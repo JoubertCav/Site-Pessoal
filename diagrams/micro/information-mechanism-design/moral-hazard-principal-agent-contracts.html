@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -23,580 +23,328 @@
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
   <style>
     :root{
-      --bg:#f6f3eb;
-      --bg2:#ece6d8;
-      --paper:#fffdf8;
-      --paper2:#faf6ec;
-      --ink:#17201f;
-      --muted:#66706d;
-      --line:#d9d0bf;
-      --line2:#c8bda8;
-      --accent:#167a74;
-      --accent2:#2aa79e;
-      --accent3:#d99041;
-      --danger:#c9544b;
-      --good:#22865e;
-      --blue:#346fa3;
-      --shadow: 0 18px 60px rgba(35, 28, 18, .10);
-      --radius: 24px;
-      --sidebar: 355px;
-      --code:#f3eadc;
-      --svgGrid:#e8dece;
+      --bg:#f4f0e7;
+      --bg-soft:#eee7d9;
+      --paper:#fffdfa;
+      --paper-soft:#faf6ed;
+      --ink:#0f1716;
+      --muted:#6d746f;
+      --faint:#929a94;
+      --line:#ddd3c1;
+      --line-strong:#c9baa2;
+      --grid:#ece3d5;
+      --pc:#247858;
+      --ic:#c48238;
+      --fb:#2f6f9f;
+      --manual:#c95850;
+      --violet:#7556a5;
+      --shadow:0 22px 70px rgba(39,31,20,.10);
+      --shadow-soft:0 10px 30px rgba(39,31,20,.06);
+      --radius:26px;
+      --radius-sm:18px;
+      --mono: ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
     }
     [data-theme="dark"]{
-      --bg:#0b1214;
-      --bg2:#101b1f;
-      --paper:#111b1f;
-      --paper2:#162429;
-      --ink:#edf7f5;
-      --muted:#a8b7b4;
-      --line:#274247;
-      --line2:#36565d;
-      --accent:#44d1c4;
-      --accent2:#6ee7dc;
-      --accent3:#f0a85f;
-      --danger:#ff8178;
-      --good:#5fe1a2;
-      --blue:#74b9ff;
-      --shadow: 0 18px 60px rgba(0, 0, 0, .33);
-      --code:#17262b;
-      --svgGrid:#22363b;
+      --bg:#0b1112;
+      --bg-soft:#10191b;
+      --paper:#121c1f;
+      --paper-soft:#172528;
+      --ink:#eef6f2;
+      --muted:#aab7b1;
+      --faint:#7f908a;
+      --line:#2b4246;
+      --line-strong:#385a60;
+      --grid:#21363a;
+      --pc:#60d99f;
+      --ic:#f0aa61;
+      --fb:#78bbef;
+      --manual:#ff8178;
+      --violet:#b39df1;
+      --shadow:0 22px 70px rgba(0,0,0,.32);
+      --shadow-soft:0 10px 30px rgba(0,0,0,.22);
     }
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
     body{
       margin:0;
       min-height:100vh;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color:var(--ink);
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at 18% 2%, rgba(42,167,158,.14), transparent 33%),
-        radial-gradient(circle at 92% 5%, rgba(217,144,65,.13), transparent 30%),
-        linear-gradient(135deg,var(--bg),var(--bg2));
-      color:var(--ink);
+        radial-gradient(circle at 12% 0%, color-mix(in oklab,var(--pc) 14%, transparent), transparent 32%),
+        radial-gradient(circle at 92% 5%, color-mix(in oklab,var(--ic) 13%, transparent), transparent 30%),
+        linear-gradient(135deg,var(--bg),var(--bg-soft));
     }
-    a{color:inherit}
-    .app{
-      display:grid;
-      grid-template-columns: var(--sidebar) minmax(0,1fr);
-      min-height:100vh;
+    .page{max-width:1320px;margin:0 auto;padding:28px 22px 56px}
+    .topbar{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:18px}
+    .eyebrow{display:flex;gap:8px;align-items:center;color:var(--pc);font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:900;margin-bottom:10px}
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--pc);box-shadow:0 0 0 5px color-mix(in oklab,var(--pc) 16%, transparent)}
+    h1{font-size:44px;line-height:.96;letter-spacing:-.065em;margin:0;max-width:860px}
+    .lead{color:var(--muted);font-size:16px;line-height:1.55;max-width:880px;margin:14px 0 0}
+    .theme{
+      border:1px solid var(--line);background:color-mix(in oklab,var(--paper) 88%, transparent);color:var(--ink);
+      border-radius:999px;padding:10px 13px;font-weight:900;cursor:pointer;box-shadow:var(--shadow-soft);white-space:nowrap;
+      display:flex;align-items:center;gap:10px;backdrop-filter:blur(16px)
     }
-    .sidebar{
-      position:sticky;
-      top:0;
-      height:100vh;
-      overflow:auto;
-      padding:24px 20px 28px;
-      border-right:1px solid var(--line);
-      background: color-mix(in oklab, var(--paper) 90%, transparent);
-      backdrop-filter: blur(20px);
-      z-index:10;
-    }
-    .brand{
-      padding:18px 18px 16px;
-      border:1px solid var(--line);
-      background:linear-gradient(180deg,var(--paper),var(--paper2));
-      border-radius:24px;
-      box-shadow:var(--shadow);
-      margin-bottom:16px;
-    }
-    .eyebrow{
-      display:flex;
-      gap:8px;
-      align-items:center;
-      color:var(--accent);
-      font-size:12px;
-      font-weight:800;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      margin-bottom:8px;
-    }
-    .dot{width:8px;height:8px;border-radius:99px;background:var(--accent);box-shadow:0 0 0 4px color-mix(in oklab,var(--accent) 16%, transparent)}
-    h1,h2,h3,p{margin:0}
-    h1{font-size:24px;line-height:1.05;letter-spacing:-.055em}
-    .brand p{font-size:13px;line-height:1.45;color:var(--muted);margin-top:10px}
-    .mode{
-      position:fixed;
-      top:18px;
-      right:18px;
-      z-index:50;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      border:1px solid var(--line);
-      background: color-mix(in oklab, var(--paper) 88%, transparent);
-      backdrop-filter: blur(16px);
-      border-radius:999px;
-      padding:9px 12px;
-      box-shadow:var(--shadow);
-      cursor:pointer;
-      color:var(--ink);
-      font-weight:800;
-      font-size:13px;
-    }
-    .switch{
-      width:42px;height:24px;border-radius:99px;background:var(--line2);position:relative;transition:.2s;
-    }
-    .switch::after{content:"";position:absolute;width:18px;height:18px;border-radius:50%;left:3px;top:3px;background:var(--paper);box-shadow:0 2px 8px rgba(0,0,0,.25);transition:.2s}
-    [data-theme="dark"] .switch{background:var(--accent)}
-    [data-theme="dark"] .switch::after{transform:translateX(18px)}
-    .nav{
-      display:grid;
-      gap:8px;
-      margin:14px 0 16px;
-    }
-    .nav a{
-      text-decoration:none;
-      padding:11px 13px;
-      border:1px solid var(--line);
-      border-radius:15px;
-      color:var(--muted);
-      font-weight:800;
-      font-size:13px;
-      background:color-mix(in oklab,var(--paper2) 80%, transparent);
-    }
-    .nav a:hover{color:var(--ink);border-color:var(--accent);background:color-mix(in oklab,var(--accent) 10%, var(--paper))}
-    .controls{
-      display:grid;
-      gap:12px;
-    }
-    .control-card{
-      border:1px solid var(--line);
-      border-radius:22px;
-      background:linear-gradient(180deg,var(--paper),var(--paper2));
-      box-shadow:var(--shadow);
-      padding:16px;
-    }
-    .control-card h3{font-size:13px;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);margin-bottom:12px}
+    .switch{width:42px;height:24px;background:var(--line-strong);border-radius:999px;position:relative;transition:.2s}
+    .switch:after{content:"";position:absolute;width:18px;height:18px;border-radius:50%;left:3px;top:3px;background:var(--paper);box-shadow:0 2px 7px rgba(0,0,0,.25);transition:.2s}
+    [data-theme="dark"] .switch{background:var(--pc)}
+    [data-theme="dark"] .switch:after{transform:translateX(18px)}
+    .layout{display:grid;grid-template-columns:340px minmax(0,1fr);gap:18px;align-items:start}
+    .panel,.card,.hero-card{border:1px solid var(--line);background:color-mix(in oklab,var(--paper) 96%, transparent);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .panel{padding:18px;position:sticky;top:18px}
+    .panel-title{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:950;margin:0 0 12px}
+    .control-group{padding:15px 0;border-top:1px solid var(--line)}
+    .control-group:first-child{border-top:0;padding-top:0}
     .ctrl{display:grid;gap:7px;margin:12px 0}
-    .ctrl:first-of-type{margin-top:0}
-    label{display:flex;justify-content:space-between;align-items:center;gap:10px;color:var(--ink);font-weight:800;font-size:13px}
-    label .label-main{display:flex;align-items:center;gap:7px;min-width:0}
-    label .sym{font-size:12px;color:var(--muted);font-weight:900;border:1px solid var(--line);background:var(--paper2);border-radius:999px;padding:3px 7px;white-space:nowrap}
-    label .val{font-variant-numeric:tabular-nums;color:var(--accent);white-space:nowrap}
-    input[type="range"]{width:100%;accent-color:var(--accent)}
-    .hint{font-size:12px;line-height:1.35;color:var(--muted)}
-    .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
-    button{
-      border:1px solid var(--line);
-      background:var(--paper2);
-      color:var(--ink);
-      border-radius:14px;
-      padding:10px 11px;
-      font-weight:900;
-      cursor:pointer;
-    }
-    button:hover{border-color:var(--accent);background:color-mix(in oklab,var(--accent) 12%, var(--paper2))}
-    .main{
-      min-width:0;
-      padding:34px 38px 70px;
-    }
-    .hero{
-      border:1px solid var(--line);
-      border-radius:32px;
-      background:
-        linear-gradient(135deg,color-mix(in oklab,var(--paper) 96%, transparent),color-mix(in oklab,var(--paper2) 88%, transparent));
-      box-shadow:var(--shadow);
-      padding:32px;
-      margin-bottom:22px;
-      position:relative;
-      overflow:hidden;
-    }
-    .hero::before{content:"";position:absolute;inset:-100px -80px auto auto;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle, color-mix(in oklab,var(--accent) 17%, transparent), transparent 70%);pointer-events:none}
-    .hero-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(420px,.9fr);gap:26px;align-items:center;position:relative}
-    .hero h2{font-size:48px;letter-spacing:-.065em;line-height:.96;max-width:820px}
-    .hero .lead{margin-top:16px;color:var(--muted);font-size:17px;line-height:1.55;max-width:790px}
-    .pill-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
-    .pill{border:1px solid var(--line);background:var(--paper2);border-radius:999px;padding:8px 11px;font-size:12px;font-weight:900;color:var(--muted)}
-    .pill.strong{color:var(--accent);border-color:color-mix(in oklab,var(--accent) 36%, var(--line))}
-    .metric-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:22px 0}
-    .metric{border:1px solid var(--line);background:var(--paper);border-radius:20px;padding:15px;box-shadow:0 10px 30px rgba(0,0,0,.04)}
-    .metric .k{font-size:12px;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px}
-    .metric .v{font-size:24px;line-height:1;font-weight:950;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
-    .metric.good .v{color:var(--good)} .metric.bad .v{color:var(--danger)} .metric.accent .v{color:var(--accent)} .metric.blue .v{color:var(--blue)}
-    section{margin:22px 0}
-    .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:0 0 12px}
-    .section-head h2{font-size:28px;letter-spacing:-.045em}
-    .section-head p{color:var(--muted);font-size:14px;max-width:720px;line-height:1.45}
-    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-    .card{
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      background:linear-gradient(180deg,var(--paper),var(--paper2));
-      box-shadow:var(--shadow);
-      padding:22px;
-      min-width:0;
-    }
-    .card h3{font-size:18px;letter-spacing:-.025em;margin-bottom:8px}
-    .card p,.card li{color:var(--muted);font-size:14px;line-height:1.52}
-    .tiny{font-size:12px;color:var(--muted);line-height:1.35}
-    .formula{
-      border:1px solid var(--line);
-      background:var(--code);
-      border-radius:18px;
-      padding:16px;
-      margin:12px 0;
-      overflow:auto;
-      color:var(--ink);
-    }
-    .formula.center{text-align:center}
-    .diagram{
-      width:100%;
-      min-height:300px;
-      border:1px solid var(--line);
-      border-radius:22px;
-      background:
-        linear-gradient(180deg,color-mix(in oklab,var(--paper) 76%, transparent),color-mix(in oklab,var(--paper2) 90%, transparent));
-      overflow:hidden;
-      position:relative;
-    }
-    .diagram svg{display:block;width:100%;height:100%;min-height:300px}
-    .diagram.big svg{min-height:440px}
-    .diagram.medium svg{min-height:360px}
-    .legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
-    .legend-item{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:12px;font-weight:800}
-    .swatch{width:12px;height:12px;border-radius:4px;background:var(--accent)}
-    .swatch.orange{background:var(--accent3)} .swatch.red{background:var(--danger)} .swatch.blue{background:var(--blue)} .swatch.green{background:var(--good)} .swatch.gray{background:var(--line2)}
-    .status{
-      display:grid;
-      gap:10px;
-      margin-top:12px;
-    }
-    .status-row{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--line);border-radius:16px;background:var(--paper);padding:12px 13px;font-size:13px}
-    .badge{border-radius:999px;padding:6px 9px;font-weight:950;font-size:12px;background:var(--paper2);border:1px solid var(--line);white-space:nowrap}
-    .badge.ok{color:var(--good);border-color:color-mix(in oklab,var(--good) 40%,var(--line));background:color-mix(in oklab,var(--good) 12%,var(--paper))}
-    .badge.no{color:var(--danger);border-color:color-mix(in oklab,var(--danger) 44%,var(--line));background:color-mix(in oklab,var(--danger) 10%,var(--paper))}
-    .badge.warn{color:var(--accent3);border-color:color-mix(in oklab,var(--accent3) 44%,var(--line));background:color-mix(in oklab,var(--accent3) 10%,var(--paper))}
-    .callout{
-      border-left:5px solid var(--accent);
-      background:color-mix(in oklab,var(--accent) 8%, var(--paper));
-      padding:15px 16px;
-      border-radius:18px;
-      margin-top:12px;
-      color:var(--muted);
-      line-height:1.5;
-      font-size:14px;
-    }
-    .table{width:100%;border-collapse:separate;border-spacing:0 8px;font-size:13px}
-    .table th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.1em;text-align:left;padding:0 10px}
-    .table td{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px;font-variant-numeric:tabular-nums}
-    .table td:first-child{border-left:1px solid var(--line);border-radius:14px 0 0 14px;font-weight:900;font-variant-numeric:normal}
-    .table td:last-child{border-right:1px solid var(--line);border-radius:0 14px 14px 0}
-    .footer-note{margin-top:24px;color:var(--muted);font-size:13px;line-height:1.5;text-align:center}
-    .math{min-height:1em}
-    .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;background:var(--code);padding:2px 6px;border-radius:6px;border:1px solid var(--line)}
-    @media (max-width:1180px){
-      :root{--sidebar:320px}
-      .hero-grid,.grid-2,.grid-3{grid-template-columns:1fr}
-      .metric-row{grid-template-columns:1fr 1fr}
-      .hero h2{font-size:40px}
-    }
-    @media (max-width:860px){
-      .app{grid-template-columns:1fr}
-      .sidebar{position:relative;height:auto;max-height:none;border-right:0;border-bottom:1px solid var(--line)}
-      .main{padding:22px 14px 60px}
-      .mode{top:12px;right:12px}
-      .metric-row{grid-template-columns:1fr}
-      .hero{padding:22px}
-      .hero h2{font-size:34px}
-    }
+    label{display:flex;justify-content:space-between;gap:12px;align-items:baseline;color:var(--ink);font-size:13px;font-weight:850}
+    .symbol{font-family:Georgia,serif;color:var(--muted);font-weight:800}
+    .val{font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:12px;color:var(--ink);background:var(--paper-soft);border:1px solid var(--line);border-radius:999px;padding:3px 7px;white-space:nowrap}
+    input[type="range"]{width:100%;accent-color:var(--pc)}
+    .hint{color:var(--muted);font-size:12px;line-height:1.4;margin:8px 0 0}
+    .button-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+    button.action{border:1px solid var(--line);background:var(--paper-soft);color:var(--ink);border-radius:14px;padding:10px 10px;font-weight:900;cursor:pointer}
+    button.action:hover{border-color:var(--pc);background:color-mix(in oklab,var(--pc) 9%, var(--paper-soft))}
+    .hero-card{padding:22px}
+    .section-title{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin:0 0 14px}
+    .section-title h2{font-size:27px;letter-spacing:-.045em;margin:0}
+    .section-title p{margin:0;color:var(--muted);font-size:13px;line-height:1.45;max-width:540px;text-align:right}
+    .formula-strip{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+    .formula{border:1px solid var(--line);background:var(--paper-soft);border-radius:18px;padding:13px 12px;text-align:center;overflow:auto;color:var(--ink)}
+    .plot-shell{border:1px solid var(--line);border-radius:22px;overflow:hidden;background:linear-gradient(180deg,color-mix(in oklab,var(--paper) 94%, transparent),var(--paper-soft));position:relative}
+    svg{display:block;width:100%;height:auto}
+    .legend{display:flex;flex-wrap:wrap;gap:12px;margin:13px 2px 0;color:var(--muted);font-size:12px;font-weight:900}
+    .legend-item{display:flex;align-items:center;gap:7px}
+    .swatch{width:12px;height:12px;border-radius:4px;background:var(--pc);border:1px solid color-mix(in oklab,var(--ink) 8%, transparent)}
+    .swatch.ic{background:var(--ic)}.swatch.fb{background:var(--fb)}.swatch.manual{background:var(--manual)}.swatch.fi{background:var(--line-strong)}.swatch.shade{background:linear-gradient(135deg,color-mix(in oklab,var(--pc) 32%, transparent),color-mix(in oklab,var(--pc) 7%, transparent))}
+    .status-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
+    .status{border:1px solid var(--line);background:var(--paper-soft);border-radius:18px;padding:13px;min-width:0}
+    .k{font-size:10.5px;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);font-weight:950;margin-bottom:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .v{font-size:20px;font-weight:950;letter-spacing:-.035em;font-variant-numeric:tabular-nums;white-space:nowrap}
+    .ok{color:var(--pc)}.bad{color:var(--manual)}.warn{color:var(--ic)}.blue{color:var(--fb)}.violet{color:var(--violet)}
+    .reading{color:var(--muted);font-size:14px;line-height:1.55;margin:14px 2px 0}.reading b{color:var(--ink)}
+    .modules{display:grid;gap:14px;margin-top:18px}
+    details.card{padding:0;overflow:hidden}
+    summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:17px 19px;cursor:pointer;font-weight:950;letter-spacing:-.02em}
+    summary::-webkit-details-marker{display:none}
+    summary span{font-size:12px;color:var(--muted);font-weight:850;letter-spacing:0;text-align:right}
+    summary:after{content:"+";font-size:22px;color:var(--muted);font-weight:650}
+    details[open] summary:after{content:"âˆ’"}
+    .details-body{padding:0 18px 18px;border-top:1px solid var(--line)}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+    .mini{border:1px solid var(--line);background:var(--paper-soft);border-radius:20px;padding:14px;min-width:0}
+    .mini h3{font-size:15px;margin:0 0 8px;letter-spacing:-.02em}.mini p,.text-block{margin:8px 0 0;color:var(--muted);font-size:13px;line-height:1.48}.mini b,.text-block b{color:var(--ink)}
+    table{width:100%;border-collapse:separate;border-spacing:0 8px;font-size:13px;margin-top:8px}
+    th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.1em;text-align:left;padding:0 10px}
+    td{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px;font-variant-numeric:tabular-nums}
+    td:first-child{border-left:1px solid var(--line);border-radius:14px 0 0 14px;font-weight:900;font-variant-numeric:normal}td:last-child{border-right:1px solid var(--line);border-radius:0 14px 14px 0}
+    .math{white-space:nowrap}.mono{font-family:var(--mono)}
+    @media(max-width:1050px){.layout{grid-template-columns:1fr}.panel{position:relative;top:0}.formula-strip,.grid-2,.grid-3,.status-grid{grid-template-columns:1fr}.section-title{align-items:flex-start;flex-direction:column}.section-title p{text-align:left}h1{font-size:34px}.topbar{flex-direction:column}.theme{align-self:flex-start}}
   </style>
 </head>
 <body data-theme="light">
-  <button class="mode" id="themeBtn" aria-label="Toggle dark mode"><span>Dark mode</span><span class="switch"></span></button>
-  <div class="app">
-    <aside class="sidebar">
-      <div class="brand">
-        <div class="eyebrow"><span class="dot"></span>Principal–Agent</div>
-        <h1>Moral hazard with hidden action</h1>
-        <p>Control the parameters on the left. The diagrams on the right show how the contract changes when the principal cannot observe the agent's effort.</p>
+  <div class="page">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow"><span class="dot"></span>Hidden action Â· risk sharing Â· incentives</div>
+        <h1>Moral Hazard and Principalâ€“Agent Contracts</h1>
+        <p class="lead">A cleaner but complete interactive notebook. The central object is the geometry of participation and incentive compatibility in utility space; the supporting panels explain the timing, the principal's problem, and the second-best trade-off.</p>
       </div>
+      <button class="theme" id="themeBtn" aria-label="Toggle theme"><span id="themeText">Dark mode</span><span class="switch"></span></button>
+    </header>
 
-      <nav class="nav" aria-label="Navigation">
-        <a href="#mapa">Principal–agent map</a>
-        <a href="#sequencia">Timing sequence</a>
-        <a href="#restricoes">PC and IC</a>
-        <a href="#problema">Principal's problem</a>
-        <a href="#doisxdois">2 efforts × 2 outcomes case</a>
-        <a href="#diagnostico">Manual contract</a>
-      </nav>
-
-      <div class="controls">
-        <div class="control-card">
-          <h3>Production technology</h3>
-          <div class="ctrl"><label><span class="label-main">Low output revenue <span class="sym math" data-tex="y_B"></span></span><span class="val" id="v_yB"></span></label><input id="yB" type="range" min="0" max="80" step="1" value="20"></div>
-          <div class="ctrl"><label><span class="label-main">High output revenue <span class="sym math" data-tex="y_G"></span></span><span class="val" id="v_yG"></span></label><input id="yG" type="range" min="40" max="180" step="1" value="100"></div>
-          <div class="ctrl"><label><span class="label-main">Pr(high | low effort) <span class="sym math" data-tex="q_L"></span></span><span class="val" id="v_qL"></span></label><input id="qL" type="range" min="0.05" max="0.90" step="0.01" value="0.30"></div>
-          <div class="ctrl"><label><span class="label-main">Pr(high | high effort) <span class="sym math" data-tex="q_H"></span></span><span class="val" id="v_qH"></span></label><input id="qH" type="range" min="0.06" max="0.95" step="0.01" value="0.70"></div>
-          <p class="hint">High effort should shift probability toward the good outcome: <span class="math" data-tex="q_H>q_L"></span>.</p>
-          <p class="hint"><b>Symbols:</b> <span class="math" data-tex="y_B,y_G"></span> are revenues; <span class="math" data-tex="q_L,q_H"></span> are probabilities of the good outcome.</p>
+    <div class="layout">
+      <aside class="panel">
+        <div class="control-group">
+          <h2 class="panel-title">Technology</h2>
+          <div class="ctrl"><label><span>Low-state revenue <span class="symbol">y<sub>B</sub></span></span><span class="val" id="v_yB"></span></label><input id="yB" type="range" min="0" max="80" step="1" value="20"></div>
+          <div class="ctrl"><label><span>High-state revenue <span class="symbol">y<sub>G</sub></span></span><span class="val" id="v_yG"></span></label><input id="yG" type="range" min="40" max="180" step="1" value="100"></div>
+          <div class="ctrl"><label><span>Pr(good | low effort) <span class="symbol">q<sub>L</sub></span></span><span class="val" id="v_qL"></span></label><input id="qL" type="range" min="0.05" max="0.85" step="0.01" value="0.30"></div>
+          <div class="ctrl"><label><span>Pr(good | high effort) <span class="symbol">q<sub>H</sub></span></span><span class="val" id="v_qH"></span></label><input id="qH" type="range" min="0.08" max="0.95" step="0.01" value="0.70"></div>
+          <p class="hint">High effort improves the distribution: <span class="math" data-tex="q_H>q_L"></span>.</p>
         </div>
 
-        <div class="control-card">
-          <h3>Agent preferences</h3>
-          <div class="ctrl"><label><span class="label-main">Cost of high effort <span class="sym math" data-tex="c_H"></span></span><span class="val" id="v_c"></span></label><input id="c" type="range" min="0.05" max="7" step="0.05" value="2.50"></div>
-          <div class="ctrl"><label><span class="label-main">Reservation utility <span class="sym math" data-tex="\bar U"></span></span><span class="val" id="v_Ubar"></span></label><input id="Ubar" type="range" min="0" max="8" step="0.05" value="4.00"></div>
-          <div class="ctrl"><label><span class="label-main">Curvature <span class="sym math" data-tex="\alpha"></span></span><span class="val" id="v_alpha"></span></label><input id="alpha" type="range" min="0.35" max="1.00" step="0.01" value="0.50"></div>
-          <div class="ctrl"><label><span class="label-main">Minimum wage <span class="sym math" data-tex="\underline w"></span></span><span class="val" id="v_wMin"></span></label><input id="wMin" type="range" min="0" max="20" step="0.5" value="0"></div>
-          <p class="hint">We use <span class="math" data-tex="u(w)=w^\alpha"></span>. The smaller <span class="math" data-tex="\alpha"></span>, the more costly it is to impose risk on the agent.</p>
-          <p class="hint"><b>Symbols:</b> <span class="math" data-tex="c_H"></span> is effort cost; <span class="math" data-tex="\bar U"></span> is outside option utility; <span class="math" data-tex="\underline w"></span> is limited liability.</p>
+        <div class="control-group">
+          <h2 class="panel-title">Agent</h2>
+          <div class="ctrl"><label><span>High-effort cost <span class="symbol">c</span></span><span class="val" id="v_c"></span></label><input id="c" type="range" min="0.05" max="7" step="0.05" value="2.50"></div>
+          <div class="ctrl"><label><span>Reservation utility <span class="symbol">UÌ„</span></span><span class="val" id="v_Ubar"></span></label><input id="Ubar" type="range" min="0" max="8" step="0.05" value="4.00"></div>
+          <div class="ctrl"><label><span>Utility curvature <span class="symbol">Î±</span></span><span class="val" id="v_alpha"></span></label><input id="alpha" type="range" min="0.35" max="1.00" step="0.01" value="0.50"></div>
+          <div class="ctrl"><label><span>Limited liability <span class="symbol">wÌ²</span></span><span class="val" id="v_wMin"></span></label><input id="wMin" type="range" min="0" max="20" step="0.5" value="0"></div>
+          <p class="hint">Utility is <span class="math" data-tex="u(w)=w^\alpha"></span>. Smaller <span class="math" data-tex="\alpha"></span> means stronger risk aversion.</p>
         </div>
 
-        <div class="control-card">
-          <h3>Manual contract</h3>
-          <div class="ctrl"><label><span class="label-main">Wage if low outcome <span class="sym math" data-tex="w_B"></span></span><span class="val" id="v_wB"></span></label><input id="wB" type="range" min="0" max="130" step="1" value="20"></div>
-          <div class="ctrl"><label><span class="label-main">Wage if high outcome <span class="sym math" data-tex="w_G"></span></span><span class="val" id="v_wG"></span></label><input id="wG" type="range" min="0" max="160" step="1" value="45"></div>
-          <div class="btn-row">
-            <button id="btnSB">use SB</button>
-            <button id="btnFB">use FB</button>
+        <div class="control-group">
+          <h2 class="panel-title">Manual contract</h2>
+          <div class="ctrl"><label><span>Wage after bad outcome <span class="symbol">w<sub>B</sub></span></span><span class="val" id="v_wB"></span></label><input id="wB" type="range" min="0" max="130" step="1" value="20"></div>
+          <div class="ctrl"><label><span>Wage after good outcome <span class="symbol">w<sub>G</sub></span></span><span class="val" id="v_wG"></span></label><input id="wG" type="range" min="0" max="160" step="1" value="45"></div>
+          <div class="button-grid"><button class="action" id="btnSB">Set to SB</button><button class="action" id="btnFB">Set to FB</button></div>
+          <div class="button-grid"><button class="action" id="btnFlat">Full insurance</button><button class="action" id="btnReset">Reset</button></div>
+        </div>
+      </aside>
+
+      <main>
+        <section class="hero-card">
+          <div class="section-title">
+            <h2>Constraint geometry in utility space</h2>
+            <p>Let <span class="math" data-tex="x=u(w_B)"></span> and <span class="math" data-tex="z=u(w_G)"></span>. The principal minimizes expected wage cost subject to the agent accepting and choosing high effort.</p>
           </div>
-          <div class="btn-row">
-            <button id="btnFlat">full insurance</button>
-            <button id="btnClassic">reset</button>
+          <div class="formula-strip">
+            <div class="formula"><span class="math" data-tex="PC_H:\quad z\geq \dfrac{\bar U+c-(1-q_H)x}{q_H}"></span></div>
+            <div class="formula"><span class="math" data-tex="IC_H:\quad z\geq x+\dfrac{c}{q_H-q_L}"></span></div>
           </div>
-        </div>
-      </div>
-    </aside>
+          <div class="plot-shell"><svg id="plot" viewBox="0 0 920 610" role="img" aria-label="Participation and incentive constraints in utility space"></svg></div>
+          <div class="legend">
+            <span class="legend-item"><span class="swatch shade"></span>feasible high-effort region</span>
+            <span class="legend-item"><span class="swatch"></span>participation constraint</span>
+            <span class="legend-item"><span class="swatch ic"></span>incentive constraint</span>
+            <span class="legend-item"><span class="swatch fi"></span>full insurance line</span>
+            <span class="legend-item"><span class="swatch fb"></span>first-best high effort</span>
+            <span class="legend-item"><span class="swatch ic"></span>second-best high effort</span>
+            <span class="legend-item"><span class="swatch manual"></span>manual contract</span>
+          </div>
+          <div class="status-grid">
+            <div class="status"><div class="k">Manual participation</div><div class="v" id="pcStatus"></div></div>
+            <div class="status"><div class="k">Manual incentives</div><div class="v" id="icStatus"></div></div>
+            <div class="status"><div class="k">Required utility premium</div><div class="v warn" id="premiumStatus"></div></div>
+            <div class="status"><div class="k">SB expected profit</div><div class="v ok" id="profitSB"></div></div>
+          </div>
+          <p class="reading" id="reading"></p>
+        </section>
 
-    <main class="main">
-      <section class="hero" id="mapa">
-        <div class="hero-grid">
-          <div>
-            <div class="eyebrow"><span class="dot"></span>core model</div>
-            <h2>The principal designs incentives. The agent chooses an action the principal cannot observe.</h2>
-            <p class="lead">The essence of the principal–agent model is a tension: the principal wants to expose the agent to incentives in order to induce effort; the agent, if risk-averse, wants insurance. The optimal second-best contract balances these two objectives.</p>
-            <div class="pill-row">
-              <span class="pill strong">principal: expected profit</span>
-              <span class="pill">agent: expected utility</span>
-              <span class="pill">hidden action</span>
-              <span class="pill">observable outcome</span>
-              <span class="pill">state-contingent contract</span>
+        <div class="modules">
+          <details class="card" open>
+            <summary>How each constraint behaves <span>comparative statics and active margins</span></summary>
+            <div class="details-body">
+              <div class="grid-3">
+                <div class="mini"><h3>Participation constraint</h3><svg id="svgPCBehavior" viewBox="0 0 620 310"></svg><p id="pcNote"></p></div>
+                <div class="mini"><h3>Incentive constraint</h3><svg id="svgICBehavior" viewBox="0 0 620 310"></svg><p id="icNote"></p></div>
+                <div class="mini"><h3>Which margin binds?</h3><svg id="svgBinding" viewBox="0 0 620 310"></svg><p id="bindNote"></p></div>
+              </div>
             </div>
-          </div>
-          <div class="diagram medium"><svg id="svgRelation" viewBox="0 0 640 360" role="img" aria-label="Principal-agent map"></svg></div>
-        </div>
-      </section>
+          </details>
 
-      <div class="metric-row">
-        <div class="metric accent"><div class="k">technological gain from effort</div><div class="v" id="m_deltaY"></div></div>
-        <div class="metric blue"><div class="k">required incentive premium</div><div class="v" id="m_premium"></div></div>
-        <div class="metric good"><div class="k">SB expected profit</div><div class="v" id="m_profitSB"></div></div>
-        <div class="metric" id="m_status_card"><div class="k">manual contract</div><div class="v" id="m_manualStatus"></div></div>
-      </div>
-
-      <section id="sequencia">
-        <div class="section-head">
-          <div><h2>Timing sequence</h2></div>
-          <p>The contract comes before the action; the action is chosen privately; only the final outcome is verifiable.</p>
-        </div>
-        <div class="grid-2">
-          <div class="card">
-            <h3>Timeline of the game</h3>
-            <div class="diagram medium"><svg id="svgTimeline" viewBox="0 0 860 360" role="img" aria-label="Timing sequence"></svg></div>
-            <div class="callout">The asymmetry is not about the outcome. The outcome <b>is observed</b>. The asymmetry is about the action: the principal observes <span class="math" data-tex="y"></span>, but does not observe <span class="math" data-tex="a"></span>.</div>
-          </div>
-          <div class="card">
-            <h3>Principal–agent tree</h3>
-            <div class="diagram medium"><svg id="svgTree" viewBox="0 0 860 360" role="img" aria-label="Principal-agent game tree"></svg></div>
-            <div class="legend">
-              <span class="legend-item"><span class="swatch"></span> principal's contract choice</span>
-              <span class="legend-item"><span class="swatch orange"></span> hidden action do agente</span>
-              <span class="legend-item"><span class="swatch blue"></span> nature / outcome</span>
+          <details class="card" open>
+            <summary>Structure of the model <span>map, timing, and game tree</span></summary>
+            <div class="details-body">
+              <div class="grid-3">
+                <div class="mini"><h3>Principalâ€“agent map</h3><svg id="svgRelation" viewBox="0 0 620 300"></svg><p>The principal chooses a wage schedule <span class="math" data-tex="w(y)"></span>; the agent privately chooses effort.</p></div>
+                <div class="mini"><h3>Timing</h3><svg id="svgTimeline" viewBox="0 0 620 300"></svg><p>The outcome is verifiable. The action is not.</p></div>
+                <div class="mini"><h3>Game tree</h3><svg id="svgTree" viewBox="0 0 620 300"></svg><p>The good outcome is an imperfect signal of high effort.</p></div>
+              </div>
             </div>
-          </div>
-        </div>
-      </section>
+          </details>
 
-      <section id="restricoes">
-        <div class="section-head">
-          <div><h2>Participation and incentive constraints</h2></div>
-          <p>The feasible region requires the agent to accept the contract and prefer high effort to low effort.</p>
-        </div>
-        <div class="grid-2">
-          <div class="card">
-            <h3>Contract geometry in utility space</h3>
-            <div class="formula center"><span class="math" data-tex="PC_H:\;(1-q_H)u(w_B)+q_Hu(w_G)-c\geq \bar U"></span></div>
-            <div class="formula center"><span class="math" data-tex="IC_H:\;(q_H-q_L)\,[u(w_G)-u(w_B)]\geq c"></span></div>
-            <div class="diagram big"><svg id="svgContract" viewBox="0 0 760 520" role="img" aria-label="PC and IC region"></svg></div>
-            <div class="legend">
-              <span class="legend-item"><span class="swatch green"></span> feasible region PC ∩ IC</span>
-              <span class="legend-item"><span class="swatch orange"></span> second-best</span>
-              <span class="legend-item"><span class="swatch blue"></span> first-best</span>
-              <span class="legend-item"><span class="swatch red"></span> manual contract</span>
+          <details class="card">
+            <summary>The principal's problem <span>program and benchmarks</span></summary>
+            <div class="details-body">
+              <div class="grid-2">
+                <div class="mini">
+                  <h3>General formulation</h3>
+                  <div class="formula"><span class="math" data-tex="\max_{w(\cdot),a}\;\sum_y p(y\mid a)[y-w(y)]"></span></div>
+                  <div class="formula"><span class="math" data-tex="\sum_y p(y\mid a)u(w(y))-c(a)\geq \bar U"></span></div>
+                  <div class="formula"><span class="math" data-tex="a\in\arg\max_{a'}\left\{\sum_y p(y\mid a')u(w(y))-c(a')\right\}"></span></div>
+                  <p><b>First-best:</b> action is contractible. <b>Second-best:</b> action is hidden, so IC becomes a real technological restriction on risk sharing.</p>
+                </div>
+                <div class="mini"><h3>Expected profits</h3><svg id="svgProfit" viewBox="0 0 760 360"></svg><p id="profitText"></p></div>
+              </div>
             </div>
-          </div>
-          <div class="card">
-            <h3>What do the constraints do?</h3>
-            <div class="diagram medium"><svg id="svgInequalities" viewBox="0 0 760 360" role="img" aria-label="Barras PC and IC"></svg></div>
-            <div class="status">
-              <div class="status-row"><span>Agent participation</span><span class="badge" id="badgePC"></span></div>
-              <div class="status-row"><span>Incentive compatibility</span><span class="badge" id="badgeIC"></span></div>
-              <div class="status-row"><span>Effort induced by the manual contract</span><span class="badge" id="badgeEffort"></span></div>
+          </details>
+
+          <details class="card">
+            <summary>The canonical 2 Ã— 2 case <span>probabilities, wages, and the riskâ€“incentive trade-off</span></summary>
+            <div class="details-body">
+              <div class="grid-3">
+                <div class="mini"><h3>Informational technology</h3><svg id="svgProb" viewBox="0 0 620 320"></svg><p>A larger <span class="math" data-tex="q_H-q_L"></span> makes the outcome more informative about effort.</p></div>
+                <div class="mini"><h3>State-contingent wages</h3><svg id="svgWages" viewBox="0 0 620 320"></svg><p>The second-best usually has <span class="math" data-tex="w_G>w_B"></span>: rewards for the good outcome create incentives.</p></div>
+                <div class="mini"><h3>Insurance versus incentives</h3><svg id="svgTradeoff" viewBox="0 0 620 320"></svg><p>Full insurance protects the agent, but cannot induce costly hidden effort unless effort is observable.</p></div>
+              </div>
             </div>
-            <div class="callout" id="constraintText"></div>
-          </div>
-        </div>
-      </section>
+          </details>
 
-      <section id="problema">
-        <div class="section-head">
-          <div><h2>Principal's problem</h2></div>
-          <p>The principal is risk-neutral and chooses outcome-contingent wages to maximize expected profit.</p>
+          <details class="card">
+            <summary>Contract diagnostics <span>numbers behind the diagram</span></summary>
+            <div class="details-body">
+              <table>
+                <thead><tr><th>Contract</th><th>wB</th><th>wG</th><th>Agent EU</th><th>Expected profit</th></tr></thead>
+                <tbody id="contractTable"></tbody>
+              </table>
+              <p class="text-block" id="tableText"></p>
+            </div>
+          </details>
         </div>
-        <div class="grid-2">
-          <div class="card">
-            <h3>General formulation</h3>
-            <div class="formula"><span class="math" data-tex="\max_{w(\cdot),a}\;\sum_{y\in Y}p(y\mid a)[y-w(y)]"></span></div>
-            <div class="formula"><span class="math" data-tex="\text{sujeito a }\sum_y p(y\mid a)u(w(y))-c(a)\geq \bar U"></span></div>
-            <div class="formula"><span class="math" data-tex="a\in\arg\max_{a'}\left\{\sum_y p(y\mid a')u(w(y))-c(a')\right\}"></span></div>
-            <p>In the first-best, the action is contractible. In the second-best, the action is hidden and the IC constraint becomes a genuine restriction.</p>
-          </div>
-          <div class="card">
-            <h3>First-best versus second-best</h3>
-            <div class="diagram medium"><svg id="svgFBvsSB" viewBox="0 0 760 380" role="img" aria-label="First-best and second-best comparison"></svg></div>
-            <div class="callout" id="fbSbText"></div>
-          </div>
-        </div>
-      </section>
-
-      <section id="doisxdois">
-        <div class="section-head">
-          <div><h2>Iconic case: 2 efforts × 2 outcomes</h2></div>
-          <p>This is the standard laboratory: low/high effort and low/high outcome.</p>
-        </div>
-        <div class="grid-3">
-          <div class="card">
-            <h3>Informational technology</h3>
-            <div class="diagram medium"><svg id="svgProb" viewBox="0 0 620 360" role="img" aria-label="Probabilities by effort"></svg></div>
-            <p>The larger <span class="math" data-tex="q_H-q_L"></span>, the more informative the outcome is about effort.</p>
-          </div>
-          <div class="card">
-            <h3>Contingent wages</h3>
-            <div class="diagram medium"><svg id="svgWages" viewBox="0 0 620 360" role="img" aria-label="Wages by outcome"></svg></div>
-            <p>The second-best typically pays more in the good outcome: <span class="math" data-tex="w_G>w_B"></span>.</p>
-          </div>
-          <div class="card">
-            <h3>Risk versus incentives</h3>
-            <div class="diagram medium"><svg id="svgTradeoff" viewBox="0 0 620 360" role="img" aria-label="Risk-incentive trade-off"></svg></div>
-            <p>Full insurance reduces risk, but destroys incentives when effort is unobserved.</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="diagnostico">
-        <div class="section-head">
-          <div><h2>Manual contract diagnosis</h2></div>
-          <p>Compare the contract chosen with the sliders to the benchmark contracts.</p>
-        </div>
-        <div class="grid-2">
-          <div class="card">
-            <h3>Contract table</h3>
-            <table class="table">
-              <thead><tr><th>Contract</th><th>low w</th><th>high w</th><th>Agent EU</th><th>Profit</th></tr></thead>
-              <tbody id="contractTable"></tbody>
-            </table>
-          </div>
-          <div class="card">
-            <h3>Economic reading</h3>
-            <div class="formula center"><span class="math" data-tex="\text{moral hazard}=\text{hidden action}+\text{outcome-based contract}"></span></div>
-            <p id="readingText"></p>
-            <div class="callout">The key intuition is: <b>the outcome is an imperfect signal of effort</b>. Therefore, the principal uses <span class="math" data-tex="w(y)"></span> to make the agent internalize part of the gain generated by high effort, but cannot do so without imposing risk on the agent.</div>
-          </div>
-        </div>
-        <p class="footer-note">Mini-app built to study principal–agent contracts: participation, incentives, risk, and the second-best.</p>
-      </section>
-    </main>
+      </main>
+    </div>
   </div>
 
 <script>
 (function(){
-  const $ = (id)=>document.getElementById(id);
-  const ids = ['yB','yG','qL','qH','c','Ubar','alpha','wMin','wB','wG'];
-  const fmt = (x,d=2)=>Number.isFinite(x)? x.toFixed(d) : '—';
-  const money = (x)=>Number.isFinite(x)? x.toFixed(1) : '—';
-  const pct = (x)=>Number.isFinite(x)? (100*x).toFixed(0)+'%' : '—';
+  const $ = id => document.getElementById(id);
+  const inputs = ['yB','yG','qL','qH','c','Ubar','alpha','wMin','wB','wG'];
+  const fmt = (x,d=2)=>Number.isFinite(x)?x.toFixed(d):'â€”';
+  const money = x=>Number.isFinite(x)?x.toFixed(1):'â€”';
+  const pct = x=>Number.isFinite(x)?(100*x).toFixed(0)+'%':'â€”';
   const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
   const svgNS='http://www.w3.org/2000/svg';
 
-  function getThemeVars(){
-    const s=getComputedStyle(document.body);
-    return {
-      ink:s.getPropertyValue('--ink').trim(), muted:s.getPropertyValue('--muted').trim(), line:s.getPropertyValue('--line').trim(),
-      line2:s.getPropertyValue('--line2').trim(), accent:s.getPropertyValue('--accent').trim(), accent2:s.getPropertyValue('--accent2').trim(),
-      accent3:s.getPropertyValue('--accent3').trim(), danger:s.getPropertyValue('--danger').trim(), good:s.getPropertyValue('--good').trim(),
-      blue:s.getPropertyValue('--blue').trim(), paper:s.getPropertyValue('--paper').trim(), paper2:s.getPropertyValue('--paper2').trim(), grid:s.getPropertyValue('--svgGrid').trim()
-    };
-  }
-  function el(name, attrs={}, children=[]){
-    const e=document.createElementNS(svgNS,name);
-    for(const [k,v] of Object.entries(attrs)){
-      if(k==='text') e.textContent=v; else e.setAttribute(k,String(v));
-    }
-    for(const c of children) e.appendChild(c);
-    return e;
-  }
+  function css(){ const s=getComputedStyle(document.body); return {
+    paper:s.getPropertyValue('--paper').trim(), paperSoft:s.getPropertyValue('--paper-soft').trim(), ink:s.getPropertyValue('--ink').trim(),
+    muted:s.getPropertyValue('--muted').trim(), faint:s.getPropertyValue('--faint').trim(), line:s.getPropertyValue('--line').trim(), lineStrong:s.getPropertyValue('--line-strong').trim(), grid:s.getPropertyValue('--grid').trim(),
+    pc:s.getPropertyValue('--pc').trim(), ic:s.getPropertyValue('--ic').trim(), fb:s.getPropertyValue('--fb').trim(), manual:s.getPropertyValue('--manual').trim(), violet:s.getPropertyValue('--violet').trim()
+  };}
+  function E(name,attrs={},children=[]){ const e=document.createElementNS(svgNS,name); for(const [k,v] of Object.entries(attrs)){ if(k==='text') e.textContent=v; else e.setAttribute(k,String(v)); } children.forEach(c=>e.appendChild(c)); return e; }
   function clear(svg){ while(svg.firstChild) svg.removeChild(svg.firstChild); }
-  function text(x,y,str,attrs={}){ return el('text',{x,y,fill:attrs.fill||getThemeVars().ink,'font-size':attrs.size||14,'font-weight':attrs.weight||700,'text-anchor':attrs.anchor||'start','dominant-baseline':attrs.base||'middle',...attrs,text:str}); }
-  function line(x1,y1,x2,y2,attrs={}){ return el('line',{x1,y1,x2,y2,stroke:attrs.stroke||getThemeVars().line2,'stroke-width':attrs.width||2,'stroke-linecap':'round',...attrs}); }
-  function rect(x,y,w,h,attrs={}){ return el('rect',{x,y,width:w,height:h,rx:attrs.rx||16,ry:attrs.ry||16,fill:attrs.fill||getThemeVars().paper,stroke:attrs.stroke||getThemeVars().line,'stroke-width':attrs.sw||1.4,...attrs}); }
-  function circle(x,y,r,attrs={}){ return el('circle',{cx:x,cy:y,r,fill:attrs.fill||getThemeVars().paper,stroke:attrs.stroke||getThemeVars().line,'stroke-width':attrs.sw||1.5,...attrs}); }
-  function path(d,attrs={}){ return el('path',{d,fill:attrs.fill||'none',stroke:attrs.stroke||getThemeVars().line2,'stroke-width':attrs.width||2,'stroke-linecap':'round','stroke-linejoin':'round',...attrs}); }
-  function arrow(svg, x1,y1,x2,y2, color, width=2.4){
-    svg.appendChild(line(x1,y1,x2,y2,{stroke:color,width, 'marker-end':'url(#arrow)'}));
-  }
+  function line(x1,y1,x2,y2,a={}){ return E('line',{x1,y1,x2,y2,stroke:a.stroke||css().line,'stroke-width':a.w||2,'stroke-linecap':'round',...a}); }
+  function path(d,a={}){ return E('path',{d,fill:a.fill||'none',stroke:a.stroke||css().line,'stroke-width':a.w||2,'stroke-linecap':'round','stroke-linejoin':'round',...a}); }
+  function text(x,y,t,a={}){ return E('text',{x,y,text:t,fill:a.fill||css().ink,'font-size':a.size||13,'font-weight':a.weight||800,'text-anchor':a.anchor||'start','dominant-baseline':'middle',...a}); }
+  function circle(x,y,r,a={}){ return E('circle',{cx:x,cy:y,r,fill:a.fill||css().paper,stroke:a.stroke||css().line,'stroke-width':a.sw||2,...a}); }
+  function rect(x,y,w,h,a={}){ return E('rect',{x,y,width:w,height:h,rx:a.rx||14,ry:a.ry||14,fill:a.fill||css().paper,stroke:a.stroke||css().line,'stroke-width':a.sw||1.4,...a}); }
   function defs(svg){
-    const c=getThemeVars();
-    const d=el('defs');
-    d.appendChild(el('marker',{id:'arrow',viewBox:'0 0 10 10',refX:'9',refY:'5',markerWidth:'7',markerHeight:'7',orient:'auto-start-reverse'},[
-      el('path',{d:'M 0 0 L 10 5 L 0 10 z',fill:c.line2,stroke:'none'})
-    ]));
-    d.appendChild(el('marker',{id:'arrowAccent',viewBox:'0 0 10 10',refX:'9',refY:'5',markerWidth:'7',markerHeight:'7',orient:'auto-start-reverse'},[
-      el('path',{d:'M 0 0 L 10 5 L 0 10 z',fill:c.accent,stroke:'none'})
-    ]));
-    d.appendChild(el('linearGradient',{id:'feasibleGrad',x1:'0',x2:'1',y1:'0',y2:'1'},[
-      el('stop',{offset:'0%','stop-color':c.good,'stop-opacity':'.24'}),
-      el('stop',{offset:'100%','stop-color':c.accent,'stop-opacity':'.08'})
-    ]));
+    const c=css(); const d=E('defs');
+    d.appendChild(E('marker',{id:'arrow',viewBox:'0 0 10 10',refX:'9',refY:'5',markerWidth:'7',markerHeight:'7',orient:'auto-start-reverse'},[E('path',{d:'M 0 0 L 10 5 L 0 10 z',fill:c.lineStrong,stroke:'none'})]));
+    d.appendChild(E('linearGradient',{id:'shade',x1:'0',x2:'1',y1:'0',y2:'1'},[E('stop',{offset:'0%','stop-color':c.pc,'stop-opacity':'.21'}),E('stop',{offset:'100%','stop-color':c.pc,'stop-opacity':'.045'})]));
+    d.appendChild(E('linearGradient',{id:'wageGrad',x1:'0',x2:'0',y1:'0',y2:'1'},[E('stop',{offset:'0%','stop-color':c.ic,'stop-opacity':'.92'}),E('stop',{offset:'100%','stop-color':c.ic,'stop-opacity':'.55'})]));
     svg.appendChild(d);
   }
 
   function params(){
-    let p={}; ids.forEach(id=>p[id]=parseFloat($(id).value));
-    if(p.yG <= p.yB+5){ p.yG = p.yB+5; $('yG').value=p.yG; }
-    if(p.qH <= p.qL+0.02){ p.qH = Math.min(.95, p.qL+.02); $('qH').value=p.qH; }
-    if(p.wG < p.wMin){ p.wG=p.wMin; $('wG').value=p.wG; }
-    if(p.wB < p.wMin){ p.wB=p.wMin; $('wB').value=p.wB; }
+    const p={}; inputs.forEach(id=>p[id]=parseFloat($(id).value));
+    if(p.yG<=p.yB+5){p.yG=p.yB+5;$('yG').value=p.yG;}
+    if(p.qH<=p.qL+.03){p.qH=Math.min(.95,p.qL+.03);$('qH').value=p.qH;}
+    if(p.wB<p.wMin){p.wB=p.wMin;$('wB').value=p.wB;}
+    if(p.wG<p.wMin){p.wG=p.wMin;$('wG').value=p.wG;}
     return p;
   }
-  function u(w,p){ return Math.pow(Math.max(w,0), p.alpha); }
-  function invu(x,p){ return Math.pow(Math.max(x,0), 1/p.alpha); }
-  function EU(wB,wG,effort,p){ const q=effort==='H'?p.qH:p.qL; const cost=effort==='H'?p.c:0; return (1-q)*u(wB,p)+q*u(wG,p)-cost; }
-  function rev(effort,p){ const q=effort==='H'?p.qH:p.qL; return (1-q)*p.yB+q*p.yG; }
-  function wageCost(wB,wG,effort,p){ const q=effort==='H'?p.qH:p.qL; return (1-q)*wB+q*wG; }
-  function profit(wB,wG,effort,p){ return rev(effort,p)-wageCost(wB,wG,effort,p); }
+  function u(w,p){return Math.pow(Math.max(w,0),p.alpha);}
+  function invu(x,p){return Math.pow(Math.max(x,0),1/p.alpha);}
+  function eu(wB,wG,e,p){const q=e==='H'?p.qH:p.qL;return (1-q)*u(wB,p)+q*u(wG,p)-(e==='H'?p.c:0);}
+  function revenue(e,p){const q=e==='H'?p.qH:p.qL;return (1-q)*p.yB+q*p.yG;}
+  function wageCost(wB,wG,e,p){const q=e==='H'?p.qH:p.qL;return (1-q)*wB+q*wG;}
+  function profit(wB,wG,e,p){return revenue(e,p)-wageCost(wB,wG,e,p);}
+
   function solve(p){
     const xMin=u(p.wMin,p);
     const D=p.c/(p.qH-p.qL);
-    const xFBH=p.Ubar+p.c;
-    const wFBH=invu(Math.max(xFBH,xMin),p);
-    const fbH={wB:wFBH,wG:wFBH,EU:EU(wFBH,wFBH,'H',p),profit:profit(wFBH,wFBH,'H',p),xB:u(wFBH,p),xG:u(wFBH,p)};
-    const wFBL=invu(Math.max(p.Ubar,xMin),p);
-    const fbL={wB:wFBL,wG:wFBL,EU:EU(wFBL,wFBL,'L',p),profit:profit(wFBL,wFBL,'L',p),xB:u(wFBL,p),xG:u(wFBL,p)};
-    let best=null;
-    const maxX=Math.max(xFBH+D+8, xMin+D+10, u(Math.max(p.yG,160),p));
-    const N=2600;
+    const pc=x=>(p.Ubar+p.c-(1-p.qH)*x)/p.qH;
+    const ic=x=>x+D;
+    const xFB=Math.max(p.Ubar+p.c,xMin), wFB=invu(xFB,p);
+    const fb={x:xFB,z:xFB,wB:wFB,wG:wFB,EU:eu(wFB,wFB,'H',p),profit:profit(wFB,wFB,'H',p)};
+    const xFBL=Math.max(p.Ubar,xMin), wFBL=invu(xFBL,p);
+    const fbLow={x:xFBL,z:xFBL,wB:wFBL,wG:wFBL,EU:eu(wFBL,wFBL,'L',p),profit:profit(wFBL,wFBL,'L',p)};
+    const xMaxRaw=Math.max(xFB+D+8,u(Math.max(p.wB,p.wG,90),p)+D+4,xMin+D+8,12);
+    let best=null; const N=3000;
     for(let i=0;i<=N;i++){
-      const xB=xMin+(maxX-xMin)*i/N;
-      const xGpc=(p.Ubar+p.c-(1-p.qH)*xB)/p.qH;
-      const xG=Math.max(xMin, xB+D, xGpc);
-      const wB=invu(xB,p), wG=invu(xG,p);
-      const cost=wageCost(wB,wG,'H',p);
-      const pr=rev('H',p)-cost;
-      if(!best || cost<best.cost){ best={wB,wG,xB,xG,cost,profit:pr,EU:EU(wB,wG,'H',p),PC:EU(wB,wG,'H',p)-p.Ubar,IC:EU(wB,wG,'H',p)-EU(wB,wG,'L',p)}; }
+      const x=xMin+(xMaxRaw-xMin)*i/N;
+      const z=Math.max(pc(x),ic(x),xMin);
+      const wB=invu(x,p), wG=invu(z,p);
+      const cost=wageCost(wB,wG,'H',p), pr=revenue('H',p)-cost;
+      if(!best || cost<best.cost) best={x,z,wB,wG,cost,profit:pr,EU:eu(wB,wG,'H',p),pcSlack:eu(wB,wG,'H',p)-p.Ubar,icSlack:eu(wB,wG,'H',p)-eu(wB,wG,'L',p)};
     }
-    const manual={wB:p.wB,wG:p.wG,xB:u(p.wB,p),xG:u(p.wG,p),EUH:EU(p.wB,p.wG,'H',p),EUL:EU(p.wB,p.wG,'L',p)};
-    manual.PC=manual.EUH-p.Ubar; manual.IC=manual.EUH-manual.EUL; manual.induced = manual.IC>=-1e-8 ? 'H' : 'L'; manual.profitH=profit(p.wB,p.wG,'H',p); manual.profitL=profit(p.wB,p.wG,'L',p); manual.profit=profit(p.wB,p.wG,manual.induced,p);
-    return {D,fbH,fbL,sb:best,manual,deltaOutput:(p.qH-p.qL)*(p.yG-p.yB)};
+    const manual={wB:p.wB,wG:p.wG,x:u(p.wB,p),z:u(p.wG,p)};
+    manual.EUH=eu(p.wB,p.wG,'H',p); manual.EUL=eu(p.wB,p.wG,'L',p);
+    manual.pcSlack=manual.EUH-p.Ubar; manual.icSlack=manual.EUH-manual.EUL;
+    manual.induced=manual.icSlack>=-1e-9?'H':'L'; manual.EU=manual.induced==='H'?manual.EUH:manual.EUL; manual.profit=profit(p.wB,p.wG,manual.induced,p);
+    const highSurplus=revenue('H',p)-p.c, lowSurplus=revenue('L',p);
+    return {D,pc,ic,fb,fbLow,sb:best,manual,xMin,xmax:xMaxRaw,deltaOutput:(p.qH-p.qL)*(p.yG-p.yB),highSurplus,lowSurplus};
   }
 
   function updateLabels(p){
@@ -605,267 +353,169 @@
     $('v_wB').textContent=money(p.wB); $('v_wG').textContent=money(p.wG);
   }
 
-  function drawRelation(s,p){
-    const svg=$('svgRelation'), c=getThemeVars(); clear(svg); defs(svg);
-    svg.appendChild(rect(38,46,190,92,{fill:c.paper,stroke:c.accent,sw:2,rx:22}));
-    svg.appendChild(text(133,78,'PRINCIPAL',{anchor:'middle',size:18,weight:950,fill:c.accent}));
-    svg.appendChild(text(133,108,'designs contract w(y)',{anchor:'middle',size:13,fill:c.muted,weight:700}));
-    svg.appendChild(rect(412,46,190,92,{fill:c.paper,stroke:c.accent3,sw:2,rx:22}));
-    svg.appendChild(text(507,78,'AGENTE',{anchor:'middle',size:18,weight:950,fill:c.accent3}));
-    svg.appendChild(text(507,108,'chooses hidden effort a',{anchor:'middle',size:13,fill:c.muted,weight:700}));
-    svg.appendChild(line(230,92,410,92,{stroke:c.line2,width:2.8,'marker-end':'url(#arrow)'}));
-    svg.appendChild(text(320,68,'contract',{anchor:'middle',size:13,fill:c.muted,weight:900}));
-    svg.appendChild(rect(225,210,190,82,{fill:c.paper2,stroke:c.blue,sw:2,rx:22}));
-    svg.appendChild(text(320,238,'OUTCOME y',{anchor:'middle',size:18,weight:950,fill:c.blue}));
-    svg.appendChild(text(320,266,'observable and verifiable',{anchor:'middle',size:13,fill:c.muted,weight:700}));
-    svg.appendChild(path('M 500 140 C 510 205, 455 242, 418 250',{stroke:c.accent3,width:2.8,'marker-end':'url(#arrow)'}));
-    svg.appendChild(path('M 223 250 C 150 245, 105 202, 120 142',{stroke:c.blue,width:2.8,'marker-end':'url(#arrow)'}));
-    svg.appendChild(text(150,210,'profit: y-w(y)',{anchor:'middle',size:13,fill:c.muted,weight:900}));
-    svg.appendChild(text(498,210,'wage: w(y)',{anchor:'middle',size:13,fill:c.muted,weight:900}));
-    svg.appendChild(rect(180,314,280,34,{fill:'transparent',stroke:c.line,rx:14}));
-    svg.appendChild(text(320,331,'moral hazard: a is unobserved, y is observed',{anchor:'middle',size:13,fill:c.ink,weight:900}));
+  function chartScale(p,s,svg,W,H,L,R,T,B){
+    const PW=W-L-R, PH=H-T-B;
+    const xMax=Math.max(s.xmax,s.fb.x*1.20,s.sb.x*1.18,s.manual.x*1.25,10);
+    const zMax=Math.max(s.xmax,s.fb.z*1.20,s.sb.z*1.18,s.manual.z*1.25,10);
+    const X=x=>L+(x/xMax)*PW, Y=z=>T+PH-(z/zMax)*PH;
+    return {PW,PH,xMax,zMax,X,Y};
   }
 
-  function drawTimeline(s,p){
-    const svg=$('svgTimeline'), c=getThemeVars(); clear(svg); defs(svg);
-    const xs=[90,280,470,660,790], labels=['1','2','3','4','5'];
-    const titles=['Contract','Hidden action','Nature','Payment','Payoffs'];
-    const subs=['P offers w(y)','A chooses a','y is realized','w(y) is paid','P and A receive payoffs'];
-    svg.appendChild(line(xs[0],180,xs[4],180,{stroke:c.line2,width:3,'marker-end':'url(#arrow)'}));
-    xs.forEach((x,i)=>{
-      svg.appendChild(circle(x,180,24,{fill:i===1?c.accent3:i===2?c.blue:c.paper,stroke:i===1?c.accent3:i===2?c.blue:c.accent,sw:2}));
-      svg.appendChild(text(x,180,labels[i],{anchor:'middle',fill:i===1||i===2?'#fff':c.accent,size:15,weight:950}));
-      svg.appendChild(rect(x-76,66,152,72,{fill:c.paper,stroke:c.line,rx:18}));
-      svg.appendChild(text(x,91,titles[i],{anchor:'middle',size:15,weight:950,fill:c.ink}));
-      svg.appendChild(text(x,116,subs[i],{anchor:'middle',size:12,weight:800,fill:c.muted}));
-      if(i===1){
-        svg.appendChild(rect(x-92,228,184,44,{fill:'rgba(217,144,65,.10)',stroke:c.accent3,rx:16}));
-        svg.appendChild(text(x,250,'private information',{anchor:'middle',size:13,weight:950,fill:c.accent3}));
-      }
-    });
-    svg.appendChild(text(430,318,'The contract cannot depend directly on a; it can only depend on y.',{anchor:'middle',size:15,fill:c.muted,weight:800}));
+  function drawMain(p,s){
+    const svg=$('plot'), c=css(); clear(svg); defs(svg);
+    const W=920,H=610,L=84,R=36,T=38,B=74; const sc=chartScale(p,s,svg,W,H,L,R,T,B); const {X,Y,xMax,zMax,PW,PH}=sc;
+    for(let i=0;i<=5;i++){const x=L+PW*i/5,y=T+PH*i/5;svg.appendChild(line(x,T,x,T+PH,{stroke:c.grid,w:1}));svg.appendChild(line(L,y,L+PW,y,{stroke:c.grid,w:1}));}
+    svg.appendChild(line(L,T+PH,L+PW,T+PH,{stroke:c.ink,w:1.7})); svg.appendChild(line(L,T,L,T+PH,{stroke:c.ink,w:1.7}));
+    svg.appendChild(text(L+PW/2,H-28,'bad-state utility  x = u(wB)',{anchor:'middle',fill:c.muted,size:14,weight:850}));
+    svg.appendChild(text(25,T+PH/2,'good-state utility  z = u(wG)',{anchor:'middle',fill:c.muted,size:14,weight:850,transform:`rotate(-90 25 ${T+PH/2})`}));
+    [0,.25,.5,.75,1].forEach(t=>{svg.appendChild(text(L+PW*t,T+PH+20,fmt(xMax*t,1),{anchor:'middle',fill:c.faint,size:11,weight:750})); if(t>0)svg.appendChild(text(L-12,T+PH-PH*t,fmt(zMax*t,1),{anchor:'end',fill:c.faint,size:11,weight:750}));});
+    const xs=[]; for(let i=0;i<=280;i++) xs.push(xMax*i/280);
+    const boundary=xs.map(x=>[x,Math.max(s.pc(x),s.ic(x),s.xMin)]).filter(d=>d[1]<=zMax && d[0]>=s.xMin);
+    if(boundary.length){let d=`M ${X(s.xMin)} ${Y(zMax)} L ${X(xMax)} ${Y(zMax)}`; const last=boundary[boundary.length-1]; d+=` L ${X(last[0])} ${Y(last[1])}`; for(let i=boundary.length-2;i>=0;i--) d+=` L ${X(boundary[i][0])} ${Y(boundary[i][1])}`; d+=' Z'; svg.appendChild(path(d,{fill:'url(#shade)',stroke:'none'}));}
+    function drawCurve(fn,color,label,shift=0){let d='',started=false,last=null; xs.forEach(x=>{const z=fn(x); if(z>=0&&z<=zMax){d+=(started?' L':'M')+` ${X(x)} ${Y(z)}`; started=true; last=[x,z];}}); if(started){svg.appendChild(path(d,{stroke:color,w:3})); if(last) svg.appendChild(text(X(last[0])-8,Y(last[1])+shift,label,{anchor:'end',fill:color,size:13,weight:950}));}}
+    drawCurve(s.pc,c.pc,'PC',-14); drawCurve(s.ic,c.ic,'IC',18);
+    svg.appendChild(path(`M ${X(0)} ${Y(0)} L ${X(Math.min(xMax,zMax))} ${Y(Math.min(xMax,zMax))}`,{stroke:c.lineStrong,w:1.7,'stroke-dasharray':'7 7'}));
+    svg.appendChild(text(X(Math.min(xMax,zMax)*.68),Y(Math.min(xMax,zMax)*.68)+22,'full insurance',{fill:c.muted,size:12,weight:850}));
+    if(s.xMin>0){svg.appendChild(line(X(s.xMin),T,X(s.xMin),T+PH,{stroke:c.violet,w:1.5,'stroke-dasharray':'4 7'})); svg.appendChild(line(L,Y(s.xMin),L+PW,Y(s.xMin),{stroke:c.violet,w:1.5,'stroke-dasharray':'4 7'})); svg.appendChild(text(X(s.xMin)+8,T+16,'limited liability',{fill:c.violet,size:11,weight:850}));}
+    function point(x,z,color,label,dx=10,dy=-12){svg.appendChild(circle(X(x),Y(z),7.5,{fill:color,stroke:c.paper,sw:3})); svg.appendChild(text(X(x)+dx,Y(z)+dy,label,{fill:color,size:13,weight:950}));}
+    point(s.fb.x,s.fb.z,c.fb,'FB'); point(s.sb.x,s.sb.z,c.ic,'SB'); point(s.manual.x,s.manual.z,c.manual,'manual');
   }
 
-  function drawTree(s,p){
-    const svg=$('svgTree'), c=getThemeVars(); clear(svg); defs(svg);
-    const root={x:90,y:180}, agent={x:260,y:180}, low={x:455,y:95}, high={x:455,y:265}, outcomes=[[680,55,'y_B','w_B'],[680,135,'y_G','w_G'],[680,225,'y_B','w_B'],[680,305,'y_G','w_G']];
-    svg.appendChild(circle(root.x,root.y,28,{fill:c.paper,stroke:c.accent,sw:2.5}));
-    svg.appendChild(text(root.x,root.y,'P',{anchor:'middle',size:18,weight:950,fill:c.accent}));
-    svg.appendChild(text(root.x,132,'oferece w(y)',{anchor:'middle',size:13,weight:900,fill:c.muted}));
-    svg.appendChild(line(root.x+28,root.y,agent.x-28,agent.y,{stroke:c.accent,width:2.4,'marker-end':'url(#arrow)'}));
-    svg.appendChild(circle(agent.x,agent.y,28,{fill:c.paper,stroke:c.accent3,sw:2.5}));
-    svg.appendChild(text(agent.x,agent.y,'A',{anchor:'middle',size:18,weight:950,fill:c.accent3}));
-    svg.appendChild(text(agent.x,132,'escolhe a',{anchor:'middle',size:13,weight:900,fill:c.muted}));
-    svg.appendChild(line(agent.x+25,agent.y-8,low.x-28,low.y,{stroke:c.accent3,width:2.4,'marker-end':'url(#arrow)'}));
-    svg.appendChild(line(agent.x+25,agent.y+8,high.x-28,high.y,{stroke:c.accent3,width:2.4,'marker-end':'url(#arrow)'}));
-    svg.appendChild(text(350,116,'low',{anchor:'middle',size:12,fill:c.muted,weight:900}));
-    svg.appendChild(text(350,242,'high',{anchor:'middle',size:12,fill:c.muted,weight:900}));
-    [low,high].forEach((n,i)=>{ svg.appendChild(circle(n.x,n.y,25,{fill:c.paper,stroke:c.blue,sw:2.2})); svg.appendChild(text(n.x,n.y,'N',{anchor:'middle',size:16,weight:950,fill:c.blue})); svg.appendChild(text(n.x,n.y+40,i?'prob. q_H':'prob. q_L',{anchor:'middle',size:12,fill:c.muted,weight:900})); });
-    svg.appendChild(line(low.x+25,low.y-8,outcomes[0][0]-62,outcomes[0][1],{stroke:c.blue,width:2.2,'marker-end':'url(#arrow)'}));
-    svg.appendChild(line(low.x+25,low.y+8,outcomes[1][0]-62,outcomes[1][1],{stroke:c.blue,width:2.2,'marker-end':'url(#arrow)'}));
-    svg.appendChild(line(high.x+25,high.y-8,outcomes[2][0]-62,outcomes[2][1],{stroke:c.blue,width:2.2,'marker-end':'url(#arrow)'}));
-    svg.appendChild(line(high.x+25,high.y+8,outcomes[3][0]-62,outcomes[3][1],{stroke:c.blue,width:2.2,'marker-end':'url(#arrow)'}));
-    outcomes.forEach((o,i)=>{
-      svg.appendChild(rect(o[0]-60,o[1]-24,120,48,{fill:c.paper2,stroke:c.line,rx:14}));
-      svg.appendChild(text(o[0],o[1]-6,o[2]+' → '+o[3],{anchor:'middle',size:13,weight:950,fill:c.ink}));
-      const pr = i%2===0 ? (i<2?1-p.qL:1-p.qH) : (i<2?p.qL:p.qH);
-      svg.appendChild(text(o[0],o[1]+14,pct(pr),{anchor:'middle',size:12,weight:800,fill:c.muted}));
-    });
+  function drawMiniConstraint(svgId,p,s,type){
+    const svg=$(svgId), c=css(); clear(svg); defs(svg);
+    const W=620,H=310,L=64,R=22,T=28,B=54, PW=W-L-R, PH=H-T-B;
+    const xMax=Math.max(s.xmax,s.sb.x*1.25,s.manual.x*1.25,10), zMax=xMax;
+    const X=x=>L+(x/xMax)*PW, Y=z=>T+PH-(z/zMax)*PH;
+    for(let i=0;i<=3;i++){svg.appendChild(line(L+PW*i/3,T,L+PW*i/3,T+PH,{stroke:c.grid,w:1}));svg.appendChild(line(L,T+PH-PH*i/3,L+PW,T+PH-PH*i/3,{stroke:c.grid,w:1}));}
+    svg.appendChild(line(L,T+PH,L+PW,T+PH,{stroke:c.ink,w:1.3})); svg.appendChild(line(L,T,L,T+PH,{stroke:c.ink,w:1.3}));
+    const xs=[]; for(let i=0;i<=180;i++) xs.push(xMax*i/180);
+    const fn=type==='pc'?s.pc:s.ic, color=type==='pc'?c.pc:c.ic, label=type==='pc'?'PC':'IC';
+    let d='',started=false; xs.forEach(x=>{const z=fn(x); if(z>=0&&z<=zMax){d+=(started?' L':'M')+` ${X(x)} ${Y(z)}`; started=true;}}); if(started) svg.appendChild(path(d,{stroke:color,w:3}));
+    svg.appendChild(circle(X(s.manual.x),Y(s.manual.z),7,{fill:c.manual,stroke:c.paper,sw:3})); svg.appendChild(text(X(s.manual.x)+10,Y(s.manual.z)-12,'manual',{fill:c.manual,size:12,weight:950}));
+    svg.appendChild(circle(X(s.sb.x),Y(s.sb.z),7,{fill:c.ic,stroke:c.paper,sw:3})); svg.appendChild(text(X(s.sb.x)+10,Y(s.sb.z)+14,'SB',{fill:c.ic,size:12,weight:950}));
+    svg.appendChild(text(W/2,20,label+' margin',{anchor:'middle',fill:color,size:13,weight:950}));
   }
 
-  function drawContractSpace(s,p){
-    const svg=$('svgContract'), c=getThemeVars(); clear(svg); defs(svg);
-    const W=760,H=520, L=72,R=28,T=38,B=64, pw=W-L-R, ph=H-T-B;
-    const xMax=Math.max(s.sb.xG*1.18, s.fbH.xG*1.35, s.manual.xG*1.25, s.manual.xB*1.25, p.Ubar+p.c+s.D+2, 2);
-    const yMax=xMax;
-    const X=x=>L+(x/xMax)*pw, Y=y=>T+ph-(y/yMax)*ph;
-    for(let i=0;i<=5;i++){
-      const x=L+pw*i/5, y=T+ph*i/5;
-      svg.appendChild(line(x,T,x,T+ph,{stroke:c.grid,width:1}));
-      svg.appendChild(line(L,y,L+pw,y,{stroke:c.grid,width:1}));
-    }
-    svg.appendChild(line(L,T+ph,L+pw,T+ph,{stroke:c.ink,width:1.7}));
-    svg.appendChild(line(L,T,L,T+ph,{stroke:c.ink,width:1.7}));
-    svg.appendChild(text(L+pw/2,H-22,'utility in the low outcome: u(w_B)',{anchor:'middle',size:13,fill:c.muted,weight:900}));
-    svg.appendChild(text(18,T+ph/2,'u(w_G)',{anchor:'middle',size:13,fill:c.muted,weight:900,transform:`rotate(-90 18 ${T+ph/2})`}));
-    const D=s.D;
-    const pcY=x=>(p.Ubar+p.c-(1-p.qH)*x)/p.qH;
-    const icY=x=>x+D;
-    const xs=[]; for(let i=0;i<=160;i++) xs.push(xMax*i/160);
-    const feas=[];
-    xs.forEach(x=>{ const y=Math.max(pcY(x),icY(x),0); if(y<=yMax) feas.push([X(x),Y(y)]); });
-    if(feas.length){
-      let d=`M ${X(0)} ${Y(yMax)} L ${X(xMax)} ${Y(yMax)} L ${feas[feas.length-1][0]} ${feas[feas.length-1][1]}`;
-      for(let i=feas.length-2;i>=0;i--) d+=` L ${feas[i][0]} ${feas[i][1]}`;
-      d+=' Z'; svg.appendChild(path(d,{fill:'url(#feasibleGrad)',stroke:'none'}));
-    }
-    function drawCurve(fn,color,label,dy=0){
-      let d=''; let first=true;
-      xs.forEach(x=>{ const y=fn(x); if(y>=0 && y<=yMax){ d+=(first?'M':' L')+` ${X(x)} ${Y(y)}`; first=false; }});
-      svg.appendChild(path(d,{stroke:color,width:3}));
-      const lx=xMax*.58, ly=fn(lx);
-      if(ly>0 && ly<yMax) svg.appendChild(text(X(lx)+8,Y(ly)+dy,label,{size:13,fill:color,weight:950}));
-    }
-    drawCurve(pcY,c.good,'PC'); drawCurve(icY,c.accent3,'IC',-12);
-    svg.appendChild(path(`M ${X(0)} ${Y(0)} L ${X(xMax)} ${Y(xMax)}`,{stroke:c.line2,width:1.6,'stroke-dasharray':'6 6'}));
-    svg.appendChild(text(X(xMax*.72),Y(xMax*.72)+18,'full insurance',{size:12,fill:c.muted,weight:900}));
-    function point(x,y,color,label,anchor='start'){
-      svg.appendChild(circle(X(x),Y(y),7,{fill:color,stroke:c.paper,sw:2.5}));
-      svg.appendChild(text(X(x)+10,Y(y)-12,label,{size:13,fill:color,weight:950,anchor}));
-    }
-    point(s.fbH.xB,s.fbH.xG,c.blue,'FB'); point(s.sb.xB,s.sb.xG,c.accent3,'SB'); point(s.manual.xB,s.manual.xG,c.danger,'manual');
-    [0,.25,.5,.75,1].forEach(t=>{
-      const v=xMax*t;
-      svg.appendChild(text(X(v),T+ph+18,fmt(v,1),{anchor:'middle',size:11,fill:c.muted,weight:700}));
-      if(t>0) svg.appendChild(text(L-12,Y(v),fmt(v,1),{anchor:'end',size:11,fill:c.muted,weight:700}));
-    });
+  function drawBinding(p,s){
+    const svg=$('svgBinding'), c=css(); clear(svg);
+    const margins=[['PC slack',s.sb.pcSlack,c.pc],['IC slack',s.sb.icSlack,c.ic],['LL gap',Math.min(s.sb.x-s.xMin,s.sb.z-s.xMin),c.violet]];
+    const max=Math.max(1,...margins.map(m=>Math.abs(m[1])))*1.15;
+    const L=115,W=360,H=26;
+    const X=v=>L+W*(v+max)/(2*max);
+    margins.forEach((m,i)=>{const y=72+i*70, ok=m[1]>1e-3; svg.appendChild(text(28,y+H/2,m[0],{fill:c.ink,size:13,weight:900})); svg.appendChild(rect(L,y,W,H,{fill:c.paper,stroke:c.line,rx:13})); svg.appendChild(line(X(0),y-6,X(0),y+H+6,{stroke:c.ink,w:1.4,'stroke-dasharray':'4 5'})); const x0=Math.min(X(0),X(m[1])), bw=Math.abs(X(m[1])-X(0)); svg.appendChild(rect(x0,y,bw,H,{fill:m[2],stroke:'none',rx:13,opacity:.82})); svg.appendChild(circle(X(m[1]),y+H/2,7,{fill:m[2],stroke:c.paper,sw:2})); svg.appendChild(text(L+W+18,y+H/2,fmt(m[1],2),{fill:m[2],size:13,weight:950}));});
+    svg.appendChild(text(310,286,'Near zero means the restriction is locally binding.',{anchor:'middle',fill:c.muted,size:12,weight:850}));
   }
 
-  function drawInequalities(s,p){
-    const svg=$('svgInequalities'), c=getThemeVars(); clear(svg); defs(svg);
-    const manual=s.manual;
-    const pcVal=manual.EUH, pcReq=p.Ubar, icVal=manual.EUH-manual.EUL, icReq=0;
-    function bar(y,title,val,req,goodWhenAbove=true){
-      const L=70,W=560,H=28;
-      const max=Math.max(Math.abs(val),Math.abs(req),p.Ubar+p.c+s.D,1)*1.25;
-      const zero=L+W*(0+max)/(2*max);
-      const X=v=>L+W*(v+max)/(2*max);
-      svg.appendChild(text(54,y-22,title,{size:14,fill:c.ink,weight:950}));
-      svg.appendChild(rect(L,y,W,H,{fill:c.paper2,stroke:c.line,rx:14}));
-      svg.appendChild(line(X(req),y-8,X(req),y+H+8,{stroke:c.ink,width:2,'stroke-dasharray':'5 5'}));
-      svg.appendChild(text(X(req),y+H+24,'limite',{anchor:'middle',size:11,fill:c.muted,weight:900}));
-      const x0=Math.min(zero,X(val)), bw=Math.abs(X(val)-zero);
-      svg.appendChild(rect(x0,y,bw,H,{fill:(val>=req?c.good:c.danger),stroke:'none',rx:14,opacity:.85}));
-      svg.appendChild(circle(X(val),y+H/2,8,{fill:(val>=req?c.good:c.danger),stroke:c.paper,sw:2}));
-      svg.appendChild(text(L+W+18,y+H/2,fmt(val,2),{size:15,fill:(val>=req?c.good:c.danger),weight:950}));
-    }
-    bar(92,'PC: agent expected utility under high effort',pcVal,pcReq);
-    bar(220,'IC: net gain from choosing high effort',icVal,icReq);
-    svg.appendChild(text(380,328,'If the bar does not cross the threshold, the constraint fails.',{anchor:'middle',size:13,fill:c.muted,weight:800}));
+  function drawRelation(p,s){
+    const svg=$('svgRelation'), c=css(); clear(svg); defs(svg);
+    svg.appendChild(rect(35,60,150,72,{fill:c.paper,stroke:c.pc,sw:2,rx:20})); svg.appendChild(text(110,88,'Principal',{anchor:'middle',fill:c.pc,size:16,weight:950})); svg.appendChild(text(110,111,'chooses w(y)',{anchor:'middle',fill:c.muted,size:11,weight:850}));
+    svg.appendChild(rect(432,60,150,72,{fill:c.paper,stroke:c.ic,sw:2,rx:20})); svg.appendChild(text(507,88,'Agent',{anchor:'middle',fill:c.ic,size:16,weight:950})); svg.appendChild(text(507,111,'chooses hidden a',{anchor:'middle',fill:c.muted,size:11,weight:850}));
+    svg.appendChild(line(190,96,427,96,{stroke:c.lineStrong,w:2.4,'marker-end':'url(#arrow)'})); svg.appendChild(text(309,72,'contract',{anchor:'middle',fill:c.muted,size:12,weight:900}));
+    svg.appendChild(rect(235,205,150,58,{fill:c.paper,stroke:c.fb,sw:2,rx:18})); svg.appendChild(text(310,228,'Outcome y',{anchor:'middle',fill:c.fb,size:16,weight:950})); svg.appendChild(text(310,248,'verifiable',{anchor:'middle',fill:c.muted,size:11,weight:850}));
+    svg.appendChild(path('M 502 134 C 520 187, 440 222, 389 234',{stroke:c.ic,w:2.4,'marker-end':'url(#arrow)'})); svg.appendChild(path('M 230 234 C 145 226, 104 180, 108 136',{stroke:c.fb,w:2.4,'marker-end':'url(#arrow)'}));
+    svg.appendChild(text(310,286,'asymmetry: a is hidden, y is observed',{anchor:'middle',fill:c.muted,size:12,weight:900}));
   }
 
-  function drawFBvsSB(s,p){
-    const svg=$('svgFBvsSB'), c=getThemeVars(); clear(svg); defs(svg);
-    const vals=[{name:'First-best high',v:s.fbH.profit,col:c.blue},{name:'Second-best',v:s.sb.profit,col:c.accent3},{name:'Manual',v:s.manual.profit,col:c.danger},{name:'First-best low',v:s.fbL.profit,col:c.good}];
-    const max=Math.max(...vals.map(d=>Math.abs(d.v)),1)*1.15;
-    const L=80,B=315,T=35,W=620,H=260;
-    svg.appendChild(line(L,T,L,B,{stroke:c.ink,width:1.5})); svg.appendChild(line(L,B,L+W,B,{stroke:c.ink,width:1.5}));
-    vals.forEach((d,i)=>{
-      const bw=92, gap=55, x=L+45+i*(bw+gap);
-      const h=(Math.max(0,d.v)/max)*H;
-      svg.appendChild(rect(x,B-h,bw,h,{fill:d.col,stroke:'none',rx:14,opacity:.88}));
-      svg.appendChild(text(x+bw/2,B-h-16,fmt(d.v,1),{anchor:'middle',size:14,fill:d.col,weight:950}));
-      const words=d.name.split(' ');
-      svg.appendChild(text(x+bw/2,B+22,words[0],{anchor:'middle',size:12,fill:c.muted,weight:900}));
-      svg.appendChild(text(x+bw/2,B+38,words.slice(1).join(' '),{anchor:'middle',size:12,fill:c.muted,weight:900}));
-    });
-    svg.appendChild(text(24,170,'expected profit',{anchor:'middle',size:13,fill:c.muted,weight:900,transform:'rotate(-90 24 170)'}));
+  function drawTimeline(p,s){
+    const svg=$('svgTimeline'), c=css(); clear(svg); defs(svg);
+    const xs=[70,185,310,435,552], labs=['Contract','Action','Nature','Payment','Payoffs'], sub=['P offers','A privately chooses','y is realized','w(y) paid','Ï€ and U'];
+    svg.appendChild(line(xs[0],150,xs[4],150,{stroke:c.lineStrong,w:2.5,'marker-end':'url(#arrow)'}));
+    xs.forEach((x,i)=>{const col=i===1?c.ic:(i===2?c.fb:c.pc); svg.appendChild(circle(x,150,20,{fill:i===1||i===2?col:c.paper,stroke:col,sw:2})); svg.appendChild(text(x,150,String(i+1),{anchor:'middle',fill:i===1||i===2?'#fff':col,size:13,weight:950})); svg.appendChild(text(x,95,labs[i],{anchor:'middle',fill:c.ink,size:12,weight:950})); svg.appendChild(text(x,116,sub[i],{anchor:'middle',fill:c.muted,size:10.5,weight:800}));});
+    svg.appendChild(rect(120,195,130,38,{fill:'transparent',stroke:c.ic,rx:15})); svg.appendChild(text(185,214,'not contractible',{anchor:'middle',fill:c.ic,size:12,weight:950}));
   }
 
-  function drawProb(s,p){
-    const svg=$('svgProb'), c=getThemeVars(); clear(svg); defs(svg);
-    const L=75,B=295,H=220,W=420;
-    svg.appendChild(line(L,55,L,B,{stroke:c.ink,width:1.5})); svg.appendChild(line(L,B,L+W,B,{stroke:c.ink,width:1.5}));
-    [{name:'low effort',q:p.qL,col:c.line2},{name:'high effort',q:p.qH,col:c.accent3}].forEach((d,i)=>{
-      const x=L+80+i*170, bw=80, h=d.q*H;
-      svg.appendChild(rect(x,B-h,bw,h,{fill:d.col,stroke:'none',rx:13,opacity:.9}));
-      svg.appendChild(text(x+bw/2,B-h-16,pct(d.q),{anchor:'middle',size:16,fill:d.col===c.line2?c.ink:d.col,weight:950}));
-      svg.appendChild(text(x+bw/2,B+24,d.name,{anchor:'middle',size:12,fill:c.muted,weight:900}));
-    });
-    svg.appendChild(path(`M ${L+160} ${B-p.qL*H} C ${L+215} ${B-p.qL*H-55}, ${L+220} ${B-p.qH*H+55}, ${L+250} ${B-p.qH*H}`,{stroke:c.accent,width:3,'marker-end':'url(#arrow)'}));
-    svg.appendChild(text(428,85,'Δq = '+pct(p.qH-p.qL),{anchor:'middle',size:15,fill:c.accent,weight:950}));
-    svg.appendChild(text(300,32,'Probability of the good outcome',{anchor:'middle',size:14,fill:c.muted,weight:900}));
+  function drawTree(p,s){
+    const svg=$('svgTree'), c=css(); clear(svg); defs(svg);
+    const A={x:88,y:150}, B={x:220,y:150}, L={x:350,y:92}, H={x:350,y:208};
+    svg.appendChild(circle(A.x,A.y,21,{fill:c.paper,stroke:c.pc,sw:2})); svg.appendChild(text(A.x,A.y,'P',{anchor:'middle',fill:c.pc,size:14,weight:950}));
+    svg.appendChild(line(A.x+22,A.y,B.x-22,B.y,{stroke:c.pc,w:2,'marker-end':'url(#arrow)'}));
+    svg.appendChild(circle(B.x,B.y,21,{fill:c.paper,stroke:c.ic,sw:2})); svg.appendChild(text(B.x,B.y,'A',{anchor:'middle',fill:c.ic,size:14,weight:950}));
+    svg.appendChild(line(B.x+20,B.y-6,L.x-20,L.y,{stroke:c.ic,w:2,'marker-end':'url(#arrow)'})); svg.appendChild(line(B.x+20,B.y+6,H.x-20,H.y,{stroke:c.ic,w:2,'marker-end':'url(#arrow)'}));
+    [[L,'low effort'],[H,'high effort']].forEach(([n,lab])=>{svg.appendChild(circle(n.x,n.y,19,{fill:c.paper,stroke:c.fb,sw:2})); svg.appendChild(text(n.x,n.y,'N',{anchor:'middle',fill:c.fb,size:13,weight:950})); svg.appendChild(text(n.x,n.y+34,lab,{anchor:'middle',fill:c.muted,size:10.5,weight:850}));});
+    const outs=[[500,48,'bad',1-p.qL],[500,122,'good',p.qL],[500,188,'bad',1-p.qH],[500,262,'good',p.qH]];
+    svg.appendChild(line(L.x+19,L.y-5,440,48,{stroke:c.fb,w:1.8,'marker-end':'url(#arrow)'})); svg.appendChild(line(L.x+19,L.y+5,440,122,{stroke:c.fb,w:1.8,'marker-end':'url(#arrow)'}));
+    svg.appendChild(line(H.x+19,H.y-5,440,188,{stroke:c.fb,w:1.8,'marker-end':'url(#arrow)'})); svg.appendChild(line(H.x+19,H.y+5,440,262,{stroke:c.fb,w:1.8,'marker-end':'url(#arrow)'}));
+    outs.forEach(o=>{svg.appendChild(rect(o[0]-42,o[1]-18,92,36,{fill:c.paper,stroke:c.line,rx:12})); svg.appendChild(text(o[0]+4,o[1]-5,o[2],{anchor:'middle',fill:c.ink,size:11.5,weight:950})); svg.appendChild(text(o[0]+4,o[1]+10,pct(o[3]),{anchor:'middle',fill:c.muted,size:10,weight:800}));});
   }
 
-  function drawWages(s,p){
-    const svg=$('svgWages'), c=getThemeVars(); clear(svg); defs(svg);
-    const rows=[{name:'FB',wB:s.fbH.wB,wG:s.fbH.wG,col:c.blue},{name:'SB',wB:s.sb.wB,wG:s.sb.wG,col:c.accent3},{name:'Manual',wB:p.wB,wG:p.wG,col:c.danger}];
-    const max=Math.max(...rows.flatMap(r=>[r.wB,r.wG]),1)*1.18;
-    const L=110,B=300,H=220,group=155,bw=36;
-    svg.appendChild(line(70,60,70,B,{stroke:c.ink,width:1.4})); svg.appendChild(line(70,B,560,B,{stroke:c.ink,width:1.4}));
-    rows.forEach((r,i)=>{
-      const x=L+i*group;
-      [['low',r.wB,c.line2],['high',r.wG,r.col]].forEach((b,j)=>{
-        const h=b[1]/max*H;
-        svg.appendChild(rect(x+j*48,B-h,bw,h,{fill:b[2],stroke:'none',rx:10,opacity:.9}));
-        svg.appendChild(text(x+j*48+bw/2,B-h-12,money(b[1]),{anchor:'middle',size:11,fill:b[2]===c.line2?c.ink:b[2],weight:950}));
-      });
-      svg.appendChild(text(x+42,B+24,r.name,{anchor:'middle',size:13,fill:r.col,weight:950}));
-    });
-    svg.appendChild(text(312,34,'Wages by state of the world',{anchor:'middle',size:14,fill:c.muted,weight:900}));
-    svg.appendChild(text(435,330,'gray = low outcome; colored = high outcome',{anchor:'middle',size:11,fill:c.muted,weight:800}));
+  function drawProfit(p,s){
+    const svg=$('svgProfit'), c=css(); clear(svg);
+    const vals=[['FB high',s.fb.profit,c.fb],['SB high',s.sb.profit,c.ic],['Manual',s.manual.profit,c.manual],['FB low',s.fbLow.profit,c.pc]];
+    const max=Math.max(1,...vals.map(v=>Math.max(0,v[1])))*1.18; const L=70,B=300,T=38,W=620,H=242;
+    svg.appendChild(line(L,T,L,B,{stroke:c.ink,w:1.4})); svg.appendChild(line(L,B,L+W,B,{stroke:c.ink,w:1.4}));
+    vals.forEach((d,i)=>{const bw=84,x=L+38+i*145,h=Math.max(0,d[1])/max*H; svg.appendChild(rect(x,B-h,bw,h,{fill:d[2],stroke:'none',rx:12,opacity:.9})); svg.appendChild(text(x+bw/2,B-h-14,fmt(d[1],1),{anchor:'middle',fill:d[2],size:13,weight:950})); svg.appendChild(text(x+bw/2,B+22,d[0],{anchor:'middle',fill:c.muted,size:12,weight:900}));});
   }
 
-  function drawTradeoff(s,p){
-    const svg=$('svgTradeoff'), c=getThemeVars(); clear(svg); defs(svg);
-    const cx=310, cy=178, r=115;
-    svg.appendChild(circle(cx,cy,r,{fill:'transparent',stroke:c.line,width:1.5}));
-    svg.appendChild(path(`M ${cx-r} ${cy} C ${cx-55} ${cy-115}, ${cx+55} ${cy+115}, ${cx+r} ${cy}`,{stroke:c.accent,width:4,fill:'none'}));
-    svg.appendChild(circle(cx-r,cy,9,{fill:c.blue,stroke:c.paper,sw:2})); svg.appendChild(text(cx-r,cy-24,'insurance',{anchor:'middle',size:13,fill:c.blue,weight:950}));
-    svg.appendChild(circle(cx+r,cy,9,{fill:c.accent3,stroke:c.paper,sw:2})); svg.appendChild(text(cx+r,cy-24,'incentives',{anchor:'middle',size:13,fill:c.accent3,weight:950}));
-    const slopeManual=Math.max(0,u(p.wG,p)-u(p.wB,p));
-    const slopeReq=s.D;
-    const pos=clamp(slopeManual/(Math.max(slopeReq*1.8,0.1)),0,1);
-    const x=(cx-r)+(2*r)*pos; const y=cy - Math.sin(pos*Math.PI)*70 + (pos-.5)*30;
-    svg.appendChild(circle(x,y,11,{fill:c.danger,stroke:c.paper,sw:3})); svg.appendChild(text(x,y+26,'manual',{anchor:'middle',size:12,fill:c.danger,weight:950}));
-    const posSB=clamp((s.sb.xG-s.sb.xB)/(Math.max(slopeReq*1.8,0.1)),0,1);
-    const xsb=(cx-r)+(2*r)*posSB; const ysb=cy - Math.sin(posSB*Math.PI)*70 + (posSB-.5)*30;
-    svg.appendChild(circle(xsb,ysb,9,{fill:c.accent3,stroke:c.paper,sw:3})); svg.appendChild(text(xsb,ysb-22,'SB',{anchor:'middle',size:12,fill:c.accent3,weight:950}));
-    svg.appendChild(text(cx,42,'The contract moves between insurance and incentives',{anchor:'middle',size:14,fill:c.muted,weight:900}));
-    svg.appendChild(text(cx,322,'required utility gap: '+fmt(s.D,2),{anchor:'middle',size:12,fill:c.muted,weight:800}));
+  function drawProb(p,s){
+    const svg=$('svgProb'), c=css(); clear(svg); const L=82,B=270,H=190; svg.appendChild(line(L,56,L,B,{stroke:c.ink,w:1.4})); svg.appendChild(line(L,B,545,B,{stroke:c.ink,w:1.4}));
+    [['low effort',p.qL,c.lineStrong],['high effort',p.qH,c.ic]].forEach((d,i)=>{const x=150+i*190,bw=84,h=d[1]*H; svg.appendChild(rect(x,B-h,bw,h,{fill:d[2],stroke:'none',rx:12,opacity:.9})); svg.appendChild(text(x+bw/2,B-h-16,pct(d[1]),{anchor:'middle',fill:i?c.ic:c.ink,size:15,weight:950})); svg.appendChild(text(x+bw/2,B+22,d[0],{anchor:'middle',fill:c.muted,size:12,weight:900}));});
+    svg.appendChild(text(310,30,'Probability of the good outcome',{anchor:'middle',fill:c.muted,size:13,weight:900}));
   }
 
-  function fillTable(s,p){
-    const rows=[
-      ['First-best high',s.fbH.wB,s.fbH.wG,s.fbH.EU,s.fbH.profit],
-      ['Second-best',s.sb.wB,s.sb.wG,s.sb.EU,s.sb.profit],
-      ['Manual',p.wB,p.wG,s.manual.induced==='H'?s.manual.EUH:s.manual.EUL,s.manual.profit],
-      ['First-best low',s.fbL.wB,s.fbL.wG,s.fbL.EU,s.fbL.profit]
-    ];
+  function drawWages(p,s){
+    const svg=$('svgWages'), c=css(); clear(svg); const rows=[['FB',s.fb.wB,s.fb.wG,c.fb],['SB',s.sb.wB,s.sb.wG,c.ic],['Manual',p.wB,p.wG,c.manual]];
+    const max=Math.max(1,...rows.flatMap(r=>[r[1],r[2]]))*1.18; const L=76,B=270,H=190; svg.appendChild(line(L,56,L,B,{stroke:c.ink,w:1.4})); svg.appendChild(line(L,B,552,B,{stroke:c.ink,w:1.4}));
+    rows.forEach((r,i)=>{const x=132+i*150; [['B',r[1],c.lineStrong],['G',r[2],r[3]]].forEach((b,j)=>{const h=b[1]/max*H; svg.appendChild(rect(x+j*48,B-h,34,h,{fill:b[2],stroke:'none',rx:9,opacity:.9})); svg.appendChild(text(x+j*48+17,B-h-10,money(b[1]),{anchor:'middle',fill:j?r[3]:c.ink,size:10,weight:950}));}); svg.appendChild(text(x+41,B+22,r[0],{anchor:'middle',fill:r[3],size:12,weight:950}));});
+    svg.appendChild(text(310,30,'Wages by realized outcome',{anchor:'middle',fill:c.muted,size:13,weight:900}));
+  }
+
+  function drawTradeoff(p,s){
+    const svg=$('svgTradeoff'), c=css(); clear(svg); const cx=310,cy=150,r=105;
+    svg.appendChild(path(`M ${cx-r} ${cy} C ${cx-60} ${cy-95}, ${cx+60} ${cy+95}, ${cx+r} ${cy}`,{stroke:c.lineStrong,w:2}));
+    svg.appendChild(circle(cx-r,cy,8,{fill:c.fb,stroke:c.paper,sw:2})); svg.appendChild(text(cx-r,cy-24,'insurance',{anchor:'middle',fill:c.fb,size:12,weight:950}));
+    svg.appendChild(circle(cx+r,cy,8,{fill:c.ic,stroke:c.paper,sw:2})); svg.appendChild(text(cx+r,cy-24,'incentives',{anchor:'middle',fill:c.ic,size:12,weight:950}));
+    const denom=Math.max(s.D*1.8,.1); const pos=clamp(Math.max(0,s.manual.z-s.manual.x)/denom,0,1); const x=(cx-r)+2*r*pos,y=cy-Math.sin(pos*Math.PI)*60+(pos-.5)*20;
+    svg.appendChild(circle(x,y,9,{fill:c.manual,stroke:c.paper,sw:3})); svg.appendChild(text(x,y+24,'manual',{anchor:'middle',fill:c.manual,size:12,weight:950}));
+    const posSB=clamp((s.sb.z-s.sb.x)/denom,0,1), xs=(cx-r)+2*r*posSB, ys=cy-Math.sin(posSB*Math.PI)*60+(posSB-.5)*20;
+    svg.appendChild(circle(xs,ys,8,{fill:c.ic,stroke:c.paper,sw:3})); svg.appendChild(text(xs,ys-22,'SB',{anchor:'middle',fill:c.ic,size:12,weight:950}));
+    svg.appendChild(text(cx,286,'required utility gap: '+fmt(s.D,2),{anchor:'middle',fill:c.muted,size:12,weight:850}));
+  }
+
+  function drawAll(p,s){
+    drawMain(p,s); drawMiniConstraint('svgPCBehavior',p,s,'pc'); drawMiniConstraint('svgICBehavior',p,s,'ic'); drawBinding(p,s); drawRelation(p,s); drawTimeline(p,s); drawTree(p,s); drawProfit(p,s); drawProb(p,s); drawWages(p,s); drawTradeoff(p,s);
+  }
+
+  function fillTable(p,s){
+    const rows=[['First-best high effort',s.fb.wB,s.fb.wG,s.fb.EU,s.fb.profit],['Second-best high effort',s.sb.wB,s.sb.wG,s.sb.EU,s.sb.profit],['Manual contract',p.wB,p.wG,s.manual.EU,s.manual.profit],['First-best low effort',s.fbLow.wB,s.fbLow.wG,s.fbLow.EU,s.fbLow.profit]];
     $('contractTable').innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td>${money(r[1])}</td><td>${money(r[2])}</td><td>${fmt(r[3],2)}</td><td>${fmt(r[4],2)}</td></tr>`).join('');
   }
 
-  function updateText(s,p){
-    $('m_deltaY').textContent=fmt(s.deltaOutput,2);
-    $('m_premium').textContent=fmt(s.D,2);
-    $('m_profitSB').textContent=fmt(s.sb.profit,2);
-    const okPC=s.manual.PC>=-1e-8, okIC=s.manual.IC>=-1e-8;
-    $('m_manualStatus').textContent= okPC && okIC ? 'feasible' : okPC ? 'no IC' : 'no PC';
-    $('m_status_card').className='metric '+(okPC&&okIC?'good': okPC?'bad':'bad');
-    function setBadge(id,ok,textOk,textNo){ const b=$(id); b.textContent=ok?textOk:textNo; b.className='badge '+(ok?'ok':'no'); }
-    setBadge('badgePC',okPC,'PC satisfied','PC fails'); setBadge('badgeIC',okIC,'IC satisfied','IC fails');
-    const be=$('badgeEffort'); be.textContent=s.manual.induced==='H'?'high effort':'low effort'; be.className='badge '+(s.manual.induced==='H'?'ok':'warn');
-    $('constraintText').innerHTML= okPC&&okIC ? 'The manual contract is feasible to implement <b>high effort</b>: the agent accepts it and does not want to deviate to low effort.' : (!okPC ? 'The manual contract does not satisfy participation: the agent prefers the outside option.' : 'The agent accepts the contract, but prefers to choose low effort. The wage profile between the low and high outcome is not steep enough.');
-    const loss=s.fbH.profit-s.sb.profit;
-    $('fbSbText').innerHTML='In the <b>first-best</b>, the principal observes effort and can offer full insurance. In the <b>second-best</b>, the principal must reward the good outcome to induce effort. The loss from hidden action is approximately <b>'+fmt(loss,2)+'</b> under this parameterization.';
-    const slope=u(p.wG,p)-u(p.wB,p);
-    $('readingText').innerHTML='Your manual contract generates a utility gap of <b>'+fmt(slope,2)+'</b> between the high and low outcome. To induce high effort, it needs at least <b>'+fmt(s.D,2)+'</b>. When this gap is high, incentives are stronger; when it is low, insurance is better, but moral hazard remains.';
+  function renderText(p,s){
+    const okPC=s.manual.pcSlack>=-1e-9, okIC=s.manual.icSlack>=-1e-9;
+    $('pcStatus').textContent=(okPC?'satisfied ':'violated ')+`(${fmt(s.manual.pcSlack,2)})`; $('pcStatus').className='v '+(okPC?'ok':'bad');
+    $('icStatus').textContent=(okIC?'satisfied ':'violated ')+`(${fmt(s.manual.icSlack,2)})`; $('icStatus').className='v '+(okIC?'ok':'bad');
+    $('premiumStatus').textContent=fmt(s.D,2); $('profitSB').textContent=fmt(s.sb.profit,2);
+    $('reading').innerHTML = okPC&&okIC
+      ? `The manual contract lies in the high-effort feasible region: the agent accepts and prefers high effort. Manual expected profit is <b>${fmt(s.manual.profit,2)}</b>; the second-best high-effort profit is <b>${fmt(s.sb.profit,2)}</b>.`
+      : (!okPC ? `The manual contract is below the participation constraint: the agent prefers the outside option. Increase average promised utility, moving the point upward and/or rightward.` : `The manual contract satisfies participation but fails incentive compatibility: the utility premium between the good and bad outcome is too small.`);
+    const pcSlope=-(1-p.qH)/p.qH;
+    $('pcNote').innerHTML=`Current slope: <b>${fmt(pcSlope,2)}</b>. Increasing <span class="mono">UÌ„</span> or <span class="mono">c</span> shifts PC upward. Increasing <span class="mono">qH</span> rotates it because the good state receives more probability weight.`;
+    $('icNote').innerHTML=`IC is a parallel upward-shifted 45Â° line. Its vertical distance from full insurance is <b>${fmt(s.D,2)}</b>. A larger <span class="mono">qHâˆ’qL</span> lowers this distance: outcomes become more informative.`;
+    const binds=[]; if(Math.abs(s.sb.pcSlack)<.05) binds.push('PC'); if(Math.abs(s.sb.icSlack)<.05) binds.push('IC'); if(Math.min(s.sb.x-s.xMin,s.sb.z-s.xMin)<.05) binds.push('limited liability');
+    $('bindNote').innerHTML = binds.length ? `At the computed second-best, the locally binding margin is approximately: <b>${binds.join(' and ')}</b>.` : `At the computed second-best, no displayed margin is exactly binding numerically; the minimizer is near the lower envelope of the feasible set.`;
+    const loss=s.fb.profit-s.sb.profit; const regime=s.sb.profit>=s.fbLow.profit?'induce high effort':'prefer the low-effort benchmark';
+    $('profitText').innerHTML=`The information rent / risk-sharing loss relative to first-best high effort is approximately <b>${fmt(loss,2)}</b>. Conditional on contracting, these parameters suggest: <b>${regime}</b>.`;
+    $('tableText').innerHTML=`The manual contract induces <b>${s.manual.induced==='H'?'high effort':'low effort'}</b>. Its relevant agent utility is <b>${fmt(s.manual.EU,2)}</b>. The high-effort technology creates an expected output gain of <b>${fmt(s.deltaOutput,2)}</b> before accounting for effort cost and risk compensation.`;
+    renderMath();
   }
 
   function renderMath(){
     if(!window.katex) return;
-    document.querySelectorAll('.math').forEach(node=>{
-      const tex=node.dataset.tex || '';
-      try{ katex.render(tex,node,{throwOnError:false,displayMode:node.dataset.display==='true'}); }catch(e){}
-    });
+    document.querySelectorAll('.math').forEach(n=>{ if(n.dataset.done==='1') return; try{katex.render(n.dataset.tex,n,{throwOnError:false}); n.dataset.done='1';}catch(e){} });
   }
 
-  function redraw(){
-    const p=params(), s=solve(p); updateLabels(p); updateText(s,p); fillTable(s,p);
-    drawRelation(s,p); drawTimeline(s,p); drawTree(s,p); drawContractSpace(s,p); drawInequalities(s,p); drawFBvsSB(s,p); drawProb(s,p); drawWages(s,p); drawTradeoff(s,p);
-    renderMath();
+  function update(){
+    const p=params(); updateLabels(p); const s=solve(p); drawAll(p,s); fillTable(p,s); renderText(p,s); window.current={p,s};
   }
-
-  ids.forEach(id=>$(id).addEventListener('input',redraw));
-  $('btnSB').addEventListener('click',()=>{ const p=params(), s=solve(p); $('wB').value=clamp(Math.round(s.sb.wB),0,130); $('wG').value=clamp(Math.round(s.sb.wG),0,160); redraw(); });
-  $('btnFB').addEventListener('click',()=>{ const p=params(), s=solve(p); const w=clamp(Math.round(s.fbH.wB),0,150); $('wB').value=w; $('wG').value=w; redraw(); });
-  $('btnFlat').addEventListener('click',()=>{ const p=params(); const w=clamp(Math.round(invu(p.Ubar+p.c,p)),0,150); $('wB').value=w; $('wG').value=w; redraw(); });
-  $('btnClassic').addEventListener('click',()=>{ const defaults={yB:20,yG:100,qL:.30,qH:.70,c:2.5,Ubar:4,alpha:.50,wMin:0,wB:20,wG:45}; Object.entries(defaults).forEach(([k,v])=>$(k).value=v); redraw(); });
-  $('themeBtn').addEventListener('click',()=>{ document.body.dataset.theme=document.body.dataset.theme==='dark'?'light':'dark'; localStorage.setItem('pa-theme',document.body.dataset.theme); redraw(); });
-  const saved=localStorage.getItem('pa-theme'); if(saved) document.body.dataset.theme=saved;
-  window.addEventListener('load',()=>{ redraw(); renderMath(); setTimeout(redraw,100); });
-  document.addEventListener('DOMContentLoaded',()=>{ redraw(); });
+  inputs.forEach(id=>$(id).addEventListener('input',update));
+  $('btnSB').addEventListener('click',()=>{const {s,p}=window.current; $('wB').value=Math.max(p.wMin,Math.round(s.sb.wB)); $('wG').value=Math.max(p.wMin,Math.round(s.sb.wG)); update();});
+  $('btnFB').addEventListener('click',()=>{const {s,p}=window.current; $('wB').value=Math.max(p.wMin,Math.round(s.fb.wB)); $('wG').value=Math.max(p.wMin,Math.round(s.fb.wG)); update();});
+  $('btnFlat').addEventListener('click',()=>{const p=params(); const w=Math.max(p.wMin,Math.round((p.wB+p.wG)/2)); $('wB').value=w; $('wG').value=w; update();});
+  $('btnReset').addEventListener('click',()=>{const vals={yB:20,yG:100,qL:.30,qH:.70,c:2.50,Ubar:4,alpha:.50,wMin:0,wB:20,wG:45}; Object.entries(vals).forEach(([k,v])=>$(k).value=v); update();});
+  $('themeBtn').addEventListener('click',()=>{const dark=document.body.dataset.theme==='dark'; document.body.dataset.theme=dark?'light':'dark'; $('themeText').textContent=dark?'Dark mode':'Light mode'; document.querySelectorAll('.math').forEach(n=>n.dataset.done='0'); update();});
+  window.addEventListener('load',()=>{renderMath(); update(); setTimeout(update,100);});
 })();
 </script>
 </body>
 </html>
+
