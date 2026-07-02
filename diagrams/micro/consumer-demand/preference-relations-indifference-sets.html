@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8" />
@@ -256,29 +256,29 @@ input[type="range"]{accent-color:var(--accent)}
 <div class="app">
   <aside class="sidebar">
     <div class="brand">
-      <div class="mark">≽</div>
+      <div class="mark">â‰½</div>
       <div>
         <h1>Preference Geometry</h1>
-        <div class="kicker">relations · contours · indifference</div>
+        <div class="kicker">relations Â· contours Â· indifference</div>
       </div>
-      <button class="theme-btn" id="themeBtn" title="Toggle dark mode">◐</button>
+      <button class="theme-btn" id="themeBtn" title="Toggle dark mode">â—</button>
     </div>
 
     <div class="group">
       <div class="group-title">Preference relation</div>
       <label for="prefType">Relation</label>
       <select id="prefType">
-        <option value="cd">Cobb–Douglas: x ≽ y ⇔ u(x) ≥ u(y)</option>
+        <option value="cd">Cobbâ€“Douglas: x â‰½ y â‡” u(x) â‰¥ u(y)</option>
         <option value="subs">Perfect substitutes</option>
         <option value="compl">Perfect complements</option>
         <option value="satiation">Bliss point / local satiation</option>
         <option value="component">Componentwise order: incomplete</option>
       </select>
-      <label for="alpha">Preference parameter α</label>
+      <label for="alpha">Preference parameter Î±</label>
       <div class="row"><input id="alpha" type="range" min="0.10" max="0.90" step="0.01" value="0.50"><div class="value" id="alphaVal">0.50</div></div>
-      <label for="blissX">Bliss x₁ <span class="small">only for satiation</span></label>
+      <label for="blissX">Bliss xâ‚ <span class="small">only for satiation</span></label>
       <div class="row"><input id="blissX" type="range" min="0.50" max="9.50" step="0.10" value="6.20"><div class="value" id="blissXVal">6.2</div></div>
-      <label for="blissY">Bliss x₂ <span class="small">only for satiation</span></label>
+      <label for="blissY">Bliss xâ‚‚ <span class="small">only for satiation</span></label>
       <div class="row"><input id="blissY" type="range" min="0.50" max="9.50" step="0.10" value="6.00"><div class="value" id="blissYVal">6.0</div></div>
     </div>
 
@@ -286,27 +286,27 @@ input[type="range"]{accent-color:var(--accent)}
       <div class="group-title">Consumption set</div>
       <label for="xset">Set X</label>
       <select id="xset">
-        <option value="quadrant">ℝ²₊ displayed on [0,10]²</option>
-        <option value="box">Box: [0, B]²</option>
-        <option value="simplex">Simplex: x₁ + x₂ ≤ B</option>
+        <option value="quadrant">â„Â²â‚Š displayed on [0,10]Â²</option>
+        <option value="box">Box: [0, B]Â²</option>
+        <option value="simplex">Simplex: xâ‚ + xâ‚‚ â‰¤ B</option>
       </select>
       <label for="B">Bound B</label>
       <div class="row"><input id="B" type="range" min="3" max="10" step="0.1" value="8.0"><div class="value" id="BVal">8.0</div></div>
     </div>
 
     <div class="group">
-      <div class="group-title">Reference bundle x̄</div>
-      <label for="x0">x̄₁</label>
+      <div class="group-title">Reference bundle xÌ„</div>
+      <label for="x0">xÌ„â‚</label>
       <div class="row"><input id="x0" type="range" min="0.2" max="9.8" step="0.1" value="3.8"><div class="value" id="x0Val">3.8</div></div>
-      <label for="y0">x̄₂</label>
+      <label for="y0">xÌ„â‚‚</label>
       <div class="row"><input id="y0" type="range" min="0.2" max="9.8" step="0.1" value="4.2"><div class="value" id="y0Val">4.2</div></div>
     </div>
 
     <div class="group">
       <div class="group-title">Comparison bundle z</div>
-      <label for="zx">z₁</label>
+      <label for="zx">zâ‚</label>
       <div class="row"><input id="zx" type="range" min="0.2" max="9.8" step="0.1" value="6.4"><div class="value" id="zxVal">6.4</div></div>
-      <label for="zy">z₂</label>
+      <label for="zy">zâ‚‚</label>
       <div class="row"><input id="zy" type="range" min="0.2" max="9.8" step="0.1" value="2.8"><div class="value" id="zyVal">2.8</div></div>
     </div>
 
@@ -326,11 +326,11 @@ input[type="range"]{accent-color:var(--accent)}
       <h2>Preference relations and indifference sets</h2>
       <p>A consumption set is the feasible universe. A preference relation orders bundles inside it. Upper and lower contour sets are the geometric shadows of the relation around a reference bundle.</p>
       <div class="pills">
-        <span class="pill">weak preference: x ≽ y</span>
-        <span class="pill">strict preference: x ≻ y</span>
-        <span class="pill">indifference: x ∼ y</span>
-        <span class="pill">upper contour: U(x̄)</span>
-        <span class="pill">lower contour: L(x̄)</span>
+        <span class="pill">weak preference: x â‰½ y</span>
+        <span class="pill">strict preference: x â‰» y</span>
+        <span class="pill">indifference: x âˆ¼ y</span>
+        <span class="pill">upper contour: U(xÌ„)</span>
+        <span class="pill">lower contour: L(xÌ„)</span>
       </div>
     </section>
 
@@ -343,9 +343,9 @@ input[type="range"]{accent-color:var(--accent)}
           <svg id="plotSvg" viewBox="0 0 720 610" preserveAspectRatio="none"></svg>
         </div>
         <div class="legend">
-          <span><i class="sw upper"></i> U(x̄) = {x ∈ X : x ≽ x̄}</span>
-          <span><i class="sw lower"></i> L(x̄) = {x ∈ X : x̄ ≽ x}</span>
-          <span><i class="sw curve"></i> I(x̄) = {x ∈ X : x ∼ x̄}</span>
+          <span><i class="sw upper"></i> U(xÌ„) = {x âˆˆ X : x â‰½ xÌ„}</span>
+          <span><i class="sw lower"></i> L(xÌ„) = {x âˆˆ X : xÌ„ â‰½ x}</span>
+          <span><i class="sw curve"></i> I(xÌ„) = {x âˆˆ X : x âˆ¼ xÌ„}</span>
         </div>
       </div>
 
@@ -354,25 +354,25 @@ input[type="range"]{accent-color:var(--accent)}
         <div class="sub" id="relationSubtitle">A binary relation on the consumption set.</div>
         <div class="math-card">
           <div class="math-title">Consumption set</div>
-          <div class="math" id="xsetFormula">X = ℝ²₊</div>
+          <div class="math" id="xsetFormula">X = â„Â²â‚Š</div>
         </div>
         <div class="math-card">
           <div class="math-title">Preference relation</div>
-          <div class="math" id="prefFormula">x ≽ y ⇔ u(x) ≥ u(y)</div>
+          <div class="math" id="prefFormula">x â‰½ y â‡” u(x) â‰¥ u(y)</div>
         </div>
         <div class="math-card">
           <div class="math-title">Derived relations</div>
           <div class="math">
-            x ≻ y ⇔ x ≽ y and not(y ≽ x)<br>
-            x ∼ y ⇔ x ≽ y and y ≽ x
+            x â‰» y â‡” x â‰½ y and not(y â‰½ x)<br>
+            x âˆ¼ y â‡” x â‰½ y and y â‰½ x
           </div>
         </div>
         <div class="math-card">
-          <div class="math-title">Contour sets at x̄</div>
+          <div class="math-title">Contour sets at xÌ„</div>
           <div class="math">
-            U(x̄) = {x ∈ X : x ≽ x̄}<br>
-            L(x̄) = {x ∈ X : x̄ ≽ x}<br>
-            I(x̄) = U(x̄) ∩ L(x̄)
+            U(xÌ„) = {x âˆˆ X : x â‰½ xÌ„}<br>
+            L(xÌ„) = {x âˆˆ X : xÌ„ â‰½ x}<br>
+            I(xÌ„) = U(xÌ„) âˆ© L(xÌ„)
           </div>
         </div>
         <div class="notice" id="noticeBox">For monotone preferences, the upper contour set lies northeast of the indifference curve.</div>
@@ -381,17 +381,17 @@ input[type="range"]{accent-color:var(--accent)}
 
     <section class="grid">
       <div class="card">
-        <h3>Compare one bundle with x̄</h3>
+        <h3>Compare one bundle with xÌ„</h3>
         <div class="sub">Move z and watch the relation classify it.</div>
         <div class="result" id="comparisonResult"></div>
         <div class="sep"></div>
         <table class="table">
           <thead><tr><th>Object</th><th>Geometric meaning</th></tr></thead>
           <tbody>
-            <tr><td><b>U(x̄)</b></td><td>All bundles weakly preferred to the reference bundle. For utility-represented preferences: u(x) ≥ u(x̄).</td></tr>
-            <tr><td><b>L(x̄)</b></td><td>All bundles that x̄ weakly dominates. For utility-represented preferences: u(x) ≤ u(x̄).</td></tr>
-            <tr><td><b>I(x̄)</b></td><td>Bundles mutually weakly preferred to x̄. It is the boundary between better and worse only in well-behaved complete preferences.</td></tr>
-            <tr><td><b>Incomplete case</b></td><td>Some bundles may be incomparable: neither z ≽ x̄ nor x̄ ≽ z. Then z belongs to neither contour set.</td></tr>
+            <tr><td><b>U(xÌ„)</b></td><td>All bundles weakly preferred to the reference bundle. For utility-represented preferences: u(x) â‰¥ u(xÌ„).</td></tr>
+            <tr><td><b>L(xÌ„)</b></td><td>All bundles that xÌ„ weakly dominates. For utility-represented preferences: u(x) â‰¤ u(xÌ„).</td></tr>
+            <tr><td><b>I(xÌ„)</b></td><td>Bundles mutually weakly preferred to xÌ„. It is the boundary between better and worse only in well-behaved complete preferences.</td></tr>
+            <tr><td><b>Incomplete case</b></td><td>Some bundles may be incomparable: neither z â‰½ xÌ„ nor xÌ„ â‰½ z. Then z belongs to neither contour set.</td></tr>
           </tbody>
         </table>
       </div>
@@ -417,7 +417,7 @@ input[type="range"]{accent-color:var(--accent)}
       <div class="exam">
         <div class="mini">
           <h4>1. Start from X</h4>
-          <p>The relation is defined only on the consumption set X. If z ∉ X, the preference comparison is not an admissible comparison inside the model.</p>
+          <p>The relation is defined only on the consumption set X. If z âˆ‰ X, the preference comparison is not an admissible comparison inside the model.</p>
         </div>
         <div class="mini">
           <h4>2. Define the relation</h4>
@@ -425,10 +425,10 @@ input[type="range"]{accent-color:var(--accent)}
         </div>
         <div class="mini">
           <h4>3. Read contours</h4>
-          <p>Upper contour means “at least as good as x̄.” Lower contour means “no better than x̄.” Indifference is their intersection.</p>
+          <p>Upper contour means â€œat least as good as xÌ„.â€ Lower contour means â€œno better than xÌ„.â€ Indifference is their intersection.</p>
         </div>
       </div>
-      <div class="footer-note">This app uses a finite display window [0,10]². For ℝ²₊, the mathematical set continues beyond the visible square.</div>
+      <div class="footer-note">This app uses a finite display window [0,10]Â². For â„Â²â‚Š, the mathematical set continues beyond the visible square.</div>
     </section>
   </main>
 </div>
@@ -477,55 +477,55 @@ function weakPref(x1,y1,x2,y2){
 function strictPref(x1,y1,x2,y2){return weakPref(x1,y1,x2,y2) && !weakPref(x2,y2,x1,y1)}
 function indifferent(x1,y1,x2,y2){return weakPref(x1,y1,x2,y2) && weakPref(x2,y2,x1,y1)}
 function relationText(zx,zy,x0,y0){
-  if(!inX(zx,zy)) return `<b>z ∉ X.</b> The comparison is outside the consumption set.`;
-  if(!inX(x0,y0)) return `<b>x̄ ∉ X.</b> Move the reference bundle back into X.`;
+  if(!inX(zx,zy)) return `<b>z âˆ‰ X.</b> The comparison is outside the consumption set.`;
+  if(!inX(x0,y0)) return `<b>xÌ„ âˆ‰ X.</b> Move the reference bundle back into X.`;
   const zWeak = weakPref(zx,zy,x0,y0);
   const xWeak = weakPref(x0,y0,zx,zy);
   let line = "";
-  if(zWeak && xWeak) line = `<b>z ∼ x̄</b>. The two bundles lie on the same indifference set.`;
-  else if(zWeak) line = `<b>z ≻ x̄</b>. The comparison bundle is strictly preferred to the reference bundle.`;
-  else if(xWeak) line = `<b>x̄ ≻ z</b>. The reference bundle is strictly preferred to the comparison bundle.`;
-  else line = `<b>z and x̄ are incomparable.</b> Neither bundle weakly dominates the other.`;
+  if(zWeak && xWeak) line = `<b>z âˆ¼ xÌ„</b>. The two bundles lie on the same indifference set.`;
+  else if(zWeak) line = `<b>z â‰» xÌ„</b>. The comparison bundle is strictly preferred to the reference bundle.`;
+  else if(xWeak) line = `<b>xÌ„ â‰» z</b>. The reference bundle is strictly preferred to the comparison bundle.`;
+  else line = `<b>z and xÌ„ are incomparable.</b> Neither bundle weakly dominates the other.`;
   const u0 = utility(x0,y0), uz = utility(zx,zy);
   if(val("prefType") === "component"){
-    return `${line}<br><span class="small">Membership: z ${zWeak ? "∈" : "∉"} U(x̄), z ${xWeak ? "∈" : "∉"} L(x̄). This relation is reflexive and transitive, but not complete.</span>`;
+    return `${line}<br><span class="small">Membership: z ${zWeak ? "âˆˆ" : "âˆ‰"} U(xÌ„), z ${xWeak ? "âˆˆ" : "âˆ‰"} L(xÌ„). This relation is reflexive and transitive, but not complete.</span>`;
   }
-  return `${line}<br><span class="small">u(x̄) = ${u0.toFixed(3)}, u(z) = ${uz.toFixed(3)}. Membership: z ${zWeak ? "∈" : "∉"} U(x̄), z ${xWeak ? "∈" : "∉"} L(x̄).</span>`;
+  return `${line}<br><span class="small">u(xÌ„) = ${u0.toFixed(3)}, u(z) = ${uz.toFixed(3)}. Membership: z ${zWeak ? "âˆˆ" : "âˆ‰"} U(xÌ„), z ${xWeak ? "âˆˆ" : "âˆ‰"} L(xÌ„).</span>`;
 }
 function formulas(){
   const type=val("prefType"), a=num("alpha").toFixed(2), B=num("B").toFixed(1);
   const set=val("xset");
-  $("xsetFormula").innerHTML = set === "quadrant" ? "X = ℝ²₊" : set === "box" ? `X = [0, ${B}] × [0, ${B}]` : `X = {x ∈ ℝ²₊ : x₁ + x₂ ≤ ${B}}`;
+  $("xsetFormula").innerHTML = set === "quadrant" ? "X = â„Â²â‚Š" : set === "box" ? `X = [0, ${B}] Ã— [0, ${B}]` : `X = {x âˆˆ â„Â²â‚Š : xâ‚ + xâ‚‚ â‰¤ ${B}}`;
   let f="", sub="", ax="", n1="", n2="";
   if(type==="cd"){
-    f = `u(x₁,x₂)=x₁<sup>${a}</sup>x₂<sup>${(1-num("alpha")).toFixed(2)}</sup><br>x ≽ y ⇔ u(x) ≥ u(y)`;
+    f = `u(xâ‚,xâ‚‚)=xâ‚<sup>${a}</sup>xâ‚‚<sup>${(1-num("alpha")).toFixed(2)}</sup><br>x â‰½ y â‡” u(x) â‰¥ u(y)`;
     sub = "Complete, transitive, continuous, monotone, convex preferences.";
-    ax = "Complete · transitive · continuous · locally nonsatiated · convex";
+    ax = "Complete Â· transitive Â· continuous Â· locally nonsatiated Â· convex";
     n1 = "Indifference curves are smooth and downward sloping. More is always better, so the upper contour set is northeast of the curve.";
     n2 = "Convex upper contour sets encode preference for mixtures: averages of good bundles remain at least as good.";
   } else if(type==="subs"){
-    f = `u(x₁,x₂)= ${a}x₁ + ${(1-num("alpha")).toFixed(2)}x₂<br>x ≽ y ⇔ u(x) ≥ u(y)`;
+    f = `u(xâ‚,xâ‚‚)= ${a}xâ‚ + ${(1-num("alpha")).toFixed(2)}xâ‚‚<br>x â‰½ y â‡” u(x) â‰¥ u(y)`;
     sub = "Complete, transitive, continuous, monotone; convex but not strictly convex.";
-    ax = "Complete · transitive · continuous · monotone · convex, not strictly convex";
+    ax = "Complete Â· transitive Â· continuous Â· monotone Â· convex, not strictly convex";
     n1 = "Indifference sets are straight parallel lines. The consumer is willing to trade goods at a constant rate.";
     n2 = "Because the indifference set is flat, tangencies are not unique in many optimization problems.";
   } else if(type==="compl"){
-    f = `u(x₁,x₂)=min{x₁/${a}, x₂/${(1-num("alpha")).toFixed(2)}}<br>x ≽ y ⇔ u(x) ≥ u(y)`;
+    f = `u(xâ‚,xâ‚‚)=min{xâ‚/${a}, xâ‚‚/${(1-num("alpha")).toFixed(2)}}<br>x â‰½ y â‡” u(x) â‰¥ u(y)`;
     sub = "Complete, transitive, continuous, monotone, convex; kinked indifference sets.";
-    ax = "Complete · transitive · continuous · monotone · convex · kinked";
+    ax = "Complete Â· transitive Â· continuous Â· monotone Â· convex Â· kinked";
     n1 = "Indifference sets are L-shaped. Extra units of one good alone do not raise utility once the bottleneck good is fixed.";
     n2 = "The kink is where the two inputs are in the desired proportion.";
   } else if(type==="satiation"){
     const bx=num("blissX").toFixed(1), by=num("blissY").toFixed(1);
-    f = `u(x₁,x₂)=−[(x₁−${bx})²+(x₂−${by})²]<br>x ≽ y ⇔ u(x) ≥ u(y)`;
+    f = `u(xâ‚,xâ‚‚)=âˆ’[(xâ‚âˆ’${bx})Â²+(xâ‚‚âˆ’${by})Â²]<br>x â‰½ y â‡” u(x) â‰¥ u(y)`;
     sub = "Complete and transitive, but not monotone. Better means closer to the bliss point.";
-    ax = "Complete · transitive · continuous · convex upper contours · not monotone";
+    ax = "Complete Â· transitive Â· continuous Â· convex upper contours Â· not monotone";
     n1 = "Upper contour sets are disks around the bliss point. More of a good can become worse after satiation.";
     n2 = "This example separates preference geometry from the usual monotonicity assumption.";
   } else {
-    f = `x ≽ y ⇔ x₁ ≥ y₁ and x₂ ≥ y₂<br><span class="small">No scalar utility representation is used here.</span>`;
+    f = `x â‰½ y â‡” xâ‚ â‰¥ yâ‚ and xâ‚‚ â‰¥ yâ‚‚<br><span class="small">No scalar utility representation is used here.</span>`;
     sub = "A partial order: reflexive and transitive, but not complete.";
-    ax = "Reflexive · transitive · antisymmetric · not complete";
+    ax = "Reflexive Â· transitive Â· antisymmetric Â· not complete";
     n1 = "The upper contour is the northeast cone. The lower contour is the southwest cone. The remaining two rectangles are incomparable.";
     n2 = "Completeness is an assumption, not a definition. Without it, indifference need not be a smooth curve.";
   }
@@ -645,8 +645,8 @@ function drawSvg(){
   }
   svg.appendChild(el('line',{x1:sx(0),y1:sy(0),x2:sx(10.15),y2:sy(0),stroke:css('--text'),'stroke-width':1.4}));
   svg.appendChild(el('line',{x1:sx(0),y1:sy(0),x2:sx(0),y2:sy(10.15),stroke:css('--text'),'stroke-width':1.4}));
-  svg.appendChild(el('text',{x:sx(10.12),y:sy(0)+28,fill:css('--muted'),'font-size':15,'text-anchor':'end'},'x₁'));
-  svg.appendChild(el('text',{x:sx(0)-30,y:sy(10.1),fill:css('--muted'),'font-size':15},'x₂'));
+  svg.appendChild(el('text',{x:sx(10.12),y:sy(0)+28,fill:css('--muted'),'font-size':15,'text-anchor':'end'},'xâ‚'));
+  svg.appendChild(el('text',{x:sx(0)-30,y:sy(10.1),fill:css('--muted'),'font-size':15},'xâ‚‚'));
   for(let k=0;k<=10;k+=2){
     svg.appendChild(el('text',{x:sx(k),y:sy(0)+22,fill:css('--faint'),'font-size':12,'text-anchor':'middle'},String(k)));
     if(k>0) svg.appendChild(el('text',{x:sx(0)-12,y:sy(k)+4,fill:css('--faint'),'font-size':12,'text-anchor':'end'},String(k)));
@@ -658,7 +658,7 @@ function drawSvg(){
       if(p.kind==='circle') svg.appendChild(el('circle',{cx:p.cx,cy:p.cy,r:p.r,fill:css('--indiff'),stroke:css('--panel'),'stroke-width':2}));
     }
   }
-  drawPoint(num("x0"),num("y0"),'x̄',css('--accent'),true);
+  drawPoint(num("x0"),num("y0"),'xÌ„',css('--accent'),true);
   drawPoint(num("zx"),num("zy"),'z',css('--warn'),false);
   if(val("prefType")==='satiation') drawPoint(num("blissX"),num("blissY"),'bliss',css('--accent2'),false,5);
 }
@@ -672,7 +672,7 @@ function drawConsumptionBoundary(){
   if(set==='simplex'){
     const b=Math.min(B,10);
     svg.appendChild(el('path',{d:`M ${sx(0)} ${sy(b)} L ${sx(b)} ${sy(0)}`,fill:'none',stroke:stroke,'stroke-width':2,'stroke-dasharray':'6 6',opacity:.75}));
-    svg.appendChild(el('text',{x:sx(b/2)+10,y:sy(b/2)-8,fill:muted,'font-size':12},'x₁+x₂≤B'));
+    svg.appendChild(el('text',{x:sx(b/2)+10,y:sy(b/2)-8,fill:muted,'font-size':12},'xâ‚+xâ‚‚â‰¤B'));
   }
 }
 function drawPoint(x,y,label,color,isRef,r=7){
@@ -710,3 +710,4 @@ update();
 </script>
 </body>
 </html>
+

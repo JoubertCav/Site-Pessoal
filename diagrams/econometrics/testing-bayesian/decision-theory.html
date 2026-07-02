@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -119,27 +119,27 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
 <section class="defs">
   <div class="def">
     <div class="tag">States</div>
-    <div class="math"><span class="formula">θ ∈ Θ</span><span class="mathNote">unknown state of nature</span></div>
+    <div class="math"><span class="formula">Î¸ âˆˆ Î˜</span><span class="mathNote">unknown state of nature</span></div>
   </div>
   <div class="def">
     <div class="tag">Actions</div>
-    <div class="math"><span class="formula">a ∈ 𝒜</span><span class="mathNote">what the statistician chooses</span></div>
+    <div class="math"><span class="formula">a âˆˆ ð’œ</span><span class="mathNote">what the statistician chooses</span></div>
   </div>
   <div class="def">
     <div class="tag">Loss</div>
-    <div class="math"><span class="formula">L(θ,a)</span><span class="mathNote">cost of action a when state θ is true</span></div>
+    <div class="math"><span class="formula">L(Î¸,a)</span><span class="mathNote">cost of action a when state Î¸ is true</span></div>
   </div>
   <div class="def">
     <div class="tag">Decision rule</div>
-    <div class="math"><span class="formula">δ:X → 𝒜</span><span class="mathNote">observation ↦ action</span></div>
+    <div class="math"><span class="formula">Î´:X â†’ ð’œ</span><span class="mathNote">observation â†¦ action</span></div>
   </div>
   <div class="def">
     <div class="tag">Risk</div>
-    <div class="math"><span class="formula">R(θ,δ)=Eθ L(θ,δ(X))</span><span class="mathNote">expected loss at each state</span></div>
+    <div class="math"><span class="formula">R(Î¸,Î´)=EÎ¸ L(Î¸,Î´(X))</span><span class="mathNote">expected loss at each state</span></div>
   </div>
   <div class="def">
     <div class="tag">Bayes / minimax</div>
-    <div class="math"><span class="formula">rπ(δ)=ΣπθR(θ,δ)</span><span class="formula">maxθ R(θ,δ)</span></div>
+    <div class="math"><span class="formula">rÏ€(Î´)=Î£Ï€Î¸R(Î¸,Î´)</span><span class="formula">maxÎ¸ R(Î¸,Î´)</span></div>
   </div>
   <div class="def">
     <div class="tag">Admissible</div>
@@ -157,35 +157,35 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
   </div>
 
   <div class="control">
-    <label for="priorRange">Prior π₁ = P(θ₁) <span class="value" id="priorVal">0.45</span></label>
+    <label for="priorRange">Prior Ï€â‚ = P(Î¸â‚) <span class="value" id="priorVal">0.45</span></label>
     <input id="priorRange" type="range" min="0.02" max="0.98" step="0.01" value="0.45"/>
   </div>
 
   <div class="control">
-    <label for="fpRange">False alarm loss L(θ₀,a₁) <span class="value" id="fpVal">1.00</span></label>
+    <label for="fpRange">False alarm loss L(Î¸â‚€,aâ‚) <span class="value" id="fpVal">1.00</span></label>
     <input id="fpRange" type="range" min="0.20" max="4.00" step="0.05" value="1.00"/>
   </div>
 
   <div class="control">
-    <label for="fnRange">Miss loss L(θ₁,a₀) <span class="value" id="fnVal">1.80</span></label>
+    <label for="fnRange">Miss loss L(Î¸â‚,aâ‚€) <span class="value" id="fnVal">1.80</span></label>
     <input id="fnRange" type="range" min="0.20" max="4.00" step="0.05" value="1.80"/>
   </div>
 
   <div class="control">
-    <label for="ruleSelect">Displayed rule δ</label>
+    <label for="ruleSelect">Displayed rule Î´</label>
     <select id="ruleSelect">
       <option value="bayes">Bayes rule for the prior</option>
       <option value="minimax">Minimax rule</option>
       <option value="follow">Follow the signal</option>
-      <option value="always0">Always choose a₀</option>
-      <option value="always1">Always choose a₁</option>
+      <option value="always0">Always choose aâ‚€</option>
+      <option value="always1">Always choose aâ‚</option>
       <option value="reverse">Reverse the signal</option>
-      <option value="mix">Randomize: α follow + (1−α) always a₀</option>
+      <option value="mix">Randomize: Î± follow + (1âˆ’Î±) always aâ‚€</option>
     </select>
   </div>
 
   <div class="control" id="alphaControl" style="display:none">
-    <label for="alphaRange">Mixing α <span class="value" id="alphaVal">0.50</span></label>
+    <label for="alphaRange">Mixing Î± <span class="value" id="alphaVal">0.50</span></label>
     <input id="alphaRange" type="range" min="0.00" max="1.00" step="0.01" value="0.50"/>
   </div>
 
@@ -206,7 +206,7 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
           <span class="pill"><span class="dot" style="background:var(--gold)"></span> admissible frontier</span>
         </div>
       </div>
-      <div class="plotSub">Risk vector: δ ↦ (R(θ₀,δ), R(θ₁,δ)). Lower-left is better.</div>
+      <div class="plotSub">Risk vector: Î´ â†¦ (R(Î¸â‚€,Î´), R(Î¸â‚,Î´)). Lower-left is better.</div>
     </div>
     <svg id="riskSvg" viewBox="0 0 980 560" preserveAspectRatio="xMidYMid meet"></svg>
   </div>
@@ -215,7 +215,7 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
     <div class="card plotCard">
       <div class="plotHead">
         <div class="plotTitle">Decision rule as a map</div>
-        <div class="plotSub">state → signal → action → loss</div>
+        <div class="plotSub">state â†’ signal â†’ action â†’ loss</div>
       </div>
       <svg id="ruleSvg" viewBox="0 0 520 330" preserveAspectRatio="xMidYMid meet"></svg>
     </div>
@@ -243,7 +243,7 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
       <div class="smallText" id="interpretText"></div>
       <div class="summary">
         <div><strong>Risk function.</strong><br>A rule is evaluated state by state. In a two-state problem, every rule becomes a point in the risk plane.</div>
-        <div><strong>Bayes risk.</strong><br>A prior π turns the risk vector into one weighted average. Graphically, Bayes chooses the lowest supporting line.</div>
+        <div><strong>Bayes risk.</strong><br>A prior Ï€ turns the risk vector into one weighted average. Graphically, Bayes chooses the lowest supporting line.</div>
         <div><strong>Minimax risk.</strong><br>Minimax minimizes the worst coordinate. Graphically, it finds the smallest square touching the risk set.</div>
         <div><strong>Admissibility.</strong><br>A rule is inadmissible if another rule lies weakly southwest and strictly southwest in at least one coordinate.</div>
       </div>
@@ -256,7 +256,7 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
 </section>
 </main>
 
-<footer>Decision theory · actions · states · loss · risk · Bayes · minimax · admissibility</footer>
+<footer>Decision theory Â· actions Â· states Â· loss Â· risk Â· Bayes Â· minimax Â· admissibility</footer>
 </div>
 
 <script>
@@ -265,7 +265,7 @@ const qRange=document.getElementById("qRange"), priorRange=document.getElementBy
 const ruleSelect=document.getElementById("ruleSelect"), alphaRange=document.getElementById("alphaRange"), alphaControl=document.getElementById("alphaControl");
 
 function css(v){return getComputedStyle(body).getPropertyValue(v).trim();}
-function fmt(x){if(!isFinite(x))return"∞"; if(Math.abs(x)<1e-4&&x!==0)return x.toExponential(2); if(Math.abs(x)<10)return x.toFixed(4); return x.toFixed(2);}
+function fmt(x){if(!isFinite(x))return"âˆž"; if(Math.abs(x)<1e-4&&x!==0)return x.toExponential(2); if(Math.abs(x)<10)return x.toFixed(4); return x.toFixed(2);}
 function line(x1,y1,x2,y2,stroke,w=1,op=1,dash=""){return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+stroke+'" stroke-width="'+w+'" stroke-opacity="'+op+'" '+(dash?'stroke-dasharray="'+dash+'"':'')+'/>';}
 function text(x,y,s,fill,size=13,weight=600,anchor="start"){return '<text x="'+x+'" y="'+y+'" fill="'+fill+'" font-size="'+size+'" font-weight="'+weight+'" text-anchor="'+anchor+'" font-family="Inter,system-ui,sans-serif">'+s+'</text>';}
 function rect(x,y,w,h,fill,stroke="none",rx=0,op=1){return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+rx+'" fill="'+fill+'" stroke="'+stroke+'" opacity="'+op+'"/>';}
@@ -291,8 +291,8 @@ function riskOfRule(name,p){
 }
 function namedRules(p){
   return [
-    {id:"always0", label:"always a₀", risk:riskOfRule("always0",p), color:css("--violet")},
-    {id:"always1", label:"always a₁", risk:riskOfRule("always1",p), color:css("--rose")},
+    {id:"always0", label:"always aâ‚€", risk:riskOfRule("always0",p), color:css("--violet")},
+    {id:"always1", label:"always aâ‚", risk:riskOfRule("always1",p), color:css("--rose")},
     {id:"follow", label:"follow signal", risk:riskOfRule("follow",p), color:css("--accent")},
     {id:"reverse", label:"reverse signal", risk:riskOfRule("reverse",p), color:css("--warn")}
   ];
@@ -322,7 +322,7 @@ function minimaxPoint(p){
 function selectedRule(p){
   if(p.rule==="bayes") {const b=bayesRule(p); return {id:b.id,label:"Bayes: "+b.label,risk:b.risk,color:css("--blue")};}
   if(p.rule==="minimax") {const m=minimaxPoint(p); return {id:"minimax",label:"minimax",risk:m.risk,color:css("--warn")};}
-  if(p.rule==="mix") return {id:"mix",label:"α follow + (1−α) always a₀",risk:riskOfRule("mix",p),color:css("--accent")};
+  if(p.rule==="mix") return {id:"mix",label:"Î± follow + (1âˆ’Î±) always aâ‚€",risk:riskOfRule("mix",p),color:css("--accent")};
   const r=namedRules(p).find(x=>x.id===p.rule);
   return {id:r.id,label:r.label,risk:r.risk,color:r.color};
 }
@@ -367,13 +367,13 @@ function posterior(p,x){
 }
 function posteriorLosses(p,x){
   const post1=posterior(p,x), post0=1-post1;
-  return {post1, lossA0:post1*p.cFN, lossA1:post0*p.cFP, action:post1*p.cFN <= post0*p.cFP ? "a₀" : "a₁"};
+  return {post1, lossA0:post1*p.cFN, lossA1:post0*p.cFP, action:post1*p.cFN <= post0*p.cFP ? "aâ‚€" : "aâ‚"};
 }
 function bayesDecisionRule(p){
   const l0=posteriorLosses(p,0), l1=posteriorLosses(p,1);
-  if(l0.action==="a₀" && l1.action==="a₀") return "always a₀";
-  if(l0.action==="a₁" && l1.action==="a₁") return "always a₁";
-  if(l0.action==="a₀" && l1.action==="a₁") return "follow signal";
+  if(l0.action==="aâ‚€" && l1.action==="aâ‚€") return "always aâ‚€";
+  if(l0.action==="aâ‚" && l1.action==="aâ‚") return "always aâ‚";
+  if(l0.action==="aâ‚€" && l1.action==="aâ‚") return "follow signal";
   return "reverse signal";
 }
 
@@ -394,8 +394,8 @@ function drawRisk(){
     h+=line(X0+(X1-X0)*k/6,Y0,X0+(X1-X0)*k/6,Y1,grid,1,.55);
   }
   h+=line(X0,Y1,X1,Y1,muted,1.2,.8)+line(X0,Y0,X0,Y1,muted,1.2,.8);
-  h+=text(X1,Y1+30,"R(θ₀,δ)",muted,11,850,"end");
-  h+=text(X0-10,Y0,"R(θ₁,δ)",muted,11,850,"end");
+  h+=text(X1,Y1+30,"R(Î¸â‚€,Î´)",muted,11,850,"end");
+  h+=text(X0-10,Y0,"R(Î¸â‚,Î´)",muted,11,850,"end");
 
   // risk set / frontier
   let path="";
@@ -418,7 +418,7 @@ function drawRisk(){
 
   // diagonal max-risk line
   h+=line(X0,Y1,X1,Y0,violet,1,.28,"4 6");
-  h+=text(px(mx*.82,0,mx,X0,X1),py(mx*.82,0,mx,Y0,Y1)-8,"R₀=R₁",violet,10,850,"middle");
+  h+=text(px(mx*.82,0,mx,X0,X1),py(mx*.82,0,mx,Y0,Y1)-8,"Râ‚€=Râ‚",violet,10,850,"middle");
 
   // deterministic points
   rules.forEach(r=>{
@@ -442,12 +442,12 @@ function drawRisk(){
   h+=text(740,102,"How to read",textc,15,900);
   h+=text(740,130,"Lower-left is better.",muted,12,850);
   h+=text(740,158,"Bayes: lowest weighted line",blue,12,900);
-  h+=text(740,185,"minimize  (1−π₁)R₀ + π₁R₁",muted,10,850);
+  h+=text(740,185,"minimize  (1âˆ’Ï€â‚)Râ‚€ + Ï€â‚Râ‚",muted,10,850);
   h+=text(740,218,"Minimax: smallest square",warn,12,900);
-  h+=text(740,245,"minimize  max{R₀,R₁}",muted,10,850);
+  h+=text(740,245,"minimize  max{Râ‚€,Râ‚}",muted,10,850);
   h+=text(740,278,"Admissible: no point southwest",gold,12,900);
   h+=text(740,322,"selected risk:",textc,12,900);
-  h+=text(740,346,"R₀ = "+fmt(sel.risk[0])+"   R₁ = "+fmt(sel.risk[1]),acc,12,900);
+  h+=text(740,346,"Râ‚€ = "+fmt(sel.risk[0])+"   Râ‚ = "+fmt(sel.risk[1]),acc,12,900);
   h+=text(740,370,"Bayes risk = "+fmt(bayesRisk(sel.risk,p))+"   max = "+fmt(maxRisk(sel.risk)),muted,10,850);
 
   svg.innerHTML=h;
@@ -459,12 +459,12 @@ function drawRule(){
   const panel=css("--panel"), panel2=css("--panel2"), border=css("--border"), muted=css("--muted"), textc=css("--text");
   const acc=css("--accent"), blue=css("--blue"), warn=css("--warn"), rose=css("--rose"), gold=css("--gold");
   let h='<rect x="8" y="10" width="504" height="300" rx="18" fill="'+panel+'" stroke="'+border+'"/>';
-  h+=text(40,40,"Rule δ maps signal into action",muted,12,850);
+  h+=text(40,40,"Rule Î´ maps signal into action",muted,12,850);
 
   // Nodes
-  const states=[{name:"θ₀",x:70,y:100,color:blue},{name:"θ₁",x:70,y:210,color:rose}];
+  const states=[{name:"Î¸â‚€",x:70,y:100,color:blue},{name:"Î¸â‚",x:70,y:210,color:rose}];
   const signals=[{name:"x=0",x:220,y:100},{name:"x=1",x:220,y:210}];
-  const actions=[{name:"a₀",x:390,y:100,color:blue},{name:"a₁",x:390,y:210,color:rose}];
+  const actions=[{name:"aâ‚€",x:390,y:100,color:blue},{name:"aâ‚",x:390,y:210,color:rose}];
 
   states.forEach(s=>{h+=circle(s.x,s.y,24,s.color,"none",.15);h+=circle(s.x,s.y,7,s.color);h+=text(s.x,s.y+4,s.name,s.color,13,900,"middle");});
   signals.forEach(s=>{h+=rect(s.x-32,s.y-18,64,36,panel2,border,14,1);h+=text(s.x,s.y+4,s.name,textc,12,900,"middle");});
@@ -472,24 +472,24 @@ function drawRule(){
 
   // State to signal probabilities
   h+=line(94,100,188,100,blue,3,.70); h+=text(135,91,"q",blue,10,900,"middle");
-  h+=line(94,100,188,210,blue,2,.35); h+=text(130,165,"1−q",muted,9,850);
+  h+=line(94,100,188,210,blue,2,.35); h+=text(130,165,"1âˆ’q",muted,9,850);
   h+=line(94,210,188,210,rose,3,.70); h+=text(135,230,"q",rose,10,900,"middle");
-  h+=line(94,210,188,100,rose,2,.35); h+=text(130,146,"1−q",muted,9,850);
+  h+=line(94,210,188,100,rose,2,.35); h+=text(130,146,"1âˆ’q",muted,9,850);
 
   function actionForSignal(x){
     const id=sel.id;
-    if(id==="always0") return "a₀";
-    if(id==="always1") return "a₁";
-    if(id==="follow") return x===0?"a₀":"a₁";
-    if(id==="reverse") return x===0?"a₁":"a₀";
-    if(id==="mix") return x===0?"a₀":"mix";
+    if(id==="always0") return "aâ‚€";
+    if(id==="always1") return "aâ‚";
+    if(id==="follow") return x===0?"aâ‚€":"aâ‚";
+    if(id==="reverse") return x===0?"aâ‚":"aâ‚€";
+    if(id==="mix") return x===0?"aâ‚€":"mix";
     if(id==="minimax") return "mix";
     return x===0?(posteriorLosses(p,0).action):(posteriorLosses(p,1).action);
   }
   [0,1].forEach((x,i)=>{
     const y=signals[i].y, a=actionForSignal(x);
-    if(a==="a₀"){h+=line(252,y,366,100,blue,3,.75);h+=text(312,y-10,"δ",blue,10,900);}
-    else if(a==="a₁"){h+=line(252,y,366,210,rose,3,.75);h+=text(312,y+18,"δ",rose,10,900);}
+    if(a==="aâ‚€"){h+=line(252,y,366,100,blue,3,.75);h+=text(312,y-10,"Î´",blue,10,900);}
+    else if(a==="aâ‚"){h+=line(252,y,366,210,rose,3,.75);h+=text(312,y+18,"Î´",rose,10,900);}
     else {h+=line(252,y,366,100,blue,2,.45,"5 5");h+=line(252,y,366,210,rose,2,.45,"5 5");h+=text(312,y+4,"randomize",acc,9,900);}
   });
 
@@ -510,15 +510,15 @@ function drawPosterior(){
     const y=84+i*116, r=posteriorLosses(p,x);
     h+=rect(42,y,420,82,panel2,border,16,1);
     h+=text(62,y+25,"after observing x="+x,textc,13,900);
-    h+=text(62,y+50,"P(θ₁ | x) = "+fmt(r.post1),blue,11,900);
+    h+=text(62,y+50,"P(Î¸â‚ | x) = "+fmt(r.post1),blue,11,900);
     const maxL=Math.max(r.lossA0,r.lossA1,.01);
     const bx=240, bw=170;
     const w0=bw*r.lossA0/maxL, w1=bw*r.lossA1/maxL;
-    h+=text(bx,y+30,"loss(a₀)",blue,10,900);
+    h+=text(bx,y+30,"loss(aâ‚€)",blue,10,900);
     h+=rect(bx+70,y+18,w0,12,blue,"none",6,.55);
-    h+=text(bx,y+57,"loss(a₁)",rose,10,900);
+    h+=text(bx,y+57,"loss(aâ‚)",rose,10,900);
     h+=rect(bx+70,y+45,w1,12,rose,"none",6,.55);
-    h+=text(420,y+41,"choose "+r.action,(r.action==="a₀"?blue:rose),12,900,"end");
+    h+=text(420,y+41,"choose "+r.action,(r.action==="aâ‚€"?blue:rose),12,900,"end");
   });
   h+=rect(42,258,420,28,panel2,border,12,1);
   h+=text(62,277,"Bayes deterministic rule: "+bayesDecisionRule(p),acc,11,900);
@@ -559,16 +559,16 @@ function updateText(){
   alphaControl.style.display=p.rule==="mix"?"":"none";
 
   document.getElementById("eqBox").innerHTML =
-    '<span class="formula">R(θ,δ)=Eθ[L(θ,δ(X))]</span>'+
+    '<span class="formula">R(Î¸,Î´)=EÎ¸[L(Î¸,Î´(X))]</span>'+
     '<span class="mathNote">Current selected rule: '+sel.label+'. Risk vector = ('+fmt(sel.risk[0])+', '+fmt(sel.risk[1])+').</span>';
 
   const miniStats=[
     ["Bayes rule", bayes.label],
     ["Bayes risk", fmt(bayesRisk(sel.risk,p))],
     ["Minimax risk", fmt(maxRisk(sel.risk))],
-    ["π₁", fmt(p.pi1)],
-    ["R(θ₀,δ)", fmt(sel.risk[0])],
-    ["R(θ₁,δ)", fmt(sel.risk[1])]
+    ["Ï€â‚", fmt(p.pi1)],
+    ["R(Î¸â‚€,Î´)", fmt(sel.risk[0])],
+    ["R(Î¸â‚,Î´)", fmt(sel.risk[1])]
   ];
   document.getElementById("miniGrid").innerHTML=miniStats.map(z=>'<div class="miniStat"><div class="k">'+z[0]+'</div><div class="v">'+z[1]+'</div></div>').join("");
 
@@ -591,8 +591,8 @@ function updateText(){
 
   let notice="Move the prior: the Bayes supporting line rotates. Move losses: the risk points stretch. Move signal accuracy: the follow-signal rule moves toward the origin.";
   if(p.q>.9) notice="High signal accuracy makes the follow-signal rule very close to the origin: both state risks become small.";
-  if(p.cFN>p.cFP*2) notice="Misses are much more costly than false alarms. Bayes tends to favor action a₁ more often.";
-  if(p.cFP>p.cFN*2) notice="False alarms are much more costly than misses. Bayes tends to favor action a₀ more often.";
+  if(p.cFN>p.cFP*2) notice="Misses are much more costly than false alarms. Bayes tends to favor action aâ‚ more often.";
+  if(p.cFP>p.cFN*2) notice="False alarms are much more costly than misses. Bayes tends to favor action aâ‚€ more often.";
   document.getElementById("noticeText").innerHTML=notice;
 }
 
@@ -610,3 +610,4 @@ drawAll();
 </script>
 </body>
 </html>
+

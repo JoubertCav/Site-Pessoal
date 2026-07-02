@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -140,15 +140,15 @@
     <section class="defs">
       <div class="def">
         <div class="tag">Product integral</div>
-        <div class="math">∫<sub>X×Y</sub> h(x,y)d(μ×ν)<br>=∫∫h(x,y)dν(y)dμ(x)</div>
+        <div class="math">âˆ«<sub>XÃ—Y</sub> h(x,y)d(Î¼Ã—Î½)<br>=âˆ«âˆ«h(x,y)dÎ½(y)dÎ¼(x)</div>
       </div>
       <div class="def">
         <div class="tag">Change order</div>
-        <div class="math">∫[∫h(x,y)dν]dμ<br>=∫[∫h(x,y)dμ]dν</div>
+        <div class="math">âˆ«[âˆ«h(x,y)dÎ½]dÎ¼<br>=âˆ«[âˆ«h(x,y)dÎ¼]dÎ½</div>
       </div>
       <div class="def">
         <div class="tag">Independence</div>
-        <div class="math">P<sub>(X,Y)</sub>=P<sub>X</sub>×P<sub>Y</sub><br>E[h(X,Y)]=∫∫h dP<sub>X</sub>dP<sub>Y</sub></div>
+        <div class="math">P<sub>(X,Y)</sub>=P<sub>X</sub>Ã—P<sub>Y</sub><br>E[h(X,Y)]=âˆ«âˆ«h dP<sub>X</sub>dP<sub>Y</sub></div>
       </div>
       <div class="def">
         <div class="tag">Iterated expectation</div>
@@ -163,7 +163,7 @@
         <div class="control">
           <label for="funcSelect">Integrand h(x,y)</label>
           <select id="funcSelect">
-            <option value="product">smooth product: x·y</option>
+            <option value="product">smooth product: xÂ·y</option>
             <option value="interaction">interaction: sin + xy</option>
             <option value="indicator">event: 1{x+y&gt;c}</option>
             <option value="peak">localized peak</option>
@@ -184,8 +184,8 @@
         <div class="control">
           <label for="orderSelect">Integration order</label>
           <select id="orderSelect">
-            <option value="yx">first y, then x: ∫[∫h dy]dx</option>
-            <option value="xy">first x, then y: ∫[∫h dx]dy</option>
+            <option value="yx">first y, then x: âˆ«[âˆ«h dy]dx</option>
+            <option value="xy">first x, then y: âˆ«[âˆ«h dx]dy</option>
           </select>
         </div>
 
@@ -212,7 +212,7 @@
         </div>
 
         <div class="eqBox" id="eqBox">
-          ∫∫h(x,y)dμ(x)dν(y) = ∫∫h(x,y)dν(y)dμ(x).
+          âˆ«âˆ«h(x,y)dÎ¼(x)dÎ½(y) = âˆ«âˆ«h(x,y)dÎ½(y)dÎ¼(x).
         </div>
 
         <div class="control">
@@ -241,7 +241,7 @@
           <div class="card plotCard">
             <div class="plotHead">
               <div class="plotTitle">Inner integral as a function</div>
-              <div class="plotSub" id="sliceSub">x ↦ ∫h(x,y)dν(y)</div>
+              <div class="plotSub" id="sliceSub">x â†¦ âˆ«h(x,y)dÎ½(y)</div>
             </div>
             <svg id="sliceSvg" viewBox="0 0 520 285" preserveAspectRatio="xMidYMid meet"></svg>
           </div>
@@ -263,8 +263,8 @@
             </div>
             <div class="summary">
               <div><strong>Product integral.</strong><br>Area is computed over the rectangle by adding contributions from small cells.</div>
-              <div><strong>Fubini.</strong><br>If ∫|h|d(μ×ν)&lt;∞, both iterated integrals exist and agree.</div>
-              <div><strong>Tonelli.</strong><br>If h≥0, both orders are safe, possibly with value +∞.</div>
+              <div><strong>Fubini.</strong><br>If âˆ«|h|d(Î¼Ã—Î½)&lt;âˆž, both iterated integrals exist and agree.</div>
+              <div><strong>Tonelli.</strong><br>If hâ‰¥0, both orders are safe, possibly with value +âˆž.</div>
               <div><strong>Iterated expectation.</strong><br>E[h(X,Y)] = E[E[h(X,Y)|X]], a slice-average followed by an outer average.</div>
             </div>
           </div>
@@ -279,7 +279,7 @@
       </section>
     </main>
 
-    <footer>Minimal interactive notebook — Fubini as slice geometry.</footer>
+    <footer>Minimal interactive notebook â€” Fubini as slice geometry.</footer>
   </div>
 
 <script>
@@ -301,7 +301,7 @@ let displayMode="mass";
 function css(v){return getComputedStyle(body).getPropertyValue(v).trim();}
 function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
 function fmt(x){
-  if(!isFinite(x)) return x>0?"+∞":"−∞";
+  if(!isFinite(x)) return x>0?"+âˆž":"âˆ’âˆž";
   if(Math.abs(x)<10) return x.toFixed(4);
   return x.toFixed(2);
 }
@@ -414,8 +414,8 @@ function drawMain(){
   const panel=css("--panel"),border=css("--border"),muted=css("--muted"),textc=css("--text"),grid=css("--grid"),acc=css("--accent"),blue=css("--blue"),warn=css("--warn");
   const x0=70,y0=52,size=330;
   let out=`<rect x="8" y="10" width="964" height="405" rx="20" fill="${panel}" stroke="${border}"/>`;
-  out+=text(70,34,"product space [0,1]×[0,1]",muted,13,850);
-  out+=text(502,34,"cell contribution: h(x,y) · density",muted,13,850);
+  out+=text(70,34,"product space [0,1]Ã—[0,1]",muted,13,850);
+  out+=text(502,34,"cell contribution: h(x,y) Â· density",muted,13,850);
   out+=`<rect x="${x0}" y="${y0}" width="${size}" height="${size}" rx="12" fill="${css("--panel2")}" stroke="${border}"/>`;
 
   const n=data.n, cell=size/n;
@@ -454,9 +454,9 @@ function drawMain(){
   const t1=orderTotal("yx"), t2=orderTotal("xy");
   out+=`<rect x="465" y="200" width="445" height="142" rx="18" fill="${panel2}" stroke="${border}"/>`;
   out+=text(488,232,"Iterated totals",textc,15,900);
-  out+=text(488,263,`∫[∫h(x,y) dy] dx ≈ ${fmt(t1)}`,blue,14,900);
-  out+=text(488,292,`∫[∫h(x,y) dx] dy ≈ ${fmt(t2)}`,acc,14,900);
-  out+=text(488,321,`∫|h| d(μ×ν) ≈ ${fmt(data.absTotal)}`,funcSelect.value==="unsafe"?warn:muted,13,850);
+  out+=text(488,263,`âˆ«[âˆ«h(x,y) dy] dx â‰ˆ ${fmt(t1)}`,blue,14,900);
+  out+=text(488,292,`âˆ«[âˆ«h(x,y) dx] dy â‰ˆ ${fmt(t2)}`,acc,14,900);
+  out+=text(488,321,`âˆ«|h| d(Î¼Ã—Î½) â‰ˆ ${fmt(data.absTotal)}`,funcSelect.value==="unsafe"?warn:muted,13,850);
 
   if(funcSelect.value==="unsafe"){
     out+=`<rect x="465" y="358" width="445" height="36" rx="13" fill="${warn}" fill-opacity=".10" stroke="${warn}" stroke-opacity=".35"/>`;
@@ -499,7 +499,7 @@ function drawSlice(){
   const sx=px(vals[k].t,0,1,x0,x1), sy=py(sv,minv,maxv,y0,y1);
   out+=line(sx,y0,sx,y1,blue,1.4,.35,"5 5");
   out+=`<circle cx="${sx}" cy="${sy}" r="6" fill="${blue}" stroke="${panel}" stroke-width="2"/>`;
-  out+=text(66,32,orderSelect.value==="yx"?"x ↦ ∫h(x,y)dν(y)":"y ↦ ∫h(x,y)dμ(x)",blue,12,900);
+  out+=text(66,32,orderSelect.value==="yx"?"x â†¦ âˆ«h(x,y)dÎ½(y)":"y â†¦ âˆ«h(x,y)dÎ¼(x)",blue,12,900);
   out+=text(sx,sy-12,fmt(sv),textc,12,900,"middle");
   out+=text(250,260,orderSelect.value==="yx"?"outer variable x":"outer variable y",muted,12,800,"middle");
   svg.innerHTML=out;
@@ -518,13 +518,13 @@ function drawFlow(){
   node(42,54,132,74,"h(x,y)","cell values",acc);
   node(198,38,132,74,"inner y","vertical slices",blue);
   node(198,142,132,74,"inner x","horizontal slices",acc);
-  node(354,92,126,84,"same total",`diff ≈ ${fmt(diff)}`,funcSelect.value==="unsafe"?warn:acc);
+  node(354,92,126,84,"same total",`diff â‰ˆ ${fmt(diff)}`,funcSelect.value==="unsafe"?warn:acc);
   out+=line(174,91,198,75,muted,1.4,.6);
   out+=line(174,91,198,179,muted,1.4,.6);
   out+=line(330,75,354,121,muted,1.4,.6);
   out+=line(330,179,354,121,muted,1.4,.6);
-  out+=text(264,122,`∫∫ = ${fmt(t1)}`,blue,12,900,"middle");
-  out+=text(264,236,`∫∫ = ${fmt(t2)}`,acc,12,900,"middle");
+  out+=text(264,122,`âˆ«âˆ« = ${fmt(t1)}`,blue,12,900,"middle");
+  out+=text(264,236,`âˆ«âˆ« = ${fmt(t2)}`,acc,12,900,"middle");
   if(funcSelect.value==="unsafe"){
     out+=text(260,250,"mathematical equality may fail without absolute integrability",warn,12,850,"middle");
   }else{
@@ -535,7 +535,7 @@ function drawFlow(){
 function hName(){
   const f=funcSelect.value;
   if(f==="product") return "h(x,y)=xy";
-  if(f==="interaction") return "h(x,y)=.35+.35sin(2πx)cos(2πy)+a xy";
+  if(f==="interaction") return "h(x,y)=.35+.35sin(2Ï€x)cos(2Ï€y)+a xy";
   if(f==="indicator") return "h(x,y)=1{x+y>c}";
   if(f==="peak") return "h is a localized nonnegative peak";
   if(f==="signed") return "h is a signed wave";
@@ -552,26 +552,26 @@ function updateText(){
   paramVal.textContent=(+paramRange.value).toFixed(2);
   gridVal.textContent=gridRange.value;
   const t1=orderTotal("yx"), t2=orderTotal("xy");
-  document.getElementById("sliceSub").innerHTML=orderSelect.value==="yx"?"x ↦ ∫h(x,y)dν(y)":"y ↦ ∫h(x,y)dμ(x)";
+  document.getElementById("sliceSub").innerHTML=orderSelect.value==="yx"?"x â†¦ âˆ«h(x,y)dÎ½(y)":"y â†¦ âˆ«h(x,y)dÎ¼(x)";
   document.getElementById("eqBox").innerHTML=
     `Current: ${hName()}<br>`+
-    `vertical order ≈ <strong>${fmt(t1)}</strong>, horizontal order ≈ <strong>${fmt(t2)}</strong>.`;
+    `vertical order â‰ˆ <strong>${fmt(t1)}</strong>, horizontal order â‰ˆ <strong>${fmt(t2)}</strong>.`;
 
   const safe = funcSelect.value!=="unsafe";
   const nonneg = ["product","indicator","peak"].includes(funcSelect.value);
   const list=document.getElementById("logicList");
   let items=[];
   if(nonneg){
-    items=[["✓","h≥0: Tonelli allows either order, even before knowing finiteness."],
-           ["✓","inner slice integrals are nonnegative."],
-           ["✓","expectation is accumulated mass."]];
+    items=[["âœ“","hâ‰¥0: Tonelli allows either order, even before knowing finiteness."],
+           ["âœ“","inner slice integrals are nonnegative."],
+           ["âœ“","expectation is accumulated mass."]];
   }else if(safe){
-    items=[["✓","signed, but numerically integrable on the square."],
-           ["✓","absolute integrability makes Fubini safe."],
-           ["✓","order change preserves the total."]];
+    items=[["âœ“","signed, but numerically integrable on the square."],
+           ["âœ“","absolute integrability makes Fubini safe."],
+           ["âœ“","order change preserves the total."]];
   }else{
     items=[["!","signed singular behavior near the diagonal."],
-           ["✕","absolute integrability is not guaranteed."],
+           ["âœ•","absolute integrability is not guaranteed."],
            ["!","changing order can become mathematically unsafe."]];
   }
   list.innerHTML=items.map(([m,t])=>`<div class="logicItem"><span class="mark">${m}</span><span>${t}</span></div>`).join("");
@@ -610,3 +610,4 @@ drawAll();
 </script>
 </body>
 </html>
+

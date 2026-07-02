@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -288,9 +288,9 @@
         <div id="themeToggle" class="theme-toggle" role="button" aria-label="Toggle dark and light mode" tabindex="0">
           <span class="label" id="themeLabel">light mode</span>
           <div class="switch">
-            <span class="icon sun">☀</span>
-            <span class="icon moon">☾</span>
-            <div class="thumb" id="themeThumb">☀</div>
+            <span class="icon sun">â˜€</span>
+            <span class="icon moon">â˜¾</span>
+            <div class="thumb" id="themeThumb">â˜€</div>
           </div>
         </div>
       </div>
@@ -349,7 +349,7 @@
         <div id="compactMessage" class="note-box"></div>
         <div class="summary-box">
           <strong>Visual proof.</strong>
-          Compact \(K\) ⇒ compact image \(f(K)\). In \(\mathbb R\), compact means the image interval contains its endpoints, so the extrema are attained.
+          Compact \(K\) â‡’ compact image \(f(K)\). In \(\mathbb R\), compact means the image interval contains its endpoints, so the extrema are attained.
         </div>
       </aside>
 
@@ -358,7 +358,7 @@
           <div class="hero-top">
             <div>
               <h2 style="margin:0; font-family:Georgia, 'Times New Roman', serif; letter-spacing:-.02em">One theorem, one diagram</h2>
-              <p>Read the picture from left to right: <strong>compact domain</strong> → <strong>continuous graph</strong> → <strong>image interval with attained endpoints</strong>.</p>
+              <p>Read the picture from left to right: <strong>compact domain</strong> â†’ <strong>continuous graph</strong> â†’ <strong>image interval with attained endpoints</strong>.</p>
             </div>
             <div id="heroStatus" class="status">extrema attained</div>
           </div>
@@ -399,24 +399,24 @@
             <div class="failure-card">
               <h4>Open interval</h4>
               <svg id="miniOpen" class="mini-svg" viewBox="0 0 260 180"></svg>
-              <p>Endpoints missing ⇒ bounds exist but are not reached.</p>
+              <p>Endpoints missing â‡’ bounds exist but are not reached.</p>
             </div>
             <div class="failure-card">
               <h4>Unbounded domain</h4>
               <svg id="miniUnbounded" class="mini-svg" viewBox="0 0 260 180"></svg>
-              <p>One side escapes to infinity ⇒ no global maximum.</p>
+              <p>One side escapes to infinity â‡’ no global maximum.</p>
             </div>
             <div class="failure-card">
               <h4>Discontinuous map</h4>
               <svg id="miniDiscontinuous" class="mini-svg" viewBox="0 0 260 180"></svg>
-              <p>Jump at the endpoint ⇒ supremum may fail to be attained.</p>
+              <p>Jump at the endpoint â‡’ supremum may fail to be attained.</p>
             </div>
           </div>
         </section>
 
         <section class="footer-strip">
           <div class="strip-box"><strong>Statement.</strong> Continuous \(f:K\to\mathbb R\) with compact \(K\subset\mathbb R^n\) attains both \(\min_K f\) and \(\max_K f\).</div>
-          <div class="strip-box"><strong>Heine–Borel.</strong> In \(\mathbb R^n\), compact = closed + bounded. That is why those are the practical hypotheses.</div>
+          <div class="strip-box"><strong>Heineâ€“Borel.</strong> In \(\mathbb R^n\), compact = closed + bounded. That is why those are the practical hypotheses.</div>
           <div class="strip-box"><strong>Optimization.</strong> A continuous objective on a compact feasible set always has a global minimizer and maximizer.</div>
         </section>
       </main>
@@ -462,7 +462,7 @@
     };
 
     const css = name => getComputedStyle(document.body).getPropertyValue(name).trim();
-    const fmt = x => (x < 0 ? '−' : '') + Math.abs(x).toFixed(2);
+    const fmt = x => (x < 0 ? 'âˆ’' : '') + Math.abs(x).toFixed(2);
     const mapLinear = (x,a,b,c,d) => c + (x-a)*(d-c)/(b-a);
 
     function updateSliderFill(input){
@@ -476,7 +476,7 @@
       document.body.classList.toggle('dark', theme === 'dark');
       localStorage.setItem('evt-diagram-theme', theme);
       els.themeLabel.textContent = theme === 'dark' ? 'dark mode' : 'light mode';
-      els.themeThumb.textContent = theme === 'dark' ? '☾' : '☀';
+      els.themeThumb.textContent = theme === 'dark' ? 'â˜¾' : 'â˜€';
       renderAll();
     }
 
@@ -620,7 +620,7 @@
 
       els.intervalBadge.textContent = `K = [${fmt(a)}, ${fmt(b)}]`;
       els.rangeBadge.textContent = `f(K) = [${fmt(ext.minY)}, ${fmt(ext.maxY)}]`;
-      els.witnessBadge.textContent = `x_min ≈ ${fmt(ext.minX)},  x_max ≈ ${fmt(ext.maxX)}`;
+      els.witnessBadge.textContent = `x_min â‰ˆ ${fmt(ext.minX)},  x_max â‰ˆ ${fmt(ext.maxX)}`;
       els.compactMessage.innerHTML = `The colored domain points <strong>\(x_{\min}\)</strong> and <strong>\(x_{\max}\)</strong> are carried by the graph to the colored endpoints of the image interval. The theorem guarantees these endpoint values are <strong>attained</strong>.`;
       els.heroStatus.textContent = 'extrema attained';
     }
@@ -725,3 +725,4 @@
   </script>
 </body>
 </html>
+

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -86,7 +86,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
 <div class="app">
   <header>
     <div>
-      <div class="eyebrow"><span class="dot"></span> Microeconomics · Pricing</div>
+      <div class="eyebrow"><span class="dot"></span> Microeconomics Â· Pricing</div>
       <h1>Two-part tariffs and nonlinear pricing</h1>
       <p class="subtitle">Entry fees, usage prices, consumer types, screening menus, and surplus extraction. The app links a common two-part tariff to a simple nonlinear menu.</p>
     </div>
@@ -122,14 +122,14 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
 
     <main class="main">
       <section class="formula-row">
-        <div class="card formula"><div><div class="name">Demand and quantity</div><div class="math mathline">q<sub>i</sub>(p)=max{0,(a<sub>i</sub>−p)/b<sub>i</sub>}</div></div><div class="soft-eq">usage price determines quantity for each type</div></div>
-        <div class="card formula"><div><div class="name">Consumer surplus</div><div class="math mathline">CS<sub>i</sub>(p)=½(a<sub>i</sub>−p)q<sub>i</sub></div></div><div class="soft-eq">entry is attractive only if this covers the fee</div></div>
-        <div class="card formula"><div><div class="name">Two-part tariff</div><div class="math mathline">T(q)=F+pq</div></div><div class="soft-eq">enter iff <span class="math-inline">CS<sub>i</sub>(p) ≥ F</span></div></div>
-        <div class="card formula"><div><div class="name">Nonlinear menu</div><div class="math mathline">U<sub>ij</sub>=CS<sub>i</sub>(p<sub>j</sub>)−F<sub>j</sub></div></div><div class="formula-chip math">j ∈ {basic,premium}</div></div>
+        <div class="card formula"><div><div class="name">Demand and quantity</div><div class="math mathline">q<sub>i</sub>(p)=max{0,(a<sub>i</sub>âˆ’p)/b<sub>i</sub>}</div></div><div class="soft-eq">usage price determines quantity for each type</div></div>
+        <div class="card formula"><div><div class="name">Consumer surplus</div><div class="math mathline">CS<sub>i</sub>(p)=Â½(a<sub>i</sub>âˆ’p)q<sub>i</sub></div></div><div class="soft-eq">entry is attractive only if this covers the fee</div></div>
+        <div class="card formula"><div><div class="name">Two-part tariff</div><div class="math mathline">T(q)=F+pq</div></div><div class="soft-eq">enter iff <span class="math-inline">CS<sub>i</sub>(p) â‰¥ F</span></div></div>
+        <div class="card formula"><div><div class="name">Nonlinear menu</div><div class="math mathline">U<sub>ij</sub>=CS<sub>i</sub>(p<sub>j</sub>)âˆ’F<sub>j</sub></div></div><div class="formula-chip math">j âˆˆ {basic,premium}</div></div>
       </section>
 
       <section class="card diagram-card">
-        <div class="diagram-head"><div><h2>Main diagram: surplus and fee extraction</h2><p>For each type, the usage price creates a quantity and a consumer-surplus triangle. The entry fee extracts part or all of that surplus.</p></div><span class="small">left: low type · right: high type</span></div>
+        <div class="diagram-head"><div><h2>Main diagram: surplus and fee extraction</h2><p>For each type, the usage price creates a quantity and a consumer-surplus triangle. The entry fee extracts part or all of that surplus.</p></div><span class="small">left: low type Â· right: high type</span></div>
         <svg id="mainSvg" viewBox="0 0 1180 590"></svg>
         <div class="legend">
           <span class="legend-item"><span class="swatch"></span> Low-type demand</span>
@@ -143,11 +143,11 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
           <div class="metric"><div class="k">q<sub>L</sub></div><div class="v" id="qLMetric"></div></div>
           <div class="metric"><div class="k">CS<sub>L</sub></div><div class="v" id="csLMetric"></div></div>
           <div class="metric"><div class="k">Entry L?</div><div class="v" id="enterLMetric"></div></div>
-          <div class="metric"><div class="k">π<sub>L</sub></div><div class="v" id="piLMetric"></div></div>
+          <div class="metric"><div class="k">Ï€<sub>L</sub></div><div class="v" id="piLMetric"></div></div>
           <div class="metric"><div class="k">q<sub>H</sub></div><div class="v" id="qHMetric"></div></div>
           <div class="metric"><div class="k">CS<sub>H</sub></div><div class="v" id="csHMetric"></div></div>
           <div class="metric"><div class="k">Entry H?</div><div class="v" id="enterHMetric"></div></div>
-          <div class="metric"><div class="k">π total</div><div class="v" id="piTotalMetric"></div></div>
+          <div class="metric"><div class="k">Ï€ total</div><div class="v" id="piTotalMetric"></div></div>
         </div>
       </section>
 
@@ -172,7 +172,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
           <div class="summary">
             <div class="summary-line"><span>1</span><div>Compute quantity from the usage price: <span class="math-inline">q<sub>i</sub>(p)</span>.</div></div>
             <div class="summary-line"><span>2</span><div>Compute consumer surplus: <span class="math-inline">CS<sub>i</sub>(p)</span>.</div></div>
-            <div class="summary-line"><span>3</span><div>Participation under a common tariff requires <span class="math-inline">CS<sub>i</sub>(p) ≥ F</span>.</div></div>
+            <div class="summary-line"><span>3</span><div>Participation under a common tariff requires <span class="math-inline">CS<sub>i</sub>(p) â‰¥ F</span>.</div></div>
             <div class="summary-line"><span>4</span><div>Profit per entrant is <span class="math-inline">F + (p-c)q<sub>i</sub></span>.</div></div>
             <div class="summary-line"><span>5</span><div>With a menu, each type picks the plan that maximizes <span class="math-inline">max{0,U<sub>iB</sub>,U<sub>iP</sub>}</span>.</div></div>
           </div>
@@ -192,7 +192,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
     qLMetric:$("qLMetric"), csLMetric:$("csLMetric"), enterLMetric:$("enterLMetric"), piLMetric:$("piLMetric"), qHMetric:$("qHMetric"), csHMetric:$("csHMetric"), enterHMetric:$("enterHMetric"), piTotalMetric:$("piTotalMetric")
   };
 
-  function fmt(x,d=2){ if(!Number.isFinite(x)) return '—'; if(Math.abs(x)>=100) return x.toFixed(1); return x.toFixed(d); }
+  function fmt(x,d=2){ if(!Number.isFinite(x)) return 'â€”'; if(Math.abs(x)>=100) return x.toFixed(1); return x.toFixed(d); }
   function clamp(x,lo,hi){ return Math.max(lo,Math.min(hi,x)); }
   function S(tag,a={}){ const e=document.createElementNS('http://www.w3.org/2000/svg',tag); for(const[k,v] of Object.entries(a)) e.setAttribute(k,v); return e; }
   function line(svg,x1,y1,x2,y2,cls){ svg.appendChild(S('line',{x1,y1,x2,y2,class:cls})); }
@@ -307,7 +307,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
     text(svg,(X(Fcut1)+X(Fcut2))/2,mr.t+20,'only high-surplus type enters','muted-label');
     text(svg,(X(Fcut2)+X(Fmax))/2,mr.t+20,'nobody enters','muted-label');
 
-    text(svg,X(Fmax*0.58),Y(profitAt(Fmax*0.58))-10,'π(F)','label','start');
+    text(svg,X(Fmax*0.58),Y(profitAt(Fmax*0.58))-10,'Ï€(F)','label','start');
   }
 
   function drawMenu(m){
@@ -331,14 +331,14 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
     const W=760,H=360, mr={l:70,r:28,t:24,b:60}; const iw=W-mr.l-mr.r, ih=H-mr.t-mr.b; const maxV=Math.max(m.totalProfit,m.menuProfit,m.L.profit,m.H.profit,1)*1.15; const Y=v=>mr.t+ih-(v/maxV)*ih;
     for(let i=0;i<=4;i++){ const v=maxV*i/4; line(svg,mr.l,Y(v),mr.l+iw,Y(v),'grid'); text(svg,mr.l-10,Y(v)+4,fmt(v,0),'muted-label','end'); }
     line(svg,mr.l,mr.t+ih,mr.l+iw,mr.t+ih,'axis'); line(svg,mr.l,mr.t,mr.l,mr.t+ih,'axis'); text(svg,mr.l-40,mr.t+8,'profit','label');
-    const xs=[mr.l+60,mr.l+220,mr.l+380,mr.l+540], vals=[m.L.profit,m.H.profit,m.totalProfit,m.menuProfit], cls=['bar-l','bar-h','bar-profit','bar-muted'], labs=['π_L','π_H','common','menu'];
+    const xs=[mr.l+60,mr.l+220,mr.l+380,mr.l+540], vals=[m.L.profit,m.H.profit,m.totalProfit,m.menuProfit], cls=['bar-l','bar-h','bar-profit','bar-muted'], labs=['Ï€_L','Ï€_H','common','menu'];
     xs.forEach((x,i)=>{ const y=Y(vals[i]); rect(svg,x,y,80,mr.t+ih-y,cls[i],8); text(svg,x+40,y-8,fmt(vals[i]),'muted-label'); text(svg,x+40,mr.t+ih+28,labs[i],'bar-label'); });
   }
 
   function updateText(m){
     els.aLVal.textContent=fmt(m.aL,0); els.bLVal.textContent=fmt(m.bL,1); els.aHVal.textContent=fmt(m.aH,0); els.bHVal.textContent=fmt(m.bH,1); els.mcVal.textContent=fmt(m.c,0); els.pUseVal.textContent=fmt(m.p,0); els.feeVal.textContent=fmt(m.F,0); els.pBVal.textContent=fmt(m.pB,0); els.fBVal.textContent=fmt(m.fB,0); els.pPVal.textContent=fmt(m.pP,0); els.fPVal.textContent=fmt(m.fP,0);
     els.qLMetric.textContent=fmt(m.L.q); els.csLMetric.textContent=fmt(m.L.cs); els.enterLMetric.textContent=m.L.enter?'Yes':'No'; els.piLMetric.textContent=fmt(m.L.profit); els.qHMetric.textContent=fmt(m.H.q); els.csHMetric.textContent=fmt(m.H.cs); els.enterHMetric.textContent=m.H.enter?'Yes':'No'; els.piTotalMetric.textContent=fmt(m.totalProfit);
-    els.statusPill.textContent='Common tariff profit '+fmt(m.totalProfit)+' · menu profit '+fmt(m.menuProfit);
+    els.statusPill.textContent='Common tariff profit '+fmt(m.totalProfit)+' Â· menu profit '+fmt(m.menuProfit);
     const lowChoice = m.LP.choice==='out' ? 'opts out' : 'chooses '+m.LP.choice; const highChoice = m.HP.choice==='out' ? 'opts out' : 'chooses '+m.HP.choice;
     els.interpretation.innerHTML = `Under the common two-part tariff, the low type buys <span class="math-inline">q_L=${fmt(m.L.q)}</span> and the high type buys <span class="math-inline">q_H=${fmt(m.H.q)}</span>. The fee <span class="math-inline">F=${fmt(m.F)}</span> keeps the low type ${m.L.enter?'in':'out'} and the high type ${m.H.enter?'in':'out'}. In the menu, the low type ${lowChoice} while the high type ${highChoice}. The common tariff yields total profit <span class="math-inline">${fmt(m.totalProfit)}</span>, whereas the menu yields <span class="math-inline">${fmt(m.menuProfit)}</span>.`;
   }
@@ -351,3 +351,4 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
 </script>
 </body>
 </html>
+

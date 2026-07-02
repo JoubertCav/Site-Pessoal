@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -168,7 +168,7 @@ ul.clean li{margin:7px 0;}
       <div class="mark"></div>
       <div>
         <h1>Consumer Problem</h1>
-        <div class="sub">budget sets · KKT · corners</div>
+        <div class="sub">budget sets Â· KKT Â· corners</div>
       </div>
     </div>
 
@@ -176,16 +176,16 @@ ul.clean li{margin:7px 0;}
 
     <div class="section-title">Preference technology</div>
     <div class="control">
-      <label for="utilityType">Utility family <span class="value" id="utilityLabel">Cobb–Douglas</span></label>
+      <label for="utilityType">Utility family <span class="value" id="utilityLabel">Cobbâ€“Douglas</span></label>
       <select id="utilityType">
-        <option value="cobb">Cobb–Douglas: x₁ᵅx₂¹⁻ᵅ</option>
-        <option value="linear">Perfect substitutes: ax₁+bx₂</option>
-        <option value="leontief">Perfect complements: min{ax₁,bx₂}</option>
-        <option value="quasilinear">Quasi-linear: γ ln(x₁+ε)+x₂</option>
+        <option value="cobb">Cobbâ€“Douglas: xâ‚áµ…xâ‚‚Â¹â»áµ…</option>
+        <option value="linear">Perfect substitutes: axâ‚+bxâ‚‚</option>
+        <option value="leontief">Perfect complements: min{axâ‚,bxâ‚‚}</option>
+        <option value="quasilinear">Quasi-linear: Î³ ln(xâ‚+Îµ)+xâ‚‚</option>
       </select>
     </div>
     <div class="control" id="alphaControl">
-      <label>Preference parameter α <span class="value" id="alphaVal">0.50</span></label>
+      <label>Preference parameter Î± <span class="value" id="alphaVal">0.50</span></label>
       <div class="range-pair"><input type="range" id="alpha" min="0.10" max="0.90" step="0.01" value="0.50" /><input class="num-input" type="number" id="alphaNum" min="0.10" max="0.90" step="0.01" value="0.50" /></div>
     </div>
     <div class="control" id="aControl">
@@ -197,17 +197,17 @@ ul.clean li{margin:7px 0;}
       <div class="range-pair"><input type="range" id="b" min="0.25" max="3.00" step="0.05" value="1.00" /><input class="num-input" type="number" id="bNum" min="0.25" max="3.00" step="0.05" value="1.00" /></div>
     </div>
     <div class="control" id="gammaControl">
-      <label>Quasi-linear intensity γ <span class="value" id="gammaVal">4.00</span></label>
+      <label>Quasi-linear intensity Î³ <span class="value" id="gammaVal">4.00</span></label>
       <div class="range-pair"><input type="range" id="gamma" min="0.50" max="10.00" step="0.10" value="4.00" /><input class="num-input" type="number" id="gammaNum" min="0.50" max="10.00" step="0.10" value="4.00" /></div>
     </div>
 
     <div class="section-title">Budget data</div>
     <div class="control">
-      <label>Price p₁ <span class="value" id="p1Val">2.00</span></label>
+      <label>Price pâ‚ <span class="value" id="p1Val">2.00</span></label>
       <div class="range-pair"><input type="range" id="p1" min="0.50" max="6.00" step="0.05" value="2.00" /><input class="num-input" type="number" id="p1Num" min="0.50" max="6.00" step="0.05" value="2.00" /></div>
     </div>
     <div class="control">
-      <label>Price p₂ <span class="value" id="p2Val">2.00</span></label>
+      <label>Price pâ‚‚ <span class="value" id="p2Val">2.00</span></label>
       <div class="range-pair"><input type="range" id="p2" min="0.50" max="6.00" step="0.05" value="2.00" /><input class="num-input" type="number" id="p2Num" min="0.50" max="6.00" step="0.05" value="2.00" /></div>
     </div>
     <div class="control">
@@ -226,17 +226,17 @@ ul.clean li{margin:7px 0;}
       </select>
     </div>
     <div class="toggle-row">
-      <div class="pill"><strong id="slopePill">−1.00</strong> slope</div>
+      <div class="pill"><strong id="slopePill">âˆ’1.00</strong> slope</div>
       <div class="pill"><strong id="casePill">interior</strong> case</div>
     </div>
 
     <div class="section-title">Interactive candidate bundle</div>
     <div class="control">
-      <label>Candidate x₁ <span class="value" id="xTest1Val">2.00</span></label>
+      <label>Candidate xâ‚ <span class="value" id="xTest1Val">2.00</span></label>
       <div class="range-pair"><input type="range" id="xTest1" min="0" max="120" step="0.05" value="2.00" /><input class="num-input" type="number" id="xTest1Num" min="0" max="120" step="0.05" value="2.00" /></div>
     </div>
     <div class="control">
-      <label>Candidate x₂ <span class="value" id="xTest2Val">2.00</span></label>
+      <label>Candidate xâ‚‚ <span class="value" id="xTest2Val">2.00</span></label>
       <div class="range-pair"><input type="range" id="xTest2" min="0" max="120" step="0.05" value="2.00" /><input class="num-input" type="number" id="xTest2Num" min="0" max="120" step="0.05" value="2.00" /></div>
       <div class="help-mini">Drag the hollow point in the graph to test feasibility and utility.</div>
     </div>
@@ -284,45 +284,45 @@ ul.clean li{margin:7px 0;}
         <div class="status">
           <div class="stat">
             <div class="label">Optimal bundle</div>
-            <div class="num" id="bundleVal">—</div>
-            <div class="note" id="bundleNote">—</div>
+            <div class="num" id="bundleVal">â€”</div>
+            <div class="note" id="bundleNote">â€”</div>
           </div>
           <div class="stat">
             <div class="label">Utility level</div>
-            <div class="num" id="utilityVal">—</div>
-            <div class="note" id="utilityNote">—</div>
+            <div class="num" id="utilityVal">â€”</div>
+            <div class="note" id="utilityNote">â€”</div>
           </div>
           <div class="stat">
             <div class="label">MRS / price ratio</div>
-            <div class="num" id="mrsVal">—</div>
-            <div class="note" id="mrsNote">—</div>
+            <div class="num" id="mrsVal">â€”</div>
+            <div class="note" id="mrsNote">â€”</div>
           </div>
           <div class="stat">
             <div class="label">Binding constraints</div>
-            <div class="num" id="bindingVal">—</div>
-            <div class="note" id="bindingNote">—</div>
+            <div class="num" id="bindingVal">â€”</div>
+            <div class="note" id="bindingNote">â€”</div>
           </div>
         </div>
         <div class="solution-grid">
           <div class="solution-card">
             <div class="label">Good 1 solution</div>
-            <div class="num" id="solX1Val">—</div>
-            <div class="formula tex" id="solX1Formula">—</div>
+            <div class="num" id="solX1Val">â€”</div>
+            <div class="formula tex" id="solX1Formula">â€”</div>
           </div>
           <div class="solution-card">
             <div class="label">Good 2 solution</div>
-            <div class="num" id="solX2Val">—</div>
-            <div class="formula tex" id="solX2Formula">—</div>
+            <div class="num" id="solX2Val">â€”</div>
+            <div class="formula tex" id="solX2Formula">â€”</div>
           </div>
         </div>
         <div class="candidate-box">
           <h4>Candidate bundle check</h4>
-          <p><strong id="candidateVal">—</strong> · <span id="candidateNote">—</span></p>
+          <p><strong id="candidateVal">â€”</strong> Â· <span id="candidateNote">â€”</span></p>
         </div>
-        <div class="reading" id="interpretation">—</div>
+        <div class="reading" id="interpretation">â€”</div>
         <div class="notice">
-          <div class="item"><span class="dot"></span><span id="notice1">—</span></div>
-          <div class="item"><span class="dot"></span><span id="notice2">—</span></div>
+          <div class="item"><span class="dot"></span><span id="notice1">â€”</span></div>
+          <div class="item"><span class="dot"></span><span id="notice2">â€”</span></div>
         </div>
       </div>
     </section>
@@ -332,7 +332,7 @@ ul.clean li{margin:7px 0;}
         <div class="card-head">
           <div>
             <h3>Lagrange and KKT cases</h3>
-            <div class="hint">The equality method is a special case of Kuhn–Tucker geometry.</div>
+            <div class="hint">The equality method is a special case of Kuhnâ€“Tucker geometry.</div>
           </div>
         </div>
         <div class="math-card">
@@ -343,12 +343,12 @@ ul.clean li{margin:7px 0;}
           <div class="case" id="caseInterior">
             <h4>Interior</h4>
             <p>No nonnegativity constraint binds. Smooth indifference curve is tangent to the budget line.</p>
-            <div class="mini-eq">MRS = p₁/p₂</div>
+            <div class="mini-eq">MRS = pâ‚/pâ‚‚</div>
           </div>
           <div class="case" id="caseCorner">
             <h4>Corner</h4>
             <p>At least one good is zero. Tangency may fail because the feasible directions are one-sided.</p>
-            <div class="mini-eq">xᵢ=0 ⇒ νᵢ may be &gt;0</div>
+            <div class="mini-eq">xáµ¢=0 â‡’ Î½áµ¢ may be &gt;0</div>
           </div>
           <div class="case" id="caseKink">
             <h4>Kink / face</h4>
@@ -373,12 +373,12 @@ ul.clean li{margin:7px 0;}
           </div>
           <div class="existence-row">
             <div class="name">Closed</div>
-            <div class="explain">The inequalities p·x≤m and x≥0 define a closed set.</div>
+            <div class="explain">The inequalities pÂ·xâ‰¤m and xâ‰¥0 define a closed set.</div>
             <div class="check">OK</div>
           </div>
           <div class="existence-row">
             <div class="name">Bounded</div>
-            <div class="explain">With p₁,p₂&gt;0, each good satisfies xᵢ≤m/pᵢ.</div>
+            <div class="explain">With pâ‚,pâ‚‚&gt;0, each good satisfies xáµ¢â‰¤m/páµ¢.</div>
             <div class="check">OK</div>
           </div>
           <div class="existence-row">
@@ -435,7 +435,7 @@ ul.clean li{margin:7px 0;}
     interpretation:$('interpretation'), notice1:$('notice1'), notice2:$('notice2'), whatList:$('whatList'), caseInterior:$('caseInterior'), caseCorner:$('caseCorner'), caseKink:$('caseKink')
   };
 
-  const fmt = (x,d=2)=>Number.isFinite(x)?x.toFixed(d):'—';
+  const fmt = (x,d=2)=>Number.isFinite(x)?x.toFixed(d):'â€”';
   const clamp = (x,lo,hi)=>Math.max(lo,Math.min(hi,x));
   const eps = 1e-7;
   const svgNS = 'http://www.w3.org/2000/svg';
@@ -477,7 +477,7 @@ ul.clean li{margin:7px 0;}
   }
 
   function utilityLabel(type){
-    return ({cobb:'Cobb–Douglas',linear:'Perfect substitutes',leontief:'Perfect complements',quasilinear:'Quasi-linear'})[type] || type;
+    return ({cobb:'Cobbâ€“Douglas',linear:'Perfect substitutes',leontief:'Perfect complements',quasilinear:'Quasi-linear'})[type] || type;
   }
   function modeLabel(mode){
     return ({tangent:'Tangency/KKT',intercepts:'Intercepts',normal:'Price normal',income:'Expansion path'})[mode] || mode;
@@ -512,7 +512,7 @@ ul.clean li{margin:7px 0;}
     if(s.type==='cobb'){
       x1=s.alpha*m/p1; x2=(1-s.alpha)*m/p2; caseType='interior';
       note='Interior: both goods are strictly positive.';
-      detail='Cobb–Douglas with 0<α<1 spends fixed income shares on the two goods.';
+      detail='Cobbâ€“Douglas with 0<Î±<1 spends fixed income shares on the two goods.';
     }else if(s.type==='linear'){
       const bang1=s.a/p1, bang2=s.b/p2;
       if(Math.abs(bang1-bang2)<1e-5){ x1=m/(2*p1); x2=(m-p1*x1)/p2; caseType='face'; multi=true; note='Whole budget line is optimal.'; detail='Both goods give equal utility per dollar, so every point on the budget hyperplane is optimal.'; }
@@ -524,9 +524,9 @@ ul.clean li{margin:7px 0;}
       detail='The budget line supports the L-shaped indifference curve at its kink.';
     }else if(s.type==='quasilinear'){
       const raw=s.gamma*p2/p1 - 0.12;
-      if(raw<=0){ x1=0; x2=m/p2; caseType='corner'; note='Corner: x₁=0 because desired x₁ is negative.'; detail='The marginal value of the first unit of good 1 is too low relative to its price.'; }
-      else if(p1*raw>=m){ x1=m/p1; x2=0; caseType='corner'; note='Corner: x₂=0 because desired x₁ exceeds income.'; detail='Income is too low to reach the quasi-linear satiation-like target for good 1.'; }
-      else { x1=raw; x2=(m-p1*x1)/p2; caseType='interior'; note='Interior: MRS equals the price ratio.'; detail='Quasi-linear demand for x₁ is income-independent whenever x₂ remains positive.'; }
+      if(raw<=0){ x1=0; x2=m/p2; caseType='corner'; note='Corner: xâ‚=0 because desired xâ‚ is negative.'; detail='The marginal value of the first unit of good 1 is too low relative to its price.'; }
+      else if(p1*raw>=m){ x1=m/p1; x2=0; caseType='corner'; note='Corner: xâ‚‚=0 because desired xâ‚ exceeds income.'; detail='Income is too low to reach the quasi-linear satiation-like target for good 1.'; }
+      else { x1=raw; x2=(m-p1*x1)/p2; caseType='interior'; note='Interior: MRS equals the price ratio.'; detail='Quasi-linear demand for xâ‚ is income-independent whenever xâ‚‚ remains positive.'; }
     }
     const util=u(s,x1,x2);
     return {x1,x2,caseType,note,detail,multi,util};
@@ -595,8 +595,8 @@ ul.clean li{margin:7px 0;}
     }
     make('line',{x1:X(0),y1:Y(0),x2:X(xMax),y2:Y(0),class:'axisline'},svg);
     make('line',{x1:X(0),y1:Y(0),x2:X(0),y2:Y(yMax),class:'axisline'},svg);
-    make('text',{x:X(xMax)-5,y:Y(0)+42,'text-anchor':'end',class:'anno'},svg).textContent='x₁';
-    make('text',{x:X(0)-30,y:Y(yMax)+8,'text-anchor':'middle',class:'anno'},svg).textContent='x₂';
+    make('text',{x:X(xMax)-5,y:Y(0)+42,'text-anchor':'end',class:'anno'},svg).textContent='xâ‚';
+    make('text',{x:X(0)-30,y:Y(yMax)+8,'text-anchor':'middle',class:'anno'},svg).textContent='xâ‚‚';
 
     const poly=`${X(0)},${Y(0)} ${X(i1)},${Y(0)} ${X(0)},${Y(i2)}`;
     make('polygon',{points:poly,class:'budget-fill'},svg);
@@ -629,7 +629,7 @@ ul.clean li{margin:7px 0;}
         const xA=clamp(sol.x1-len,0,xMax), xB=clamp(sol.x1+len,0,xMax);
         const yA=sol.x2+slope*(xA-sol.x1), yB=sol.x2+slope*(xB-sol.x1);
         make('line',{x1:X(xA),y1:Y(yA),x2:X(xB),y2:Y(yB),class:'tangent'},svg);
-        make('text',{x:X(sol.x1)+10,y:Y(sol.x2)-24,class:'anno'},svg).textContent='MRS = p₁/p₂';
+        make('text',{x:X(sol.x1)+10,y:Y(sol.x2)-24,class:'anno'},svg).textContent='MRS = pâ‚/pâ‚‚';
       }else if(sol.caseType==='corner'){
         make('text',{x:X(sol.x1)+10,y:Y(sol.x2)-22,class:'anno'},svg).textContent='corner: one-sided feasible directions';
       }else if(sol.caseType==='kink'){
@@ -641,9 +641,9 @@ ul.clean li{margin:7px 0;}
     if(s.mode==='intercepts'){
       make('line',{x1:X(i1),y1:Y(0),x2:X(i1),y2:Y(0)+15,class:'bracket'},svg);
       make('line',{x1:X(0)-15,y1:Y(i2),x2:X(0),y2:Y(i2),class:'bracket'},svg);
-      make('text',{x:X(i1),y:Y(0)-10,'text-anchor':'middle',class:'anno'},svg).textContent='m/p₁';
-      make('text',{x:X(0)+12,y:Y(i2)-10,class:'anno'},svg).textContent='m/p₂';
-      make('text',{x:X(i1*.5),y:Y(i2*.5)-12,'text-anchor':'middle',class:'anno'},svg).textContent='slope = −p₁/p₂';
+      make('text',{x:X(i1),y:Y(0)-10,'text-anchor':'middle',class:'anno'},svg).textContent='m/pâ‚';
+      make('text',{x:X(0)+12,y:Y(i2)-10,class:'anno'},svg).textContent='m/pâ‚‚';
+      make('text',{x:X(i1*.5),y:Y(i2*.5)-12,'text-anchor':'middle',class:'anno'},svg).textContent='slope = âˆ’pâ‚/pâ‚‚';
     }
     if(s.mode==='normal'){
       const bx=i1*.45, by=i2*(1-.45);
@@ -652,7 +652,7 @@ ul.clean li{margin:7px 0;}
       const nx=s.p1/mag*normLen, ny=s.p2/mag*normLen;
       arrow(svg,X(bx),Y(by),X(bx+nx),Y(by+ny),'tangent');
       make('text',{x:X(bx+nx)+8,y:Y(by+ny),class:'anno'},svg).textContent='normal vector p';
-      make('text',{x:X(bx)-16,y:Y(by)+18,'text-anchor':'end',class:'anno'},svg).textContent='p·x=m';
+      make('text',{x:X(bx)-16,y:Y(by)+18,'text-anchor':'end',class:'anno'},svg).textContent='pÂ·x=m';
     }
     if(s.mode==='income'){
       const pts=[];
@@ -675,8 +675,8 @@ ul.clean li{margin:7px 0;}
     make('circle',{cx:X(cx),cy:Y(cy),r:7,class:'test-point '+(feasibleCand?'feasible':'')},svg);
     make('text',{x:X(cx)+10,y:Y(cy)-10,class:'test-label '+(feasibleCand?'feasible':'')},svg).textContent='candidate';
 
-    make('text',{x:X(i1)+2,y:Y(0)-7,class:'smalltext'},svg).textContent='m/p₁';
-    make('text',{x:X(0)+8,y:Y(i2)-8,class:'smalltext'},svg).textContent='m/p₂';
+    make('text',{x:X(i1)+2,y:Y(0)-7,class:'smalltext'},svg).textContent='m/pâ‚';
+    make('text',{x:X(0)+8,y:Y(i2)-8,class:'smalltext'},svg).textContent='m/pâ‚‚';
     currentGeom={ml,mt,gx,gy,xMax,yMax,W,H};
   }
 
@@ -733,7 +733,7 @@ ul.clean li{margin:7px 0;}
 
   function updateText(s,sol){
     const priceRatio=s.p1/s.p2;
-    let mrsText='—', mrsNote='—';
+    let mrsText='â€”', mrsNote='â€”';
     if(sol.caseType==='interior' && s.type!=='leontief'){
       mrsText=fmt(mrs(s,sol.x1,sol.x2),3)+' / '+fmt(priceRatio,3);
       mrsNote='At the optimum, MRS equals the price ratio.';
@@ -743,7 +743,7 @@ ul.clean li{margin:7px 0;}
       mrsText=fmt(priceRatio,3); mrsNote='Linear indifference curves are parallel to the budget line.';
     }else{
       const g=mrs(s,Math.max(sol.x1,1e-5),Math.max(sol.x2,1e-5));
-      mrsText=(Number.isFinite(g)?fmt(g,3):'—')+' / '+fmt(priceRatio,3);
+      mrsText=(Number.isFinite(g)?fmt(g,3):'â€”')+' / '+fmt(priceRatio,3);
       mrsNote='Tangency is not required at a corner.';
     }
 
@@ -756,16 +756,16 @@ ul.clean li{margin:7px 0;}
 
     const binds=[];
     if(Math.abs(s.p1*sol.x1+s.p2*sol.x2-s.m)<1e-5) binds.push('budget');
-    if(sol.x1<1e-5) binds.push('x₁=0');
-    if(sol.x2<1e-5) binds.push('x₂=0');
+    if(sol.x1<1e-5) binds.push('xâ‚=0');
+    if(sol.x2<1e-5) binds.push('xâ‚‚=0');
     if(sol.caseType==='kink') binds.push('kink');
     if(sol.caseType==='face') binds.push('face');
     els.bindingVal.textContent=binds.join(', ') || 'none';
     els.bindingNote.textContent='Active constraints determine the correct first-order logic.';
 
     const forms=solutionFormulas(s,sol);
-    els.solX1Val.textContent = `x₁* = ${fmt(sol.x1,3)}`;
-    els.solX2Val.textContent = `x₂* = ${fmt(sol.x2,3)}`;
+    els.solX1Val.textContent = `xâ‚* = ${fmt(sol.x1,3)}`;
+    els.solX2Val.textContent = `xâ‚‚* = ${fmt(sol.x2,3)}`;
     tex(els.solX1Formula, forms.f1);
     tex(els.solX2Formula, forms.f2);
 
@@ -778,16 +778,16 @@ ul.clean li{margin:7px 0;}
 
     const caseName=sol.caseType==='face'?'face':sol.caseType;
     els.casePill.textContent=caseName;
-    els.slopePill.textContent='−'+fmt(s.p1/s.p2,2);
+    els.slopePill.textContent='âˆ’'+fmt(s.p1/s.p2,2);
     els.diagramTag.textContent = sol.caseType==='interior'?'smooth interior':sol.caseType==='corner'?'corner solution':sol.caseType==='kink'?'kink solution':'multiple optima';
     els.interpretation.textContent=sol.detail;
 
     if(sol.caseType==='interior'){
       els.notice1.textContent='The budget hyperplane supports the upper contour set at a smooth point.';
-      els.notice2.textContent='The equality MRS = p₁/p₂ says that the indifference curve and budget line have the same slope.';
+      els.notice2.textContent='The equality MRS = pâ‚/pâ‚‚ says that the indifference curve and budget line have the same slope.';
     }else if(sol.caseType==='corner'){
       els.notice1.textContent='A corner is not a failure of optimization; it is a different KKT case.';
-      els.notice2.textContent='Do not impose MRS = p₁/p₂ when the consumer cannot move in both directions locally.';
+      els.notice2.textContent='Do not impose MRS = pâ‚/pâ‚‚ when the consumer cannot move in both directions locally.';
     }else if(sol.caseType==='kink'){
       els.notice1.textContent='At a kink, there is no single tangent; the price vector must lie in the normal cone.';
       els.notice2.textContent='For Leontief preferences, unused surplus of one good is worthless, so the optimum balances proportions.';
@@ -803,10 +803,10 @@ ul.clean li{margin:7px 0;}
       'Local nonsatiation makes the budget bind, but it does not guarantee an interior solution.'
     ];
     const specific={
-      cobb:['Cobb–Douglas with positive exponents never chooses zero consumption when income and prices are positive.','The optimum is characterized by income shares and a smooth tangency.'],
-      linear:['Perfect substitutes compare utility per dollar: a/p₁ versus b/p₂.','If the ratios are equal, the demand correspondence is a whole budget segment.'],
-      leontief:['Perfect complements create a kink: more of one good alone does not raise utility.','The optimal bundle lies on the ray ax₁=bx₂.'],
-      quasilinear:['Quasi-linear demand for x₁ is independent of income only when the interior solution has x₂>0.','Low income or extreme prices can still produce a corner.']
+      cobb:['Cobbâ€“Douglas with positive exponents never chooses zero consumption when income and prices are positive.','The optimum is characterized by income shares and a smooth tangency.'],
+      linear:['Perfect substitutes compare utility per dollar: a/pâ‚ versus b/pâ‚‚.','If the ratios are equal, the demand correspondence is a whole budget segment.'],
+      leontief:['Perfect complements create a kink: more of one good alone does not raise utility.','The optimal bundle lies on the ray axâ‚=bxâ‚‚.'],
+      quasilinear:['Quasi-linear demand for xâ‚ is independent of income only when the interior solution has xâ‚‚>0.','Low income or extreme prices can still produce a corner.']
     }[s.type];
     [...common,...specific].forEach(txt=>{const li=document.createElement('li');li.textContent=txt;els.whatList.appendChild(li);});
 
@@ -829,7 +829,7 @@ ul.clean li{margin:7px 0;}
     els.aControl.style.display=showAB?'block':'none';
     els.bControl.style.display=showAB?'block':'none';
     els.gammaControl.style.display=showGamma?'block':'none';
-    els.continuityText.textContent=s.type==='quasilinear'?'The logarithm is continuous because the app uses x₁+ε with ε>0.':'The selected utility is continuous on the displayed domain.';
+    els.continuityText.textContent=s.type==='quasilinear'?'The logarithm is continuous because the app uses xâ‚+Îµ with Îµ>0.':'The selected utility is continuous on the displayed domain.';
   }
 
   function render(){
@@ -904,3 +904,4 @@ ul.clean li{margin:7px 0;}
 </script>
 </body>
 </html>
+

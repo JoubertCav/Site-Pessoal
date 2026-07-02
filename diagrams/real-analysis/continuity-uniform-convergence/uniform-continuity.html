@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -206,13 +206,13 @@
       </div>
       <div class="top-actions">
         <div class="chip">one \(\delta\) for all \(x,y\)</div>
-        <div class="chip">Heine–Cantor: compact + continuous ⇒ uniformly continuous</div>
+        <div class="chip">Heineâ€“Cantor: compact + continuous â‡’ uniformly continuous</div>
         <div id="themeToggle" class="theme-toggle" role="button" aria-label="Toggle dark and light mode" tabindex="0">
           <span class="label" id="themeLabel">light mode</span>
           <div class="switch">
-            <span class="icon sun">☀</span>
-            <span class="icon moon">☾</span>
-            <div class="thumb" id="themeThumb">☀</div>
+            <span class="icon sun">â˜€</span>
+            <span class="icon moon">â˜¾</span>
+            <div class="thumb" id="themeThumb">â˜€</div>
           </div>
         </div>
       </div>
@@ -262,7 +262,7 @@
         </div>
 
         <div id="compactMessage" class="note-box"></div>
-        <div class="summary-box"><strong>Heine–Cantor.</strong> If \(K\subset\mathbb R^n\) is compact and \(f:K\to\mathbb R\) is continuous, then \(f\) is uniformly continuous on \(K\).</div>
+        <div class="summary-box"><strong>Heineâ€“Cantor.</strong> If \(K\subset\mathbb R^n\) is compact and \(f:K\to\mathbb R\) is continuous, then \(f\) is uniformly continuous on \(K\).</div>
       </aside>
 
       <main class="main">
@@ -366,7 +366,7 @@
         openLeft:false,
         openRight:false,
         description:'continuous on a compact interval',
-        formula:'f(x)=√x',
+        formula:'f(x)=âˆšx',
         f:x=>Math.sqrt(Math.max(0,x))
       },
       x2Compact: {
@@ -377,7 +377,7 @@
         openLeft:false,
         openRight:false,
         description:'continuous on a compact interval',
-        formula:'f(x)=x²',
+        formula:'f(x)=xÂ²',
         f:x=>x*x
       },
       x2R: {
@@ -387,8 +387,8 @@
         compact:false,
         openLeft:true,
         openRight:true,
-        description:'view of a noncompact domain ℝ',
-        formula:'f(x)=x² on ℝ',
+        description:'view of a noncompact domain â„',
+        formula:'f(x)=xÂ² on â„',
         f:x=>x*x
       },
       invOpen: {
@@ -437,7 +437,7 @@
     };
 
     const css = name => getComputedStyle(document.body).getPropertyValue(name).trim();
-    const fmt = x => (x < 0 ? '−' : '') + Math.abs(x).toFixed(2);
+    const fmt = x => (x < 0 ? 'âˆ’' : '') + Math.abs(x).toFixed(2);
     const mapLinear = (x,a,b,c,d) => c + (x-a)*(d-c)/(b-a);
 
     function setTheme(theme){
@@ -445,7 +445,7 @@
       document.body.classList.toggle('dark', theme === 'dark');
       localStorage.setItem('uniform-cont-theme', theme);
       els.themeLabel.textContent = theme === 'dark' ? 'dark mode' : 'light mode';
-      els.themeThumb.textContent = theme === 'dark' ? '☾' : '☀';
+      els.themeThumb.textContent = theme === 'dark' ? 'â˜¾' : 'â˜€';
       renderAll();
     }
 
@@ -600,9 +600,9 @@
       els.mainSvg.innerHTML = `
         <rect x="0" y="0" width="${W}" height="${H}" rx="24" fill="${css('--panel-2')}"/>
 
-        ${svgText(dom.x, 58, 'same δ tested everywhere on the domain', {size:22, weight:700, family:'Georgia, serif'})}
+        ${svgText(dom.x, 58, 'same Î´ tested everywhere on the domain', {size:22, weight:700, family:'Georgia, serif'})}
         ${svgText(graph.x, 228, 'graph of f : local vertical responses to the same horizontal scale', {size:22, weight:700, family:'Georgia, serif'})}
-        ${svgText(gauge.x-4, 58, 'ε target', {size:22, weight:700, family:'Georgia, serif'})}
+        ${svgText(gauge.x-4, 58, 'Îµ target', {size:22, weight:700, family:'Georgia, serif'})}
 
         <rect x="${dom.x}" y="${dom.y}" width="${dom.w}" height="${dom.h}" rx="22" fill="${css('--accent-soft')}" stroke="${css('--line')}"/>
         <line x1="${dom.x+30}" y1="${dom.y+dom.h/2}" x2="${dom.x+dom.w-30}" y2="${dom.y+dom.h/2}" stroke="${css('--muted')}" stroke-width="2.2"/>
@@ -611,7 +611,7 @@
         ${ex.openRight ? `<circle cx="${XD(b)}" cy="${dom.y+dom.h/2}" r="6" fill="${css('--panel-2')}" stroke="${css('--text')}" stroke-width="2.2"/>` : `<circle cx="${XD(b)}" cy="${dom.y+dom.h/2}" r="6" fill="${css('--text')}"/>`}
         ${svgText(XD(a), dom.y+dom.h/2-26, ex.openLeft ? '(' : '[', {anchor:'middle', size:22, family:'Georgia, serif', fill:css('--muted')})}
         ${svgText(XD(b), dom.y+dom.h/2-26, ex.openRight ? ')' : ']', {anchor:'middle', size:22, family:'Georgia, serif', fill:css('--muted')})}
-        ${svgText(dom.x+dom.w-84, dom.y+26, `δ = ${delta.toFixed(2)}`, {size:16, fill:css('--accent'), weight:700})}
+        ${svgText(dom.x+dom.w-84, dom.y+26, `Î´ = ${delta.toFixed(2)}`, {size:16, fill:css('--accent'), weight:700})}
 
         <rect x="${graph.x}" y="${graph.y}" width="${graph.w}" height="${graph.h}" rx="24" fill="rgba(255,255,255,.02)" stroke="${css('--line')}"/>
         ${grid}
@@ -622,9 +622,9 @@
         <circle cx="${wx1}" cy="${wy1}" r="6.6" fill="${wcol}" stroke="${css('--panel-2')}" stroke-width="2.2"/>
         <circle cx="${wx2}" cy="${wy2}" r="6.6" fill="${wcol}" stroke="${css('--panel-2')}" stroke-width="2.2"/>
         <line x1="${wx2+12}" y1="${Math.min(wy1,wy2)}" x2="${wx2+12}" y2="${Math.max(wy1,wy2)}" stroke="${wcol}" stroke-width="3"/>
-        ${svgText(wx2+20, (wy1+wy2)/2-6, `|Δf| = ${worst.diff.toFixed(2)}`, {size:15, fill:wcol, weight:700})}
-        ${svgText(graph.x+12, graph.y+24, 'green: within ε', {size:14, fill:css('--accent'), weight:700})}
-        ${svgText(graph.x+134, graph.y+24, 'red: exceeds ε', {size:14, fill:css('--accent-2'), weight:700})}
+        ${svgText(wx2+20, (wy1+wy2)/2-6, `|Î”f| = ${worst.diff.toFixed(2)}`, {size:15, fill:wcol, weight:700})}
+        ${svgText(graph.x+12, graph.y+24, 'green: within Îµ', {size:14, fill:css('--accent'), weight:700})}
+        ${svgText(graph.x+134, graph.y+24, 'red: exceeds Îµ', {size:14, fill:css('--accent-2'), weight:700})}
         ${svgText(graph.x+graph.w-12, graph.y+graph.h+24, 'x', {size:14, fill:css('--muted'), anchor:'end'})}
         ${svgText(graph.x+12, graph.y+18, 'f(x)', {size:14, fill:css('--muted'), family:'Georgia, serif'})}
 
@@ -635,19 +635,19 @@
         <rect x="${gaugeMid-22}" y="${Math.min(epsTop,epsBottom)}" width="44" height="${Math.abs(epsBottom-epsTop)}" rx="22" fill="rgba(95,127,157,.18)" stroke="${css('--accent-3')}" stroke-width="1.4"/>
         <circle cx="${gaugeMid}" cy="${epsTop}" r="7.8" fill="${css('--accent-3')}" stroke="${css('--panel-2')}" stroke-width="2.4"/>
         <circle cx="${gaugeMid}" cy="${epsBottom}" r="7.8" fill="${css('--accent-3')}" stroke="${css('--panel-2')}" stroke-width="2.4"/>
-        ${svgText(gaugeMid, epsTop-14, '+ε/2', {anchor:'middle', size:14, fill:css('--accent-3'), weight:700})}
-        ${svgText(gaugeMid, epsBottom+26, '−ε/2', {anchor:'middle', size:14, fill:css('--accent-3'), weight:700})}
-        ${svgText(gaugeMid, gauge.y+gauge.h-8, `ε = ${eps.toFixed(2)}`, {anchor:'middle', size:15, fill:css('--accent-3'), weight:700})}
+        ${svgText(gaugeMid, epsTop-14, '+Îµ/2', {anchor:'middle', size:14, fill:css('--accent-3'), weight:700})}
+        ${svgText(gaugeMid, epsBottom+26, 'âˆ’Îµ/2', {anchor:'middle', size:14, fill:css('--accent-3'), weight:700})}
+        ${svgText(gaugeMid, gauge.y+gauge.h-8, `Îµ = ${eps.toFixed(2)}`, {anchor:'middle', size:15, fill:css('--accent-3'), weight:700})}
       `;
 
       els.domainTypeText.textContent = ex.compact ? 'compact interval' : 'noncompact / open setting';
       els.domainBadge.textContent = domainBadge;
-      els.oscillationBadge.textContent = `max |f(x)-f(y)| ≈ ${stats.maxDiff.toFixed(2)}`;
-      els.witnessBadge.textContent = `x ≈ ${fmt(worst.x)}, y ≈ ${fmt(worst.y)}`;
+      els.oscillationBadge.textContent = `max |f(x)-f(y)| â‰ˆ ${stats.maxDiff.toFixed(2)}`;
+      els.witnessBadge.textContent = `x â‰ˆ ${fmt(worst.x)}, y â‰ˆ ${fmt(worst.y)}`;
       els.compactMessage.innerHTML = stats.works
         ? `For the current \(\varepsilon=${eps.toFixed(2)}\), the chosen global \(\delta=${delta.toFixed(2)}\) keeps every tested pair below \(\varepsilon\).`
         : `For the current \(\varepsilon=${eps.toFixed(2)}\), the chosen global \(\delta=${delta.toFixed(2)}\) fails: some pair satisfies \(|x-y|<\delta\) but produces \(|f(x)-f(y)|\ge \varepsilon\).`;
-      els.heroStatus.textContent = stats.works ? 'global δ works' : 'global δ fails';
+      els.heroStatus.textContent = stats.works ? 'global Î´ works' : 'global Î´ fails';
       els.heroStatus.style.color = stats.works ? css('--ok') : css('--warn');
       els.heroStatus.style.background = stats.works ? 'rgba(36,108,86,.08)' : 'rgba(164,90,79,.08)';
     }
@@ -681,19 +681,19 @@
 
       els.profileSvg.innerHTML = `
         <rect x="0" y="0" width="${W}" height="${H}" rx="22" fill="${css('--panel-2')}"/>
-        ${svgText(chart.x, 26, 'local admissible δₓ for the chosen ε', {size:20, weight:700, family:'Georgia, serif'})}
+        ${svgText(chart.x, 26, 'local admissible Î´â‚“ for the chosen Îµ', {size:20, weight:700, family:'Georgia, serif'})}
         <rect x="${chart.x}" y="${chart.y}" width="${chart.w}" height="${chart.h}" rx="20" fill="rgba(255,255,255,.02)" stroke="${css('--line')}"/>
         ${grid}
         <line x1="${chart.x}" y1="${chart.y+chart.h}" x2="${chart.x+chart.w}" y2="${chart.y+chart.h}" stroke="${css('--line')}" stroke-width="1.3"/>
         <line x1="${chart.x}" y1="${chart.y}" x2="${chart.x}" y2="${chart.y+chart.h}" stroke="${css('--line')}" stroke-width="1.3"/>
         <path d="${path}" fill="none" stroke="${css('--text')}" stroke-width="3.1" stroke-linecap="round"/>
         <line x1="${chart.x}" y1="${Y(state.delta)}" x2="${chart.x+chart.w}" y2="${Y(state.delta)}" stroke="${deltaCol}" stroke-width="2.4" stroke-dasharray="8 6"/>
-        ${svgText(chart.x+10, Y(state.delta)-10, 'chosen global δ', {size:14, fill:deltaCol, weight:700})}
+        ${svgText(chart.x+10, Y(state.delta)-10, 'chosen global Î´', {size:14, fill:deltaCol, weight:700})}
         <circle cx="${X(profile.minX)}" cy="${Y(minR)}" r="7.4" fill="${css('--accent-3')}" stroke="${css('--panel-2')}" stroke-width="2.2"/>
-        ${svgText(X(profile.minX)+10, Y(minR)-12, `inf local scale ≈ ${minR.toFixed(2)}`, {size:14, fill:css('--accent-3'), weight:700})}
+        ${svgText(X(profile.minX)+10, Y(minR)-12, `inf local scale â‰ˆ ${minR.toFixed(2)}`, {size:14, fill:css('--accent-3'), weight:700})}
         ${svgText(chart.x+chart.w-8, chart.y+chart.h+24, 'x', {size:14, fill:css('--muted'), anchor:'end'})}
-        ${svgText(chart.x+8, chart.y+18, 'δₓ', {size:14, fill:css('--muted'), family:'Georgia, serif'})}
-        ${svgText(chart.x+10, chart.y+chart.h+44, canShowGlobal ? 'uniform continuity appears as the local δₓ profile staying above a positive floor' : 'the local δₓ profile sinks toward 0, so no positive global δ survives', {size:14, fill:css('--muted')})}
+        ${svgText(chart.x+8, chart.y+18, 'Î´â‚“', {size:14, fill:css('--muted'), family:'Georgia, serif'})}
+        ${svgText(chart.x+10, chart.y+chart.h+44, canShowGlobal ? 'uniform continuity appears as the local Î´â‚“ profile staying above a positive floor' : 'the local Î´â‚“ profile sinks toward 0, so no positive global Î´ survives', {size:14, fill:css('--muted')})}
       `;
     }
 
@@ -775,3 +775,4 @@
   </script>
 </body>
 </html>
+

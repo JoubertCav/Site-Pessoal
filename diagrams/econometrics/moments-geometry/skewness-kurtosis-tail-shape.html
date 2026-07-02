@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -118,7 +118,7 @@
     <div class="def"><div class="tag">Standard variable</div><div class="math">\(Z=(X-\mu)/\sigma\)<br>\(E[Z]=0,\ E[Z^2]=1\)</div></div>
     <div class="def"><div class="tag">Skewness</div><div class="math">\(\gamma_1=E[Z^3]\)<br>\(\int_{z<0}z^3f_Z+\int_{z>0}z^3f_Z\)</div></div>
     <div class="def"><div class="tag">Kurtosis</div><div class="math">\(\kappa=E[Z^4]\)<br>\(\int_{\mathbb R}z^4f_Z(z)\,dz\ge0\)</div></div>
-    <div class="def"><div class="tag">Excess kurtosis</div><div class="math">\(\kappa-3\)<br>compares to Gaussian, not just “peakedness”</div></div>
+    <div class="def"><div class="tag">Excess kurtosis</div><div class="math">\(\kappa-3\)<br>compares to Gaussian, not just â€œpeakednessâ€</div></div>
   </section>
 
   <main class="layout">
@@ -149,12 +149,12 @@
       </div>
 
       <div class="control">
-        <label for="dfRange">Tail parameter ν <span class="value" id="dfVal">5.00</span></label>
+        <label for="dfRange">Tail parameter Î½ <span class="value" id="dfVal">5.00</span></label>
         <input id="dfRange" type="range" min="2.20" max="30.00" step="0.10" value="5.00"/>
       </div>
 
       <div class="control">
-        <label for="epsRange">Outlier mass ε <span class="value" id="epsVal">0.04</span></label>
+        <label for="epsRange">Outlier mass Îµ <span class="value" id="epsVal">0.04</span></label>
         <input id="epsRange" type="range" min="0.00" max="0.20" step="0.005" value="0.04"/>
       </div>
 
@@ -232,7 +232,7 @@
     </section>
   </main>
 
-  <footer>Minimal interactive notebook — theoretically consistent skewness and kurtosis geometry.</footer>
+  <footer>Minimal interactive notebook â€” theoretically consistent skewness and kurtosis geometry.</footer>
 </div>
 
 <script>
@@ -249,7 +249,7 @@ const cRange=document.getElementById("cRange");
 function css(v){return getComputedStyle(body).getPropertyValue(v).trim();}
 function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
 function fmt(x){
-  if(!isFinite(x)) return "∞";
+  if(!isFinite(x)) return "âˆž";
   if(Math.abs(x)<0.001 && x!==0) return x.toExponential(2);
   if(Math.abs(x)<10) return x.toFixed(3);
   return x.toFixed(2);
@@ -366,8 +366,8 @@ function moments(base){
   if(distSelect.value==="student"){
     theoreticalSkew = nu>3 ? 0 : Infinity;
     theoreticalKurt = nu>4 ? 3*(nu-2)/(nu-4) : Infinity;
-    if(nu<=3) note="For Student-t with ν≤3, skewness is not a finite third moment.";
-    else if(nu<=4) note="For Student-t with ν≤4, kurtosis is infinite.";
+    if(nu<=3) note="For Student-t with Î½â‰¤3, skewness is not a finite third moment.";
+    else if(nu<=4) note="For Student-t with Î½â‰¤4, kurtosis is infinite.";
   }
   return {skew,kurt,excess:kurt-3,leftSkew,rightSkew,theoreticalKurt,theoreticalSkew,note};
 }
@@ -455,8 +455,8 @@ function drawMain(){
   h+='<rect x="730" y="70" width="206" height="286" rx="20" fill="'+panel2+'" stroke="'+border+'"/>';
   h+=text(752,102,"Shape moments",textc,16,900);
   h+=text(752,134,"E[Z^"+r+"]",warn,13,900)+text(915,134,fmt(stdMoment(base,r)),textc,13,850,"end");
-  h+=text(752,164,"skewness E[Z³]",violet,13,900)+text(915,164,fmt(mom.theoreticalSkew===Infinity?Infinity:mom.skew),textc,13,850,"end");
-  h+=text(752,194,"kurtosis E[Z⁴]",violet,13,900)+text(915,194,fmt(mom.theoreticalKurt===Infinity?Infinity:mom.kurt),textc,13,850,"end");
+  h+=text(752,164,"skewness E[ZÂ³]",violet,13,900)+text(915,164,fmt(mom.theoreticalSkew===Infinity?Infinity:mom.skew),textc,13,850,"end");
+  h+=text(752,194,"kurtosis E[Zâ´]",violet,13,900)+text(915,194,fmt(mom.theoreticalKurt===Infinity?Infinity:mom.kurt),textc,13,850,"end");
   h+=text(752,224,"excess",muted,12,850)+text(915,224,fmt(mom.theoreticalKurt===Infinity?Infinity:(mom.theoreticalKurt||mom.kurt)-3),textc,12,850,"end");
   h+=text(752,254,"mean of Z",muted,12,850)+text(915,254,"0",textc,12,850,"end");
   h+=text(752,282,"var of Z",muted,12,850)+text(915,282,"1",textc,12,850,"end");
@@ -494,7 +494,7 @@ function drawSkew(){
   h+='<path d="'+curve+'" fill="none" stroke="'+acc+'" stroke-width="2.5"/>';
   h+=line(px(0,zlo,zhi,X0,X1),Y0,px(0,zlo,zhi,X0,X1),Y1,blue,1.6,.5,"5 5");
 
-  const bars=[{label:"L = ∫ z<0",v:mom.leftSkew,c:violet},{label:"R = ∫ z>0",v:mom.rightSkew,c:warn},{label:"γ₁=L+R",v:(mom.theoreticalSkew===Infinity?Infinity:mom.skew),c:acc}];
+  const bars=[{label:"L = âˆ« z<0",v:mom.leftSkew,c:violet},{label:"R = âˆ« z>0",v:mom.rightSkew,c:warn},{label:"Î³â‚=L+R",v:(mom.theoreticalSkew===Infinity?Infinity:mom.skew),c:acc}];
   let maxAbs=Math.max(...bars.map(b=>isFinite(b.v)?Math.abs(b.v):1),0.001)*1.25;
   const baseY=280, zeroB=250, xs=[120,260,400];
   h+=line(68,zeroB,452,zeroB,muted,1,.55);
@@ -506,7 +506,7 @@ function drawSkew(){
     h+=text(xs[i],baseY,b.label,muted,10,850,"middle");
     h+=text(xs[i],y-7,fmt(b.v),textc,11,900,"middle");
   });
-  h+=text(68,34,"signed cubic integrand z³ fZ(z)",muted,12,850);
+  h+=text(68,34,"signed cubic integrand zÂ³ fZ(z)",muted,12,850);
   svg.innerHTML=h;
 }
 function drawKurt(){
@@ -541,7 +541,7 @@ function drawKurt(){
   const bars=[
     {label:"center",v:parts.center,c:blue},
     {label:"tails",v:parts.tails,c:warn},
-    {label:"κ",v:actualK,c:acc},
+    {label:"Îº",v:actualK,c:acc},
     {label:"Gaussian 3",v:3,c:violet}
   ];
   let maxV=Math.max(...bars.map(b=>isFinite(b.v)?b.v:3),0.001)*1.18;
@@ -555,7 +555,7 @@ function drawKurt(){
     h+=text(xs[i],y-7,fmt(b.v),textc,11,900,"middle");
   });
 
-  h+=text(68,34,"nonnegative fourth-power integrand z⁴ fZ(z)",muted,12,850);
+  h+=text(68,34,"nonnegative fourth-power integrand zâ´ fZ(z)",muted,12,850);
   svg.innerHTML=h;
 }
 function kurtParts(base,c){
@@ -583,24 +583,24 @@ function updateText(){
   const kShown=mom.theoreticalKurt===Infinity?Infinity:mom.kurt;
   const sShown=mom.theoreticalSkew===Infinity?Infinity:mom.skew;
   document.getElementById("eqBox").innerHTML=
-    "Skewness: <strong>γ₁ = ∫z³fZ(z)dz = "+fmt(sShown)+"</strong><br>"+
-    "Kurtosis: <strong>κ = ∫z⁴fZ(z)dz = "+fmt(kShown)+"</strong>.";
+    "Skewness: <strong>Î³â‚ = âˆ«zÂ³fZ(z)dz = "+fmt(sShown)+"</strong><br>"+
+    "Kurtosis: <strong>Îº = âˆ«zâ´fZ(z)dz = "+fmt(kShown)+"</strong>.";
 
   const mini=[
     ["E[Z^"+r+"]", fmt(stdMoment(base,r))],
     ["left cubic", fmt(mom.leftSkew)],
     ["right cubic", fmt(mom.rightSkew)],
     ["excess", fmt(isFinite(kShown)?kShown-3:Infinity)],
-    ["μ of X", fmt(base.mean)],
-    ["σ of X", fmt(base.sd)]
+    ["Î¼ of X", fmt(base.mean)],
+    ["Ïƒ of X", fmt(base.sd)]
   ];
   document.getElementById("miniGrid").innerHTML=mini.map(d=>'<div class="miniStat"><div class="k">'+d[0]+'</div><div class="v">'+d[1]+'</div></div>').join("");
 
   const items=[
-    ["✓","skewness split is exactly z<0 versus z>0"],
-    ["✓","kurtosis is one nonnegative integral over all z"],
-    ["✓","center/tail kurtosis split is auxiliary, not the definition"],
-    ["→","excess kurtosis compares κ with Gaussian κ=3"]
+    ["âœ“","skewness split is exactly z<0 versus z>0"],
+    ["âœ“","kurtosis is one nonnegative integral over all z"],
+    ["âœ“","center/tail kurtosis split is auxiliary, not the definition"],
+    ["â†’","excess kurtosis compares Îº with Gaussian Îº=3"]
   ];
   document.getElementById("logicList").innerHTML=items.map(it=>'<div class="logicItem"><span class="mark">'+it[0]+'</span><span>'+it[1]+'</span></div>').join("");
 
@@ -630,3 +630,4 @@ drawAll();
 </script>
 </body>
 </html>
+

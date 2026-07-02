@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -161,11 +161,11 @@
             </select>
           </div>
           <div class="control">
-            <label><span>Target height</span><span>y₀ = <b id="targetVal">0.00</b></span></label>
+            <label><span>Target height</span><span>yâ‚€ = <b id="targetVal">0.00</b></span></label>
             <input id="target" type="range" min="-1.6" max="1.6" step="0.01" value="0" />
           </div>
           <div class="control">
-            <label><span>Curve bending</span><span>α = <b id="bendVal">0.35</b></span></label>
+            <label><span>Curve bending</span><span>Î± = <b id="bendVal">0.35</b></span></label>
             <input id="bend" type="range" min="0" max="0.7" step="0.01" value="0.35" />
           </div>
           <div class="control" id="gapControl">
@@ -383,7 +383,7 @@
   function status(s,roots){
     const band=inEndpointBand(s);
     if(s.scene === 'ivt'){
-      if(band) return {kind:'ok', tag:'crossing guaranteed', title:'IVT applies', msg:'The target height lies between the endpoint heights. Since the interval and the graph are unbroken, some c must satisfy f(c)=y₀.'};
+      if(band) return {kind:'ok', tag:'crossing guaranteed', title:'IVT applies', msg:'The target height lies between the endpoint heights. Since the interval and the graph are unbroken, some c must satisfy f(c)=yâ‚€.'};
       return {kind:'neutral', tag:'IVT silent', title:'No guarantee', msg:'The target height is not between f(a) and f(b). The graph may cross it, but IVT does not force it.'};
     }
     if(s.scene === 'outside') return {kind:'neutral', tag:'outside endpoint band', title:'IVT is silent', msg:'Continuity is present, but the selected height is outside the endpoint band. No intermediate-value conclusion follows.'};
@@ -438,7 +438,7 @@
     if(targetInside){
       line(mainSvg,X(xMin),Y(s.t),X(xMax),Y(s.t),{stroke:warm,'stroke-width':2.4,'stroke-dasharray':'10 8'});
       rect(mainSvg,X(xMax)-126,Y(s.t)-16,112,27,{rx:13,fill:css('--paper'),stroke:warm,'stroke-width':1,opacity:.96});
-      text(mainSvg,X(xMax)-112,Y(s.t)+4,`target y₀ = ${fmt(s.t)}`,{fill:warm,'font-size':14,'font-family':'ui-sans-serif, system-ui'});
+      text(mainSvg,X(xMax)-112,Y(s.t)+4,`target yâ‚€ = ${fmt(s.t)}`,{fill:warm,'font-size':14,'font-family':'ui-sans-serif, system-ui'});
     }
 
     // Broken/missing gap visuals
@@ -491,7 +491,7 @@
         circle(mainSvg,X(r),Y(s.t),8,{fill:warm,stroke:css('--paper'),'stroke-width':3});
         circle(mainSvg,X(r),barY,5,{fill:warm});
         if(i===0){
-          text(mainSvg,X(r)+12,Y(s.t)-12,'c with f(c)=y₀',{fill:warm,'font-size':14,'font-family':'ui-sans-serif, system-ui'});
+          text(mainSvg,X(r)+12,Y(s.t)-12,'c with f(c)=yâ‚€',{fill:warm,'font-size':14,'font-family':'ui-sans-serif, system-ui'});
         }
       });
     } else {
@@ -503,7 +503,7 @@
 
     // Big visual slogan inside plot
     const slogan = s.scene === 'ivt'
-      ? 'unbroken x-interval  +  unbroken graph  ⇒  no missing y-height'
+      ? 'unbroken x-interval  +  unbroken graph  â‡’  no missing y-height'
       : s.scene === 'jump'
         ? 'endpoint signs are not enough: continuity is broken'
         : s.scene === 'gap'
@@ -563,7 +563,7 @@
     const fa=f(s.a,s), fb=f(s.b,s), ylo=Math.min(fa,fb), yhi=Math.max(fa,fb);
     rect(mapSvg,486,MY(yhi),38,Math.max(2,MY(ylo)-MY(yhi)),{rx:10,fill:accent,opacity:.10});
     line(mapSvg,468,MY(s.t),545,MY(s.t),{stroke:warm,'stroke-width':2.2,'stroke-dasharray':'7 6'});
-    text(mapSvg,554,MY(s.t)+5,'y₀',{fill:warm,'font-size':14,'font-family':'ui-sans-serif, system-ui'});
+    text(mapSvg,554,MY(s.t)+5,'yâ‚€',{fill:warm,'font-size':14,'font-family':'ui-sans-serif, system-ui'});
 
     if(s.scene === 'ivt' || s.scene === 'outside'){
       const lo=Math.min(...ranges.map(r=>r[0])), hi=Math.max(...ranges.map(r=>r[1]));
@@ -583,7 +583,7 @@
     // Lower conclusion row
     rect(mapSvg,35,285,690,94,{rx:22,fill:paper2,stroke:lineC});
     const conclusion = s.scene === 'ivt'
-      ? 'Topological reason: connected set  →  connected image. In R, connected means interval.'
+      ? 'Topological reason: connected set  â†’  connected image. In R, connected means interval.'
       : s.scene === 'jump'
         ? 'A discontinuous map need not preserve connectedness. The image can split.'
         : s.scene === 'gap'
@@ -591,7 +591,7 @@
           : 'The image is connected, but IVT only forces heights between the endpoint values.';
     text(mapSvg,60,323,conclusion,{fill:ink,'font-size':17,'font-family':'ui-serif, Georgia'});
     const formula = s.scene === 'gap'
-      ? 'D = [-2,-g] ∪ [g,2] is not connected.'
+      ? 'D = [-2,-g] âˆª [g,2] is not connected.'
       : s.scene === 'jump'
         ? 'f has a jump, so continuity fails.'
         : 'f([a,b]) is an interval.';
@@ -604,3 +604,4 @@
 </script>
 </body>
 </html>
+

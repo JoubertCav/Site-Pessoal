@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -43,45 +43,45 @@ h1{margin:0;font-size:clamp(1.55rem,3vw,2.35rem);line-height:1.04;letter-spacing
 <body data-theme="light">
 <div class="wrap">
 <header>
-  <div><h1>Random Variables as Measurable Functions</h1><p class="subtitle">A random variable is not first a distribution. It is a measurable map. Geometry: outcomes live in Ω, values live in a target space, and observable events are pulled back by inverse images.</p></div>
+  <div><h1>Random Variables as Measurable Functions</h1><p class="subtitle">A random variable is not first a distribution. It is a measurable map. Geometry: outcomes live in Î©, values live in a target space, and observable events are pulled back by inverse images.</p></div>
   <button class="themeBtn" id="themeBtn">Dark mode</button>
 </header>
 <section class="defs">
-  <div class="def"><div class="tag">Map</div><div class="math">X : (Ω, 𝓕) → (ℝ, 𝓑(ℝ))<br>ω ↦ X(ω)</div></div>
-  <div class="def"><div class="tag">Measurable</div><div class="math">B ∈ 𝓑(ℝ) ⇒ X⁻¹(B) ∈ 𝓕</div></div>
-  <div class="def"><div class="tag">Information</div><div class="math">σ(X) = { X⁻¹(B) : B ∈ 𝓑(ℝ) }</div></div>
-  <div class="def"><div class="tag">Transform</div><div class="math">Y = g(X)<br>Y⁻¹(C)=X⁻¹(g⁻¹(C))</div></div>
+  <div class="def"><div class="tag">Map</div><div class="math">X : (Î©, ð“•) â†’ (â„, ð“‘(â„))<br>Ï‰ â†¦ X(Ï‰)</div></div>
+  <div class="def"><div class="tag">Measurable</div><div class="math">B âˆˆ ð“‘(â„) â‡’ Xâ»Â¹(B) âˆˆ ð“•</div></div>
+  <div class="def"><div class="tag">Information</div><div class="math">Ïƒ(X) = { Xâ»Â¹(B) : B âˆˆ ð“‘(â„) }</div></div>
+  <div class="def"><div class="tag">Transform</div><div class="math">Y = g(X)<br>Yâ»Â¹(C)=Xâ»Â¹(gâ»Â¹(C))</div></div>
 </section>
 <main class="grid">
 <aside class="card pad controls">
   <h2>Controls</h2>
   <div class="control"><label for="mode">Random object</label><select id="mode"><option value="projection">Real variable: X(u,v)=u</option><option value="diagonal">Real variable: X(u,v)=(u+v)/2</option><option value="step">Discrete observation: coarse X</option><option value="vector">Random vector: X(u,v)=(u,v)</option></select></div>
-  <div class="control"><label for="a">Left endpoint / x₀ <span class="value" id="aVal">0.30</span></label><input id="a" type="range" min="0.00" max="0.95" step="0.01" value="0.30"></div>
-  <div class="control"><label for="b">Right endpoint / x₁ <span class="value" id="bVal">0.68</span></label><input id="b" type="range" min="0.05" max="1.00" step="0.01" value="0.68"></div>
-  <div class="control" id="yControls"><label for="c">Lower y₀ <span class="value" id="cVal">0.25</span></label><input id="c" type="range" min="0.00" max="0.95" step="0.01" value="0.25"><label for="d" style="margin-top:12px">Upper y₁ <span class="value" id="dVal">0.70</span></label><input id="d" type="range" min="0.05" max="1.00" step="0.01" value="0.70"></div>
+  <div class="control"><label for="a">Left endpoint / xâ‚€ <span class="value" id="aVal">0.30</span></label><input id="a" type="range" min="0.00" max="0.95" step="0.01" value="0.30"></div>
+  <div class="control"><label for="b">Right endpoint / xâ‚ <span class="value" id="bVal">0.68</span></label><input id="b" type="range" min="0.05" max="1.00" step="0.01" value="0.68"></div>
+  <div class="control" id="yControls"><label for="c">Lower yâ‚€ <span class="value" id="cVal">0.25</span></label><input id="c" type="range" min="0.00" max="0.95" step="0.01" value="0.25"><label for="d" style="margin-top:12px">Upper yâ‚ <span class="value" id="dVal">0.70</span></label><input id="d" type="range" min="0.05" max="1.00" step="0.01" value="0.70"></div>
   <div class="control"><label for="u">Outcome coordinate u <span class="value" id="uVal">0.42</span></label><input id="u" type="range" min="0.02" max="0.98" step="0.01" value="0.42"></div>
   <div class="control"><label for="v">Outcome coordinate v <span class="value" id="vVal">0.58</span></label><input id="v" type="range" min="0.02" max="0.98" step="0.01" value="0.58"></div>
-  <div class="control"><label for="transform">Transformation g</label><select id="transform"><option value="identity">g(x)=x</option><option value="threshold">g(x)=1{x ≥ 0.5}</option><option value="coarse">g(x)=floor(3x)/3</option><option value="square">g(x)=x²</option></select></div>
-  <div class="formulaBox" id="formulaBox">X⁻¹(B) is the region of Ω whose arrows land inside B.</div>
+  <div class="control"><label for="transform">Transformation g</label><select id="transform"><option value="identity">g(x)=x</option><option value="threshold">g(x)=1{x â‰¥ 0.5}</option><option value="coarse">g(x)=floor(3x)/3</option><option value="square">g(x)=xÂ²</option></select></div>
+  <div class="formulaBox" id="formulaBox">Xâ»Â¹(B) is the region of Î© whose arrows land inside B.</div>
 </aside>
 <section class="main">
   <div class="card">
-    <div class="plotHead"><div><div class="plotTitle">Forward map and inverse image</div><div class="pill"><span class="dot"></span> choose B in the target, then pull it back to Ω</div></div><div class="plotSub" id="mainSub">A direct image sends points forward; an inverse image sends observable sets backward.</div></div>
+    <div class="plotHead"><div><div class="plotTitle">Forward map and inverse image</div><div class="pill"><span class="dot"></span> choose B in the target, then pull it back to Î©</div></div><div class="plotSub" id="mainSub">A direct image sends points forward; an inverse image sends observable sets backward.</div></div>
     <div class="stage"><svg id="mainSvg" viewBox="0 0 960 430" role="img" aria-label="Random variable as a measurable map"></svg></div>
-    <div class="legend"><span class="pill">green = X⁻¹(B)</span><span class="pill">red point = selected outcome ω</span><span class="pill">dashed arrow = inverse image</span></div>
+    <div class="legend"><span class="pill">green = Xâ»Â¹(B)</span><span class="pill">red point = selected outcome Ï‰</span><span class="pill">dashed arrow = inverse image</span></div>
   </div>
   <div class="two">
-    <div class="card"><div class="plotHead"><div class="plotTitle">Observable information σ(X)</div><div class="plotSub" id="infoSub">events distinguish only what X can see</div></div><div class="stage"><svg id="infoSvg" viewBox="0 0 470 260"></svg></div></div>
+    <div class="card"><div class="plotHead"><div class="plotTitle">Observable information Ïƒ(X)</div><div class="plotSub" id="infoSub">events distinguish only what X can see</div></div><div class="stage"><svg id="infoSvg" viewBox="0 0 470 260"></svg></div></div>
     <div class="card"><div class="plotHead"><div class="plotTitle">Transformation g(X)</div><div class="plotSub" id="transSub">transforming values changes information</div></div><div class="stage"><svg id="transSvg" viewBox="0 0 470 260"></svg></div></div>
   </div>
   <div class="interpret">
-    <div class="card pad"><div class="panelTitle">Interpretation</div><div class="statement" id="interp"><strong>Map:</strong> X sends each outcome ω to a numerical value. <strong>Inverse map:</strong> an observable claim about values, B, becomes an event about outcomes, X⁻¹(B).</div></div>
-    <div class="card pad"><div class="panelTitle">What to notice</div><div class="notice" id="notice">The inverse image is the central object: probability statements about X are always probabilities of events back in Ω.</div></div>
+    <div class="card pad"><div class="panelTitle">Interpretation</div><div class="statement" id="interp"><strong>Map:</strong> X sends each outcome Ï‰ to a numerical value. <strong>Inverse map:</strong> an observable claim about values, B, becomes an event about outcomes, Xâ»Â¹(B).</div></div>
+    <div class="card pad"><div class="panelTitle">What to notice</div><div class="notice" id="notice">The inverse image is the central object: probability statements about X are always probabilities of events back in Î©.</div></div>
   </div>
-  <div class="card pad"><div class="panelTitle">Compact exam-style summary</div><div class="summary"><div><b>Random variable.</b><br>A map X:Ω→ℝ such that Borel sets pull back to measurable events.</div><div><b>Probability law.</b><br>P(X∈B)=P(X⁻¹(B)). The distribution is the pushforward of P by X.</div><div><b>Random vector.</b><br>X:Ω→ℝᵈ is measurable when inverse images of Borel sets in ℝᵈ are in 𝓕.</div><div><b>Information.</b><br>σ(X) is the smallest σ-algebra making X observable.</div></div></div>
+  <div class="card pad"><div class="panelTitle">Compact exam-style summary</div><div class="summary"><div><b>Random variable.</b><br>A map X:Î©â†’â„ such that Borel sets pull back to measurable events.</div><div><b>Probability law.</b><br>P(XâˆˆB)=P(Xâ»Â¹(B)). The distribution is the pushforward of P by X.</div><div><b>Random vector.</b><br>X:Î©â†’â„áµˆ is measurable when inverse images of Borel sets in â„áµˆ are in ð“•.</div><div><b>Information.</b><br>Ïƒ(X) is the smallest Ïƒ-algebra making X observable.</div></div></div>
 </section>
 </main>
-<footer>Minimal interactive notebook · pure HTML/SVG/JavaScript · no backend</footer>
+<footer>Minimal interactive notebook Â· pure HTML/SVG/JavaScript Â· no backend</footer>
 </div>
 <script>
 const S = {
@@ -105,7 +105,7 @@ function markerDefs(svg){const defs=el('defs',{},svg);const m=el('marker',{id:'a
 function drawOmega(svg,x0,y0,L,st){
   el('rect',{x:x0,y:y0,width:L,height:L,rx:18,fill:'none',stroke:css('--line'),'stroke-width':1.6},svg);
   for(let i=1;i<5;i++){el('line',{x1:x0+i*L/5,y1:y0,x2:x0+i*L/5,y2:y0+L,class:'gridLine'},svg);el('line',{x1:x0,y1:y0+i*L/5,x2:x0+L,y2:y0+i*L/5,class:'gridLine'},svg)}
-  txt(svg,x0,y0-18,'Ω: outcomes', 'svgText',15,'start','780'); txt(svg,x0+L,y0+L+28,'ω=(u,v)', 'svgMuted',12,'end','600');
+  txt(svg,x0,y0-18,'Î©: outcomes', 'svgText',15,'start','780'); txt(svg,x0+L,y0+L+28,'Ï‰=(u,v)', 'svgMuted',12,'end','600');
   if(st.mode==='projection'){
     const xa=x0+st.a*L, xb=x0+st.b*L; el('rect',{x:xa,y:y0,width:xb-xa,height:L,rx:0,class:'preFill'},svg); el('rect',{x:xa,y:y0,width:xb-xa,height:L,fill:'none',class:'preStroke'},svg);
     for(let z=.1;z<1;z+=.2)el('line',{x1:x0+z*L,y1:y0,x2:x0+z*L,y2:y0+L,class:'fiber'},svg);
@@ -118,32 +118,32 @@ function drawOmega(svg,x0,y0,L,st){
     const xa=x0+st.a*L, xb=x0+st.b*L, yc=y0+(1-st.d)*L, yd=y0+(1-st.c)*L; el('rect',{x:xa,y:yc,width:xb-xa,height:yd-yc,rx:6,class:'preFill'},svg); el('rect',{x:xa,y:yc,width:xb-xa,height:yd-yc,rx:6,class:'preStroke',fill:'none'},svg);
   }
   for(let i=0;i<17;i++)for(let j=0;j<12;j++){const u=(i+.5)/17, v=(j+.5)/12; let inside=false; if(st.mode==='vector')inside=u>=st.a&&u<=st.b&&v>=st.c&&v<=st.d; else {const x=Xval(st.mode,u,v); inside=x>=st.a&&x<=st.b} el('circle',{cx:x0+u*L,cy:y0+(1-v)*L,r:2.3,class:inside?'inDot':'outDot'},svg)}
-  const sx=x0+st.u*L, sy=y0+(1-st.v)*L; el('circle',{cx:sx,cy:sy,r:7,class:'selected'},svg); txt(svg,sx+10,sy-8,'ω','svgText',13,'start','800'); return [sx,sy];
+  const sx=x0+st.u*L, sy=y0+(1-st.v)*L; el('circle',{cx:sx,cy:sy,r:7,class:'selected'},svg); txt(svg,sx+10,sy-8,'Ï‰','svgText',13,'start','800'); return [sx,sy];
 }
 function lineSquareSum(s){let pts=[]; if(s>=0&&s<=1){pts.push([0,s]);pts.push([s,0])} else if(s>1&&s<=2){pts.push([s-1,1]);pts.push([1,s-1])} return pts;}
 function clip(poly,fn){let out=[];for(let i=0;i<poly.length;i++){const A=poly[i],B=poly[(i+1)%poly.length], Ain=fn(A), Bin=fn(B); if(Ain&&Bin) out.push(B); else if(Ain&&!Bin) out.push(intersect(A,B,fn)); else if(!Ain&&Bin){out.push(intersect(A,B,fn));out.push(B)}} return out.filter(Boolean);}
 function intersect(A,B,fn){let lo=0,hi=1;for(let k=0;k<30;k++){const m=(lo+hi)/2,P=[A[0]+(B[0]-A[0])*m,A[1]+(B[1]-A[1])*m]; if(fn(A)===fn(P))lo=m;else hi=m}return[A[0]+(B[0]-A[0])*hi,A[1]+(B[1]-A[1])*hi];}
 function bandPolygon(low,high){let p=[[0,0],[1,0],[1,1],[0,1]];p=clip(p,q=>q[0]+q[1]>=low);p=clip(p,q=>q[0]+q[1]<=high);return p;}
 function drawScalarTarget(svg,x0,y0,W,st,selected){
-  txt(svg,x0,y0-86,'Target space ℝ','svgText',15,'start','780'); el('line',{x1:x0,y1:y0,x2:x0+W,y2:y0,class:'axis'},svg); for(let i=0;i<=10;i++){const x=x0+i*W/10;el('line',{x1:x,y1:y0-5,x2:x,y2:y0+5,stroke:css('--line'),'stroke-width':1},svg); if(i%2===0)txt(svg,x,y0+23,(i/10).toFixed(1),'svgMuted',11,'middle','600')}
-  const xa=x0+st.a*W, xb=x0+st.b*W; el('rect',{x:xa,y:y0-35,width:xb-xa,height:70,rx:12,class:'targetFill'},svg); txt(svg,(xa+xb)/2,y0-48,'B ⊂ ℝ','svgText',13,'middle','800');
-  const sx=x0+selected*W; el('circle',{cx:sx,cy:y0,r:7,class:'selected'},svg); txt(svg,sx,y0-15,'X(ω)','svgText',12,'middle','800'); return [sx,y0];
+  txt(svg,x0,y0-86,'Target space â„','svgText',15,'start','780'); el('line',{x1:x0,y1:y0,x2:x0+W,y2:y0,class:'axis'},svg); for(let i=0;i<=10;i++){const x=x0+i*W/10;el('line',{x1:x,y1:y0-5,x2:x,y2:y0+5,stroke:css('--line'),'stroke-width':1},svg); if(i%2===0)txt(svg,x,y0+23,(i/10).toFixed(1),'svgMuted',11,'middle','600')}
+  const xa=x0+st.a*W, xb=x0+st.b*W; el('rect',{x:xa,y:y0-35,width:xb-xa,height:70,rx:12,class:'targetFill'},svg); txt(svg,(xa+xb)/2,y0-48,'B âŠ‚ â„','svgText',13,'middle','800');
+  const sx=x0+selected*W; el('circle',{cx:sx,cy:y0,r:7,class:'selected'},svg); txt(svg,sx,y0-15,'X(Ï‰)','svgText',12,'middle','800'); return [sx,y0];
 }
 function drawVectorTarget(svg,x0,y0,L,st){
-  txt(svg,x0,y0-18,'Target space ℝ²','svgText',15,'start','780'); el('rect',{x:x0,y:y0,width:L,height:L,rx:18,fill:'none',stroke:css('--line'),'stroke-width':1.6},svg); for(let i=1;i<5;i++){el('line',{x1:x0+i*L/5,y1:y0,x2:x0+i*L/5,y2:y0+L,class:'gridLine'},svg);el('line',{x1:x0,y1:y0+i*L/5,x2:x0+L,y2:y0+i*L/5,class:'gridLine'},svg)}
-  const xa=x0+st.a*L, xb=x0+st.b*L, yc=y0+(1-st.d)*L, yd=y0+(1-st.c)*L; el('rect',{x:xa,y:yc,width:xb-xa,height:yd-yc,rx:8,class:'targetFill'},svg); txt(svg,(xa+xb)/2,yc-10,'C ⊂ ℝ²','svgText',13,'middle','800'); const sx=x0+st.u*L, sy=y0+(1-st.v)*L; el('circle',{cx:sx,cy:sy,r:7,class:'selected'},svg); txt(svg,sx+10,sy-8,'X(ω)','svgText',12,'start','800'); return [sx,sy];
+  txt(svg,x0,y0-18,'Target space â„Â²','svgText',15,'start','780'); el('rect',{x:x0,y:y0,width:L,height:L,rx:18,fill:'none',stroke:css('--line'),'stroke-width':1.6},svg); for(let i=1;i<5;i++){el('line',{x1:x0+i*L/5,y1:y0,x2:x0+i*L/5,y2:y0+L,class:'gridLine'},svg);el('line',{x1:x0,y1:y0+i*L/5,x2:x0+L,y2:y0+i*L/5,class:'gridLine'},svg)}
+  const xa=x0+st.a*L, xb=x0+st.b*L, yc=y0+(1-st.d)*L, yd=y0+(1-st.c)*L; el('rect',{x:xa,y:yc,width:xb-xa,height:yd-yc,rx:8,class:'targetFill'},svg); txt(svg,(xa+xb)/2,yc-10,'C âŠ‚ â„Â²','svgText',13,'middle','800'); const sx=x0+st.u*L, sy=y0+(1-st.v)*L; el('circle',{cx:sx,cy:sy,r:7,class:'selected'},svg); txt(svg,sx+10,sy-8,'X(Ï‰)','svgText',12,'start','800'); return [sx,sy];
 }
 function drawMain(){const st=getState(); mainSvg.innerHTML=''; markerDefs(mainSvg); const sx=drawOmega(mainSvg,62,92,250,st); let tx;if(st.mode==='vector'){tx=drawVectorTarget(mainSvg,590,92,250,st)}else{tx=drawScalarTarget(mainSvg,545,252,330,st,Xval(st.mode,st.u,st.v))}
   el('path',{d:`M ${sx[0]+12} ${sx[1]-8} C 420 ${sx[1]-90}, 465 ${tx[1]-80}, ${tx[0]-12} ${tx[1]-8}`,class:'arrow'},mainSvg);
   const backStart=st.mode==='vector'?[655,116]:[710,212]; const backEnd=[210,92]; el('path',{d:`M ${backStart[0]} ${backStart[1]} C 450 52, 370 54, ${backEnd[0]} ${backEnd[1]}`,class:'backArrow'},mainSvg); txt(mainSvg,402,70,'inverse image: pull the set back','svgText',13,'middle','780');
   txt(mainSvg,62,392,preimageText(st),'svgText',15,'start','780'); txt(mainSvg,545,392,targetText(st),'svgText',15,'start','780');
 }
-function preimageText(st){if(st.mode==='vector')return `X⁻¹(C) = {ω : X(ω) ∈ C}`;return `X⁻¹(B) = {ω ∈ Ω : ${st.a.toFixed(2)} ≤ X(ω) ≤ ${st.b.toFixed(2)}}`;}
-function targetText(st){if(st.mode==='vector')return `C = [${st.a.toFixed(2)},${st.b.toFixed(2)}] × [${st.c.toFixed(2)},${st.d.toFixed(2)}]`;return `B = [${st.a.toFixed(2)}, ${st.b.toFixed(2)}]`;}
+function preimageText(st){if(st.mode==='vector')return `Xâ»Â¹(C) = {Ï‰ : X(Ï‰) âˆˆ C}`;return `Xâ»Â¹(B) = {Ï‰ âˆˆ Î© : ${st.a.toFixed(2)} â‰¤ X(Ï‰) â‰¤ ${st.b.toFixed(2)}}`;}
+function targetText(st){if(st.mode==='vector')return `C = [${st.a.toFixed(2)},${st.b.toFixed(2)}] Ã— [${st.c.toFixed(2)},${st.d.toFixed(2)}]`;return `B = [${st.a.toFixed(2)}, ${st.b.toFixed(2)}]`;}
 function drawInfo(){const st=getState(); infoSvg.innerHTML=''; const x0=38,y0=55,L=165; txt(infoSvg,24,28,'What can observation X distinguish?', 'svgText',15,'start','820'); el('rect',{x:x0,y:y0,width:L,height:L,rx:16,fill:'none',stroke:css('--line'),'stroke-width':1.4},infoSvg);
-  if(st.mode==='projection'){for(let k=1;k<7;k++)el('line',{x1:x0+k*L/7,y1:y0,x2:x0+k*L/7,y2:y0+L,class:'fiber'},infoSvg); txt(infoSvg,232,92,'fibers: same u', 'svgText',13); txt(infoSvg,232,118,'σ(X) sees vertical slabs', 'svgMuted',12); txt(infoSvg,232,146,'v is invisible after observing X', 'svgMuted',12)}
-  if(st.mode==='diagonal'){for(let s=.25;s<1.9;s+=.25){const pts=lineSquareSum(s); if(pts.length===2)el('line',{x1:x0+pts[0][0]*L,y1:y0+(1-pts[0][1])*L,x2:x0+pts[1][0]*L,y2:y0+(1-pts[1][1])*L,class:'fiber'},infoSvg)} txt(infoSvg,232,92,'fibers: same u+v', 'svgText',13); txt(infoSvg,232,118,'σ(X) sees diagonal bands', 'svgMuted',12); txt(infoSvg,232,146,'points on one fiber have same X', 'svgMuted',12)}
-  if(st.mode==='step'){for(let k=0;k<5;k++){el('rect',{x:x0+k*L/5,y:y0,width:L/5,height:L,fill:k%2?css('--accent2'):'transparent',stroke:css('--line'),'stroke-width':1},infoSvg); txt(infoSvg,x0+(k+.5)*L/5,y0+L/2,String(k+1),'svgText',14,'middle','800')} txt(infoSvg,232,92,'finite observation', 'svgText',13); txt(infoSvg,232,118,'σ(X) is generated by 5 atoms', 'svgMuted',12); txt(infoSvg,232,146,'inside an atom, X cannot separate points', 'svgMuted',12)}
+  if(st.mode==='projection'){for(let k=1;k<7;k++)el('line',{x1:x0+k*L/7,y1:y0,x2:x0+k*L/7,y2:y0+L,class:'fiber'},infoSvg); txt(infoSvg,232,92,'fibers: same u', 'svgText',13); txt(infoSvg,232,118,'Ïƒ(X) sees vertical slabs', 'svgMuted',12); txt(infoSvg,232,146,'v is invisible after observing X', 'svgMuted',12)}
+  if(st.mode==='diagonal'){for(let s=.25;s<1.9;s+=.25){const pts=lineSquareSum(s); if(pts.length===2)el('line',{x1:x0+pts[0][0]*L,y1:y0+(1-pts[0][1])*L,x2:x0+pts[1][0]*L,y2:y0+(1-pts[1][1])*L,class:'fiber'},infoSvg)} txt(infoSvg,232,92,'fibers: same u+v', 'svgText',13); txt(infoSvg,232,118,'Ïƒ(X) sees diagonal bands', 'svgMuted',12); txt(infoSvg,232,146,'points on one fiber have same X', 'svgMuted',12)}
+  if(st.mode==='step'){for(let k=0;k<5;k++){el('rect',{x:x0+k*L/5,y:y0,width:L/5,height:L,fill:k%2?css('--accent2'):'transparent',stroke:css('--line'),'stroke-width':1},infoSvg); txt(infoSvg,x0+(k+.5)*L/5,y0+L/2,String(k+1),'svgText',14,'middle','800')} txt(infoSvg,232,92,'finite observation', 'svgText',13); txt(infoSvg,232,118,'Ïƒ(X) is generated by 5 atoms', 'svgMuted',12); txt(infoSvg,232,146,'inside an atom, X cannot separate points', 'svgMuted',12)}
   if(st.mode==='vector'){for(let i=1;i<5;i++){el('line',{x1:x0+i*L/5,y1:y0,x2:x0+i*L/5,y2:y0+L,class:'gridLine'},infoSvg);el('line',{x1:x0,y1:y0+i*L/5,x2:x0+L,y2:y0+i*L/5,class:'gridLine'},infoSvg)} txt(infoSvg,232,92,'vector observation', 'svgText',13); txt(infoSvg,232,118,'X=(u,v) sees both coordinates', 'svgMuted',12); txt(infoSvg,232,146,'rectangles pull back to rectangles', 'svgMuted',12)}
 }
 function drawTrans(){const st=getState(); transSvg.innerHTML=''; txt(transSvg,24,28,'Transformation of information', 'svgText',15,'start','820'); const x0=52,W=355,y1=88,y2=178; el('line',{x1:x0,y1:y1,x2:x0+W,y2:y1,class:'axis'},transSvg); el('line',{x1:x0,y1:y2,x2:x0+W,y2:y2,class:'axis'},transSvg); txt(transSvg,26,y1+5,'X','svgText',13,'end','800'); txt(transSvg,26,y2+5,'g(X)','svgText',13,'end','800');
@@ -151,11 +151,11 @@ function drawTrans(){const st=getState(); transSvg.innerHTML=''; txt(transSvg,24
   txt(transSvg,x0,y1-18,'0','svgMuted',11,'middle','600'); txt(transSvg,x0+W,y1-18,'1','svgMuted',11,'middle','600');
   let msg='identity preserves information'; if(st.g==='threshold')msg='threshold collapses many values into 0 or 1'; if(st.g==='coarse')msg='coarsening creates fewer observable classes'; if(st.g==='square')msg='on [0,1], square is still one-to-one'; if(st.mode==='vector')msg='a function of a vector may forget coordinates'; txt(transSvg,52,228,msg,'svgMuted',12,'start','650'); transSub.textContent=msg;
 }
-function updateText(){const st=getState(); let x=Xval(st.mode,st.u,st.v); let inside=st.mode==='vector'?(st.u>=st.a&&st.u<=st.b&&st.v>=st.c&&st.v<=st.d):(x>=st.a&&x<=st.b); let xText=Array.isArray(x)?`(${x[0].toFixed(2)}, ${x[1].toFixed(2)})`:x.toFixed(2); formulaBox.innerHTML = st.mode==='vector' ? `C = [${st.a.toFixed(2)},${st.b.toFixed(2)}] × [${st.c.toFixed(2)},${st.d.toFixed(2)}]<br>X(ω)=(${st.u.toFixed(2)},${st.v.toFixed(2)}) ${inside?'∈':'∉'} C<br>X⁻¹(C) is the green rectangle in Ω.` : `B = [${st.a.toFixed(2)}, ${st.b.toFixed(2)}]<br>X(ω) = ${xText} ${inside?'∈':'∉'} B<br>X⁻¹(B) is the green region in Ω.`;
-  if(st.mode==='projection'){mainSub.textContent='The map X(u,v)=u collapses vertical fibers onto one real line.'; infoSub.textContent='vertical fibers are indistinguishable after observing X'; interp.innerHTML='<strong>Forward map:</strong> each outcome (u,v) is sent to its first coordinate u. <strong>Inverse image:</strong> an interval B on the real line becomes a vertical slab in Ω.'; notice.textContent='The inverse image is not the inverse function. Many outcomes can share the same value, but every target event still pulls back to a well-defined event in Ω.';}
-  if(st.mode==='diagonal'){mainSub.textContent='The map X(u,v)=(u+v)/2 collapses diagonal fibers.'; infoSub.textContent='diagonal bands represent observable numerical claims'; interp.innerHTML='<strong>Forward map:</strong> outcomes on the same diagonal have the same value. <strong>Inverse image:</strong> an interval B becomes a diagonal band.'; notice.textContent='A probability statement such as P(a≤X≤b) is literally the measure of the corresponding diagonal band in Ω.';}
-  if(st.mode==='step'){mainSub.textContent='A discrete random variable converts Ω into finitely many observable atoms.'; infoSub.textContent='finite atoms show coarse observable information'; interp.innerHTML='<strong>Forward map:</strong> whole regions of Ω are sent to the same number. <strong>Inverse image:</strong> an interval B selects a union of atoms.'; notice.textContent='Discrete variables are measurable because every claim about values corresponds to a union of observable atoms.';}
-  if(st.mode==='vector'){mainSub.textContent='A random vector maps outcomes into a geometric target space ℝ².'; infoSub.textContent='rectangles in ℝ² pull back to events in Ω'; interp.innerHTML='<strong>Forward map:</strong> X sends ω to an ordered pair. <strong>Inverse image:</strong> a target rectangle C becomes the event of outcomes whose vector falls inside C.'; notice.textContent='For random vectors, measurability is still the same logic: Borel sets in the target must pull back to events in the original σ-algebra.';}
+function updateText(){const st=getState(); let x=Xval(st.mode,st.u,st.v); let inside=st.mode==='vector'?(st.u>=st.a&&st.u<=st.b&&st.v>=st.c&&st.v<=st.d):(x>=st.a&&x<=st.b); let xText=Array.isArray(x)?`(${x[0].toFixed(2)}, ${x[1].toFixed(2)})`:x.toFixed(2); formulaBox.innerHTML = st.mode==='vector' ? `C = [${st.a.toFixed(2)},${st.b.toFixed(2)}] Ã— [${st.c.toFixed(2)},${st.d.toFixed(2)}]<br>X(Ï‰)=(${st.u.toFixed(2)},${st.v.toFixed(2)}) ${inside?'âˆˆ':'âˆ‰'} C<br>Xâ»Â¹(C) is the green rectangle in Î©.` : `B = [${st.a.toFixed(2)}, ${st.b.toFixed(2)}]<br>X(Ï‰) = ${xText} ${inside?'âˆˆ':'âˆ‰'} B<br>Xâ»Â¹(B) is the green region in Î©.`;
+  if(st.mode==='projection'){mainSub.textContent='The map X(u,v)=u collapses vertical fibers onto one real line.'; infoSub.textContent='vertical fibers are indistinguishable after observing X'; interp.innerHTML='<strong>Forward map:</strong> each outcome (u,v) is sent to its first coordinate u. <strong>Inverse image:</strong> an interval B on the real line becomes a vertical slab in Î©.'; notice.textContent='The inverse image is not the inverse function. Many outcomes can share the same value, but every target event still pulls back to a well-defined event in Î©.';}
+  if(st.mode==='diagonal'){mainSub.textContent='The map X(u,v)=(u+v)/2 collapses diagonal fibers.'; infoSub.textContent='diagonal bands represent observable numerical claims'; interp.innerHTML='<strong>Forward map:</strong> outcomes on the same diagonal have the same value. <strong>Inverse image:</strong> an interval B becomes a diagonal band.'; notice.textContent='A probability statement such as P(aâ‰¤Xâ‰¤b) is literally the measure of the corresponding diagonal band in Î©.';}
+  if(st.mode==='step'){mainSub.textContent='A discrete random variable converts Î© into finitely many observable atoms.'; infoSub.textContent='finite atoms show coarse observable information'; interp.innerHTML='<strong>Forward map:</strong> whole regions of Î© are sent to the same number. <strong>Inverse image:</strong> an interval B selects a union of atoms.'; notice.textContent='Discrete variables are measurable because every claim about values corresponds to a union of observable atoms.';}
+  if(st.mode==='vector'){mainSub.textContent='A random vector maps outcomes into a geometric target space â„Â².'; infoSub.textContent='rectangles in â„Â² pull back to events in Î©'; interp.innerHTML='<strong>Forward map:</strong> X sends Ï‰ to an ordered pair. <strong>Inverse image:</strong> a target rectangle C becomes the event of outcomes whose vector falls inside C.'; notice.textContent='For random vectors, measurability is still the same logic: Borel sets in the target must pull back to events in the original Ïƒ-algebra.';}
 }
 function render(){setVals();drawMain();drawInfo();drawTrans();updateText();}
 for(const k in S) S[k].addEventListener('input',render);
@@ -164,3 +164,4 @@ render();
 </script>
 </body>
 </html>
+

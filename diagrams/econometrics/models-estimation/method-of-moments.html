@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -118,7 +118,7 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
 <section class="defs">
   <div class="def">
     <div class="tag">Population moments</div>
-    <div class="math"><span class="formula">m(θ)=E[g(X,θ)]</span><span class="mathNote">theoretical restrictions implied by the model</span></div>
+    <div class="math"><span class="formula">m(Î¸)=E[g(X,Î¸)]</span><span class="mathNote">theoretical restrictions implied by the model</span></div>
   </div>
   <div class="def">
     <div class="tag">Sample moments</div>
@@ -126,7 +126,7 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
   </div>
   <div class="def">
     <div class="tag">MoM estimator</div>
-    <div class="math"><span class="formula">m(\hat θ_n)=\bar g_n</span><span class="mathNote">match theoretical and empirical moments</span></div>
+    <div class="math"><span class="formula">m(\hat Î¸_n)=\bar g_n</span><span class="mathNote">match theoretical and empirical moments</span></div>
   </div>
   <div class="def">
     <div class="tag">Just-identification</div>
@@ -134,11 +134,11 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
   </div>
   <div class="def">
     <div class="tag">Consistency</div>
-    <div class="math"><span class="formula">\(\hat θ_n \to θ_0\)</span><span class="mathNote">sample moments converge to population moments</span></div>
+    <div class="math"><span class="formula">\(\hat Î¸_n \to Î¸_0\)</span><span class="mathNote">sample moments converge to population moments</span></div>
   </div>
   <div class="def">
     <div class="tag">CLT normality</div>
-    <div class="math"><span class="formula">\(\sqrt n(\hat θ_n-θ_0)\Rightarrow N(0,V)\)</span><span class="mathNote">moment noise becomes asymptotically Gaussian</span></div>
+    <div class="math"><span class="formula">\(\sqrt n(\hat Î¸_n-Î¸_0)\Rightarrow N(0,V)\)</span><span class="mathNote">moment noise becomes asymptotically Gaussian</span></div>
   </div>
 </section>
 
@@ -150,8 +150,8 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
     <label for="modelSelect">Model</label>
     <select id="modelSelect">
       <option value="bernoulli">Bernoulli(p)</option>
-      <option value="exponential">Exponential(λ)</option>
-      <option value="normal2">Normal(μ,σ²) with 2 moments</option>
+      <option value="exponential">Exponential(Î»)</option>
+      <option value="normal2">Normal(Î¼,ÏƒÂ²) with 2 moments</option>
     </select>
   </div>
 
@@ -181,7 +181,7 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
   </div>
 
   <div class="control">
-    <label for="nCompareRange">Comparison n′ for consistency <span class="value" id="nCompareVal">220</span></label>
+    <label for="nCompareRange">Comparison nâ€² for consistency <span class="value" id="nCompareVal">220</span></label>
     <input id="nCompareRange" type="range" min="20" max="600" step="5" value="220"/>
   </div>
 
@@ -194,7 +194,7 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
   <div class="card plotCard">
     <div class="plotHead">
       <div>
-        <div class="plotTitle">Moment map: parameter space → moment space → estimate</div>
+        <div class="plotTitle">Moment map: parameter space â†’ moment space â†’ estimate</div>
         <div class="pillRow">
           <span class="pill"><span class="dot" style="background:var(--blue)"></span> true population moment</span>
           <span class="pill"><span class="dot" style="background:var(--warn)"></span> selected sample moment</span>
@@ -244,7 +244,7 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
 </section>
 </main>
 
-<footer>Method of moments · population moments · sample moments · just-identification · consistency · CLT normality</footer>
+<footer>Method of moments Â· population moments Â· sample moments Â· just-identification Â· consistency Â· CLT normality</footer>
 </div>
 
 <script>
@@ -253,7 +253,7 @@ const modelSelect=document.getElementById("modelSelect"), thetaRange=document.ge
 const nRange=document.getElementById("nRange"), repsRange=document.getElementById("repsRange"), sampleIndexRange=document.getElementById("sampleIndexRange"), nCompareRange=document.getElementById("nCompareRange");
 
 function css(v){return getComputedStyle(body).getPropertyValue(v).trim();}
-function fmt(x){if(!isFinite(x))return "∞"; if(Math.abs(x)<1e-4&&x!==0)return x.toExponential(2); if(Math.abs(x)<10)return x.toFixed(4); return x.toFixed(2);}
+function fmt(x){if(!isFinite(x))return "âˆž"; if(Math.abs(x)<1e-4&&x!==0)return x.toExponential(2); if(Math.abs(x)<10)return x.toFixed(4); return x.toFixed(2);}
 function line(x1,y1,x2,y2,stroke,w=1,op=1,dash=""){return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+stroke+'" stroke-width="'+w+'" stroke-opacity="'+op+'" '+(dash?'stroke-dasharray="'+dash+'"':'')+'/>';}
 function text(x,y,s,fill,size=13,weight=600,anchor="start"){return '<text x="'+x+'" y="'+y+'" fill="'+fill+'" font-size="'+size+'" font-weight="'+weight+'" text-anchor="'+anchor+'" font-family="Inter,system-ui,sans-serif">'+s+'</text>';}
 function rect(x,y,w,h,fill,stroke="none",rx=0,op=1){return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+rx+'" fill="'+fill+'" stroke="'+stroke+'" opacity="'+op+'"/>';}
@@ -311,11 +311,11 @@ function estimateFromMoments(m,p){
 function theoryInfo(p){
   if(p.model==="bernoulli"){
     const varx=p.theta*(1-p.theta);
-    return {truth:[p.theta], pop:popMom(p.theta,null,p), asymVar:[varx], formula:"E[X]=p, so  p̂ₘₒₘ = X̄", labels:["p"], momentLabels:["E[X]"]};
+    return {truth:[p.theta], pop:popMom(p.theta,null,p), asymVar:[varx], formula:"E[X]=p, so  pÌ‚â‚˜â‚’â‚˜ = XÌ„", labels:["p"], momentLabels:["E[X]"]};
   }
   if(p.model==="exponential"){
     const ex=1/p.theta, varx=1/(p.theta*p.theta), deriv=-1/(ex*ex);
-    return {truth:[p.theta], pop:popMom(p.theta,null,p), asymVar:[(deriv*deriv)*varx], formula:"E[X]=1/λ, so  λ̂ₘₒₘ = 1/X̄", labels:["λ"], momentLabels:["E[X]"]};
+    return {truth:[p.theta], pop:popMom(p.theta,null,p), asymVar:[(deriv*deriv)*varx], formula:"E[X]=1/Î», so  Î»Ì‚â‚˜â‚’â‚˜ = 1/XÌ„", labels:["Î»"], momentLabels:["E[X]"]};
   }
   const mu=p.theta, s=p.sigma, m1=mu, m2=mu*mu+s*s;
   // asymptotic covariance via delta method
@@ -332,7 +332,7 @@ function theoryInfo(p){
   const A21=J[1][0]*S[0][0]+J[1][1]*S[1][0], A22=J[1][0]*S[0][1]+J[1][1]*S[1][1];
   const V11=A11*J[0][0]+A12*J[0][1];
   const V22=A21*J[1][0]+A22*J[1][1];
-  return {truth:[mu,s], pop:[m1,m2], asymVar:[V11,V22], formula:"E[X]=μ, E[X²]=μ²+σ² ⇒ μ̂=X̄, σ̂=√(X̄₂−X̄²)", labels:["μ","σ"], momentLabels:["E[X]","E[X²]"]};
+  return {truth:[mu,s], pop:[m1,m2], asymVar:[V11,V22], formula:"E[X]=Î¼, E[XÂ²]=Î¼Â²+ÏƒÂ² â‡’ Î¼Ì‚=XÌ„, ÏƒÌ‚=âˆš(XÌ„â‚‚âˆ’XÌ„Â²)", labels:["Î¼","Ïƒ"], momentLabels:["E[X]","E[XÂ²]"]};
 }
 function simulate(p, nOverride=null, repsOverride=null){
   const q={...p, n:nOverride??p.n, reps:repsOverride??p.reps};
@@ -377,7 +377,7 @@ function drawMomentMap(d){
     // parameter axis
     const lo = p.model==="bernoulli" ? 0 : Math.max(.05, truth*0.2);
     const hi = p.model==="bernoulli" ? 1 : truth*2.8;
-    h+=text(92,80,"parameter space Θ",textc,15,900);
+    h+=text(92,80,"parameter space Î˜",textc,15,900);
     h+=line(P.x0,P.y,P.x1,P.y,muted,1.3,.8);
     for(let k=0;k<=5;k++) h+=line(P.x0+(P.x1-P.x0)*k/5,P.y-34,P.x0+(P.x1-P.x0)*k/5,P.y+34,grid,1,.45);
     const tx=px(truth,lo,hi,P.x0,P.x1), ex=px(chosenEst,lo,hi,P.x0,P.x1);
@@ -403,7 +403,7 @@ function drawMomentMap(d){
     h+='<path d="M 320 180 C 350 130, 350 130, 380 180" stroke="'+violet+'" stroke-width="2.7" fill="none" marker-end="url(#a1)"/>';
     h+='<path d="M 620 180 C 665 130, 665 130, 710 180" stroke="'+acc+'" stroke-width="2.7" fill="none" marker-end="url(#a1)"/>';
     h+='<defs><marker id="a1" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="'+acc+'"/></marker></defs>';
-    h+=text(350,126,"m(θ)",violet,12,900,"middle");
+    h+=text(350,126,"m(Î¸)",violet,12,900,"middle");
     h+=text(664,126,"invert",acc,12,900,"middle");
 
     const popx=px(info.pop[0],mlo,mhi,M.x0,M.x1), smpx=px(chosenMom,mlo,mhi,M.x0,M.x1);
@@ -414,8 +414,8 @@ function drawMomentMap(d){
     h+=line(E.x0,E.y,E.x1,E.y,muted,1.3,.8);
     for(let k=0;k<=4;k++) h+=line(E.x0+(E.x1-E.x0)*k/4,E.y-34,E.x0+(E.x1-E.x0)*k/4,E.y+34,grid,1,.45);
     const estx=px(chosenEst,lo,hi,E.x0,E.x1), tr2=px(truth,lo,hi,E.x0,E.x1);
-    h+=circle(tr2,E.y,6,blue); h+=text(tr2,E.y-16,"θ₀",blue,10,900,"middle");
-    h+=circle(estx,E.y,7,acc); h+=text(estx,E.y+24,"θ̂ₘₒₘ",acc,10,900,"middle");
+    h+=circle(tr2,E.y,6,blue); h+=text(tr2,E.y-16,"Î¸â‚€",blue,10,900,"middle");
+    h+=circle(estx,E.y,7,acc); h+=text(estx,E.y+24,"Î¸Ì‚â‚˜â‚’â‚˜",acc,10,900,"middle");
 
     // lower sample distribution
     const vals=sims.map(s=>s.est[0]);
@@ -434,14 +434,14 @@ function drawMomentMap(d){
     h+=line(thx,Y0,thx,Y1,blue,1.5,.5,"5 5");
     h+=line(mx,Y0,mx,Y1,rose,1.4,.45,"5 5");
     h+=text(thx,Y0-8,"truth",blue,10,900,"middle");
-    h+=text(mx,Y0+16,"E[θ̂]",rose,10,900,"middle");
+    h+=text(mx,Y0+16,"E[Î¸Ì‚]",rose,10,900,"middle");
   } else {
     // 2D case: parameter point -> moment point -> inverse back
     const tru=[p.theta,p.sigma], pm=info.pop, sm=chosen.mom, est=chosen.est;
     const P={x0:70,x1:360,y0:88,y1:278}, M={x0:612,x1:904,y0:88,y1:278};
-    h+=text(96,64,"parameter space (μ,σ)",textc,15,900);
+    h+=text(96,64,"parameter space (Î¼,Ïƒ)",textc,15,900);
     h+=rect(P.x0,P.y0,P.x1-P.x0,P.y1-P.y0,panel2,border,18,1);
-    h+=text(640,64,"moment space (E[X],E[X²])",textc,15,900);
+    h+=text(640,64,"moment space (E[X],E[XÂ²])",textc,15,900);
     h+=rect(M.x0,M.y0,M.x1-M.x0,M.y1-M.y0,panel2,border,18,1);
 
     for(let k=1;k<5;k++){
@@ -477,16 +477,16 @@ function drawMomentMap(d){
     h+='<path d="M 380 180 C 450 120, 530 120, 600 180" stroke="'+violet+'" stroke-width="2.8" fill="none" marker-end="url(#a2)"/>';
     h+='<path d="M 600 220 C 530 290, 450 290, 380 220" stroke="'+acc+'" stroke-width="2.8" fill="none" marker-end="url(#a2)"/>';
     h+='<defs><marker id="a2" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="'+acc+'"/></marker></defs>';
-    h+=text(486,124,"(μ,σ) ↦ (E[X],E[X²])",violet,12,900,"middle");
+    h+=text(486,124,"(Î¼,Ïƒ) â†¦ (E[X],E[XÂ²])",violet,12,900,"middle");
     h+=text(487,307,"invert the two moment equations",acc,12,900,"middle");
 
     // lower strip: selected sample moments and solution
     h+=rect(78,332,822,150,panel2,border,18,1);
     h+=text(98,360,"Just-identification: 2 parameters and 2 moments",textc,14,900);
-    h+=text(98,389,"sample moments:  m̄₁ = "+fmt(sm[0])+"   ,   m̄₂ = "+fmt(sm[1]),warn,12,900);
-    h+=text(98,417,"solve  μ = m̄₁   and   σ = √(m̄₂ − m̄₁²)",acc,12,900);
-    h+=text(98,448,"estimate:  μ̂ = "+fmt(est[0])+"   ,   σ̂ = "+fmt(est[1]),acc,13,900);
-    h+=text(98,474,"truth:      μ₀ = "+fmt(tru[0])+"   ,   σ₀ = "+fmt(tru[1]),blue,13,900);
+    h+=text(98,389,"sample moments:  mÌ„â‚ = "+fmt(sm[0])+"   ,   mÌ„â‚‚ = "+fmt(sm[1]),warn,12,900);
+    h+=text(98,417,"solve  Î¼ = mÌ„â‚   and   Ïƒ = âˆš(mÌ„â‚‚ âˆ’ mÌ„â‚Â²)",acc,12,900);
+    h+=text(98,448,"estimate:  Î¼Ì‚ = "+fmt(est[0])+"   ,   ÏƒÌ‚ = "+fmt(est[1]),acc,13,900);
+    h+=text(98,474,"truth:      Î¼â‚€ = "+fmt(tru[0])+"   ,   Ïƒâ‚€ = "+fmt(tru[1]),blue,13,900);
   }
   svg.innerHTML=h;
 }
@@ -522,7 +522,7 @@ function drawSampling(d){
   h+=line(m2,Y0,m2,Y1,gold,1.4,.45,"5 5");
   h+=text(tx,Y0-8,"truth",blue,10,900,"middle");
   h+=text(430,74,"green: n",acc,10,900);
-  h+=text(430,90,"gold: n′",gold,10,900);
+  h+=text(430,90,"gold: nâ€²",gold,10,900);
   h+=text(58,280,"Consistency becomes visible as concentration around the truth.", muted,11,850);
   svg.innerHTML=h;
 }
@@ -556,7 +556,7 @@ function drawCLT(d){
   h+='<path d="'+path+'" fill="none" stroke="'+blue+'" stroke-width="2.5" stroke-dasharray="7 5"/>';
   const zx=px(0,lo,hi,X0,X1); h+=line(zx,Y0,zx,Y1,blue,1.3,.45,"5 5");
   h+='<rect x="72" y="258" width="482" height="24" rx="10" fill="'+css("--panel2")+'" stroke="'+border+'"/>';
-  h+=text(88,275,"For the first parameter: asymptotic variance V ≈ "+fmt(V), textc, 11, 900);
+  h+=text(88,275,"For the first parameter: asymptotic variance V â‰ˆ "+fmt(V), textc, 11, 900);
   svg.innerHTML=h;
 }
 
@@ -580,14 +580,14 @@ function updateText(d){
     ["estimate 1", fmt(chosen.est[0])],
     ["E[estimate 1]", fmt(mean(firstVals))],
     ["Var(estimate 1)", fmt(variance(firstVals))],
-    ["n vs n′ sd ratio", fmt(Math.sqrt(variance(firstVals))/Math.sqrt(variance(sims2.map(s=>s.est[0]))))]
+    ["n vs nâ€² sd ratio", fmt(Math.sqrt(variance(firstVals))/Math.sqrt(variance(sims2.map(s=>s.est[0]))))]
   ];
   if(p.model==="normal2"){
     mini[1]=["sample moment 2", fmt(chosen.mom[1])];
-    mini[2]=["estimate μ̂", fmt(chosen.est[0])];
-    mini[3]=["estimate σ̂", fmt(chosen.est[1])];
-    mini[4]=["E[μ̂]", fmt(mean(firstVals))];
-    mini[5]=["E[σ̂]", fmt(mean(secondVals))];
+    mini[2]=["estimate Î¼Ì‚", fmt(chosen.est[0])];
+    mini[3]=["estimate ÏƒÌ‚", fmt(chosen.est[1])];
+    mini[4]=["E[Î¼Ì‚]", fmt(mean(firstVals))];
+    mini[5]=["E[ÏƒÌ‚]", fmt(mean(secondVals))];
   }
   document.getElementById("miniGrid").innerHTML=mini.map(z=>'<div class="miniStat"><div class="k">'+z[0]+'</div><div class="v">'+z[1]+'</div></div>').join("");
 
@@ -603,9 +603,9 @@ function updateText(d){
   }).join("");
 
   let interp="Method of moments first moves from the sample to empirical moments, then from those moments back to parameters. The estimator is therefore an inverse-image construction in moment space.";
-  if(p.model==="bernoulli") interp="For Bernoulli, the map is almost trivial: the theoretical first moment equals p. Matching E[X]=p with X̄ gives p̂ = X̄.";
-  if(p.model==="exponential") interp="For the exponential model, the first moment is E[X]=1/λ. So the empirical mean determines the MoM estimate by inversion: λ̂ = 1/X̄.";
-  if(p.model==="normal2") interp="In the two-parameter normal model, one moment is not enough. The pair (E[X],E[X²]) carries exactly enough information to identify (μ,σ).";
+  if(p.model==="bernoulli") interp="For Bernoulli, the map is almost trivial: the theoretical first moment equals p. Matching E[X]=p with XÌ„ gives pÌ‚ = XÌ„.";
+  if(p.model==="exponential") interp="For the exponential model, the first moment is E[X]=1/Î». So the empirical mean determines the MoM estimate by inversion: Î»Ì‚ = 1/XÌ„.";
+  if(p.model==="normal2") interp="In the two-parameter normal model, one moment is not enough. The pair (E[X],E[XÂ²]) carries exactly enough information to identify (Î¼,Ïƒ).";
   document.getElementById("interpretText").innerHTML=interp;
 
   let notice="Watch the geometry: the sample creates a point in moment space; the method of moments sends that point backward to the parameter space.";
@@ -634,3 +634,4 @@ drawAll();
 </script>
 </body>
 </html>
+

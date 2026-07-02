@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -82,7 +82,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.matrix-cell{fill:va
 <div class="app">
 <header>
   <div>
-    <div class="eyebrow"><span class="dot"></span> Game Theory · Nash in Pure Strategies</div>
+    <div class="eyebrow"><span class="dot"></span> Game Theory Â· Nash in Pure Strategies</div>
     <h1>Nash equilibrium in pure strategies</h1>
     <p class="subtitle">Best-response intersections, coordination games, prisoner's dilemma, and multiple equilibria. The app makes pure-strategy equilibrium visible as mutual best response inside the payoff matrix.</p>
   </div>
@@ -91,7 +91,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.matrix-cell{fill:va
 
 <div class="layout">
   <aside class="card controls">
-    <div class="card-title"><h2>Controls</h2><span class="small">2 × 2 strategic form</span></div>
+    <div class="card-title"><h2>Controls</h2><span class="small">2 Ã— 2 strategic form</span></div>
 
     <div class="section-label">Canonical examples</div>
     <div class="control">
@@ -119,16 +119,16 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.matrix-cell{fill:va
     </div>
 
     <div class="section-label">Row player payoffs</div>
-    <div class="control"><div class="label-row"><label for="a11">u₁(U,L)</label><span class="value" id="a11Val"></span></div><input id="a11" type="range" min="-5" max="8" step="1" value="3"></div>
-    <div class="control"><div class="label-row"><label for="a12">u₁(U,R)</label><span class="value" id="a12Val"></span></div><input id="a12" type="range" min="-5" max="8" step="1" value="0"></div>
-    <div class="control"><div class="label-row"><label for="a21">u₁(D,L)</label><span class="value" id="a21Val"></span></div><input id="a21" type="range" min="-5" max="8" step="1" value="5"></div>
-    <div class="control"><div class="label-row"><label for="a22">u₁(D,R)</label><span class="value" id="a22Val"></span></div><input id="a22" type="range" min="-5" max="8" step="1" value="1"></div>
+    <div class="control"><div class="label-row"><label for="a11">uâ‚(U,L)</label><span class="value" id="a11Val"></span></div><input id="a11" type="range" min="-5" max="8" step="1" value="3"></div>
+    <div class="control"><div class="label-row"><label for="a12">uâ‚(U,R)</label><span class="value" id="a12Val"></span></div><input id="a12" type="range" min="-5" max="8" step="1" value="0"></div>
+    <div class="control"><div class="label-row"><label for="a21">uâ‚(D,L)</label><span class="value" id="a21Val"></span></div><input id="a21" type="range" min="-5" max="8" step="1" value="5"></div>
+    <div class="control"><div class="label-row"><label for="a22">uâ‚(D,R)</label><span class="value" id="a22Val"></span></div><input id="a22" type="range" min="-5" max="8" step="1" value="1"></div>
 
     <div class="section-label">Column player payoffs</div>
-    <div class="control"><div class="label-row"><label for="b11">u₂(U,L)</label><span class="value" id="b11Val"></span></div><input id="b11" type="range" min="-5" max="8" step="1" value="3"></div>
-    <div class="control"><div class="label-row"><label for="b12">u₂(U,R)</label><span class="value" id="b12Val"></span></div><input id="b12" type="range" min="-5" max="8" step="1" value="5"></div>
-    <div class="control"><div class="label-row"><label for="b21">u₂(D,L)</label><span class="value" id="b21Val"></span></div><input id="b21" type="range" min="-5" max="8" step="1" value="0"></div>
-    <div class="control"><div class="label-row"><label for="b22">u₂(D,R)</label><span class="value" id="b22Val"></span></div><input id="b22" type="range" min="-5" max="8" step="1" value="1"></div>
+    <div class="control"><div class="label-row"><label for="b11">uâ‚‚(U,L)</label><span class="value" id="b11Val"></span></div><input id="b11" type="range" min="-5" max="8" step="1" value="3"></div>
+    <div class="control"><div class="label-row"><label for="b12">uâ‚‚(U,R)</label><span class="value" id="b12Val"></span></div><input id="b12" type="range" min="-5" max="8" step="1" value="5"></div>
+    <div class="control"><div class="label-row"><label for="b21">uâ‚‚(D,L)</label><span class="value" id="b21Val"></span></div><input id="b21" type="range" min="-5" max="8" step="1" value="0"></div>
+    <div class="control"><div class="label-row"><label for="b22">uâ‚‚(D,R)</label><span class="value" id="b22Val"></span></div><input id="b22" type="range" min="-5" max="8" step="1" value="1"></div>
 
     <div class="toggle-row"><div><div style="font-size:14px;">Show best responses</div><div class="small">row and column markers</div></div><label class="switch"><input id="showBR" type="checkbox" checked><span class="slider-switch"></span></label></div>
     <div class="toggle-row"><div><div style="font-size:14px;">Show dominance fading</div><div class="small">fade dominated strategies</div></div><label class="switch"><input id="showDom" type="checkbox" checked><span class="slider-switch"></span></label></div>
@@ -151,7 +151,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.matrix-cell{fill:va
             <h2>Main diagram: payoff matrix</h2>
             <p>A pure-strategy Nash equilibrium is exactly a matrix cell where the row player's best-response marker and the column player's best-response marker coincide.</p>
           </div>
-          <span class="small">row chooses U/D · column chooses L/R</span>
+          <span class="small">row chooses U/D Â· column chooses L/R</span>
         </div>
         <svg id="matrixSvg" viewBox="0 0 1120 620"></svg>
         <div class="legend">
@@ -243,7 +243,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.matrix-cell{fill:va
   function rowText(arr){ return arr.length===2?'U,D':(arr[0]===0?'U':'D'); }
   function colText(arr){ return arr.length===2?'L,R':(arr[0]===0?'L':'R'); }
   function dom2(x1,x2,y1,y2,a,b){ if(x1>y1 && x2>y2) return `${a} strictly dominates ${b}`; if(y1>x1 && y2>x2) return `${b} strictly dominates ${a}`; if(x1>=y1 && x2>=y2 && (x1>y1 || x2>y2)) return `${a} weakly dominates ${b}`; if(y1>=x1 && y2>=x2 && (y1>x1 || y2>x2)) return `${b} weakly dominates ${a}`; return 'none'; }
-  function short(x){ return x.replace(' strictly dominates ',' ≻ ').replace(' weakly dominates ',' ⪰ '); }
+  function short(x){ return x.replace(' strictly dominates ',' â‰» ').replace(' weakly dominates ',' âª° '); }
 
   function game(){
     const g={A:[[+els.a11.value,+els.a12.value],[+els.a21.value,+els.a22.value]],B:[[+els.b11.value,+els.b12.value],[+els.b21.value,+els.b22.value]],sel:+els.selCell.value};
@@ -335,3 +335,4 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.matrix-cell{fill:va
 </script>
 </body>
 </html>
+

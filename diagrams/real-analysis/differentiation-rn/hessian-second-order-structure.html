@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -97,7 +97,7 @@
     .theme .label{font-size:.92rem;color:var(--muted);min-width:70px}
     .switch{position:relative;width:70px;height:36px;border-radius:999px;background:var(--switch);border:1px solid var(--line)}
     .switch:before,.switch:after{position:absolute;top:50%;transform:translateY(-50%);font-size:13px;opacity:.75}
-    .switch:before{content:"☀";left:10px}.switch:after{content:"☾";right:10px}
+    .switch:before{content:"â˜€";left:10px}.switch:after{content:"â˜¾";right:10px}
     .knob{position:absolute;left:3px;top:3px;width:28px;height:28px;border-radius:50%;background:var(--thumb);border:1px solid var(--line);box-shadow:0 4px 12px rgba(0,0,0,.16);transition:left .25s ease;display:grid;place-items:center;font-size:13px}
     body.dark .knob{left:37px}
 
@@ -163,7 +163,7 @@
         <div class="pill">directional curvature classification</div>
         <div id="theme" class="theme" role="button" tabindex="0">
           <span id="themeLabel" class="label">light mode</span>
-          <div class="switch"><div id="knob" class="knob">☀</div></div>
+          <div class="switch"><div id="knob" class="knob">â˜€</div></div>
         </div>
       </div>
     </header>
@@ -382,7 +382,7 @@
 
         <section class="footer">
           <div><strong>Second-order model.</strong> Near any point, the Hessian determines the local quadratic correction to the tangent plane.</div>
-          <div><strong>At critical points.</strong> When the gradient vanishes, the Hessian becomes the leading local term and therefore decides the local geometry—except in degenerate cases.</div>
+          <div><strong>At critical points.</strong> When the gradient vanishes, the Hessian becomes the leading local term and therefore decides the local geometryâ€”except in degenerate cases.</div>
           <div><strong>Degeneracy.</strong> If the Hessian is singular or zero, the usual second-order test may fail. Then higher-order terms decide the true local behavior.</div>
         </section>
       </main>
@@ -500,9 +500,9 @@
   const dot=(a,b)=>a.reduce((s,x,i)=>s+x*b[i],0);
   const matVec=(A,v)=>[A[0][0]*v[0]+A[0][1]*v[1], A[1][0]*v[0]+A[1][1]*v[1]];
   const fmt=x=>{
-    if(!Number.isFinite(x)) return '—';
+    if(!Number.isFinite(x)) return 'â€”';
     if(Math.abs(x)>9999) return x.toExponential(2);
-    return (x<0?'−':'')+Math.abs(x).toFixed(3);
+    return (x<0?'âˆ’':'')+Math.abs(x).toFixed(3);
   };
   const fmtVec=v=>`(${fmt(v[0])}, ${fmt(v[1])})`;
   const lin=(x,a,b,c,d)=>c+(x-a)*(d-c)/(b-a);
@@ -554,7 +554,7 @@
     document.body.classList.toggle('dark',t==='dark');
     localStorage.setItem('hessian-second-order-theme',t);
     el.themeLabel.textContent=t==='dark'?'dark mode':'light mode';
-    el.knob.textContent=t==='dark'?'☾':'☀';
+    el.knob.textContent=t==='dark'?'â˜¾':'â˜€';
     if(state.initialized) render();
   }
 
@@ -720,14 +720,14 @@
         type:'scatter', mode:'lines+markers+text',
         x:[p[0]-L*e1[0], p[0]+L*e1[0]], y:[p[1]-L*e1[1], p[1]+L*e1[1]],
         marker:{size:[0,7],color:css('--bad')}, line:{color:css('--bad'),width:4},
-        text:['','e₁'], textposition:'top center', textfont:{size:12,color:css('--bad')},
+        text:['','eâ‚'], textposition:'top center', textfont:{size:12,color:css('--bad')},
         hoverinfo:'skip', showlegend:false
       },
       {
         type:'scatter', mode:'lines+markers+text',
         x:[p[0]-L*e2[0], p[0]+L*e2[0]], y:[p[1]-L*e2[1], p[1]+L*e2[1]],
         marker:{size:[0,7],color:css('--violet')}, line:{color:css('--violet'),width:4},
-        text:['','e₂'], textposition:'bottom center', textfont:{size:12,color:css('--violet')},
+        text:['','eâ‚‚'], textposition:'bottom center', textfont:{size:12,color:css('--violet')},
         hoverinfo:'skip', showlegend:false
       },
       {
@@ -771,7 +771,7 @@
     const th2=((Math.atan2(C.eig.v2[1],C.eig.v2[0])%(2*Math.PI))+2*Math.PI)%(2*Math.PI);
     el.curvSvg.innerHTML = `
       <rect x="0" y="0" width="${W}" height="${H}" rx="22" fill="${css('--paper')}"/>
-      ${text(plot.x,40,'uᵀ H(a) u on the unit circle',{size:22,weight:700,family:'Georgia, serif'})}
+      ${text(plot.x,40,'uáµ€ H(a) u on the unit circle',{size:22,weight:700,family:'Georgia, serif'})}
       <rect x="${plot.x}" y="${plot.y}" width="${plot.w}" height="${plot.h}" rx="22" fill="transparent" stroke="${css('--line')}"/>
       ${grid}
       <line x1="${X(0)}" y1="${Y(0)}" x2="${X(2*Math.PI)}" y2="${Y(0)}" stroke="${css('--line')}" stroke-width="1.8"/>
@@ -781,9 +781,9 @@
       <line x1="${X(th1)}" y1="${plot.y}" x2="${X(th1)}" y2="${plot.y+plot.h}" stroke="${css('--bad')}" stroke-dasharray="5 5" stroke-width="2.0"/>
       <line x1="${X(th2)}" y1="${plot.y}" x2="${X(th2)}" y2="${plot.y+plot.h}" stroke="${css('--violet')}" stroke-dasharray="5 5" stroke-width="2.0"/>
       ${text(X(state.theta)+8,Y(C.dir2)-8,'chosen direction',{size:14,fill:css('--gold'),weight:700})}
-      ${text(X(th1)+8,plot.y+26,'e₁', {size:13,fill:css('--bad'),weight:700})}
-      ${text(X(th2)+8,plot.y+48,'e₂', {size:13,fill:css('--violet'),weight:700})}
-      ${text(plot.x+plot.w-8,plot.y+plot.h+28,'θ', {size:15,fill:css('--muted'),weight:700,anchor:'end'})}
+      ${text(X(th1)+8,plot.y+26,'eâ‚', {size:13,fill:css('--bad'),weight:700})}
+      ${text(X(th2)+8,plot.y+48,'eâ‚‚', {size:13,fill:css('--violet'),weight:700})}
+      ${text(plot.x+plot.w-8,plot.y+plot.h+28,'Î¸', {size:15,fill:css('--muted'),weight:700,anchor:'end'})}
     `;
   }
 
@@ -814,14 +814,14 @@
     }
     el.sliceSvg.innerHTML = `
       <rect x="0" y="0" width="${W}" height="${H}" rx="22" fill="${css('--paper')}"/>
-      ${text(plot.x,40,'principal slices: s ↦ f(a + s eᵢ) − f(a)',{size:22,weight:700,family:'Georgia, serif'})}
+      ${text(plot.x,40,'principal slices: s â†¦ f(a + s eáµ¢) âˆ’ f(a)',{size:22,weight:700,family:'Georgia, serif'})}
       <rect x="${plot.x}" y="${plot.y}" width="${plot.w}" height="${plot.h}" rx="22" fill="transparent" stroke="${css('--line')}"/>
       ${grid}
       <line x1="${X(sMin)}" y1="${Y(0)}" x2="${X(sMax)}" y2="${Y(0)}" stroke="${css('--line')}" stroke-width="1.8"/>
       <path d="${path(d1,X,Y)}" fill="none" stroke="${css('--bad')}" stroke-width="3.5"/>
       <path d="${path(d2,X,Y)}" fill="none" stroke="${css('--violet')}" stroke-width="3.5"/>
-      ${text(X(0.52),Y(d1[Math.floor(d1.length*0.74)].y)-10,'slice along e₁', {size:14,fill:css('--bad'),weight:700})}
-      ${text(X(0.40),Y(d2[Math.floor(d2.length*0.67)].y)+18,'slice along e₂', {size:14,fill:css('--violet'),weight:700})}
+      ${text(X(0.52),Y(d1[Math.floor(d1.length*0.74)].y)-10,'slice along eâ‚', {size:14,fill:css('--bad'),weight:700})}
+      ${text(X(0.40),Y(d2[Math.floor(d2.length*0.67)].y)+18,'slice along eâ‚‚', {size:14,fill:css('--violet'),weight:700})}
       ${text(plot.x+plot.w-8,plot.y+plot.h+28,'s', {size:15,fill:css('--muted'),weight:700,anchor:'end'})}
     `;
   }
@@ -834,23 +834,23 @@
     const cls=C.cls;
     el.logicSvg.innerHTML = `
       <rect x="0" y="0" width="${W}" height="${H}" rx="22" fill="${css('--paper')}"/>
-      ${text(78,40,'classification map using D = det(H) and fₓₓ',{size:22,weight:700,family:'Georgia, serif'})}
+      ${text(78,40,'classification map using D = det(H) and fâ‚“â‚“',{size:22,weight:700,family:'Georgia, serif'})}
 
       <rect x="86" y="92" width="396" height="356" rx="22" fill="transparent" stroke="${css('--line')}"/>
       <line x1="284" y1="92" x2="284" y2="448" stroke="${css('--line')}" stroke-width="2"/>
       <line x1="86" y1="270" x2="482" y2="270" stroke="${css('--line')}" stroke-width="2"/>
       ${text(382,462,'D = det(H)', {size:14,fill:css('--muted'),weight:700})}
-      ${text(96,108,'fₓₓ', {size:14,fill:css('--muted'),weight:700})}
+      ${text(96,108,'fâ‚“â‚“', {size:14,fill:css('--muted'),weight:700})}
 
       <rect x="286" y="94" width="194" height="174" rx="18" fill="${css('--goodSoft')}" stroke="${css('--good')}"/>
       <rect x="286" y="272" width="194" height="174" rx="18" fill="${css('--badSoft')}" stroke="${css('--bad')}"/>
       <rect x="88" y="94" width="194" height="352" rx="18" fill="${css('--violetSoft')}" stroke="${css('--violet')}"/>
 
-      ${text(382,138,'D > 0, fₓₓ > 0', {size:18,fill:css('--good'),weight:700,anchor:'middle',family:'Georgia, serif'})}
+      ${text(382,138,'D > 0, fâ‚“â‚“ > 0', {size:18,fill:css('--good'),weight:700,anchor:'middle',family:'Georgia, serif'})}
       ${text(382,170,'positive definite', {size:16,fill:css('--good'),weight:700,anchor:'middle'})}
       ${text(382,198,'local minimum', {size:18,fill:css('--good'),weight:700,anchor:'middle'})}
 
-      ${text(382,318,'D > 0, fₓₓ < 0', {size:18,fill:css('--bad'),weight:700,anchor:'middle',family:'Georgia, serif'})}
+      ${text(382,318,'D > 0, fâ‚“â‚“ < 0', {size:18,fill:css('--bad'),weight:700,anchor:'middle',family:'Georgia, serif'})}
       ${text(382,350,'negative definite', {size:16,fill:css('--bad'),weight:700,anchor:'middle'})}
       ${text(382,378,'local maximum', {size:18,fill:css('--bad'),weight:700,anchor:'middle'})}
 
@@ -863,12 +863,12 @@
 
       <rect x="560" y="106" width="320" height="312" rx="22" fill="${css('--card')}" stroke="${css('--line')}"/>
       ${text(580,142,'Current algebraic data',{size:20,weight:700,family:'Georgia, serif'})}
-      ${text(580,184,`det(H) ≈ ${fmt(C.det)}`,{size:17,fill:css('--muted'),weight:700})}
-      ${text(580,214,`fₓₓ(a) ≈ ${fmt(C.H[0][0])}`,{size:17,fill:css('--muted'),weight:700})}
-      ${text(580,244,`trace(H) ≈ ${fmt(C.tr)}`,{size:17,fill:css('--muted'),weight:700})}
+      ${text(580,184,`det(H) â‰ˆ ${fmt(C.det)}`,{size:17,fill:css('--muted'),weight:700})}
+      ${text(580,214,`fâ‚“â‚“(a) â‰ˆ ${fmt(C.H[0][0])}`,{size:17,fill:css('--muted'),weight:700})}
+      ${text(580,244,`trace(H) â‰ˆ ${fmt(C.tr)}`,{size:17,fill:css('--muted'),weight:700})}
       ${text(580,282,`classification: ${cls.label}`,{size:18,fill:cls.color,weight:700,family:'Georgia, serif'})}
       ${text(580,314,cls.detail,{size:15,fill:css('--muted'),weight:700})}
-      ${text(580,356,'Remember: if ∇f(a) ≠ 0,',{size:15,fill:css('--muted'),weight:700})}
+      ${text(580,356,'Remember: if âˆ‡f(a) â‰  0,',{size:15,fill:css('--muted'),weight:700})}
       ${text(580,382,'the point is not yet a candidate',{size:15,fill:css('--muted'),weight:700})}
       ${text(580,408,'for the standard second-order test.',{size:15,fill:css('--muted'),weight:700})}
     `;
@@ -887,27 +887,27 @@
 
     el.matrixBox.textContent =
       `a = ${fmtVec(C.a)}\n` +
-      `∇f(a) = ${fmtVec(C.grad)}\n` +
+      `âˆ‡f(a) = ${fmtVec(C.grad)}\n` +
       `H(a) = [[${fmt(C.H[0][0])}, ${fmt(C.H[0][1])}],\n` +
       `        [${fmt(C.H[1][0])}, ${fmt(C.H[1][1])}]]\n` +
-      `λ₁ ≈ ${fmt(C.eig.l1)},  λ₂ ≈ ${fmt(C.eig.l2)}\n` +
-      `e₁ ≈ ${fmtVec(C.eig.v1)}\n` +
-      `e₂ ≈ ${fmtVec(C.eig.v2)}`;
+      `Î»â‚ â‰ˆ ${fmt(C.eig.l1)},  Î»â‚‚ â‰ˆ ${fmt(C.eig.l2)}\n` +
+      `eâ‚ â‰ˆ ${fmtVec(C.eig.v1)}\n` +
+      `eâ‚‚ â‰ˆ ${fmtVec(C.eig.v2)}`;
     el.formulaBox.innerHTML=C.ex.formula;
     el.noticeBox.innerHTML=C.ex.notice;
 
-    el.status.textContent = `${C.cls.label} · ${C.cls.detail}`;
+    el.status.textContent = `${C.cls.label} Â· ${C.cls.detail}`;
     el.status.style.color = C.cls.color;
     el.status.style.background = state.theme==='dark'
       ? `color-mix(in srgb, ${C.cls.color} 18%, transparent)`
       : `color-mix(in srgb, ${C.cls.color} 12%, transparent)`;
 
-    el.gradMetric.textContent = `∇f(a) ≈ ${fmtVec(C.grad)} ;  ||∇f(a)|| ≈ ${fmt(norm(C.grad))}`;
-    el.hessMetric.textContent = `det ≈ ${fmt(C.det)} ;  tr ≈ ${fmt(C.tr)} ;  eigenvalues ≈ (${fmt(C.eig.l1)}, ${fmt(C.eig.l2)})`;
-    el.dirMetric.textContent = `u ≈ ${fmtVec(C.u)} ;  uᵀHu ≈ ${fmt(C.dir2)}`;
+    el.gradMetric.textContent = `âˆ‡f(a) â‰ˆ ${fmtVec(C.grad)} ;  ||âˆ‡f(a)|| â‰ˆ ${fmt(norm(C.grad))}`;
+    el.hessMetric.textContent = `det â‰ˆ ${fmt(C.det)} ;  tr â‰ˆ ${fmt(C.tr)} ;  eigenvalues â‰ˆ (${fmt(C.eig.l1)}, ${fmt(C.eig.l2)})`;
+    el.dirMetric.textContent = `u â‰ˆ ${fmtVec(C.u)} ;  uáµ€Hu â‰ˆ ${fmt(C.dir2)}`;
     el.classMetric.textContent = C.cls.label;
     el.classMetric.style.color = C.cls.color;
-    el.errorMetric.textContent = `f(a+h)−q(h) ≈ ${fmt(C.err)}`;
+    el.errorMetric.textContent = `f(a+h)âˆ’q(h) â‰ˆ ${fmt(C.err)}`;
   }
 
   function render(){
@@ -963,3 +963,4 @@
 </script>
 </body>
 </html>
+

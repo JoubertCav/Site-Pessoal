@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -267,7 +267,7 @@ const $ = id => document.getElementById(id);
 const state = { mode:'form', family:'bernoulli' };
 const modeButtons = [...document.querySelectorAll('[data-mode]')];
 
-function fmt(x,d=2){ return isFinite(x) ? Number(x).toFixed(d) : '∞'; }
+function fmt(x,d=2){ return isFinite(x) ? Number(x).toFixed(d) : 'âˆž'; }
 function clamp(x,a,b){ return Math.max(a,Math.min(b,x)); }
 function clear(el){ el.innerHTML=''; }
 function svgEl(tag, attrs={}){ const e=document.createElementNS('http://www.w3.org/2000/svg',tag); for(const k in attrs) e.setAttribute(k,attrs[k]); return e; }
@@ -297,8 +297,8 @@ function expPdf(x,rate){ return x<0?0:rate*Math.exp(-rate*x); }
 const families = {
   bernoulli:{
     name:'Bernoulli',
-    domain:'η ∈ ℝ',
-    xLabel:'x ∈ {0,1}',
+    domain:'Î· âˆˆ â„',
+    xLabel:'x âˆˆ {0,1}',
     type:'discrete',
     xMin:0,xMax:1,
     A:e=>Math.log1p(Math.exp(e)),
@@ -311,7 +311,7 @@ const families = {
   },
   poisson:{
     name:'Poisson',
-    domain:'η ∈ ℝ',
+    domain:'Î· âˆˆ â„',
     type:'discrete',
     xLabel:'count x',
     xMin:0,xMax:14,
@@ -325,7 +325,7 @@ const families = {
   },
   normal:{
     name:'Normal, variance known',
-    domain:'η ∈ ℝ',
+    domain:'Î· âˆˆ â„',
     type:'continuous',
     xLabel:'real x',
     xMin:-5,xMax:5,
@@ -339,7 +339,7 @@ const families = {
   },
   exponential:{
     name:'Exponential',
-    domain:'η < 0',
+    domain:'Î· < 0',
     type:'continuous',
     xLabel:'positive x',
     xMin:0,xMax:8,
@@ -402,7 +402,7 @@ function drawFamilyMain(){
     });
     const m=fam.mean(e);
     svg.appendChild(svgEl('line',{x1:xs(m),y1:y0+h,x2:xs(m),y2:y0+10,class:'guide'}));
-    text(svg,xs(m)+8,y0+26,'A′(η)=E[T]','inklabel','start');
+    text(svg,xs(m)+8,y0+26,'Aâ€²(Î·)=E[T]','inklabel','start');
   } else {
     let xMin=fam.xMin, xMax=fam.xMax;
     if(state.family==='normal'){ xMin=e-4; xMax=e+4; }
@@ -424,7 +424,7 @@ function drawFamilyMain(){
       const y=fam.pdf(mean,e);
       svg.appendChild(svgEl('line',{x1:xs(mean),y1:y0+h,x2:xs(mean),y2:ys(y),class:'guide'}));
       svg.appendChild(svgEl('circle',{cx:xs(mean),cy:ys(y),r:5,class:'dot'}));
-      text(svg,xs(mean)+8,ys(y)-8,'A′(η)=E[T]','inklabel','start');
+      text(svg,xs(mean)+8,ys(y)-8,'Aâ€²(Î·)=E[T]','inklabel','start');
     }
   }
   text(svg,x0+w-4,y0+18,fam.name,'inklabel','end');
@@ -446,7 +446,7 @@ function drawDecompositionSecondary(){
     svg.appendChild(svgEl('rect',{x:bx,y:yy,width:bw,height:bh,rx:16,fill:'var(--paper2)',class:'barstroke'}));
     text(svg,bx-12,yy+25,b[0],'label','end');
     svgKatex(svg,bx+bw/2,yy+8,b[1],{w:bw-20,h:26,cls:'svgmath small'});
-    if(i<3) text(svg,bx+bw/2,yy+51,'↓','inklabel');
+    if(i<3) text(svg,bx+bw/2,yy+51,'â†“','inklabel');
   });
   svgKatex(svg,310,292,fam.map,{w:560,h:32});
 }
@@ -464,7 +464,7 @@ function drawPartitionMain(){
   }
   const margin=(yMax-yMin)*0.12 || 1; yMin-=margin; yMax+=margin;
   const xs=x=>x0+w*(x-lo)/(hi-lo), ys=y=>y0+h-h*(y-yMin)/(yMax-yMin);
-  axes(svg,{x0,y0,w,h,xMin:lo,xMax:hi,yMin,yMax,xLabel:'natural parameter η',yLabel:'log-partition A(η)'});
+  axes(svg,{x0,y0,w,h,xMin:lo,xMax:hi,yMin,yMax,xLabel:'natural parameter Î·',yLabel:'log-partition A(Î·)'});
   svg.appendChild(svgEl('path',{d:pathLine(pts,xs,ys),class:'curve'}));
   const A=fam.A(e), m=fam.mean(e);
   const tangent=[];
@@ -472,9 +472,9 @@ function drawPartitionMain(){
   svg.appendChild(svgEl('path',{d:pathLine(tangent,xs,ys),class:'curve2'}));
   svg.appendChild(svgEl('circle',{cx:xs(e),cy:ys(A),r:5,class:'dot'}));
   svg.appendChild(svgEl('line',{x1:xs(e),y1:y0+h,x2:xs(e),y2:ys(A),class:'guide'}));
-  text(svg,xs(e)+8,ys(A)-8,`slope = A′(η) = ${fmt(m,2)}`,'inklabel','start');
+  text(svg,xs(e)+8,ys(A)-8,`slope = Aâ€²(Î·) = ${fmt(m,2)}`,'inklabel','start');
   text(svg,x0+w-4,y0+18,'convex log-normalizer','inklabel','end');
-  legend([{className:'sw',label:'A(η)'},{className:'sw2',label:'tangent slope = mean'}]);
+  legend([{className:'sw',label:'A(Î·)'},{className:'sw2',label:'tangent slope = mean'}]);
 }
 function drawPartitionSecondary(){
   const svg=$('secondarySvg'); clear(svg);
@@ -489,7 +489,7 @@ function drawPartitionSecondary(){
   }
   yMax=Math.max(yMax*1.15,1);
   const xs=x=>x0+w*(x-lo)/(hi-lo), ys=y=>y0+h-h*y/yMax;
-  axes(svg,{x0,y0,w,h,xMin:lo,xMax:hi,yMax,xLabel:'η',yLabel:'cumulants'});
+  axes(svg,{x0,y0,w,h,xMin:lo,xMax:hi,yMax,xLabel:'Î·',yLabel:'cumulants'});
   svg.appendChild(svgEl('path',{d:pathLine(ptsMean,xs,ys),class:'curve'}));
   svg.appendChild(svgEl('path',{d:pathLine(ptsVar,xs,ys),class:'curve2'}));
   svg.appendChild(svgEl('circle',{cx:xs(e),cy:ys(fam.mean(e)),r:5,class:'dot'}));
@@ -515,7 +515,7 @@ function drawMomentsMain(){
   if(isFinite(K)){
     svg.appendChild(svgEl('line',{x1:xs(tilt),y1:y0+h,x2:xs(tilt),y2:ys(K),class:'guide'}));
     svg.appendChild(svgEl('circle',{cx:xs(tilt),cy:ys(K),r:5,class:'dot'}));
-    text(svg,xs(tilt)+8,ys(K)-8,'K(t)=A(η+t)-A(η)','inklabel','start');
+    text(svg,xs(tilt)+8,ys(K)-8,'K(t)=A(Î·+t)-A(Î·)','inklabel','start');
   }
   text(svg,x0+w-4,y0+18,'moments generated by log-partition differences','inklabel','end');
   legend([{className:'sw',label:'cumulant generating function'}]);
@@ -535,10 +535,10 @@ function drawMomentsSecondary(){
     svg.appendChild(svgEl('rect',{x:bx,y:yy,width:bw,height:bh,rx:16,fill:'var(--paper2)',class:'barstroke'}));
     text(svg,bx-12,yy+26,r[0],'label','end');
     svgKatex(svg,bx+bw/2,yy+8,r[1],{w:bw-20,h:26,cls:'svgmath small'});
-    if(i<2) text(svg,bx+bw/2,yy+58,'↓','inklabel');
+    if(i<2) text(svg,bx+bw/2,yy+58,'â†“','inklabel');
   });
   const shifted=e+t;
-  text(svg,310,284,`η = ${fmt(e,2)}  →  η+t = ${fmt(shifted,2)}`,'inklabel');
+  text(svg,310,284,`Î· = ${fmt(e,2)}  â†’  Î·+t = ${fmt(shifted,2)}`,'inklabel');
 }
 function drawSufficiencyMain(){
   const svg=$('mainSvg'); clear(svg);
@@ -558,7 +558,7 @@ function drawSufficiencyMain(){
   }
   const pad=(yMax-yMin)*0.13||1; yMin-=pad; yMax+=pad;
   const xs=x=>x0+w*(x-lo)/(hi-lo), ys=y=>y0+h-h*(y-yMin)/(yMax-yMin);
-  axes(svg,{x0,y0,w,h,xMin:lo,xMax:hi,yMin,yMax,xLabel:'η',yLabel:'log-likelihood up to constants'});
+  axes(svg,{x0,y0,w,h,xMin:lo,xMax:hi,yMin,yMax,xLabel:'Î·',yLabel:'log-likelihood up to constants'});
   svg.appendChild(svgEl('path',{d:pathLine(pts,xs,ys),class:'curve'}));
   const etaHat = state.family==='bernoulli' ? Math.log(clamp(s/n,.001,.999)/(1-clamp(s/n,.001,.999))) :
                  state.family==='poisson' ? Math.log(Math.max(s/n,.001)) :
@@ -568,10 +568,10 @@ function drawSufficiencyMain(){
     const ell=etaHat*s-n*fam.A(etaHat);
     svg.appendChild(svgEl('line',{x1:xs(etaHat),y1:y0+h,x2:xs(etaHat),y2:ys(ell),class:'guide'}));
     svg.appendChild(svgEl('circle',{cx:xs(etaHat),cy:ys(ell),r:5,class:'dot'}));
-    text(svg,xs(etaHat)+8,ys(ell)-8,'MLE solves A′(η)=s/n','inklabel','start');
+    text(svg,xs(etaHat)+8,ys(ell)-8,'MLE solves Aâ€²(Î·)=s/n','inklabel','start');
   }
   text(svg,x0+w-4,y0+18,`likelihood depends on data only through s = ${fmt(s,1)}`,'inklabel','end');
-  legend([{className:'sw',label:'compressed likelihood in η'}]);
+  legend([{className:'sw',label:'compressed likelihood in Î·'}]);
 }
 function drawSufficiencySecondary(){
   const svg=$('secondarySvg'); clear(svg);
@@ -588,7 +588,7 @@ function drawSufficiencySecondary(){
     svg.appendChild(svgEl('rect',{x:bx,y:yy,width:bw,height:bh,rx:14,fill:'var(--paper2)',class:'barstroke'}));
     text(svg,bx-12,yy+19,v[0],'label','end');
     svgKatex(svg,bx+bw/2,yy+4,v[1],{w:bw-20,h:22,cls:'svgmath small'});
-    if(i<2) text(svg,bx+bw/2,yy+52,'↓','inklabel');
+    if(i<2) text(svg,bx+bw/2,yy+52,'â†“','inklabel');
   });
   const px=520, py=88;
   for(let i=0;i<Math.min(n,36);i++){
@@ -601,15 +601,15 @@ function drawSufficiencySecondary(){
 const candidates = [
   ['Bernoulli',true,String.raw`p^x(1-p)^{1-x}=\exp\{x\eta-A(\eta)\}`],
   ['Poisson',true,String.raw`e^{-\lambda}\lambda^x/x!=h(x)\exp\{x\eta-A(\eta)\}`],
-  ['Uniform(0,θ)',false,String.raw`f(x\mid\theta)=\theta^{-1}\mathbf 1\{0<x<\theta\}`],
-  ['Normal, both μ and σ² unknown',true,String.raw`\eta_1x+\eta_2x^2-A(\eta)\quad(\eta_2<0)`],
+  ['Uniform(0,Î¸)',false,String.raw`f(x\mid\theta)=\theta^{-1}\mathbf 1\{0<x<\theta\}`],
+  ['Normal, both Î¼ and ÏƒÂ² unknown',true,String.raw`\eta_1x+\eta_2x^2-A(\eta)\quad(\eta_2<0)`],
   ['Cauchy location',false,String.raw`[\pi(1+(x-\theta)^2)]^{-1}`]
 ];
 function drawMembershipMain(){
   const svg=$('mainSvg'); clear(svg);
   const c=candidates[params().candidate];
   const x0=72,y0=46,w=728,h=280;
-  text(svg,x0,34,'Membership test: can all parameter dependence be isolated in ηᵀT(x) − A(η)?','inklabel','start');
+  text(svg,x0,34,'Membership test: can all parameter dependence be isolated in Î·áµ€T(x) âˆ’ A(Î·)?','inklabel','start');
   const criteria=[
     ['fixed support?', c[0].startsWith('Uniform')?'no':'yes'],
     ['parameter enters linearly in statistics?', c[1]?'yes':'no'],
@@ -622,7 +622,7 @@ function drawMembershipMain(){
     text(svg,x0+18,yy+28,r[0],'label','start');
     const good=r[1]==='yes';
     svg.appendChild(svgEl('circle',{cx:x0+w-42,cy:yy+22,r:13,fill:good?'var(--accent)':'var(--red)',opacity:.72}));
-    text(svg,x0+w-42,yy+27,good?'✓':'×','inklabel');
+    text(svg,x0+w-42,yy+27,good?'âœ“':'Ã—','inklabel');
     text(svg,x0+w-76,yy+27,r[1],'inklabel','end');
   });
   svgKatex(svg,430,354,c[2],{w:610,h:36});
@@ -635,7 +635,7 @@ function drawMembershipSecondary(){
   const steps=[
     ['1', 'Choose support independent of parameter'],
     ['2', 'Move all parameter dependence into exponent'],
-    ['3', 'Identify T(x), η, A(η), h(x)'],
+    ['3', 'Identify T(x), Î·, A(Î·), h(x)'],
     ['4', c[1]?'Member of an exponential family':'Not a regular finite-dimensional exponential family']
   ];
   steps.forEach((s,i)=>{
@@ -672,11 +672,11 @@ function updateTexts(){
     $('mainTitle').textContent='Canonical form';
     $('mainSub').innerHTML=String.raw`The density or mass function is split into base measure, natural statistic, and log-normalizer.`;
     $('secondaryTitle').textContent='Parameter decomposition';
-    $('secondarySub').textContent='Only η and A(η) depend on the parameter.';
+    $('secondarySub').textContent='Only Î· and A(Î·) depend on the parameter.';
     $('badge').textContent=fam.name;
     setKatex($('definition'),fam.formula);
     $('interpText').textContent='The exponential-family form isolates the parameter in a linear pairing with the statistic. The log-partition function makes the object integrate or sum to one.';
-    $('noticeText').textContent='Changing η moves probability mass by tilting the statistic. A(η) counterbalances the tilt so total probability remains one.';
+    $('noticeText').textContent='Changing Î· moves probability mass by tilting the statistic. A(Î·) counterbalances the tilt so total probability remains one.';
     $('summaryText').innerHTML=String.raw`Canonical form: <span class="math-inline" data-katex="p_\eta(x)=h(x)\exp\{\eta^\top T(x)-A(\eta)\}"></span>.`;
   } else if(state.mode==='partition'){
     $('mainTitle').textContent='Log-partition convexity';
@@ -692,7 +692,7 @@ function updateTexts(){
     $('mainTitle').textContent='Moment generation by exponential tilting';
     $('mainSub').innerHTML=String.raw`The moment-generating function of <span class="math-inline" data-katex="T(X)"></span> is a log-partition difference.`;
     $('secondaryTitle').textContent='Tilt and renormalize';
-    $('secondarySub').textContent='Multiplying by exp(tT) shifts η to η+t.';
+    $('secondarySub').textContent='Multiplying by exp(tT) shifts Î· to Î·+t.';
     $('badge').innerHTML=String.raw`<span class="math-inline" data-katex="K(t)=A(\eta+t)-A(\eta)"></span>`;
     setKatex($('definition'),String.raw`M_T(t)=E_\eta[e^{tT(X)}]=\exp\{A(\eta+t)-A(\eta)\}`);
     $('interpText').textContent='Moment generation is simple because exponential tilting stays inside the same family. The natural parameter shifts by t.';
@@ -705,7 +705,7 @@ function updateTexts(){
     $('secondarySub').textContent='Raw data collapse to a finite-dimensional statistic.';
     $('badge').innerHTML=String.raw`statistic: <span class="math-inline" data-katex="\sum_iT(X_i)"></span>`;
     setKatex($('definition'),String.raw`L(\eta;x_{1:n})=\left[\prod_i h(x_i)\right]\exp\left\{\eta\sum_iT(x_i)-nA(\eta)\right\}`);
-    $('interpText').textContent='Sufficiency means that, for inference about η, two samples with the same statistic carry the same likelihood shape.';
+    $('interpText').textContent='Sufficiency means that, for inference about Î·, two samples with the same statistic carry the same likelihood shape.';
     $('noticeText').textContent='The log-likelihood is linear in the observed statistic and concave when A is convex. The MLE solves observed average statistic equals model mean statistic.';
     $('summaryText').innerHTML=String.raw`Factorization theorem: <span class="math-inline" data-katex="T_n=\sum_iT(X_i)"></span> is sufficient in regular iid exponential families.`;
   } else {
@@ -716,7 +716,7 @@ function updateTexts(){
     $('badge').textContent=candidates[p.candidate][0];
     setKatex($('definition'),String.raw`p_\theta(x)=h(x)\exp\{\eta(\theta)^\top T(x)-A(\theta)\}`);
     $('interpText').textContent='Some familiar distributions are exponential families after reparameterization. Others fail because support depends on the parameter or the parameter enters nonlinearly in a way that cannot be finitely summarized.';
-    $('noticeText').textContent='Normal with both mean and variance unknown is still exponential family, but needs two statistics: x and x².';
+    $('noticeText').textContent='Normal with both mean and variance unknown is still exponential family, but needs two statistics: x and xÂ².';
     $('summaryText').innerHTML=String.raw`Checklist: fixed support, finite-dimensional <span class="math-inline" data-katex="T(x)"></span>, parameter enters through <span class="math-inline" data-katex="\eta^\top T(x)-A(\eta)"></span>.`;
   }
   renderAll();
@@ -750,3 +750,4 @@ window.addEventListener('load',()=>{ renderAll(); draw(); });
 </script>
 </body>
 </html>
+

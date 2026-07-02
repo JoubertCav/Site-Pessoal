@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -272,7 +272,7 @@ const $ = id => document.getElementById(id);
 const state = { mode:'transform' };
 const modeButtons = [...document.querySelectorAll('[data-mode]')];
 
-function fmt(x,d=2){ return isFinite(x) ? Number(x).toFixed(d) : '∞'; }
+function fmt(x,d=2){ return isFinite(x) ? Number(x).toFixed(d) : 'âˆž'; }
 function clamp(x,a,b){ return Math.max(a,Math.min(b,x)); }
 function clear(el){ el.innerHTML=''; }
 function svgEl(tag, attrs={}){ const e=document.createElementNS('http://www.w3.org/2000/svg',tag); for(const k in attrs) e.setAttribute(k,attrs[k]); return e; }
@@ -380,7 +380,7 @@ function drawLognormalDensity({compare=false,perturb=false}={}){
   if(cutoff>0 && cutoff<xMax){
     const y=lognormalPdf(cutoff,mu,sig);
     svg.appendChild(svgEl('circle',{cx:xs(cutoff),cy:ys(Math.min(y,yMax)),r:5,class:'dot'}));
-    text(svg,xs(cutoff)+8,ys(Math.min(y,yMax))-8,`F(y₀)=${fmt(lognormalCdf(cutoff,mu,sig),3)}`,'inklabel','start');
+    text(svg,xs(cutoff)+8,ys(Math.min(y,yMax))-8,`F(yâ‚€)=${fmt(lognormalCdf(cutoff,mu,sig),3)}`,'inklabel','start');
   }
   text(svg,x0+w-4,y0+18,perturb?'same moments, different density':'lognormal right-tail geometry','inklabel','end');
 }
@@ -391,7 +391,7 @@ function drawTransformSecondary(){
   const xMin=mu-3.2*sig, xMax=mu+3.2*sig, yMax=Math.exp(xMax), yMin=Math.exp(xMin);
   const x0=60,y0=36,w=500,h=220;
   const xs=x=>x0+w*(x-xMin)/(xMax-xMin), ys=y=>y0+h-h*(y-yMin)/(yMax-yMin);
-  axes(svg,{x0,y0,w,h,xMin,xMax,yMin,yMax,xLabel:'log variable x',yLabel:'transformed y=eˣ',ticksX:4,ticksY:4});
+  axes(svg,{x0,y0,w,h,xMin,xMax,yMin,yMax,xLabel:'log variable x',yLabel:'transformed y=eË£',ticksX:4,ticksY:4});
   const pts=[];
   for(let i=0;i<=260;i++){ const x=xMin+(xMax-xMin)*i/260; pts.push([x,Math.exp(x)]); }
   svg.appendChild(svgEl('path',{d:pathLine(pts,xs,ys),class:'curve'}));
@@ -453,7 +453,7 @@ function drawGrowthMain(){
       text(svg,xs(v)+8,ys(y)+(i?18:-8),l,'inklabel','start');
     }
   });
-  text(svg,x0+w-4,y0+18,'product of shocks → lognormal outcome','inklabel','end');
+  text(svg,x0+w-4,y0+18,'product of shocks â†’ lognormal outcome','inklabel','end');
 }
 
 function drawGrowthSecondary(){
@@ -548,8 +548,8 @@ function updateTexts(){
     $('secondarySub').textContent='The bell is symmetric only before exponentiation.';
     $('badge').innerHTML=String.raw`law: <span class="math-inline" data-katex="\log Y\sim N(\mu,\sigma^2)"></span>`;
     setKatex($('definition'),String.raw`Y=e^X,\quad X\sim N(\mu,\sigma^2),\quad f_Y(y)=\frac{1}{y\sigma\sqrt{2\pi}}\exp\!\left[-\frac{(\log y-\mu)^2}{2\sigma^2}\right]`);
-    $('interpText').textContent='The median is exp(μ), the mode is exp(μ−σ²), and the mean is exp(μ+σ²/2). Their separation is the geometry of right skewness.';
-    $('noticeText').textContent='Increasing σ moves the mean far to the right while the median stays tied to μ. This is why averages of multiplicative outcomes can be tail dominated.';
+    $('interpText').textContent='The median is exp(Î¼), the mode is exp(Î¼âˆ’ÏƒÂ²), and the mean is exp(Î¼+ÏƒÂ²/2). Their separation is the geometry of right skewness.';
+    $('noticeText').textContent='Increasing Ïƒ moves the mean far to the right while the median stays tied to Î¼. This is why averages of multiplicative outcomes can be tail dominated.';
     $('summaryText').innerHTML=String.raw`Useful identities: <span class="math-inline" data-katex="E[Y]=e^{\mu+\sigma^2/2}"></span>, <span class="math-inline" data-katex="\operatorname{Med}(Y)=e^\mu"></span>, <span class="math-inline" data-katex="\operatorname{Mode}(Y)=e^{\mu-\sigma^2}"></span>.`;
   } else if(state.mode==='growth'){
     $('mainTitle').textContent='Multiplicative growth';
@@ -576,7 +576,7 @@ function updateTexts(){
   $('meanMetric').textContent=fmt(mean,3);
   $('medianMetric').textContent=fmt(med,3);
   $('spreadMetric').textContent=fmt(Math.sqrt(variance),3);
-  $('tailMetric').textContent=state.mode==='growth' ? 'right-skewed' : `F(y₀)=${fmt(cdf,3)}`;
+  $('tailMetric').textContent=state.mode==='growth' ? 'right-skewed' : `F(yâ‚€)=${fmt(cdf,3)}`;
   renderAll();
 }
 
@@ -614,3 +614,4 @@ window.addEventListener('load',()=>{ renderAll(); draw(); });
 </script>
 </body>
 </html>
+

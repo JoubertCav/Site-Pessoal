@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -120,14 +120,14 @@
     <div class="def">
       <div class="tag">Normalized sum</div>
       <div class="math">
-        <span class="formula">Z<sub>n</sub> = (S<sub>n</sub>−E[S<sub>n</sub>]) / √Var(S<sub>n</sub>)</span>
+        <span class="formula">Z<sub>n</sub> = (S<sub>n</sub>âˆ’E[S<sub>n</sub>]) / âˆšVar(S<sub>n</sub>)</span>
         <span class="mathNote">center, then scale by total standard deviation</span>
       </div>
     </div>
     <div class="def">
       <div class="tag">iid CLT</div>
       <div class="math">
-        <span class="formula">√n( X̄<sub>n</sub>−μ ) / σ ⇒ N(0,1)</span>
+        <span class="formula">âˆšn( XÌ„<sub>n</sub>âˆ’Î¼ ) / Ïƒ â‡’ N(0,1)</span>
         <span class="mathNote">finite, nonzero variance</span>
       </div>
     </div>
@@ -141,7 +141,7 @@
     <div class="def">
       <div class="tag">Variance role</div>
       <div class="math">
-        <span class="formula">s<sub>n</sub><sup>2</sup> = ∑Var(X<sub>ni</sub>)</span>
+        <span class="formula">s<sub>n</sub><sup>2</sup> = âˆ‘Var(X<sub>ni</sub>)</span>
         <span class="mathNote">the denominator is the geometry of spread</span>
       </div>
     </div>
@@ -154,7 +154,7 @@
       <div class="control">
         <label for="distSelect">Summand model</label>
         <select id="distSelect">
-          <option value="rademacher">Rademacher ±1</option>
+          <option value="rademacher">Rademacher Â±1</option>
           <option value="bernoulli">Bernoulli centered</option>
           <option value="exponential">Exponential centered</option>
           <option value="uniform">Uniform centered</option>
@@ -190,7 +190,7 @@
       </div>
 
       <div class="control">
-        <label for="epsRange">Lindeberg threshold ε <span class="value" id="epsVal">0.60</span></label>
+        <label for="epsRange">Lindeberg threshold Îµ <span class="value" id="epsVal">0.60</span></label>
         <input id="epsRange" type="range" min="0.10" max="2.50" step="0.05" value="0.60"/>
       </div>
 
@@ -224,7 +224,7 @@
         <div class="card plotCard">
           <div class="plotHead">
             <div class="plotTitle">Variance geometry and Lindeberg intuition</div>
-            <div class="plotSub">one clean ruler: raw units → z units</div>
+            <div class="plotSub">one clean ruler: raw units â†’ z units</div>
           </div>
           <svg id="varianceSvg" viewBox="0 0 520 320" preserveAspectRatio="xMidYMid meet"></svg>
         </div>
@@ -258,7 +258,7 @@
     </section>
   </main>
 
-  <footer>Minimal interactive notebook — normalized sums, asymptotic normality, Lindeberg intuition, and variance geometry.</footer>
+  <footer>Minimal interactive notebook â€” normalized sums, asymptotic normality, Lindeberg intuition, and variance geometry.</footer>
 </div>
 
 <script>
@@ -274,7 +274,7 @@ const epsRange=document.getElementById("epsRange");
 
 function css(v){return getComputedStyle(body).getPropertyValue(v).trim();}
 function fmt(x){
-  if(!isFinite(x)) return "∞";
+  if(!isFinite(x)) return "âˆž";
   if(Math.abs(x)<0.0001 && x!==0) return x.toExponential(2);
   if(Math.abs(x)<10) return x.toFixed(4);
   return x.toFixed(2);
@@ -314,7 +314,7 @@ function studentLike(i,j,k,df){
 function paretoRand(i,j,k,alpha){return Math.pow(1-rand(i,j,k),-1/alpha);}
 function modelInfo(){
   const d=distSelect.value, p=Number(pRange.value), df=Number(dfRange.value), dom=Number(domRange.value);
-  if(d==="rademacher") return {mu:0,var:1,finiteVar:true,label:"Rademacher ±1",skew:0,excess:-2};
+  if(d==="rademacher") return {mu:0,var:1,finiteVar:true,label:"Rademacher Â±1",skew:0,excess:-2};
   if(d==="bernoulli"){
     const mu=p, v=p*(1-p);
     const skew=(1-2*p)/Math.sqrt(v);
@@ -399,7 +399,7 @@ function drawMain(){
   const dens=counts.map(c=>c/(arr.length*bw));
   let maxY=Math.max(.42,...dens)*1.15;
   let h='<rect x="8" y="10" width="964" height="470" rx="20" fill="'+panel+'" stroke="'+border+'"/>';
-  h+=text(68,38,"histogram of normalized sums Zₙ",muted,13,850);
+  h+=text(68,38,"histogram of normalized sums Zâ‚™",muted,13,850);
   for(let k=0;k<=5;k++){
     const yy=Y1-(Y1-Y0)*k/5;
     h+=line(X0,yy,X1,yy,grid,1,.85);
@@ -444,7 +444,7 @@ function drawMain(){
   });
   h+='<rect x="730" y="370" width="205" height="62" rx="16" fill="'+css("--accentSoft")+'" stroke="'+css("--accentLine")+'"/>';
   h+=text(752,398,"CLT target",textc,13,900);
-  h+=text(752,420,info.finiteVar?"histogram should approach φ(z)":"variance normalization breaks",muted,12,780);
+  h+=text(752,420,info.finiteVar?"histogram should approach Ï†(z)":"variance normalization breaks",muted,12,780);
   svg.innerHTML=h;
 }
 function varianceShares(n){
@@ -498,19 +498,19 @@ function drawVariance(){
   const rawPoint=px(clamp(D_n,rawMin,rawMax),rawMin,rawMax,x0,x1);
   if(finiteScale){
     h+='<rect x="'+Math.min(rawOneLeft,rawOneRight)+'" y="'+(rawY-10)+'" width="'+Math.abs(rawOneRight-rawOneLeft)+'" height="20" rx="10" fill="'+css("--accentSoft")+'" stroke="'+css("--accentLine")+'"/>';
-    h+=text((rawOneLeft+rawOneRight)/2,rawY-18,"±sₙ",acc,10,900,"middle");
+    h+=text((rawOneLeft+rawOneRight)/2,rawY-18,"Â±sâ‚™",acc,10,900,"middle");
   }
   h+=line(rawZero,rawY-22,rawZero,rawY+22,blue,1.5,.65,"5 5");
   h+=line(rawZero,rawY,rawPoint,rawY,warn,5,.78);
   h+='<circle cx="'+rawPoint+'" cy="'+rawY+'" r="5.2" fill="'+warn+'"/>';
   h+=text(rawZero,rawY+38,"0",blue,10,850,"middle");
-  h+=text(rawPoint,rawY+38,"Dₙ",warn,10,900,"middle");
+  h+=text(rawPoint,rawY+38,"Dâ‚™",warn,10,900,"middle");
 
   // transformation formula
   h+=line(238,118,238,153,violet,1.6,.65,"5 5");
-  h+=text(255,139,"divide by sₙ",violet,11,900);
-  h+=text(70,144,"Dₙ = Sₙ − E[Sₙ]",muted,11,850);
-  h+=text(332,144,"Zₙ = Dₙ / sₙ",textc,11,900);
+  h+=text(255,139,"divide by sâ‚™",violet,11,900);
+  h+=text(70,144,"Dâ‚™ = Sâ‚™ âˆ’ E[Sâ‚™]",muted,11,850);
+  h+=text(332,144,"Zâ‚™ = Dâ‚™ / sâ‚™",textc,11,900);
 
   // standardized ruler
   h+=text(70,160,"standardized distance",textc,12,900);
@@ -520,7 +520,7 @@ function drawVariance(){
   const zRight=px(1,zMin,zMax,x0,x1);
   const zPoint=px(clamp(zObs,zMin,zMax),zMin,zMax,x0,x1);
   h+='<rect x="'+zLeft+'" y="'+(zY-10)+'" width="'+(zRight-zLeft)+'" height="20" rx="10" fill="'+css("--accentSoft")+'" stroke="'+css("--accentLine")+'"/>';
-  h+=text((zLeft+zRight)/2,zY-18,"±1",acc,10,900,"middle");
+  h+=text((zLeft+zRight)/2,zY-18,"Â±1",acc,10,900,"middle");
   h+=line(zZero,zY-22,zZero,zY+22,blue,1.5,.65,"5 5");
   h+=line(zZero,zY,zPoint,zY,warn,5,.78);
   h+='<circle cx="'+zPoint+'" cy="'+zY+'" r="5.2" fill="'+warn+'"/>';
@@ -532,8 +532,8 @@ function drawVariance(){
 
   // small diagnostics, kept separate and quiet
   h+='<rect x="70" y="228" width="345" height="38" rx="14" fill="'+css("--panel2")+'" stroke="'+border+'"/>';
-  h+=text(88,252,finiteScale ? "sₙ = "+fmt(s_n) : "sₙ is not finite",finiteScale?textc:warn,11,900);
-  h+=text(204,252,"Dₙ = "+fmt(D_n),warn,11,900);
+  h+=text(88,252,finiteScale ? "sâ‚™ = "+fmt(s_n) : "sâ‚™ is not finite",finiteScale?textc:warn,11,900);
+  h+=text(204,252,"Dâ‚™ = "+fmt(D_n),warn,11,900);
   h+=text(318,252,"z = "+fmt(zObs),blue,11,900);
 
   const shares=varianceShares(n);
@@ -570,9 +570,9 @@ function drawCDF(){
   }
   h+='<path d="'+norm+'" fill="none" stroke="'+blue+'" stroke-width="2.4" stroke-dasharray="7 5"/>';
   h+='<path d="'+emp+'" fill="none" stroke="'+acc+'" stroke-width="2.6"/>';
-  h+=text(68,34,"empirical CDF of Zₙ versus Φ",muted,12,850);
-  h+=text(72,278,"Φ",blue,12,900);
-  h+=text(112,278,"Fₙ",acc,12,900);
+  h+=text(68,34,"empirical CDF of Zâ‚™ versus Î¦",muted,12,850);
+  h+=text(72,278,"Î¦",blue,12,900);
+  h+=text(112,278,"Fâ‚™",acc,12,900);
   svg.innerHTML=h;
 }
 function updateText(){
@@ -586,8 +586,8 @@ function updateText(){
   document.getElementById("epsVal").textContent=fmt(eps);
 
   document.getElementById("eqBox").innerHTML =
-    '<span class="formula">Zₙ = (Sₙ − E[Sₙ]) / √Var(Sₙ)</span>'+
-    '<span class="mathNote">'+info.label+' · '+(info.finiteVar?'variance finite':'variance problem')+'</span>';
+    '<span class="formula">Zâ‚™ = (Sâ‚™ âˆ’ E[Sâ‚™]) / âˆšVar(Sâ‚™)</span>'+
+    '<span class="mathNote">'+info.label+' Â· '+(info.finiteVar?'variance finite':'variance problem')+'</span>';
 
   const mini=[
     ["mean",fmt(st.mean)],
@@ -600,10 +600,10 @@ function updateText(){
   document.getElementById("miniGrid").innerHTML=mini.map(d=>'<div class="miniStat"><div class="k">'+d[0]+'</div><div class="v">'+d[1]+'</div></div>').join("");
 
   const logic=[
-    ["✓","center by the mean of the sum"],
-    ["✓","scale differences by sₙ = √Var(Sₙ)"],
-    ["✓","many small independent shocks create Φ"],
-    ["→","variance scaling works only when no shock dominates"]
+    ["âœ“","center by the mean of the sum"],
+    ["âœ“","scale differences by sâ‚™ = âˆšVar(Sâ‚™)"],
+    ["âœ“","many small independent shocks create Î¦"],
+    ["â†’","variance scaling works only when no shock dominates"]
   ];
   document.getElementById("logicList").innerHTML=logic.map(it=>'<div class="logicItem"><span class="mark">'+it[0]+'</span><span>'+it[1]+'</span></div>').join("");
 
@@ -613,7 +613,7 @@ function updateText(){
   if(distSelect.value==="exponential" || distSelect.value==="bernoulli") interp="The finite-n law is skewed or discrete, but summing many independent centered terms smooths the shape toward the Gaussian.";
   document.getElementById("interpretText").innerHTML=interp;
 
-  let notice="The raw centered difference Dₙ is measured with the ruler sₙ. Dividing by sₙ converts it into the standardized distance Zₙ.";
+  let notice="The raw centered difference Dâ‚™ is measured with the ruler sâ‚™. Dividing by sâ‚™ converts it into the standardized distance Zâ‚™.";
   if(!info.finiteVar) notice="The usual finite-variance CLT fails because the variance scale is not well-defined or not finite.";
   else if(maxShare>.15) notice="A large variance share means one term still dominates the sum; this is exactly what Lindeberg rules out.";
   else if(n<20) notice="At small n, discreteness or skewness is still visible. Increase n to see the Gaussian shape emerge.";
@@ -632,3 +632,4 @@ drawAll();
 </script>
 </body>
 </html>
+

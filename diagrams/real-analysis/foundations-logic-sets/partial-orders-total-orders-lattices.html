@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -165,7 +165,7 @@ table{border-collapse:collapse;width:100%;font-size:12px}th,td{border-bottom:1px
 <div class="app">
   <header>
     <div>
-      <div class="eyebrow">Real Analysis · order structure</div>
+      <div class="eyebrow">Real Analysis Â· order structure</div>
       <h1>Partial Orders, Total Orders, and Lattices</h1>
       <p class="subtitle">A partial order is a geometry of comparison. A lattice is the special case where every two points have a best common upper bound and a best common lower bound.</p>
     </div>
@@ -182,8 +182,8 @@ table{border-collapse:collapse;width:100%;font-size:12px}th,td{border-bottom:1px
         <span class="badge"><span class="dot"></span> relation</span>
       </div>
       <div class="mathbox">
-        <span class="mathline">A relation is a subset&nbsp; <b>R ⊆ X × X</b>.</span>
-        <span class="mathline">Write&nbsp; <b>x ⪯ y</b> &nbsp;iff&nbsp; <b>(x,y) ∈ R</b>.</span>
+        <span class="mathline">A relation is a subset&nbsp; <b>R âŠ† X Ã— X</b>.</span>
+        <span class="mathline">Write&nbsp; <b>x âª¯ y</b> &nbsp;iff&nbsp; <b>(x,y) âˆˆ R</b>.</span>
         <span class="mathline">Partial order: reflexive + antisymmetric + transitive.</span>
       </div>
 
@@ -218,7 +218,7 @@ table{border-collapse:collapse;width:100%;font-size:12px}th,td{border-bottom:1px
         <label><span>Diagram edges</span><span>Hasse vs relation</span></label>
         <div class="toggle-row">
           <button id="coverBtn" class="active">Cover edges</button>
-          <button id="allEdgesBtn">All x ⪯ y</button>
+          <button id="allEdgesBtn">All x âª¯ y</button>
         </div>
       </div>
 
@@ -255,10 +255,10 @@ table{border-collapse:collapse;width:100%;font-size:12px}th,td{border-bottom:1px
         <div class="card pad">
           <div class="card-title"><h2>Property test</h2><span class="small">global</span></div>
           <div class="status-grid" style="grid-template-columns:1fr 1fr">
-            <div class="status" id="partialStatus"><div class="name">partial order</div><div class="val">—</div></div>
-            <div class="status" id="totalStatus"><div class="name">total order</div><div class="val">—</div></div>
-            <div class="status" id="latticeStatus"><div class="name">lattice</div><div class="val">—</div></div>
-            <div class="status" id="boundedStatus"><div class="name">has min/max</div><div class="val">—</div></div>
+            <div class="status" id="partialStatus"><div class="name">partial order</div><div class="val">â€”</div></div>
+            <div class="status" id="totalStatus"><div class="name">total order</div><div class="val">â€”</div></div>
+            <div class="status" id="latticeStatus"><div class="name">lattice</div><div class="val">â€”</div></div>
+            <div class="status" id="boundedStatus"><div class="name">has min/max</div><div class="val">â€”</div></div>
           </div>
         </div>
 
@@ -275,7 +275,7 @@ table{border-collapse:collapse;width:100%;font-size:12px}th,td{border-bottom:1px
 
       <section class="panel-grid">
         <div class="card pad">
-          <div class="card-title"><h2>Relation matrix</h2><span class="small">cell = 1 iff row ⪯ column</span></div>
+          <div class="card-title"><h2>Relation matrix</h2><span class="small">cell = 1 iff row âª¯ column</span></div>
           <div class="matrix" id="matrixWrap"></div>
           <div class="legend">
             <span class="badge"><span class="dot"></span>true</span>
@@ -287,10 +287,10 @@ table{border-collapse:collapse;width:100%;font-size:12px}th,td{border-bottom:1px
         <div class="card pad">
           <div class="card-title"><h2>Definitions made visible</h2><span class="small">exam notation</span></div>
           <div class="mathbox">
-            <span class="mathline"><b>comparability</b>: &nbsp; x ⪯ y or y ⪯ x</span>
-            <span class="mathline"><b>upper bound</b>: &nbsp; x ⪯ u and y ⪯ u</span>
-            <span class="mathline"><b>x ∨ y</b>: &nbsp; least element of all upper bounds</span>
-            <span class="mathline"><b>x ∧ y</b>: &nbsp; greatest element of all lower bounds</span>
+            <span class="mathline"><b>comparability</b>: &nbsp; x âª¯ y or y âª¯ x</span>
+            <span class="mathline"><b>upper bound</b>: &nbsp; x âª¯ u and y âª¯ u</span>
+            <span class="mathline"><b>x âˆ¨ y</b>: &nbsp; least element of all upper bounds</span>
+            <span class="mathline"><b>x âˆ§ y</b>: &nbsp; greatest element of all lower bounds</span>
           </div>
           <div class="notice">
             <h3>What to notice</h3>
@@ -307,7 +307,7 @@ table{border-collapse:collapse;width:100%;font-size:12px}th,td{border-bottom:1px
             <li><b>Total order:</b> partial order + every pair is comparable.</li>
             <li><b>Maximum:</b> one element above all others. <b>Maximal:</b> no strictly larger element.</li>
             <li><b>Supremum:</b> least upper bound, not merely a minimal upper bound.</li>
-            <li><b>Lattice:</b> every pair has both a supremum <span class="formula">x ∨ y</span> and an infimum <span class="formula">x ∧ y</span>.</li>
+            <li><b>Lattice:</b> every pair has both a supremum <span class="formula">x âˆ¨ y</span> and an infimum <span class="formula">x âˆ§ y</span>.</li>
           </ul>
         </div>
         <div class="summary">
@@ -323,7 +323,7 @@ table{border-collapse:collapse;width:100%;font-size:12px}th,td{border-bottom:1px
       </section>
     </main>
   </section>
-  <div class="footer-note">Self-contained HTML · no backend · pure SVG + JavaScript</div>
+  <div class="footer-note">Self-contained HTML Â· no backend Â· pure SVG + JavaScript</div>
 </div>
 
 <script>
@@ -333,7 +333,7 @@ const body = document.body;
 function popcount(n){let c=0;while(n){c+=n&1;n>>=1;}return c;}
 function subsetLabel(bits){
   const names=['a','b','c'];
-  if(bits===0) return '∅';
+  if(bits===0) return 'âˆ…';
   return '{'+names.filter((_,i)=>bits&(1<<i)).join(',')+'}';
 }
 function divisors(n){const a=[];for(let i=1;i<=n;i++)if(n%i===0)a.push(i);return a;}
@@ -342,9 +342,9 @@ function productItems(m,n){const arr=[];for(let i=0;i<m;i++)for(let j=0;j<n;j++)
 const examples = [
   {
     id:'boolean3',
-    name:'Boolean lattice 𝒫({a,b,c})',
+    name:'Boolean lattice ð’«({a,b,c})',
     badge:'Boolean lattice',
-    hint:'Order by inclusion: A ⊆ B. Join is union; meet is intersection.',
+    hint:'Order by inclusion: A âŠ† B. Join is union; meet is intersection.',
     items:Array.from({length:8},(_,i)=>({id:String(i), label:subsetLabel(i), val:i, rank:popcount(i)})),
     leq:(x,y)=>(x.val & ~y.val)===0,
     notice:['Inclusion is partial: {a} and {b} are incomparable.','Every pair still has a join and meet: union and intersection.','The Hasse diagram has levels by cardinality.']
@@ -353,7 +353,7 @@ const examples = [
     id:'div12',
     name:'Divisibility lattice Div(12)',
     badge:'divisibility',
-    hint:'Order by divisibility: x ⪯ y iff x divides y. Join is lcm; meet is gcd inside this set.',
+    hint:'Order by divisibility: x âª¯ y iff x divides y. Join is lcm; meet is gcd inside this set.',
     items:divisors(12).map(v=>({id:String(v), label:String(v), val:v})),
     leq:(x,y)=>y.val % x.val === 0,
     notice:['Divisibility behaves like inclusion of prime factors.','The join is the least common multiple.','The meet is the greatest common divisor.']
@@ -365,20 +365,20 @@ const examples = [
     hint:'Every pair is comparable. This is the simplest lattice: join=max and meet=min.',
     items:[1,2,3,4,5].map(v=>({id:String(v), label:String(v), val:v, rank:v-1})),
     leq:(x,y)=>x.val<=y.val,
-    notice:['A total order is a partial order with no incomparability.','Every finite chain is automatically a lattice.','Here x∨y=max{x,y} and x∧y=min{x,y}.']
+    notice:['A total order is a partial order with no incomparability.','Every finite chain is automatically a lattice.','Here xâˆ¨y=max{x,y} and xâˆ§y=min{x,y}.']
   },
   {
     id:'product3',
-    name:'Product order {0,1,2}²',
+    name:'Product order {0,1,2}Â²',
     badge:'product lattice',
-    hint:'Order componentwise: (i,j) ⪯ (k,l) iff i≤k and j≤l.',
+    hint:'Order componentwise: (i,j) âª¯ (k,l) iff iâ‰¤k and jâ‰¤l.',
     items:productItems(3,3),
     leq:(x,y)=>x.val[0]<=y.val[0] && x.val[1]<=y.val[1],
     notice:['Comparison requires both coordinates to increase.','Join is coordinatewise maximum.','Meet is coordinatewise minimum.']
   },
   {
     id:'diamond',
-    name:'Diamond lattice M₃',
+    name:'Diamond lattice Mâ‚ƒ',
     badge:'non-distributive lattice',
     hint:'A lattice can fail distributivity. Three middle atoms are pairwise incomparable.',
     items:[
@@ -409,7 +409,7 @@ const examples = [
       if((x.id==='a'||x.id==='b') && (y.id==='u'||y.id==='v')) return true;
       return false;
     },
-    notice:['Minimal upper bounds need not be least upper bounds.','For a,b, both u and v are common upper bounds.','Neither u ⪯ v nor v ⪯ u, so a∨b does not exist.']
+    notice:['Minimal upper bounds need not be least upper bounds.','For a,b, both u and v are common upper bounds.','Neither u âª¯ v nor v âª¯ u, so aâˆ¨b does not exist.']
   }
 ];
 
@@ -421,7 +421,7 @@ function leq(i,j){ return state.ex.leq(state.ex.items[i], state.ex.items[j]); }
 function lt(i,j){ return i!==j && leq(i,j); }
 function comparable(i,j){ return leq(i,j) || leq(j,i); }
 function label(i){ return state.ex.items[i].label; }
-function setOf(indices){ return indices.length ? indices.map(label).join(', ') : '∅'; }
+function setOf(indices){ return indices.length ? indices.map(label).join(', ') : 'âˆ…'; }
 
 function covers(){
   const n=state.ex.items.length, e=[];
@@ -590,7 +590,7 @@ function renderHasse(){
 }
 function renderMatrix(){
   const n=state.ex.items.length;
-  let html='<table><thead><tr><th>⪯</th>'+state.ex.items.map((it)=>`<th>${it.label}</th>`).join('')+'</tr></thead><tbody>';
+  let html='<table><thead><tr><th>âª¯</th>'+state.ex.items.map((it)=>`<th>${it.label}</th>`).join('')+'</tr></thead><tbody>';
   for(let i=0;i<n;i++){
     html+=`<tr><th>${label(i)}</th>`;
     for(let j=0;j<n;j++){
@@ -618,12 +618,12 @@ function renderPairInfo(){
   const i=state.x,j=state.y;
   $('pairName').textContent=`${label(i)} , ${label(j)}`;
   const comp=comparable(i,j);
-  const rel = leq(i,j) && leq(j,i) ? `${label(i)} = ${label(j)}` : leq(i,j) ? `${label(i)} ⪯ ${label(j)}` : leq(j,i) ? `${label(j)} ⪯ ${label(i)}` : 'incomparable';
+  const rel = leq(i,j) && leq(j,i) ? `${label(i)} = ${label(j)}` : leq(i,j) ? `${label(i)} âª¯ ${label(j)}` : leq(j,i) ? `${label(j)} âª¯ ${label(i)}` : 'incomparable';
   const rows=[
     ['comparison',rel],
     ['comparable?',comp?'yes':'no'],
-    ['x ⪯ y?',leq(i,j)?'true':'false'],
-    ['y ⪯ x?',leq(j,i)?'true':'false']
+    ['x âª¯ y?',leq(i,j)?'true':'false'],
+    ['y âª¯ x?',leq(j,i)?'true':'false']
   ];
   $('pairInfo').innerHTML=rows.map(([a,b])=>`<div class="info-line"><b>${a}</b><span>${b}</span></div>`).join('');
   const ub=upperBounds(i,j), lb=lowerBounds(i,j), js=join(i,j), mt=meet(i,j);
@@ -632,10 +632,10 @@ function renderPairInfo(){
   const rows2=[
     ['upper bounds',setOf(ub)],
     ['minimal upper bounds',setOf(minUB)],
-    ['join x ∨ y',js===null?'does not exist':label(js)],
+    ['join x âˆ¨ y',js===null?'does not exist':label(js)],
     ['lower bounds',setOf(lb)],
     ['maximal lower bounds',setOf(maxLB)],
-    ['meet x ∧ y',mt===null?'does not exist':label(mt)]
+    ['meet x âˆ§ y',mt===null?'does not exist':label(mt)]
   ];
   $('boundsInfo').innerHTML=rows2.map(([a,b])=>`<div class="info-line"><b>${a}</b><span>${b}</span></div>`).join('');
 }
@@ -659,3 +659,4 @@ render();
 </script>
 </body>
 </html>
+

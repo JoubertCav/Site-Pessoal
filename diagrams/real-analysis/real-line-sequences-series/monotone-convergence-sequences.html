@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -194,7 +194,7 @@ svg text{font-family:var(--font);fill:var(--muted);font-size:12px}
 <div class="app">
   <header>
     <div>
-      <div class="kicker">Real Analysis · Sequences</div>
+      <div class="kicker">Real Analysis Â· Sequences</div>
       <h1>Monotone Convergence Theorem</h1>
       <p class="subtitle">A monotone bounded sequence has only one possible direction and only one place left to go: the least upper bound or the greatest lower bound.</p>
     </div>
@@ -214,10 +214,10 @@ svg text{font-family:var(--font);fill:var(--muted);font-size:12px}
       <div class="control">
         <label for="mode">Sequence model</label>
         <select id="mode">
-          <option value="inc">Increasing · bounded above</option>
-          <option value="dec">Decreasing · bounded below</option>
-          <option value="unbounded">Increasing · unbounded</option>
-          <option value="osc">Bounded · not monotone</option>
+          <option value="inc">Increasing Â· bounded above</option>
+          <option value="dec">Decreasing Â· bounded below</option>
+          <option value="unbounded">Increasing Â· unbounded</option>
+          <option value="osc">Bounded Â· not monotone</option>
         </select>
       </div>
 
@@ -278,7 +278,7 @@ svg text{font-family:var(--font);fill:var(--muted);font-size:12px}
 
       <section class="card diagram-card">
         <div class="card-title">
-          <h2>Main diagram · sequence on the real line</h2>
+          <h2>Main diagram Â· sequence on the real line</h2>
           <span class="small" id="lineCaption">terms approach the supremum from below</span>
         </div>
         <svg id="lineSvg" viewBox="0 0 820 270" role="img" aria-label="Interactive real line visualization of a monotone sequence"></svg>
@@ -330,7 +330,7 @@ const els = ['mode','limit','start','rate','eps','nmax'].reduce((a,id)=>(a[id]=$
 
 function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
 function fmt(x){
-  if(!Number.isFinite(x)) return '∞';
+  if(!Number.isFinite(x)) return 'âˆž';
   const y = Math.abs(x) < 1e-9 ? 0 : x;
   return y.toFixed(2).replace(/\.00$/,'');
 }
@@ -512,25 +512,25 @@ function renderSup(xs,p){
     html += `<line x1="${X(L)}" y1="64" x2="${X(L)}" y2="222" class="limit-line"/>`;
     html += `<line x1="${X(L-eps)}" y1="88" x2="${X(L-eps)}" y2="212" class="eps-line"/>`;
     html += text(X(L)-18,54,'s = sup A','',`font-weight="700" fill="var(--accent)"`);
-    html += text(X(L-eps)-38,80,'s − ε');
+    html += text(X(L-eps)-38,80,'s âˆ’ Îµ');
     html += `<path d="M ${X(L-eps)} 244 C ${X(L-eps)+35} 286, ${X(L)-35} 286, ${X(L)} 244" fill="none" stroke="var(--accent)" stroke-width="1.5"/>`;
-    html += text((X(L-eps)+X(L))/2-55,312,'s−ε cannot be an upper bound','',`fill="var(--accent)"`);
+    html += text((X(L-eps)+X(L))/2-55,312,'sâˆ’Îµ cannot be an upper bound','',`fill="var(--accent)"`);
     const candidates = xs.map((v,i)=>({v,i})).filter(o=>o.v>L-eps).slice(0,7);
     candidates.forEach((o,k)=>{
       html += `<circle cx="${X(o.v)}" cy="${y-22-k*10}" r="4.6" class="point-tail"/>`;
     });
-    if(p.N) html += text(X(xs[p.N-1])+6,y-45,`x_N > s−ε`,'',`font-weight="700" fill="var(--accent)"`);
+    if(p.N) html += text(X(xs[p.N-1])+6,y-45,`x_N > sâˆ’Îµ`,'',`font-weight="700" fill="var(--accent)"`);
   } else if(m==='dec'){
     html += `<rect x="${X(L)}" y="95" width="${X(L+eps)-X(L)}" height="96" rx="15" class="tube"/>`;
     html += `<line x1="${X(L)}" y1="64" x2="${X(L)}" y2="222" class="limit-line"/>`;
     html += `<line x1="${X(L+eps)}" y1="88" x2="${X(L+eps)}" y2="212" class="eps-line"/>`;
     html += text(X(L)-18,54,'i = inf A','',`font-weight="700" fill="var(--accent)"`);
-    html += text(X(L+eps)+8,80,'i + ε');
+    html += text(X(L+eps)+8,80,'i + Îµ');
     html += `<path d="M ${X(L)} 244 C ${X(L)+35} 286, ${X(L+eps)-35} 286, ${X(L+eps)} 244" fill="none" stroke="var(--accent)" stroke-width="1.5"/>`;
-    html += text((X(L)+X(L+eps))/2-55,312,'i+ε cannot be a lower bound','',`fill="var(--accent)"`);
+    html += text((X(L)+X(L+eps))/2-55,312,'i+Îµ cannot be a lower bound','',`fill="var(--accent)"`);
     const candidates = xs.map((v,i)=>({v,i})).filter(o=>o.v<L+eps).slice(0,7);
     candidates.forEach((o,k)=>{html += `<circle cx="${X(o.v)}" cy="${y-22-k*10}" r="4.6" class="point-tail"/>`;});
-    if(p.N) html += text(X(xs[p.N-1])+6,y-45,`x_N < i+ε`,'',`font-weight="700" fill="var(--accent)"`);
+    if(p.N) html += text(X(xs[p.N-1])+6,y-45,`x_N < i+Îµ`,'',`font-weight="700" fill="var(--accent)"`);
   } else if(m==='unbounded'){
     const minU=Math.min(...xs), maxU=Math.max(...xs), XU=xScale(minU-.3,maxU+.7,54,38,W);
     html='';
@@ -569,33 +569,33 @@ function renderText(xs,p){
 
   const pills = [
     ['monotone',p.monotone],['bounded',p.bounded],['convergent',p.convergent]
-  ].map(([t,ok])=>`<span class="pill ${ok?'good':'bad'}">${ok?'✓':'×'} ${t}</span>`).join('');
+  ].map(([t,ok])=>`<span class="pill ${ok?'good':'bad'}">${ok?'âœ“':'Ã—'} ${t}</span>`).join('');
   $('propertyPills').innerHTML=pills;
 
   if(m==='inc'){
     $('theoremBox').innerHTML = `
       If <span class="sym">x_1 \le x_2 \le \cdots</span> and A={x_n:n\in\u2115} is bounded above, then<br>
       <span class="sym">x_n \to s = \sup A.</span><br>
-      Given \u03b5&gt;0: since s−\u03b5 is not an upper bound, \u2203N with x_N&gt;s−\u03b5. Hence n\u2265N \u21d2 s−\u03b5&lt;x_N\u2264x_n\u2264s.`;
+      Given \u03b5&gt;0: since sâˆ’\u03b5 is not an upper bound, \u2203N with x_N&gt;sâˆ’\u03b5. Hence n\u2265N \u21d2 sâˆ’\u03b5&lt;x_N\u2264x_n\u2264s.`;
     $('proofSteps').innerHTML = steps([
       ['Bounded above','The set A={x_n:n\u2208\u2115} has at least one upper bound.'],
       ['Completeness','The real line supplies s=sup A.'],
-      ['Crossing','For every \u03b5&gt;0, s−\u03b5 is not an upper bound.'],
-      ['Monotonicity','Once x_N crosses s−\u03b5, every later x_n stays between s−\u03b5 and s.']
+      ['Crossing','For every \u03b5&gt;0, sâˆ’\u03b5 is not an upper bound.'],
+      ['Monotonicity','Once x_N crosses sâˆ’\u03b5, every later x_n stays between sâˆ’\u03b5 and s.']
     ]);
     $('lineCaption').textContent='terms approach the supremum from below';
     $('interpretation').innerHTML=`The theorem is not magic convergence. It is the geometry of a one-way sequence trapped below a ceiling. Completeness turns the ceiling into a real number s, and monotonicity turns one crossing into an entire tail.`;
     $('noticeBox').innerHTML=laws([
-      ['The tail is constructive: find one x_N inside (s−ε,s].'],
+      ['The tail is constructive: find one x_N inside (sâˆ’Îµ,s].'],
       ['The supremum need not be a term of the sequence.'],
       ['Boundedness prevents escape; monotonicity prevents oscillation.']
     ]);
     $('examSummary').textContent=`Increasing case:
 A={x_n}. Since A is bounded above, s=sup A exists.
-Let ε>0. Then s−ε is not an upper bound.
-So ∃N: x_N > s−ε.
-If n≥N, monotonicity gives x_N≤x_n≤s.
-Thus |x_n−s|<ε. Hence x_n→s.`;
+Let Îµ>0. Then sâˆ’Îµ is not an upper bound.
+So âˆƒN: x_N > sâˆ’Îµ.
+If nâ‰¥N, monotonicity gives x_Nâ‰¤x_nâ‰¤s.
+Thus |x_nâˆ’s|<Îµ. Hence x_nâ†’s.`;
   } else if(m==='dec'){
     $('theoremBox').innerHTML = `
       If <span class="sym">x_1 \ge x_2 \ge \cdots</span> and A={x_n:n\in\u2115} is bounded below, then<br>
@@ -611,32 +611,32 @@ Thus |x_n−s|<ε. Hence x_n→s.`;
     $('interpretation').innerHTML=`The decreasing version is the same theorem reflected in a mirror. A lower floor i replaces the upper ceiling s.`;
     $('noticeBox').innerHTML=laws([
       ['The proof uses infimum instead of supremum.'],
-      ['One crossing below i+ε controls the entire later tail.'],
+      ['One crossing below i+Îµ controls the entire later tail.'],
       ['A decreasing sequence may never touch its infimum.']
     ]);
     $('examSummary').textContent=`Decreasing case:
 A={x_n}. Since A is bounded below, i=inf A exists.
-Let ε>0. Then i+ε is not a lower bound.
-So ∃N: x_N < i+ε.
-If n≥N, monotonicity gives i≤x_n≤x_N.
-Thus |x_n−i|<ε. Hence x_n→i.`;
+Let Îµ>0. Then i+Îµ is not a lower bound.
+So âˆƒN: x_N < i+Îµ.
+If nâ‰¥N, monotonicity gives iâ‰¤x_nâ‰¤x_N.
+Thus |x_nâˆ’i|<Îµ. Hence x_nâ†’i.`;
   } else if(m==='unbounded'){
     $('theoremBox').innerHTML = `
       <span class="warn">Monotone alone is not enough.</span><br>
-      Example: x_n = x_1 + c(n−1) is increasing, but has no finite upper bound.<br>
+      Example: x_n = x_1 + c(nâˆ’1) is increasing, but has no finite upper bound.<br>
       Therefore no s=\sup\{x_n\} in \mathbb R, and no finite limit in \mathbb R.`;
     $('proofSteps').innerHTML = steps([
       ['Direction','The sequence moves one way.'],
       ['Missing ceiling','There is no finite upper bound.'],
       ['No supremum in R','The supremum-property step cannot even start.'],
-      ['Conclusion','It diverges to +∞ rather than converging to a real number.']
+      ['Conclusion','It diverges to +âˆž rather than converging to a real number.']
     ]);
     $('lineCaption').textContent='monotone motion without a ceiling escapes';
     $('interpretation').innerHTML=`The theorem needs boundedness because monotonicity only gives direction. Without a ceiling or floor, direction becomes escape.`;
     $('noticeBox').innerHTML=laws([
       ['Monotone does not mean convergent.'],
       ['The missing object is a finite supremum.'],
-      ['In the extended real line one may write x_n→+∞, but not convergence in R.']
+      ['In the extended real line one may write x_nâ†’+âˆž, but not convergence in R.']
     ]);
     $('examSummary').textContent=`Failure without boundedness:
 x_n=n is increasing.
@@ -651,7 +651,7 @@ Therefore monotonicity alone does not imply convergence in R.`;
     $('proofSteps').innerHTML = steps([
       ['Trap','All terms remain in a finite interval.'],
       ['Missing direction','The sequence keeps jumping between sides.'],
-      ['No tail capture','For small ε, infinitely many late terms remain outside any one candidate tube.'],
+      ['No tail capture','For small Îµ, infinitely many late terms remain outside any one candidate tube.'],
       ['Conclusion','Boundedness alone does not imply convergence.']
     ]);
     $('lineCaption').textContent='bounded cloud without monotonicity can oscillate';
@@ -663,13 +663,13 @@ Therefore monotonicity alone does not imply convergence in R.`;
     ]);
     $('examSummary').textContent=`Failure without monotonicity:
 x_n=(-1)^n is bounded.
-But it has two subsequential limits: 1 and −1.
+But it has two subsequential limits: 1 and âˆ’1.
 Hence it does not converge.
 Boundedness alone is weaker than monotone boundedness.`;
   }
 }
 function steps(arr){return arr.map((s,i)=>`<div class="step"><div class="badge">${i+1}</div><div><strong>${esc(s[0])}</strong>${esc(s[1])}</div></div>`).join('');}
-function laws(arr){return arr.map(a=>`<div class="law"><span class="check">•</span><span>${esc(a[0])}</span></div>`).join('');}
+function laws(arr){return arr.map(a=>`<div class="law"><span class="check">â€¢</span><span>${esc(a[0])}</span></div>`).join('');}
 
 function render(){
   const xs=seqTerms();
@@ -714,3 +714,4 @@ render();
 </script>
 </body>
 </html>
+

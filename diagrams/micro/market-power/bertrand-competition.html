@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -205,7 +205,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
 <div class="app">
 <header>
   <div>
-    <div class="eyebrow"><span class="dot"></span> Microeconomics · Oligopoly</div>
+    <div class="eyebrow"><span class="dot"></span> Microeconomics Â· Oligopoly</div>
     <h1>Bertrand competition</h1>
     <p class="subtitle">Price competition benchmarked against monopoly. Control the number of firms and the strength of price-stealing to see how prices, markups, profits, consumer surplus, and welfare move away from the monopoly outcome.</p>
   </div>
@@ -223,11 +223,11 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
 
     <div class="section-label">Bertrand pressure</div>
     <div class="control"><div class="label-row"><label for="N">Number of firms N</label><span class="value" id="NVal"></span></div><input id="N" type="range" min="1" max="25" step="1" value="2"></div>
-    <div class="control"><div class="label-row"><label for="tau">Price-stealing intensity τ</label><span class="value" id="tauVal"></span></div><input id="tau" type="range" min="0" max="24" step="0.25" value="7"></div>
+    <div class="control"><div class="label-row"><label for="tau">Price-stealing intensity Ï„</label><span class="value" id="tauVal"></span></div><input id="tau" type="range" min="0" max="24" step="0.25" value="7"></div>
     <div class="control"><div class="label-row"><label for="Nmax">Comparison horizon</label><span class="value" id="NmaxVal"></span></div><input id="Nmax" type="range" min="3" max="40" step="1" value="25"></div>
 
     <div class="toggle-row"><div><div style="font-size:14px;">Show welfare areas</div><div class="small">CS, profit, and monopoly loss</div></div><label class="switch"><input id="showAreas" type="checkbox" checked><span class="slider-switch"></span></label></div>
-    <div class="toggle-row"><div><div style="font-size:14px;">Show pure homogeneous theorem</div><div class="small">N ≥ 2 implies p = c</div></div><label class="switch"><input id="showPure" type="checkbox" checked><span class="slider-switch"></span></label></div>
+    <div class="toggle-row"><div><div style="font-size:14px;">Show pure homogeneous theorem</div><div class="small">N â‰¥ 2 implies p = c</div></div><label class="switch"><input id="showPure" type="checkbox" checked><span class="slider-switch"></span></label></div>
 
     <div class="pill" id="statusPill">Monopoly is the reference point</div>
   </aside>
@@ -259,7 +259,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
             <h2>Main diagram: market outcome vs monopoly</h2>
             <p>The orange marker is the monopoly benchmark. The purple marker is the current Bertrand outcome. The red marker is the marginal-cost limit.</p>
           </div>
-          <span class="small">Q horizontal · price vertical</span>
+          <span class="small">Q horizontal Â· price vertical</span>
         </div>
         <svg id="marketSvg" viewBox="0 0 1120 620"></svg>
         <div class="legend">
@@ -271,13 +271,13 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
         </div>
         <div class="metrics">
           <div class="metric"><div class="k">N</div><div class="v" id="mN"></div></div>
-          <div class="metric"><div class="k">pᴺ / pᴹ</div><div class="v" id="mpRatio"></div></div>
-          <div class="metric"><div class="k">Qᴺ / Qᴹ</div><div class="v" id="mQRatio"></div></div>
-          <div class="metric"><div class="k">πᴺ / πᴹ</div><div class="v" id="mpiRatio"></div></div>
-          <div class="metric"><div class="k">pᴺ</div><div class="v" id="mpN"></div></div>
-          <div class="metric"><div class="k">Qᴺ</div><div class="v" id="mQN"></div></div>
-          <div class="metric"><div class="k">Lᴺ</div><div class="v" id="mLN"></div></div>
-          <div class="metric"><div class="k">CSᴺ / CSᴹ</div><div class="v" id="mCSRatio"></div></div>
+          <div class="metric"><div class="k">pá´º / pá´¹</div><div class="v" id="mpRatio"></div></div>
+          <div class="metric"><div class="k">Qá´º / Qá´¹</div><div class="v" id="mQRatio"></div></div>
+          <div class="metric"><div class="k">Ï€á´º / Ï€á´¹</div><div class="v" id="mpiRatio"></div></div>
+          <div class="metric"><div class="k">pá´º</div><div class="v" id="mpN"></div></div>
+          <div class="metric"><div class="k">Qá´º</div><div class="v" id="mQN"></div></div>
+          <div class="metric"><div class="k">Lá´º</div><div class="v" id="mLN"></div></div>
+          <div class="metric"><div class="k">CSá´º / CSá´¹</div><div class="v" id="mCSRatio"></div></div>
         </div>
       </section>
 
@@ -287,7 +287,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
             <h2>Entry path: normalized to monopoly</h2>
             <p>Everything is scaled by the monopoly outcome. Price, profit, and markup fall as price competition intensifies; output and consumer surplus rise.</p>
           </div>
-          <span class="small">N horizontal · monopoly = 1</span>
+          <span class="small">N horizontal Â· monopoly = 1</span>
         </div>
         <svg id="pathSvg" viewBox="0 0 980 620"></svg>
         <div class="legend">
@@ -301,7 +301,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
 
     <section class="secondary-row">
       <section class="card mini-card">
-        <div class="mini-head"><h3>Representative firm’s price problem</h3><span class="mini-sub">rivals fixed at the current symmetric price</span></div>
+        <div class="mini-head"><h3>Representative firmâ€™s price problem</h3><span class="mini-sub">rivals fixed at the current symmetric price</span></div>
         <svg id="profitSvg" viewBox="0 0 760 360"></svg>
       </section>
       <section class="card mini-card">
@@ -360,12 +360,12 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
   };
 
   function fmt(x,d=2){
-    if(!Number.isFinite(x)) return "—";
+    if(!Number.isFinite(x)) return "â€”";
     if(Math.abs(x) >= 100) return x.toFixed(1);
     if(Math.abs(x) >= 10) return x.toFixed(2);
     return x.toFixed(d);
   }
-  function pct(x){ return Number.isFinite(x) ? (100*x).toFixed(1)+"%" : "—"; }
+  function pct(x){ return Number.isFinite(x) ? (100*x).toFixed(1)+"%" : "â€”"; }
   function clamp(x,lo,hi){ return Math.max(lo, Math.min(hi, x)); }
   function S(tag,a={}){ const e=document.createElementNS("http://www.w3.org/2000/svg",tag); for(const [k,v] of Object.entries(a)) e.setAttribute(k,v); return e; }
   function line(svg,x1,y1,x2,y2,cls){ svg.appendChild(S("line",{x1,y1,x2,y2,class:cls})); }
@@ -502,16 +502,16 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
     circle(svg,X(m.QN),Y(m.pN),8,"point-c");
     circle(svg,X(m.QC),Y(m.c),6,"point-d");
 
-    text(svg,X(m.QM),Y(0)+28,"Qᴹ","label");
-    text(svg,X(m.QN),Y(0)+48,"Qᴺ","label");
-    text(svg,X(m.QC),Y(0)+28,"Qᶜ","muted-label");
-    text(svg,X(0)-12,Y(m.pM)+4,"pᴹ","label","end");
-    text(svg,X(0)-12,Y(m.pN)+4,"pᴺ","label","end");
+    text(svg,X(m.QM),Y(0)+28,"Qá´¹","label");
+    text(svg,X(m.QN),Y(0)+48,"Qá´º","label");
+    text(svg,X(m.QC),Y(0)+28,"Qá¶œ","muted-label");
+    text(svg,X(0)-12,Y(m.pM)+4,"pá´¹","label","end");
+    text(svg,X(0)-12,Y(m.pN)+4,"pá´º","label","end");
     text(svg,X(0)-12,Y(m.c)+4,"c","muted-label","end");
 
     if(els.showAreas.checked){
-      text(svg,X(m.QN*.38),Y((m.choke+m.pN)/2),"CSᴺ","label");
-      if(m.piN>0) text(svg,X(m.QN*.50),Y((m.pN+m.c)/2)+4,"πᴺ","label");
+      text(svg,X(m.QN*.38),Y((m.choke+m.pN)/2),"CSá´º","label");
+      if(m.piN>0) text(svg,X(m.QN*.50),Y((m.pN+m.c)/2)+4,"Ï€á´º","label");
       if(m.QC>m.QN) text(svg,(X(m.QN)+X(m.QC))/2,Y((m.pN+m.c)/2)+4,"remaining DWL","label");
     }
 
@@ -555,10 +555,10 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
 
     const curr=safeModel(m.A,m.B,m.c,m.N,m.tau);
     const pts=[
-      [curr.pN/m.pM,"point-c","p/pᴹ"],
-      [curr.QN/m.QM,"point-a","Q/Qᴹ"],
-      [curr.piN/m.piM,"point-b","π/πᴹ"],
-      [curr.LN/m.LM,"point-d","L/Lᴹ"]
+      [curr.pN/m.pM,"point-c","p/pá´¹"],
+      [curr.QN/m.QM,"point-a","Q/Qá´¹"],
+      [curr.piN/m.piM,"point-b","Ï€/Ï€á´¹"],
+      [curr.LN/m.LM,"point-d","L/Lá´¹"]
     ];
     pts.forEach((item,idx)=>{
       const [v,cls,label]=item;
@@ -597,7 +597,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
     const piAtM=Math.max(0,(m.pM-m.c)*residualQi(m.pM,pr,m));
     circle(svg,X(m.pM),Y(piAtM),6,"point-b");
 
-    text(svg,X(m.pN)+8,Y(m.piFirm)-10,"best response pᴺ","label","start");
+    text(svg,X(m.pN)+8,Y(m.piFirm)-10,"best response pá´º","label","start");
     text(svg,X(m.pM)+8,Y(piAtM)+18,"monopoly price","muted-label","start");
     text(svg,X(m.c)+8,Y(yMax*.95),"c","muted-label","start");
   }
@@ -625,14 +625,14 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
       const under=Math.max(m.c,m.pM-eps);
       line(svg,X(m.pM),Y(m.pM),X(under),Y(m.pM),"helper-b");
       circle(svg,X(under),Y(m.pM),5,"point-a");
-      text(svg,X(under),Y(m.pM)-10,"undercut pᴹ by ε","muted-label");
+      text(svg,X(under),Y(m.pM)-10,"undercut pá´¹ by Îµ","muted-label");
     }
 
     text(svg,X(pMax*.24),Y(pMax*.72),"own price < rival price","label");
     text(svg,X(pMax*.73),Y(pMax*.25),"own price > rival price","label");
     text(svg,X(pMax*.62),Y(pMax*.62)-10,"tie line","muted-label");
     text(svg,X(m.pM)+8,Y(m.pM)-12,"monopoly price pair","muted-label","start");
-    text(svg,X(m.pN)+8,Y(m.pN)+18,"current pᴺ","label","start");
+    text(svg,X(m.pN)+8,Y(m.pN)+18,"current pá´º","label","start");
     text(svg,X(m.c)+8,Y(m.c)-10,"MC point","muted-label","start");
   }
 
@@ -648,7 +648,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
       m.WN/m.WM,
       m.LN/m.LM
     ].map(v=>Number.isFinite(v)?v:0);
-    const labels=["pᴺ/pᴹ","Qᴺ/Qᴹ","πᴺ/πᴹ","CSᴺ/CSᴹ","Wᴺ/Wᴹ","Lᴺ/Lᴹ"];
+    const labels=["pá´º/pá´¹","Qá´º/Qá´¹","Ï€á´º/Ï€á´¹","CSá´º/CSá´¹","Wá´º/Wá´¹","Lá´º/Lá´¹"];
     const cls=["bar-c","bar-a","bar-b","bar-c","bar-a","bar-d"];
     const yMax=Math.max(2.05,...vals)*1.08;
     const iw=W-mar.l-mar.r, ih=H-mar.t-mar.b, Y=v=>mar.t+ih-(v/yMax)*ih;
@@ -665,7 +665,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
     const vb=svg.viewBox.baseVal, W=vb.width||760, H=vb.height||360;
     const mar={l:66,r:24,t:24,b:70};
     const vals=[m.CSM,m.piM,m.WM,m.CSN,m.piN,m.WN];
-    const labs=["CSᴹ","πᴹ","Wᴹ","CSᴺ","πᴺ","Wᴺ"];
+    const labs=["CSá´¹","Ï€á´¹","Wá´¹","CSá´º","Ï€á´º","Wá´º"];
     const cls=["bar-e","bar-b","bar-a","bar-c","bar-b","bar-a"];
     const yMax=Math.max(1,...vals)*1.16;
     const iw=W-mar.l-mar.r, ih=H-mar.t-mar.b, Y=v=>mar.t+ih-(v/yMax)*ih;
@@ -697,12 +697,12 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
 
     const closeness = m.tau < 2 ? "weak price-stealing" : m.tau < 9 ? "moderate price-stealing" : "strong price-stealing";
     const pure = m.N>=2 ? " In the pure homogeneous-good theorem, the same N would imply price exactly equal to marginal cost." : " With N = 1, the Bertrand outcome is simply monopoly.";
-    els.statusPill.textContent = `${closeness} · N = ${m.N}`;
+    els.statusPill.textContent = `${closeness} Â· N = ${m.N}`;
 
     const markupLoss = 1 - (m.LN/m.LM);
     const piLoss = 1 - (m.piN/m.piM);
     els.interpretation.textContent =
-      `Monopoly charges pM = ${fmt(m.pM)} and sells QM = ${fmt(m.QM)}. With N = ${m.N} and price-stealing intensity τ = ${fmt(m.tau,2)}, the current Bertrand outcome is pN = ${fmt(m.pN)} and QN = ${fmt(m.QN)}. Relative to monopoly, price is ${fmt(m.pN/m.pM,2)}, output is ${fmt(m.QN/m.QM,2)}, total profit is ${fmt(m.piN/m.piM,2)}, and the Lerner index is ${fmt(m.LN/m.LM,2)}. Price competition has eliminated about ${pct(Math.max(0,markupLoss))} of the monopoly markup and ${pct(Math.max(0,piLoss))} of monopoly profit.` + pure;
+      `Monopoly charges pM = ${fmt(m.pM)} and sells QM = ${fmt(m.QM)}. With N = ${m.N} and price-stealing intensity Ï„ = ${fmt(m.tau,2)}, the current Bertrand outcome is pN = ${fmt(m.pN)} and QN = ${fmt(m.QN)}. Relative to monopoly, price is ${fmt(m.pN/m.pM,2)}, output is ${fmt(m.QN/m.QM,2)}, total profit is ${fmt(m.piN/m.piM,2)}, and the Lerner index is ${fmt(m.LN/m.LM,2)}. Price competition has eliminated about ${pct(Math.max(0,markupLoss))} of the monopoly markup and ${pct(Math.max(0,piLoss))} of monopoly profit.` + pure;
   }
 
   function renderTex(){
@@ -753,3 +753,4 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
 </script>
 </body>
 </html>
+

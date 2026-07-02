@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -98,7 +98,7 @@
     .theme .label{font-size:.92rem;color:var(--muted);min-width:70px}
     .switch{position:relative;width:70px;height:36px;border-radius:999px;background:var(--switch);border:1px solid var(--line)}
     .switch:before,.switch:after{position:absolute;top:50%;transform:translateY(-50%);font-size:13px;opacity:.75}
-    .switch:before{content:"☀";left:10px}.switch:after{content:"☾";right:10px}
+    .switch:before{content:"â˜€";left:10px}.switch:after{content:"â˜¾";right:10px}
     .knob{position:absolute;left:3px;top:3px;width:28px;height:28px;border-radius:50%;background:var(--thumb);border:1px solid var(--line);box-shadow:0 4px 12px rgba(0,0,0,.16);transition:left .25s ease;display:grid;place-items:center;font-size:13px}
     body.dark .knob{left:37px}
 
@@ -158,11 +158,11 @@
       </div>
       <div class="actions">
         <div class="pill">clean local microscope</div>
-        <div class="pill">domain disk → image patch</div>
+        <div class="pill">domain disk â†’ image patch</div>
         <div class="pill">regular versus singular geometry</div>
         <div id="theme" class="theme" role="button" tabindex="0">
           <span id="themeLabel" class="label">light mode</span>
-          <div class="switch"><div id="knob" class="knob">☀</div></div>
+          <div class="switch"><div id="knob" class="knob">â˜€</div></div>
         </div>
       </div>
     </header>
@@ -440,9 +440,9 @@
     return [[A[1][1]/d,-A[0][1]/d],[-A[1][0]/d,A[0][0]/d]];
   };
   const fmt=x=>{
-    if(!Number.isFinite(x)) return '—';
+    if(!Number.isFinite(x)) return 'â€”';
     if(Math.abs(x)>9999) return x.toExponential(2);
-    return (x<0?'−':'')+Math.abs(x).toFixed(3);
+    return (x<0?'âˆ’':'')+Math.abs(x).toFixed(3);
   };
   const fmtVec=v=>`(${fmt(v[0])}, ${fmt(v[1])})`;
   const lin=(x,a,b,c,d)=>c+(x-a)*(d-c)/(b-a);
@@ -481,7 +481,7 @@
     document.body.classList.toggle('dark',t==='dark');
     localStorage.setItem('ift-refined-theme',t);
     el.themeLabel.textContent=t==='dark'?'dark mode':'light mode';
-    el.knob.textContent=t==='dark'?'☾':'☀';
+    el.knob.textContent=t==='dark'?'â˜¾':'â˜€';
     if(state.initialized) render();
   }
 
@@ -677,7 +677,7 @@
 
       <rect x="510" y="642" width="400" height="64" rx="22" fill="${Math.abs(C.det)>0.06?css('--goodSoft'):css('--badSoft')}" stroke="${css('--line')}"/>
       ${txt(710,668,Math.abs(C.det)>0.06?'non-collapsed local image: inverse theorem applies':'collapsed/folded local image: theorem does not apply',{size:17,fill:color,weight:800,family:'Georgia, serif',anchor:'middle'})}
-      ${txt(710,694,`det DF(a) ≈ ${fmt(C.det)}`,{size:15,fill:css('--muted'),weight:750,anchor:'middle'})}
+      ${txt(710,694,`det DF(a) â‰ˆ ${fmt(C.det)}`,{size:15,fill:css('--muted'),weight:750,anchor:'middle'})}
     `;
   }
 
@@ -712,7 +712,7 @@
       ${arrow(X(0),Y(0),X(r*0.72),Y(0),css('--gold'),3)}
       ${arrow(X(0),Y(0),X(0),Y(r*0.72),css('--violet'),3)}
       <circle cx="${X(hLin[0])}" cy="${Y(hLin[1])}" r="6" fill="${css('--model')}" stroke="${css('--paper')}" stroke-width="2"/>
-      ${txt(X(hLin[0])+8,Y(hLin[1])-8,'J⁻¹η',{size:14,fill:css('--model'),weight:750})}
+      ${txt(X(hLin[0])+8,Y(hLin[1])-8,'Jâ»Â¹Î·',{size:14,fill:css('--model'),weight:750})}
 
       ${makeAxes(right,KX,KY)}
       <path d="${polyline(ell,p=>[KX(p[0]),KY(p[1])])}" fill="${Math.abs(C.det)>0.06?css('--goodSoft'):css('--badSoft')}" stroke="${color}" stroke-width="3.2"/>
@@ -720,14 +720,14 @@
       ${arrow(KX(0),KY(0),KX(matVec(C.J,[r*0.72,0])[0]),KY(matVec(C.J,[r*0.72,0])[1]),css('--gold'),3)}
       ${arrow(KX(0),KY(0),KX(matVec(C.J,[0,r*0.72])[0]),KY(matVec(C.J,[0,r*0.72])[1]),css('--violet'),3)}
       <circle cx="${KX(C.eta[0])}" cy="${KY(C.eta[1])}" r="6" fill="${css('--model')}" stroke="${css('--paper')}" stroke-width="2"/>
-      ${txt(KX(C.eta[0])+8,KY(C.eta[1])-8,'η',{size:14,fill:css('--model'),weight:750})}
+      ${txt(KX(C.eta[0])+8,KY(C.eta[1])-8,'Î·',{size:14,fill:css('--model'),weight:750})}
 
       <path d="M 565 265 C 590 265, 600 265, 618 265" fill="none" stroke="${css('--line')}" stroke-width="2.6" marker-end="url(#marr)"/>
       ${txt(590,246,'DF(a)',{size:20,fill:css('--muted'),weight:800,family:'Georgia, serif',anchor:'middle'})}
 
       <rect x="432" y="520" width="316" height="58" rx="20" fill="${Math.abs(C.det)>0.06?css('--goodSoft'):css('--badSoft')}" stroke="${css('--line')}"/>
       ${txt(590,544,Math.abs(C.det)>0.06?'ellipse has nonzero area':'ellipse collapses toward a segment',{size:17,fill:color,weight:800,family:'Georgia, serif',anchor:'middle'})}
-      ${txt(590,568,`area scale = |det DF(a)| ≈ ${fmt(Math.abs(C.det))}`,{size:14,fill:css('--muted'),weight:750,anchor:'middle'})}
+      ${txt(590,568,`area scale = |det DF(a)| â‰ˆ ${fmt(Math.abs(C.det))}`,{size:14,fill:css('--muted'),weight:750,anchor:'middle'})}
     `;
   }
 
@@ -770,8 +770,8 @@
           <circle cx="${XL(0)}" cy="${YL(0)}" r="6" fill="${css('--gold')}"/>
           <circle cx="${XL(h1[0])}" cy="${YL(h1[1])}" r="6" fill="${css('--good')}"/>
           <circle cx="${XL(h2[0])}" cy="${YL(h2[1])}" r="6" fill="${css('--violet')}"/>
-          ${txt(XL(h1[0])+8,YL(h1[1])-8,'x₁',{size:14,fill:css('--good'),weight:750})}
-          ${txt(XL(h2[0])+8,YL(h2[1])+18,'x₂',{size:14,fill:css('--violet'),weight:750})}
+          ${txt(XL(h1[0])+8,YL(h1[1])-8,'xâ‚',{size:14,fill:css('--good'),weight:750})}
+          ${txt(XL(h2[0])+8,YL(h2[1])+18,'xâ‚‚',{size:14,fill:css('--violet'),weight:750})}
         `;
         rightContent=`
           <circle cx="${XR(0)}" cy="${YR(0)}" r="6" fill="${css('--gold')}"/>
@@ -838,13 +838,13 @@
 
     const regular=Math.abs(C.det)>0.06;
     const col=regular?css('--good'):css('--bad');
-    el.status.textContent=regular?'regular point · local diffeomorphism':'singular point · theorem does not apply';
+    el.status.textContent=regular?'regular point Â· local diffeomorphism':'singular point Â· theorem does not apply';
     el.status.style.color=col;
     el.status.style.background=regular?css('--goodSoft'):css('--badSoft');
 
-    el.detMetric.textContent=`det DF(a) ≈ ${fmt(C.det)}`;
-    el.invMetric.textContent=regular&&C.inv.ok?`unique nearby preimage · residual ${fmt(C.inv.residual)}`:(C.two?'two nearby preimages appear':'no local inverse guaranteed');
-    el.linMetric.textContent=C.xLin?`linear preimage ≈ ${fmtVec(C.xLin)}`:'no linear inverse';
+    el.detMetric.textContent=`det DF(a) â‰ˆ ${fmt(C.det)}`;
+    el.invMetric.textContent=regular&&C.inv.ok?`unique nearby preimage Â· residual ${fmt(C.inv.residual)}`:(C.two?'two nearby preimages appear':'no local inverse guaranteed');
+    el.linMetric.textContent=C.xLin?`linear preimage â‰ˆ ${fmtVec(C.xLin)}`:'no linear inverse';
     el.oriMetric.textContent=C.det>0.06?'orientation preserved':(C.det<-0.06?'orientation reversed':'orientation collapses');
     el.warnMetric.textContent=regular?'non-collapsed local image':(C.two?'fold/branching behavior':'rank loss / collapse');
   }
@@ -904,3 +904,4 @@
 </script>
 </body>
 </html>
+

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -93,7 +93,7 @@
     .theme .label{font-size:.92rem;color:var(--muted);min-width:70px}
     .switch{position:relative;width:70px;height:36px;border-radius:999px;background:var(--switch);border:1px solid var(--line)}
     .switch:before,.switch:after{position:absolute;top:50%;transform:translateY(-50%);font-size:13px;opacity:.75}
-    .switch:before{content:"☀";left:10px}.switch:after{content:"☾";right:10px}
+    .switch:before{content:"â˜€";left:10px}.switch:after{content:"â˜¾";right:10px}
     .knob{position:absolute;left:3px;top:3px;width:28px;height:28px;border-radius:50%;background:var(--thumb);border:1px solid var(--line);box-shadow:0 4px 12px rgba(0,0,0,.16);transition:left .25s ease;display:grid;place-items:center;font-size:13px}
     body.dark .knob{left:37px}
 
@@ -148,10 +148,10 @@
       </div>
       <div class="actions">
         <div class="pill">uniform control over a family</div>
-        <div class="pill">Arzelà–Ascoli intuition</div>
+        <div class="pill">ArzelÃ â€“Ascoli intuition</div>
         <div id="theme" class="theme" role="button" tabindex="0">
           <span id="themeLabel" class="label">light mode</span>
-          <div class="switch"><div id="knob" class="knob">☀</div></div>
+          <div class="switch"><div id="knob" class="knob">â˜€</div></div>
         </div>
       </div>
     </header>
@@ -266,7 +266,7 @@
             <div class="head">
               <div>
                 <h3>Compactness in function spaces</h3>
-                <p>The Arzelà–Ascoli picture.</p>
+                <p>The ArzelÃ â€“Ascoli picture.</p>
               </div>
               <div class="tag">precompactness</div>
             </div>
@@ -288,7 +288,7 @@
         <section class="footer">
           <div><strong>Equicontinuity.</strong> One \(\delta\) works for all \(x,y\) and all \(f\in\mathcal F\).</div>
           <div><strong>Modulus.</strong> \(\omega_{\mathcal F}(\delta)=\sup_{f\in\mathcal F,\ |x-y|\le\delta}|f(x)-f(y)|\).</div>
-          <div><strong>Arzelà–Ascoli.</strong> On compact \(K\), boundedness plus equicontinuity gives relative compactness in \(C(K)\).</div>
+          <div><strong>ArzelÃ â€“Ascoli.</strong> On compact \(K\), boundedness plus equicontinuity gives relative compactness in \(C(K)\).</div>
         </section>
       </main>
     </div>
@@ -371,14 +371,14 @@
 
     const css=v=>getComputedStyle(document.body).getPropertyValue(v).trim();
     const lin=(x,a,b,c,d)=>c+(x-a)*(d-c)/(b-a);
-    const fmt=x=>(x<0?'−':'')+Math.abs(x).toFixed(2);
+    const fmt=x=>(x<0?'âˆ’':'')+Math.abs(x).toFixed(2);
 
     function setTheme(t){
       state.theme=t;
       document.body.classList.toggle('dark', t==='dark');
       localStorage.setItem('equicontinuity-theme', t);
       el.themeLabel.textContent=t==='dark'?'dark mode':'light mode';
-      el.knob.textContent=t==='dark'?'☾':'☀';
+      el.knob.textContent=t==='dark'?'â˜¾':'â˜€';
       render();
     }
 
@@ -500,7 +500,7 @@
 
       el.mainSvg.innerHTML=`
         <rect x="0" y="0" width="${W}" height="${H}" rx="26" fill="${css('--paper')}"/>
-        ${text(top.x,42,'common δ-window tested on the family',{size:21,weight:700,family:'Georgia, serif'})}
+        ${text(top.x,42,'common Î´-window tested on the family',{size:21,weight:700,family:'Georgia, serif'})}
         ${text(bottom.x,590,'local worst oscillation along the domain',{size:18,weight:700,family:'Georgia, serif'})}
         ${text(gauge.x-8,82,'window test',{size:18,weight:700,family:'Georgia, serif'})}
 
@@ -512,29 +512,29 @@
         ${curves}
         ${oscillationLine}
         <line x1="${X(loc.center)}" y1="${top.y}" x2="${X(loc.center)}" y2="${top.y+top.h}" stroke="${css('--gold')}" stroke-width="2" stroke-dasharray="6 6"/>
-        ${text(X(loc.center),top.y+top.h+24,'x₀',{size:14,fill:css('--gold'),weight:700,anchor:'middle'})}
-        ${text(top.x+16,top.y+28,'same δ for every curve',{size:14,fill:css('--limit'),weight:700})}
+        ${text(X(loc.center),top.y+top.h+24,'xâ‚€',{size:14,fill:css('--gold'),weight:700,anchor:'middle'})}
+        ${text(top.x+16,top.y+28,'same Î´ for every curve',{size:14,fill:css('--limit'),weight:700})}
         ${text(top.x+top.w-10,top.y+top.h+24,'x',{size:13,fill:css('--muted'),anchor:'end'})}
 
         <rect x="${bottom.x}" y="${bottom.y}" width="${bottom.w}" height="${bottom.h}" rx="18" fill="transparent" stroke="${css('--line')}"/>
         <line x1="${bottom.x}" y1="${YB(state.eps)}" x2="${bottom.x+bottom.w}" y2="${YB(state.eps)}" stroke="${css('--limit')}" stroke-dasharray="8 7" stroke-width="2"/>
         <path d="${path(omegaPath,XB,YB)}" fill="none" stroke="${col}" stroke-width="3"/>
-        ${text(bottom.x+10,YB(state.eps)-9,'ε',{size:14,fill:css('--limit'),weight:700})}
+        ${text(bottom.x+10,YB(state.eps)-9,'Îµ',{size:14,fill:css('--limit'),weight:700})}
 
         <rect x="${gauge.x}" y="${gauge.y}" width="${gauge.w}" height="${gauge.h}" rx="24" fill="${loc.inside?css('--accentSoft'):css('--badSoft')}" stroke="${css('--line')}"/>
         <line x1="${gauge.x+gauge.w/2}" y1="${gauge.y+24}" x2="${gauge.x+gauge.w/2}" y2="${gauge.y+gauge.h-24}" stroke="${css('--muted')}" stroke-width="2"/>
         <rect x="${gauge.x+gauge.w/2-20}" y="${YG(loc.omega)}" width="40" height="${YG(0)-YG(loc.omega)}" rx="18" fill="${loc.inside?css('--accentSoft'):css('--badSoft')}" stroke="${col}" stroke-width="1.6"/>
         <line x1="${gauge.x+18}" y1="${YG(state.eps)}" x2="${gauge.x+gauge.w-18}" y2="${YG(state.eps)}" stroke="${css('--limit')}" stroke-width="2.2" stroke-dasharray="7 6"/>
         <circle cx="${gauge.x+gauge.w/2}" cy="${YG(loc.omega)}" r="8" fill="${col}" stroke="${css('--paper')}" stroke-width="2.4"/>
-        ${text(gauge.x+gauge.w/2,YG(state.eps)-12,'ε',{size:14,fill:css('--limit'),weight:700,anchor:'middle'})}
-        ${text(gauge.x+gauge.w/2,YG(loc.omega)-12,'ω',{size:14,fill:col,weight:700,anchor:'middle'})}
-        ${text(gauge.x+gauge.w/2,gauge.y+gauge.h+34, loc.inside?'ω < ε':'ω ≥ ε',{size:15,fill:col,weight:700,anchor:'middle'})}
+        ${text(gauge.x+gauge.w/2,YG(state.eps)-12,'Îµ',{size:14,fill:css('--limit'),weight:700,anchor:'middle'})}
+        ${text(gauge.x+gauge.w/2,YG(loc.omega)-12,'Ï‰',{size:14,fill:col,weight:700,anchor:'middle'})}
+        ${text(gauge.x+gauge.w/2,gauge.y+gauge.h+34, loc.inside?'Ï‰ < Îµ':'Ï‰ â‰¥ Îµ',{size:15,fill:col,weight:700,anchor:'middle'})}
       `;
 
       el.typeMetric.textContent=fam.fullStatus;
-      el.omegaMetric.textContent=`ω(δ) ≈ ${loc.omega.toFixed(3)}`;
+      el.omegaMetric.textContent=`Ï‰(Î´) â‰ˆ ${loc.omega.toFixed(3)}`;
       el.worstMetric.textContent=`function #${loc.wi+1}`;
-      el.bandMetric.textContent=loc.inside?'common δ works here':'common δ fails here';
+      el.bandMetric.textContent=loc.inside?'common Î´ works here':'common Î´ fails here';
       el.status.textContent=fam.fullStatus;
       el.status.style.color=fam.fullStatus==='equicontinuous'?css('--accent'):css('--bad');
       el.status.style.background=fam.fullStatus==='equicontinuous'?css('--accentSoft'):css('--badSoft');
@@ -561,17 +561,17 @@
 
       el.modulusSvg.innerHTML=`
         <rect x="0" y="0" width="${W}" height="${H}" rx="22" fill="${css('--paper')}"/>
-        ${text(plot.x,30,'modulus  ω𝓕(δ)',{size:20,weight:700,family:'Georgia, serif'})}
+        ${text(plot.x,30,'modulus  Ï‰ð“•(Î´)',{size:20,weight:700,family:'Georgia, serif'})}
         <rect x="${plot.x}" y="${plot.y}" width="${plot.w}" height="${plot.h}" rx="20" fill="transparent" stroke="${css('--line')}"/>
         ${grid}
         <line x1="${plot.x}" y1="${Y(state.eps)}" x2="${plot.x+plot.w}" y2="${Y(state.eps)}" stroke="${css('--limit')}" stroke-dasharray="8 7" stroke-width="2"/>
         <path d="${path(vals,X,Y)}" fill="none" stroke="${col}" stroke-width="3" stroke-linecap="round"/>
         <line x1="${X(state.delta)}" y1="${plot.y}" x2="${X(state.delta)}" y2="${plot.y+plot.h}" stroke="${css('--gold')}" stroke-width="2" stroke-dasharray="6 6"/>
         <circle cx="${X(state.delta)}" cy="${Y(curr)}" r="7.5" fill="${col}" stroke="${css('--paper')}" stroke-width="2.3"/>
-        ${text(plot.x+10,Y(state.eps)-9,'ε',{size:14,fill:css('--limit'),weight:700})}
-        ${text(X(state.delta)+10,Y(curr)-10,`δ=${state.delta.toFixed(2)}`,{size:14,fill:col,weight:700})}
-        ${text(plot.x+plot.w-8,plot.y+plot.h+24,'δ',{size:13,fill:css('--muted'),anchor:'end'})}
-        ${text(plot.x+plot.w-8,392,families[state.family].fullStatus==='equicontinuous'?'equicontinuity: ω𝓕(δ) → 0':'failure: no common δ works for the full family',{size:14,fill:families[state.family].fullStatus==='equicontinuous'?css('--accent'):css('--bad'),weight:700,anchor:'end'})}
+        ${text(plot.x+10,Y(state.eps)-9,'Îµ',{size:14,fill:css('--limit'),weight:700})}
+        ${text(X(state.delta)+10,Y(curr)-10,`Î´=${state.delta.toFixed(2)}`,{size:14,fill:col,weight:700})}
+        ${text(plot.x+plot.w-8,plot.y+plot.h+24,'Î´',{size:13,fill:css('--muted'),anchor:'end'})}
+        ${text(plot.x+plot.w-8,392,families[state.family].fullStatus==='equicontinuous'?'equicontinuity: Ï‰ð“•(Î´) â†’ 0':'failure: no common Î´ works for the full family',{size:14,fill:families[state.family].fullStatus==='equicontinuous'?css('--accent'):css('--bad'),weight:700,anchor:'end'})}
       `;
     }
 
@@ -659,3 +659,4 @@
   </script>
 </body>
 </html>
+

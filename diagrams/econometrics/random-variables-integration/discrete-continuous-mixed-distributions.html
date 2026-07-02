@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -59,10 +59,10 @@
     </header>
 
     <section class="defs">
-      <div class="def"><div class="tag">Discrete law</div><div class="math">P(X=x_i)=p_i<br>Σ p_i = 1</div></div>
-      <div class="def"><div class="tag">Continuous law</div><div class="math">P(X∈A)=∫<sub>A</sub> f(x) dx<br>P(X=x)=0</div></div>
+      <div class="def"><div class="tag">Discrete law</div><div class="math">P(X=x_i)=p_i<br>Î£ p_i = 1</div></div>
+      <div class="def"><div class="tag">Continuous law</div><div class="math">P(XâˆˆA)=âˆ«<sub>A</sub> f(x) dx<br>P(X=x)=0</div></div>
       <div class="def"><div class="tag">Atom</div><div class="math">x is an atom if<br>P(X=x)&gt;0</div></div>
-      <div class="def"><div class="tag">Mixed law</div><div class="math">μ = μ<sub>d</sub> + μ<sub>ac</sub><br>jump + area</div></div>
+      <div class="def"><div class="tag">Mixed law</div><div class="math">Î¼ = Î¼<sub>d</sub> + Î¼<sub>ac</sub><br>jump + area</div></div>
     </section>
 
     <main class="layout">
@@ -70,14 +70,14 @@
         <div class="panelTitle">Controls</div>
         <div class="control"><label for="modelSelect">Distribution type</label><select id="modelSelect"><option value="discrete">discrete: four atoms</option><option value="continuous">continuous: normal density</option><option value="mixed" selected>mixed economic outcome</option></select></div>
         <div class="control" id="atomBlock"><label for="atomRange">Atom at zero <span class="value" id="atomVal">0.35</span></label><input id="atomRange" type="range" min="0" max="0.85" step="0.01" value="0.35" /></div>
-        <div class="control"><label for="centerRange">Location μ <span class="value" id="centerVal">1.00</span></label><input id="centerRange" type="range" min="-1.5" max="2.5" step="0.05" value="1.00" /></div>
-        <div class="control"><label for="scaleRange">Dispersion σ <span class="value" id="scaleVal">0.70</span></label><input id="scaleRange" type="range" min="0.25" max="1.50" step="0.05" value="0.70" /></div>
-        <div class="control"><label for="leftRange">Event A left <span class="value" id="leftVal">−0.20</span></label><input id="leftRange" type="range" min="-3" max="4" step="0.05" value="-0.20" /></div>
+        <div class="control"><label for="centerRange">Location Î¼ <span class="value" id="centerVal">1.00</span></label><input id="centerRange" type="range" min="-1.5" max="2.5" step="0.05" value="1.00" /></div>
+        <div class="control"><label for="scaleRange">Dispersion Ïƒ <span class="value" id="scaleVal">0.70</span></label><input id="scaleRange" type="range" min="0.25" max="1.50" step="0.05" value="0.70" /></div>
+        <div class="control"><label for="leftRange">Event A left <span class="value" id="leftVal">âˆ’0.20</span></label><input id="leftRange" type="range" min="-3" max="4" step="0.05" value="-0.20" /></div>
         <div class="control"><label for="rightRange">Event A right <span class="value" id="rightVal">1.60</span></label><input id="rightRange" type="range" min="-3" max="4" step="0.05" value="1.60" /></div>
         <div class="control"><label for="sampleRange">Simulation size <span class="value" id="sampleVal">800</span></label><input id="sampleRange" type="range" min="100" max="5000" step="100" value="800" /></div>
         <div class="control"><div class="seg"><button class="btn active" id="measureBtn">Measure view</button><button class="btn" id="sampleBtn">Sample view</button></div></div>
         <div class="control"><button class="btn" id="resampleBtn">Resimulate</button></div>
-        <div class="eqBox" id="eqBox">Mixed law:<br>μ = p₀δ₀ + (1−p₀)f(x)dx</div>
+        <div class="eqBox" id="eqBox">Mixed law:<br>Î¼ = pâ‚€Î´â‚€ + (1âˆ’pâ‚€)f(x)dx</div>
       </aside>
 
       <section class="main">
@@ -86,7 +86,7 @@
           <svg id="mainSvg" viewBox="0 0 980 420" preserveAspectRatio="xMidYMid meet"></svg>
         </div>
         <div class="two">
-          <div class="card plotCard"><div class="plotHead"><div class="plotTitle">CDF: jumps and smooth parts</div><div class="plotSub">F(x)=P(X≤x)</div></div><svg id="cdfSvg" viewBox="0 0 520 270" preserveAspectRatio="xMidYMid meet"></svg></div>
+          <div class="card plotCard"><div class="plotHead"><div class="plotTitle">CDF: jumps and smooth parts</div><div class="plotSub">F(x)=P(Xâ‰¤x)</div></div><svg id="cdfSvg" viewBox="0 0 520 270" preserveAspectRatio="xMidYMid meet"></svg></div>
           <div class="card plotCard"><div class="plotHead"><div class="plotTitle">Simulation: empirical law</div><div class="plotSub">samples reveal atoms by repeated ties</div></div><svg id="sampleSvg" viewBox="0 0 520 270" preserveAspectRatio="xMidYMid meet"></svg></div>
         </div>
         <div class="interpretation">
@@ -95,7 +95,7 @@
         </div>
       </section>
     </main>
-    <footer>Minimal interactive notebook — atoms, densities, and mixed laws.</footer>
+    <footer>Minimal interactive notebook â€” atoms, densities, and mixed laws.</footer>
   </div>
 
 <script>
@@ -125,12 +125,13 @@ function drawMain(){const svg=el('mainSvg'),p=params(),panel=css('--panel'),bord
  if(p.model!=='discrete'){let path='',area=''; for(let i=0;i<=260;i++){let x=-3+7*i/260,y=normPdf(x,p.mu,p.sigma)*(p.model==='mixed'?(1-p.p0):1),X=sx(x),Y=sy(y,maxY); path+=(i?'L':'M')+X+' '+Y; if(x>=p.L&&x<=p.R) area+=(area?'L':'M')+X+' '+Y} html+=`<path d="${path}" fill="none" stroke="${blue}" stroke-width="3"/>`; if(area){html+=`<path d="${area} L ${sx(p.R)} 350 L ${sx(p.L)} 350 Z" fill="${blue}" opacity=".18"/>`} }
  if(p.model==='discrete'||p.model==='mixed'){let atoms=p.model==='discrete'?discX.map((x,i)=>[x,discP[i]]):[[0,p.p0]]; atoms.forEach(([x,m])=>{let inside=x>=p.L&&x<=p.R; let y=sy(Math.min(m,maxY),maxY); html+=`<line x1="${sx(x)}" y1="350" x2="${sx(x)}" y2="${y}" stroke="${inside?warn:accent}" stroke-width="4"/><circle cx="${sx(x)}" cy="${y}" r="${10+18*m}" fill="${inside?warn:accent}" opacity=".88"/><text x="${sx(x)}" y="${y-18-18*m}" text-anchor="middle" fill="${text}" font-size="13" font-weight="800">${m.toFixed(2)}</text>`})}
  if(view==='sample'){samples.slice(0,800).forEach((x,i)=>{let jitter=((i*37)%41-20)/20; html+=`<circle cx="${sx(Math.max(-3,Math.min(4,x)))}" cy="${368+jitter*6}" r="2.1" fill="${x>=p.L&&x<=p.R?warn:mut}" opacity=".42"/>`})}
- html+=`<text x="70" y="382" fill="${mut}" font-size="12">−3</text><text x="900" y="382" fill="${mut}" font-size="12">4</text><text x="490" y="388" text-anchor="middle" fill="${mut}" font-size="12">outcome x</text><text x="55" y="48" fill="${mut}" font-size="12">mass / density</text>`; svg.innerHTML=html}
+ html+=`<text x="70" y="382" fill="${mut}" font-size="12">âˆ’3</text><text x="900" y="382" fill="${mut}" font-size="12">4</text><text x="490" y="388" text-anchor="middle" fill="${mut}" font-size="12">outcome x</text><text x="55" y="48" fill="${mut}" font-size="12">mass / density</text>`; svg.innerHTML=html}
 function drawCDF(){const svg=el('cdfSvg'),p=params(),panel=css('--panel'),border=css('--border'),text=css('--text'),accent=css('--accent'),warn=css('--warn'),mut=css('--muted'); let html=`<rect x="8" y="8" width="504" height="248" rx="18" fill="${panel}" stroke="${border}"/>`+axes(520,270,55,32,480,225); let path=''; for(let i=0;i<=360;i++){let x=-3+7*i/360,y=cdf(x),X=smallSx(x),Y=smallSy(y); path+=(i?'L':'M')+X+' '+Y} html+=`<path d="${path}" fill="none" stroke="${accent}" stroke-width="3"/>`; [params().L,params().R].forEach(x=>html+=`<line x1="${smallSx(x)}" y1="32" x2="${smallSx(x)}" y2="225" stroke="${warn}" stroke-dasharray="5 5"/>`); if(p.model==='discrete'||p.model==='mixed'){let atoms=p.model==='discrete'?discX: [0]; atoms.forEach(x=>{let y0=cdf(x-1e-5),y1=cdf(x); html+=`<line x1="${smallSx(x)}" y1="${smallSy(y0)}" x2="${smallSx(x)}" y2="${smallSy(y1)}" stroke="${warn}" stroke-width="3"/><circle cx="${smallSx(x)}" cy="${smallSy(y1)}" r="4" fill="${warn}"/>`})} html+=`<text x="67" y="48" fill="${mut}" font-size="12">1</text><text x="250" y="248" text-anchor="middle" fill="${mut}" font-size="12">CDF jumps exactly at atoms</text>`; svg.innerHTML=html}
 function drawSamples(){const svg=el('sampleSvg'),p=params(),panel=css('--panel'),border=css('--border'),accent=css('--accent'),warn=css('--warn'),blue=css('--blue'),mut=css('--muted'); let html=`<rect x="8" y="8" width="504" height="248" rx="18" fill="${panel}" stroke="${border}"/>`+axes(520,270,55,32,480,225); let bins=35,counts=Array(bins).fill(0); samples.forEach(x=>{let k=Math.floor((x+3)/7*bins); if(k>=0&&k<bins)counts[k]++}); let max=Math.max(1,...counts); for(let k=0;k<bins;k++){let x0=-3+7*k/bins,x1=-3+7*(k+1)/bins,h=counts[k]/max*170; let mid=(x0+x1)/2; html+=`<rect x="${smallSx(x0)+1}" y="${225-h}" width="${Math.max(1,smallSx(x1)-smallSx(x0)-2)}" height="${h}" rx="3" fill="${mid>=p.L&&mid<=p.R?warn:blue}" opacity=".55"/>`} if(p.model==='mixed'){let n0=samples.filter(x=>Math.abs(x)<1e-12).length; html+=`<circle cx="${smallSx(0)}" cy="${55}" r="${8+25*n0/p.N}" fill="${accent}" opacity=".9"/><text x="${smallSx(0)+18}" y="60" fill="${mut}" font-size="12">repeated zeroes: ${(n0/p.N).toFixed(2)}</text>`} html+=`<text x="250" y="248" text-anchor="middle" fill="${mut}" font-size="12">histogram of simulated outcomes</text>`; svg.innerHTML=html}
-function updateText(){const p=params(),prob=probEvent(); let kind=p.model==='discrete'?'purely discrete':p.model==='continuous'?'absolutely continuous':'mixed'; el('eqBox').innerHTML=p.model==='discrete'?`Discrete law:<br>μ = Σ pᵢ δₓᵢ<br>P(A) = sum of selected atoms`:p.model==='continuous'?`Absolutely continuous law:<br>μ(dx)=f(x)dx<br>P(A)=∫<sub>A</sub> f(x)dx`:`Mixed law:<br>μ = p₀δ₀ + (1−p₀)f(x)dx<br>P(A)=jump + area`; el('interpretText').innerHTML=`Current law is <strong>${kind}</strong>. For A=[${p.L.toFixed(2)}, ${p.R.toFixed(2)}], the app computes <strong>P(X∈A)≈${prob.toFixed(3)}</strong>. ${p.model==='mixed'?'The atom at zero contributes only when 0 lies inside A; the continuous tail contributes by area.':p.model==='continuous'?'Only area matters; changing a single point does not change probability.':'Only selected points matter; empty space between atoms carries no probability.'}`; el('noticeText').textContent=p.model==='mixed'?'Mixed laws force two visual languages at once: points can have probability, and intervals can also have probability by area.':p.model==='continuous'?'In a continuous law, height is density, not probability. Probability appears only after integrating over a region.':'In a discrete law, the CDF is flat between atoms because no probability lives in the gaps.'; el('mainSub').innerHTML=`P(X∈A) ≈ ${prob.toFixed(3)}`}
+function updateText(){const p=params(),prob=probEvent(); let kind=p.model==='discrete'?'purely discrete':p.model==='continuous'?'absolutely continuous':'mixed'; el('eqBox').innerHTML=p.model==='discrete'?`Discrete law:<br>Î¼ = Î£ páµ¢ Î´â‚“áµ¢<br>P(A) = sum of selected atoms`:p.model==='continuous'?`Absolutely continuous law:<br>Î¼(dx)=f(x)dx<br>P(A)=âˆ«<sub>A</sub> f(x)dx`:`Mixed law:<br>Î¼ = pâ‚€Î´â‚€ + (1âˆ’pâ‚€)f(x)dx<br>P(A)=jump + area`; el('interpretText').innerHTML=`Current law is <strong>${kind}</strong>. For A=[${p.L.toFixed(2)}, ${p.R.toFixed(2)}], the app computes <strong>P(XâˆˆA)â‰ˆ${prob.toFixed(3)}</strong>. ${p.model==='mixed'?'The atom at zero contributes only when 0 lies inside A; the continuous tail contributes by area.':p.model==='continuous'?'Only area matters; changing a single point does not change probability.':'Only selected points matter; empty space between atoms carries no probability.'}`; el('noticeText').textContent=p.model==='mixed'?'Mixed laws force two visual languages at once: points can have probability, and intervals can also have probability by area.':p.model==='continuous'?'In a continuous law, height is density, not probability. Probability appears only after integrating over a region.':'In a discrete law, the CDF is flat between atoms because no probability lives in the gaps.'; el('mainSub').innerHTML=`P(XâˆˆA) â‰ˆ ${prob.toFixed(3)}`}
 function drawAll(){updateLabels(); updateText(); drawMain(); drawCDF(); drawSamples()}
 resample(); drawAll();
 </script>
 </body>
 </html>
+

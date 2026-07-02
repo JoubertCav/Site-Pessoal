@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -97,7 +97,7 @@
     .theme .label{font-size:.92rem;color:var(--muted);min-width:70px}
     .switch{position:relative;width:70px;height:36px;border-radius:999px;background:var(--switch);border:1px solid var(--line)}
     .switch:before,.switch:after{position:absolute;top:50%;transform:translateY(-50%);font-size:13px;opacity:.75}
-    .switch:before{content:"☀";left:10px}.switch:after{content:"☾";right:10px}
+    .switch:before{content:"â˜€";left:10px}.switch:after{content:"â˜¾";right:10px}
     .knob{position:absolute;left:3px;top:3px;width:28px;height:28px;border-radius:50%;background:var(--thumb);border:1px solid var(--line);box-shadow:0 4px 12px rgba(0,0,0,.16);transition:left .25s ease;display:grid;place-items:center;font-size:13px}
     body.dark .knob{left:37px}
 
@@ -165,7 +165,7 @@
         <div class="pill">normal and tangent directions</div>
         <div id="theme" class="theme" role="button" tabindex="0">
           <span id="themeLabel" class="label">light mode</span>
-          <div class="switch"><div id="knob" class="knob">☀</div></div>
+          <div class="switch"><div id="knob" class="knob">â˜€</div></div>
         </div>
       </div>
     </header>
@@ -463,9 +463,9 @@
   const norm=v=>Math.hypot(...v);
   const dot=(a,b)=>a[0]*b[0]+a[1]*b[1];
   const fmt=x=>{
-    if(!Number.isFinite(x)) return '—';
+    if(!Number.isFinite(x)) return 'â€”';
     if(Math.abs(x)>9999) return x.toExponential(2);
-    return (x<0?'−':'')+Math.abs(x).toFixed(3);
+    return (x<0?'âˆ’':'')+Math.abs(x).toFixed(3);
   };
   const fmtVec=v=>`(${fmt(v[0])}, ${fmt(v[1])})`;
   function fill(input){
@@ -487,7 +487,7 @@
             <path d="M ${x2} ${y2} L ${hx1} ${hy1} M ${x2} ${y2} L ${hx2} ${hy2}" stroke="${color}" stroke-width="${w}" fill="none" stroke-linecap="round"/>`;
   }
   function matrixStr(g, nvec){
-    return `∇f(a) = ${fmtVec(g)}\n|∇f(a)| = ${fmt(norm(g))}\nN_graph = (${fmt(nvec[0])}, ${fmt(nvec[1])}, ${fmt(nvec[2])})`;
+    return `âˆ‡f(a) = ${fmtVec(g)}\n|âˆ‡f(a)| = ${fmt(norm(g))}\nN_graph = (${fmt(nvec[0])}, ${fmt(nvec[1])}, ${fmt(nvec[2])})`;
   }
 
   function setTheme(t){
@@ -495,7 +495,7 @@
     document.body.classList.toggle('dark',t==='dark');
     localStorage.setItem('gradient-tangent-level-sets-theme',t);
     el.themeLabel.textContent=t==='dark'?'dark mode':'light mode';
-    el.knob.textContent=t==='dark'?'☾':'☀';
+    el.knob.textContent=t==='dark'?'â˜¾':'â˜€';
     if(state.initialized) render();
   }
 
@@ -667,7 +667,7 @@
         x:[p[0],gradTip[0]], y:[p[1],gradTip[1]],
         marker:{size:[0,7], color:css('--gold')},
         line:{color:css('--gold'), width:4},
-        text:['','∇f(a)'], textposition:'top center',
+        text:['','âˆ‡f(a)'], textposition:'top center',
         textfont:{size:12,color:css('--gold')},
         hoverinfo:'skip', showlegend:false
       },
@@ -795,7 +795,7 @@
       <line x1="${X(state.theta)}" y1="${plot.y}" x2="${X(state.theta)}" y2="${plot.y+plot.h}" stroke="${css('--gold')}" stroke-dasharray="6 6" stroke-width="2.4"/>
       <circle cx="${X(state.theta)}" cy="${Y(C.Du)}" r="6" fill="${css('--gold')}"/>
       ${text(X(state.theta)+8,Y(C.Du)-8,'current slope',{size:14,fill:css('--gold'),weight:700})}
-      ${text(plot.x+plot.w-10,plot.y+plot.h+28,'θ',{size:15,fill:css('--muted'),weight:700,anchor:'end'})}
+      ${text(plot.x+plot.w-10,plot.y+plot.h+28,'Î¸',{size:15,fill:css('--muted'),weight:700,anchor:'end'})}
       ${text(plot.x+12,plot.y+26,'D_u f(a)',{size:15,fill:css('--muted'),weight:700})}
     `;
   }
@@ -827,20 +827,20 @@
 
       <circle cx="${center.x}" cy="${center.y}" r="6" fill="${css('--bad')}"/>
       ${text(center.x+8,center.y-8,'a on the level set',{size:15,fill:css('--bad'),weight:700})}
-      ${text(gradTip.x+8,gradTip.y-8,'∇f(a)',{size:15,fill:css('--gold'),weight:700})}
+      ${text(gradTip.x+8,gradTip.y-8,'âˆ‡f(a)',{size:15,fill:css('--gold'),weight:700})}
       ${text(tanTip.x+8,tanTip.y+18,'v tangent', {size:15,fill:css('--violet'),weight:700})}
       ${text(dirTip.x+8,dirTip.y-8,'u', {size:15,fill:css('--model'),weight:700})}
-      ${text(projTip.x+8,projTip.y+18,'projection of u on ∇f', {size:15,fill:css('--good'),weight:700})}
+      ${text(projTip.x+8,projTip.y+18,'projection of u on âˆ‡f', {size:15,fill:css('--good'),weight:700})}
 
       <path d="M ${center.x} ${center.y} L ${center.x+26*tdir[0]} ${center.y-26*tdir[1]} L ${center.x+26*(tdir[0]+gdir[0])} ${center.y-26*(tdir[1]+gdir[1])}" fill="none" stroke="${css('--line')}" stroke-width="2"/>
       <rect x="640" y="100" width="232" height="220" rx="22" fill="${css('--card')}" stroke="${css('--line')}"/>
       ${text(660,136,'What the picture says',{size:20,weight:700,family:'Georgia, serif'})}
-      ${text(660,172,'• contour tangent v satisfies', {size:14,fill:css('--muted'),weight:700})}
-      ${text(682,196,'∇f(a) · v = 0', {size:18,fill:css('--violet'),weight:700,family:'Georgia, serif'})}
-      ${text(660,234,'• directional slope along u is', {size:14,fill:css('--muted'),weight:700})}
-      ${text(682,258,'D_u f(a) = ∇f(a) · u', {size:18,fill:css('--model'),weight:700,family:'Georgia, serif'})}
-      ${text(660,296,'• maximal slope occurs when', {size:14,fill:css('--muted'),weight:700})}
-      ${text(682,320,'u is parallel to ∇f(a)', {size:18,fill:css('--gold'),weight:700,family:'Georgia, serif'})}
+      ${text(660,172,'â€¢ contour tangent v satisfies', {size:14,fill:css('--muted'),weight:700})}
+      ${text(682,196,'âˆ‡f(a) Â· v = 0', {size:18,fill:css('--violet'),weight:700,family:'Georgia, serif'})}
+      ${text(660,234,'â€¢ directional slope along u is', {size:14,fill:css('--muted'),weight:700})}
+      ${text(682,258,'D_u f(a) = âˆ‡f(a) Â· u', {size:18,fill:css('--model'),weight:700,family:'Georgia, serif'})}
+      ${text(660,296,'â€¢ maximal slope occurs when', {size:14,fill:css('--muted'),weight:700})}
+      ${text(682,320,'u is parallel to âˆ‡f(a)', {size:18,fill:css('--gold'),weight:700,family:'Georgia, serif'})}
     `;
   }
 
@@ -857,11 +857,11 @@
     el.formulaBox.innerHTML=C.fobj.formula;
     el.noticeBox.innerHTML=C.fobj.notice;
 
-    el.gradMetric.textContent=`∇f(a) ≈ ${fmtVec(C.g)} ;  |∇f(a)| ≈ ${fmt(norm(C.g))}`;
-    el.dirMetric.textContent=`u ≈ ${fmtVec(C.u)} ;  D_u f(a) ≈ ${fmt(C.Du)}`;
-    el.planeMetric.textContent=`z ≈ ${fmt(C.z0)} + ${fmt(C.g[0])}(x-${fmt(C.a[0])}) + ${fmt(C.g[1])}(y-${fmt(C.a[1])})`;
-    el.tanMetric.textContent=`one tangent direction: ${fmtVec(C.tvec)} ;  dot ≈ ${fmt(dot(C.g,C.tvec))}`;
-    el.normalMetric.textContent=`N ≈ (${fmt(C.ngraph[0])}, ${fmt(C.ngraph[1])}, 1.000)`;
+    el.gradMetric.textContent=`âˆ‡f(a) â‰ˆ ${fmtVec(C.g)} ;  |âˆ‡f(a)| â‰ˆ ${fmt(norm(C.g))}`;
+    el.dirMetric.textContent=`u â‰ˆ ${fmtVec(C.u)} ;  D_u f(a) â‰ˆ ${fmt(C.Du)}`;
+    el.planeMetric.textContent=`z â‰ˆ ${fmt(C.z0)} + ${fmt(C.g[0])}(x-${fmt(C.a[0])}) + ${fmt(C.g[1])}(y-${fmt(C.a[1])})`;
+    el.tanMetric.textContent=`one tangent direction: ${fmtVec(C.tvec)} ;  dot â‰ˆ ${fmt(dot(C.g,C.tvec))}`;
+    el.normalMetric.textContent=`N â‰ˆ (${fmt(C.ngraph[0])}, ${fmt(C.ngraph[1])}, 1.000)`;
   }
 
   function render(){
@@ -917,3 +917,4 @@
 </script>
 </body>
 </html>
+

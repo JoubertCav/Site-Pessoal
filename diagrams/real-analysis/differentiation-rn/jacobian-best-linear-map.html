@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -97,7 +97,7 @@
     .theme .label{font-size:.92rem;color:var(--muted);min-width:70px}
     .switch{position:relative;width:70px;height:36px;border-radius:999px;background:var(--switch);border:1px solid var(--line)}
     .switch:before,.switch:after{position:absolute;top:50%;transform:translateY(-50%);font-size:13px;opacity:.75}
-    .switch:before{content:"☀";left:10px}.switch:after{content:"☾";right:10px}
+    .switch:before{content:"â˜€";left:10px}.switch:after{content:"â˜¾";right:10px}
     .knob{position:absolute;left:3px;top:3px;width:28px;height:28px;border-radius:50%;background:var(--thumb);border:1px solid var(--line);box-shadow:0 4px 12px rgba(0,0,0,.16);transition:left .25s ease;display:grid;place-items:center;font-size:13px}
     body.dark .knob{left:37px}
 
@@ -169,7 +169,7 @@
         <div class="pill">chain rule in \(\mathbb R^n\)</div>
         <div id="theme" class="theme" role="button" tabindex="0">
           <span id="themeLabel" class="label">light mode</span>
-          <div class="switch"><div id="knob" class="knob">☀</div></div>
+          <div class="switch"><div id="knob" class="knob">â˜€</div></div>
         </div>
       </div>
     </header>
@@ -525,9 +525,9 @@
   const lin=(x,a,b,c,d)=>c+(x-a)*(d-c)/(b-a);
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   const fmt=x=>{
-    if(!Number.isFinite(x)) return '—';
+    if(!Number.isFinite(x)) return 'â€”';
     if(Math.abs(x)>9999) return x.toExponential(2);
-    return (x<0?'−':'')+Math.abs(x).toFixed(3);
+    return (x<0?'âˆ’':'')+Math.abs(x).toFixed(3);
   };
   const fmtVec=v=>`(${fmt(v[0])}, ${fmt(v[1])})`;
   const matVec=(A,v)=>[A[0][0]*v[0]+A[0][1]*v[1], A[1][0]*v[0]+A[1][1]*v[1]];
@@ -556,7 +556,7 @@
             <path d="M ${x2} ${y2} L ${hx1} ${hy1} M ${x2} ${y2} L ${hx2} ${hy2}" stroke="${color}" stroke-width="${w}" fill="none" stroke-linecap="round"/>`;
   }
   function matString(A){
-    return `⎡ ${fmt(A[0][0]).padStart(6,' ')}   ${fmt(A[0][1]).padStart(6,' ')} ⎤\n⎣ ${fmt(A[1][0]).padStart(6,' ')}   ${fmt(A[1][1]).padStart(6,' ')} ⎦`;
+    return `âŽ¡ ${fmt(A[0][0]).padStart(6,' ')}   ${fmt(A[0][1]).padStart(6,' ')} âŽ¤\nâŽ£ ${fmt(A[1][0]).padStart(6,' ')}   ${fmt(A[1][1]).padStart(6,' ')} âŽ¦`;
   }
 
   function setTheme(t){
@@ -564,7 +564,7 @@
     document.body.classList.toggle('dark',t==='dark');
     localStorage.setItem('jacobian-best-linear-map-theme',t);
     el.themeLabel.textContent=t==='dark'?'dark mode':'light mode';
-    el.knob.textContent=t==='dark'?'☾':'☀';
+    el.knob.textContent=t==='dark'?'â˜¾':'â˜€';
     if(state.initialized) render();
   }
 
@@ -688,7 +688,7 @@
         bgcolor:'rgba(0,0,0,0)',
         xaxis:{title:'coordinate 1', color:css('--muted'), gridcolor:css('--grid'), zerolinecolor:css('--line'), showbackground:true, backgroundcolor:axisBg},
         yaxis:{title:'coordinate 2', color:css('--muted'), gridcolor:css('--grid'), zerolinecolor:css('--line'), showbackground:true, backgroundcolor:axisBg},
-        zaxis:{title:'domain → image', color:css('--muted'), gridcolor:css('--grid'), zerolinecolor:css('--line'), showbackground:true, backgroundcolor:axisBg, range:[-0.1,2.05], tickvals:[0,H,H+0.04], ticktext:['domain','true image','linear image']},
+        zaxis:{title:'domain â†’ image', color:css('--muted'), gridcolor:css('--grid'), zerolinecolor:css('--line'), showbackground:true, backgroundcolor:axisBg, range:[-0.1,2.05], tickvals:[0,H,H+0.04], ticktext:['domain','true image','linear image']},
         aspectmode:'manual',
         aspectratio:{x:1.05,y:1.0,z:0.72},
         camera:{eye:{x:1.65,y:1.45,z:0.94}}
@@ -812,8 +812,8 @@
 
       <circle cx="${X(C.Fa[0])}" cy="${Y(C.Fa[1])}" r="6" fill="${css('--gold')}"/>
       ${text(X(C.Fa[0])+8,Y(C.Fa[1])-8,'F(a)',{size:15,fill:css('--gold'),weight:700})}
-      ${text(X(C.Fa[0]+c1[0])+6,Y(C.Fa[1]+c1[1])-6,'column 1 = J(a)e₁',{size:14,fill:css('--good'),weight:700})}
-      ${text(X(C.Fa[0]+c2[0])+6,Y(C.Fa[1]+c2[1])+16,'column 2 = J(a)e₂',{size:14,fill:css('--violet'),weight:700})}
+      ${text(X(C.Fa[0]+c1[0])+6,Y(C.Fa[1]+c1[1])-6,'column 1 = J(a)eâ‚',{size:14,fill:css('--good'),weight:700})}
+      ${text(X(C.Fa[0]+c2[0])+6,Y(C.Fa[1]+c2[1])+16,'column 2 = J(a)eâ‚‚',{size:14,fill:css('--violet'),weight:700})}
       ${text(X(C.pred[0])+6,Y(C.pred[1])-8,'J(a)h',{size:14,fill:css('--model'),weight:700})}
       ${text(X(C.actual[0])+6,Y(C.actual[1])+16,'actual increment',{size:14,fill:css('--bad'),weight:700})}
 
@@ -856,7 +856,7 @@
       <path d="${path(data,X,Y)}" fill="none" stroke="${css('--bad')}" stroke-width="3.4"/>
       <line x1="${X(state.t)}" y1="${plot.y}" x2="${X(state.t)}" y2="${plot.y+plot.h}" stroke="${css('--gold')}" stroke-dasharray="6 6" stroke-width="2.2"/>
       ${text(X(state.t)+8,plot.y+26,'selected t',{size:14,fill:css('--gold'),weight:700})}
-      ${text(plot.x+plot.w-8,plot.y+plot.h+28,'t → 0',{size:14,fill:css('--muted'),weight:700,anchor:'end'})}
+      ${text(plot.x+plot.w-8,plot.y+plot.h+28,'t â†’ 0',{size:14,fill:css('--muted'),weight:700,anchor:'end'})}
     `;
   }
 
@@ -894,8 +894,8 @@
       ${text(132,370,'Chain rule matrix identity',{size:22,weight:700,family:'Georgia, serif'})}
       ${text(132,406,`J_F(a) = ${fmtVec([C.J[0][0],C.J[0][1]])} / ${fmtVec([C.J[1][0],C.J[1][1]])}`,{size:14,fill:css('--muted'),weight:700})}
       ${text(132,430,`J_G(F(a))J_F(a) h = ${fmtVec(direct)}`,{size:15,fill:css('--good'),weight:700})}
-      ${text(512,430,`actual composed increment ≈ ${fmtVec(C.compInc)}`,{size:15,fill:css('--bad'),weight:700})}
-      ${text(132,455,'\u2192 the composition of the two Jacobians is the best first-order map for G∘F at a.',{size:15,fill:css('--muted'),weight:700})}
+      ${text(512,430,`actual composed increment â‰ˆ ${fmtVec(C.compInc)}`,{size:15,fill:css('--bad'),weight:700})}
+      ${text(132,455,'\u2192 the composition of the two Jacobians is the best first-order map for Gâˆ˜F at a.',{size:15,fill:css('--muted'),weight:700})}
     `;
   }
 
@@ -968,11 +968,11 @@
     el.formulaBox.innerHTML=C.map.formula + '<br>' + C.outer.formula;
     el.noticeBox.innerHTML=C.map.notice;
 
-    el.linMetric.textContent=`J_F(a)h ≈ ${fmtVec(C.Jh)}`;
-    el.actualMetric.textContent=`F(a+h)-F(a) ≈ ${fmtVec(C.inc)}`;
-    el.errorMetric.textContent=`remainder ≈ ${fmtVec(C.rem)} ;  ratio ≈ ${fmt(norm(C.rem)/norm(C.h))}`;
-    el.detMetric.textContent=`det J_F(a) ≈ ${fmt(det(C.J))}`;
-    el.chainMetric.textContent=`product error ratio ≈ ${fmt(norm(C.compRem)/norm(C.h))}`;
+    el.linMetric.textContent=`J_F(a)h â‰ˆ ${fmtVec(C.Jh)}`;
+    el.actualMetric.textContent=`F(a+h)-F(a) â‰ˆ ${fmtVec(C.inc)}`;
+    el.errorMetric.textContent=`remainder â‰ˆ ${fmtVec(C.rem)} ;  ratio â‰ˆ ${fmt(norm(C.rem)/norm(C.h))}`;
+    el.detMetric.textContent=`det J_F(a) â‰ˆ ${fmt(det(C.J))}`;
+    el.chainMetric.textContent=`product error ratio â‰ˆ ${fmt(norm(C.compRem)/norm(C.h))}`;
   }
 
   function render(){
@@ -1034,3 +1034,4 @@
 </script>
 </body>
 </html>
+

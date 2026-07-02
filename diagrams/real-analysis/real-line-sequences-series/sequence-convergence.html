@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -119,7 +119,7 @@
 <div class="wrap">
 <header>
   <div>
-    <div class="eyebrow">Real Analysis • Sequences</div>
+    <div class="eyebrow">Real Analysis â€¢ Sequences</div>
     <h1>Sequence convergence</h1>
     <p class="subtitle">The limit is not where the first terms are. It is the point around which every sufficiently late tail is trapped.</p>
   </div>
@@ -131,28 +131,28 @@
 
 <div class="grid">
   <aside class="card pad control-card">
-    <div class="card-title"><h2>Control object</h2><span class="pill">ε–N</span></div>
+    <div class="card-title"><h2>Control object</h2><span class="pill">Îµâ€“N</span></div>
     <div class="formula">
       <div><b>Definition.</b></div>
       <div style="margin-top:6px">
-        x<sub>n</sub> → L ⇔ ∀ε &gt; 0, ∃N ∈ ℕ : n ≥ N ⇒ |x<sub>n</sub> − L| &lt; ε.
+        x<sub>n</sub> â†’ L â‡” âˆ€Îµ &gt; 0, âˆƒN âˆˆ â„• : n â‰¥ N â‡’ |x<sub>n</sub> âˆ’ L| &lt; Îµ.
       </div>
     </div>
     <div class="controls">
       <label>
         <span class="rowline"><span>Sequence</span><span class="pill" id="seqLimitPill">L = 0</span></span>
         <select id="sequenceSelect">
-          <option value="inv">xₙ = 1/n</option>
-          <option value="altinv">xₙ = (−1)ⁿ/n</option>
-          <option value="shift">xₙ = 1 + 2/n</option>
-          <option value="sinroot">xₙ = sin(n)/√n</option>
-          <option value="osc">xₙ = (−1)ⁿ</option>
-          <option value="harmonic">xₙ = 1 + 1/2 + ··· + 1/n</option>
+          <option value="inv">xâ‚™ = 1/n</option>
+          <option value="altinv">xâ‚™ = (âˆ’1)â¿/n</option>
+          <option value="shift">xâ‚™ = 1 + 2/n</option>
+          <option value="sinroot">xâ‚™ = sin(n)/âˆšn</option>
+          <option value="osc">xâ‚™ = (âˆ’1)â¿</option>
+          <option value="harmonic">xâ‚™ = 1 + 1/2 + Â·Â·Â· + 1/n</option>
         </select>
       </label>
 
       <label>
-        <span class="rowline"><span>Epsilon radius</span><span class="pill" id="epsText">ε = 0.25</span></span>
+        <span class="rowline"><span>Epsilon radius</span><span class="pill" id="epsText">Îµ = 0.25</span></span>
         <input id="epsRange" type="range" min="0.03" max="1.5" step="0.01" value="0.25" />
       </label>
 
@@ -172,14 +172,14 @@
       </div>
 
       <div class="notice" id="definitionNotice">
-        Choose ε. The task is to move N far enough so the whole tail lies inside the horizontal ε-band around L.
+        Choose Îµ. The task is to move N far enough so the whole tail lies inside the horizontal Îµ-band around L.
       </div>
     </div>
   </aside>
 
   <main class="card">
     <nav class="tabs" aria-label="Modules">
-      <button class="tab active" data-tab="tail">ε–N tail</button>
+      <button class="tab active" data-tab="tail">Îµâ€“N tail</button>
       <button class="tab" data-tab="unique">Uniqueness</button>
       <button class="tab" data-tab="bounded">Boundedness</button>
       <button class="tab" data-tab="algebra">Algebra of limits</button>
@@ -191,17 +191,17 @@
         <div class="card plot-card" style="box-shadow:none">
           <div class="module-head">
             <div>
-              <div class="card-title" style="margin-bottom:4px"><h3>Main diagram: tail in the ε-tube</h3></div>
-              <div class="small">Blue points are the finite beginning. Green points are the selected tail. Red points violate the ε condition.</div>
+              <div class="card-title" style="margin-bottom:4px"><h3>Main diagram: tail in the Îµ-tube</h3></div>
+              <div class="small">Blue points are the finite beginning. Green points are the selected tail. Red points violate the Îµ condition.</div>
             </div>
-            <span class="pill" id="tailStatus">checking…</span>
+            <span class="pill" id="tailStatus">checkingâ€¦</span>
           </div>
           <svg id="sequencePlot" viewBox="0 0 820 430" role="img" aria-label="Sequence convergence plot"></svg>
           <div class="legend">
             <span><span class="dot blue"></span>beginning n &lt; N</span>
-            <span><span class="dot"></span>tail inside ε</span>
-            <span><span class="dot bad"></span>tail outside ε</span>
-            <span><span class="dot warn"></span>limit L and ε-band</span>
+            <span><span class="dot"></span>tail inside Îµ</span>
+            <span><span class="dot bad"></span>tail outside Îµ</span>
+            <span><span class="dot warn"></span>limit L and Îµ-band</span>
           </div>
         </div>
         <div class="stack">
@@ -210,9 +210,9 @@
             <svg id="numberLinePlot" viewBox="0 0 420 210" role="img" aria-label="Number line tail diagram"></svg>
           </div>
           <div class="mini-grid">
-            <div class="stat"><b id="computedN">—</b><span class="small">sufficient N from the formula or a safe bound</span></div>
-            <div class="stat"><b id="maxDeviation">—</b><span class="small">largest displayed tail deviation</span></div>
-            <div class="stat"><b id="tailMeaning">—</b><span class="small">current ε–N statement</span></div>
+            <div class="stat"><b id="computedN">â€”</b><span class="small">sufficient N from the formula or a safe bound</span></div>
+            <div class="stat"><b id="maxDeviation">â€”</b><span class="small">largest displayed tail deviation</span></div>
+            <div class="stat"><b id="tailMeaning">â€”</b><span class="small">current Îµâ€“N statement</span></div>
           </div>
           <div class="callout" id="sequenceInterpretation"></div>
         </div>
@@ -225,9 +225,9 @@
           <div class="module-head">
             <div>
               <div class="card-title" style="margin-bottom:4px"><h3>Uniqueness of limits</h3></div>
-              <div class="small">If two proposed limits are distinct, choose ε smaller than half their distance. Their neighborhoods cannot share the same eventual tail.</div>
+              <div class="small">If two proposed limits are distinct, choose Îµ smaller than half their distance. Their neighborhoods cannot share the same eventual tail.</div>
             </div>
-            <span class="pill" id="uniquePill">ε &lt; |A − B|/2</span>
+            <span class="pill" id="uniquePill">Îµ &lt; |A âˆ’ B|/2</span>
           </div>
           <svg id="uniquenessPlot" viewBox="0 0 820 355" role="img" aria-label="Uniqueness of limits diagram"></svg>
         </div>
@@ -240,14 +240,14 @@
             </label>
             <div style="height:12px"></div>
             <label>
-              <span class="rowline"><span>Neighborhood radius</span><span class="pill" id="uniqueEpsText">η = 0.25</span></span>
+              <span class="rowline"><span>Neighborhood radius</span><span class="pill" id="uniqueEpsText">Î· = 0.25</span></span>
               <input id="uniqueEpsRange" type="range" min="0.03" max="1" step="0.01" value="0.25" />
             </label>
           </div>
           <div class="formula">
-            If x<sub>n</sub> → A and x<sub>n</sub> → B with A ≠ B, choose η = |A − B|/3.<br>
-            Eventually |x<sub>n</sub>−A| &lt; η and |x<sub>n</sub>−B| &lt; η.<br>
-            Then |A−B| ≤ |A−x<sub>n</sub>| + |x<sub>n</sub>−B| &lt; 2η &lt; |A−B|, contradiction.
+            If x<sub>n</sub> â†’ A and x<sub>n</sub> â†’ B with A â‰  B, choose Î· = |A âˆ’ B|/3.<br>
+            Eventually |x<sub>n</sub>âˆ’A| &lt; Î· and |x<sub>n</sub>âˆ’B| &lt; Î·.<br>
+            Then |Aâˆ’B| â‰¤ |Aâˆ’x<sub>n</sub>| + |x<sub>n</sub>âˆ’B| &lt; 2Î· &lt; |Aâˆ’B|, contradiction.
           </div>
           <div class="notice" id="uniqueNotice"></div>
         </div>
@@ -259,10 +259,10 @@
         <div class="card plot-card" style="box-shadow:none">
           <div class="module-head">
             <div>
-              <div class="card-title" style="margin-bottom:4px"><h3>Convergent sequence ⇒ bounded</h3></div>
+              <div class="card-title" style="margin-bottom:4px"><h3>Convergent sequence â‡’ bounded</h3></div>
               <div class="small">The tail is trapped near L. The finite beginning may be wild, but finite sets have a maximum absolute size.</div>
             </div>
-            <span class="pill" id="boundPill">M = —</span>
+            <span class="pill" id="boundPill">M = â€”</span>
           </div>
           <svg id="boundedPlot" viewBox="0 0 820 380" role="img" aria-label="Boundedness of convergent sequence plot"></svg>
         </div>
@@ -280,9 +280,9 @@
             </label>
           </div>
           <div class="formula">
-            x<sub>n</sub> → L ⇒ choose N with |x<sub>n</sub>−L| &lt; 1 for n ≥ N.<br>
-            Hence |x<sub>n</sub>| ≤ |L|+1 eventually.<br>
-            The first N−1 terms are finite, so one bound covers all terms.
+            x<sub>n</sub> â†’ L â‡’ choose N with |x<sub>n</sub>âˆ’L| &lt; 1 for n â‰¥ N.<br>
+            Hence |x<sub>n</sub>| â‰¤ |L|+1 eventually.<br>
+            The first Nâˆ’1 terms are finite, so one bound covers all terms.
           </div>
           <div class="notice" id="boundedNotice"></div>
         </div>
@@ -297,7 +297,7 @@
               <div class="card-title" style="margin-bottom:4px"><h3>Limit algebra lab</h3></div>
               <div class="small">Two convergent sequences are combined term-by-term. The operation is continuous, so the combined sequence converges to the combined limits.</div>
             </div>
-            <span class="pill" id="algebraPill">zₙ → ?</span>
+            <span class="pill" id="algebraPill">zâ‚™ â†’ ?</span>
           </div>
           <svg id="algebraPlot" viewBox="0 0 820 410" role="img" aria-label="Algebra of limits plot"></svg>
         </div>
@@ -307,14 +307,14 @@
             <label>
               <span>Operation on sequences</span>
               <select id="operationSelect">
-                <option value="sum">zₙ = xₙ + yₙ</option>
-                <option value="diff">zₙ = xₙ − yₙ</option>
-                <option value="prod">zₙ = xₙyₙ</option>
-                <option value="quot">zₙ = xₙ/yₙ</option>
+                <option value="sum">zâ‚™ = xâ‚™ + yâ‚™</option>
+                <option value="diff">zâ‚™ = xâ‚™ âˆ’ yâ‚™</option>
+                <option value="prod">zâ‚™ = xâ‚™yâ‚™</option>
+                <option value="quot">zâ‚™ = xâ‚™/yâ‚™</option>
               </select>
             </label>
             <div style="height:12px"></div>
-            <label class="switch"><input id="showXY" type="checkbox" checked /> show xₙ and yₙ</label>
+            <label class="switch"><input id="showXY" type="checkbox" checked /> show xâ‚™ and yâ‚™</label>
           </div>
           <div class="formula" id="algebraFormula"></div>
           <table class="truth-table" aria-label="Limit algebra table">
@@ -333,7 +333,7 @@
             <div class="card-title"><h3>What to notice</h3><span class="pill">visual logic</span></div>
             <div class="exam">
               <div><b>Convergence is eventual.</b> Finitely many early terms do not matter.</div>
-              <div><b>ε is chosen first.</b> N may depend on ε.</div>
+              <div><b>Îµ is chosen first.</b> N may depend on Îµ.</div>
               <div><b>The tail must fit entirely.</b> It is not enough to have infinitely many terms near L.</div>
               <div><b>Uniqueness is geometric.</b> Two distinct limits have disjoint small neighborhoods.</div>
               <div><b>Boundedness follows from tail + finite beginning.</b></div>
@@ -342,8 +342,8 @@
           <div class="card pad" style="box-shadow:none">
             <div class="card-title"><h3>Common mistakes</h3></div>
             <div class="exam">
-              <div>Do not write ∃ε. The definition requires ∀ε &gt; 0.</div>
-              <div>Do not let N depend on n. It depends on ε.</div>
+              <div>Do not write âˆƒÎµ. The definition requires âˆ€Îµ &gt; 0.</div>
+              <div>Do not let N depend on n. It depends on Îµ.</div>
               <div>Do not prove only a subsequence converges. The whole tail must be trapped.</div>
               <div>Do not confuse bounded with convergent. Every convergent sequence is bounded, but not conversely.</div>
             </div>
@@ -352,23 +352,23 @@
         <div class="stack">
           <div class="formula">
             <b>Exam core.</b><br><br>
-            x<sub>n</sub> → L ⇔ ∀ε&gt;0, ∃N∈ℕ : n≥N ⇒ |x<sub>n</sub>−L|&lt;ε.<br><br>
-            If x<sub>n</sub>→L and x<sub>n</sub>→M, then L=M.<br><br>
-            If x<sub>n</sub>→L, then (x<sub>n</sub>) is bounded.<br><br>
-            If x<sub>n</sub>→a and y<sub>n</sub>→b, then:<br>
-            x<sub>n</sub>±y<sub>n</sub>→a±b,<br>
-            x<sub>n</sub>y<sub>n</sub>→ab,<br>
-            x<sub>n</sub>/y<sub>n</sub>→a/b if b≠0 and y<sub>n</sub>≠0 eventually.
+            x<sub>n</sub> â†’ L â‡” âˆ€Îµ&gt;0, âˆƒNâˆˆâ„• : nâ‰¥N â‡’ |x<sub>n</sub>âˆ’L|&lt;Îµ.<br><br>
+            If x<sub>n</sub>â†’L and x<sub>n</sub>â†’M, then L=M.<br><br>
+            If x<sub>n</sub>â†’L, then (x<sub>n</sub>) is bounded.<br><br>
+            If x<sub>n</sub>â†’a and y<sub>n</sub>â†’b, then:<br>
+            x<sub>n</sub>Â±y<sub>n</sub>â†’aÂ±b,<br>
+            x<sub>n</sub>y<sub>n</sub>â†’ab,<br>
+            x<sub>n</sub>/y<sub>n</sub>â†’a/b if bâ‰ 0 and y<sub>n</sub>â‰ 0 eventually.
           </div>
           <div class="notice">
-            To prove convergence in an exam, start from |x<sub>n</sub>−L|, dominate it by a simple expression, and choose N so the expression is smaller than ε.
+            To prove convergence in an exam, start from |x<sub>n</sub>âˆ’L|, dominate it by a simple expression, and choose N so the expression is smaller than Îµ.
           </div>
         </div>
       </div>
     </section>
   </main>
 </div>
-<footer>Single-file HTML app • no backend • diagrams update instantly</footer>
+<footer>Single-file HTML app â€¢ no backend â€¢ diagrams update instantly</footer>
 </div>
 
 <script>
@@ -385,52 +385,52 @@
 
   const seqs = {
     inv: {
-      name:'xₙ = 1/n', limit:0, converges:true,
+      name:'xâ‚™ = 1/n', limit:0, converges:true,
       formula:'x<sub>n</sub> = 1/n',
       f:n=>1/n,
       sufficientN:eps=>Math.floor(1/eps)+1,
-      text: eps => `For xₙ = 1/n, |xₙ−0| = 1/n. It is enough to choose N > 1/ε.`,
+      text: eps => `For xâ‚™ = 1/n, |xâ‚™âˆ’0| = 1/n. It is enough to choose N > 1/Îµ.`,
     },
     altinv: {
-      name:'xₙ = (−1)ⁿ/n', limit:0, converges:true,
-      formula:'x<sub>n</sub> = (−1)<sup>n</sup>/n',
+      name:'xâ‚™ = (âˆ’1)â¿/n', limit:0, converges:true,
+      formula:'x<sub>n</sub> = (âˆ’1)<sup>n</sup>/n',
       f:n=>Math.pow(-1,n)/n,
       sufficientN:eps=>Math.floor(1/eps)+1,
-      text: eps => `The sign oscillates, but the amplitude is 1/n. The whole oscillating tail is eventually inside every ε-band around 0.`,
+      text: eps => `The sign oscillates, but the amplitude is 1/n. The whole oscillating tail is eventually inside every Îµ-band around 0.`,
     },
     shift: {
-      name:'xₙ = 1 + 2/n', limit:1, converges:true,
+      name:'xâ‚™ = 1 + 2/n', limit:1, converges:true,
       formula:'x<sub>n</sub> = 1 + 2/n',
       f:n=>1+2/n,
       sufficientN:eps=>Math.floor(2/eps)+1,
-      text: eps => `Here |xₙ−1| = 2/n. It is enough to choose N > 2/ε.`,
+      text: eps => `Here |xâ‚™âˆ’1| = 2/n. It is enough to choose N > 2/Îµ.`,
     },
     sinroot: {
-      name:'xₙ = sin(n)/√n', limit:0, converges:true,
-      formula:'x<sub>n</sub> = sin(n)/√n',
+      name:'xâ‚™ = sin(n)/âˆšn', limit:0, converges:true,
+      formula:'x<sub>n</sub> = sin(n)/âˆšn',
       f:n=>Math.sin(n)/Math.sqrt(n),
       sufficientN:eps=>Math.floor(1/(eps*eps))+1,
-      text: eps => `Since |sin n| ≤ 1, |xₙ| ≤ 1/√n. A safe choice is N > 1/ε².`,
+      text: eps => `Since |sin n| â‰¤ 1, |xâ‚™| â‰¤ 1/âˆšn. A safe choice is N > 1/ÎµÂ².`,
     },
     osc: {
-      name:'xₙ = (−1)ⁿ', limit:0, converges:false,
-      formula:'x<sub>n</sub> = (−1)<sup>n</sup>',
+      name:'xâ‚™ = (âˆ’1)â¿', limit:0, converges:false,
+      formula:'x<sub>n</sub> = (âˆ’1)<sup>n</sup>',
       f:n=>Math.pow(-1,n),
       sufficientN:eps=>null,
-      text: eps => `This sequence has two permanent tails: even terms at 1 and odd terms at −1. No single L traps every tail for small ε.`,
+      text: eps => `This sequence has two permanent tails: even terms at 1 and odd terms at âˆ’1. No single L traps every tail for small Îµ.`,
     },
     harmonic: {
-      name:'xₙ = Hₙ', limit:null, converges:false,
-      formula:'x<sub>n</sub> = 1 + 1/2 + ··· + 1/n',
+      name:'xâ‚™ = Hâ‚™', limit:null, converges:false,
+      formula:'x<sub>n</sub> = 1 + 1/2 + Â·Â·Â· + 1/n',
       f:n=>{let s=0; for(let k=1;k<=n;k++) s+=1/k; return s;},
       sufficientN:eps=>null,
-      text: eps => `The harmonic partial sums keep drifting upward. Boundedness fails, so convergence is impossible in ℝ.`,
+      text: eps => `The harmonic partial sums keep drifting upward. Boundedness fails, so convergence is impossible in â„.`,
     }
   };
 
   function css(name){ return getComputedStyle(root).getPropertyValue(name).trim(); }
   function fmt(x,d=3){
-    if(x === null || x === undefined || Number.isNaN(x)) return '—';
+    if(x === null || x === undefined || Number.isNaN(x)) return 'â€”';
     if(Math.abs(x)>999) return x.toExponential(2);
     return Number(x).toFixed(d).replace(/\.?0+$/,'');
   }
@@ -451,7 +451,7 @@
   function circle(cx,cy,r,attrs={}){ return svgEl('circle',{cx,cy,r,...attrs}); }
   function path(d,attrs={}){ return svgEl('path',{d,...attrs}); }
 
-  function drawAxes(svg, W,H, margin, xMax, yMin, yMax, xLabel='n', yLabel='xₙ'){
+  function drawAxes(svg, W,H, margin, xMax, yMin, yMax, xLabel='n', yLabel='xâ‚™'){
     const grid=css('--grid'), ink=css('--ink'), muted=css('--muted'), linec=css('--line');
     const x0=margin.l, x1=W-margin.r, y0=H-margin.b, y1=margin.t;
     svg.appendChild(rect(0,0,W,H,{fill:'transparent'}));
@@ -509,8 +509,8 @@
       svg.appendChild(rect(margin.l,Math.min(top,bottom),W-margin.l-margin.r,Math.abs(bottom-top),{fill:warn,opacity:.13,rx:8}));
       svg.appendChild(line(margin.l,y(L),W-margin.r,y(L),{stroke:warn,'stroke-width':2.3,'stroke-dasharray':'7 7'}));
       svg.appendChild(text(W-margin.r-4,y(L)-8,`L = ${fmt(L,2)}`,{'text-anchor':'end',fill:warn,'font-size':13,'font-weight':700}));
-      svg.appendChild(text(W-margin.r-4,top-8,`L + ε`,{'text-anchor':'end',fill:muted,'font-size':11}));
-      svg.appendChild(text(W-margin.r-4,bottom+17,`L − ε`,{'text-anchor':'end',fill:muted,'font-size':11}));
+      svg.appendChild(text(W-margin.r-4,top-8,`L + Îµ`,{'text-anchor':'end',fill:muted,'font-size':11}));
+      svg.appendChild(text(W-margin.r-4,bottom+17,`L âˆ’ Îµ`,{'text-anchor':'end',fill:muted,'font-size':11}));
     } else {
       svg.appendChild(text(W-margin.r-8,margin.t+20,'no finite candidate L',{'text-anchor':'end',fill:warn,'font-size':13,'font-weight':700}));
     }
@@ -536,7 +536,7 @@
     $('tailStatus').textContent = L===null ? 'not convergent' : validDisplayed ? 'displayed tail fits' : 'displayed tail fails';
     $('tailStatus').style.color = L===null || !validDisplayed ? bad : accent;
     const suff = seq.sufficientN(state.eps);
-    $('computedN').textContent = suff ? `N ≥ ${suff}` : 'no such N';
+    $('computedN').textContent = suff ? `N â‰¥ ${suff}` : 'no such N';
     $('maxDeviation').textContent = isFinite(maxDev) ? fmt(maxDev,3) : 'unbounded';
     $('tailMeaning').textContent = validDisplayed ? 'true on view' : 'not yet';
     $('sequenceInterpretation').innerHTML = seq.text(state.eps);
@@ -564,8 +564,8 @@
       svg.appendChild(rect(x(L-state.eps),54,Math.max(0,x(L+state.eps)-x(L-state.eps)),55,{fill:warn,opacity:.13,rx:12}));
       svg.appendChild(line(x(L),42,x(L),143,{stroke:warn,'stroke-width':2,'stroke-dasharray':'6 6'}));
       svg.appendChild(text(x(L),34,'L',{'text-anchor':'middle',fill:warn,'font-size':13,'font-weight':700}));
-      svg.appendChild(text(x(L-state.eps),51,'L−ε',{'text-anchor':'middle',fill:muted,'font-size':11}));
-      svg.appendChild(text(x(L+state.eps),51,'L+ε',{'text-anchor':'middle',fill:muted,'font-size':11}));
+      svg.appendChild(text(x(L-state.eps),51,'Lâˆ’Îµ',{'text-anchor':'middle',fill:muted,'font-size':11}));
+      svg.appendChild(text(x(L+state.eps),51,'L+Îµ',{'text-anchor':'middle',fill:muted,'font-size':11}));
     }
     tail.slice(0,80).forEach((t,i)=>{
       const dev=L===null?Infinity:Math.abs(t.v-L);
@@ -594,24 +594,24 @@
       svg.appendChild(rect(left,y,right-left,h,{fill:color,opacity:.18,rx:14}));
       svg.appendChild(line(x(center),y-12,x(center),y+h+12,{stroke:color,'stroke-width':2.2,'stroke-dasharray':'6 6'}));
       svg.appendChild(text(x(center),y-20,label,{'text-anchor':'middle',fill:color,'font-size':14,'font-weight':700}));
-      svg.appendChild(text(left,y+h+18,`${label}−η`,{'text-anchor':'middle',fill:muted,'font-size':11}));
-      svg.appendChild(text(right,y+h+18,`${label}+η`,{'text-anchor':'middle',fill:muted,'font-size':11}));
+      svg.appendChild(text(left,y+h+18,`${label}âˆ’Î·`,{'text-anchor':'middle',fill:muted,'font-size':11}));
+      svg.appendChild(text(right,y+h+18,`${label}+Î·`,{'text-anchor':'middle',fill:muted,'font-size':11}));
     }
     interval(A,accent,'A',78,62);
     interval(B,bad,'B',204,62);
     const overlap = Math.max(0, Math.min(A+eta,B+eta)-Math.max(A-eta,B-eta));
     if(overlap>0){
       svg.appendChild(rect(x(Math.max(A-eta,B-eta)),151,x(Math.min(A+eta,B+eta))-x(Math.max(A-eta,B-eta)),38,{fill:warn,opacity:.22,rx:9}));
-      svg.appendChild(text(W/2,326,'Neighborhoods overlap: choose smaller η to force contradiction.',{'text-anchor':'middle',fill:warn,'font-size':13}));
+      svg.appendChild(text(W/2,326,'Neighborhoods overlap: choose smaller Î· to force contradiction.',{'text-anchor':'middle',fill:warn,'font-size':13}));
     } else {
       svg.appendChild(text(W/2,326,'Disjoint neighborhoods: one eventual tail cannot live in both.',{'text-anchor':'middle',fill:accent,'font-size':13,'font-weight':700}));
     }
     $('BText').textContent=`B = ${fmt(B,2)}`;
-    $('uniqueEpsText').textContent=`η = ${fmt(eta,2)}`;
+    $('uniqueEpsText').textContent=`Î· = ${fmt(eta,2)}`;
     const threshold=Math.abs(A-B)/2;
     $('uniquePill').textContent = eta < threshold ? 'disjoint' : 'overlap';
     $('uniquePill').style.color = eta < threshold ? accent : warn;
-    $('uniqueNotice').innerHTML = `Distance |A−B| = <b>${fmt(Math.abs(A-B),3)}</b>. Any radius η &lt; |A−B|/2 = <b>${fmt(threshold,3)}</b> makes the two limit-neighborhoods disjoint.`;
+    $('uniqueNotice').innerHTML = `Distance |Aâˆ’B| = <b>${fmt(Math.abs(A-B),3)}</b>. Any radius Î· &lt; |Aâˆ’B|/2 = <b>${fmt(threshold,3)}</b> makes the two limit-neighborhoods disjoint.`;
   }
 
   function renderBounded(){
@@ -619,7 +619,7 @@
     const terms=getTerms('inv',Math.max(state.M,60),true);
     const L=0, r=state.trap;
     const [yMin,yMax]=computeYDomain(terms,L,r);
-    drawAxes(svg,W,H,margin,terms.length,yMin,yMax,'n','xₙ');
+    drawAxes(svg,W,H,margin,terms.length,yMin,yMax,'n','xâ‚™');
     const x=n=>map(n,1,terms.length,margin.l,W-margin.r), y=v=>map(v,yMin,yMax,H-margin.b,margin.t);
     const accent=css('--accent'), bad=css('--bad'), blue=css('--accent-3'), warn=css('--accent-2'), muted=css('--muted');
     const Ntrap=Math.floor(1/r)+1;
@@ -632,7 +632,7 @@
     svg.appendChild(line(margin.l,y(Mbound),W-margin.r,y(Mbound),{stroke:bad,'stroke-width':1.4,'stroke-dasharray':'4 5'}));
     svg.appendChild(line(margin.l,y(-Mbound),W-margin.r,y(-Mbound),{stroke:bad,'stroke-width':1.4,'stroke-dasharray':'4 5'}));
     svg.appendChild(text(W-margin.r-4,y(Mbound)-6,`+M`,{'text-anchor':'end',fill:bad,'font-size':12}));
-    svg.appendChild(text(W-margin.r-4,y(-Mbound)+16,`−M`,{'text-anchor':'end',fill:bad,'font-size':12}));
+    svg.appendChild(text(W-margin.r-4,y(-Mbound)+16,`âˆ’M`,{'text-anchor':'end',fill:bad,'font-size':12}));
     terms.forEach(t=>{
       const isEarly=t.n<Ntrap;
       svg.appendChild(circle(x(t.n),y(t.v),isEarly?4.2:3.8,{fill:isEarly?blue:accent,opacity:.9,stroke:'var(--paper)','stroke-width':1}));
@@ -659,10 +659,10 @@
   }
   function algebraLimit(){
     const a=2,b=1;
-    if(state.operation==='sum') return {symbol:'a + b', val:a+b, formula:'x<sub>n</sub> + y<sub>n</sub> → a+b'};
-    if(state.operation==='diff') return {symbol:'a − b', val:a-b, formula:'x<sub>n</sub> − y<sub>n</sub> → a−b'};
-    if(state.operation==='prod') return {symbol:'ab', val:a*b, formula:'x<sub>n</sub>y<sub>n</sub> → ab'};
-    return {symbol:'a/b', val:a/b, formula:'x<sub>n</sub>/y<sub>n</sub> → a/b, if b≠0 and y<sub>n</sub>≠0 eventually'};
+    if(state.operation==='sum') return {symbol:'a + b', val:a+b, formula:'x<sub>n</sub> + y<sub>n</sub> â†’ a+b'};
+    if(state.operation==='diff') return {symbol:'a âˆ’ b', val:a-b, formula:'x<sub>n</sub> âˆ’ y<sub>n</sub> â†’ aâˆ’b'};
+    if(state.operation==='prod') return {symbol:'ab', val:a*b, formula:'x<sub>n</sub>y<sub>n</sub> â†’ ab'};
+    return {symbol:'a/b', val:a/b, formula:'x<sub>n</sub>/y<sub>n</sub> â†’ a/b, if bâ‰ 0 and y<sub>n</sub>â‰ 0 eventually'};
   }
   function renderAlgebra(){
     const svg=$('algebraPlot'), W=820,H=410, margin={l:62,r:24,t:24,b:54}; clear(svg);
@@ -683,20 +683,20 @@
     }
     if(state.showXY){ drawSeries(xs,blue,'a=2',2,.52); drawSeries(ys,warn,'b=1',1,.52); }
     drawSeries(zs,accent,`limit ${fmt(lim.val,2)}`,lim.val,.95);
-    $('algebraPill').textContent = `zₙ → ${fmt(lim.val,3)}`;
-    $('algebraFormula').innerHTML = `<b>${lim.formula}</b><br><br>Here x<sub>n</sub> = 2 + (−1)<sup>n</sup>1.3/n → 2 and y<sub>n</sub> = 1 + 0.9/(n+1) → 1.`;
-    const op = {sum:'xₙ+yₙ', diff:'xₙ−yₙ', prod:'xₙyₙ', quot:'xₙ/yₙ'}[state.operation];
+    $('algebraPill').textContent = `zâ‚™ â†’ ${fmt(lim.val,3)}`;
+    $('algebraFormula').innerHTML = `<b>${lim.formula}</b><br><br>Here x<sub>n</sub> = 2 + (âˆ’1)<sup>n</sup>1.3/n â†’ 2 and y<sub>n</sub> = 1 + 0.9/(n+1) â†’ 1.`;
+    const op = {sum:'xâ‚™+yâ‚™', diff:'xâ‚™âˆ’yâ‚™', prod:'xâ‚™yâ‚™', quot:'xâ‚™/yâ‚™'}[state.operation];
     $('algebraTable').innerHTML = `
-      <tr><td>x<sub>n</sub></td><td>2 + (−1)<sup>n</sup>1.3/n</td><td>2</td></tr>
+      <tr><td>x<sub>n</sub></td><td>2 + (âˆ’1)<sup>n</sup>1.3/n</td><td>2</td></tr>
       <tr><td>y<sub>n</sub></td><td>1 + 0.9/(n+1)</td><td>1</td></tr>
       <tr><td>z<sub>n</sub></td><td>${op}</td><td>${fmt(lim.val,3)}</td></tr>`;
     $('algebraNotice').innerHTML = state.operation==='quot'
-      ? `Division needs an extra hypothesis: the denominator limit is nonzero, so yₙ stays away from zero eventually.`
-      : `The graph shows a new tail forming around the algebraic limit. Algebra of limits is an ε–N statement plus boundedness estimates.`;
+      ? `Division needs an extra hypothesis: the denominator limit is nonzero, so yâ‚™ stays away from zero eventually.`
+      : `The graph shows a new tail forming around the algebraic limit. Algebra of limits is an Îµâ€“N statement plus boundedness estimates.`;
   }
 
   function syncControls(){
-    $('epsText').textContent=`ε = ${fmt(state.eps,2)}`;
+    $('epsText').textContent=`Îµ = ${fmt(state.eps,2)}`;
     $('NText').textContent=`N = ${state.N}`;
     $('MText').textContent=`${state.M} terms`;
     const seq=seqs[state.sequence];
@@ -755,3 +755,4 @@
 </script>
 </body>
 </html>
+

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -176,7 +176,7 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
 <div class="app" id="app">
   <header>
     <div>
-      <div class="eyebrow">Real Analysis · Sequences</div>
+      <div class="eyebrow">Real Analysis Â· Sequences</div>
       <h1>Cauchy sequences and completeness</h1>
       <p class="subtitle">A sequence is Cauchy when its tail becomes internally small. Completeness says that in \(\mathbb R\), every internally small tail has a real point to converge to. In \(\mathbb Q\), a hole can remain.</p>
     </div>
@@ -193,17 +193,17 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
         <div class="control">
           <div class="label-row"><span>Sequence</span><span class="value" id="seqKindLabel"></span></div>
           <select id="seqSelect">
-            <option value="oneOverN">xₙ = 1/n</option>
-            <option value="altOverN">xₙ = (-1)ⁿ/n</option>
-            <option value="sqrt2q">qₙ = floor(10ⁿ√2)/10ⁿ ∈ ℚ</option>
-            <option value="oscillate">xₙ = (-1)ⁿ</option>
-            <option value="linear">xₙ = n/8</option>
-            <option value="harmonic">xₙ = 1 + 1/2 + ⋯ + 1/n</option>
+            <option value="oneOverN">xâ‚™ = 1/n</option>
+            <option value="altOverN">xâ‚™ = (-1)â¿/n</option>
+            <option value="sqrt2q">qâ‚™ = floor(10â¿âˆš2)/10â¿ âˆˆ â„š</option>
+            <option value="oscillate">xâ‚™ = (-1)â¿</option>
+            <option value="linear">xâ‚™ = n/8</option>
+            <option value="harmonic">xâ‚™ = 1 + 1/2 + â‹¯ + 1/n</option>
           </select>
         </div>
 
         <div class="control">
-          <div class="label-row"><span>ε threshold</span><span class="value" id="epsLabel"></span></div>
+          <div class="label-row"><span>Îµ threshold</span><span class="value" id="epsLabel"></span></div>
           <input type="range" id="epsSlider" min="0" max="10" value="5" step="1" />
         </div>
 
@@ -231,18 +231,18 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
       <section class="card compact">
         <h2><strong>Definitions</strong></h2>
         <div class="formula">
-          xₙ → L ⇔ ∀ ε &gt; 0, ∃ N ∈ ℕ : n ≥ N ⇒ |xₙ − L| &lt; ε
+          xâ‚™ â†’ L â‡” âˆ€ Îµ &gt; 0, âˆƒ N âˆˆ â„• : n â‰¥ N â‡’ |xâ‚™ âˆ’ L| &lt; Îµ
         </div>
         <div style="height:10px"></div>
         <div class="formula">
-          (xₙ) Cauchy ⇔ ∀ ε &gt; 0, ∃ N ∈ ℕ : m,n ≥ N ⇒ |xₘ − xₙ| &lt; ε
+          (xâ‚™) Cauchy â‡” âˆ€ Îµ &gt; 0, âˆƒ N âˆˆ â„• : m,n â‰¥ N â‡’ |xâ‚˜ âˆ’ xâ‚™| &lt; Îµ
         </div>
       </section>
     </aside>
 
     <main class="main">
       <section class="card">
-        <h2><strong>Main diagram</strong> · tail diameter</h2>
+        <h2><strong>Main diagram</strong> Â· tail diameter</h2>
         <div class="hero-grid">
           <div>
             <div class="canvas-wrap">
@@ -254,9 +254,9 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
               </div>
             </div>
             <div class="kpi-grid">
-              <div class="kpi"><div class="num" id="diamKpi">—</div><div class="cap">sample tail diameter max − min</div></div>
-              <div class="kpi"><div class="num" id="firstGoodKpi">—</div><div class="cap">first N with diameter &lt; ε in window</div></div>
-              <div class="kpi"><div class="num" id="limitKpi">—</div><div class="cap">candidate limit in the chosen ambient space</div></div>
+              <div class="kpi"><div class="num" id="diamKpi">â€”</div><div class="cap">sample tail diameter max âˆ’ min</div></div>
+              <div class="kpi"><div class="num" id="firstGoodKpi">â€”</div><div class="cap">first N with diameter &lt; Îµ in window</div></div>
+              <div class="kpi"><div class="num" id="limitKpi">â€”</div><div class="cap">candidate limit in the chosen ambient space</div></div>
             </div>
           </div>
           <div>
@@ -266,7 +266,7 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
             </div>
             <hr>
             <h3><strong>Pairwise Cauchy test</strong></h3>
-            <p style="color:var(--muted);font-size:14px;margin-top:-4px">Each cell checks whether |xₘ − xₙ| &lt; ε for indices in the visible tail block.</p>
+            <p style="color:var(--muted);font-size:14px;margin-top:-4px">Each cell checks whether |xâ‚˜ âˆ’ xâ‚™| &lt; Îµ for indices in the visible tail block.</p>
             <div id="matrix" class="matrix" aria-label="pairwise distance matrix"></div>
           </div>
         </div>
@@ -274,37 +274,37 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
 
       <section class="two">
         <div class="card">
-          <h2><strong>Proof microscope</strong> · convergent ⇒ Cauchy</h2>
+          <h2><strong>Proof microscope</strong> Â· convergent â‡’ Cauchy</h2>
           <div class="proof">
-            <div class="step"><div class="dot">1</div><div><b>Assume convergence.</b><p>For a given ε, eventually |xₙ − L| &lt; ε/2.</p></div></div>
-            <div class="step"><div class="dot">2</div><div><b>Take two late terms.</b><p>If m,n ≥ N, then both xₘ and xₙ lie in the same ε/2-neighborhood of L.</p></div></div>
-            <div class="step"><div class="dot">3</div><div><b>Use the triangle inequality.</b><p>|xₘ − xₙ| ≤ |xₘ − L| + |xₙ − L| &lt; ε.</p></div></div>
+            <div class="step"><div class="dot">1</div><div><b>Assume convergence.</b><p>For a given Îµ, eventually |xâ‚™ âˆ’ L| &lt; Îµ/2.</p></div></div>
+            <div class="step"><div class="dot">2</div><div><b>Take two late terms.</b><p>If m,n â‰¥ N, then both xâ‚˜ and xâ‚™ lie in the same Îµ/2-neighborhood of L.</p></div></div>
+            <div class="step"><div class="dot">3</div><div><b>Use the triangle inequality.</b><p>|xâ‚˜ âˆ’ xâ‚™| â‰¤ |xâ‚˜ âˆ’ L| + |xâ‚™ âˆ’ L| &lt; Îµ.</p></div></div>
           </div>
           <div class="notice" style="margin-top:12px"><p>Convergence is external: terms approach a named point L. Cauchy is internal: late terms approach each other.</p></div>
         </div>
 
         <div class="card">
-          <h2><strong>Completeness</strong> · why \(\mathbb R\) matters</h2>
+          <h2><strong>Completeness</strong> Â· why \(\mathbb R\) matters</h2>
           <div class="formula">
-            \(\mathbb R\) complete ⇔ every Cauchy sequence of real numbers converges to a real number.
+            \(\mathbb R\) complete â‡” every Cauchy sequence of real numbers converges to a real number.
           </div>
           <div style="height:12px"></div>
           <div class="formula">
-            \(\mathbb Q\) not complete: qₙ ∈ \(\mathbb Q\), qₙ → √2, but √2 ∉ \(\mathbb Q\).
+            \(\mathbb Q\) not complete: qâ‚™ âˆˆ \(\mathbb Q\), qâ‚™ â†’ âˆš2, but âˆš2 âˆ‰ \(\mathbb Q\).
           </div>
           <div class="notice" style="margin-top:12px"><p>A Cauchy sequence can describe a missing point. Completeness is the axiom that the missing point is actually present.</p></div>
         </div>
       </section>
 
       <section class="card">
-        <h2><strong>Failure in \(\mathbb Q\)</strong> · a hole seen by a rational Cauchy sequence</h2>
+        <h2><strong>Failure in \(\mathbb Q\)</strong> Â· a hole seen by a rational Cauchy sequence</h2>
         <div class="hero-grid">
-          <div class="canvas-wrap" style="min-height:250px"><canvas id="qCanvas"></canvas><div class="overlay-note"><span class="micro">rational decimals approach √2</span></div></div>
+          <div class="canvas-wrap" style="min-height:250px"><canvas id="qCanvas"></canvas><div class="overlay-note"><span class="micro">rational decimals approach âˆš2</span></div></div>
           <div>
             <div class="proof">
-              <div class="step"><div class="dot">Q</div><div><b>Rational terms.</b><p>qₙ = floor(10ⁿ√2)/10ⁿ is a terminating decimal, hence rational.</p></div></div>
+              <div class="step"><div class="dot">Q</div><div><b>Rational terms.</b><p>qâ‚™ = floor(10â¿âˆš2)/10â¿ is a terminating decimal, hence rational.</p></div></div>
               <div class="step"><div class="dot">C</div><div><b>Cauchy behavior.</b><p>The decimals agree more and more. The tail diameter tends to 0.</p></div></div>
-              <div class="step"><div class="dot">∉</div><div><b>No rational limit.</b><p>If qₙ converged in \(\mathbb Q\), its limit would be a rational x with x² = 2, impossible.</p></div></div>
+              <div class="step"><div class="dot">âˆ‰</div><div><b>No rational limit.</b><p>If qâ‚™ converged in \(\mathbb Q\), its limit would be a rational x with xÂ² = 2, impossible.</p></div></div>
             </div>
           </div>
         </div>
@@ -314,7 +314,7 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
         <h2><strong>What to notice</strong></h2>
         <div class="law-grid">
           <div class="law"><div class="name">Tail</div><div class="txt">Only late terms matter.</div></div>
-          <div class="law"><div class="name">Cauchy</div><div class="txt">tail diameter → 0.</div></div>
+          <div class="law"><div class="name">Cauchy</div><div class="txt">tail diameter â†’ 0.</div></div>
           <div class="law"><div class="name">Convergent</div><div class="txt">tail collapses to L.</div></div>
           <div class="law"><div class="name">Complete</div><div class="txt">collapse point belongs to the space.</div></div>
         </div>
@@ -323,10 +323,10 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
       <section class="card">
         <h2><strong>Exam-style summary</strong></h2>
         <div class="summary">
-          <div><b>Definition</b><span>Cauchy means ∀ε &gt; 0, eventually all pairwise distances are &lt; ε.</span></div>
-          <div><b>Convergent ⇒ Cauchy</b><span>Use ε/2 and triangle inequality around the limit L.</span></div>
-          <div><b>Completeness of ℝ</b><span>Every real Cauchy sequence has a real limit.</span></div>
-          <div><b>Failure of ℚ</b><span>Rational Cauchy sequences may converge only to an irrational real.</span></div>
+          <div><b>Definition</b><span>Cauchy means âˆ€Îµ &gt; 0, eventually all pairwise distances are &lt; Îµ.</span></div>
+          <div><b>Convergent â‡’ Cauchy</b><span>Use Îµ/2 and triangle inequality around the limit L.</span></div>
+          <div><b>Completeness of â„</b><span>Every real Cauchy sequence has a real limit.</span></div>
+          <div><b>Failure of â„š</b><span>Rational Cauchy sequences may converge only to an irrational real.</span></div>
         </div>
       </section>
 
@@ -348,12 +348,12 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
     oneOverN:'real convergent', altOverN:'real convergent', sqrt2q:'rational Cauchy', oscillate:'bounded non-Cauchy', linear:'unbounded', harmonic:'divergent'
   };
   const theorem={
-    oneOverN:{cauchy:true,conv:true,limit:'0 ∈ ℝ',ambient:'ℝ complete'},
-    altOverN:{cauchy:true,conv:true,limit:'0 ∈ ℝ',ambient:'ℝ complete'},
-    sqrt2q:{cauchy:true,conv:false,limit:'√2 ∉ ℚ',ambient:'ℚ not complete'},
-    oscillate:{cauchy:false,conv:false,limit:'none',ambient:'ℝ'},
-    linear:{cauchy:false,conv:false,limit:'∞ is not a real limit',ambient:'ℝ'},
-    harmonic:{cauchy:false,conv:false,limit:'∞ is not a real limit',ambient:'ℝ'}
+    oneOverN:{cauchy:true,conv:true,limit:'0 âˆˆ â„',ambient:'â„ complete'},
+    altOverN:{cauchy:true,conv:true,limit:'0 âˆˆ â„',ambient:'â„ complete'},
+    sqrt2q:{cauchy:true,conv:false,limit:'âˆš2 âˆ‰ â„š',ambient:'â„š not complete'},
+    oscillate:{cauchy:false,conv:false,limit:'none',ambient:'â„'},
+    linear:{cauchy:false,conv:false,limit:'âˆž is not a real limit',ambient:'â„'},
+    harmonic:{cauchy:false,conv:false,limit:'âˆž is not a real limit',ambient:'â„'}
   };
   function css(name){return getComputedStyle(root).getPropertyValue(name).trim()}
   function rgba(hex,alpha){
@@ -388,7 +388,7 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
     return null;
   }
   function fmt(x){
-    if(!isFinite(x))return '—';
+    if(!isFinite(x))return 'â€”';
     if(Math.abs(x)>=100)return x.toFixed(0);
     if(Math.abs(x)>=10)return x.toFixed(2);
     if(Math.abs(x)>=1)return x.toFixed(3);
@@ -416,7 +416,7 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
     ctx.strokeStyle=css('--line'); ctx.lineWidth=1.25;
     ctx.beginPath();ctx.moveTo(pad.l,h-pad.b);ctx.lineTo(w-pad.r,h-pad.b);ctx.stroke();
     ctx.fillStyle=css('--muted');ctx.font='12px Inter,system-ui';
-    ctx.fillText('n',w-pad.r-10,h-14);ctx.fillText('xₙ',14,pad.t+4);
+    ctx.fillText('n',w-pad.r-10,h-14);ctx.fillText('xâ‚™',14,pad.t+4);
 
     const xN=xScale(N);
     ctx.fillStyle=rgba(css('--accent').startsWith('#')?css('--accent'):'#2e9c8f',.08);
@@ -446,7 +446,7 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
     ctx.fillText('N = '+N,xN+8,pad.t+18);
     ctx.fillStyle=css('--muted');ctx.font='12px Inter,system-ui';
     ctx.fillText('sample tail diameter = '+fmt(st.diam),xN+8,pad.t+36);
-    ctx.fillText('ε = '+eps,pad.l+6,pad.t+18);
+    ctx.fillText('Îµ = '+eps,pad.l+6,pad.t+18);
   }
   function drawLine(arr,N,kind){
     const canvas=document.getElementById('lineCanvas');
@@ -466,7 +466,7 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
     t.forEach((v,i)=>{ctx.beginPath();ctx.fillStyle=css('--accent');ctx.globalAlpha=Math.max(.16,1-i/t.length);ctx.arc(xScale(v),y+(i%5-2)*7,3.3,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;});
     const known=theorem[kind].limit;
     if(kind==='sqrt2q'){
-      const x=xScale(Math.sqrt(2));ctx.strokeStyle=css('--bad');ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,y-54);ctx.lineTo(x,y+54);ctx.stroke();ctx.fillStyle=css('--bad');ctx.font='13px Georgia,serif';ctx.fillText('√2 ∉ ℚ',x+7,y-38);
+      const x=xScale(Math.sqrt(2));ctx.strokeStyle=css('--bad');ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,y-54);ctx.lineTo(x,y+54);ctx.stroke();ctx.fillStyle=css('--bad');ctx.font='13px Georgia,serif';ctx.fillText('âˆš2 âˆ‰ â„š',x+7,y-38);
     }
     if(kind==='oneOverN'||kind==='altOverN'){
       const x=xScale(0);ctx.strokeStyle=css('--good');ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,y-54);ctx.lineTo(x,y+54);ctx.stroke();ctx.fillStyle=css('--good');ctx.font='13px Georgia,serif';ctx.fillText('L = 0',x+7,y-38);
@@ -481,7 +481,7 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
     const xScale=v=>46+(v-xmin)/(xmax-xmin)*(w-76);
     const yBase=h-54;
     ctx.strokeStyle=css('--line');ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(34,yBase);ctx.lineTo(w-28,yBase);ctx.stroke();
-    ctx.fillStyle=css('--muted');ctx.font='12px Inter,system-ui';ctx.fillText('terminating decimals in ℚ',18,24);
+    ctx.fillStyle=css('--muted');ctx.font='12px Inter,system-ui';ctx.fillText('terminating decimals in â„š',18,24);
     vals.forEach((v,i)=>{
       const x=xScale(v), y=yBase-(i+1)*11;
       ctx.strokeStyle=rgba(css('--accent').startsWith('#')?css('--accent'):'#2e9c8f',.25);ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x,yBase);ctx.stroke();
@@ -489,8 +489,8 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
       if(i<6||i===12){ctx.fillStyle=css('--muted');ctx.font='11px Inter,system-ui';ctx.fillText('q'+(i+1),x+5,y+4)}
     });
     const x=xScale(sqrt2);ctx.strokeStyle=css('--bad');ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,36);ctx.lineTo(x,yBase+18);ctx.stroke();
-    ctx.fillStyle=css('--bad');ctx.font='14px Georgia,serif';ctx.fillText('√2',x+8,52);
-    ctx.fillStyle=css('--muted');ctx.font='12px Inter,system-ui';ctx.fillText('The sequence is Cauchy in ℚ, but the indicated limit is not in ℚ.',18,h-18);
+    ctx.fillStyle=css('--bad');ctx.font='14px Georgia,serif';ctx.fillText('âˆš2',x+8,52);
+    ctx.fillStyle=css('--muted');ctx.font='12px Inter,system-ui';ctx.fillText('The sequence is Cauchy in â„š, but the indicated limit is not in â„š.',18,h-18);
   }
   function updateMatrix(arr,N,eps){
     const box=document.getElementById('matrix');box.innerHTML='';
@@ -511,7 +511,7 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
     c.className='badge '+(th.cauchy?'good':'bad'); c.textContent=th.cauchy?'Cauchy: yes':'Cauchy: no';
     v.className='badge '+(th.conv?'good':'bad'); v.textContent=th.conv?'Convergent: yes':'Convergent: no';
     a.className='badge '+(kind==='sqrt2q'?'bad':'good'); a.textContent=th.ambient;
-    document.getElementById('statusNote').textContent=st.diam<eps?'visible tail passes ε':'visible tail fails ε';
+    document.getElementById('statusNote').textContent=st.diam<eps?'visible tail passes Îµ':'visible tail fails Îµ';
     document.getElementById('statusNote').style.color=st.diam<eps?css('--good'):css('--bad');
   }
   function render(){
@@ -526,8 +526,8 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
     document.getElementById('epsLabel').textContent=eps;
     document.getElementById('nLabel').textContent=N;
     document.getElementById('termsLabel').textContent=M;
-    document.getElementById('tailNote').textContent=`tail: n ≥ ${N}`;
-    document.getElementById('diamNote').textContent=`diameter ${fmt(st.diam)} ${st.diam<eps?' < ':' ≥ '} ε`;
+    document.getElementById('tailNote').textContent=`tail: n â‰¥ ${N}`;
+    document.getElementById('diamNote').textContent=`diameter ${fmt(st.diam)} ${st.diam<eps?' < ':' â‰¥ '} Îµ`;
     document.getElementById('diamKpi').textContent=fmt(st.diam);
     document.getElementById('firstGoodKpi').textContent=fg?String(fg):'none';
     document.getElementById('limitKpi').textContent=theorem[kind].limit;
@@ -544,3 +544,4 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
 </script>
 </body>
 </html>
+

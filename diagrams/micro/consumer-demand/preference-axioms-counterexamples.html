@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -130,16 +130,16 @@ svg{width:100%;height:auto;display:block;background:linear-gradient(180deg,var(-
         <h1>Preference axioms<br>geometric atlas</h1>
         <p class="sub">A clean visual notebook for seeing what each axiom imposes on a preference relation.</p>
       </div>
-      <button class="theme" id="themeBtn" aria-label="Toggle dark mode">☾</button>
+      <button class="theme" id="themeBtn" aria-label="Toggle dark mode">â˜¾</button>
     </div>
     <div class="nav" id="nav"></div>
     <div class="controls">
       <div class="control">
-        <label><span>Reference bundle x₁</span><b id="x1val">4.0</b></label>
+        <label><span>Reference bundle xâ‚</span><b id="x1val">4.0</b></label>
         <input id="x1" type="range" min="1.4" max="8.6" step="0.1" value="4.0" />
       </div>
       <div class="control">
-        <label><span>Reference bundle x₂</span><b id="x2val">4.0</b></label>
+        <label><span>Reference bundle xâ‚‚</span><b id="x2val">4.0</b></label>
         <input id="x2" type="range" min="1.4" max="8.6" step="0.1" value="4.0" />
       </div>
       <div class="control">
@@ -156,18 +156,18 @@ svg{width:100%;height:auto;display:block;background:linear-gradient(180deg,var(-
   <main class="main">
     <section class="panel hero">
       <div>
-        <div class="kicker">Preference relations · contour sets · violations</div>
+        <div class="kicker">Preference relations Â· contour sets Â· violations</div>
         <h2 id="title">Completeness</h2>
         <p id="subtitle">Every two bundles in the consumption set are comparable.</p>
       </div>
-      <div class="pill"><span class="dot"></span><span>X ⊂ ℝ²₊ · x ⪰ y · U(x) · L(x)</span></div>
+      <div class="pill"><span class="dot"></span><span>X âŠ‚ â„Â²â‚Š Â· x âª° y Â· U(x) Â· L(x)</span></div>
     </section>
 
     <section class="theoryStrip">
-      <div class="stripItem"><b>Weak preference</b><div class="math">x ⪰ y</div><div class="math small muted">x is at least as good as y</div></div>
-      <div class="stripItem"><b>Strict preference</b><div class="math">x ≻ y ⇔ x ⪰ y and not y ⪰ x</div></div>
-      <div class="stripItem"><b>Indifference</b><div class="math">x ∼ y ⇔ x ⪰ y and y ⪰ x</div></div>
-      <div class="stripItem"><b>Contour sets</b><div class="math">U(x)={y∈X:y⪰x}<br>L(x)={y∈X:x⪰y}</div></div>
+      <div class="stripItem"><b>Weak preference</b><div class="math">x âª° y</div><div class="math small muted">x is at least as good as y</div></div>
+      <div class="stripItem"><b>Strict preference</b><div class="math">x â‰» y â‡” x âª° y and not y âª° x</div></div>
+      <div class="stripItem"><b>Indifference</b><div class="math">x âˆ¼ y â‡” x âª° y and y âª° x</div></div>
+      <div class="stripItem"><b>Contour sets</b><div class="math">U(x)={yâˆˆX:yâª°x}<br>L(x)={yâˆˆX:xâª°y}</div></div>
     </section>
 
     <section class="layout">
@@ -214,35 +214,35 @@ svg{width:100%;height:auto;display:block;background:linear-gradient(180deg,var(-
     </section>
 
     <section class="panel tight">
-      <div class="panelHead"><div><h3>Compact atlas</h3><p>Each tile is one geometric constraint on the relation ⪰.</p></div><span class="pill">click a tile</span></div>
+      <div class="panelHead"><div><h3>Compact atlas</h3><p>Each tile is one geometric constraint on the relation âª°.</p></div><span class="pill">click a tile</span></div>
       <div class="atlas" id="atlas"></div>
     </section>
-    <div class="footer">Original schematic figures for study. The point is not to memorize drawings, but to read each axiom as a restriction on upper and lower contour sets. <span class="kbd">v2 · pleasant + theory-consistent</span></div>
+    <div class="footer">Original schematic figures for study. The point is not to memorize drawings, but to read each axiom as a restriction on upper and lower contour sets. <span class="kbd">v2 Â· pleasant + theory-consistent</span></div>
   </main>
 </div>
 <script>
 'use strict';
 const AXIOMS={
   completeness:{
-    name:'Completeness', short:'Complete', sym:'∀x,y',
+    name:'Completeness', short:'Complete', sym:'âˆ€x,y',
     subtitle:'Every two bundles in the consumption set are comparable.',
-    axiom:'∀x,y∈X: x ⪰ y or y ⪰ x.',
+    axiom:'âˆ€x,yâˆˆX: x âª° y or y âª° x.',
     geo:'No pair is left outside the ranking. The relation covers the whole consumption set X.',
-    obj:'A binary relation ⪰ that ranks all pairs in X.',
-    test:'Take arbitrary x,y∈X. At least one comparison must be true.',
+    obj:'A binary relation âª° that ranks all pairs in X.',
+    test:'Take arbitrary x,yâˆˆX. At least one comparison must be true.',
     fail:'Incomplete preferences: two feasible bundles are incomparable.',
-    utility:'Any real-valued utility u:X→ℝ represents a complete relation.',
+    utility:'Any real-valued utility u:Xâ†’â„ represents a complete relation.',
     hierarchy:'Utility representation implies completeness because real numbers are completely ordered. Completeness alone says nothing about smoothness, monotonicity, or convexity.',
     notice:['Completeness is comparability, not rationality by itself.','A partial order such as componentwise dominance violates completeness.','Graphically, incompleteness appears as pairs with no arrow in either direction.']
   },
   transitivity:{
-    name:'Transitivity', short:'Transitive', sym:'x⪰y⪰z',
+    name:'Transitivity', short:'Transitive', sym:'xâª°yâª°z',
     subtitle:'Preference chains must not generate cycles.',
-    axiom:'x ⪰ y and y ⪰ z ⇒ x ⪰ z.',
+    axiom:'x âª° y and y âª° z â‡’ x âª° z.',
     geo:'Contour levels can be stacked consistently only when preference cycles are absent.',
     obj:'Consistency of all three-bundle comparisons.',
-    test:'Check every triple x,y,z∈X.',
-    fail:'A cycle: x ≻ y, y ≻ z, z ≻ x.',
+    test:'Check every triple x,y,zâˆˆX.',
+    fail:'A cycle: x â‰» y, y â‰» z, z â‰» x.',
     utility:'No real-valued utility can represent a strict cycle.',
     hierarchy:'Completeness plus transitivity gives a preference ordering. Most consumer theory starts here before adding topological or shape restrictions.',
     notice:['Transitivity is the no-cycle condition.','It makes maximization meaningful: a chosen best object cannot be beaten through a chain.','Without it, indifference curves cannot be interpreted as ordered utility levels.']
@@ -250,50 +250,50 @@ const AXIOMS={
   continuity:{
     name:'Continuity', short:'Continuous', sym:'closed U,L',
     subtitle:'Small changes in bundles cannot cause discontinuous jumps in ranking.',
-    axiom:'For every x∈X, U(x)={y:y⪰x} and L(x)={y:x⪰y} are closed in X.',
+    axiom:'For every xâˆˆX, U(x)={y:yâª°x} and L(x)={y:xâª°y} are closed in X.',
     geo:'Upper and lower contour sets contain their boundary limit points.',
     obj:'Closed upper and lower contour sets.',
-    test:'If yⁿ⪰x and yⁿ→y, then y⪰x. Similarly for lower sets.',
+    test:'If yâ¿âª°x and yâ¿â†’y, then yâª°x. Similarly for lower sets.',
     fail:'Lexicographic preferences: a preferred sequence can converge to a non-preferred bundle.',
-    utility:'Continuous u represents continuous preferences by U(x)={y:u(y)≥u(x)}.',
+    utility:'Continuous u represents continuous preferences by U(x)={y:u(y)â‰¥u(x)}.',
     hierarchy:'Continuity is a topological axiom. It is independent of monotonicity and convexity, but crucial for existence and separation arguments.',
     notice:['Closed contour sets are the visual signature of continuity.','Lexicographic preferences are complete and transitive but not continuous.','Continuity rules out infinitely sharp priority of one good over another.']
   },
   monotonicity:{
-    name:'Monotonicity', short:'Monotone', sym:'NE ↑',
+    name:'Monotonicity', short:'Monotone', sym:'NE â†‘',
     subtitle:'More commodities are better.',
-    axiom:'Strong form: y ≥ x and y≠x ⇒ y ≻ x.',
+    axiom:'Strong form: y â‰¥ x and yâ‰ x â‡’ y â‰» x.',
     geo:'The northeast direction is the direction of strict improvement.',
-    obj:'Preference respects the commodity order on ℝ²₊.',
+    obj:'Preference respects the commodity order on â„Â²â‚Š.',
     test:'Move weakly northeast and strictly in at least one coordinate. Welfare must rise.',
     fail:'Satiation or bads: more of a commodity can lower welfare.',
-    utility:'u(x)=x₁x₂ is strongly monotone on ℝ²₊₊.',
+    utility:'u(x)=xâ‚xâ‚‚ is strongly monotone on â„Â²â‚Šâ‚Š.',
     hierarchy:'Strong monotonicity implies local nonsatiation. Local nonsatiation does not imply global monotonicity.',
-    notice:['Monotonicity is directional: northeast movements improve the bundle.','It rules out interior bliss points.','It is stronger than merely saying “there is always something nearby better.”']
+    notice:['Monotonicity is directional: northeast movements improve the bundle.','It rules out interior bliss points.','It is stronger than merely saying â€œthere is always something nearby better.â€']
   },
   lns:{
-    name:'Local nonsatiation', short:'LNS', sym:'∀ε',
+    name:'Local nonsatiation', short:'LNS', sym:'âˆ€Îµ',
     subtitle:'At every bundle, an arbitrarily close strictly better bundle exists.',
-    axiom:'∀x∈X, ∀ε>0, ∃y∈X: ‖y−x‖<ε and y ≻ x.',
+    axiom:'âˆ€xâˆˆX, âˆ€Îµ>0, âˆƒyâˆˆX: â€–yâˆ’xâ€–<Îµ and y â‰» x.',
     geo:'No bundle has a small neighborhood with no improvement.',
     obj:'Absence of local bliss points or local plateaus with no escape.',
-    test:'Draw any ε-ball around x. It must contain some y≻x.',
+    test:'Draw any Îµ-ball around x. It must contain some yâ‰»x.',
     fail:'A bliss point: near it, every nearby bundle is weakly worse.',
-    utility:'u(x)=x₁+x₂ satisfies LNS. A bliss-point utility violates it at the bliss point.',
+    utility:'u(x)=xâ‚+xâ‚‚ satisfies LNS. A bliss-point utility violates it at the bliss point.',
     hierarchy:'LNS is enough for budget exhaustion in standard problems. It is weaker than monotonicity because the improving nearby direction need not be northeast.',
     notice:['LNS is local, not global.','It does not say every good is desirable.','Its main economic force: consumers do not leave money unspent when a nearby affordable improvement exists.']
   },
   convexity:{
-    name:'Convexity', short:'Convex', sym:'λy+(1−λ)z',
+    name:'Convexity', short:'Convex', sym:'Î»y+(1âˆ’Î»)z',
     subtitle:'Averages of preferred bundles remain preferred.',
-    axiom:'If y⪰x and z⪰x, then λy+(1−λ)z ⪰ x for every λ∈[0,1].',
+    axiom:'If yâª°x and zâª°x, then Î»y+(1âˆ’Î»)z âª° x for every Î»âˆˆ[0,1].',
     geo:'Every upper contour set U(x) is convex.',
     obj:'Shape restriction on upper contour sets.',
     test:'Pick two points in U(x). The entire segment between them must stay inside U(x).',
     fail:'Taste for extremes: two preferred extremes but their average is not preferred.',
-    utility:'Quasi-concave utilities represent convex preferences. u(x)=max{x₁,x₂} violates convexity.',
+    utility:'Quasi-concave utilities represent convex preferences. u(x)=max{xâ‚,xâ‚‚} violates convexity.',
     hierarchy:'Convexity is separate from monotonicity. Perfect substitutes are convex but not strictly convex; extreme-loving preferences are nonconvex.',
-    notice:['Convexity is “preference for mixtures” in weak form.','It is exactly the convexity of upper contour sets.','Strict convexity would make the average strictly better than two distinct indifferent bundles.']
+    notice:['Convexity is â€œpreference for mixturesâ€ in weak form.','It is exactly the convexity of upper contour sets.','Strict convexity would make the average strictly better than two distinct indifferent bundles.']
   }
 };
 const ORDER=['completeness','transitivity','continuity','monotonicity','lns','convexity'];
@@ -394,7 +394,7 @@ function maybeLogic(L,R,good,bad){
 function drawCompleteness(L,R,x,y){
   let s=axes(L,'Axiom satisfied','all pairs are ranked')+axes(R,'Classic violation','partial order leaves gaps');
   const u=x*y, a=[Math.max(1.3,x-1.5),Math.min(8.8,y+2.1)], b=[Math.min(8.8,x+2.3),Math.max(1.2,y-1.1)];
-  s+=upperCD(L,u)+cdCurve(L,u)+point(L,x,y,'x⁰');
+  s+=upperCD(L,u)+cdCurve(L,u)+point(L,x,y,'xâ°');
   s+=cdCurve(L,a[0]*a[1],'var(--blue)','stroke-dasharray="6 5"',2.1)+cdCurve(L,b[0]*b[1],'var(--bad)','stroke-dasharray="6 5"',2.1);
   s+=point(L,a[0],a[1],'a','var(--blue)',5)+point(L,b[0],b[1],'b','var(--bad)',5);
   s+=text(L,1.0,9.45,'u(a) and u(b) can always be compared','var(--muted)');
@@ -404,79 +404,79 @@ function drawCompleteness(L,R,x,y){
   s+=point(R,p[0],p[1],'a','var(--accent)',6)+point(R,q[0],q[1],'b','var(--bad)',6);
   s+=line(R,p[0],p[1],q[0],q[1],'var(--bad)','stroke-dasharray="7 6"',2.4);
   s+=text(R,1.0,9.45,'componentwise dominance: a and b cross','var(--muted)');
-  s+=text(R,2.0,1.15,'neither a ⪰ b nor b ⪰ a','var(--bad)');
+  s+=text(R,2.0,1.15,'neither a âª° b nor b âª° a','var(--bad)');
   if(state.notes){s+=text(L,1,1.05,'Completeness = no missing comparison','var(--accent)');s+=text(R,1,8.7,'incomparable region','var(--bad)');}
-  return s+maybeLogic(L,R,[{t:'Take any a,b∈X.'},{t:'Real numbers u(a),u(b) are ordered.'},{t:'So a⪰b or b⪰a.',bold:true,color:'var(--accent)'}],[{t:'Define a⪰b iff a≥b componentwise.'},{t:'a=(3,7), b=(7,3).'},{t:'Neither dominates the other.',bold:true,color:'var(--bad)'}]);
+  return s+maybeLogic(L,R,[{t:'Take any a,bâˆˆX.'},{t:'Real numbers u(a),u(b) are ordered.'},{t:'So aâª°b or bâª°a.',bold:true,color:'var(--accent)'}],[{t:'Define aâª°b iff aâ‰¥b componentwise.'},{t:'a=(3,7), b=(7,3).'},{t:'Neither dominates the other.',bold:true,color:'var(--bad)'}]);
 }
 function drawTransitivity(L,R,x,y){
   let s=axes(L,'Axiom satisfied','ordered utility levels')+axes(R,'Classic violation','cycle of strict preference');
   [10,22,40,62].forEach((u,i)=>s+=cdCurve(L,u,i===3?'var(--accent)':i===2?'var(--blue)':'var(--faint)',i<3?'stroke-dasharray="6 6"':'',i===3?2.8:2));
   const z=[2.0,2.1], yy=[4.1,4.4], xx=[7.4,7.0];
   s+=point(L,z[0],z[1],'z','var(--bad)',5,false)+point(L,yy[0],yy[1],'y','var(--blue)',5)+point(L,xx[0],xx[1],'x','var(--accent)',6);
-  s+=arrow(L,z[0]+.25,z[1]+.18,yy[0]-.25,yy[1]-.18,'var(--blue)','y ⪰ z','arrowBlue');
-  s+=arrow(L,yy[0]+.25,yy[1]+.18,xx[0]-.25,xx[1]-.18,'var(--accent)','x ⪰ y','arrowA');
+  s+=arrow(L,z[0]+.25,z[1]+.18,yy[0]-.25,yy[1]-.18,'var(--blue)','y âª° z','arrowBlue');
+  s+=arrow(L,yy[0]+.25,yy[1]+.18,xx[0]-.25,xx[1]-.18,'var(--accent)','x âª° y','arrowA');
   s+=text(L,1.0,9.45,'higher level dominates all lower linked levels','var(--muted)');
   const A=[5,8.0],B=[2.3,3.9],C=[7.7,3.9];
   s+=point(R,A[0],A[1],'x','var(--accent)',6)+point(R,B[0],B[1],'y','var(--blue)',6)+point(R,C[0],C[1],'z','var(--bad)',6);
-  s+=arrow(R,A[0]-.2,A[1]-.42,B[0]+.32,B[1]+.35,'var(--accent)','x ≻ y','arrowA');
-  s+=arrow(R,B[0]+.45,B[1],C[0]-.45,C[1],'var(--blue)','y ≻ z','arrowBlue');
-  s+=arrow(R,C[0]-.05,C[1]+.45,A[0]+.05,A[1]-.45,'var(--bad)','z ≻ x','arrowB');
+  s+=arrow(R,A[0]-.2,A[1]-.42,B[0]+.32,B[1]+.35,'var(--accent)','x â‰» y','arrowA');
+  s+=arrow(R,B[0]+.45,B[1],C[0]-.45,C[1],'var(--blue)','y â‰» z','arrowBlue');
+  s+=arrow(R,C[0]-.05,C[1]+.45,A[0]+.05,A[1]-.45,'var(--bad)','z â‰» x','arrowB');
   s+=text(R,1.1,1.15,'strict cycle destroys ordinal consistency','var(--bad)');
   if(state.notes)s+=text(L,1,1.05,'utility levels cannot cycle','var(--accent)');
-  return s+maybeLogic(L,R,[{t:'x⪰y'},{t:'y⪰z'},{t:'therefore x⪰z',bold:true,color:'var(--accent)'}],[{t:'x≻y and y≻z'},{t:'but z≻x'},{t:'contradiction to transitivity',bold:true,color:'var(--bad)'}]);
+  return s+maybeLogic(L,R,[{t:'xâª°y'},{t:'yâª°z'},{t:'therefore xâª°z',bold:true,color:'var(--accent)'}],[{t:'xâ‰»y and yâ‰»z'},{t:'but zâ‰»x'},{t:'contradiction to transitivity',bold:true,color:'var(--bad)'}]);
 }
 function drawContinuity(L,R,x,y){
   let s=axes(L,'Axiom satisfied','closed upper and lower sets')+axes(R,'Classic violation','lexicographic preference');
   const u=x*y;
-  s+=upperCD(L,u,.14)+lowerCD(L,u,.07)+cdCurve(L,u)+point(L,x,y,'x⁰','var(--accent)',6);
-  s+=text(L,1.0,9.45,'U(x⁰) and L(x⁰) include their boundaries','var(--muted)');
-  s+=text(L,Math.min(7.3,x+.4),Math.min(9.2,y+1.2),'U(x⁰)','var(--accent)')+text(L,1.0,1.1,'L(x⁰)','var(--bad)');
+  s+=upperCD(L,u,.14)+lowerCD(L,u,.07)+cdCurve(L,u)+point(L,x,y,'xâ°','var(--accent)',6);
+  s+=text(L,1.0,9.45,'U(xâ°) and L(xâ°) include their boundaries','var(--muted)');
+  s+=text(L,Math.min(7.3,x+.4),Math.min(9.2,y+1.2),'U(xâ°)','var(--accent)')+text(L,1.0,1.1,'L(xâ°)','var(--bad)');
   const x0=x, y0=y, ylim=clamp(y-1.65,1,8.5);
   s+=`<rect x="${sx(R,x0)}" y="${sy(R,10)}" width="${sx(R,10)-sx(R,x0)}" height="${sy(R,0)-sy(R,10)}" fill="var(--accent)" opacity=".12"/>`;
   s+=`<line x1="${sx(R,x0)}" y1="${sy(R,y0)}" x2="${sx(R,x0)}" y2="${sy(R,10)}" stroke="var(--accent)" stroke-width="4" stroke-linecap="round"/>`;
   s+=`<line x1="${sx(R,x0)}" y1="${sy(R,0)}" x2="${sx(R,x0)}" y2="${sy(R,y0)}" stroke="var(--bad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 6"/>`;
-  s+=point(R,x0,y0,'x⁰','var(--accent)',6);
+  s+=point(R,x0,y0,'xâ°','var(--accent)',6);
   for(let i=1;i<=5;i++){s+=point(R,x0+1.0/i,ylim,'','var(--blue)',3.5,false);} s+=point(R,x0,ylim,'limit','var(--bad)',5,false);
   s+=text(R,1.0,9.45,'lexicographic: good 1 has absolute priority','var(--muted)');
-  s+=text(R,1.05,1.15,'yⁿ⪰x⁰, yⁿ→y, but y⋡x⁰','var(--bad)');
-  return s+maybeLogic(L,R,[{t:'yⁿ∈U(x)'},{t:'yⁿ→y'},{t:'closedness gives y∈U(x)',bold:true,color:'var(--accent)'}],[{t:'yⁿ=(x₁+1/n, x₂−1)'},{t:'yⁿ≻x by lexicographic priority'},{t:'limit is not preferred to x',bold:true,color:'var(--bad)'}]);
+  s+=text(R,1.05,1.15,'yâ¿âª°xâ°, yâ¿â†’y, but yâ‹¡xâ°','var(--bad)');
+  return s+maybeLogic(L,R,[{t:'yâ¿âˆˆU(x)'},{t:'yâ¿â†’y'},{t:'closedness gives yâˆˆU(x)',bold:true,color:'var(--accent)'}],[{t:'yâ¿=(xâ‚+1/n, xâ‚‚âˆ’1)'},{t:'yâ¿â‰»x by lexicographic priority'},{t:'limit is not preferred to x',bold:true,color:'var(--bad)'}]);
 }
 function drawMonotonicity(L,R,x,y){
   let s=axes(L,'Axiom satisfied','northeast improvement')+axes(R,'Classic violation','satiation / bliss point');
   const u=x*y; s+=upperCD(L,u,.14)+cdCurve(L,u)+point(L,x,y,'x','var(--accent)',6);
   const ne=[clamp(x+2.25,0,9.25),clamp(y+1.75,0,9.25)], sw=[clamp(x-1.75,.7,10),clamp(y-1.35,.7,10)];
   s+=arrow(L,x,y,ne[0],ne[1],'var(--accent)','strictly better','arrowA')+arrow(L,x,y,sw[0],sw[1],'var(--bad)','worse','arrowB');
-  s+=text(L,1,9.45,'y≥x, y≠x ⇒ y≻x','var(--muted)');
+  s+=text(L,1,9.45,'yâ‰¥x, yâ‰ x â‡’ yâ‰»x','var(--muted)');
   const b=[5.15,5.1];
   [1.0,2.0,3.0].forEach((r,i)=>{s+=`<circle cx="${sx(R,b[0])}" cy="${sy(R,b[1])}" r="${r*38}" fill="none" stroke="${i===0?'var(--accent)':i===1?'var(--blue)':'var(--bad)'}" stroke-width="2" opacity=".85"/>`;});
   s+=point(R,b[0],b[1],'bliss','var(--accent)',6);
   const a=[4.2,4.2], more=[7.8,7.3]; s+=point(R,a[0],a[1],'x','var(--blue)',5)+point(R,more[0],more[1],'y','var(--bad)',5);
   s+=arrow(R,a[0],a[1],more[0],more[1],'var(--bad)','more but worse','arrowB');
-  s+=text(R,1,9.45,'u(x)=−‖x−b‖: distance from bliss matters','var(--muted)');
+  s+=text(R,1,9.45,'u(x)=âˆ’â€–xâˆ’bâ€–: distance from bliss matters','var(--muted)');
   s+=text(R,1,1.15,'more can move away from bliss','var(--bad)');
-  return s+maybeLogic(L,R,[{t:'y≥x and y≠x'},{t:'all goods are goods'},{t:'therefore y≻x',bold:true,color:'var(--accent)'}],[{t:'there is a bliss bundle b'},{t:'y≥x but y farther from b'},{t:'so y≺x',bold:true,color:'var(--bad)'}]);
+  return s+maybeLogic(L,R,[{t:'yâ‰¥x and yâ‰ x'},{t:'all goods are goods'},{t:'therefore yâ‰»x',bold:true,color:'var(--accent)'}],[{t:'there is a bliss bundle b'},{t:'yâ‰¥x but y farther from b'},{t:'so yâ‰ºx',bold:true,color:'var(--bad)'}]);
 }
 function drawLNS(L,R,x,y){
   let s=axes(L,'Axiom satisfied','nearby improvement always exists')+axes(R,'Classic violation','local satiation');
   const u=x*y; s+=upperCD(L,u,.12)+cdCurve(L,u)+point(L,x,y,'x','var(--accent)',6);
   s+=ball(L,x,y,62,'var(--blue)');
-  const yp=[clamp(x+.72,0,9),clamp(y+.55,0,9)]; s+=point(L,yp[0],yp[1],'y','var(--blue)',5)+arrow(L,x,y,yp[0],yp[1],'var(--blue)','y≻x','arrowBlue');
-  s+=text(L,1,9.45,'every ε-ball around x contains improvement','var(--muted)');
+  const yp=[clamp(x+.72,0,9),clamp(y+.55,0,9)]; s+=point(L,yp[0],yp[1],'y','var(--blue)',5)+arrow(L,x,y,yp[0],yp[1],'var(--blue)','yâ‰»x','arrowBlue');
+  s+=text(L,1,9.45,'every Îµ-ball around x contains improvement','var(--muted)');
   const b=[5.1,5.05];
   [1.0,2.0,3.0].forEach((r,i)=>{s+=`<circle cx="${sx(R,b[0])}" cy="${sy(R,b[1])}" r="${r*37}" fill="none" stroke="${i===0?'var(--accent)':i===1?'var(--blue)':'var(--bad)'}" stroke-width="2" opacity=".86"/>`;});
   s+=`<circle cx="${sx(R,b[0])}" cy="${sy(R,b[1])}" r="70" fill="var(--bad)" opacity=".08" stroke="var(--bad)" stroke-width="2" stroke-dasharray="6 6"/>`;
   s+=point(R,b[0],b[1],'x*','var(--accent)',6);
   s+=text(R,1,9.45,'at x*, no nearby point is strictly better','var(--muted)');
-  s+=text(R,1.0,1.15,'∃ε>0 such that no y in Bε(x*) satisfies y≻x*','var(--bad)');
-  return s+maybeLogic(L,R,[{t:'choose any ε>0'},{t:'find y within ε of x'},{t:'with y≻x',bold:true,color:'var(--accent)'}],[{t:'x* is a local bliss point'},{t:'inside a small ball all y⪯x*'},{t:'LNS fails at x*',bold:true,color:'var(--bad)'}]);
+  s+=text(R,1.0,1.15,'âˆƒÎµ>0 such that no y in BÎµ(x*) satisfies yâ‰»x*','var(--bad)');
+  return s+maybeLogic(L,R,[{t:'choose any Îµ>0'},{t:'find y within Îµ of x'},{t:'with yâ‰»x',bold:true,color:'var(--accent)'}],[{t:'x* is a local bliss point'},{t:'inside a small ball all yâª¯x*'},{t:'LNS fails at x*',bold:true,color:'var(--bad)'}]);
 }
 function drawConvexity(L,R,x,y){
   let s=axes(L,'Axiom satisfied','convex upper contour set')+axes(R,'Classic violation','love of extremes');
-  const u=x*y; s+=upperCD(L,u,.14)+cdCurve(L,u)+point(L,x,y,'x⁰','var(--accent)',6);
+  const u=x*y; s+=upperCD(L,u,.14)+cdCurve(L,u)+point(L,x,y,'xâ°','var(--accent)',6);
   const a=[clamp(x+3,1,9),clamp(y+.7,1,9)], b=[clamp(x+.7,1,9),clamp(y+3,1,9)], m=[(a[0]+b[0])/2,(a[1]+b[1])/2];
   s+=line(L,a[0],a[1],b[0],b[1],'var(--blue)','stroke-dasharray="7 6"',2.2);
   s+=point(L,a[0],a[1],'y','var(--blue)',5)+point(L,b[0],b[1],'z','var(--blue)',5)+point(L,m[0],m[1],'mix','var(--accent)',5,false);
-  s+=text(L,1,9.45,'if y,z∈U(x⁰), the segment stays in U(x⁰)','var(--muted)');
+  s+=text(L,1,9.45,'if y,zâˆˆU(xâ°), the segment stays in U(xâ°)','var(--muted)');
   const t=6.1;
   s+=`<rect x="${sx(R,t)}" y="${sy(R,10)}" width="${sx(R,10)-sx(R,t)}" height="${sy(R,0)-sy(R,10)}" fill="var(--accent)" opacity=".12"/>`;
   s+=`<rect x="${sx(R,0)}" y="${sy(R,10)}" width="${sx(R,10)-sx(R,0)}" height="${sy(R,t)-sy(R,10)}" fill="var(--accent)" opacity=".12"/>`;
@@ -484,9 +484,9 @@ function drawConvexity(L,R,x,y){
   const p=[t+.3,1.6], q=[1.6,t+.3], mid=[(p[0]+q[0])/2,(p[1]+q[1])/2];
   s+=line(R,p[0],p[1],q[0],q[1],'var(--bad)','stroke-dasharray="7 6"',2.2);
   s+=point(R,p[0],p[1],'y','var(--blue)',5)+point(R,q[0],q[1],'z','var(--blue)',5)+point(R,mid[0],mid[1],'mix','var(--bad)',5,false);
-  s+=text(R,1,9.45,'u(x)=max{x₁,x₂}: upper set is a union of arms','var(--muted)');
+  s+=text(R,1,9.45,'u(x)=max{xâ‚,xâ‚‚}: upper set is a union of arms','var(--muted)');
   s+=text(R,1,1.15,'two preferred extremes, average not preferred','var(--bad)');
-  return s+maybeLogic(L,R,[{t:'y,z∈U(x)'},{t:'λy+(1−λ)z lies on segment'},{t:'segment ⊂ U(x)',bold:true,color:'var(--accent)'}],[{t:'y,z∈U(x)'},{t:'midpoint falls in the gap'},{t:'upper set is nonconvex',bold:true,color:'var(--bad)'}]);
+  return s+maybeLogic(L,R,[{t:'y,zâˆˆU(x)'},{t:'Î»y+(1âˆ’Î»)z lies on segment'},{t:'segment âŠ‚ U(x)',bold:true,color:'var(--accent)'}],[{t:'y,zâˆˆU(x)'},{t:'midpoint falls in the gap'},{t:'upper set is nonconvex',bold:true,color:'var(--bad)'}]);
 }
 $('x1').addEventListener('input',e=>{state.x1=+e.target.value;$('x1val').textContent=fmt(state.x1);render();});
 $('x2').addEventListener('input',e=>{state.x2=+e.target.value;$('x2val').textContent=fmt(state.x2);render();});
@@ -495,11 +495,12 @@ $('logicBtn').addEventListener('click',()=>setMode('logic'));
 $('notesToggle').addEventListener('change',e=>{state.notes=e.target.checked;render();});
 $('themeBtn').addEventListener('click',()=>{
   const root=document.documentElement; const dark=root.getAttribute('data-theme')==='dark';
-  root.setAttribute('data-theme',dark?'light':'dark'); $('themeBtn').textContent=dark?'☾':'☀';
+  root.setAttribute('data-theme',dark?'light':'dark'); $('themeBtn').textContent=dark?'â˜¾':'â˜€';
   try{localStorage.setItem('prefAtlasTheme',dark?'light':'dark');}catch(e){}
 });
-try{const saved=localStorage.getItem('prefAtlasTheme'); if(saved==='dark'){document.documentElement.setAttribute('data-theme','dark'); $('themeBtn').textContent='☀';}}catch(e){}
+try{const saved=localStorage.getItem('prefAtlasTheme'); if(saved==='dark'){document.documentElement.setAttribute('data-theme','dark'); $('themeBtn').textContent='â˜€';}}catch(e){}
 buildUI(); render();
 </script>
 </body>
 </html>
+

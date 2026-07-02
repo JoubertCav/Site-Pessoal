@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -398,7 +398,7 @@ svg {
       </p>
     </div>
     <div class="top-actions">
-      <button class="toggle" id="themeBtn" type="button">◐ Theme</button>
+      <button class="toggle" id="themeBtn" type="button">â— Theme</button>
       <button class="pill" id="animateBtn" type="button">Animate money injection</button>
     </div>
   </header>
@@ -433,7 +433,7 @@ svg {
           <input id="income" type="range" min="50" max="220" step="1" value="120">
         </div>
         <div class="row">
-          <div class="label"><label for="trapStrength">Trap strength λ</label><span class="value" id="vTrapStrength"></span></div>
+          <div class="label"><label for="trapStrength">Trap strength Î»</label><span class="value" id="vTrapStrength"></span></div>
           <input id="trapStrength" type="range" min="0" max="1" step="0.01" value="0.88">
         </div>
       </div>
@@ -441,15 +441,15 @@ svg {
       <div class="group">
         <div class="group-label">Expectations channel</div>
         <div class="row">
-          <div class="label"><label for="expInfl">Expected inflation Eπ</label><span class="value" id="vExpInfl"></span></div>
+          <div class="label"><label for="expInfl">Expected inflation EÏ€</label><span class="value" id="vExpInfl"></span></div>
           <input id="expInfl" type="range" min="-2" max="6" step="0.1" value="2.0">
         </div>
         <div class="row">
-          <div class="label"><label for="naturalRate">Natural real rate rⁿ</label><span class="value" id="vNaturalRate"></span></div>
+          <div class="label"><label for="naturalRate">Natural real rate râ¿</label><span class="value" id="vNaturalRate"></span></div>
           <input id="naturalRate" type="range" min="-3" max="4" step="0.1" value="-1.0">
         </div>
         <div class="row">
-          <div class="label"><label for="sigma">Intertemporal elasticity parameter σ</label><span class="value" id="vSigma"></span></div>
+          <div class="label"><label for="sigma">Intertemporal elasticity parameter Ïƒ</label><span class="value" id="vSigma"></span></div>
           <input id="sigma" type="range" min="0.5" max="4" step="0.1" value="1.4">
         </div>
         <div class="row">
@@ -467,15 +467,15 @@ svg {
             <div class="equations">
               <div class="line">M/P = L(Y,i)</div>
               <div class="line">normal case: L<sub>i</sub> &lt; 0</div>
-              <div class="line">liquidity trap: i ≈ 0 and L becomes very interest-elastic</div>
+              <div class="line">liquidity trap: i â‰ˆ 0 and L becomes very interest-elastic</div>
             </div>
           </div>
 
           <div class="eqbox">
             <div class="eq-title">Expectations at the ZLB</div>
             <div class="equations">
-              <div class="line">r = i − Eπ</div>
-              <div class="line">x = − (1/σ)(r − rⁿ)</div>
+              <div class="line">r = i âˆ’ EÏ€</div>
+              <div class="line">x = âˆ’ (1/Ïƒ)(r âˆ’ râ¿)</div>
               <div class="line">at the ZLB, i cannot fall much further</div>
             </div>
             <div class="note">If expected inflation rises, the real rate falls even with the nominal rate stuck at the lower bound, which supports current demand.</div>
@@ -502,7 +502,7 @@ svg {
                 <h3>The role of expectations</h3>
                 <p>When the nominal rate is stuck, expected inflation becomes a tool for reducing the real rate and raising the output gap.</p>
               </div>
-              <div class="badge" id="expectBadge">Eπ</div>
+              <div class="badge" id="expectBadge">EÏ€</div>
             </div>
             <div class="svgbox small">
               <svg id="expectSvg" viewBox="0 0 620 420" preserveAspectRatio="xMidYMid meet"></svg>
@@ -518,8 +518,8 @@ svg {
             <span>computed live</span>
           </div>
           <div class="kpis">
-            <div class="kpi"><small>Initial nominal rate i₀</small><strong id="kI0"></strong></div>
-            <div class="kpi"><small>New nominal rate i₁</small><strong id="kI1"></strong></div>
+            <div class="kpi"><small>Initial nominal rate iâ‚€</small><strong id="kI0"></strong></div>
+            <div class="kpi"><small>New nominal rate iâ‚</small><strong id="kI1"></strong></div>
             <div class="kpi"><small>Real rate r</small><strong id="kReal"></strong></div>
             <div class="kpi"><small>Output gap x</small><strong id="kGap"></strong></div>
           </div>
@@ -751,7 +751,7 @@ function updateLabels(d) {
   $("kGap").textContent = `${d.outputGap >= 0 ? "+" : ""}${pct(d.outputGap, 2)}`;
 
   $("marketBadge").textContent = state.mode === "trap" ? "trap regime" : "normal regime";
-  $("expectBadge").textContent = `Eπ = ${pct(d.expInfl, 1)}`;
+  $("expectBadge").textContent = `EÏ€ = ${pct(d.expInfl, 1)}`;
 }
 
 function drawMarket(d) {
@@ -826,21 +826,21 @@ function drawMarket(d) {
   const gapColor = d.ineffectiveness < 0.22 ? red : accent;
   rect(marketSvg, 514, 82, 156, 42, { fill: paper2, stroke: linec, rx: 14 });
   text(marketSvg, 528, 99, "rate response", { fill: muted, size: 10.5, weight: 800 });
-  text(marketSvg, 528, 116, `Δi = ${pct(d.i1 - d.i0, 2)}`, { fill: gapColor, size: 13.2, weight: 850 });
+  text(marketSvg, 528, 116, `Î”i = ${pct(d.i1 - d.i0, 2)}`, { fill: gapColor, size: 13.2, weight: 850 });
 
   rect(marketSvg, 344, 82, 156, 42, { fill: paper2, stroke: linec, rx: 14 });
   text(marketSvg, 358, 99, "money expansion", { fill: muted, size: 10.5, weight: 800 });
-  text(marketSvg, 358, 116, `Δ(M/P) = ${fmt(d.ms1 - d.ms0)}`, { fill: gold, size: 13.2, weight: 850 });
+  text(marketSvg, 358, 116, `Î”(M/P) = ${fmt(d.ms1 - d.ms0)}`, { fill: gold, size: 13.2, weight: 850 });
 
   rect(marketSvg, 174, 82, 156, 42, { fill: paper2, stroke: linec, rx: 14 });
   text(marketSvg, 188, 99, "trap strength", { fill: muted, size: 10.5, weight: 800 });
-  text(marketSvg, 188, 116, `λ = ${fmt(d.lambda, 2)}`, { fill: accent, size: 13.2, weight: 850 });
+  text(marketSvg, 188, 116, `Î» = ${fmt(d.lambda, 2)}`, { fill: accent, size: 13.2, weight: 850 });
 
   text(marketSvg, x0 + W, y0 + 30, "real money balances M/P", { fill: muted, size: 12, anchor: "end", weight: 740 });
   text(marketSvg, x0 - 22, y0 - H - 8, "nominal interest rate i", { fill: muted, size: 12, weight: 740 });
 
-  text(marketSvg, X(d.ms0) + 8, y0 - H + 22, "(M/P)₀", { fill: blue, size: 11.2, weight: 800 });
-  text(marketSvg, X(d.ms1) + 8, y0 - H + 42, "(M/P)₁", { fill: gold, size: 11.2, weight: 800 });
+  text(marketSvg, X(d.ms0) + 8, y0 - H + 22, "(M/P)â‚€", { fill: blue, size: 11.2, weight: 800 });
+  text(marketSvg, X(d.ms1) + 8, y0 - H + 42, "(M/P)â‚", { fill: gold, size: 11.2, weight: 800 });
   text(marketSvg, x0 + W - 158, Yp(d.zlb) - 8, "zero lower bound", { fill: red, size: 11.2, weight: 800 });
 
   rect(marketSvg, 104, 430, 552, 36, { fill: paper2, stroke: linec, rx: 15, opacity: .98 });
@@ -851,7 +851,7 @@ function drawMarket(d) {
        { fill: d.ineffectiveness < 0.22 ? red : accent, size: 12.1, weight: 820 });
 
   rect(marketSvg, 104, 474, 552, 30, { fill: paper2, stroke: linec, rx: 14, opacity: .96 });
-  text(marketSvg, 124, 494, "Dashed purple curve = normal money demand. Solid teal curve = current regime with trap intensity λ.", {
+  text(marketSvg, 124, 494, "Dashed purple curve = normal money demand. Solid teal curve = current regime with trap intensity Î».", {
     fill: muted, size: 11.3, weight: 780
   });
 }
@@ -879,7 +879,7 @@ function drawExpectations(d) {
   }
   chip(74, 78, "nominal rate i", pct(d.i1, 2), blue);
   chip(222, 78, "real rate r", pct(d.realRate, 2), red);
-  chip(370, 78, "natural rate rⁿ", pct(d.rn, 2), purple);
+  chip(370, 78, "natural rate râ¿", pct(d.rn, 2), purple);
 
   // Main plot
   const x0 = 76, y0 = 248, W = 466, H = 150;
@@ -928,7 +928,7 @@ function drawExpectations(d) {
   dot.addEventListener("mouseleave", untip);
 
   // Repositioned axis labels to avoid superposition.
-  text(expectSvg, x0 + W, y0 + 24, "expected inflation Eπ", { fill: muted, size: 11.3, weight: 740, anchor: "end" });
+  text(expectSvg, x0 + W, y0 + 24, "expected inflation EÏ€", { fill: muted, size: 11.3, weight: 740, anchor: "end" });
   text(expectSvg, x0 - 18, y0 - H + 18, "output gap x", { fill: muted, size: 11.3, weight: 740 });
 
   text(expectSvg, currX + 10, currY - 10, `x = ${d.outputGap >= 0 ? "+" : ""}${pct(d.outputGap,2)}`, {
@@ -943,12 +943,12 @@ function drawExpectations(d) {
   text(expectSvg, 248, 286, "x = 0", { fill: muted, size: 10.3, weight: 760 });
 
   rect(expectSvg, 76, 306, 466, 31, { fill: paper2, stroke: linec, rx: 13, opacity: .98 });
-  text(expectSvg, 94, 326, `Real-rate channel: r = i − Eπ = ${pct(d.i1,2)} − ${pct(d.expInfl,1)} = ${pct(d.realRate,2)}`, {
+  text(expectSvg, 94, 326, `Real-rate channel: r = i âˆ’ EÏ€ = ${pct(d.i1,2)} âˆ’ ${pct(d.expInfl,1)} = ${pct(d.realRate,2)}`, {
     fill: ink, size: 11.4, weight: 790
   });
 
   rect(expectSvg, 76, 346, 466, 31, { fill: paper2, stroke: linec, rx: 13, opacity: .98 });
-  text(expectSvg, 94, 366, `Demand effect: x = −(1/σ)(r − rⁿ) = ${d.outputGap >= 0 ? "+" : ""}${pct(d.outputGap,2)}`, {
+  text(expectSvg, 94, 366, `Demand effect: x = âˆ’(1/Ïƒ)(r âˆ’ râ¿) = ${d.outputGap >= 0 ? "+" : ""}${pct(d.outputGap,2)}`, {
     fill: accent, size: 11.4, weight: 840
   });
 
@@ -1015,3 +1015,4 @@ update();
 </script>
 </body>
 </html>
+

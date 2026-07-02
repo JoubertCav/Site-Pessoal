@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -97,7 +97,7 @@
     .theme .label{font-size:.92rem;color:var(--muted);min-width:70px}
     .switch{position:relative;width:70px;height:36px;border-radius:999px;background:var(--switch);border:1px solid var(--line)}
     .switch:before,.switch:after{position:absolute;top:50%;transform:translateY(-50%);font-size:13px;opacity:.75}
-    .switch:before{content:"☀";left:10px}.switch:after{content:"☾";right:10px}
+    .switch:before{content:"â˜€";left:10px}.switch:after{content:"â˜¾";right:10px}
     .knob{position:absolute;left:3px;top:3px;width:28px;height:28px;border-radius:50%;background:var(--thumb);border:1px solid var(--line);box-shadow:0 4px 12px rgba(0,0,0,.16);transition:left .25s ease;display:grid;place-items:center;font-size:13px}
     body.dark .knob{left:37px}
 
@@ -163,7 +163,7 @@
         <div class="pill">Lagrange and normal-cone view</div>
         <div id="theme" class="theme" role="button" tabindex="0">
           <span id="themeLabel" class="label">light mode</span>
-          <div class="switch"><div id="knob" class="knob">☀</div></div>
+          <div class="switch"><div id="knob" class="knob">â˜€</div></div>
         </div>
       </div>
     </header>
@@ -507,9 +507,9 @@
   const dot=(a,b)=>a[0]*b[0]+a[1]*b[1];
   const norm=v=>Math.hypot(...v);
   const fmt=x=>{
-    if(!Number.isFinite(x)) return '—';
+    if(!Number.isFinite(x)) return 'â€”';
     if(Math.abs(x)>9999) return x.toExponential(2);
-    return (x<0?'−':'')+Math.abs(x).toFixed(3);
+    return (x<0?'âˆ’':'')+Math.abs(x).toFixed(3);
   };
   const fmtVec=v=>`(${fmt(v[0])}, ${fmt(v[1])})`;
   function fill(input){
@@ -536,7 +536,7 @@
     document.body.classList.toggle('dark',t==='dark');
     localStorage.setItem('constrained-extrema-theme',t);
     el.themeLabel.textContent=t==='dark'?'dark mode':'light mode';
-    el.knob.textContent=t==='dark'?'☾':'☀';
+    el.knob.textContent=t==='dark'?'â˜¾':'â˜€';
     if(state.initialized) render();
   }
 
@@ -805,7 +805,7 @@
         type:'scatter', mode:'lines+markers+text',
         x:[p[0],gradTip[0]], y:[p[1],gradTip[1]],
         marker:{size:[0,7],color:css('--gold')}, line:{color:css('--gold'),width:4},
-        text:['','∇f(a)'], textposition:'top center', textfont:{size:12,color:css('--gold')},
+        text:['','âˆ‡f(a)'], textposition:'top center', textfont:{size:12,color:css('--gold')},
         hoverinfo:'skip', showlegend:false
       },
       {
@@ -871,8 +871,8 @@
       <line x1="${X(C.th)}" y1="${plot.y}" x2="${X(C.th)}" y2="${plot.y+plot.h}" stroke="${pickColor}" stroke-width="2.4" stroke-dasharray="6 6"/>
       <circle cx="${X(C.th)}" cy="${Y(C.z0)}" r="6" fill="${pickColor}"/>
       ${text(X(C.th)+8,Y(C.z0)-8,'selected point',{size:14,fill:pickColor,weight:700})}
-      ${text(plot.x+10,plot.y+24,`φ'(θ) ≈ ${fmt(C.d1)},   φ''(θ) ≈ ${fmt(C.d2)}`,{size:14,fill:css('--muted'),weight:700})}
-      ${text(plot.x+plot.w-8,plot.y+plot.h+28,'θ',{size:15,fill:css('--muted'),weight:700,anchor:'end'})}
+      ${text(plot.x+10,plot.y+24,`Ï†'(Î¸) â‰ˆ ${fmt(C.d1)},   Ï†''(Î¸) â‰ˆ ${fmt(C.d2)}`,{size:14,fill:css('--muted'),weight:700})}
+      ${text(plot.x+plot.w-8,plot.y+plot.h+28,'Î¸',{size:15,fill:css('--muted'),weight:700,anchor:'end'})}
     `;
   }
 
@@ -892,7 +892,7 @@
     const minusGrad=[p[0]-0.40*C.grad[0], p[1]-0.40*C.grad[1]];
     const plusGrad=[p[0]+0.40*C.grad[0], p[1]+0.40*C.grad[1]];
     const choose = C.kind.includes('min') ? minusGrad : plusGrad;
-    const chooseLabel = C.kind.includes('min') ? '−∇f(a)' : '∇f(a)';
+    const chooseLabel = C.kind.includes('min') ? 'âˆ’âˆ‡f(a)' : 'âˆ‡f(a)';
 
     el.coneSvg.innerHTML = `
       <rect x="0" y="0" width="${W}" height="${H}" rx="22" fill="${css('--paper')}"/>
@@ -909,11 +909,11 @@
       <rect x="${side.x}" y="${side.y}" width="${side.w}" height="${side.h}" rx="22" fill="${css('--card')}" stroke="${css('--line')}"/>
       ${text(side.x+18,side.y+34,'Normal cone statement',{size:20,weight:700,family:'Georgia, serif'})}
       ${text(side.x+18,side.y+76,'For a smooth boundary point:',{size:14,fill:css('--muted'),weight:700})}
-      ${text(side.x+24,side.y+102,'N_K(a)= { μ n(a) : μ ≥ 0 }',{size:18,fill:css('--violet'),weight:700,family:'Georgia, serif'})}
+      ${text(side.x+24,side.y+102,'N_K(a)= { Î¼ n(a) : Î¼ â‰¥ 0 }',{size:18,fill:css('--violet'),weight:700,family:'Georgia, serif'})}
       ${text(side.x+18,side.y+146,'Boundary minima of f over K satisfy',{size:14,fill:css('--muted'),weight:700})}
-      ${text(side.x+24,side.y+172,'−∇f(a) ∈ N_K(a)',{size:18,fill:css('--gold'),weight:700,family:'Georgia, serif'})}
+      ${text(side.x+24,side.y+172,'âˆ’âˆ‡f(a) âˆˆ N_K(a)',{size:18,fill:css('--gold'),weight:700,family:'Georgia, serif'})}
       ${text(side.x+18,side.y+214,'Boundary maxima satisfy',{size:14,fill:css('--muted'),weight:700})}
-      ${text(side.x+24,side.y+240,'∇f(a) ∈ N_K(a)',{size:18,fill:css('--gold'),weight:700,family:'Georgia, serif'})}
+      ${text(side.x+24,side.y+240,'âˆ‡f(a) âˆˆ N_K(a)',{size:18,fill:css('--gold'),weight:700,family:'Georgia, serif'})}
     `;
   }
 
@@ -931,7 +931,7 @@
 
     el.decompSvg.innerHTML = `
       <rect x="0" y="0" width="${W}" height="${H}" rx="22" fill="${css('--paper')}"/>
-      ${text(76,40,'decompose ∇f(a) into tangent + normal parts',{size:22,weight:700,family:'Georgia, serif'})}
+      ${text(76,40,'decompose âˆ‡f(a) into tangent + normal parts',{size:22,weight:700,family:'Georgia, serif'})}
 
       <rect x="${left.x}" y="${left.y}" width="${left.w}" height="${left.h}" rx="22" fill="transparent" stroke="${css('--line')}"/>
       <line x1="${left.x+20}" y1="${center.y}" x2="${left.x+left.w-20}" y2="${center.y}" stroke="${css('--grid')}"/>
@@ -941,7 +941,7 @@
       ${arrow(center.x,center.y,nTip.x,nTip.y,css('--violet'),4)}
       ${arrow(center.x,center.y,tanProj.x,tanProj.y,css('--model'),4,'6 5')}
       ${arrow(center.x,center.y,norProj.x,norProj.y,css('--violet'),4,'6 5')}
-      ${text(gTip.x+8,gTip.y-8,'∇f(a)',{size:14,fill:css('--gold'),weight:700})}
+      ${text(gTip.x+8,gTip.y-8,'âˆ‡f(a)',{size:14,fill:css('--gold'),weight:700})}
       ${text(tTip.x+8,tTip.y+18,'tangent', {size:14,fill:css('--model'),weight:700})}
       ${text(nTip.x+8,nTip.y-8,'normal', {size:14,fill:css('--violet'),weight:700})}
       ${text(tanProj.x+8,tanProj.y-8,'tangential part', {size:13,fill:css('--model'),weight:700})}
@@ -949,13 +949,13 @@
 
       <rect x="${right.x}" y="${right.y}" width="${right.w}" height="${right.h}" rx="22" fill="${css('--card')}" stroke="${css('--line')}"/>
       ${text(right.x+18,right.y+34,'Algebraic statement',{size:20,weight:700,family:'Georgia, serif'})}
-      ${text(right.x+18,right.y+78,'∇f(a) = (∇f·t)t + (∇f·n)n',{size:18,fill:css('--gold'),weight:700,family:'Georgia, serif'})}
+      ${text(right.x+18,right.y+78,'âˆ‡f(a) = (âˆ‡fÂ·t)t + (âˆ‡fÂ·n)n',{size:18,fill:css('--gold'),weight:700,family:'Georgia, serif'})}
       ${text(right.x+18,right.y+120,'Tangential coefficient:',{size:14,fill:css('--muted'),weight:700})}
-      ${text(right.x+24,right.y+146,`∇f(a)·t ≈ ${fmt(C.tangentPart)}`,{size:18,fill:css('--model'),weight:700,family:'Georgia, serif'})}
+      ${text(right.x+24,right.y+146,`âˆ‡f(a)Â·t â‰ˆ ${fmt(C.tangentPart)}`,{size:18,fill:css('--model'),weight:700,family:'Georgia, serif'})}
       ${text(right.x+18,right.y+190,'Normal coefficient:',{size:14,fill:css('--muted'),weight:700})}
-      ${text(right.x+24,right.y+216,`∇f(a)·n ≈ ${fmt(C.normalPart)}`,{size:18,fill:css('--violet'),weight:700,family:'Georgia, serif'})}
+      ${text(right.x+24,right.y+216,`âˆ‡f(a)Â·n â‰ˆ ${fmt(C.normalPart)}`,{size:18,fill:css('--violet'),weight:700,family:'Georgia, serif'})}
       ${text(right.x+18,right.y+260,'At a constrained critical point,', {size:14,fill:css('--muted'),weight:700})}
-      ${text(right.x+24,right.y+286,'∇f(a)·t = 0', {size:18,fill:css('--bad'),weight:700,family:'Georgia, serif'})}
+      ${text(right.x+24,right.y+286,'âˆ‡f(a)Â·t = 0', {size:18,fill:css('--bad'),weight:700,family:'Georgia, serif'})}
       ${text(right.x+24,right.y+316,'so only the normal part remains.', {size:16,fill:css('--muted'),weight:700})}
     `;
   }
@@ -973,20 +973,20 @@
     el.matrixBox.textContent =
       `a = ${fmtVec(C.a)}\n` +
       `f(a) = ${fmt(C.z0)}\n` +
-      `∇f(a) = ${fmtVec(C.grad)}\n` +
+      `âˆ‡f(a) = ${fmtVec(C.grad)}\n` +
       `t(a) = ${fmtVec(C.tu)}\n` +
       `n(a) = ${fmtVec(C.n)}\n` +
-      `λ ≈ ${fmt(C.lam)}`;
+      `Î» â‰ˆ ${fmt(C.lam)}`;
     el.formulaBox.innerHTML = C.obj.formula + '<br>' + C.cons.formula;
     el.noticeBox.innerHTML = C.obj.notice + '<br><br>' + C.cons.notice;
 
     const crit = Math.abs(C.d1)<0.03 ? 'almost critical' : 'not critical yet';
-    el.status.textContent = `${C.kind} · ${crit}`;
-    el.valueMetric.textContent = `a ≈ ${fmtVec(C.a)} ;  f(a) ≈ ${fmt(C.z0)}`;
-    el.lagrangeMetric.textContent = `λ ≈ ${fmt(C.lam)} ;  residual ≈ ${fmt(norm(C.residual))}`;
-    el.tanMetric.textContent = `φ'(θ) ≈ ${fmt(C.d1)} ;  tangential part ≈ ${fmt(C.tangentPart)}`;
-    el.secondMetric.textContent = `φ''(θ) ≈ ${fmt(C.d2)} ;  classification: ${C.kind}`;
-    el.coneMetric.textContent = `normal ray direction n(a) ≈ ${fmtVec(C.n)}`;
+    el.status.textContent = `${C.kind} Â· ${crit}`;
+    el.valueMetric.textContent = `a â‰ˆ ${fmtVec(C.a)} ;  f(a) â‰ˆ ${fmt(C.z0)}`;
+    el.lagrangeMetric.textContent = `Î» â‰ˆ ${fmt(C.lam)} ;  residual â‰ˆ ${fmt(norm(C.residual))}`;
+    el.tanMetric.textContent = `Ï†'(Î¸) â‰ˆ ${fmt(C.d1)} ;  tangential part â‰ˆ ${fmt(C.tangentPart)}`;
+    el.secondMetric.textContent = `Ï†''(Î¸) â‰ˆ ${fmt(C.d2)} ;  classification: ${C.kind}`;
+    el.coneMetric.textContent = `normal ray direction n(a) â‰ˆ ${fmtVec(C.n)}`;
   }
 
   function render(){
@@ -1035,3 +1035,4 @@
 </script>
 </body>
 </html>
+

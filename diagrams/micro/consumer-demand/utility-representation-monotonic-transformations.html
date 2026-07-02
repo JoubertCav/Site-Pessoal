@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -145,7 +145,7 @@ svg{width:100%;height:auto;display:block;background:linear-gradient(180deg,var(-
         <h1>Utility representation<br>and transformations</h1>
         <p class="sub">A geometric notebook for ordinal utility, Debreu representation, monotonic transformations, MRS, and cardinal mistakes.</p>
       </div>
-      <button class="theme" id="themeBtn" aria-label="Toggle dark mode">☾</button>
+      <button class="theme" id="themeBtn" aria-label="Toggle dark mode">â˜¾</button>
     </div>
     <div class="nav" id="nav"></div>
     <div class="controls">
@@ -160,26 +160,26 @@ svg{width:100%;height:auto;display:block;background:linear-gradient(180deg,var(-
         </select>
       </div>
       <div class="control">
-        <label><span>Transformation φ</span></label>
+        <label><span>Transformation Ï†</span></label>
         <select id="transformType">
           <option value="log">log(1+u)</option>
           <option value="affine">3 + 2u</option>
-          <option value="square">u²</option>
-          <option value="sqrt">√u</option>
-          <option value="badneg">−u, decreasing</option>
+          <option value="square">uÂ²</option>
+          <option value="sqrt">âˆšu</option>
+          <option value="badneg">âˆ’u, decreasing</option>
           <option value="badsin">sin(u), non-monotone</option>
         </select>
       </div>
       <div class="control">
-        <label><span>Preference parameter α</span><b id="alphaVal">0.50</b></label>
+        <label><span>Preference parameter Î±</span><b id="alphaVal">0.50</b></label>
         <input id="alpha" type="range" min="0.15" max="0.85" step="0.01" value="0.50" />
       </div>
       <div class="control">
-        <label><span>Reference bundle x₁</span><b id="x1Val">4.0</b></label>
+        <label><span>Reference bundle xâ‚</span><b id="x1Val">4.0</b></label>
         <input id="x1" type="range" min="1.2" max="8.8" step="0.1" value="4.0" />
       </div>
       <div class="control">
-        <label><span>Reference bundle x₂</span><b id="x2Val">4.0</b></label>
+        <label><span>Reference bundle xâ‚‚</span><b id="x2Val">4.0</b></label>
         <input id="x2" type="range" min="1.2" max="8.8" step="0.1" value="4.0" />
       </div>
       <label class="toggle"><span>Show upper contour set</span><input id="upperToggle" type="checkbox" checked /></label>
@@ -190,11 +190,11 @@ svg{width:100%;height:auto;display:block;background:linear-gradient(180deg,var(-
   <main class="main">
     <section class="panel hero">
       <div>
-        <div class="kicker">Ordinal information · same preferences, different utility numbers</div>
+        <div class="kicker">Ordinal information Â· same preferences, different utility numbers</div>
         <h2 id="title">Ordinal utility</h2>
         <p id="subtitle">A utility function represents a preference relation when it preserves exactly the same ranking of bundles.</p>
       </div>
-      <div class="pill"><span class="dot"></span><span id="statusPill">φ increasing ⇒ same preferences</span></div>
+      <div class="pill"><span class="dot"></span><span id="statusPill">Ï† increasing â‡’ same preferences</span></div>
     </section>
 
     <section class="theoryStrip">
@@ -217,7 +217,7 @@ svg{width:100%;height:auto;display:block;background:linear-gradient(180deg,var(-
           </div>
         </div>
         <div class="panelHead">
-          <div><h3>Same consumption geometry under monotone transformations</h3><p>Left: utility representation u. Right: transformed representation v=φ(u).</p></div>
+          <div><h3>Same consumption geometry under monotone transformations</h3><p>Left: utility representation u. Right: transformed representation v=Ï†(u).</p></div>
           <div class="pill"><span class="dot"></span><span id="bundleLabel">x=(4.0,4.0)</span></div>
         </div>
         <div class="svgWrap">
@@ -250,7 +250,7 @@ svg{width:100%;height:auto;display:block;background:linear-gradient(180deg,var(-
     <section class="panel">
       <div class="panelHead">
         <div><h3>Cardinal mistakes: same ranking, different gaps</h3><p>Utility numbers are labels. Monotone transformations preserve order but change distances between labels.</p></div>
-        <span class="pill" id="gapPill">Δu need not equal Δv</span>
+        <span class="pill" id="gapPill">Î”u need not equal Î”v</span>
       </div>
       <svg id="scaleSvg" viewBox="0 0 1040 286" role="img" aria-label="Ordinal utility scale diagram"></svg>
     </section>
@@ -260,7 +260,7 @@ svg{width:100%;height:auto;display:block;background:linear-gradient(180deg,var(-
       <div class="tiles" id="tiles"></div>
     </section>
 
-    <div class="footer">Original interactive study app. It uses utility functions only as representations of a preference relation; it does not assign psychological units to utility. <span class="kbd">u and φ∘u</span></div>
+    <div class="footer">Original interactive study app. It uses utility functions only as representations of a preference relation; it does not assign psychological units to utility. <span class="kbd">u and Ï†âˆ˜u</span></div>
   </main>
 </div>
 
@@ -279,7 +279,7 @@ const MODULES={
     notice:['A utility function \\(u\\) is not the relation \\(\\succeq\\); it is a coding of it.','If \\(u\\) and \\(v\\) rank every pair of bundles identically, they represent the same preferences.','Indifference curves carry ordinal information; their numerical labels do not.']
   },
   debreu:{
-    name:'Debreu representation', short:'Debreu', sym:'∃u',
+    name:'Debreu representation', short:'Debreu', sym:'âˆƒu',
     subtitle:'Under standard order and topological assumptions, preferences admit a continuous utility representation.',
     principle:'\\[\\text{complete + transitive + continuous} \\Longrightarrow \\exists u:X\\to\\mathbb{R}\\text{ continuous}\\] <div class="math small">with \\(x\\succeq y\\iff u(x)\\ge u(y)\\).</div>',
     geo:'Continuity makes upper and lower contour sets closed, so the contour map can be drawn without lexicographic jumps.',
@@ -290,7 +290,7 @@ const MODULES={
     notice:['Debreu gives existence of a representation, not uniqueness of a utility scale.','The theorem is topological: closed contour sets matter.','A continuous representation makes ordered contour maps legitimate.']
   },
   transformations:{
-    name:'Monotonic transformations', short:'Transform', sym:'φ↑',
+    name:'Monotonic transformations', short:'Transform', sym:'Ï†â†‘',
     subtitle:'Strictly increasing transformations preserve exactly the same preference ordering.',
     principle:'\\[v(x)=\\phi(u(x)),\\quad \\phi\\uparrow \\quad\\Longrightarrow\\quad x\\succeq_u y \\Longleftrightarrow x\\succeq_v y\\]' ,
     geo:'The same contours remain in the same order: \\(\\{x:u(x)=c\\}=\\{x:v(x)=\\phi(c)\\}\\).',
@@ -302,7 +302,7 @@ const MODULES={
   },
   mrs:{
     name:'MRS preservation', short:'MRS', sym:'ratio',
-    subtitle:'Where differentiable and φ′>0, the marginal rate of substitution is unchanged by monotone transformations.',
+    subtitle:'Where differentiable and Ï†â€²>0, the marginal rate of substitution is unchanged by monotone transformations.',
     principle:'\\[MU_i^{v}=\\phi^{\\prime}(u)MU_i^{u},\\qquad MRS_{12}^{v}=\\frac{MU_1^{v}}{MU_2^{v}}=\\frac{MU_1^{u}}{MU_2^{u}}=MRS_{12}^{u}\\]' ,
     geo:'Because the indifference curve itself is unchanged, its tangent slope \\(-MRS_{12}\\) is unchanged.',
     obj:'The local slope of the indifference curve.',
@@ -312,13 +312,13 @@ const MODULES={
     notice:['Marginal utilities are representation-dependent.','\\(MRS\\) is ordinal because the common factor \\(\\phi^{\\prime}(u)\\) cancels.','At kinks, \\(MRS\\) may be a set or may be undefined; the geometry still matters.']
   },
   cardinal:{
-    name:'Cardinal mistakes', short:'Cardinal', sym:'Δu?',
+    name:'Cardinal mistakes', short:'Cardinal', sym:'Î”u?',
     subtitle:'Utility gaps, ratios, and interpersonal comparisons are not ordinal preference facts.',
     principle:'\\[u(B)-u(A)\\quad\\text{and}\\quad \\frac{u(C)}{u(B)}\\quad\\text{are not ordinal invariants.}\\]' ,
     geo:'The order \\(A\\prec B\\prec C\\) can stay fixed while distances between labels change completely.',
     obj:'Misreading utility labels as measurable welfare intensity.',
     invariant:'Only ranking statements such as \\(C\\succ B\\succ A\\) are preserved.',
-    failure:'Saying “\\(B\\) is twice as preferred as \\(A\\)” from \\(u(B)=2u(A)\\).',
+    failure:'Saying â€œ\\(B\\) is twice as preferred as \\(A\\)â€ from \\(u(B)=2u(A)\\).',
     formula:'\\(u(C)>u(B)>u(A)\\) survives; \\(\\Delta u\\) and ratios usually do not.',
     notice:['Ordinal theory permits ranking, not measuring psychological distance.','A utility difference can become larger or smaller after a valid transformation.','Cardinality appears in expected utility, but that is a different representation theorem with stronger structure.']
   }
@@ -333,25 +333,25 @@ function line(x1,y1,x2,y2,attrs={}){return el('line',{x1,y1,x2,y2,stroke:'var(--
 function circle(cx,cy,r,attrs={}){return el('circle',{cx,cy,r,fill:'var(--accent)',stroke:'var(--paper)','stroke-width':2,...attrs});}
 function rect(x,y,w,h,attrs={}){return el('rect',{x,y,width:w,height:h,rx:attrs.rx||0,ry:attrs.ry||attrs.rx||0,...attrs});}
 function clamp(z,a,b){return Math.max(a,Math.min(b,z));}
-function fmt(z,n=2){if(!Number.isFinite(z))return '—';return Number(z).toFixed(n);}
+function fmt(z,n=2){if(!Number.isFinite(z))return 'â€”';return Number(z).toFixed(n);}
 function U(x,y){x=Math.max(.001,x);y=Math.max(.001,y);const a=state.alpha;switch(state.utility){case 'cd':return Math.pow(x,a)*Math.pow(y,1-a);case 'ces':{const rho=-.65;return Math.pow(a*Math.pow(x,rho)+(1-a)*Math.pow(y,rho),1/rho);}case 'ql':return Math.log(x+.2)+(1.1+a)*y;case 'subs':return a*x+(1-a)*y;case 'comp':return Math.min(x/a,y/(1-a));default:return Math.pow(x,a)*Math.pow(y,1-a);}}
 function MU1(x,y){const h=.0008;return (U(x+h,y)-U(x-h,y))/(2*h)}
 function MU2(x,y){const h=.0008;return (U(x,y+h)-U(x,y-h))/(2*h)}
 function MRS(x,y){const b=MU2(x,y);return Math.abs(b)<1e-8?Infinity:MU1(x,y)/b;}
 function utilityName(){return {cd:'Cobb-Douglas',ces:'CES',ql:'Quasilinear',subs:'Perfect substitutes',comp:'Perfect complements'}[state.utility];}
-function transformName(){return {log:'log(1+u)',affine:'3+2u',square:'u²',sqrt:'√u',badneg:'−u',badsin:'sin(u)'}[state.transform];}
+function transformName(){return {log:'log(1+u)',affine:'3+2u',square:'uÂ²',sqrt:'âˆšu',badneg:'âˆ’u',badsin:'sin(u)'}[state.transform];}
 function phi(u){u=Math.max(0,u);switch(state.transform){case 'log':return Math.log(1+u);case 'affine':return 3+2*u;case 'square':return u*u;case 'sqrt':return Math.sqrt(u);case 'badneg':return -u;case 'badsin':return Math.sin(u);default:return Math.log(1+u);}}
 function phiPrimeApprox(u){const h=1e-4;return (phi(u+h)-phi(u-h))/(2*h)}
 function isGoodTransform(){return ['log','affine','square','sqrt'].includes(state.transform);}
-function rankWarning(){return isGoodTransform()?'φ strictly increasing: same preferences':'φ is not a valid monotone representation of the same preference relation';}
+function rankWarning(){return isGoodTransform()?'Ï† strictly increasing: same preferences':'Ï† is not a valid monotone representation of the same preference relation';}
 function panelMap(panel){const left=panel==='left';const ox=left?62:562, oy=442, w=390, h=330;return {ox,oy,w,h,x:t=>ox+t/10*w,y:t=>oy-t/10*h,invX:px=>(px-ox)/w*10,invY:py=>(oy-py)/h*10};}
 function drawGrid(g,map,title,subtitle){
   g.appendChild(rect(map.ox-36,map.oy-map.h-48,map.w+72,map.h+88,{fill:'transparent',stroke:'var(--line)','stroke-width':1.2,rx:18}));
   for(let i=0;i<=10;i+=2){g.appendChild(line(map.x(i),map.y(0),map.x(i),map.y(10),{stroke:'var(--grid)','stroke-width':1}));g.appendChild(line(map.x(0),map.y(i),map.x(10),map.y(i),{stroke:'var(--grid)','stroke-width':1}));}
   g.appendChild(line(map.x(0),map.y(0),map.x(10.35),map.y(0),{stroke:'var(--muted)','stroke-width':1.5}));
   g.appendChild(line(map.x(0),map.y(0),map.x(0),map.y(10.35),{stroke:'var(--muted)','stroke-width':1.5}));
-  g.appendChild(txt(map.x(10.38),map.y(0)+4,'x₁',{anchor:'start',size:13,fill:'var(--muted)'}));
-  g.appendChild(txt(map.x(0)-5,map.y(10.4),'x₂',{anchor:'end',size:13,fill:'var(--muted)'}));
+  g.appendChild(txt(map.x(10.38),map.y(0)+4,'xâ‚',{anchor:'start',size:13,fill:'var(--muted)'}));
+  g.appendChild(txt(map.x(0)-5,map.y(10.4),'xâ‚‚',{anchor:'end',size:13,fill:'var(--muted)'}));
   g.appendChild(txt(map.ox,map.oy-map.h-68,title,{size:18,weight:800,fill:'var(--ink)'}));
   g.appendChild(txt(map.ox,map.oy-map.h-47,subtitle,{size:12,fill:'var(--muted)'}));
 }
@@ -401,7 +401,7 @@ function drawUpper(g,map){
   if(!state.showUpper)return;
   const d=upperContourPolygon(map,U(state.x1,state.x2)); if(!d)return;
   g.appendChild(path(d,{fill:'var(--shadeA)',stroke:'none',opacity:.85}));
-  g.appendChild(txt(map.x(7.2),map.y(9.25),'U(x)={y:y⪰x}',{size:12,fill:'var(--accent)',weight:700}));
+  g.appendChild(txt(map.x(7.2),map.y(9.25),'U(x)={y:yâª°x}',{size:12,fill:'var(--accent)',weight:700}));
 }
 function drawTangent(g,map){
   if(!state.showMRS)return;
@@ -409,11 +409,11 @@ function drawTangent(g,map){
   const len=1.7; const dx=len/Math.sqrt(1+m*m); const dy=-m*dx;
   const xA=clamp(state.x1-dx,0,10), yA=clamp(state.x2-dy,0,10), xB=clamp(state.x1+dx,0,10), yB=clamp(state.x2+dy,0,10);
   g.appendChild(line(map.x(xA),map.y(yA),map.x(xB),map.y(yB),{stroke:'var(--gold)','stroke-width':2.2,'stroke-dasharray':'7 5'}));
-  g.appendChild(txt(map.x(state.x1)+12,map.y(state.x2)+32,'slope = −MRS',{size:12,fill:'var(--gold)',weight:700}));
+  g.appendChild(txt(map.x(state.x1)+12,map.y(state.x2)+32,'slope = âˆ’MRS',{size:12,fill:'var(--gold)',weight:700}));
 }
 function drawPanel(g,panel){
   const map=panelMap(panel); const right=panel==='right';
-  drawGrid(g,map,right?'Transformed utility v=φ(u)':'Utility representation u',right?`${transformName()} · ${rankWarning()}`:`${utilityName()} · original labels`);
+  drawGrid(g,map,right?'Transformed utility v=Ï†(u)':'Utility representation u',right?`${transformName()} Â· ${rankWarning()}`:`${utilityName()} Â· original labels`);
   drawUpper(g,map);
   drawContours(g,map,right);
   drawTangent(g,map);
@@ -458,7 +458,7 @@ function drawScale(){
   const svg=$('scaleSvg'); svg.innerHTML=''; const g=el('g'); svg.appendChild(g);
   const bundles=bundleSet(); const uMap=scaleMap(bundles.map(b=>b.u)); const vMap=scaleMap(bundles.map(b=>b.v));
   g.appendChild(txt(42,62,'u scale',{size:15,weight:800,fill:'var(--ink)'}));
-  g.appendChild(txt(42,179,'v=φ(u) scale',{size:15,weight:800,fill:'var(--ink)'}));
+  g.appendChild(txt(42,179,'v=Ï†(u) scale',{size:15,weight:800,fill:'var(--ink)'}));
   g.appendChild(line(86,82,956,82,{stroke:'var(--muted)','stroke-width':1.5}));
   g.appendChild(line(86,198,956,198,{stroke:'var(--muted)','stroke-width':1.5}));
   bundles.forEach((b,i)=>{
@@ -469,11 +469,11 @@ function drawScale(){
   });
   const duAB=bundles[1].u-bundles[0].u, duBC=bundles[2].u-bundles[1].u;
   const dvAB=bundles[1].v-bundles[0].v, dvBC=bundles[2].v-bundles[1].v;
-  const msg=isGoodTransform()?`Order preserved, but gaps change: Δu_AB=${fmt(duAB,2)}, Δu_BC=${fmt(duBC,2)}; Δv_AB=${fmt(dvAB,2)}, Δv_BC=${fmt(dvBC,2)}.`:`The transformation may reverse or scramble order: it is not a representation of the same preferences.`;
+  const msg=isGoodTransform()?`Order preserved, but gaps change: Î”u_AB=${fmt(duAB,2)}, Î”u_BC=${fmt(duBC,2)}; Î”v_AB=${fmt(dvAB,2)}, Î”v_BC=${fmt(dvBC,2)}.`:`The transformation may reverse or scramble order: it is not a representation of the same preferences.`;
   g.appendChild(rect(88,244,864,30,{fill:isGoodTransform()?'var(--shadeA)':'var(--shadeBad)',stroke:isGoodTransform()?'var(--accent)':'var(--bad)','stroke-width':1,rx:15}));
   g.appendChild(txt(520,264,msg,{anchor:'middle',size:13,fill:isGoodTransform()?'var(--accent)':'var(--bad)',weight:800}));
   if(isGoodTransform()){
-    g.appendChild(txt(520,22,'A ≺ B ≺ C remains true. “How much more” is not ordinal information.',{anchor:'middle',size:13,fill:'var(--muted)'}));
+    g.appendChild(txt(520,22,'A â‰º B â‰º C remains true. â€œHow much moreâ€ is not ordinal information.',{anchor:'middle',size:13,fill:'var(--muted)'}));
   }else{
     g.appendChild(txt(520,22,'A transformation must be strictly increasing to preserve the original preference order.',{anchor:'middle',size:13,fill:'var(--bad)',weight:800}));
   }
@@ -495,7 +495,7 @@ function renderText(){
   $('alphaVal').textContent=fmt(state.alpha,2); $('x1Val').textContent=fmt(state.x1,1); $('x2Val').textContent=fmt(state.x2,1);
   $('bundleLabel').textContent=`x=(${fmt(state.x1,1)},${fmt(state.x2,1)})`;
   const good=isGoodTransform();
-  $('statusPill').textContent=good?'φ increasing ⇒ same preferences':'warning: not ordinally equivalent';
+  $('statusPill').textContent=good?'Ï† increasing â‡’ same preferences':'warning: not ordinally equivalent';
   $('gapPill').textContent=good?'same order, different gaps':'invalid transformation';
   document.querySelector('#statusPill').parentElement.querySelector('.dot').style.background=good?'var(--accent)':'var(--bad)';
 }
@@ -515,7 +515,7 @@ function renderKatexNow(){
 window.renderKatexNow=renderKatexNow;
 function renderAll(){renderNav();renderTiles();renderText();drawMain();drawScale();setTimeout(renderKatexNow,0);}
 function setup(){
-  $('themeBtn').onclick=()=>{const dark=document.documentElement.getAttribute('data-theme')==='dark';document.documentElement.setAttribute('data-theme',dark?'light':'dark');$('themeBtn').textContent=dark?'☾':'☼';setTimeout(renderAll,10);};
+  $('themeBtn').onclick=()=>{const dark=document.documentElement.getAttribute('data-theme')==='dark';document.documentElement.setAttribute('data-theme',dark?'light':'dark');$('themeBtn').textContent=dark?'â˜¾':'â˜¼';setTimeout(renderAll,10);};
   $('utilityType').onchange=e=>{state.utility=e.target.value;renderAll();};
   $('transformType').onchange=e=>{state.transform=e.target.value;renderAll();};
   $('alpha').oninput=e=>{state.alpha=Number(e.target.value);renderAll();};
@@ -530,3 +530,4 @@ window.addEventListener('load',()=>setTimeout(renderKatexNow,0));
 </script>
 </body>
 </html>
+

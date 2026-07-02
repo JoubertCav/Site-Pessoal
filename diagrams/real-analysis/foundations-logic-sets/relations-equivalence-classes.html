@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -234,29 +234,29 @@ svg{display:block;width:100%;height:100%}
     <div>
       <div class="eyebrow"><span class="dot"></span> Real Analysis Notebook</div>
       <h1>Relations and equivalence classes</h1>
-      <p class="subtitle">A binary relation is a region inside <strong>U × U</strong>. Equivalence relations are exactly the regions whose rows group points into a genuine partition.</p>
+      <p class="subtitle">A binary relation is a region inside <strong>U Ã— U</strong>. Equivalence relations are exactly the regions whose rows group points into a genuine partition.</p>
     </div>
-    <button class="themeToggle" id="themeBtn" aria-label="Toggle theme"><span id="themeIcon">☾</span><span id="themeText">Dark mode</span></button>
+    <button class="themeToggle" id="themeBtn" aria-label="Toggle theme"><span id="themeIcon">â˜¾</span><span id="themeText">Dark mode</span></button>
   </header>
 
   <section class="topGrid">
     <div class="card definition">
       <div class="kicker">Minimal symbolic model</div>
       <div class="formula">
-        <span>R ⊆ U × U</span>,&nbsp;&nbsp;
-        <span>xRy ⇔ (x,y) ∈ R</span>.
+        <span>R âŠ† U Ã— U</span>,&nbsp;&nbsp;
+        <span>xRy â‡” (x,y) âˆˆ R</span>.
       </div>
       <div class="formula">
-        <div>R is an equivalence relation ⇔</div>
+        <div>R is an equivalence relation â‡”</div>
         <div style="padding-left:1.1rem">
-          ∀x∈U: xRx <span class="small">reflexive</span><br>
-          xRy ⇒ yRx <span class="small">symmetric</span><br>
-          xRy ∧ yRz ⇒ xRz <span class="small">transitive</span>
+          âˆ€xâˆˆU: xRx <span class="small">reflexive</span><br>
+          xRy â‡’ yRx <span class="small">symmetric</span><br>
+          xRy âˆ§ yRz â‡’ xRz <span class="small">transitive</span>
         </div>
       </div>
       <div class="formula">
-        [x]<sub>R</sub> = { y∈U : xRy },&nbsp;&nbsp;
-        U/R = { [x]<sub>R</sub> : x∈U }.
+        [x]<sub>R</sub> = { yâˆˆU : xRy },&nbsp;&nbsp;
+        U/R = { [x]<sub>R</sub> : xâˆˆU }.
       </div>
       <p class="tightText">The matrix below is the geometry of the relation: filled cells are true statements. Diagonal means reflexivity, mirror symmetry means symmetry, and filled two-step paths force a third filled cell when transitivity holds.</p>
     </div>
@@ -269,11 +269,11 @@ svg{display:block;width:100%;height:100%}
         <div class="control full">
           <div class="labelRow"><label for="relationType">Relation family</label><span class="valuePill" id="relationName">mod</span></div>
           <select id="relationType">
-            <option value="mod">Congruence: x ≡ y mod m</option>
+            <option value="mod">Congruence: x â‰¡ y mod m</option>
             <option value="blocks">Same block in a partition</option>
             <option value="equality">Equality: x = y</option>
             <option value="universal">Universal: every pair related</option>
-            <option value="near">Nearness: |x − y| ≤ d</option>
+            <option value="near">Nearness: |x âˆ’ y| â‰¤ d</option>
             <option value="divides">Divisibility: x divides y</option>
             <option value="less">Strict order: x &lt; y</option>
             <option value="custom">Custom clickable matrix</option>
@@ -320,7 +320,7 @@ svg{display:block;width:100%;height:100%}
   <main class="dashboard">
     <section class="card panel">
       <div class="panelTitle">
-        <div><h2>Relation as a truth region in U × U</h2><p>Rows are first coordinate x; columns are second coordinate y.</p></div>
+        <div><h2>Relation as a truth region in U Ã— U</h2><p>Rows are first coordinate x; columns are second coordinate y.</p></div>
         <span class="badge" id="equivBadge">checking</span>
       </div>
       <div class="matrixWrap"><div class="matrix" id="matrix"></div></div>
@@ -373,12 +373,12 @@ svg{display:block;width:100%;height:100%}
     <div class="card exam">
       <div class="kicker">Compact exam-style summary</div>
       <div class="examGrid">
-        <div class="examItem"><b>Binary relation</b><span>Any subset R of U×U.</span></div>
+        <div class="examItem"><b>Binary relation</b><span>Any subset R of UÃ—U.</span></div>
         <div class="examItem"><b>Equivalence relation</b><span>Reflexive + symmetric + transitive.</span></div>
-        <div class="examItem"><b>Class</b><span>[x] = {y∈U : xRy}.</span></div>
+        <div class="examItem"><b>Class</b><span>[x] = {yâˆˆU : xRy}.</span></div>
         <div class="examItem"><b>Quotient</b><span>U/R = set of all distinct classes.</span></div>
-        <div class="examItem"><b>Partition theorem</b><span>Equivalence relations on U ↔ partitions of U.</span></div>
-        <div class="examItem"><b>Matrix test</b><span>M²_boolean ≤ M, plus diagonal and symmetry.</span></div>
+        <div class="examItem"><b>Partition theorem</b><span>Equivalence relations on U â†” partitions of U.</span></div>
+        <div class="examItem"><b>Matrix test</b><span>MÂ²_boolean â‰¤ M, plus diagonal and symmetry.</span></div>
       </div>
     </div>
   </section>
@@ -413,7 +413,7 @@ function R(a,b){
 function matrix(){return U().map(a=>U().map(b=>R(a,b)))}
 function classOf(x){return U().filter(y=>R(x,y))}
 function relationName(){
-  const map={mod:'x ≡ y mod m',blocks:'same partition block',equality:'x = y',universal:'U × U',near:'|x − y| ≤ d',divides:'x divides y',less:'x < y',custom:'custom R'};
+  const map={mod:'x â‰¡ y mod m',blocks:'same partition block',equality:'x = y',universal:'U Ã— U',near:'|x âˆ’ y| â‰¤ d',divides:'x divides y',less:'x < y',custom:'custom R'};
   return map[state.type];
 }
 function updateSliderBounds(){
@@ -473,14 +473,14 @@ function renderMatrix(tests){
       if(x===ta&&y===tb) cell.classList.add('triple1');
       if(x===tb&&y===tc) cell.classList.add('triple2');
       if(x===ta&&y===tc) cell.classList.add('triple3');
-      cell.title=`(${x},${y}) ${val?'∈':'∉'} R`;
+      cell.title=`(${x},${y}) ${val?'âˆˆ':'âˆ‰'} R`;
       if(state.type==='custom') cell.addEventListener('click',()=>{state.custom[x-1][y-1]=!state.custom[x-1][y-1]; render();});
       M.appendChild(cell);
     });
   });
 }
 function propCard(title, ok, formula, witness){
-  return `<div class="prop ${ok?'ok':''}"><div class="propHead"><h3>${title}</h3><div class="mark">${ok?'✓':'×'}</div></div><div class="propFormula">${formula}</div><div class="witness">${witness}</div></div>`;
+  return `<div class="prop ${ok?'ok':''}"><div class="propHead"><h3>${title}</h3><div class="mark">${ok?'âœ“':'Ã—'}</div></div><div class="propFormula">${formula}</div><div class="witness">${witness}</div></div>`;
 }
 function renderProperties(t){
   const refW=t.ref?'every diagonal cell is filled':`fails at x=${t.refW[0]}: ${t.refW[0]}R${t.refW[0]} is false`;
@@ -488,10 +488,10 @@ function renderProperties(t){
   const trW=t.trans?'every two-step path closes':`counterexample: ${t.transW[0]}R${t.transW[1]} and ${t.transW[1]}R${t.transW[2]}, but not ${t.transW[0]}R${t.transW[2]}`;
   const eqW=t.equiv?'classes are genuine partition blocks':'quotient partition is not valid until all three hold';
   $('propertyGrid').innerHTML =
-    propCard('Reflexive',t.ref,'∀x∈U: xRx',refW)+
-    propCard('Symmetric',t.sym,'xRy ⇒ yRx',symW)+
-    propCard('Transitive',t.trans,'xRy ∧ yRz ⇒ xRz',trW)+
-    propCard('Equivalence',t.equiv,'refl. ∧ sym. ∧ trans.',eqW);
+    propCard('Reflexive',t.ref,'âˆ€xâˆˆU: xRx',refW)+
+    propCard('Symmetric',t.sym,'xRy â‡’ yRx',symW)+
+    propCard('Transitive',t.trans,'xRy âˆ§ yRz â‡’ xRz',trW)+
+    propCard('Equivalence',t.equiv,'refl. âˆ§ sym. âˆ§ trans.',eqW);
   const badge=$('equivBadge');
   badge.className='badge '+(t.equiv?'ok':'no');
   badge.textContent=t.equiv?'equivalence relation':'not an equivalence relation';
@@ -589,7 +589,7 @@ function renderTriple(){
   function row(label,val){return `<div class="truthRow"><div class="truth">${label}</div><div class="truthVal ${val?'t':'f'}">${val?'true':'false'}</div></div>`}
   $('triplePanel').innerHTML =
     row(`${a}R${b}`,ab)+row(`${b}R${c}`,bc)+row(`${a}R${c}`,ac)+
-    `<div class="truthRow"><div><div class="truth">(${a}R${b} ∧ ${b}R${c}) ⇒ ${a}R${c}</div><div class="partitionNote">${implication?'This triple respects transitivity.':'This triple violates transitivity.'}</div></div><div class="truthVal ${implication?'t':'f'}">${implication?'ok':'fail'}</div></div>`;
+    `<div class="truthRow"><div><div class="truth">(${a}R${b} âˆ§ ${b}R${c}) â‡’ ${a}R${c}</div><div class="partitionNote">${implication?'This triple respects transitivity.':'This triple violates transitivity.'}</div></div><div class="truthVal ${implication?'t':'f'}">${implication?'ok':'fail'}</div></div>`;
 }
 function render(){
   updateSliderBounds(); configureParam();
@@ -600,7 +600,7 @@ function render(){
 $('themeBtn').addEventListener('click',()=>{
   const body=document.body; const dark=body.getAttribute('data-theme')==='dark';
   body.setAttribute('data-theme',dark?'light':'dark');
-  $('themeIcon').textContent=dark?'☾':'☀'; $('themeText').textContent=dark?'Dark mode':'Light mode';
+  $('themeIcon').textContent=dark?'â˜¾':'â˜€'; $('themeText').textContent=dark?'Dark mode':'Light mode';
   renderGraph();
 });
 $('relationType').addEventListener('change',e=>{state.type=e.target.value; render();});
@@ -625,3 +625,4 @@ render();
 </script>
 </body>
 </html>
+

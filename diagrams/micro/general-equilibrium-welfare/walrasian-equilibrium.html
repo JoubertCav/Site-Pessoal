@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -500,7 +500,7 @@
     <main class="main">
       <header class="hero">
         <div>
-          <div class="eyebrow">Common budget line · supporting prices · market clearing</div>
+          <div class="eyebrow">Common budget line Â· supporting prices Â· market clearing</div>
           <h1>Walrasian equilibrium</h1>
           <p class="subtitle">A price ratio supports a competitive allocation when both consumers maximize utility on their own budget sets and their chosen bundles are mutually feasible.</p>
         </div>
@@ -616,7 +616,7 @@
 
     function css(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
     function clamp(x, lo, hi) { return Math.max(lo, Math.min(hi, x)); }
-    function fmt(x, d=2) { return Number.isFinite(x) ? x.toFixed(d) : "—"; }
+    function fmt(x, d=2) { return Number.isFinite(x) ? x.toFixed(d) : "â€”"; }
 
     function math(id, latex, display = true) {
       const el = typeof id === "string" ? $(id) : id;
@@ -874,20 +874,20 @@
         svg.addEventListener("pointermove", move);
         svg.addEventListener("pointerup", up);
       });
-      text(svg, sx(state.wX)+12, sy(state.wY)+23, "ω", "titleText");
+      text(svg, sx(state.wX)+12, sy(state.wY)+23, "Ï‰", "titleText");
 
       circle(svg, sx(D.A.x1), sy(D.A.x2), 8, "demandA");
-      text(svg, sx(D.A.x1)+12, sy(D.A.x2)-12, "xᴬ(p)", "titleText");
+      text(svg, sx(D.A.x1)+12, sy(D.A.x2)-12, "xá´¬(p)", "titleText");
       circle(svg, sx(bAsA.x), sy(bAsA.y), 8, "demandB");
-      text(svg, sx(bAsA.x)+12, sy(bAsA.y)+24, "e−xᴮ(p)", "titleText");
+      text(svg, sx(bAsA.x)+12, sy(bAsA.y)+24, "eâˆ’xá´®(p)", "titleText");
       circle(svg, sx(eqAsA.x), sy(eqAsA.y), 8.8, "eqPoint");
       text(svg, sx(eqAsA.x)+13, sy(eqAsA.y)-16, "x*", "titleText");
 
-      text(svg, margin.left-16, margin.top+bh+30, "Oᴬ", "titleText", "end");
-      text(svg, margin.left+bw+14, margin.top-16, "Oᴮ", "titleText", "start");
-      text(svg, margin.left+bw/2, margin.top+bh+48, "good 1 for A  →", "axisText", "middle");
+      text(svg, margin.left-16, margin.top+bh+30, "Oá´¬", "titleText", "end");
+      text(svg, margin.left+bw+14, margin.top-16, "Oá´®", "titleText", "start");
+      text(svg, margin.left+bw/2, margin.top+bh+48, "good 1 for A  â†’", "axisText", "middle");
       text(svg, margin.left-48, margin.top+bh/2, "good 2 for A", "axisText", "middle", -90);
-      text(svg, margin.left+bw/2, margin.top-34, "←  good 1 for B", "axisText", "middle");
+      text(svg, margin.left+bw/2, margin.top-34, "â†  good 1 for B", "axisText", "middle");
       text(svg, margin.left+bw+50, margin.top+bh/2, "good 2 for B", "axisText", "middle", 90);
 
       function arrow(svg, x1, y1, x2, y2) {
@@ -939,3 +939,4 @@
   </script>
 </body>
 </html>
+

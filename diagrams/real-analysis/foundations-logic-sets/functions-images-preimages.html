@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -184,7 +184,7 @@ table{border-collapse:collapse;width:100%;font-size:13px}th,td{border-bottom:1px
       <h1>Functions, Images, and Preimages</h1>
       <p class="subtitle">A function is a deterministic arrow from each point of a domain to exactly one point of a codomain. Images move sets forward. Preimages pull predicates backward.</p>
     </div>
-    <button class="themeBtn" id="themeBtn" aria-label="Toggle dark mode">◐ <span>Dark mode</span></button>
+    <button class="themeBtn" id="themeBtn" aria-label="Toggle dark mode">â— <span>Dark mode</span></button>
   </header>
 
   <section class="grid main">
@@ -192,10 +192,10 @@ table{border-collapse:collapse;width:100%;font-size:13px}th,td{border-bottom:1px
       <div class="card">
         <div class="sectionTitle"><h2>Symbolic core</h2><span class="small">finite model</span></div>
         <div class="math">
-          <div><span class="big">f:X → Y</span></div>
-          <div style="margin-top:9px">function ⇔ ∀x∈X, ∃!y∈Y : f(x)=y</div>
-          <div style="margin-top:9px">f(A) = { f(x) : x∈A }</div>
-          <div>f<sup>−1</sup>(B) = { x∈X : f(x)∈B }</div>
+          <div><span class="big">f:X â†’ Y</span></div>
+          <div style="margin-top:9px">function â‡” âˆ€xâˆˆX, âˆƒ!yâˆˆY : f(x)=y</div>
+          <div style="margin-top:9px">f(A) = { f(x) : xâˆˆA }</div>
+          <div>f<sup>âˆ’1</sup>(B) = { xâˆˆX : f(x)âˆˆB }</div>
         </div>
       </div>
 
@@ -222,17 +222,17 @@ table{border-collapse:collapse;width:100%;font-size:13px}th,td{border-bottom:1px
           </select>
         </div>
         <div class="control">
-          <label><span>Subset A ⊆ X</span><span>image f(A)</span></label>
+          <label><span>Subset A âŠ† X</span><span>image f(A)</span></label>
           <div class="pills" id="xPills"></div>
         </div>
         <div class="control">
-          <label><span>Subset B ⊆ Y</span><span>preimage f⁻¹(B)</span></label>
+          <label><span>Subset B âŠ† Y</span><span>preimage fâ»Â¹(B)</span></label>
           <div class="pills" id="yPills"></div>
         </div>
       </div>
 
       <div class="card compact">
-        <div class="sectionTitle"><h2>Edit f</h2><span class="small">x ↦ y</span></div>
+        <div class="sectionTitle"><h2>Edit f</h2><span class="small">x â†¦ y</span></div>
         <div id="mapEditor" class="mapGrid"></div>
       </div>
     </aside>
@@ -259,12 +259,12 @@ table{border-collapse:collapse;width:100%;font-size:13px}th,td{border-bottom:1px
   <section class="grid two" style="margin-top:16px">
     <div class="card">
       <div class="sectionTitle"><h2>Fibers: preimages of singletons</h2><span class="small">Y is sliced by f</span></div>
-      <div class="math center" id="fiberFormula">f<sup>−1</sup>({y}) = {x∈X : f(x)=y}</div>
+      <div class="math center" id="fiberFormula">f<sup>âˆ’1</sup>({y}) = {xâˆˆX : f(x)=y}</div>
       <div class="fibers" id="fibers" style="margin-top:12px"></div>
     </div>
 
     <div class="card">
-      <div class="sectionTitle"><h2>Relation matrix of a function</h2><span class="small">graph Γ<sub>f</sub> ⊆ X×Y</span></div>
+      <div class="sectionTitle"><h2>Relation matrix of a function</h2><span class="small">graph Î“<sub>f</sub> âŠ† XÃ—Y</span></div>
       <div class="tableWrap"><table id="matrixTable"></table></div>
       <p class="panelText" style="margin-top:10px">Every row has exactly one mark. Injectivity means every column has at most one mark. Surjectivity means every column has at least one mark.</p>
     </div>
@@ -272,13 +272,13 @@ table{border-collapse:collapse;width:100%;font-size:13px}th,td{border-bottom:1px
 
   <section class="grid two" style="margin-top:16px">
     <div class="card">
-      <div class="sectionTitle"><h2>Composition</h2><span class="small">g ∘ f : X → Z</span></div>
+      <div class="sectionTitle"><h2>Composition</h2><span class="small">g âˆ˜ f : X â†’ Z</span></div>
       <div class="control" style="margin-bottom:12px">
         <label><span>|Z| target</span><span id="kVal">4</span></label>
         <input id="kRange" type="range" min="2" max="7" value="4" />
       </div>
       <div class="control" style="margin-bottom:12px">
-        <label><span>Map g:Y→Z</span></label>
+        <label><span>Map g:Yâ†’Z</span></label>
         <select id="gPreset">
           <option value="fold">fold classes</option>
           <option value="identityish">identity-like</option>
@@ -288,14 +288,14 @@ table{border-collapse:collapse;width:100%;font-size:13px}th,td{border-bottom:1px
       </div>
       <div id="gEditor" class="mapGrid" style="margin-bottom:12px"></div>
       <div class="svgBox" style="min-height:250px"><svg id="compSvg" viewBox="0 0 720 290" role="img" aria-label="Composition diagram"></svg></div>
-      <div class="math" style="margin-top:12px">(g∘f)(x) = g(f(x))</div>
+      <div class="math" style="margin-top:12px">(gâˆ˜f)(x) = g(f(x))</div>
     </div>
 
     <div class="card">
       <div class="sectionTitle"><h2>Restrictions and extensions</h2><span class="small">same arrows, smaller domain</span></div>
       <div class="math">
-        f|<sub>A</sub> : A → Y, &nbsp; f|<sub>A</sub>(x)=f(x)<br>
-        F extends h:S→Y ⇔ S⊆X and F(x)=h(x) for all x∈S
+        f|<sub>A</sub> : A â†’ Y, &nbsp; f|<sub>A</sub>(x)=f(x)<br>
+        F extends h:Sâ†’Y â‡” SâŠ†X and F(x)=h(x) for all xâˆˆS
       </div>
       <div class="svgBox" style="margin-top:12px;min-height:250px"><svg id="restrSvg" viewBox="0 0 720 290" role="img" aria-label="Restriction and extension diagram"></svg></div>
       <div class="truthList" style="margin-top:12px" id="restrFacts"></div>
@@ -315,8 +315,8 @@ table{border-collapse:collapse;width:100%;font-size:13px}th,td{border-bottom:1px
         <li><strong>Injective:</strong> no two distinct domain points share the same image.</li>
         <li><strong>Surjective:</strong> every codomain point is hit.</li>
         <li><strong>Bijective:</strong> injective + surjective; then an inverse function exists.</li>
-        <li><strong>Image:</strong> pushes A⊆X forward to f(A)⊆Y.</li>
-        <li><strong>Preimage:</strong> pulls B⊆Y backward to f<sup>−1</sup>(B)⊆X; always defined for any function.</li>
+        <li><strong>Image:</strong> pushes AâŠ†X forward to f(A)âŠ†Y.</li>
+        <li><strong>Preimage:</strong> pulls BâŠ†Y backward to f<sup>âˆ’1</sup>(B)âŠ†X; always defined for any function.</li>
         <li><strong>Composition:</strong> first f, then g; order matters.</li>
         <li><strong>Restriction:</strong> same rule on smaller domain. <strong>Extension:</strong> a larger-domain function agreeing on the old domain.</li>
       </ul>
@@ -419,7 +419,7 @@ function renderEditors(){
   const ed=$('mapEditor'); ed.innerHTML='';
   for(let i=0;i<state.n;i++){
     const row=document.createElement('div'); row.className='mapRow';
-    const lab=document.createElement('span'); lab.innerHTML='<strong>'+X(i)+'</strong> ↦';
+    const lab=document.createElement('span'); lab.innerHTML='<strong>'+X(i)+'</strong> â†¦';
     const sel=document.createElement('select');
     for(let j=0;j<state.m;j++){ const o=document.createElement('option'); o.value=j; o.textContent=Y(j); sel.appendChild(o); }
     sel.value=state.f[i];
@@ -429,7 +429,7 @@ function renderEditors(){
   const ged=$('gEditor'); ged.innerHTML='';
   for(let j=0;j<state.m;j++){
     const row=document.createElement('div'); row.className='mapRow';
-    const lab=document.createElement('span'); lab.innerHTML='<strong>'+Y(j)+'</strong> ↦';
+    const lab=document.createElement('span'); lab.innerHTML='<strong>'+Y(j)+'</strong> â†¦';
     const sel=document.createElement('select');
     for(let z=0;z<state.k;z++){ const o=document.createElement('option'); o.value=z; o.textContent=Z(z); sel.appendChild(o); }
     sel.value=state.g[j];
@@ -439,12 +439,12 @@ function renderEditors(){
 }
 function pointList(set, labeler){
   const arr=[...set].sort((a,b)=>a-b).map(labeler);
-  return arr.length?'{ '+arr.join(', ')+' }':'∅';
+  return arr.length?'{ '+arr.join(', ')+' }':'âˆ…';
 }
 function renderBadges(){
   const p=props();
   const badges=[['injective',p.injective],['surjective',p.surjective],['bijective',p.bijective]];
-  $('propertyBadges').innerHTML=badges.map(([name,ok])=>`<span class="badge ${ok?'good':'bad'}">${ok?'✓':'×'} ${name}</span>`).join('');
+  $('propertyBadges').innerHTML=badges.map(([name,ok])=>`<span class="badge ${ok?'good':'bad'}">${ok?'âœ“':'Ã—'} ${name}</span>`).join('');
 }
 function renderMainSvg(){
   const svg=$('mainSvg');
@@ -459,7 +459,7 @@ function renderMainSvg(){
     <filter id="softShadow"><feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="rgba(0,0,0,.18)"/></filter>
   </defs>`;
   s+=`<text x="${lx}" y="32" text-anchor="middle" class="svgMath">X</text><text x="${rx}" y="32" text-anchor="middle" class="svgMath">Y</text>`;
-  s+=`<text x="360" y="32" text-anchor="middle" class="svgLabel">f : X → Y</text>`;
+  s+=`<text x="360" y="32" text-anchor="middle" class="svgLabel">f : X â†’ Y</text>`;
   for(let i=0;i<state.n;i++){
     const j=state.f[i];
     const y1=ypX(i), y2=ypY(j);
@@ -490,27 +490,27 @@ function renderInterpretation(){
   const imA=imageOfA(), preB=preimageOfB(), p=props();
   const failInj = p.F.find(arr=>arr.length>1);
   const missing = p.F.map((arr,j)=>arr.length?null:j).filter(v=>v!==null);
-  let text=`For the chosen subset A = ${pointList(state.A,X)}, the forward image is f(A) = ${pointList(imA,Y)}. For B = ${pointList(state.B,Y)}, the inverse image is f⁻¹(B) = ${pointList(preB,X)}.`;
+  let text=`For the chosen subset A = ${pointList(state.A,X)}, the forward image is f(A) = ${pointList(imA,Y)}. For B = ${pointList(state.B,Y)}, the inverse image is fâ»Â¹(B) = ${pointList(preB,X)}.`;
   if(!p.injective && failInj) text += ` Injectivity fails because ${failInj.map(X).join(' and ')} land on the same codomain point.`;
   if(!p.surjective) text += ` Surjectivity fails because ${missing.map(Y).join(', ')} ${missing.length===1?'is':'are'} not hit.`;
-  if(p.bijective) text += ` Since every fiber has exactly one element, the inverse map Y→X exists.`;
+  if(p.bijective) text += ` Since every fiber has exactly one element, the inverse map Yâ†’X exists.`;
   $('interpretation').textContent=text;
 }
 function renderFibers(){
   const F=fibers(); const el=$('fibers'); el.innerHTML='';
   F.forEach((arr,j)=>{
     const d=document.createElement('div'); d.className='fiber '+(arr.length?'hit':'');
-    d.innerHTML=`<div class="fiberTitle">f⁻¹({${Y(j)}})</div><div class="fiberEls">${arr.length?arr.map(i=>`<span class="miniChip">${X(i)}</span>`).join(''):'<span class="small">∅</span>'}</div>`;
+    d.innerHTML=`<div class="fiberTitle">fâ»Â¹({${Y(j)}})</div><div class="fiberEls">${arr.length?arr.map(i=>`<span class="miniChip">${X(i)}</span>`).join(''):'<span class="small">âˆ…</span>'}</div>`;
     el.appendChild(d);
   });
 }
 function renderMatrix(){
-  let html='<thead><tr><th>Γ<sub>f</sub></th>';
+  let html='<thead><tr><th>Î“<sub>f</sub></th>';
   for(let j=0;j<state.m;j++) html+=`<th>${Y(j)}</th>`;
   html+='</tr></thead><tbody>';
   for(let i=0;i<state.n;i++){
     html+=`<tr><th>${X(i)}</th>`;
-    for(let j=0;j<state.m;j++) html+=`<td>${state.f[i]===j?'<span class="dot"></span>':'<span class="empty">·</span>'}</td>`;
+    for(let j=0;j<state.m;j++) html+=`<td>${state.f[i]===j?'<span class="dot"></span>':'<span class="empty">Â·</span>'}</td>`;
     html+='</tr>';
   }
   html+='</tbody>';
@@ -521,10 +521,10 @@ function renderLogic(){
   const failInj = p.F.find(arr=>arr.length>1);
   const missing = p.F.map((arr,j)=>arr.length?null:j).filter(v=>v!==null);
   const tests=[];
-  tests.push([true,'Function test','Every row of Γ_f has exactly one mark: each x has a unique f(x).']);
-  tests.push([p.injective,'Injectivity','∀x,x′∈X, f(x)=f(x′) ⇒ x=x′.'+(p.injective?'':' Witness: '+failInj.map(X).join(' ≠ ')+' share one image.')]);
-  tests.push([p.surjective,'Surjectivity','∀y∈Y, ∃x∈X with f(x)=y.'+(p.surjective?'':' Missing: '+missing.map(Y).join(', ')+'.')]);
-  tests.push([p.bijective,'Bijectivity','Equivalent to every fiber f⁻¹({y}) having exactly one element.']);
+  tests.push([true,'Function test','Every row of Î“_f has exactly one mark: each x has a unique f(x).']);
+  tests.push([p.injective,'Injectivity','âˆ€x,xâ€²âˆˆX, f(x)=f(xâ€²) â‡’ x=xâ€².'+(p.injective?'':' Witness: '+failInj.map(X).join(' â‰  ')+' share one image.')]);
+  tests.push([p.surjective,'Surjectivity','âˆ€yâˆˆY, âˆƒxâˆˆX with f(x)=y.'+(p.surjective?'':' Missing: '+missing.map(Y).join(', ')+'.')]);
+  tests.push([p.bijective,'Bijectivity','Equivalent to every fiber fâ»Â¹({y}) having exactly one element.']);
   $('logicTests').innerHTML=tests.map(([ok,title,body])=>`<div class="truthItem"><span class="truthDot ${ok?'good':'bad'}"></span><div><strong>${title}</strong><br><span class="small">${body}</span></div></div>`).join('');
 }
 function renderCompSvg(){
@@ -542,7 +542,7 @@ function renderCompSvg(){
   for(let i=0;i<state.n;i++) s+=nodeDraw(x1,pos(i,state.n),X(i),line);
   for(let j=0;j<state.m;j++) s+=nodeDraw(x2,pos(j,state.m),Y(j),line);
   for(let z=0;z<state.k;z++) s+=nodeDraw(x3,pos(z,state.k),Z(z),line);
-  s+=`<text x="225" y="265" text-anchor="middle" class="svgLabel">f</text><text x="495" y="265" text-anchor="middle" class="svgLabel">g</text><text x="360" y="282" text-anchor="middle" class="svgLabel">dashed: g∘f</text>`;
+  s+=`<text x="225" y="265" text-anchor="middle" class="svgLabel">f</text><text x="495" y="265" text-anchor="middle" class="svgLabel">g</text><text x="360" y="282" text-anchor="middle" class="svgLabel">dashed: gâˆ˜f</text>`;
   svg.innerHTML=s;
 }
 function renderRestrSvg(){
@@ -553,7 +553,7 @@ function renderRestrSvg(){
   const ypY=j=>state.m===1?(top+bottom)/2:top+(bottom-top)*j/(state.m-1);
   const accent=cssVar('--accent'), accent2=cssVar('--accent-2'), line=cssVar('--line'), node=cssVar('--node'), muted=cssVar('--muted');
   let s=`<defs><marker id="arr3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="${accent}"/></marker></defs>`;
-  s+=`<text x="${lx}" y="28" text-anchor="middle" class="svgMath">A ⊆ X</text><text x="${rx}" y="28" text-anchor="middle" class="svgMath">Y</text>`;
+  s+=`<text x="${lx}" y="28" text-anchor="middle" class="svgMath">A âŠ† X</text><text x="${rx}" y="28" text-anchor="middle" class="svgMath">Y</text>`;
   for(let i=0;i<state.n;i++){
     const j=state.f[i]; const active=A.has(i);
     s+=`<path d="M ${lx+22} ${ypX(i)} C 250 ${ypX(i)},455 ${ypY(j)},${rx-22} ${ypY(j)}" fill="none" stroke="${active?accent:line}" stroke-width="${active?2.1:1.05}" opacity="${active?.86:.24}" marker-end="${active?'url(#arr3)':''}" stroke-dasharray="${active?'':'4 5'}"/>`;
@@ -577,7 +577,7 @@ function renderRestrFacts(){
   const outside=[...Array(state.n).keys()].filter(i=>!state.A.has(i));
   const items=[
     [true,'Restriction','f|A keeps exactly the arrows starting inside A. Its image is f(A) = '+pointList(imA,Y)+'.'],
-    [true,'Extension','The current f:X→Y extends h=f|A because it agrees with h on every point of A.'],
+    [true,'Extension','The current f:Xâ†’Y extends h=f|A because it agrees with h on every point of A.'],
     [outside.length>0,'Freedom','Outside A, an extension may choose values freely, as long as it remains a function. Free points: '+(outside.length?outside.map(X).join(', '):'none')+'.']
   ];
   $('restrFacts').innerHTML=items.map(([ok,title,body])=>`<div class="truthItem"><span class="truthDot ${ok?'good':'bad'}"></span><div><strong>${title}</strong><br><span class="small">${body}</span></div></div>`).join('');
@@ -597,3 +597,4 @@ buildF(); buildG(); updateThemeButton(); renderAll(false);
 </script>
 </body>
 </html>
+

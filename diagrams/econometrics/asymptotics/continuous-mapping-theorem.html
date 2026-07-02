@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -120,29 +120,29 @@
     <div class="def">
       <div class="tag">CMT</div>
       <div class="math">
-        <span class="formula">X<sub>n</sub> ⇒ X, &nbsp; g continuous</span>
-        <span class="formula">g(X<sub>n</sub>) ⇒ g(X)</span>
+        <span class="formula">X<sub>n</sub> â‡’ X, &nbsp; g continuous</span>
+        <span class="formula">g(X<sub>n</sub>) â‡’ g(X)</span>
       </div>
     </div>
     <div class="def">
       <div class="tag">In probability</div>
       <div class="math">
-        <span class="formula">X<sub>n</sub> →<sub>p</sub> X</span>
-        <span class="formula">⇒ g(X<sub>n</sub>) →<sub>p</sub> g(X)</span>
+        <span class="formula">X<sub>n</sub> â†’<sub>p</sub> X</span>
+        <span class="formula">â‡’ g(X<sub>n</sub>) â†’<sub>p</sub> g(X)</span>
       </div>
     </div>
     <div class="def">
       <div class="tag">General form</div>
       <div class="math">
-        <span class="formula">P(X ∈ D<sub>g</sub>) = 0</span>
+        <span class="formula">P(X âˆˆ D<sub>g</sub>) = 0</span>
         <span class="mathNote">continuity is only needed where the limit lands</span>
       </div>
     </div>
     <div class="def">
       <div class="tag">Delta method seed</div>
       <div class="math">
-        <span class="formula">√n(X<sub>n</sub>−θ) ⇒ Z</span>
-        <span class="formula">g(X<sub>n</sub>) → g(θ)</span>
+        <span class="formula">âˆšn(X<sub>n</sub>âˆ’Î¸) â‡’ Z</span>
+        <span class="formula">g(X<sub>n</sub>) â†’ g(Î¸)</span>
       </div>
     </div>
   </section>
@@ -154,10 +154,10 @@
       <div class="control">
         <label for="seqSelect">Convergent sequence \(X_n\)</label>
         <select id="seqSelect">
-          <option value="point">point limit: θ + Z/√n</option>
-          <option value="normal">law limit: N(θ, 1+1/n)</option>
-          <option value="atom">moving atom: δ_{θ+1/n}</option>
-          <option value="uniform">shrinking uniform around θ</option>
+          <option value="point">point limit: Î¸ + Z/âˆšn</option>
+          <option value="normal">law limit: N(Î¸, 1+1/n)</option>
+          <option value="atom">moving atom: Î´_{Î¸+1/n}</option>
+          <option value="uniform">shrinking uniform around Î¸</option>
           <option value="continuous">limit law: N(0,1)</option>
         </select>
       </div>
@@ -166,7 +166,7 @@
         <label for="gSelect">Transformation \(g\)</label>
         <select id="gSelect">
           <option value="identity">identity: g(x)=x</option>
-          <option value="square">square: g(x)=x²</option>
+          <option value="square">square: g(x)=xÂ²</option>
           <option value="exp">exponential: g(x)=exp(x/2)</option>
           <option value="abs">absolute value: g(x)=|x|</option>
           <option value="sin">sine: g(x)=sin(2x)</option>
@@ -181,7 +181,7 @@
       </div>
 
       <div class="control">
-        <label for="thetaRange">Limit point θ <span class="value" id="thetaVal">0.50</span></label>
+        <label for="thetaRange">Limit point Î¸ <span class="value" id="thetaVal">0.50</span></label>
         <input id="thetaRange" type="range" min="-2.00" max="2.00" step="0.05" value="0.50"/>
       </div>
 
@@ -259,7 +259,7 @@
     </section>
   </main>
 
-  <footer>Minimal interactive notebook — continuous mapping theorem, transformed limits, and discontinuity traps.</footer>
+  <footer>Minimal interactive notebook â€” continuous mapping theorem, transformed limits, and discontinuity traps.</footer>
 </div>
 
 <script>
@@ -274,7 +274,7 @@ const xRange=document.getElementById("xRange");
 
 function css(v){return getComputedStyle(body).getPropertyValue(v).trim();}
 function fmt(x){
-  if(!isFinite(x)) return "∞";
+  if(!isFinite(x)) return "âˆž";
   if(Math.abs(x)<0.0001 && x!==0) return x.toExponential(2);
   if(Math.abs(x)<10) return x.toFixed(4);
   return x.toFixed(2);
@@ -318,7 +318,7 @@ function g(x){
 function gLabel(){
   const type=gSelect.value;
   if(type==="identity") return "g(x)=x";
-  if(type==="square") return "g(x)=x²";
+  if(type==="square") return "g(x)=xÂ²";
   if(type==="exp") return "g(x)=exp(x/2)";
   if(type==="abs") return "g(x)=|x|";
   if(type==="sin") return "g(x)=sin(2x)";
@@ -375,7 +375,7 @@ function theoremStatus(){
   const type=gSelect.value, ok=continuityOK();
   if(type==="reciprocal" && !ok) return "fails at limit point";
   if(type==="indicator" && !ok) return "fails at jump";
-  if(discontinuities().length>0 && ok) return "allowed: P(X∈Dg)=0";
+  if(discontinuities().length>0 && ok) return "allowed: P(XâˆˆDg)=0";
   return "CMT applies";
 }
 function kolmogorov(a,b){
@@ -408,7 +408,7 @@ function drawMain(){
   const ypad=(yhi-ylo)*.12; ylo-=ypad; yhi+=ypad;
 
   let h='<rect x="8" y="10" width="964" height="470" rx="20" fill="'+panel+'" stroke="'+border+'"/>';
-  h+=text(68,38,"mapping diagram: x ↦ g(x)",muted,13,850);
+  h+=text(68,38,"mapping diagram: x â†¦ g(x)",muted,13,850);
   for(let k=0;k<=5;k++) h+=line(X0,Y1-(Y1-Y0)*k/5,X1,Y1-(Y1-Y0)*k/5,grid,1,.85);
   for(let k=-3;k<=3;k++){
     const xx=px(k,xlo,xhi,X0,X1);
@@ -460,7 +460,7 @@ function drawMain(){
     const ty=py(clamp(g(theta),ylo,yhi),ylo,yhi,Y0,Y1);
     h+=line(tx,Y0,tx,Y1,blue,1.4,.45,"5 5");
     h+='<circle cx="'+tx+'" cy="'+ty+'" r="6" fill="'+blue+'"/>';
-    h+=text(tx+8,ty-8,"(θ,g(θ))",blue,11,900);
+    h+=text(tx+8,ty-8,"(Î¸,g(Î¸))",blue,11,900);
   }else{
     let band="";
     const mu=seqSelect.value==="normal"?theta:0, sd=1;
@@ -486,9 +486,9 @@ function drawMain(){
     ["g",gLabel(),violet],
     ["status",theoremStatus(),continuityOK()?acc:warn],
     ["CDF gap",fmt(gap),warn],
-    ["mean |gXn−gX|",fmt(meanAbsDiff(data.Yn,data.Y)),acc],
+    ["mean |gXnâˆ’gX|",fmt(meanAbsDiff(data.Yn,data.Y)),acc],
     ["n",String(n),muted],
-    ["θ",fmt(theta),blue]
+    ["Î¸",fmt(theta),blue]
   ];
   rows.forEach((r,i)=>{
     const y=138+i*31;
@@ -529,9 +529,9 @@ function drawLaw(){
     h+='<rect x="'+(x+1)+'" y="'+yT+'" width="'+w+'" height="'+(Y1-yT)+'" rx="4" fill="'+blue+'" fill-opacity=".30"/>';
     h+='<rect x="'+(x+1+w*.18)+'" y="'+yN+'" width="'+(w*.64)+'" height="'+(Y1-yN)+'" rx="4" fill="'+acc+'" fill-opacity=".68"/>';
   }
-  h+=text(68,34,"law of g(Xₙ) approaching law of g(X)",muted,12,850);
+  h+=text(68,34,"law of g(Xâ‚™) approaching law of g(X)",muted,12,850);
   h+=text(72,278,"g(X)",blue,12,900);
-  h+=text(128,278,"g(Xₙ)",acc,12,900);
+  h+=text(128,278,"g(Xâ‚™)",acc,12,900);
   svg.innerHTML=h;
 }
 function drawCDF(){
@@ -559,7 +559,7 @@ function drawCDF(){
   h+='<path d="'+ecdfPath(a)+'" fill="none" stroke="'+acc+'" stroke-width="2.6"/>';
   h+=text(68,34,"empirical CDFs after transformation",muted,12,850);
   h+=text(72,278,"F of g(X)",blue,12,900);
-  h+=text(158,278,"F of g(Xₙ)",acc,12,900);
+  h+=text(158,278,"F of g(Xâ‚™)",acc,12,900);
   svg.innerHTML=h;
 }
 function updateText(){
@@ -581,19 +581,19 @@ function updateText(){
   const Fy=data.Y.filter(v=>v<=y).length/data.Y.length;
   const mini=[
     ["CDF gap",fmt(gap)],
-    ["Fₙ(y)",fmt(Fny)],
+    ["Fâ‚™(y)",fmt(Fny)],
     ["F(y)",fmt(Fy)],
-    ["mean gXₙ",fmt(m)],
-    ["sd gXₙ",fmt(Math.sqrt(v))],
+    ["mean gXâ‚™",fmt(m)],
+    ["sd gXâ‚™",fmt(Math.sqrt(v))],
     ["CMT",continuityOK()?"ok":"danger"]
   ];
   document.getElementById("miniGrid").innerHTML=mini.map(d=>'<div class="miniStat"><div class="k">'+d[0]+'</div><div class="v">'+d[1]+'</div></div>').join("");
 
   const logic=[
-    ["1","start with Xₙ converging to X"],
+    ["1","start with Xâ‚™ converging to X"],
     ["2","push both laws through g"],
     ["3","if g is continuous where X lands"],
-    ["→","then g(Xₙ) converges to g(X)"]
+    ["â†’","then g(Xâ‚™) converges to g(X)"]
   ];
   document.getElementById("logicList").innerHTML=logic.map(it=>'<div class="logicItem"><span class="mark">'+it[0]+'</span><span>'+it[1]+'</span></div>').join("");
 
@@ -622,3 +622,4 @@ drawAll();
 </script>
 </body>
 </html>
+

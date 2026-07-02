@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -164,7 +164,7 @@
 <div class="app">
   <header>
     <div>
-      <div class="eyebrow"><span class="dot"></span> Microeconomics · Market Power</div>
+      <div class="eyebrow"><span class="dot"></span> Microeconomics Â· Market Power</div>
       <h1>Lerner index and elasticity</h1>
       <p class="subtitle">A clean linked view of how the main monopoly diagram generates price, marginal revenue, elasticity, and the Lerner index. Move one quantity, and every function reacts.</p>
     </div>
@@ -196,7 +196,7 @@
       </div>
 
       <div class="toggle-row">
-        <div><div style="font-size:14px;">Snap to monopoly</div><div class="small">q = qᴹ</div></div>
+        <div><div style="font-size:14px;">Snap to monopoly</div><div class="small">q = qá´¹</div></div>
         <label class="switch"><input id="snapM" type="checkbox" /><span class="slider-switch"></span></label>
       </div>
 
@@ -218,7 +218,7 @@
         <div class="card formula">
           <div>
             <div class="name">Demand</div>
-            <div class="math mathline">p(q) = a − bq</div>
+            <div class="math mathline">p(q) = a âˆ’ bq</div>
           </div>
           <div class="soft-eq">the price read from the demand curve</div>
         </div>
@@ -226,7 +226,7 @@
         <div class="card formula">
           <div>
             <div class="name">Marginal revenue</div>
-            <div class="math mathline">MR(q) = a − 2bq</div>
+            <div class="math mathline">MR(q) = a âˆ’ 2bq</div>
           </div>
           <div class="soft-eq">steeper than demand</div>
         </div>
@@ -234,7 +234,7 @@
         <div class="card formula">
           <div>
             <div class="name">Elasticity magnitude</div>
-            <div class="math mathline">|ε(q)| = <span class="frac"><span class="top">p(q)</span><span class="bottom">bq</span></span></div>
+            <div class="math mathline">|Îµ(q)| = <span class="frac"><span class="top">p(q)</span><span class="bottom">bq</span></span></div>
           </div>
           <div class="soft-eq">how sensitive quantity is to price</div>
         </div>
@@ -242,7 +242,7 @@
         <div class="card formula">
           <div>
             <div class="name">Lerner index</div>
-            <div class="math mathline">L(q) = <span class="frac"><span class="top">p(q) − c</span><span class="bottom">p(q)</span></span></div>
+            <div class="math mathline">L(q) = <span class="frac"><span class="top">p(q) âˆ’ c</span><span class="bottom">p(q)</span></span></div>
           </div>
           <div class="soft-eq">share of price above marginal cost</div>
         </div>
@@ -254,7 +254,7 @@
             <h2>Main market diagram</h2>
             <p>Click or drag on the graph to choose a quantity. The same quantity is highlighted in every function below.</p>
           </div>
-          <span class="small">q horizontal · p vertical</span>
+          <span class="small">q horizontal Â· p vertical</span>
         </div>
         <svg id="marketSvg" viewBox="0 0 980 560" aria-label="Main market diagram"></svg>
         <div class="legend">
@@ -269,10 +269,10 @@
           <div class="metric"><div class="k">p(q)</div><div class="v" id="pMetric"></div></div>
           <div class="metric"><div class="k">MR(q)</div><div class="v" id="mrMetric"></div></div>
           <div class="metric"><div class="k">MC</div><div class="v" id="mcMetric"></div></div>
-          <div class="metric"><div class="k">Markup p−MC</div><div class="v" id="muMetric"></div></div>
-          <div class="metric"><div class="k">|ε(q)|</div><div class="v" id="eMetric"></div></div>
+          <div class="metric"><div class="k">Markup pâˆ’MC</div><div class="v" id="muMetric"></div></div>
+          <div class="metric"><div class="k">|Îµ(q)|</div><div class="v" id="eMetric"></div></div>
           <div class="metric"><div class="k">L(q)</div><div class="v" id="LMetric"></div></div>
-          <div class="metric"><div class="k">qᴹ</div><div class="v" id="qMMetric"></div></div>
+          <div class="metric"><div class="k">qá´¹</div><div class="v" id="qMMetric"></div></div>
         </div>
       </section>
 
@@ -286,7 +286,7 @@
           <svg id="mrSvg" viewBox="0 0 700 270" aria-label="Marginal revenue function"></svg>
         </section>
         <section class="card mini-card">
-          <div class="mini-head"><h3>Elasticity function</h3><span class="mini-sub">|ε(q)|</span></div>
+          <div class="mini-head"><h3>Elasticity function</h3><span class="mini-sub">|Îµ(q)|</span></div>
           <svg id="elasSvg" viewBox="0 0 700 270" aria-label="Elasticity function"></svg>
         </section>
         <section class="card mini-card">
@@ -301,7 +301,7 @@
           <p id="interpretation"></p>
           <div class="notice-list">
             <div class="notice"><strong>One quantity, many objects.</strong> Choosing q on the main graph simultaneously determines price, marginal revenue, elasticity, and markup.</div>
-            <div class="notice"><strong>Why qᴹ matters.</strong> At the monopoly quantity, <span class="math-inline">MR = MC</span>. Exactly there, the Lerner index equals the inverse of elasticity in magnitude: <span class="math-inline">L = 1/|ε|</span>.</div>
+            <div class="notice"><strong>Why qá´¹ matters.</strong> At the monopoly quantity, <span class="math-inline">MR = MC</span>. Exactly there, the Lerner index equals the inverse of elasticity in magnitude: <span class="math-inline">L = 1/|Îµ|</span>.</div>
             <div class="notice"><strong>Core intuition.</strong> The less elastic demand is at the chosen point, the easier it is for the monopolist to keep price above marginal cost.</div>
           </div>
         </section>
@@ -317,7 +317,7 @@
             <div class="summary-line"><span>1</span><div>Demand tells you <span class="math-inline">p(q)</span>; MR tells you whether increasing output still raises revenue at the margin.</div></div>
             <div class="summary-line"><span>2</span><div>Elasticity is high on the left and falls as q moves right toward the choke quantity.</div></div>
             <div class="summary-line"><span>3</span><div>The Lerner index is the normalized markup, so it rises when price stays high relative to cost.</div></div>
-            <div class="summary-line"><span>4</span><div>At qᴹ the four objects become one story: <span class="math-inline">MR=MC</span>, demand is elastic, and <span class="math-inline">L=1/|ε|</span>.</div></div>
+            <div class="summary-line"><span>4</span><div>At qá´¹ the four objects become one story: <span class="math-inline">MR=MC</span>, demand is elastic, and <span class="math-inline">L=1/|Îµ|</span>.</div></div>
           </div>
         </section>
       </section>
@@ -336,7 +336,7 @@
     interpretation:$("interpretation"), notice1:$("notice1"), notice2:$("notice2"), notice3:$("notice3")
   };
 
-  function fmt(x,d=2){ if(!Number.isFinite(x)) return '—'; if(Math.abs(x)>=100) return x.toFixed(1); return x.toFixed(d); }
+  function fmt(x,d=2){ if(!Number.isFinite(x)) return 'â€”'; if(Math.abs(x)>=100) return x.toFixed(1); return x.toFixed(d); }
   function clamp(x,lo,hi){ return Math.max(lo, Math.min(hi, x)); }
   function s(tag, attrs={}){ const el=document.createElementNS('http://www.w3.org/2000/svg', tag); for(const [k,v] of Object.entries(attrs)) el.setAttribute(k,v); return el; }
   function line(svg,x1,y1,x2,y2,cls){ svg.appendChild(s('line',{x1,y1,x2,y2,class:cls})); }
@@ -415,9 +415,9 @@
     line(svg,X(m.qM),Y(0),X(m.qM),Y(m.pM),'helper');
     line(svg,X(0),Y(m.pM),X(m.qM),Y(m.pM),'helper');
     circle(svg,X(m.qM),Y(m.pM),6.1,'point-accent'); circle(svg,X(m.qM),Y(m.c),5.3,'point');
-    text(svg,X(m.qM),Y(0)+28,'qᴹ','label'); text(svg,X(0)-14,Y(m.pM)+4,'pᴹ','label','end');
+    text(svg,X(m.qM),Y(0)+28,'qá´¹','label'); text(svg,X(0)-14,Y(m.pM)+4,'pá´¹','label','end');
 
-    if(els.comp.checked){ line(svg,X(m.qC),Y(0),X(m.qC),Y(m.c),'helper'); circle(svg,X(m.qC),Y(m.c),5,'point'); text(svg,X(m.qC),Y(0)+28,'qᶜ','muted-label'); }
+    if(els.comp.checked){ line(svg,X(m.qC),Y(0),X(m.qC),Y(m.c),'helper'); circle(svg,X(m.qC),Y(m.c),5,'point'); text(svg,X(m.qC),Y(0)+28,'qá¶œ','muted-label'); }
 
     line(svg,X(m.q),Y(0),X(m.q),Y(m.p),'helper-focus');
     line(svg,X(0),Y(m.p),X(m.q),Y(m.p),'helper-focus');
@@ -463,22 +463,22 @@
       if(focusLabel) text(svg,X(m.q)+8,Y(clamp(fy,yMin,effectiveYMax))-10,focusLabel,'muted-label','start');
     }
     line(svg,X(m.qM),margin.top,X(m.qM),margin.top+axes.ih,'helper');
-    text(svg,X(m.qM),margin.top+axes.ih+22,'qᴹ','muted-label');
+    text(svg,X(m.qM),margin.top+axes.ih+22,'qá´¹','muted-label');
     text(svg,X(m.q),margin.top+axes.ih+22,'q','label');
   }
 
   function updateText(m){
     els.aVal.textContent=fmt(m.a,0); els.bVal.textContent=fmt(m.b,1); els.cVal.textContent=fmt(m.c,0); els.qFocusVal.textContent=fmt(m.q);
-    els.qMetric.textContent=fmt(m.q); els.pMetric.textContent=fmt(m.p); els.mrMetric.textContent=fmt(m.MR); els.mcMetric.textContent=fmt(m.MC,0); els.muMetric.textContent=fmt(m.markup); els.eMetric.textContent=Number.isFinite(m.absE)?fmt(m.absE):'∞'; els.LMetric.textContent=fmt(m.L); els.qMMetric.textContent=fmt(m.qM);
+    els.qMetric.textContent=fmt(m.q); els.pMetric.textContent=fmt(m.p); els.mrMetric.textContent=fmt(m.MR); els.mcMetric.textContent=fmt(m.MC,0); els.muMetric.textContent=fmt(m.markup); els.eMetric.textContent=Number.isFinite(m.absE)?fmt(m.absE):'âˆž'; els.LMetric.textContent=fmt(m.L); els.qMMetric.textContent=fmt(m.qM);
     els.statusPill.textContent = els.snapM.checked ? 'Snapped to monopoly quantity' : 'Linked quantity view';
 
     const exact = Math.abs(m.q-m.qM) < 0.08;
-    const inverseText = exact ? `At this quantity, the inverse elasticity rule is exact: <span class="math-inline">L = ${fmt(m.L)}</span> and <span class="math-inline">1/|ε| = ${fmt(1/m.absE)}</span>.` : `At this quantity, <span class="math-inline">L(q)</span> and <span class="math-inline">1/|ε(q)|</span> need not coincide; the equality is a monopoly condition, not a general identity.`;
+    const inverseText = exact ? `At this quantity, the inverse elasticity rule is exact: <span class="math-inline">L = ${fmt(m.L)}</span> and <span class="math-inline">1/|Îµ| = ${fmt(1/m.absE)}</span>.` : `At this quantity, <span class="math-inline">L(q)</span> and <span class="math-inline">1/|Îµ(q)|</span> need not coincide; the equality is a monopoly condition, not a general identity.`;
 
-    els.interpretation.innerHTML = `The chosen quantity is <span class="math-inline">q = ${fmt(m.q)}</span>. Reading upward on demand gives price <span class="math-inline">p(q) = ${fmt(m.p)}</span>. The same q implies marginal revenue <span class="math-inline">MR(q) = ${fmt(m.MR)}</span>, elasticity magnitude <span class="math-inline">|ε(q)| = ${Number.isFinite(m.absE)?fmt(m.absE):'∞'}</span>, and Lerner index <span class="math-inline">L(q) = ${fmt(m.L)}</span>. ${inverseText}`;
+    els.interpretation.innerHTML = `The chosen quantity is <span class="math-inline">q = ${fmt(m.q)}</span>. Reading upward on demand gives price <span class="math-inline">p(q) = ${fmt(m.p)}</span>. The same q implies marginal revenue <span class="math-inline">MR(q) = ${fmt(m.MR)}</span>, elasticity magnitude <span class="math-inline">|Îµ(q)| = ${Number.isFinite(m.absE)?fmt(m.absE):'âˆž'}</span>, and Lerner index <span class="math-inline">L(q) = ${fmt(m.L)}</span>. ${inverseText}`;
 
     els.notice1.innerHTML = `<strong>Demand and MR react together.</strong> When q moves right, both <span class="math-inline">p(q)</span> and <span class="math-inline">MR(q)</span> fall, but MR falls faster because selling one more unit lowers revenue on all previous units.`;
-    els.notice2.innerHTML = `<strong>Elasticity reacts nonlinearly.</strong> On the left, demand is very elastic. As q rises, <span class="math-inline">|ε(q)|</span> drops toward 1. Monopoly always chooses in the elastic region, so <span class="math-inline">|ε(q^M)| = ${fmt(m.absEM)}</span> is greater than 1.`;
+    els.notice2.innerHTML = `<strong>Elasticity reacts nonlinearly.</strong> On the left, demand is very elastic. As q rises, <span class="math-inline">|Îµ(q)|</span> drops toward 1. Monopoly always chooses in the elastic region, so <span class="math-inline">|Îµ(q^M)| = ${fmt(m.absEM)}</span> is greater than 1.`;
     els.notice3.innerHTML = `<strong>Lerner as normalized markup.</strong> The raw markup is <span class="math-inline">p-c = ${fmt(m.markup)}</span>, while the Lerner index is the fraction of price above cost, <span class="math-inline">L = ${fmt(m.L)}</span>. This is why Lerner measures market power more cleanly than markup alone.`;
   }
 
@@ -491,7 +491,7 @@
     drawMarket(m);
     drawFunction(els.priceSvg,m,{getter:q=>m.a-m.b*q,label:'p',curveClass:'curve-secondary',yMin:0,yMax:Math.max(m.a*1.05,m.c*1.2),focusLabel:'p(q)'});
     drawFunction(els.mrSvg,m,{getter:q=>m.a-2*m.b*q,label:'MR',curveClass:'curve-secondary',yMin:Math.min(0,m.a-2*m.b*m.qInt*1.02),yMax:m.a*1.05,focusLabel:'MR(q)'});
-    drawFunction(els.elasSvg,m,{getter:q=>{ const p=m.a-m.b*q; return (q>0 && p>0)? p/(m.b*q):Infinity; },label:'|ε|',curveClass:'curve-focus',yMin:0,yMax:Math.max(6,m.absEM*1.8),focusLabel:'|ε(q)|'});
+    drawFunction(els.elasSvg,m,{getter:q=>{ const p=m.a-m.b*q; return (q>0 && p>0)? p/(m.b*q):Infinity; },label:'|Îµ|',curveClass:'curve-focus',yMin:0,yMax:Math.max(6,m.absEM*1.8),focusLabel:'|Îµ(q)|'});
     drawFunction(els.lernerSvg,m,{getter:q=>{ const p=m.a-m.b*q; return p>0 ? Math.max(0,(p-m.c)/p) : 0; },label:'L',curveClass:'curve-focus',yMin:0,yMax:1.02,focusLabel:'L(q)'});
   }
 
@@ -502,3 +502,4 @@
 </script>
 </body>
 </html>
+

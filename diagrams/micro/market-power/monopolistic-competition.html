@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -81,9 +81,9 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
 <div class="app">
 <header>
   <div>
-    <div class="eyebrow"><span class="dot"></span> Microeconomics · Market Structure</div>
+    <div class="eyebrow"><span class="dot"></span> Microeconomics Â· Market Structure</div>
     <h1>Monopolistic competition</h1>
-    <p class="subtitle">Differentiated products, free entry, zero-profit tangency, and excess capacity. The app shows how entry shifts each firm’s residual demand inward until profit disappears.</p>
+    <p class="subtitle">Differentiated products, free entry, zero-profit tangency, and excess capacity. The app shows how entry shifts each firmâ€™s residual demand inward until profit disappears.</p>
   </div>
   <button class="theme-btn" id="themeBtn">Dark mode</button>
 </header>
@@ -111,10 +111,10 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
 
   <main class="main">
     <section class="formula-row">
-      <div class="card formula"><div><div class="name">Residual demand</div><div class="math mathline">p<sub>N</sub>(q)=A−gN−bq</div></div><div class="soft-eq">more firms → weaker residual demand for each firm</div></div>
+      <div class="card formula"><div><div class="name">Residual demand</div><div class="math mathline">p<sub>N</sub>(q)=Aâˆ’gNâˆ’bq</div></div><div class="soft-eq">more firms â†’ weaker residual demand for each firm</div></div>
       <div class="card formula"><div><div class="name">Short-run choice</div><div class="math mathline">MR<sub>N</sub>(q)=MC(q)</div></div><div class="soft-eq">choose q where marginal revenue equals marginal cost</div></div>
-      <div class="card formula"><div><div class="name">Long-run free entry</div><div class="math mathline">π=0 and D tangent to AC</div></div><div class="soft-eq">entry continues until profit disappears</div></div>
-      <div class="card formula"><div><div class="name">Excess capacity</div><div class="math mathline">q<sub>minAC</sub>−q<sub>LR</sub> &gt; 0</div></div><div class="formula-chip math">p<sub>LR</sub> &gt; MC</div></div>
+      <div class="card formula"><div><div class="name">Long-run free entry</div><div class="math mathline">Ï€=0 and D tangent to AC</div></div><div class="soft-eq">entry continues until profit disappears</div></div>
+      <div class="card formula"><div><div class="name">Excess capacity</div><div class="math mathline">q<sub>minAC</sub>âˆ’q<sub>LR</sub> &gt; 0</div></div><div class="formula-chip math">p<sub>LR</sub> &gt; MC</div></div>
     </section>
 
     <section class="card diagram-card">
@@ -123,7 +123,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
           <h2>Main diagram: short run versus long run</h2>
           <p>The current residual demand D<sub>N</sub> determines the short-run outcome. Free entry shifts it left to the long-run demand that is tangent to average cost.</p>
         </div>
-        <span class="small">q horizontal · price / cost vertical</span>
+        <span class="small">q horizontal Â· price / cost vertical</span>
       </div>
       <svg id="mainSvg" viewBox="0 0 1120 620"></svg>
       <div class="legend">
@@ -139,7 +139,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
         <div class="metric"><div class="k">N*</div><div class="v" id="mNstar"></div></div>
         <div class="metric"><div class="k">q<sub>SR</sub></div><div class="v" id="mqsr"></div></div>
         <div class="metric"><div class="k">p<sub>SR</sub></div><div class="v" id="mpsr"></div></div>
-        <div class="metric"><div class="k">π<sub>SR</sub></div><div class="v" id="mpisr"></div></div>
+        <div class="metric"><div class="k">Ï€<sub>SR</sub></div><div class="v" id="mpisr"></div></div>
         <div class="metric"><div class="k">q<sub>LR</sub></div><div class="v" id="mqlr"></div></div>
         <div class="metric"><div class="k">p<sub>LR</sub></div><div class="v" id="mplr"></div></div>
         <div class="metric"><div class="k">Excess cap.</div><div class="v" id="mcap"></div></div>
@@ -147,8 +147,8 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
     </section>
 
     <section class="three-col">
-      <section class="card mini-card"><div class="mini-head"><h3>Entry shifts demand</h3><span class="mini-sub">a(N)=A−gN</span></div><svg id="entrySvg" viewBox="0 0 760 360"></svg></section>
-      <section class="card mini-card"><div class="mini-head"><h3>Profit and free entry</h3><span class="mini-sub">π(N) crosses zero at N*</span></div><svg id="profitSvg" viewBox="0 0 760 360"></svg></section>
+      <section class="card mini-card"><div class="mini-head"><h3>Entry shifts demand</h3><span class="mini-sub">a(N)=Aâˆ’gN</span></div><svg id="entrySvg" viewBox="0 0 760 360"></svg></section>
+      <section class="card mini-card"><div class="mini-head"><h3>Profit and free entry</h3><span class="mini-sub">Ï€(N) crosses zero at N*</span></div><svg id="profitSvg" viewBox="0 0 760 360"></svg></section>
       <section class="card mini-card"><div class="mini-head"><h3>Excess capacity</h3><span class="mini-sub">q<sub>LR</sub> below q<sub>minAC</sub></span></div><svg id="capSvg" viewBox="0 0 760 360"></svg></section>
     </section>
 
@@ -158,7 +158,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
         <p id="interpretation"></p>
         <div class="notice-list">
           <div class="notice"><strong>Differentiated products.</strong> Each firm faces a downward-sloping residual demand because products are not perfect substitutes.</div>
-          <div class="notice"><strong>Free entry.</strong> Positive short-run profit attracts entry, which lowers each incumbent’s demand intercept from <span class="math-inline">a(N)=A-gN</span> until profit becomes zero.</div>
+          <div class="notice"><strong>Free entry.</strong> Positive short-run profit attracts entry, which lowers each incumbentâ€™s demand intercept from <span class="math-inline">a(N)=A-gN</span> until profit becomes zero.</div>
           <div class="notice"><strong>Excess capacity.</strong> In long-run equilibrium the firm operates to the left of minimum average cost, so it could produce more at a lower average cost if it had a larger residual market.</div>
         </div>
       </section>
@@ -167,8 +167,8 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
         <div class="summary">
           <div class="summary-line"><span>1</span><div>Write residual demand <span class="math-inline">p_N(q)=A-gN-bq</span>.</div></div>
           <div class="summary-line"><span>2</span><div>Compute the short-run choice from <span class="math-inline">MR_N=MC</span>.</div></div>
-          <div class="summary-line"><span>3</span><div>If <span class="math-inline">π&gt;0</span>, entry reduces demand for each firm; if <span class="math-inline">π&lt;0</span>, exit raises it.</div></div>
-          <div class="summary-line"><span>4</span><div>Long-run equilibrium satisfies <span class="math-inline">π=0</span>, so demand is tangent to average cost at the chosen quantity.</div></div>
+          <div class="summary-line"><span>3</span><div>If <span class="math-inline">Ï€&gt;0</span>, entry reduces demand for each firm; if <span class="math-inline">Ï€&lt;0</span>, exit raises it.</div></div>
+          <div class="summary-line"><span>4</span><div>Long-run equilibrium satisfies <span class="math-inline">Ï€=0</span>, so demand is tangent to average cost at the chosen quantity.</div></div>
           <div class="summary-line"><span>5</span><div>Because <span class="math-inline">q_{LR}&lt;q_{minAC}</span>, monopolistic competition exhibits excess capacity.</div></div>
         </div>
       </section>
@@ -187,7 +187,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
     mN:$("mN"), mNstar:$("mNstar"), mqsr:$("mqsr"), mpsr:$("mpsr"), mpisr:$("mpisr"), mqlr:$("mqlr"), mplr:$("mplr"), mcap:$("mcap")
   };
 
-  function fmt(x,d=2){ if(!Number.isFinite(x)) return '—'; if(Math.abs(x)>=100) return x.toFixed(1); return x.toFixed(d); }
+  function fmt(x,d=2){ if(!Number.isFinite(x)) return 'â€”'; if(Math.abs(x)>=100) return x.toFixed(1); return x.toFixed(d); }
   function S(tag,a={}){ const e=document.createElementNS('http://www.w3.org/2000/svg',tag); for(const[k,v] of Object.entries(a)) e.setAttribute(k,v); return e; }
   function line(svg,x1,y1,x2,y2,cls){ svg.appendChild(S('line',{x1,y1,x2,y2,class:cls})); }
   function text(svg,x,y,str,cls='label',anchor='middle'){ const t=S('text',{x,y,class:cls,'text-anchor':anchor}); t.textContent=str; svg.appendChild(t); }
@@ -319,9 +319,9 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
     const iw=W-mr.l-mr.r, ih=H-mr.t-mr.b; const X=x=>mr.l+(x/Nmax)*iw; const Y=y=>mr.t+ih-((y-yMin)/(yMax-yMin))*ih;
     for(let i=0;i<=5;i++){ const x=Nmax*i/5; line(svg,X(x),mr.t,X(x),mr.t+ih,'grid'); text(svg,X(x),mr.t+ih+22,fmt(x,1),'muted-label'); }
     for(let i=0;i<=4;i++){ const y=yMin + (yMax-yMin)*i/4; line(svg,mr.l,Y(y),mr.l+iw,Y(y),'grid'); text(svg,mr.l-10,Y(y)+4,fmt(y,0),'muted-label','end'); }
-    line(svg,mr.l,mr.t+ih,mr.l+iw,mr.t+ih,'axis'); line(svg,mr.l,mr.t,mr.l,mr.t+ih,'axis'); text(svg,mr.l+iw,mr.t+ih+40,'N','label'); text(svg,mr.l-26,mr.t+8,'π','label');
+    line(svg,mr.l,mr.t+ih,mr.l+iw,mr.t+ih,'axis'); line(svg,mr.l,mr.t,mr.l,mr.t+ih,'axis'); text(svg,mr.l+iw,mr.t+ih+40,'N','label'); text(svg,mr.l-26,mr.t+8,'Ï€','label');
     path(svg,pts.map(p=>[X(p[0]),Y(p[1])]),'curve-profit'); line(svg,mr.l,Y(0),mr.l+iw,Y(0),'helper'); line(svg,X(m.Nstar),mr.t,X(m.Nstar),mr.t+ih,'helper-a'); line(svg,X(m.N),mr.t,X(m.N),mr.t+ih,'helper');
-    circle(svg,X(m.N),Y(m.piSR),6,'point-a'); text(svg,X(m.N)+8,Y(m.piSR)-10,'current π','muted-label','start'); text(svg,X(m.Nstar),mr.t+ih+24,'N*','muted-label');
+    circle(svg,X(m.N),Y(m.piSR),6,'point-a'); text(svg,X(m.N)+8,Y(m.piSR)-10,'current Ï€','muted-label','start'); text(svg,X(m.Nstar),mr.t+ih+24,'N*','muted-label');
   }
 
   function drawCap(m){
@@ -344,7 +344,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
     els.mN.textContent=fmt(m.N,2); els.mNstar.textContent=fmt(m.Nstar,2); els.mqsr.textContent=fmt(m.qSR); els.mpsr.textContent=fmt(m.pSR); els.mpisr.textContent=fmt(m.piSR); els.mqlr.textContent=fmt(m.qLR); els.mplr.textContent=fmt(m.pLR); els.mcap.textContent=fmt(m.cap);
     const regime = m.piSR>0 ? 'profit is positive, so entry should occur' : (m.piSR<0 ? 'profit is negative, so exit should occur' : 'profit is zero, so the market is in long-run equilibrium');
     els.statusPill.textContent = regime;
-    els.interpretation.innerHTML = `With <span class="math-inline">N=${fmt(m.N,2)}</span>, the firm faces residual demand intercept <span class="math-inline">a(N)=${fmt(m.aN)}</span>. The short-run choice is <span class="math-inline">q_{SR}=${fmt(m.qSR)}</span> at price <span class="math-inline">p_{SR}=${fmt(m.pSR)}</span>, generating profit <span class="math-inline">π=${fmt(m.piSR)}</span>. Free entry drives the market toward <span class="math-inline">N^*=${fmt(m.Nstar,2)}</span>, where the residual demand becomes tangent to average cost at <span class="math-inline">q_{LR}=${fmt(m.qLR)}</span>. Because <span class="math-inline">q_{LR}&lt;q_{minAC}=${fmt(m.qMinAC)}</span>, the long-run equilibrium displays excess capacity.`;
+    els.interpretation.innerHTML = `With <span class="math-inline">N=${fmt(m.N,2)}</span>, the firm faces residual demand intercept <span class="math-inline">a(N)=${fmt(m.aN)}</span>. The short-run choice is <span class="math-inline">q_{SR}=${fmt(m.qSR)}</span> at price <span class="math-inline">p_{SR}=${fmt(m.pSR)}</span>, generating profit <span class="math-inline">Ï€=${fmt(m.piSR)}</span>. Free entry drives the market toward <span class="math-inline">N^*=${fmt(m.Nstar,2)}</span>, where the residual demand becomes tangent to average cost at <span class="math-inline">q_{LR}=${fmt(m.qLR)}</span>. Because <span class="math-inline">q_{LR}&lt;q_{minAC}=${fmt(m.qMinAC)}</span>, the long-run equilibrium displays excess capacity.`;
   }
 
   function update(){ const m=model(); updateText(m); drawMain(m); drawEntry(m); drawProfit(m); drawCap(m); }
@@ -355,3 +355,4 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
 </script>
 </body>
 </html>
+

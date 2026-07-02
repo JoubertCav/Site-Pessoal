@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -120,29 +120,29 @@
     <div class="def">
       <div class="tag">Likelihood</div>
       <div class="math">
-        <span class="formula">L(θ;x)=∏ f(xᵢ;θ)</span>
-        <span class="mathNote">compatibility of parameter θ with observed data</span>
+        <span class="formula">L(Î¸;x)=âˆ f(xáµ¢;Î¸)</span>
+        <span class="mathNote">compatibility of parameter Î¸ with observed data</span>
       </div>
     </div>
     <div class="def">
       <div class="tag">Log-likelihood</div>
       <div class="math">
-        <span class="formula">ℓ(θ)=logL(θ;x)</span>
+        <span class="formula">â„“(Î¸)=logL(Î¸;x)</span>
         <span class="mathNote">same maximum, cleaner geometry</span>
       </div>
     </div>
     <div class="def">
       <div class="tag">Score equation</div>
       <div class="math">
-        <span class="formula">U(θ)=ℓ′(θ), &nbsp; U(θ̂)=0</span>
+        <span class="formula">U(Î¸)=â„“â€²(Î¸), &nbsp; U(Î¸Ì‚)=0</span>
         <span class="mathNote">at an interior maximum the tangent is flat</span>
       </div>
     </div>
     <div class="def">
       <div class="tag">Curvature and LR</div>
       <div class="math">
-        <span class="formula">J(θ̂)=−ℓ″(θ̂)</span>
-        <span class="formula">LR(θ)=2[ℓ(θ̂)−ℓ(θ)]</span>
+        <span class="formula">J(Î¸Ì‚)=âˆ’â„“â€³(Î¸Ì‚)</span>
+        <span class="formula">LR(Î¸)=2[â„“(Î¸Ì‚)âˆ’â„“(Î¸)]</span>
       </div>
     </div>
   </section>
@@ -154,11 +154,11 @@
       <div class="control">
         <label for="modelSelect">Model</label>
         <select id="modelSelect">
-          <option value="normalMean">Normal mean, σ known</option>
+          <option value="normalMean">Normal mean, Ïƒ known</option>
           <option value="bernoulli">Bernoulli probability</option>
           <option value="poisson">Poisson rate</option>
           <option value="exponential">Exponential rate</option>
-          <option value="normalVar">Normal variance, μ=0</option>
+          <option value="normalVar">Normal variance, Î¼=0</option>
         </select>
       </div>
 
@@ -168,12 +168,12 @@
       </div>
 
       <div class="control">
-        <label for="trueRange">True parameter θ₀ <span class="value" id="trueVal">1.20</span></label>
+        <label for="trueRange">True parameter Î¸â‚€ <span class="value" id="trueVal">1.20</span></label>
         <input id="trueRange" type="range" min="0.10" max="4.00" step="0.05" value="1.20"/>
       </div>
 
       <div class="control">
-        <label for="thetaRange">Candidate θ <span class="value" id="thetaVal">0.90</span></label>
+        <label for="thetaRange">Candidate Î¸ <span class="value" id="thetaVal">0.90</span></label>
         <input id="thetaRange" type="range" min="0.05" max="5.00" step="0.02" value="0.90"/>
       </div>
 
@@ -202,13 +202,13 @@
           <div>
             <div class="plotTitle">Normalized log-likelihood: vertical loss from the peak</div>
             <div class="pillRow">
-              <span class="pill"><span class="dot"></span> \(ℓ(θ)-ℓ(θ̂)\)</span>
-              <span class="pill"><span class="dot" style="background:var(--blue)"></span> MLE \(θ̂\)</span>
-              <span class="pill"><span class="dot" style="background:var(--violet)"></span> candidate θ</span>
+              <span class="pill"><span class="dot"></span> \(â„“(Î¸)-â„“(Î¸Ì‚)\)</span>
+              <span class="pill"><span class="dot" style="background:var(--blue)"></span> MLE \(Î¸Ì‚\)</span>
+              <span class="pill"><span class="dot" style="background:var(--violet)"></span> candidate Î¸</span>
               <span class="pill"><span class="dot" style="background:var(--warn)"></span> LR loss</span>
             </div>
           </div>
-          <div class="plotSub" id="mainSub">All models are displayed on the common scale \(ℓ(θ)-ℓ(θ̂)\le 0\).</div>
+          <div class="plotSub" id="mainSub">All models are displayed on the common scale \(â„“(Î¸)-â„“(Î¸Ì‚)\le 0\).</div>
         </div>
         <svg id="mainSvg" viewBox="0 0 980 505" preserveAspectRatio="xMidYMid meet"></svg>
       </div>
@@ -217,7 +217,7 @@
         <div class="card plotCard">
           <div class="plotHead">
             <div class="plotTitle">Score equation</div>
-            <div class="plotSub">the slope \(U(θ)\) crosses zero at \(θ̂\)</div>
+            <div class="plotSub">the slope \(U(Î¸)\) crosses zero at \(Î¸Ì‚\)</div>
           </div>
           <svg id="scoreSvg" viewBox="0 0 520 320" preserveAspectRatio="xMidYMid meet"></svg>
         </div>
@@ -225,7 +225,7 @@
         <div class="card plotCard">
           <div class="plotHead">
             <div class="plotTitle">Compatibility with data</div>
-            <div class="plotSub">model at θ with observed sample</div>
+            <div class="plotSub">model at Î¸ with observed sample</div>
           </div>
           <svg id="compatSvg" viewBox="0 0 520 320" preserveAspectRatio="xMidYMid meet"></svg>
         </div>
@@ -236,10 +236,10 @@
           <div class="panelTitle">Interpretation</div>
           <div class="smallText" id="interpretText"></div>
           <div class="summary">
-            <div><strong>Likelihood.</strong><br>The data are fixed; θ moves. Higher likelihood means the model at θ makes the observed sample more compatible.</div>
+            <div><strong>Likelihood.</strong><br>The data are fixed; Î¸ moves. Higher likelihood means the model at Î¸ makes the observed sample more compatible.</div>
             <div><strong>Score.</strong><br>The score is the derivative of the log-likelihood. Positive score means move right; negative score means move left.</div>
-            <div><strong>Hessian.</strong><br>At the peak, \(J(θ̂)=-ℓ''(θ̂)\) measures sharpness. Sharper peak means more local information.</div>
-            <div><strong>Likelihood ratio.</strong><br>\(LR(θ)\) is twice the vertical drop from the maximum, giving a natural evidence distance.</div>
+            <div><strong>Hessian.</strong><br>At the peak, \(J(Î¸Ì‚)=-â„“''(Î¸Ì‚)\) measures sharpness. Sharper peak means more local information.</div>
+            <div><strong>Likelihood ratio.</strong><br>\(LR(Î¸)\) is twice the vertical drop from the maximum, giving a natural evidence distance.</div>
           </div>
         </div>
 
@@ -251,7 +251,7 @@
     </section>
   </main>
 
-  <footer>Minimal interactive notebook — likelihood, score, Hessian curvature, and likelihood ratios.</footer>
+  <footer>Minimal interactive notebook â€” likelihood, score, Hessian curvature, and likelihood ratios.</footer>
 </div>
 
 <script>
@@ -266,7 +266,7 @@ const dropRange=document.getElementById("dropRange");
 
 function css(v){return getComputedStyle(body).getPropertyValue(v).trim();}
 function fmt(x){
-  if(!isFinite(x)) return "∞";
+  if(!isFinite(x)) return "âˆž";
   if(Math.abs(x)<0.0001 && x!==0) return x.toExponential(2);
   if(Math.abs(x)<10) return x.toFixed(4);
   return x.toFixed(2);
@@ -407,7 +407,7 @@ function drawMain(){
   const acc=css("--accent"), blue=css("--blue"), warn=css("--warn"), violet=css("--violet");
   const X0=62,X1=690,Y0=58,Y1=398, ylo=-drop, yhi=.8;
   let h='<rect x="8" y="10" width="964" height="470" rx="20" fill="'+panel+'" stroke="'+border+'"/>';
-  h+=text(68,38,"profile: ℓ(θ) − ℓ(θ̂)",muted,13,850);
+  h+=text(68,38,"profile: â„“(Î¸) âˆ’ â„“(Î¸Ì‚)",muted,13,850);
   for(let k=0;k<=5;k++){
     const yy=Y1-(Y1-Y0)*k/5;
     h+=line(X0,yy,X1,yy,grid,1,.85);
@@ -445,23 +445,23 @@ function drawMain(){
   h+='<circle cx="'+hx+'" cy="'+hy+'" r="7" fill="'+blue+'"/>';
   h+='<circle cx="'+tx+'" cy="'+ty+'" r="7" fill="'+violet+'"/>';
   h+=line(tx,hy,tx,ty,warn,4,.68);
-  h+=text(hx,hy-14,"θ̂",blue,12,900,"middle");
-  h+=text(tx,ty+22,"θ",violet,12,900,"middle");
-  h+=text(tx+8,(hy+ty)/2,"ℓ loss",warn,11,900);
+  h+=text(hx,hy-14,"Î¸Ì‚",blue,12,900,"middle");
+  h+=text(tx,ty+22,"Î¸",violet,12,900,"middle");
+  h+=text(tx+8,(hy+ty)/2,"â„“ loss",warn,11,900);
 
   h+=text(X0,Y1+24,fmt(lo),muted,10,800);
   h+=text(X1,Y1+24,fmt(hi),muted,10,800,"end");
-  h+=text(X1,Y1+42,"parameter θ",muted,11,850,"end");
+  h+=text(X1,Y1+42,"parameter Î¸",muted,11,850,"end");
 
   h+='<rect x="730" y="72" width="205" height="272" rx="20" fill="'+panel2+'" stroke="'+border+'"/>';
   h+=text(752,104,"Profile values",textc,16,900);
   const rows=[
-    ["θ̂",fmt(c.hat),blue],
-    ["θ",fmt(c.theta),violet],
-    ["ℓ(θ)-ℓ(θ̂)",fmt(c.ell-c.ellhat),acc],
-    ["score U(θ)",fmt(c.U),violet],
-    ["J(θ̂)",fmt(c.J),warn],
-    ["LR(θ)",fmt(c.LR),warn]
+    ["Î¸Ì‚",fmt(c.hat),blue],
+    ["Î¸",fmt(c.theta),violet],
+    ["â„“(Î¸)-â„“(Î¸Ì‚)",fmt(c.ell-c.ellhat),acc],
+    ["score U(Î¸)",fmt(c.U),violet],
+    ["J(Î¸Ì‚)",fmt(c.J),warn],
+    ["LR(Î¸)",fmt(c.LR),warn]
   ];
   rows.forEach((r,i)=>{
     const y=138+i*31;
@@ -470,7 +470,7 @@ function drawMain(){
   });
   h+='<rect x="730" y="370" width="205" height="62" rx="16" fill="'+css("--accentSoft")+'" stroke="'+css("--accentLine")+'"/>';
   h+=text(752,398,"Clean geometry",textc,13,900);
-  h+=text(752,420,"height = evidence loss from θ̂",muted,12,780);
+  h+=text(752,420,"height = evidence loss from Î¸Ì‚",muted,12,780);
   svg.innerHTML=h;
 }
 function drawScore(){
@@ -502,9 +502,9 @@ function drawScore(){
   h+=line(tx,Y0,tx,Y1,warn,1.3,.45,"5 5");
   h+='<circle cx="'+hx+'" cy="'+py(0,-maxAbs,maxAbs,Y0,Y1)+'" r="5.5" fill="'+blue+'"/>';
   h+='<circle cx="'+tx+'" cy="'+py(clamp(c.U,-maxAbs,maxAbs),-maxAbs,maxAbs,Y0,Y1)+'" r="5.5" fill="'+warn+'"/>';
-  h+=text(68,34,"score curve U(θ)=ℓ′(θ)",muted,12,850);
-  h+=text(X1,Y1+24,"θ",muted,10,850,"end");
-  h+=text(84,70,"zero crossing = θ̂",blue,11,900);
+  h+=text(68,34,"score curve U(Î¸)=â„“â€²(Î¸)",muted,12,850);
+  h+=text(X1,Y1+24,"Î¸",muted,10,850,"end");
+  h+=text(84,70,"zero crossing = Î¸Ì‚",blue,11,900);
   svg.innerHTML=h;
 }
 function drawCompat(){
@@ -523,7 +523,7 @@ function drawCompat(){
       const x=px(v.x,-.4,1.4,X0,X1), y=py(v.p,0,maxY*1.2,Y0,Y1);
       h+='<rect x="'+(x-44)+'" y="'+y+'" width="88" height="'+(Y1-y)+'" rx="10" fill="'+acc+'" fill-opacity=".62"/>';
       h+=text(x,Y1+24,"x="+v.x,muted,11,800,"middle");
-      h+=text(x,y-8,"Pθ="+fmt(v.p),acc,11,900,"middle");
+      h+=text(x,y-8,"PÎ¸="+fmt(v.p),acc,11,900,"middle");
       h+=text(x,Y0+18,"obs "+v.obs,blue,11,900,"middle");
     });
   }else if(m==="poisson"){
@@ -559,8 +559,8 @@ function drawCompat(){
       h+='<circle cx="'+x+'" cy="'+y+'" r="2.5" fill="'+blue+'" fill-opacity=".45"/>';
     });
   }
-  h+=text(68,34,"observed sample under model at θ",muted,12,850);
-  h+=text(72,278,"model at θ",acc,12,900);
+  h+=text(68,34,"observed sample under model at Î¸",muted,12,850);
+  h+=text(72,278,"model at Î¸",acc,12,900);
   h+=text(178,278,"data",blue,12,900);
   svg.innerHTML=h;
 }
@@ -574,41 +574,41 @@ function updateText(){
   document.getElementById("dropVal").textContent=String(Number(dropRange.value));
 
   let formula="";
-  if(modelSelect.value==="normalMean") formula="ℓ(μ)=−½∑(xᵢ−μ)² + const.";
-  if(modelSelect.value==="bernoulli") formula="ℓ(θ)=k logθ+(n−k)log(1−θ)";
-  if(modelSelect.value==="poisson") formula="ℓ(λ)=(∑xᵢ)logλ−nλ+const.";
-  if(modelSelect.value==="exponential") formula="ℓ(λ)=nlogλ−λ∑xᵢ";
-  if(modelSelect.value==="normalVar") formula="ℓ(v)=−(n/2)logv−(∑xᵢ²)/(2v)+const.";
+  if(modelSelect.value==="normalMean") formula="â„“(Î¼)=âˆ’Â½âˆ‘(xáµ¢âˆ’Î¼)Â² + const.";
+  if(modelSelect.value==="bernoulli") formula="â„“(Î¸)=k logÎ¸+(nâˆ’k)log(1âˆ’Î¸)";
+  if(modelSelect.value==="poisson") formula="â„“(Î»)=(âˆ‘xáµ¢)logÎ»âˆ’nÎ»+const.";
+  if(modelSelect.value==="exponential") formula="â„“(Î»)=nlogÎ»âˆ’Î»âˆ‘xáµ¢";
+  if(modelSelect.value==="normalVar") formula="â„“(v)=âˆ’(n/2)logvâˆ’(âˆ‘xáµ¢Â²)/(2v)+const.";
   document.getElementById("eqBox").innerHTML =
     '<span class="formula">'+formula+'</span>'+
-    '<span class="mathNote">θ̂ ≈ '+fmt(c.hat)+' · J(θ̂)=−ℓ″(θ̂)≈ '+fmt(c.J)+'</span>';
+    '<span class="mathNote">Î¸Ì‚ â‰ˆ '+fmt(c.hat)+' Â· J(Î¸Ì‚)=âˆ’â„“â€³(Î¸Ì‚)â‰ˆ '+fmt(c.J)+'</span>';
 
   const mini=[
-    ["θ̂",fmt(c.hat)],
-    ["θ",fmt(c.theta)],
-    ["U(θ)",fmt(c.U)],
-    ["J(θ̂)",fmt(c.J)],
-    ["LR(θ)",fmt(c.LR)],
+    ["Î¸Ì‚",fmt(c.hat)],
+    ["Î¸",fmt(c.theta)],
+    ["U(Î¸)",fmt(c.U)],
+    ["J(Î¸Ì‚)",fmt(c.J)],
+    ["LR(Î¸)",fmt(c.LR)],
     ["n",String(s.n)]
   ];
   document.getElementById("miniGrid").innerHTML=mini.map(d=>'<div class="miniStat"><div class="k">'+d[0]+'</div><div class="v">'+d[1]+'</div></div>').join("");
 
   const logic=[
-    ["1","data fixed; θ varies"],
-    ["2","maximize ℓ(θ), not L's raw product"],
-    ["3","score U(θ) is the slope"],
-    ["→","Hessian and LR measure evidence geometry"]
+    ["1","data fixed; Î¸ varies"],
+    ["2","maximize â„“(Î¸), not L's raw product"],
+    ["3","score U(Î¸) is the slope"],
+    ["â†’","Hessian and LR measure evidence geometry"]
   ];
   document.getElementById("logicList").innerHTML=logic.map(it=>'<div class="logicItem"><span class="mark">'+it[0]+'</span><span>'+it[1]+'</span></div>').join("");
 
-  let interp="The main graph uses the normalized profile \(ℓ(θ)-ℓ(θ̂)\), so the maximum is always zero. This makes likelihood-ratio geometry visible: every candidate parameter is judged by its vertical loss from the best-fitting parameter.";
-  if(Math.abs(c.U)>1) interp="The selected θ is not at a local maximum. The score panel shows the direction of improvement: positive score means move right; negative score means move left.";
-  if(c.LR>3.84) interp="The candidate θ has a visible likelihood-ratio loss. In regular one-parameter problems, \(LR≈3.84\) is the familiar asymptotic 5% cutoff.";
+  let interp="The main graph uses the normalized profile \(â„“(Î¸)-â„“(Î¸Ì‚)\), so the maximum is always zero. This makes likelihood-ratio geometry visible: every candidate parameter is judged by its vertical loss from the best-fitting parameter.";
+  if(Math.abs(c.U)>1) interp="The selected Î¸ is not at a local maximum. The score panel shows the direction of improvement: positive score means move right; negative score means move left.";
+  if(c.LR>3.84) interp="The candidate Î¸ has a visible likelihood-ratio loss. In regular one-parameter problems, \(LRâ‰ˆ3.84\) is the familiar asymptotic 5% cutoff.";
   document.getElementById("interpretText").innerHTML=interp;
 
-  let notice="This version keeps the geometry consistent: height is always \(ℓ(θ)-ℓ(θ̂)\), not raw likelihood.";
-  if(c.J>100) notice="The peak is sharp: large observed information means small changes in θ quickly lower compatibility.";
-  if(Math.abs(c.U)<0.05) notice="At the selected θ, the score is nearly zero, so θ is close to a stationary point.";
+  let notice="This version keeps the geometry consistent: height is always \(â„“(Î¸)-â„“(Î¸Ì‚)\), not raw likelihood.";
+  if(c.J>100) notice="The peak is sharp: large observed information means small changes in Î¸ quickly lower compatibility.";
+  if(Math.abs(c.U)<0.05) notice="At the selected Î¸, the score is nearly zero, so Î¸ is close to a stationary point.";
   if(c.LR>3.84) notice="The candidate is outside the usual likelihood-ratio comfort zone for one regular parameter.";
   document.getElementById("noticeText").innerHTML=notice;
 }
@@ -626,3 +626,4 @@ drawAll();
 </script>
 </body>
 </html>
+

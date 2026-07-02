@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -125,7 +125,7 @@
       <div>
         <h1>Change of variables and LOTUS</h1>
         <div class="subtitle">
-          Expectation can be computed on the hidden sample space Ω, or after transporting probability through X onto the real line.
+          Expectation can be computed on the hidden sample space Î©, or after transporting probability through X onto the real line.
           LOTUS says: to integrate a function of X, integrate that function against the law of X.
         </div>
       </div>
@@ -135,19 +135,19 @@
     <section class="defs">
       <div class="def">
         <div class="tag">Sample-space integral</div>
-        <div class="math">E[g(X)] = ∫<sub>Ω</sub> g(X(ω)) dP(ω)</div>
+        <div class="math">E[g(X)] = âˆ«<sub>Î©</sub> g(X(Ï‰)) dP(Ï‰)</div>
       </div>
       <div class="def">
         <div class="tag">Law of X</div>
-        <div class="math">μ<sub>X</sub>(B)=P(X∈B)=P(X<sup>−1</sup>B)</div>
+        <div class="math">Î¼<sub>X</sub>(B)=P(XâˆˆB)=P(X<sup>âˆ’1</sup>B)</div>
       </div>
       <div class="def">
         <div class="tag">LOTUS</div>
-        <div class="math">E[g(X)] = ∫<sub>ℝ</sub> g(x) dμ<sub>X</sub>(x)</div>
+        <div class="math">E[g(X)] = âˆ«<sub>â„</sub> g(x) dÎ¼<sub>X</sub>(x)</div>
       </div>
       <div class="def">
         <div class="tag">Transformation</div>
-        <div class="math">Y=g(X), &nbsp; μ<sub>Y</sub>=μ<sub>X</sub>∘g<sup>−1</sup></div>
+        <div class="math">Y=g(X), &nbsp; Î¼<sub>Y</sub>=Î¼<sub>X</sub>âˆ˜g<sup>âˆ’1</sup></div>
       </div>
     </section>
 
@@ -158,9 +158,9 @@
         <div class="control">
           <label for="xMap">Random variable X</label>
           <select id="xMap">
-            <option value="linear">linear: X=4ω−2</option>
-            <option value="square">folding: X=(2ω−1)²</option>
-            <option value="sine">wave: X=sin(2πω)</option>
+            <option value="linear">linear: X=4Ï‰âˆ’2</option>
+            <option value="square">folding: X=(2Ï‰âˆ’1)Â²</option>
+            <option value="sine">wave: X=sin(2Ï€Ï‰)</option>
             <option value="discrete">discrete thresholds</option>
             <option value="mixed">mixed atom + continuous tail</option>
           </select>
@@ -170,10 +170,10 @@
           <label for="gMap">Transformation g</label>
           <select id="gMap">
             <option value="id">g(x)=x</option>
-            <option value="square">g(x)=x²</option>
+            <option value="square">g(x)=xÂ²</option>
             <option value="positive">g(x)=max{x,0}</option>
             <option value="indicator">g(x)=1{x&gt;c}</option>
-            <option value="loss">g(x)=max{c−x,0}</option>
+            <option value="loss">g(x)=max{câˆ’x,0}</option>
           </select>
         </div>
 
@@ -204,7 +204,7 @@
         </div>
 
         <div class="eqBox" id="eqBox">
-          E[g(X)] = ∫<sub>Ω</sub> g(X(ω)) dP(ω) = ∫<sub>ℝ</sub> g(x)dμ<sub>X</sub>(x).
+          E[g(X)] = âˆ«<sub>Î©</sub> g(X(Ï‰)) dP(Ï‰) = âˆ«<sub>â„</sub> g(x)dÎ¼<sub>X</sub>(x).
         </div>
       </aside>
 
@@ -212,10 +212,10 @@
         <div class="card plotCard">
           <div class="plotHead">
             <div>
-              <div class="plotTitle">The geometric chain Ω → X(Ω) → g(X)</div>
+              <div class="plotTitle">The geometric chain Î© â†’ X(Î©) â†’ g(X)</div>
               <div class="pillRow">
-                <span class="pill"><span class="dot"></span> points start in Ω</span>
-                <span class="pill"><span class="dot" style="background:var(--blue)"></span> X pushes mass to ℝ</span>
+                <span class="pill"><span class="dot"></span> points start in Î©</span>
+                <span class="pill"><span class="dot" style="background:var(--blue)"></span> X pushes mass to â„</span>
                 <span class="pill"><span class="dot" style="background:var(--warn)"></span> g transforms values</span>
               </div>
             </div>
@@ -228,7 +228,7 @@
           <div class="card plotCard">
             <div class="plotHead">
               <div class="plotTitle">Law of X and integrand g</div>
-              <div class="plotSub">∫ g(x)dμ<sub>X</sub>(x)</div>
+              <div class="plotSub">âˆ« g(x)dÎ¼<sub>X</sub>(x)</div>
             </div>
             <svg id="lawSvg" viewBox="0 0 520 280" preserveAspectRatio="xMidYMid meet"></svg>
           </div>
@@ -246,12 +246,12 @@
           <div class="card cardPad">
             <div class="panelTitle">Interpretation</div>
             <div class="smallText" id="interpretText">
-              LOTUS avoids reconstructing the original sample space. Once the law μX is known, any expectation of g(X) can be computed on the real line.
+              LOTUS avoids reconstructing the original sample space. Once the law Î¼X is known, any expectation of g(X) can be computed on the real line.
             </div>
             <div class="summary">
-              <div><strong>Sample-space view.</strong><br>Average the realized numbers g(X(ω)) over ω∈Ω.</div>
-              <div><strong>Law view.</strong><br>Push P through X, then average g(x) with respect to μ<sub>X</sub>.</div>
-              <div><strong>Change of variables.</strong><br>Y=g(X) has law μ<sub>Y</sub>(A)=μ<sub>X</sub>(g<sup>−1</sup>A).</div>
+              <div><strong>Sample-space view.</strong><br>Average the realized numbers g(X(Ï‰)) over Ï‰âˆˆÎ©.</div>
+              <div><strong>Law view.</strong><br>Push P through X, then average g(x) with respect to Î¼<sub>X</sub>.</div>
+              <div><strong>Change of variables.</strong><br>Y=g(X) has law Î¼<sub>Y</sub>(A)=Î¼<sub>X</sub>(g<sup>âˆ’1</sup>A).</div>
               <div><strong>Unconscious statistician.</strong><br>You do not need the density of Y to compute E[g(X)].</div>
             </div>
           </div>
@@ -259,14 +259,14 @@
           <div class="card cardPad">
             <div class="panelTitle">What to notice</div>
             <div class="notice" id="noticeText">
-              The middle histogram is the law of X. LOTUS says that placing g on this histogram gives the same expectation as measuring g(X(ω)) directly on Ω.
+              The middle histogram is the law of X. LOTUS says that placing g on this histogram gives the same expectation as measuring g(X(Ï‰)) directly on Î©.
             </div>
           </div>
         </div>
       </section>
     </main>
 
-    <footer>Minimal interactive notebook — LOTUS as pushforward integration.</footer>
+    <footer>Minimal interactive notebook â€” LOTUS as pushforward integration.</footer>
   </div>
 
 <script>
@@ -340,16 +340,16 @@ function G(x){
 function gFormula(){
   const t=gMapEl.value;
   if(t==="id") return "g(x)=x";
-  if(t==="square") return "g(x)=x²";
+  if(t==="square") return "g(x)=xÂ²";
   if(t==="positive") return "g(x)=max{x,0}";
   if(t==="indicator") return "g(x)=1{x>c}";
-  if(t==="loss") return "g(x)=max{c−x,0}";
+  if(t==="loss") return "g(x)=max{câˆ’x,0}";
 }
 function xFormula(){
   const t=xMapEl.value;
-  if(t==="linear") return "X=4ω−2";
-  if(t==="square") return "X=(2ω−1)²";
-  if(t==="sine") return "X=sin(2πω)";
+  if(t==="linear") return "X=4Ï‰âˆ’2";
+  if(t==="square") return "X=(2Ï‰âˆ’1)Â²";
+  if(t==="sine") return "X=sin(2Ï€Ï‰)";
   if(t==="discrete") return "X is a step variable";
   if(t==="mixed") return "X has atom + tail";
 }
@@ -360,7 +360,7 @@ function updateLabels(){
   document.getElementById("cutBlock").style.display=(gMapEl.value==="indicator"||gMapEl.value==="loss")?"block":"none";
   const eg=mean(sample.map(d=>d.y));
   document.getElementById("eqBox").innerHTML=
-    `E[g(X)] ≈ <strong>${fmt(eg)}</strong><br>∫<sub>Ω</sub> ${gFormula().replaceAll("<","&lt;").replaceAll(">","&gt;")}(X(ω))dP(ω) = ∫<sub>ℝ</sub> ${gFormula().replaceAll("<","&lt;").replaceAll(">","&gt;")} dμ<sub>X</sub>.`;
+    `E[g(X)] â‰ˆ <strong>${fmt(eg)}</strong><br>âˆ«<sub>Î©</sub> ${gFormula().replaceAll("<","&lt;").replaceAll(">","&gt;")}(X(Ï‰))dP(Ï‰) = âˆ«<sub>â„</sub> ${gFormula().replaceAll("<","&lt;").replaceAll(">","&gt;")} dÎ¼<sub>X</sub>.`;
 }
 function mean(a){return a.reduce((s,v)=>s+v,0)/a.length;}
 function minmax(a){
@@ -406,10 +406,10 @@ function drawChain(){
   const xx0=62, xx1=918, xy=214;
   const yx0=62, yx1=918, yy=333;
   let h=`<rect x="8" y="10" width="964" height="400" rx="20" fill="${panel}" stroke="${border}"/>`;
-  h+=text(62,42,"Ω: hidden states",muted,13,800);
-  h+=text(62,160,"law μX on the real line",muted,13,800);
+  h+=text(62,42,"Î©: hidden states",muted,13,800);
+  h+=text(62,160,"law Î¼X on the real line",muted,13,800);
   h+=text(62,280,"values of g(X)",muted,13,800);
-  h+=axisX(ox0,ox1,oy,"ω ∈ [0,1]");
+  h+=axisX(ox0,ox1,oy,"Ï‰ âˆˆ [0,1]");
   h+=axisX(xx0,xx1,xy,"x-values");
   h+=axisX(yx0,yx1,yy,"g(x)-values");
   h+=text(845,42,xFormula(),textc,13,800,"end");
@@ -441,7 +441,7 @@ function drawChain(){
       const ht=44*v/maxh;
       h+=`<rect x="${x0}" y="${yy-ht}" width="${w}" height="${ht}" rx="2" fill="${warn}" fill-opacity=".52"/>`;
     });
-    h+=text(760,292,"μY = μX ∘ g⁻¹",warn,13,900);
+    h+=text(760,292,"Î¼Y = Î¼X âˆ˜ gâ»Â¹",warn,13,900);
   }
 
   thin.forEach(d=>{
@@ -490,7 +490,7 @@ function drawLaw(){
     path+=(i===0?"M":"L")+x+","+y+" ";
   });
   h+=`<path d="${path}" fill="none" stroke="${warn}" stroke-width="2.5"/>`;
-  h+=text(66,32,"histogram of μX",blue,12,850);
+  h+=text(66,32,"histogram of Î¼X",blue,12,850);
   h+=text(380,32,gFormula().replaceAll("<","&lt;").replaceAll(">","&gt;"),warn,12,850);
   h+=text(x0,y1+21,"x",muted,12,800);
   h+=text(x1,y1+21,"real line",muted,12,800,"end");
@@ -512,7 +512,7 @@ function drawBars(){
   }
   const scale=92/abs;
   const bars=[
-    {label:"Ω average",v:e1,c:acc,x:160},
+    {label:"Î© average",v:e1,c:acc,x:160},
     {label:"law average",v:e2,c:blue,x:330}
   ];
   bars.forEach(b=>{
@@ -522,8 +522,8 @@ function drawBars(){
     h+=text(b.x,yBase+30,b.label,muted,12,850,"middle");
     h+=text(b.x,y-10,fmt(b.v),textc,13,900,"middle");
   });
-  h+=text(54,34,"∫Ω g(X(ω)) dP(ω)",acc,12,900);
-  h+=text(486,34,"∫ℝ g(x) dμX(x)",blue,12,900,"end");
+  h+=text(54,34,"âˆ«Î© g(X(Ï‰)) dP(Ï‰)",acc,12,900);
+  h+=text(486,34,"âˆ«â„ g(x) dÎ¼X(x)",blue,12,900,"end");
   h+=text(260,226,"same numerical object; different domain of integration",muted,12,700,"middle");
   svg.innerHTML=h;
 }
@@ -532,12 +532,12 @@ function refreshText(){
   const interp=document.getElementById("interpretText");
   const notice=document.getElementById("noticeText");
   if(viewMode==="expectation"){
-    interp.innerHTML=`For <strong>${xFormula()}</strong> and <strong>${gFormula()}</strong>, the app computes <strong>E[g(X)]≈${fmt(e)}</strong>. The upper route averages g(X(ω)) over Ω. The middle route first forms μ<sub>X</sub>, then integrates g against that law.`;
-    notice.innerHTML=`The random variable X is the change of variables. It moves probability from Ω to the real line. LOTUS lets you forget Ω once μ<sub>X</sub> is known.`;
+    interp.innerHTML=`For <strong>${xFormula()}</strong> and <strong>${gFormula()}</strong>, the app computes <strong>E[g(X)]â‰ˆ${fmt(e)}</strong>. The upper route averages g(X(Ï‰)) over Î©. The middle route first forms Î¼<sub>X</sub>, then integrates g against that law.`;
+    notice.innerHTML=`The random variable X is the change of variables. It moves probability from Î© to the real line. LOTUS lets you forget Î© once Î¼<sub>X</sub> is known.`;
     document.getElementById("chainSub").innerHTML="Same expectation, two integration domains";
   } else {
-    interp.innerHTML=`Now the focus is the transformed variable <strong>Y=g(X)</strong>. Its law is obtained by pushing μ<sub>X</sub> through g: μ<sub>Y</sub>(A)=μ<sub>X</sub>(g<sup>−1</sup>A).`;
-    notice.innerHTML=`You do not need to derive μ<sub>Y</sub> to compute E[Y]. LOTUS computes E[g(X)] directly from μ<sub>X</sub>.`;
+    interp.innerHTML=`Now the focus is the transformed variable <strong>Y=g(X)</strong>. Its law is obtained by pushing Î¼<sub>X</sub> through g: Î¼<sub>Y</sub>(A)=Î¼<sub>X</sub>(g<sup>âˆ’1</sup>A).`;
+    notice.innerHTML=`You do not need to derive Î¼<sub>Y</sub> to compute E[Y]. LOTUS computes E[g(X)] directly from Î¼<sub>X</sub>.`;
     document.getElementById("chainSub").innerHTML="The law of Y is a second pushforward";
   }
 }
@@ -579,3 +579,4 @@ drawAll();
 </script>
 </body>
 </html>
+

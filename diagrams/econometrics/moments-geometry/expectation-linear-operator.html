@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -130,7 +130,7 @@
       <div>
         <h1>Expectation as a linear operator</h1>
         <div class="subtitle">
-          A random variable is a function-vector on Ω. Expectation extracts its constant component:
+          A random variable is a function-vector on Î©. Expectation extracts its constant component:
           \(X = E[X]\mathbf 1 + (X-E[X])\), where the residual has mean zero.
         </div>
       </div>
@@ -140,11 +140,11 @@
     <section class="defs">
       <div class="def">
         <div class="tag">Functional</div>
-        <div class="math">E : L¹(Ω) → ℝ<br>X ↦ ∫Ω X dP</div>
+        <div class="math">E : LÂ¹(Î©) â†’ â„<br>X â†¦ âˆ«Î© X dP</div>
       </div>
       <div class="def">
         <div class="tag">Geometric split</div>
-        <div class="math">X = E[X]·1 + (X−E[X])<br>E[X−E[X]]=0</div>
+        <div class="math">X = E[X]Â·1 + (Xâˆ’E[X])<br>E[Xâˆ’E[X]]=0</div>
       </div>
       <div class="def">
         <div class="tag">Linearity</div>
@@ -152,7 +152,7 @@
       </div>
       <div class="def">
         <div class="tag">Curvature</div>
-        <div class="math">φ convex ⇒ φ(E[X])≤E[φ(X)]</div>
+        <div class="math">Ï† convex â‡’ Ï†(E[X])â‰¤E[Ï†(X)]</div>
       </div>
     </section>
 
@@ -202,13 +202,13 @@
         </div>
 
         <div class="control">
-          <label for="phiSelect">Transformation φ</label>
+          <label for="phiSelect">Transformation Ï†</label>
           <select id="phiSelect">
-            <option value="square">convex: φ(x)=x²</option>
-            <option value="exp">convex: φ(x)=exp(x/2)</option>
-            <option value="abs">convex: φ(x)=|x|</option>
-            <option value="sqrt">concave: φ(x)=√(x−min+0.25)</option>
-            <option value="log">concave: φ(x)=log(x−min+1)</option>
+            <option value="square">convex: Ï†(x)=xÂ²</option>
+            <option value="exp">convex: Ï†(x)=exp(x/2)</option>
+            <option value="abs">convex: Ï†(x)=|x|</option>
+            <option value="sqrt">concave: Ï†(x)=âˆš(xâˆ’min+0.25)</option>
+            <option value="log">concave: Ï†(x)=log(xâˆ’min+1)</option>
           </select>
         </div>
 
@@ -220,7 +220,7 @@
         </div>
 
         <div class="eqBox" id="eqBox">
-          X = E[X]·1 + (X−E[X]).
+          X = E[X]Â·1 + (Xâˆ’E[X]).
         </div>
 
         <div class="control">
@@ -270,7 +270,7 @@
               Expectation takes a random function and keeps only its constant component. The remaining part is risk/noise with mean zero.
             </div>
             <div class="summary">
-              <div><strong>Operator.</strong><br>\(E\) maps a whole function \(X(ω)\) into one scalar.</div>
+              <div><strong>Operator.</strong><br>\(E\) maps a whole function \(X(Ï‰)\) into one scalar.</div>
               <div><strong>Projection intuition.</strong><br>\(E[X]\mathbf 1\) is the constant shadow of \(X\).</div>
               <div><strong>Linearity.</strong><br>The shadow of \(aX+bY\) equals \(a\) times the shadow of \(X\) plus \(b\) times the shadow of \(Y\).</div>
               <div><strong>Jensen.</strong><br>Nonlinear curvature does not commute with averaging.</div>
@@ -287,7 +287,7 @@
       </section>
     </main>
 
-    <footer>Minimal interactive notebook — expectation as projection, average, and central operator.</footer>
+    <footer>Minimal interactive notebook â€” expectation as projection, average, and central operator.</footer>
   </div>
 
 <script>
@@ -368,11 +368,11 @@ function phi(x){
 }
 function phiName(){
   const type=phiSelect.value;
-  if(type==="square") return "φ(x)=x²";
-  if(type==="exp") return "φ(x)=exp(x/2)";
-  if(type==="abs") return "φ(x)=|x|";
-  if(type==="sqrt") return "φ(x)=√(x−min+0.25)";
-  if(type==="log") return "φ(x)=log(x−min+1)";
+  if(type==="square") return "Ï†(x)=xÂ²";
+  if(type==="exp") return "Ï†(x)=exp(x/2)";
+  if(type==="abs") return "Ï†(x)=|x|";
+  if(type==="sqrt") return "Ï†(x)=âˆš(xâˆ’min+0.25)";
+  if(type==="log") return "Ï†(x)=log(xâˆ’min+1)";
 }
 function convexity(){return ["square","exp","abs"].includes(phiSelect.value)?"convex":"concave";}
 function line(x1,y1,x2,y2,stroke,w=1,op=1,dash=""){
@@ -406,7 +406,7 @@ function drawMain(){
   const xAxis=py(0,0,ymax,y0,y1);
   const yAxis=px(0,xmin,xmax,x0,x1);
   let h=`<rect x="8" y="10" width="964" height="425" rx="20" fill="${panel}" stroke="${border}"/>`;
-  h+=text(70,36,"reduced function-space picture: X ↦ (mean, fluctuation)",muted,13,850);
+  h+=text(70,36,"reduced function-space picture: X â†¦ (mean, fluctuation)",muted,13,850);
   for(let i=0;i<=5;i++){
     const yy=y1-(y1-y0)*i/5;
     h+=line(x0,yy,x1,yy,grid,1,.85);
@@ -417,7 +417,7 @@ function drawMain(){
   }
   h+=line(x0,xAxis,x1,xAxis,muted,1.2,.85);
   h+=line(yAxis,y0,yAxis,y1,muted,1.2,.85);
-  h+=text(x1,xAxis+24,"constant axis  E[X]·1",muted,12,850,"end");
+  h+=text(x1,xAxis+24,"constant axis  E[X]Â·1",muted,12,850,"end");
   h+=text(yAxis+8,y0+12,"zero-mean fluctuation",muted,12,850);
   const pts=[
     {name:"X",mu:EX,s:sx,c:acc},
@@ -436,11 +436,11 @@ function drawMain(){
   });
   h+=`<rect x="660" y="62" width="275" height="205" rx="20" fill="${panel2}" stroke="${border}"/>`;
   h+=text(684,94,"Projection identity",textc,16,900);
-  h+=text(684,126,"X = E[X]·1 + X°",acc,15,900);
-  h+=text(684,151,"where X° = X−E[X]",muted,13,850);
+  h+=text(684,126,"X = E[X]Â·1 + XÂ°",acc,15,900);
+  h+=text(684,151,"where XÂ° = Xâˆ’E[X]",muted,13,850);
   h+=text(684,183,`E[X] = ${fmt(EX)}`,acc,14,900);
   h+=text(684,210,`sd(X) = ${fmt(sx)}`,blue,14,900);
-  h+=text(684,238,`E[X°] = ${fmt(dot(p,center(x)))}`,warn,14,900);
+  h+=text(684,238,`E[XÂ°] = ${fmt(dot(p,center(x)))}`,warn,14,900);
   h+=`<rect x="660" y="292" width="275" height="82" rx="18" fill="${panel2}" stroke="${border}"/>`;
   h+=text(684,324,"Linearity",textc,15,900);
   h+=text(684,350,`E[aX+bY] = ${fmt(EZ)}`,warn,13,900);
@@ -469,13 +469,13 @@ function drawState(){
     const yt=Math.min(yy,zero), ht=Math.abs(yy-zero);
     h+=`<rect x="${cx-bw/2}" y="${yt}" width="${bw}" height="${ht}" rx="5" fill="${mode==="projection"?acc:warn}" fill-opacity=".76"/>`;
     h+=`<circle cx="${cx}" cy="${y1+31}" r="${4+p[i]*48}" fill="${blue}" fill-opacity=".32" stroke="${blue}" stroke-opacity=".55"/>`;
-    h+=text(cx,y1+57,`ω${i+1}`,muted,10,750,"middle");
+    h+=text(cx,y1+57,`Ï‰${i+1}`,muted,10,750,"middle");
   });
   const mean=mode==="projection"?EX:EZ;
   const meanY=py(mean,ymin,ymax,y0,y1);
   h+=line(x0,meanY,x1,meanY,warn,2.2,.9,"7 5");
   h+=text(x1-4,meanY-8,`E = ${fmt(mean)}`,warn,12,900,"end");
-  h+=text(66,32,mode==="projection"?"values X(ωᵢ)":"values Z(ωᵢ)=aX(ωᵢ)+bY(ωᵢ)",mode==="projection"?acc:warn,12,900);
+  h+=text(66,32,mode==="projection"?"values X(Ï‰áµ¢)":"values Z(Ï‰áµ¢)=aX(Ï‰áµ¢)+bY(Ï‰áµ¢)",mode==="projection"?acc:warn,12,900);
   svg.innerHTML=h;
 }
 function drawJensen(){
@@ -516,8 +516,8 @@ function drawJensen(){
   h+=`<circle cx="${mx}" cy="${yMeanPhi}" r="6" fill="${blue}" stroke="${panel}" stroke-width="2"/>`;
   h+=text(70,33,phiName(),acc,12,900);
   h+=text(486,33,convexity(),convexity()==="convex"?warn:blue,12,900,"end");
-  h+=text(65,260,`φ(E[X])=${fmt(phiEX)}`,warn,12,900);
-  h+=text(486,260,`E[φ(X)]=${fmt(Ephi)}`,blue,12,900,"end");
+  h+=text(65,260,`Ï†(E[X])=${fmt(phiEX)}`,warn,12,900);
+  h+=text(486,260,`E[Ï†(X)]=${fmt(Ephi)}`,blue,12,900,"end");
   svg.innerHTML=h;
 }
 function updateText(){
@@ -532,29 +532,29 @@ function updateText(){
   const notice=document.getElementById("noticeText");
   const list=document.getElementById("logicList");
   if(mode==="projection"){
-    eq.innerHTML=`X = E[X]·1 + X°<br>E[X] = <strong>${fmt(EX)}</strong>, E[X°]=<strong>${fmt(dot(p,center(x)))}</strong>.`;
-    interp.innerHTML=`The main diagram reduces the function space to two coordinates: the <strong>constant component</strong> E[X] and the <strong>zero-mean fluctuation</strong> X−E[X]. Expectation is the shadow of X on the constant axis.`;
+    eq.innerHTML=`X = E[X]Â·1 + XÂ°<br>E[X] = <strong>${fmt(EX)}</strong>, E[XÂ°]=<strong>${fmt(dot(p,center(x)))}</strong>.`;
+    interp.innerHTML=`The main diagram reduces the function space to two coordinates: the <strong>constant component</strong> E[X] and the <strong>zero-mean fluctuation</strong> Xâˆ’E[X]. Expectation is the shadow of X on the constant axis.`;
     notice.innerHTML="The vertical component can be large, but expectation ignores it because it has weighted mean zero.";
     list.innerHTML=[
-      ["✓","random variables are functions on Ω"],
-      ["✓","expectation extracts the constant part"],
-      ["✓","X−E[X] has mean zero"],
-      ["✓",`linearity: E[aX+bY] = ${fmt(EZ)} = ${fmt(a*EX+b*EY)}`]
+      ["âœ“","random variables are functions on Î©"],
+      ["âœ“","expectation extracts the constant part"],
+      ["âœ“","Xâˆ’E[X] has mean zero"],
+      ["âœ“",`linearity: E[aX+bY] = ${fmt(EZ)} = ${fmt(a*EX+b*EY)}`]
     ].map(([m,t])=>`<div class="logicItem"><span class="mark">${m}</span><span>${t}</span></div>`).join("");
   }else{
     const cvx=convexity()==="convex";
     eq.innerHTML=cvx
-      ? `φ convex ⇒ φ(E[X]) ≤ E[φ(X)]<br>gap = <strong>${fmt(Ephi-phiEX)}</strong>.`
-      : `φ concave ⇒ φ(E[X]) ≥ E[φ(X)]<br>gap = <strong>${fmt(phiEX-Ephi)}</strong>.`;
-    interp.innerHTML=`Jensen compares two paths: first average then bend, or first bend then average. Because φ is <strong>${convexity()}</strong>, curvature creates a systematic gap.`;
+      ? `Ï† convex â‡’ Ï†(E[X]) â‰¤ E[Ï†(X)]<br>gap = <strong>${fmt(Ephi-phiEX)}</strong>.`
+      : `Ï† concave â‡’ Ï†(E[X]) â‰¥ E[Ï†(X)]<br>gap = <strong>${fmt(phiEX-Ephi)}</strong>.`;
+    interp.innerHTML=`Jensen compares two paths: first average then bend, or first bend then average. Because Ï† is <strong>${convexity()}</strong>, curvature creates a systematic gap.`;
     notice.innerHTML=cvx
       ? "Convexity makes dispersion expensive: the average after bending lies above the bend at the average."
       : "Concavity rewards smoothing: the bend at the average lies above the average after bending.";
     list.innerHTML=[
-      ["✓",`${convexity()} transformation selected`],
-      ["✓",`φ(E[X]) = ${fmt(phiEX)}`],
-      ["✓",`E[φ(X)] = ${fmt(Ephi)}`],
-      ["→",cvx?"Jensen: φ(E[X])≤E[φ(X)]":"Jensen: φ(E[X])≥E[φ(X)]"]
+      ["âœ“",`${convexity()} transformation selected`],
+      ["âœ“",`Ï†(E[X]) = ${fmt(phiEX)}`],
+      ["âœ“",`E[Ï†(X)] = ${fmt(Ephi)}`],
+      ["â†’",cvx?"Jensen: Ï†(E[X])â‰¤E[Ï†(X)]":"Jensen: Ï†(E[X])â‰¥E[Ï†(X)]"]
     ].map(([m,t])=>`<div class="logicItem"><span class="mark">${m}</span><span>${t}</span></div>`).join("");
   }
 }
@@ -587,4 +587,5 @@ drawAll();
 </script>
 </body>
 </html>
+
 

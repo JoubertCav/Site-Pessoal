@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -161,9 +161,9 @@
 <div class="wrap">
   <header>
     <div>
-      <h1>Score, Fisher information, and the Cramér–Rao bound</h1>
+      <h1>Score, Fisher information, and the CramÃ©râ€“Rao bound</h1>
       <div class="subtitle">
-        A single geometric chain: the law changes with the parameter, the score records the relative parameter derivative, Fisher information averages the squared score under the law, the expected log-likelihood inherits the same curvature, and the Cramér–Rao lower bound converts that curvature into a minimum variance scale.
+        A single geometric chain: the law changes with the parameter, the score records the relative parameter derivative, Fisher information averages the squared score under the law, the expected log-likelihood inherits the same curvature, and the CramÃ©râ€“Rao lower bound converts that curvature into a minimum variance scale.
       </div>
     </div>
     <button class="themeBtn" id="themeBtn">Dark mode</button>
@@ -173,29 +173,29 @@
     <div class="def">
       <div class="tag">Law derivative</div>
       <div class="math">
-        <span class="formula">∂<sub>θ</sub> f<sub>θ</sub>(x)</span>
-        <span class="mathNote">how the probability law changes when θ moves</span>
+        <span class="formula">âˆ‚<sub>Î¸</sub> f<sub>Î¸</sub>(x)</span>
+        <span class="mathNote">how the probability law changes when Î¸ moves</span>
       </div>
     </div>
     <div class="def">
       <div class="tag">Score</div>
       <div class="math">
-        <span class="formula">U<sub>θ</sub>(x)=∂<sub>θ</sub>\log f<sub>θ</sub>(x)=\frac{∂<sub>θ</sub>f<sub>θ</sub>(x)}{f<sub>θ</sub>(x)}</span>
+        <span class="formula">U<sub>Î¸</sub>(x)=âˆ‚<sub>Î¸</sub>\log f<sub>Î¸</sub>(x)=\frac{âˆ‚<sub>Î¸</sub>f<sub>Î¸</sub>(x)}{f<sub>Î¸</sub>(x)}</span>
         <span class="mathNote">relative parameter sensitivity of the law</span>
       </div>
     </div>
     <div class="def">
       <div class="tag">Information</div>
       <div class="math">
-        <span class="formula">I₁(θ)=E<sub>θ</sub>[U<sub>θ</sub>(X)^2]</span>
-        <span class="formula">= -E<sub>θ</sub}[H<sub>θ</sub>(X)]</span>
+        <span class="formula">Iâ‚(Î¸)=E<sub>Î¸</sub>[U<sub>Î¸</sub>(X)^2]</span>
+        <span class="formula">= -E<sub>Î¸</sub}[H<sub>Î¸</sub>(X)]</span>
         <span class="mathNote">variance of the score = expected negative curvature</span>
       </div>
     </div>
     <div class="def">
-      <div class="tag">Cramér–Rao</div>
+      <div class="tag">CramÃ©râ€“Rao</div>
       <div class="math">
-        <span class="formula">Var(T)\ge \frac{1}{nI₁(θ)}</span>
+        <span class="formula">Var(T)\ge \frac{1}{nIâ‚(Î¸)}</span>
         <span class="mathNote">for unbiased regular estimators <em>T</em></span>
       </div>
     </div>
@@ -208,11 +208,11 @@
       <div class="control">
         <label for="modelSelect">Model</label>
         <select id="modelSelect">
-          <option value="normalMean">Normal mean, σ known</option>
+          <option value="normalMean">Normal mean, Ïƒ known</option>
           <option value="bernoulli">Bernoulli probability</option>
           <option value="poisson">Poisson rate</option>
           <option value="exponential">Exponential rate</option>
-          <option value="normalVar">Normal variance, μ = 0</option>
+          <option value="normalVar">Normal variance, Î¼ = 0</option>
         </select>
       </div>
 
@@ -222,7 +222,7 @@
       </div>
 
       <div class="control">
-        <label for="thetaRange">Parameter θ <span class="value" id="thetaVal">1.20</span></label>
+        <label for="thetaRange">Parameter Î¸ <span class="value" id="thetaVal">1.20</span></label>
         <input id="thetaRange" type="range" min="0.1" max="4.0" step="0.02" value="1.20" />
       </div>
 
@@ -232,7 +232,7 @@
       </div>
 
       <div class="control">
-        <label for="deltaRange">Parameter movement Δθ <span class="value" id="deltaVal">0.20</span></label>
+        <label for="deltaRange">Parameter movement Î”Î¸ <span class="value" id="deltaVal">0.20</span></label>
         <input id="deltaRange" type="range" min="-0.80" max="0.80" step="0.02" value="0.20" />
       </div>
 
@@ -264,16 +264,16 @@
       <div class="card plotCard">
         <div class="plotHead">
           <div>
-            <div class="plotTitle">One-object geometry: law derivative → score → information integrand</div>
+            <div class="plotTitle">One-object geometry: law derivative â†’ score â†’ information integrand</div>
             <div class="pillRow">
-              <span class="pill"><span class="dot"></span> law <em>f</em><sub>θ</sub>(x)</span>
-              <span class="pill"><span class="dot" style="background:var(--warn)"></span> ∂<sub>θ</sub><em>f</em><sub>θ</sub>(x)</span>
-              <span class="pill"><span class="dot" style="background:var(--violet)"></span> score <em>U</em><sub>θ</sub>(x)</span>
-              <span class="pill"><span class="dot" style="background:var(--rose)"></span> <em>U</em><sub>θ</sub>(x)<sup>2</sup><em>f</em><sub>θ</sub>(x)</span>
+              <span class="pill"><span class="dot"></span> law <em>f</em><sub>Î¸</sub>(x)</span>
+              <span class="pill"><span class="dot" style="background:var(--warn)"></span> âˆ‚<sub>Î¸</sub><em>f</em><sub>Î¸</sub>(x)</span>
+              <span class="pill"><span class="dot" style="background:var(--violet)"></span> score <em>U</em><sub>Î¸</sub>(x)</span>
+              <span class="pill"><span class="dot" style="background:var(--rose)"></span> <em>U</em><sub>Î¸</sub>(x)<sup>2</sup><em>f</em><sub>Î¸</sub>(x)</span>
               <span class="pill"><span class="dot" style="background:var(--blue)"></span> selected <em>x</em></span>
             </div>
           </div>
-          <div class="plotSub">The last panel makes <em>I</em><sub>1</sub>(θ) = ∫ <em>U</em><sub>θ</sub>(x)<sup>2</sup><em>f</em><sub>θ</sub>(x) dx literally visible as total weighted area / sum.</div>
+          <div class="plotSub">The last panel makes <em>I</em><sub>1</sub>(Î¸) = âˆ« <em>U</em><sub>Î¸</sub>(x)<sup>2</sup><em>f</em><sub>Î¸</sub>(x) dx literally visible as total weighted area / sum.</div>
         </div>
         <svg id="mainSvg" viewBox="0 0 980 560" preserveAspectRatio="xMidYMid meet"></svg>
       </div>
@@ -282,7 +282,7 @@
         <div class="card plotCard">
           <div class="plotHead">
             <div class="plotTitle">Curvature of expected log-likelihood</div>
-            <div class="plotSub"><em>m</em>(t) = E<sub>θ</sub>[log <em>f</em><sub>t</sub>(X)], with <em>m</em>″(θ) = −<em>I</em><sub>1</sub>(θ)</div>
+            <div class="plotSub"><em>m</em>(t) = E<sub>Î¸</sub>[log <em>f</em><sub>t</sub>(X)], with <em>m</em>â€³(Î¸) = âˆ’<em>I</em><sub>1</sub>(Î¸)</div>
           </div>
           <svg id="midLeftSvg" viewBox="0 0 520 330" preserveAspectRatio="xMidYMid meet"></svg>
         </div>
@@ -290,7 +290,7 @@
         <div class="card plotCard">
           <div class="plotHead">
             <div class="plotTitle">Score law and information equality</div>
-            <div class="plotSub">distribution of <em>U</em><sub>θ</sub>(X), with E[U²] and −E[H]</div>
+            <div class="plotSub">distribution of <em>U</em><sub>Î¸</sub>(X), with E[UÂ²] and âˆ’E[H]</div>
           </div>
           <svg id="midRightSvg" viewBox="0 0 520 330" preserveAspectRatio="xMidYMid meet"></svg>
         </div>
@@ -300,7 +300,7 @@
         <div class="card plotCard">
           <div class="plotHead">
             <div>
-              <div class="plotTitle">Cramér–Rao lower bound</div>
+              <div class="plotTitle">CramÃ©râ€“Rao lower bound</div>
               <div class="pillRow">
                 <span class="pill"><span class="dot" style="background:var(--blue)"></span> efficient</span>
                 <span class="pill"><span class="dot" style="background:var(--gold)"></span> inefficient</span>
@@ -319,10 +319,10 @@
           <div class="panelTitle">Interpretation</div>
           <div class="smallText" id="interpretText"></div>
           <div class="summary">
-            <div><strong>Score.</strong><br>For fixed θ, the map <em>x</em> ↦ <em>U</em><sub>θ</sub>(x) tells how one observation pushes the parameter locally in log units.</div>
-            <div><strong>Fisher information.</strong><br><em>I</em><sub>1</sub>(θ) is not a new object: it is the law-weighted squared score, hence the average local sensitivity of the law to θ.</div>
-            <div><strong>Curvature.</strong><br>Under regularity, the same <em>I</em><sub>1</sub>(θ) is the downward curvature of the expected log-likelihood at the truth.</div>
-            <div><strong>CRLB.</strong><br>Unbiased regular estimators obey Var(T) ≥ 1/(n<em>I</em><sub>1</sub>(θ)). For biased regular estimators, the derivative of the bias changes the variance bound, and MSE adds bias².</div>
+            <div><strong>Score.</strong><br>For fixed Î¸, the map <em>x</em> â†¦ <em>U</em><sub>Î¸</sub>(x) tells how one observation pushes the parameter locally in log units.</div>
+            <div><strong>Fisher information.</strong><br><em>I</em><sub>1</sub>(Î¸) is not a new object: it is the law-weighted squared score, hence the average local sensitivity of the law to Î¸.</div>
+            <div><strong>Curvature.</strong><br>Under regularity, the same <em>I</em><sub>1</sub>(Î¸) is the downward curvature of the expected log-likelihood at the truth.</div>
+            <div><strong>CRLB.</strong><br>Unbiased regular estimators obey Var(T) â‰¥ 1/(n<em>I</em><sub>1</sub>(Î¸)). For biased regular estimators, the derivative of the bias changes the variance bound, and MSE adds biasÂ².</div>
           </div>
         </div>
 
@@ -334,7 +334,7 @@
     </section>
   </main>
 
-  <footer>Minimal interactive notebook — score, Fisher information, information equality, curvature, and the Cramér–Rao lower bound.</footer>
+  <footer>Minimal interactive notebook â€” score, Fisher information, information equality, curvature, and the CramÃ©râ€“Rao lower bound.</footer>
 </div>
 
 <script>
@@ -351,7 +351,7 @@ const seedRange=document.getElementById("seedRange");
 
 function css(v){return getComputedStyle(body).getPropertyValue(v).trim();}
 function fmt(x){
-  if(!isFinite(x)) return "∞";
+  if(!isFinite(x)) return "âˆž";
   if(Math.abs(x)<1e-4 && x!==0) return x.toExponential(2);
   if(Math.abs(x)<10) return x.toFixed(4);
   return x.toFixed(2);
@@ -382,20 +382,20 @@ function factorialLog(k){let s=0;for(let i=2;i<=k;i++) s+=Math.log(i);return s;}
 
 const estimatorOptions = {
   normalMean: [
-    {value:"mean", label:"Sample mean x̄", unbiased:true, regular:true, efficient:true}
+    {value:"mean", label:"Sample mean xÌ„", unbiased:true, regular:true, efficient:true}
   ],
   bernoulli: [
-    {value:"mean", label:"Sample proportion x̄", unbiased:true, regular:true, efficient:true}
+    {value:"mean", label:"Sample proportion xÌ„", unbiased:true, regular:true, efficient:true}
   ],
   poisson: [
-    {value:"mean", label:"Sample mean x̄", unbiased:true, regular:true, efficient:true}
+    {value:"mean", label:"Sample mean xÌ„", unbiased:true, regular:true, efficient:true}
   ],
   exponential: [
-    {value:"mle", label:"MLE n/ΣXᵢ", unbiased:false, regular:true, efficient:false},
-    {value:"unbiasedRate", label:"Unbiased rate estimator (n−1)/ΣXᵢ", unbiased:true, regular:true, efficient:false}
+    {value:"mle", label:"MLE n/Î£Xáµ¢", unbiased:false, regular:true, efficient:false},
+    {value:"unbiasedRate", label:"Unbiased rate estimator (nâˆ’1)/Î£Xáµ¢", unbiased:true, regular:true, efficient:false}
   ],
   normalVar: [
-    {value:"secondMoment", label:"Second moment n⁻¹ΣXᵢ²", unbiased:true, regular:true, efficient:true}
+    {value:"secondMoment", label:"Second moment nâ»Â¹Î£Xáµ¢Â²", unbiased:true, regular:true, efficient:true}
   ]
 };
 
@@ -571,10 +571,10 @@ function drawMain(){
   const panel=css("--panel"), panel2=css("--panel2"), border=css("--border"), grid=css("--grid"), muted=css("--muted"), textc=css("--text");
   const acc=css("--accent"), warn=css("--warn"), violet=css("--violet"), rose=css("--rose"), blue=css("--blue");
   const cols = [
-    {x0:48,x1:265,y0:68,y1:250,label:"law fθ(x)", color:acc},
-    {x0:287,x1:504,y0:68,y1:250,label:"law derivative ∂θfθ(x)", color:warn},
-    {x0:526,x1:743,y0:68,y1:250,label:"score Uθ(x)", color:violet},
-    {x0:765,x1:932,y0:68,y1:250,label:"information integrand Uθ(x)²fθ(x)", color:rose}
+    {x0:48,x1:265,y0:68,y1:250,label:"law fÎ¸(x)", color:acc},
+    {x0:287,x1:504,y0:68,y1:250,label:"law derivative âˆ‚Î¸fÎ¸(x)", color:warn},
+    {x0:526,x1:743,y0:68,y1:250,label:"score UÎ¸(x)", color:violet},
+    {x0:765,x1:932,y0:68,y1:250,label:"information integrand UÎ¸(x)Â²fÎ¸(x)", color:rose}
   ];
   let h='<rect x="8" y="10" width="964" height="530" rx="20" fill="'+panel+'" stroke="'+border+'"/>';
   h+=text(58,38,"The same object seen at four levels",muted,13,850);
@@ -662,11 +662,11 @@ function drawMain(){
 
   const rowY = 390, x0 = 78, boxW=145, gap=24;
   const nodes = [
-    ["1","change in law", "∂θfθ(x)", fmt(df), warn],
-    ["2","relative change", "Uθ(x)=∂θf/f", fmt(U), violet],
-    ["3","square-weight", "Uθ(x)^2 fθ(x)", fmt(U*U*f), rose],
-    ["4","average over X", "I₁(θ)", fmt(I), acc],
-    ["5","variance floor", "1/(nI₁)", fmt(1/(Number(nRange.value)*I)), blue]
+    ["1","change in law", "âˆ‚Î¸fÎ¸(x)", fmt(df), warn],
+    ["2","relative change", "UÎ¸(x)=âˆ‚Î¸f/f", fmt(U), violet],
+    ["3","square-weight", "UÎ¸(x)^2 fÎ¸(x)", fmt(U*U*f), rose],
+    ["4","average over X", "Iâ‚(Î¸)", fmt(I), acc],
+    ["5","variance floor", "1/(nIâ‚)", fmt(1/(Number(nRange.value)*I)), blue]
   ];
   nodes.forEach((node,i)=>{
     const x=x0+i*(boxW+gap);
@@ -675,9 +675,9 @@ function drawMain(){
     h+=text(x+72,rowY+20,node[1],muted,9,850,"middle");
     h+=text(x+72,rowY+39,node[2],node[4],10,900,"middle");
     h+=text(x+72,rowY+57,node[3],textc,10,850,"middle");
-    if(i<nodes.length-1) h+=text(x+boxW+gap/2,rowY+36,"→",muted,18,900,"middle");
+    if(i<nodes.length-1) h+=text(x+boxW+gap/2,rowY+36,"â†’",muted,18,900,"middle");
   });
-  h+=text(66,480,"At this x:  Δ log f(x;θ) ≈ Uθ(x)Δθ,  actual = "+fmt(actual)+",  linear = "+fmt(linear), muted,11,850);
+  h+=text(66,480,"At this x:  Î” log f(x;Î¸) â‰ˆ UÎ¸(x)Î”Î¸,  actual = "+fmt(actual)+",  linear = "+fmt(linear), muted,11,850);
 
   svg.innerHTML=h;
 }
@@ -712,8 +712,8 @@ function drawCurvature(){
   h+=text(70,34,"expected log-likelihood profile",muted,12,850);
   h+='<rect x="300" y="66" width="170" height="84" rx="14" fill="'+css("--panel2")+'" stroke="'+border+'"/>';
   h+=text(316,88,"Curvature reading",textc,12,900);
-  h+=text(316,108,"I₁(θ) = "+fmt(I),warn,10,900);
-  h+=text(316,126,"m″(θ) = −"+fmt(I),acc,10,900);
+  h+=text(316,108,"Iâ‚(Î¸) = "+fmt(I),warn,10,900);
+  h+=text(316,126,"mâ€³(Î¸) = âˆ’"+fmt(I),acc,10,900);
   h+=text(X1,Y1+22,"parameter t",muted,10,850,"end");
   svg.innerHTML=h;
 }
@@ -747,11 +747,11 @@ function drawScoreLaw(){
     const w=(X1-X0)/bins - 2;
     h+='<rect x="'+(x+1)+'" y="'+y+'" width="'+w+'" height="'+(Y1-y)+'" rx="4" fill="'+violet+'" fill-opacity=".68"/>';
   }
-  h+=text(68,34,"score distribution under Pθ",muted,12,850);
+  h+=text(68,34,"score distribution under PÎ¸",muted,12,850);
 
   // equality bars
   const BX=340, BY=84, BH=140, BW=36;
-  const vals=[["E(U²)",empVar,violet],["−E(H)",empNegH,warn],["I₁",I,acc]];
+  const vals=[["E(UÂ²)",empVar,violet],["âˆ’E(H)",empNegH,warn],["Iâ‚",I,acc]];
   const maxB=Math.max(empVar,empNegH,I,1e-6);
   vals.forEach((d,i)=>{
     const ht=BH*d[1]/maxB;
@@ -761,7 +761,7 @@ function drawScoreLaw(){
     h+=text(x+BW/2,BY+BH-ht-7,fmt(d[1]),textc,9,900,"middle");
   });
   h+=text(344,34,"information equality",muted,12,850);
-  h+=text(340,252,"regularity:  E[U]=0,  E[U²]=−E[H]",muted,10,850);
+  h+=text(340,252,"regularity:  E[U]=0,  E[UÂ²]=âˆ’E[H]",muted,10,850);
   svg.innerHTML=h;
 }
 
@@ -786,13 +786,13 @@ function drawCRLB(){
   const pad=(hi-lo)*0.08; lo-=pad; hi+=pad;
 
   let h='<rect x="8" y="10" width="964" height="405" rx="20" fill="'+panel+'" stroke="'+border+'"/>';
-  h+=text(76,40,"Cramér–Rao: compare center and spread",muted,13,850);
+  h+=text(76,40,"CramÃ©râ€“Rao: compare center and spread",muted,13,850);
 
   // One very compact theorem strip
   h+='<rect x="72" y="62" width="820" height="44" rx="15" fill="'+panel2+'" stroke="'+border+'"/>';
   h+=text(96,90,"unbiased + regular",muted,12,850);
-  h+=text(230,90,"⇒",muted,14,900);
-  h+=text(266,90,"Var(T) ≥ 1/(nI₁)",blue,13,900);
+  h+=text(230,90,"â‡’",muted,14,900);
+  h+=text(266,90,"Var(T) â‰¥ 1/(nIâ‚)",blue,13,900);
   h+=text(456,90,"efficient means equality",blue,12,850);
   h+=text(666,90,"biased: compare MSE",warn,12,900);
 
@@ -815,7 +815,7 @@ function drawCRLB(){
     // Axis and theta
     h+=line(axisX0,axisY,axisX1,axisY,muted,1.2,.75);
     h+=line(thetaX,axisY-35,thetaX,axisY+38,blue,1.3,.42,"5 5");
-    h+=text(thetaX,axisY-40,"θ",blue,10,900,"middle");
+    h+=text(thetaX,axisY-40,"Î¸",blue,10,900,"middle");
 
     // CRLB reference is faint in all cards
     h+=line(crlbA,axisY-18,crlbB,axisY-18,blue,2,.25);
@@ -848,7 +848,7 @@ function drawCRLB(){
   const axisX0=stripX+260, axisX1=stripX+stripW-36, axisY=stripY+35;
   h+='<rect x="'+stripX+'" y="'+stripY+'" width="'+stripW+'" height="'+stripH+'" rx="18" fill="'+panel2+'" stroke="'+border+'"/>';
   h+=text(stripX+22,stripY+25,"Selected estimator",textc,14,900);
-  h+=text(stripX+22,stripY+46,(meta.unbiased?"unbiased":"biased")+" · "+(meta.efficient?"efficient":"not efficient"),meta.efficient?blue:(meta.unbiased?gold:warn),11,900);
+  h+=text(stripX+22,stripY+46,(meta.unbiased?"unbiased":"biased")+" Â· "+(meta.efficient?"efficient":"not efficient"),meta.efficient?blue:(meta.unbiased?gold:warn),11,900);
 
   const thetaX=px(theta,lo,hi,axisX0,axisX1);
   const centerX=px(estMean,lo,hi,axisX0,axisX1);
@@ -862,8 +862,8 @@ function drawCRLB(){
   h+=line(crlbA,axisY-12,crlbB,axisY-12,blue,2,.28);
   h+=line(sdA,axisY,sdB,axisY,acc,5,.82);
   h+='<circle cx="'+centerX+'" cy="'+axisY+'" r="6.5" fill="'+acc+'"/>';
-  h+=text(axisX1-6,stripY+20,"Var ≈ "+fmt(v),acc,10,900,"end");
-  h+=text(axisX1-6,stripY+42,"CRLB = "+fmt(crlb)+" · bias ≈ "+fmt(bias),muted,9,850,"end");
+  h+=text(axisX1-6,stripY+20,"Var â‰ˆ "+fmt(v),acc,10,900,"end");
+  h+=text(axisX1-6,stripY+42,"CRLB = "+fmt(crlb)+" Â· bias â‰ˆ "+fmt(bias),muted,9,850,"end");
 
   svg.innerHTML=h;
 }
@@ -888,13 +888,13 @@ function updateText(){
   if(modelSelect.value==="normalVar") modelFormula="X\\sim N(0,\\theta),\\quad U_\\theta(x)= -\\frac{1}{2\\theta}+\\frac{x^2}{2\\theta^2}";
   document.getElementById("eqBox").innerHTML =
     '<span class="formula">'+modelFormula+'</span>' +
-    '<span class="mathNote">Regular chain: ∂θfθ → Uθ = ∂θfθ / fθ → I₁(θ) = E[U²] = −E[H] → Var(T) ≥ 1/(nI₁).</span>';
+    '<span class="mathNote">Regular chain: âˆ‚Î¸fÎ¸ â†’ UÎ¸ = âˆ‚Î¸fÎ¸ / fÎ¸ â†’ Iâ‚(Î¸) = E[UÂ²] = âˆ’E[H] â†’ Var(T) â‰¥ 1/(nIâ‚).</span>';
 
   const mini = [
-    ["I₁(θ)", fmt(I)],
-    ["nI₁(θ)", fmt(n*I)],
-    ["E(U²) sim", fmt(empVar)],
-    ["−E(H) sim", fmt(empNegH)],
+    ["Iâ‚(Î¸)", fmt(I)],
+    ["nIâ‚(Î¸)", fmt(n*I)],
+    ["E(UÂ²) sim", fmt(empVar)],
+    ["âˆ’E(H) sim", fmt(empNegH)],
     ["Var(est)", fmt(ev)],
     ["CRLB", fmt(1/(n*I))]
   ];
@@ -903,28 +903,28 @@ function updateText(){
   ).join("");
 
   const logic = [
-    ["1", "Differentiate the law with respect to θ: ∂θfθ."],
-    ["2", "Normalize by the law itself: Uθ = ∂θfθ / fθ."],
-    ["3", "Square and average under Pθ: I₁(θ) = Eθ[Uθ(X)²]."],
-    ["4", "Under regularity: I₁(θ) = −Eθ[Hθ(X)]."],
-    ["→", "For unbiased regular T: Var(T) ≥ 1/(nI₁(θ))."]
+    ["1", "Differentiate the law with respect to Î¸: âˆ‚Î¸fÎ¸."],
+    ["2", "Normalize by the law itself: UÎ¸ = âˆ‚Î¸fÎ¸ / fÎ¸."],
+    ["3", "Square and average under PÎ¸: Iâ‚(Î¸) = EÎ¸[UÎ¸(X)Â²]."],
+    ["4", "Under regularity: Iâ‚(Î¸) = âˆ’EÎ¸[HÎ¸(X)]."],
+    ["â†’", "For unbiased regular T: Var(T) â‰¥ 1/(nIâ‚(Î¸))."]
   ];
   document.getElementById("logicList").innerHTML = logic.map(d =>
     '<div class="logicItem"><span class="mark">'+d[0]+'</span><span>'+d[1]+'</span></div>'
   ).join("");
 
-  let interp = "The app is organized around a single mathematical object. First, the distribution changes with the parameter. The score turns this into a relative log change. Fisher information is the average squared size of that score, so it measures how much the law reveals about θ. The same number then controls expected log-likelihood curvature and the best possible variance scale.";
+  let interp = "The app is organized around a single mathematical object. First, the distribution changes with the parameter. The score turns this into a relative log change. Fisher information is the average squared size of that score, so it measures how much the law reveals about Î¸. The same number then controls expected log-likelihood curvature and the best possible variance scale.";
   if(modelSelect.value==="normalMean") interp = "For the normal mean with known variance, each observation contributes exactly one unit of information. The sample mean is efficient, so the CRLB frontier is attained.";
   if(modelSelect.value==="bernoulli") interp = "For Bernoulli, there are only two score values, one for failure and one for success. The sample proportion is efficient and reaches the CRLB.";
-  if(modelSelect.value==="poisson") interp = "For Poisson, the sample mean is unbiased and efficient. The score law is discrete, but the chain score → information → curvature → CRLB stays identical.";
+  if(modelSelect.value==="poisson") interp = "For Poisson, the sample mean is unbiased and efficient. The score law is discrete, but the chain score â†’ information â†’ curvature â†’ CRLB stays identical.";
   if(modelSelect.value==="exponential") interp = meta.unbiased
-      ? "For the exponential rate, the unbiased estimator (n−1)/ΣXᵢ satisfies the unbiasedness requirement, but it does not attain the CRLB. This makes the gap between admissible and efficient behavior visible."
-      : "For the exponential rate, the MLE n/ΣXᵢ is biased in finite samples. The CRLB is formally an unbiased bound, so the comparison is heuristic unless the estimator is bias-corrected.";
-  if(modelSelect.value==="normalVar") interp = "For the normal variance with mean fixed at zero, the second moment n⁻¹ΣXᵢ² is unbiased and efficient. The CRLB is attained exactly.";
+      ? "For the exponential rate, the unbiased estimator (nâˆ’1)/Î£Xáµ¢ satisfies the unbiasedness requirement, but it does not attain the CRLB. This makes the gap between admissible and efficient behavior visible."
+      : "For the exponential rate, the MLE n/Î£Xáµ¢ is biased in finite samples. The CRLB is formally an unbiased bound, so the comparison is heuristic unless the estimator is bias-corrected.";
+  if(modelSelect.value==="normalVar") interp = "For the normal variance with mean fixed at zero, the second moment nâ»Â¹Î£Xáµ¢Â² is unbiased and efficient. The CRLB is attained exactly.";
   document.getElementById("interpretText").innerHTML = interp;
 
   let notice = "The most important panel is the first: it makes score and information literal geometric transforms of the same probability law.";
-  if(meta.unbiased && meta.efficient) notice = "This estimator is efficient: its spread sits right on the Cramér–Rao frontier, so the lower bound is attained.";
+  if(meta.unbiased && meta.efficient) notice = "This estimator is efficient: its spread sits right on the CramÃ©râ€“Rao frontier, so the lower bound is attained.";
   if(meta.unbiased && !meta.efficient) notice = "This estimator is unbiased, so the CRLB applies exactly. The visible gap above the frontier is inefficiency, not bias.";
   if(!meta.unbiased) notice = "The chosen estimator is biased. The CRLB panel remains useful geometrically, but the classical inequality applies only after unbiasedness and regularity are imposed.";
   document.getElementById("noticeText").innerHTML = notice;
@@ -958,4 +958,5 @@ drawAll();
 </script>
 </body>
 </html>
+
 

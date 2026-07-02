@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -398,7 +398,7 @@ svg {
       </p>
     </div>
     <div class="top-actions">
-      <button class="toggle" id="themeBtn" type="button">◐ Theme</button>
+      <button class="toggle" id="themeBtn" type="button">â— Theme</button>
       <button class="pill" id="animateBtn" type="button">Animate policy shock</button>
     </div>
   </header>
@@ -421,7 +421,7 @@ svg {
       <div class="group">
         <div class="group-label">Balance-sheet operation</div>
         <div class="row">
-          <div class="label"><label for="base0">Initial monetary base B₀</label><span class="value" id="vBase0"></span></div>
+          <div class="label"><label for="base0">Initial monetary base Bâ‚€</label><span class="value" id="vBase0"></span></div>
           <input id="base0" type="range" min="500" max="12000" step="100" value="4000">
         </div>
         <div class="row">
@@ -441,11 +441,11 @@ svg {
           <input id="currencyRatio" type="range" min="0" max="0.8" step="0.01" value="0.20">
         </div>
         <div class="row">
-          <div class="label"><label for="rr0">Initial reserve requirement rr₀</label><span class="value" id="vRr0"></span></div>
+          <div class="label"><label for="rr0">Initial reserve requirement rrâ‚€</label><span class="value" id="vRr0"></span></div>
           <input id="rr0" type="range" min="0.02" max="0.5" step="0.01" value="0.10">
         </div>
         <div class="row">
-          <div class="label"><label for="rr1">New reserve requirement rr₁</label><span class="value" id="vRr1"></span></div>
+          <div class="label"><label for="rr1">New reserve requirement rrâ‚</label><span class="value" id="vRr1"></span></div>
           <input id="rr1" type="range" min="0.02" max="0.5" step="0.01" value="0.14">
         </div>
         <div class="row">
@@ -462,8 +462,8 @@ svg {
             <div class="eq-title">Base channel</div>
             <div class="equations">
               <div class="line">B = C + R</div>
-              <div class="line">OMO purchase: central bank buys securities → reserves rise → B rises</div>
-              <div class="line">OMO sale: central bank sells securities → reserves fall → B falls</div>
+              <div class="line">OMO purchase: central bank buys securities â†’ reserves rise â†’ B rises</div>
+              <div class="line">OMO sale: central bank sells securities â†’ reserves fall â†’ B falls</div>
             </div>
           </div>
 
@@ -472,7 +472,7 @@ svg {
             <div class="equations">
               <div class="line">m = (1+c)/(c+rr+er)</div>
               <div class="line">M = mB</div>
-              <div class="line">rr ↑ ⇒ m ↓ for given c and er</div>
+              <div class="line">rr â†‘ â‡’ m â†“ for given c and er</div>
             </div>
             <div class="note">Reserve requirements do not create base money by themselves; they change how much deposit money banks can support with a given base.</div>
           </div>
@@ -485,7 +485,7 @@ svg {
                 <h3>Base channel</h3>
                 <p>Open-market operations move reserves and therefore the monetary base.</p>
               </div>
-              <div class="badge" id="baseBadge">ΔB</div>
+              <div class="badge" id="baseBadge">Î”B</div>
             </div>
             <div class="svgbox">
               <svg id="balanceSvg" viewBox="0 0 760 530" preserveAspectRatio="xMidYMid meet"></svg>
@@ -514,9 +514,9 @@ svg {
             <span>computed live</span>
           </div>
           <div class="kpis">
-            <div class="kpi"><small>New base B₁</small><strong id="kBase1"></strong></div>
-            <div class="kpi"><small>Multiplier m₁</small><strong id="kMult1"></strong></div>
-            <div class="kpi"><small>Broad money M₁</small><strong id="kMoney1"></strong></div>
+            <div class="kpi"><small>New base Bâ‚</small><strong id="kBase1"></strong></div>
+            <div class="kpi"><small>Multiplier mâ‚</small><strong id="kMult1"></strong></div>
+            <div class="kpi"><small>Broad money Mâ‚</small><strong id="kMoney1"></strong></div>
             <div class="kpi"><small>Reserve pressure</small><strong id="kPressure"></strong></div>
           </div>
           <div class="notice">
@@ -553,10 +553,10 @@ svg {
           <div class="notice">
             <h4>Exam-style summary</h4>
             <ul>
-              <li>OMO purchase: ΔB &gt; 0 and reserves rise.</li>
-              <li>OMO sale: ΔB &lt; 0 and reserves fall.</li>
+              <li>OMO purchase: Î”B &gt; 0 and reserves rise.</li>
+              <li>OMO sale: Î”B &lt; 0 and reserves fall.</li>
               <li>Multiplier: m = (1+c)/(c+rr+er).</li>
-              <li>rr ↑ ⇒ m ↓ ⇒ supported M falls for a given B.</li>
+              <li>rr â†‘ â‡’ m â†“ â‡’ supported M falls for a given B.</li>
             </ul>
           </div>
         </div>
@@ -749,7 +749,7 @@ function untip() { tooltip.style.opacity = 0; }
 
 function updateLabels(d) {
   values.base0.textContent = fmt(num(inputs.base0.value));
-  values.omoSize.textContent = `${state.mode === "purchase" ? "+" : "−"}${fmt(num(inputs.omoSize.value) * state.shockScale)}`;
+  values.omoSize.textContent = `${state.mode === "purchase" ? "+" : "âˆ’"}${fmt(num(inputs.omoSize.value) * state.shockScale)}`;
   values.currencyShare.textContent = pct(num(inputs.currencyShare.value), 0);
   values.currencyRatio.textContent = fmt(num(inputs.currencyRatio.value), 2);
   values.rr0.textContent = pct(num(inputs.rr0.value), 0);
@@ -760,8 +760,8 @@ function updateLabels(d) {
   $("kMult1").textContent = fmt(d.m1, 2);
   $("kMoney1").textContent = fmt(d.M1);
   $("kPressure").textContent = d.pressure >= 0 ? `+${fmt(d.pressure)}` : fmt(d.pressure);
-  $("baseBadge").textContent = `ΔB = ${d.effectiveDeltaR >= 0 ? "+" : ""}${fmt(d.effectiveDeltaR)}`;
-  $("multBadge").textContent = `m₁ = ${fmt(d.m1, 2)}`;
+  $("baseBadge").textContent = `Î”B = ${d.effectiveDeltaR >= 0 ? "+" : ""}${fmt(d.effectiveDeltaR)}`;
+  $("multBadge").textContent = `mâ‚ = ${fmt(d.m1, 2)}`;
 }
 
 function drawBaseChannel(d) {
@@ -809,7 +809,7 @@ function drawBaseChannel(d) {
 
   rect(balanceSvg, 286, 216, 188, 60, { fill: paper2, stroke: linec, rx: 18 });
   text(balanceSvg, 304, 238, action, { fill: muted, size: 11.2, weight: 800 });
-  text(balanceSvg, 304, 258, `ΔR = ΔB = ${d.effectiveDeltaR >= 0 ? "+" : ""}${fmt(d.effectiveDeltaR)}`, {
+  text(balanceSvg, 304, 258, `Î”R = Î”B = ${d.effectiveDeltaR >= 0 ? "+" : ""}${fmt(d.effectiveDeltaR)}`, {
     fill: opColor, size: 16.2, weight: 850
   });
 
@@ -890,11 +890,11 @@ function drawMultiplierChannel(d) {
 
   line(multSvg, X(d.rr0), y0, X(d.rr0), Yp(d.m0), { stroke: muted, sw: 1.05, dash: "4 5" });
   circle(multSvg, X(d.rr0), Yp(d.m0), 5.8, { fill: muted, stroke: ink, sw: 1.1 });
-  text(multSvg, X(d.rr0) + 8, Yp(d.m0) - 8, "rr₀", { fill: muted, size: 10.8, weight: 800 });
+  text(multSvg, X(d.rr0) + 8, Yp(d.m0) - 8, "rrâ‚€", { fill: muted, size: 10.8, weight: 800 });
 
   line(multSvg, X(d.rr1), y0, X(d.rr1), Yp(d.m1), { stroke: red, sw: 1.05, dash: "4 5" });
   circle(multSvg, X(d.rr1), Yp(d.m1), 7.2, { fill: red, stroke: ink, sw: 1.15 });
-  text(multSvg, X(d.rr1) + 8, Yp(d.m1) + 16, "rr₁", { fill: red, size: 10.8, weight: 800 });
+  text(multSvg, X(d.rr1) + 8, Yp(d.m1) + 16, "rrâ‚", { fill: red, size: 10.8, weight: 800 });
 
   text(multSvg, x0 + W, y0 + 24, "reserve requirement rr", { fill: muted, size: 11.4, weight: 740, anchor: "end" });
   text(multSvg, x0 - 18, y0 - H - 7, "money multiplier m", { fill: muted, size: 11.4, weight: 740 });
@@ -906,7 +906,7 @@ function drawMultiplierChannel(d) {
     text(multSvg, x + 13, y + 31, val, { fill: color, size: 12.8, weight: 850 });
   }
 
-  miniCard(414, 78, "multiplier", `${fmt(d.m0,2)} → ${fmt(d.m1,2)}`, red);
+  miniCard(414, 78, "multiplier", `${fmt(d.m0,2)} â†’ ${fmt(d.m1,2)}`, red);
   miniCard(414, 124, "base after OMO", fmt(d.B1), blue);
   miniCard(414, 170, "supported M", fmt(d.M1), accent);
 
@@ -918,7 +918,7 @@ function drawMultiplierChannel(d) {
   const items = [
     ["before", d.M0, muted],
     ["after OMO only", d.MBaseOnly, gold],
-    ["after OMO + rr₁", d.M1, accent]
+    ["after OMO + rrâ‚", d.M1, accent]
   ];
   items.forEach((it, idx) => {
     const y = by + idx * 23;
@@ -930,7 +930,7 @@ function drawMultiplierChannel(d) {
 
   const pressureColor = d.pressure >= 0 ? accent : red;
   rect(multSvg, 78, 364, 456, 22, { fill: paper2, stroke: linec, rx: 11, opacity: .96 });
-  text(multSvg, 94, 379, `${d.pressureLabel}: ${d.pressure >= 0 ? "+" : ""}${fmt(d.pressure)} reserves relative to rr₁ at old deposits.`, {
+  text(multSvg, 94, 379, `${d.pressureLabel}: ${d.pressure >= 0 ? "+" : ""}${fmt(d.pressure)} reserves relative to rrâ‚ at old deposits.`, {
     fill: pressureColor,
     size: 10.7,
     weight: 820
@@ -996,3 +996,4 @@ update();
 </script>
 </body>
 </html>
+

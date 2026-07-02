@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -437,13 +437,13 @@ svg {
   <header class="header">
     <div>
       <div class="eyebrow">Macroeconomics notebook</div>
-      <h1>Baumol–Tobin Money Demand</h1>
+      <h1>Baumolâ€“Tobin Money Demand</h1>
       <p class="subtitle">
         Money demand as an inventory problem: choose how often to convert bonds into cash, balancing transaction costs against foregone interest.
       </p>
     </div>
     <div class="top-actions">
-      <button class="toggle" id="themeBtn" type="button">◐ Theme</button>
+      <button class="toggle" id="themeBtn" type="button">â— Theme</button>
       <button class="pill" id="animateBtn" type="button">Animate withdrawals</button>
     </div>
   </header>
@@ -502,7 +502,7 @@ svg {
             <div class="eq-title">Minimal symbolic model</div>
             <div class="equations">
               <div class="line">Choose withdrawal size C.</div>
-              <div class="line">Average money: Mᵈ = C/2</div>
+              <div class="line">Average money: Máµˆ = C/2</div>
               <div class="line">Number of conversions: N = Y/C</div>
               <div class="line">Cost(C) = bY/C + iC/2</div>
             </div>
@@ -511,11 +511,11 @@ svg {
           <div class="eqbox">
             <div class="eq-title">Square-root rule</div>
             <div class="equations">
-              <div class="line">C* = √(2bY/i)</div>
-              <div class="line">Mᵈ* = C*/2 = √(bY/(2i))</div>
-              <div class="line">N* = Y/C* = √(iY/(2b))</div>
+              <div class="line">C* = âˆš(2bY/i)</div>
+              <div class="line">Máµˆ* = C*/2 = âˆš(bY/(2i))</div>
+              <div class="line">N* = Y/C* = âˆš(iY/(2b))</div>
             </div>
-            <div class="note">The model predicts income elasticity 1/2 and interest elasticity −1/2 for transactions money demand.</div>
+            <div class="note">The model predicts income elasticity 1/2 and interest elasticity âˆ’1/2 for transactions money demand.</div>
           </div>
         </div>
 
@@ -556,7 +556,7 @@ svg {
           </div>
           <div class="kpis">
             <div class="kpi"><small>Withdrawal C*</small><strong id="kCstar"></strong></div>
-            <div class="kpi"><small>Money demand Mᵈ*</small><strong id="kMstar"></strong></div>
+            <div class="kpi"><small>Money demand Máµˆ*</small><strong id="kMstar"></strong></div>
             <div class="kpi"><small>Conversions N*</small><strong id="kNstar"></strong></div>
             <div class="kpi"><small>Minimum cost</small><strong id="kCost"></strong></div>
           </div>
@@ -594,10 +594,10 @@ svg {
           <div class="notice">
             <h4>Exam-style summary</h4>
             <ul>
-              <li>Baumol–Tobin gives a microfoundation for transactions demand for money.</li>
+              <li>Baumolâ€“Tobin gives a microfoundation for transactions demand for money.</li>
               <li>Total cost is bY/C + iC/2.</li>
-              <li>FOC: −bY/C² + i/2 = 0.</li>
-              <li>Therefore C* = √(2bY/i) and Mᵈ* = √(bY/(2i)).</li>
+              <li>FOC: âˆ’bY/CÂ² + i/2 = 0.</li>
+              <li>Therefore C* = âˆš(2bY/i) and Máµˆ* = âˆš(bY/(2i)).</li>
             </ul>
           </div>
         </div>
@@ -760,15 +760,15 @@ function updateLabels(d) {
   values.interest.textContent = `${fmt(num(inputs.interest.value), 1)}%`;
   values.fixedCost.textContent = fmt(num(inputs.fixedCost.value));
   values.periods.textContent = fmt(num(inputs.periods.value));
-  values.incomeShock.textContent = `${fmt(num(inputs.incomeShock.value), 2)}×`;
-  values.costShock.textContent = `${fmt(num(inputs.costShock.value), 2)}×`;
+  values.incomeShock.textContent = `${fmt(num(inputs.incomeShock.value), 2)}Ã—`;
+  values.costShock.textContent = `${fmt(num(inputs.costShock.value), 2)}Ã—`;
 
   $("kCstar").textContent = fmt(d.Cstar);
   $("kMstar").textContent = fmt(d.Mstar);
   $("kNstar").textContent = fmt(d.Nstar, 2);
   $("kCost").textContent = fmt(d.minCost, 2);
 
-  $("cashBadge").textContent = `Mᵈ* = ${fmt(d.Mstar)}`;
+  $("cashBadge").textContent = `Máµˆ* = ${fmt(d.Mstar)}`;
   $("costBadge").textContent = `C* = ${fmt(d.Cstar)}`;
 }
 
@@ -847,7 +847,7 @@ function drawInventory(d) {
 
   text(inventorySvg, x0 + W, y0 + 30, "time within the period", { fill: muted, size: 12, anchor: "end", weight: 740 });
   text(inventorySvg, x0 - 22, y0 - H - 8, "cash balance", { fill: muted, size: 12, weight: 740 });
-  text(inventorySvg, x0 + W - 8, avgCurrent - 8, "average money Mᵈ = C*/2", { fill: blue, size: 12, anchor: "end", weight: 850 });
+  text(inventorySvg, x0 + W - 8, avgCurrent - 8, "average money Máµˆ = C*/2", { fill: blue, size: 12, anchor: "end", weight: 850 });
 
   function miniCard(x, y, title, value, color) {
     rect(inventorySvg, x, y, 156, 42, { fill: paper2, stroke: linec, rx: 14 });
@@ -856,7 +856,7 @@ function drawInventory(d) {
   }
 
   miniCard(88, 82, "current C*", fmt(d.Cstar), accent);
-  miniCard(258, 82, "average Mᵈ*", fmt(d.Mstar), blue);
+  miniCard(258, 82, "average Máµˆ*", fmt(d.Mstar), blue);
   miniCard(428, 82, "conversions N*", fmt(d.Nstar, 2), gold);
 
   const movingX = x0 + (state.phase % 1) * W;
@@ -969,7 +969,7 @@ function drawCost(d) {
 
   circle(costSvg, xStar, yStar, 11.5, { fill: accent, opacity: .16 });
   const dot = circle(costSvg, xStar, yStar, 6.2, { fill: accent, stroke: ink, sw: 1.25 });
-  dot.addEventListener("mousemove", ev => tip(ev, `<b>Cost minimum</b><br>C* = ${fmt(d.Cstar)}<br>Mᵈ* = ${fmt(d.Mstar)}<br>TC = ${fmt(d.minCost, 2)}<br><br>At optimum:<br>bY/C* = iC*/2`));
+  dot.addEventListener("mousemove", ev => tip(ev, `<b>Cost minimum</b><br>C* = ${fmt(d.Cstar)}<br>Máµˆ* = ${fmt(d.Mstar)}<br>TC = ${fmt(d.minCost, 2)}<br><br>At optimum:<br>bY/C* = iC*/2`));
   dot.addEventListener("mouseleave", untip);
 
   text(costSvg, x0 + W, y0 + 24, "withdrawal size C", { fill: muted, size: 11.5, weight: 740, anchor: "end" });
@@ -998,7 +998,7 @@ function drawCost(d) {
   legend(492, 323, accent, "", "total");
 
   rect(costSvg, 82, 354, 456, 26, { fill: paper2, stroke: linec, rx: 12, opacity: .96 });
-  text(costSvg, 100, 371, "Square-root rule: C* minimizes bY/C + iC/2, so Mᵈ* = C*/2.", {
+  text(costSvg, 100, 371, "Square-root rule: C* minimizes bY/C + iC/2, so Máµˆ* = C*/2.", {
     fill: muted,
     size: 11.1,
     weight: 790
@@ -1053,3 +1053,4 @@ update();
 </script>
 </body>
 </html>
+

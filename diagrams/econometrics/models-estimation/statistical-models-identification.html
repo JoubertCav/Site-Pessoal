@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -120,28 +120,28 @@
     <div class="def">
       <div class="tag">Model</div>
       <div class="math">
-        <span class="formula">𝓟 = {P<sub>θ</sub> : θ ∈ Θ}</span>
+        <span class="formula">ð“Ÿ = {P<sub>Î¸</sub> : Î¸ âˆˆ Î˜}</span>
         <span class="mathNote">a curve inside the probability simplex</span>
       </div>
     </div>
     <div class="def">
       <div class="tag">Identification</div>
       <div class="math">
-        <span class="formula">P<sub>θ</sub> = P<sub>θ′</sub> ⇒ θ = θ′</span>
+        <span class="formula">P<sub>Î¸</sub> = P<sub>Î¸â€²</sub> â‡’ Î¸ = Î¸â€²</span>
         <span class="mathNote">the parameter-to-law map is injective</span>
       </div>
     </div>
     <div class="def">
       <div class="tag">True parameter</div>
       <div class="math">
-        <span class="formula">P<sub>0</sub> = P<sub>θ₀</sub></span>
+        <span class="formula">P<sub>0</sub> = P<sub>Î¸â‚€</sub></span>
         <span class="mathNote">only under correct specification</span>
       </div>
     </div>
     <div class="def">
       <div class="tag">Pseudo-true</div>
       <div class="math">
-        <span class="formula">θ★ ∈ argmin KL(P<sub>0</sub>||P<sub>θ</sub>)</span>
+        <span class="formula">Î¸â˜… âˆˆ argmin KL(P<sub>0</sub>||P<sub>Î¸</sub>)</span>
         <span class="mathNote">closest model law when \(P_0\notin\mathcal P\)</span>
       </div>
     </div>
@@ -155,7 +155,7 @@
         <label for="modelSelect">Model map</label>
         <select id="modelSelect">
           <option value="identified">identified exponential family</option>
-          <option value="nonid">nonidentified: θ and −θ</option>
+          <option value="nonid">nonidentified: Î¸ and âˆ’Î¸</option>
           <option value="weak">weak identification</option>
           <option value="overparam">overparameterized fibers</option>
           <option value="misspecified">misspecified truth</option>
@@ -163,17 +163,17 @@
       </div>
 
       <div class="control">
-        <label for="thetaRange">Candidate θ <span class="value" id="thetaVal">0.80</span></label>
+        <label for="thetaRange">Candidate Î¸ <span class="value" id="thetaVal">0.80</span></label>
         <input id="thetaRange" type="range" min="-2.50" max="2.50" step="0.05" value="0.80"/>
       </div>
 
       <div class="control">
-        <label for="trueRange">Truth index η₀ <span class="value" id="trueVal">1.00</span></label>
+        <label for="trueRange">Truth index Î·â‚€ <span class="value" id="trueVal">1.00</span></label>
         <input id="trueRange" type="range" min="-2.20" max="2.20" step="0.05" value="1.00"/>
       </div>
 
       <div class="control">
-        <label for="kappaRange">Identification strength κ <span class="value" id="kappaVal">0.30</span></label>
+        <label for="kappaRange">Identification strength Îº <span class="value" id="kappaVal">0.30</span></label>
         <input id="kappaRange" type="range" min="0.02" max="1.50" step="0.02" value="0.30"/>
       </div>
 
@@ -205,7 +205,7 @@
               <span class="pill"><span class="dot"></span> model \(P_\theta\)</span>
               <span class="pill"><span class="dot" style="background:var(--blue)"></span> true law \(P_0\)</span>
               <span class="pill"><span class="dot" style="background:var(--violet)"></span> candidate \(P_\theta\)</span>
-              <span class="pill"><span class="dot" style="background:var(--warn)"></span> pseudo-true \(P_{\theta★}\)</span>
+              <span class="pill"><span class="dot" style="background:var(--warn)"></span> pseudo-true \(P_{\thetaâ˜…}\)</span>
             </div>
           </div>
           <div class="plotSub" id="mainSub">Each point of the triangle is a distribution over three outcomes.</div>
@@ -217,7 +217,7 @@
         <div class="card plotCard">
           <div class="plotHead">
             <div class="plotTitle">Population contrast</div>
-            <div class="plotSub">expected negative log-likelihood / KL over θ</div>
+            <div class="plotSub">expected negative log-likelihood / KL over Î¸</div>
           </div>
           <svg id="contrastSvg" viewBox="0 0 520 320" preserveAspectRatio="xMidYMid meet"></svg>
         </div>
@@ -239,7 +239,7 @@
             <div><strong>Model.</strong><br>\(\Theta\) is not the space of distributions. It is mapped into the space of distributions.</div>
             <div><strong>Identification.</strong><br>Failure occurs when distinct parameters land at the same point in the simplex.</div>
             <div><strong>True parameter.</strong><br>If \(P_0\) lies on the model curve and the preimage is unique, \(\theta_0\) is identified.</div>
-            <div><strong>Pseudo-true.</strong><br>If \(P_0\) lies outside the curve, estimation targets the KL projection \(P_{\theta★}\).</div>
+            <div><strong>Pseudo-true.</strong><br>If \(P_0\) lies outside the curve, estimation targets the KL projection \(P_{\thetaâ˜…}\).</div>
           </div>
         </div>
 
@@ -251,7 +251,7 @@
     </section>
   </main>
 
-  <footer>Minimal interactive notebook — statistical models, identification, pseudo-truth, and KL geometry.</footer>
+  <footer>Minimal interactive notebook â€” statistical models, identification, pseudo-truth, and KL geometry.</footer>
 </div>
 
 <script>
@@ -266,7 +266,7 @@ const nRange=document.getElementById("nRange");
 
 function css(v){return getComputedStyle(body).getPropertyValue(v).trim();}
 function fmt(x){
-  if(!isFinite(x)) return "∞";
+  if(!isFinite(x)) return "âˆž";
   if(Math.abs(x)<0.0001 && x!==0) return x.toExponential(2);
   if(Math.abs(x)<10) return x.toFixed(4);
   return x.toFixed(2);
@@ -366,7 +366,7 @@ function drawMain(){
   const X0=66,X1=430,Y=388,tlo=-2.5,thi=2.5;
   let h='<rect x="8" y="10" width="964" height="475" rx="20" fill="'+panel+'" stroke="'+border+'"/>';
   h+=text(72,40,"parameter space",muted,13,850);
-  h+=text(610,40,"probability simplex Δ²",muted,13,850);
+  h+=text(610,40,"probability simplex Î”Â²",muted,13,850);
 
   // parameter axis
   h+=line(X0,Y,X1,Y,muted,1.6,.85);
@@ -377,24 +377,24 @@ function drawMain(){
   }
   const thX=px(theta,tlo,thi,X0,X1);
   h+='<circle cx="'+thX+'" cy="'+Y+'" r="7" fill="'+violet+'"/>';
-  h+=text(thX,Y-16,"θ",violet,12,900,"middle");
+  h+=text(thX,Y-16,"Î¸",violet,12,900,"middle");
   ids.forEach((t,i)=>{
     const x=px(t,tlo,thi,X0,X1);
     h+='<circle cx="'+x+'" cy="'+Y+'" r="6" fill="'+warn+'"/>';
-    h+=text(x,Y+45,i===0?"θ★":"alt",warn,10,900,"middle");
+    h+=text(x,Y+45,i===0?"Î¸â˜…":"alt",warn,10,900,"middle");
   });
 
   // overparam inset
   if(modelSelect.value==="overparam"){
     h+='<rect x="82" y="78" width="300" height="150" rx="20" fill="'+panel2+'" stroke="'+border+'"/>';
-    h+=text(110,110,"Underlying Θ = {(α,β)}",textc,14,900);
-    h+=text(110,140,"law depends only on α+β",muted,12,850);
+    h+=text(110,110,"Underlying Î˜ = {(Î±,Î²)}",textc,14,900);
+    h+=text(110,140,"law depends only on Î±+Î²",muted,12,850);
     for(let k=-2;k<=2;k++){
       const x1=125, y1=185-k*18, x2=335, y2=105-k*18;
       h+=line(x1,y1,x2,y2,grid,1.5,.9);
     }
     h+=line(135,190,330,115,warn,2,.6,"5 5");
-    h+=text(244,210,"fiber: same Pθ",warn,11,900,"middle");
+    h+=text(244,210,"fiber: same PÎ¸",warn,11,900,"middle");
   }
 
   // simplex
@@ -422,17 +422,17 @@ function drawMain(){
     path+=(i===0?"M":"L")+" "+b.x+" "+b.y;
   });
   h+='<path d="'+path+'" fill="none" stroke="'+acc+'" stroke-width="4" stroke-opacity=".78"/>';
-  h+=text(785,160,"𝓟 = {Pθ}",acc,12,900);
+  h+=text(785,160,"ð“Ÿ = {PÎ¸}",acc,12,900);
 
   // candidate, true, star
   const cand=bary(Ptheta(theta)), truth=bary(p0), star=bary(Ptheta(tStar));
   h+='<circle cx="'+cand.x+'" cy="'+cand.y+'" r="7" fill="'+violet+'"/>';
-  h+=text(cand.x+9,cand.y-9,"Pθ",violet,12,900);
+  h+=text(cand.x+9,cand.y-9,"PÎ¸",violet,12,900);
   h+='<circle cx="'+truth.x+'" cy="'+truth.y+'" r="8" fill="'+blue+'"/>';
-  h+=text(truth.x+10,truth.y-10,"P₀",blue,13,900);
+  h+=text(truth.x+10,truth.y-10,"Pâ‚€",blue,13,900);
   h+='<circle cx="'+star.x+'" cy="'+star.y+'" r="8" fill="'+warn+'"/>';
   h+=line(truth.x,truth.y,star.x,star.y,warn,2,.55,"5 5");
-  h+=text(star.x+9,star.y+18,"Pθ★",warn,12,900);
+  h+=text(star.x+9,star.y+18,"PÎ¸â˜…",warn,12,900);
 
   // map arrows
   h+=line(thX,Y-12,cand.x,cand.y+8,violet,1.3,.42,"5 6");
@@ -445,9 +445,9 @@ function drawMain(){
   const KLcand=contrast(theta), KLstar=contrast(tStar);
   h+='<rect x="70" y="64" width="340" height="120" rx="18" fill="'+panel2+'" stroke="'+border+'"/>';
   h+=text(94,96,"Distribution vector",textc,15,900);
-  h+=text(94,124,"Pθ = ("+Ptheta(theta).map(fmt).join(", ")+")",violet,12,850);
-  h+=text(94,150,"P₀ = ("+p0.map(fmt).join(", ")+")",blue,12,850);
-  h+=text(94,176,"KL candidate "+fmt(KLcand)+" · KL★ "+fmt(KLstar),warn,12,850);
+  h+=text(94,124,"PÎ¸ = ("+Ptheta(theta).map(fmt).join(", ")+")",violet,12,850);
+  h+=text(94,150,"Pâ‚€ = ("+p0.map(fmt).join(", ")+")",blue,12,850);
+  h+=text(94,176,"KL candidate "+fmt(KLcand)+" Â· KLâ˜… "+fmt(KLstar),warn,12,850);
 
   svg.innerHTML=h;
 }
@@ -475,9 +475,9 @@ function drawContrast(){
   });
   const cx=px(theta,tlo,thi,X0,X1), cy=py(contrast(theta),lo,hi,Y0,Y1);
   h+='<circle cx="'+cx+'" cy="'+cy+'" r="5.5" fill="'+violet+'"/>';
-  h+=text(68,34,"population KL: KL(P₀ || Pθ)",muted,12,850);
+  h+=text(68,34,"population KL: KL(Pâ‚€ || PÎ¸)",muted,12,850);
   h+=text(80,70,"minimizers = pseudo-true identified set",warn,11,850);
-  h+=text(X1,Y1+24,"θ",muted,10,850,"end");
+  h+=text(X1,Y1+24,"Î¸",muted,10,850,"end");
   svg.innerHTML=h;
 }
 function drawSample(){
@@ -505,7 +505,7 @@ function drawSample(){
   h+='<circle cx="'+cx+'" cy="'+cy+'" r="5.5" fill="'+violet+'"/>';
   h+=text(68,34,"sample negative log-likelihood, n="+n,muted,12,850);
   h+=text(80,70,"finite samples perturb the population geometry",warn,11,850);
-  h+=text(X1,Y1+24,"θ",muted,10,850,"end");
+  h+=text(X1,Y1+24,"Î¸",muted,10,850,"end");
   svg.innerHTML=h;
 }
 function updateText(){
@@ -525,32 +525,32 @@ function updateText(){
     "identified";
 
   document.getElementById("eqBox").innerHTML =
-    '<span class="formula">Pθ = softmax(−η(θ),0,η(θ))</span>'+
-    '<span class="mathNote">'+status+' · θ★ ≈ '+fmt(tStar)+'</span>';
+    '<span class="formula">PÎ¸ = softmax(âˆ’Î·(Î¸),0,Î·(Î¸))</span>'+
+    '<span class="mathNote">'+status+' Â· Î¸â˜… â‰ˆ '+fmt(tStar)+'</span>';
 
   const mini=[
-    ["KL(P₀||Pθ)",fmt(contrast(theta))],
-    ["KL★",fmt(contrast(tStar))],
-    ["θ★ count",String(ids.length)],
-    ["Pθ(-1)",fmt(pth[0])],
-    ["Pθ(0)",fmt(pth[1])],
-    ["Pθ(1)",fmt(pth[2])]
+    ["KL(Pâ‚€||PÎ¸)",fmt(contrast(theta))],
+    ["KLâ˜…",fmt(contrast(tStar))],
+    ["Î¸â˜… count",String(ids.length)],
+    ["PÎ¸(-1)",fmt(pth[0])],
+    ["PÎ¸(0)",fmt(pth[1])],
+    ["PÎ¸(1)",fmt(pth[2])]
   ];
   document.getElementById("miniGrid").innerHTML=mini.map(d=>'<div class="miniStat"><div class="k">'+d[0]+'</div><div class="v">'+d[1]+'</div></div>').join("");
 
   const logic=[
-    ["1","choose Θ"],
-    ["2","define θ ↦ Pθ"],
-    ["3","inspect fibers: {θ : Pθ = P}"],
-    ["→","unique fiber means identification"]
+    ["1","choose Î˜"],
+    ["2","define Î¸ â†¦ PÎ¸"],
+    ["3","inspect fibers: {Î¸ : PÎ¸ = P}"],
+    ["â†’","unique fiber means identification"]
   ];
   document.getElementById("logicList").innerHTML=logic.map(it=>'<div class="logicItem"><span class="mark">'+it[0]+'</span><span>'+it[1]+'</span></div>').join("");
 
   let interp="The model is now drawn as an actual curve of probability vectors inside the three-outcome simplex. Identification means the parameter line does not hit the same simplex point twice.";
-  if(modelSelect.value==="nonid") interp="Here \(η(θ)=θ^2\). Both \(θ\) and \(-θ\) generate the same probability vector. The KL contrast has two symmetric minima when the truth lies on the model.";
-  if(modelSelect.value==="weak") interp="Here \(η(θ)=κθ\). The model is formally injective when \(κ>0\), but the curve moves slowly through the simplex; the criterion is shallow and finite-sample identification is weak.";
-  if(modelSelect.value==="overparam") interp="The displayed one-dimensional index is identified, but the underlying structural parameters are not: many \((α,β)\) pairs can imply the same index and therefore the same distribution.";
-  if(modelSelect.value==="misspecified") interp="The blue truth is deliberately pulled away from the model curve. There is no true parameter in the model; estimation targets the red KL projection \(θ^\star\).";
+  if(modelSelect.value==="nonid") interp="Here \(Î·(Î¸)=Î¸^2\). Both \(Î¸\) and \(-Î¸\) generate the same probability vector. The KL contrast has two symmetric minima when the truth lies on the model.";
+  if(modelSelect.value==="weak") interp="Here \(Î·(Î¸)=ÎºÎ¸\). The model is formally injective when \(Îº>0\), but the curve moves slowly through the simplex; the criterion is shallow and finite-sample identification is weak.";
+  if(modelSelect.value==="overparam") interp="The displayed one-dimensional index is identified, but the underlying structural parameters are not: many \((Î±,Î²)\) pairs can imply the same index and therefore the same distribution.";
+  if(modelSelect.value==="misspecified") interp="The blue truth is deliberately pulled away from the model curve. There is no true parameter in the model; estimation targets the red KL projection \(Î¸^\star\).";
   document.getElementById("interpretText").innerHTML=interp;
 
   let notice="Look at fibers: if two parameter values land at one simplex point, data cannot separate them.";
@@ -573,3 +573,4 @@ drawAll();
 </script>
 </body>
 </html>
+

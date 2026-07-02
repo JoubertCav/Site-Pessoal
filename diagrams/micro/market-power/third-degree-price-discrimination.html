@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -184,7 +184,7 @@
 <div class="app">
   <header>
     <div>
-      <div class="eyebrow"><span class="dot"></span> Microeconomics · Market Power</div>
+      <div class="eyebrow"><span class="dot"></span> Microeconomics Â· Market Power</div>
       <h1>Third-degree price discrimination</h1>
       <p class="subtitle">Segmented markets, different elasticities, different markups, and output allocation across groups. The firm chooses a quantity and price separately in each segment.</p>
     </div>
@@ -203,7 +203,7 @@
 
       <div class="control"><div class="label-row"><label for="c">Common marginal cost</label><span class="value" id="cVal"></span></div><input id="c" type="range" min="0" max="130" step="1" value="30" /></div>
 
-      <div class="toggle-row"><div><div style="font-size:14px;">Show marginal revenue</div><div class="small">MRᵢ = MC in each segment</div></div><label class="switch"><input id="showMR" type="checkbox" checked /><span class="slider-switch"></span></label></div>
+      <div class="toggle-row"><div><div style="font-size:14px;">Show marginal revenue</div><div class="small">MRáµ¢ = MC in each segment</div></div><label class="switch"><input id="showMR" type="checkbox" checked /><span class="slider-switch"></span></label></div>
       <div class="toggle-row"><div><div style="font-size:14px;">Show welfare areas</div><div class="small">profit and DWL by group</div></div><label class="switch"><input id="areas" type="checkbox" checked /><span class="slider-switch"></span></label></div>
 
       <div class="pill" id="statusPill">No arbitrage between groups</div>
@@ -211,10 +211,10 @@
 
     <main class="main">
       <section class="formula-row">
-        <div class="card formula"><div><div class="name">Segmented demand</div><div class="math mathline">pᵢ(qᵢ)=aᵢ−bᵢqᵢ</div></div><div class="soft-eq">groups are separable and resale is blocked</div></div>
-        <div class="card formula"><div><div class="name">Segment condition</div><div class="math mathline">MRᵢ(qᵢ)=MC</div></div><div class="soft-eq">choose output separately in each group</div></div>
-        <div class="card formula"><div><div class="name">Inverse elasticity rule</div><div class="math mathline"><span class="frac"><span class="top">pᵢ−MC</span><span class="bottom">pᵢ</span></span> = <span class="frac"><span class="top">1</span><span class="bottom">|εᵢ|</span></span></div></div><div class="soft-eq">lower elasticity → higher markup</div></div>
-        <div class="card formula"><div><div class="name">Output allocation</div><div class="math mathline">Q = qᴬ + qᴮ</div></div><div class="formula-chip math">MRᴬ = MRᴮ = MC</div></div>
+        <div class="card formula"><div><div class="name">Segmented demand</div><div class="math mathline">páµ¢(qáµ¢)=aáµ¢âˆ’báµ¢qáµ¢</div></div><div class="soft-eq">groups are separable and resale is blocked</div></div>
+        <div class="card formula"><div><div class="name">Segment condition</div><div class="math mathline">MRáµ¢(qáµ¢)=MC</div></div><div class="soft-eq">choose output separately in each group</div></div>
+        <div class="card formula"><div><div class="name">Inverse elasticity rule</div><div class="math mathline"><span class="frac"><span class="top">páµ¢âˆ’MC</span><span class="bottom">páµ¢</span></span> = <span class="frac"><span class="top">1</span><span class="bottom">|Îµáµ¢|</span></span></div></div><div class="soft-eq">lower elasticity â†’ higher markup</div></div>
+        <div class="card formula"><div><div class="name">Output allocation</div><div class="math mathline">Q = qá´¬ + qá´®</div></div><div class="formula-chip math">MRá´¬ = MRá´® = MC</div></div>
       </section>
 
       <section class="card diagram-card">
@@ -223,7 +223,7 @@
             <h2>Main diagram: two segmented markets</h2>
             <p>Each segment has its own demand, marginal revenue, price, quantity, elasticity, and markup.</p>
           </div>
-          <span class="small">q horizontal · price/value vertical</span>
+          <span class="small">q horizontal Â· price/value vertical</span>
         </div>
         <svg id="mainSvg" viewBox="0 0 1120 620" aria-label="Third-degree price discrimination segmented markets"></svg>
         <div class="legend">
@@ -235,25 +235,25 @@
           <span class="legend-item"><span class="swatch fillB"></span> Group B profit</span>
         </div>
         <div class="metrics">
-          <div class="metric"><div class="k">pᴬ</div><div class="v" id="pAValM"></div></div>
-          <div class="metric"><div class="k">qᴬ</div><div class="v" id="qAValM"></div></div>
-          <div class="metric"><div class="k">|εᴬ|</div><div class="v" id="eAValM"></div></div>
-          <div class="metric"><div class="k">Lᴬ</div><div class="v" id="LAValM"></div></div>
-          <div class="metric"><div class="k">pᴮ</div><div class="v" id="pBValM"></div></div>
-          <div class="metric"><div class="k">qᴮ</div><div class="v" id="qBValM"></div></div>
-          <div class="metric"><div class="k">|εᴮ|</div><div class="v" id="eBValM"></div></div>
-          <div class="metric"><div class="k">Lᴮ</div><div class="v" id="LBValM"></div></div>
+          <div class="metric"><div class="k">pá´¬</div><div class="v" id="pAValM"></div></div>
+          <div class="metric"><div class="k">qá´¬</div><div class="v" id="qAValM"></div></div>
+          <div class="metric"><div class="k">|Îµá´¬|</div><div class="v" id="eAValM"></div></div>
+          <div class="metric"><div class="k">Lá´¬</div><div class="v" id="LAValM"></div></div>
+          <div class="metric"><div class="k">pá´®</div><div class="v" id="pBValM"></div></div>
+          <div class="metric"><div class="k">qá´®</div><div class="v" id="qBValM"></div></div>
+          <div class="metric"><div class="k">|Îµá´®|</div><div class="v" id="eBValM"></div></div>
+          <div class="metric"><div class="k">Lá´®</div><div class="v" id="LBValM"></div></div>
         </div>
       </section>
 
       <section class="three-col">
         <section class="card mini-card">
-          <div class="mini-head"><h3>Elasticity → markup</h3><span class="mini-sub">same rule, different points</span></div>
+          <div class="mini-head"><h3>Elasticity â†’ markup</h3><span class="mini-sub">same rule, different points</span></div>
           <svg id="ruleSvg" viewBox="0 0 760 360" aria-label="Elasticity markup rule"></svg>
         </section>
 
         <section class="card mini-card">
-          <div class="mini-head"><h3>Output allocation</h3><span class="mini-sub">qᴬ and qᴮ</span></div>
+          <div class="mini-head"><h3>Output allocation</h3><span class="mini-sub">qá´¬ and qá´®</span></div>
           <svg id="outputSvg" viewBox="0 0 760 360" aria-label="Output allocation"></svg>
         </section>
 
@@ -265,12 +265,12 @@
 
       <section class="two-col">
         <section class="card mini-card">
-          <div class="mini-head"><h3>Demand inclination</h3><span class="mini-sub">inverse-demand slopes bᴬ and bᴮ</span></div>
+          <div class="mini-head"><h3>Demand inclination</h3><span class="mini-sub">inverse-demand slopes bá´¬ and bá´®</span></div>
           <svg id="slopeSvg" viewBox="0 0 760 360" aria-label="Demand inclination by group"></svg>
         </section>
 
         <section class="card mini-card">
-          <div class="mini-head"><h3>Elasticity functions</h3><span class="mini-sub">|εᵢ(q)| along each demand curve</span></div>
+          <div class="mini-head"><h3>Elasticity functions</h3><span class="mini-sub">|Îµáµ¢(q)| along each demand curve</span></div>
           <svg id="elasSvg" viewBox="0 0 760 360" aria-label="Elasticity functions by group"></svg>
         </section>
       </section>
@@ -290,10 +290,10 @@
           <h2>Exam-style summary</h2>
           <div class="summary">
             <div class="summary-line"><span>1</span><div>Separate consumers into segments with no resale/arbitrage.</div></div>
-            <div class="summary-line"><span>2</span><div>For each segment, write <span class="math-inline">pᵢ(qᵢ)</span> and <span class="math-inline">MRᵢ(qᵢ)</span>.</div></div>
-            <div class="summary-line"><span>3</span><div>Solve <span class="math-inline">MRᵢ(qᵢ)=MC</span> for every active segment.</div></div>
-            <div class="summary-line"><span>4</span><div>Price from each segment’s demand curve: <span class="math-inline">pᵢ=pᵢ(qᵢ)</span>.</div></div>
-            <div class="summary-line"><span>5</span><div>Check markups: <span class="math-inline">(pᵢ−MC)/pᵢ=1/|εᵢ|</span>. Less elastic groups pay more.</div></div>
+            <div class="summary-line"><span>2</span><div>For each segment, write <span class="math-inline">páµ¢(qáµ¢)</span> and <span class="math-inline">MRáµ¢(qáµ¢)</span>.</div></div>
+            <div class="summary-line"><span>3</span><div>Solve <span class="math-inline">MRáµ¢(qáµ¢)=MC</span> for every active segment.</div></div>
+            <div class="summary-line"><span>4</span><div>Price from each segmentâ€™s demand curve: <span class="math-inline">páµ¢=páµ¢(qáµ¢)</span>.</div></div>
+            <div class="summary-line"><span>5</span><div>Check markups: <span class="math-inline">(páµ¢âˆ’MC)/páµ¢=1/|Îµáµ¢|</span>. Less elastic groups pay more.</div></div>
           </div>
         </section>
       </section>
@@ -313,7 +313,7 @@
     interpretation:$("interpretation")
   };
 
-  function fmt(x,d=2){ if(!Number.isFinite(x)) return "—"; if(Math.abs(x)>=100) return x.toFixed(1); return x.toFixed(d); }
+  function fmt(x,d=2){ if(!Number.isFinite(x)) return "â€”"; if(Math.abs(x)>=100) return x.toFixed(1); return x.toFixed(d); }
   function clamp(x,lo,hi){ return Math.max(lo, Math.min(hi, x)); }
   function s(tag, attrs={}){ const el=document.createElementNS("http://www.w3.org/2000/svg", tag); for(const [k,v] of Object.entries(attrs)) el.setAttribute(k,v); return el; }
   function line(svg,x1,y1,x2,y2,cls){ svg.appendChild(s("line",{x1,y1,x2,y2,class:cls})); }
@@ -412,7 +412,7 @@
 
     line(svg,X(seg.qEff),Y(0),X(seg.qEff),Y(seg.c),"helper");
     circle(svg,X(seg.qEff),Y(seg.c),5.2,"point");
-    text(svg,X(seg.qEff),Y(0)+28,"qᴱ","muted-label");
+    text(svg,X(seg.qEff),Y(0)+28,"qá´±","muted-label");
   }
 
   function drawMain(m){
@@ -433,14 +433,14 @@
       pts.push([X(x),Y(1/x)]);
     }
     path(svg,pts,"curve-rule");
-    text(svg,X(maxE*0.72),Y(1/(maxE*0.72))-10,"L = 1/|ε|","label");
+    text(svg,X(maxE*0.72),Y(1/(maxE*0.72))-10,"L = 1/|Îµ|","label");
     line(svg,X(m.A.eps),margin.top,X(m.A.eps),Y(m.A.L),"helper-a");
     line(svg,X(m.B.eps),margin.top,X(m.B.eps),Y(m.B.L),"helper-b");
     circle(svg,X(m.A.eps),Y(m.A.L),6.2,"point-a");
     circle(svg,X(m.B.eps),Y(m.B.L),6.2,"point-b");
     text(svg,X(m.A.eps)+8,Y(m.A.L)-10,"A","label","start");
     text(svg,X(m.B.eps)+8,Y(m.B.L)+18,"B","label","start");
-    text(svg,X(maxE*0.78),margin.top+ih+40,"|ε|","label");
+    text(svg,X(maxE*0.78),margin.top+ih+40,"|Îµ|","label");
   }
 
   function barChart(svg, data, yLabel, yMax){
@@ -468,20 +468,20 @@
 
   function drawOutput(m){
     barChart(els.outputSvg,[
-      {name:"qᴬ",value:m.A.q,cls:"bar-a"},
-      {name:"qᴮ",value:m.B.q,cls:"bar-b"},
+      {name:"qá´¬",value:m.A.q,cls:"bar-a"},
+      {name:"qá´®",value:m.B.q,cls:"bar-b"},
       {name:"Q",value:m.Q,cls:"bar-muted"}
     ],"output",Math.max(m.Q,m.A.q,m.B.q,1)*1.15);
   }
 
   function drawPrice(m){
     barChart(els.priceSvg,[
-      {name:"pᴬ",value:m.A.p,cls:"bar-a"},
-      {name:"pᴮ",value:m.B.p,cls:"bar-b"},
+      {name:"pá´¬",value:m.A.p,cls:"bar-a"},
+      {name:"pá´®",value:m.B.p,cls:"bar-b"},
       {name:"MC",value:m.c,cls:"bar-muted"},
-      {name:"Lᴬ",value:m.A.L*100,cls:"bar-a"},
-      {name:"Lᴮ",value:m.B.L*100,cls:"bar-b"}
-    ],"price / L×100",Math.max(m.A.p,m.B.p,m.c,m.A.L*100,m.B.L*100,1)*1.15);
+      {name:"Lá´¬",value:m.A.L*100,cls:"bar-a"},
+      {name:"Lá´®",value:m.B.L*100,cls:"bar-b"}
+    ],"price / LÃ—100",Math.max(m.A.p,m.B.p,m.c,m.A.L*100,m.B.L*100,1)*1.15);
   }
 
   function drawSlope(m){
@@ -517,7 +517,7 @@
       poly(svg,[[X(q0),Y(p0)],[X(q0+dq),Y(p0)],[X(q0+dq),Y(p1)]],cls);
       line(svg,X(q0),Y(p0),X(q0+dq),Y(p0),'helper');
       line(svg,X(q0+dq),Y(p0),X(q0+dq),Y(p1),'helper');
-      text(svg,X(q0+dq)+8,(Y(p0)+Y(p1))/2+yShift,`${label}: drop = b·Δq`,'muted-label','start');
+      text(svg,X(q0+dq)+8,(Y(p0)+Y(p1))/2+yShift,`${label}: drop = bÂ·Î”q`,'muted-label','start');
     }
 
     slopeTriangle(m.A,'slope-triangle-a','A',-2);
@@ -528,8 +528,8 @@
     line(svg,X(m.A.q),margin.top,X(m.A.q),margin.top+ih,'helper-a');
     line(svg,X(m.B.q),margin.top,X(m.B.q),margin.top+ih,'helper-b');
 
-    text(svg,X(qMax*0.72),Y(Math.max(0,m.A.a-m.A.b*qMax*0.72))-10,'Dᴬ','label');
-    text(svg,X(qMax*0.72),Y(Math.max(0,m.B.a-m.B.b*qMax*0.72))+18,'Dᴮ','label');
+    text(svg,X(qMax*0.72),Y(Math.max(0,m.A.a-m.A.b*qMax*0.72))-10,'Dá´¬','label');
+    text(svg,X(qMax*0.72),Y(Math.max(0,m.B.a-m.B.b*qMax*0.72))+18,'Dá´®','label');
     text(svg,margin.left+105,margin.top+18,'same axes: changing b visibly rotates demand','muted-label','start');
   }
 
@@ -538,7 +538,7 @@
     const W=760,H=360, margin={left:70,right:26,top:24,bottom:58};
     const qMax=m.visualQ;
     const yMax=10;
-    const {X,Y,ih}=axes(svg,W,H,margin,qMax,0,yMax,"|ε|",5,4);
+    const {X,Y,ih}=axes(svg,W,H,margin,qMax,0,yMax,"|Îµ|",5,4);
 
     function elasticityPath(seg){
       const pts=[];
@@ -560,8 +560,8 @@
     circle(svg,X(m.A.q),Y(Math.min(yMax,m.A.eps)),6.1,'point-a');
     circle(svg,X(m.B.q),Y(Math.min(yMax,m.B.eps)),6.1,'point-b');
 
-    text(svg,X(m.A.q)+8,Y(Math.min(yMax,m.A.eps))-10,`A: |ε|=${fmt(m.A.eps)}`,'muted-label','start');
-    text(svg,X(m.B.q)+8,Y(Math.min(yMax,m.B.eps))+18,`B: |ε|=${fmt(m.B.eps)}`,'muted-label','start');
+    text(svg,X(m.A.q)+8,Y(Math.min(yMax,m.A.eps))-10,`A: |Îµ|=${fmt(m.A.eps)}`,'muted-label','start');
+    text(svg,X(m.B.q)+8,Y(Math.min(yMax,m.B.eps))+18,`B: |Îµ|=${fmt(m.B.eps)}`,'muted-label','start');
     text(svg,margin.left+105,margin.top+18,'same q-scale: slope changes now move the whole curve','muted-label','start');
   }
 
@@ -618,3 +618,4 @@
 </script>
 </body>
 </html>
+

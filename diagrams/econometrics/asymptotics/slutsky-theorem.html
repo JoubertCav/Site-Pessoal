@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -120,7 +120,7 @@
     <div class="def">
       <div class="tag">Core theorem</div>
       <div class="math">
-        <span class="formula">X<sub>n</sub> ⇒ X, &nbsp; Y<sub>n</sub> → c</span>
+        <span class="formula">X<sub>n</sub> â‡’ X, &nbsp; Y<sub>n</sub> â†’ c</span>
         <span class="mathNote">then sums, products, and quotients inherit limits</span>
       </div>
     </div>
@@ -134,14 +134,14 @@
     <div class="def">
       <div class="tag">Mean inference</div>
       <div class="math">
-        <span class="formula">√n( X̄<sub>n</sub>−μ ) / S<sub>n</sub> ⇒ N(0,1)</span>
-        <span class="mathNote">unknown σ replaced by sample standard deviation</span>
+        <span class="formula">âˆšn( XÌ„<sub>n</sub>âˆ’Î¼ ) / S<sub>n</sub> â‡’ N(0,1)</span>
+        <span class="mathNote">unknown Ïƒ replaced by sample standard deviation</span>
       </div>
     </div>
     <div class="def">
       <div class="tag">Confidence interval</div>
       <div class="math">
-        <span class="formula">X̄<sub>n</sub> ± z<sub>1−α/2</sub>S<sub>n</sub>/√n</span>
+        <span class="formula">XÌ„<sub>n</sub> Â± z<sub>1âˆ’Î±/2</sub>S<sub>n</sub>/âˆšn</span>
         <span class="mathNote">feasible asymptotic inference</span>
       </div>
     </div>
@@ -166,8 +166,8 @@
         <select id="scaleSelect">
           <option value="sample" selected>consistent: sample sd</option>
           <option value="slow">consistent but noisy</option>
-          <option value="biased">inconsistent: 1.25 × sample sd</option>
-          <option value="oracle">oracle: true σ</option>
+          <option value="biased">inconsistent: 1.25 Ã— sample sd</option>
+          <option value="oracle">oracle: true Ïƒ</option>
         </select>
       </div>
 
@@ -217,7 +217,7 @@
               <span class="pill"><span class="dot" style="background:var(--warn)"></span> replacement error</span>
             </div>
           </div>
-          <div class="plotSub">If \( \widehat\sigma_n/\sigma \to_p 1 \), replacing σ does not change the limit.</div>
+          <div class="plotSub">If \( \widehat\sigma_n/\sigma \to_p 1 \), replacing Ïƒ does not change the limit.</div>
         </div>
         <svg id="mainSvg" viewBox="0 0 980 500" preserveAspectRatio="xMidYMid meet"></svg>
       </div>
@@ -260,7 +260,7 @@
     </section>
   </main>
 
-  <footer>Minimal interactive notebook — Slutsky, consistent replacement, feasible statistics, and inference.</footer>
+  <footer>Minimal interactive notebook â€” Slutsky, consistent replacement, feasible statistics, and inference.</footer>
 </div>
 
 <script>
@@ -276,7 +276,7 @@ const levelRange=document.getElementById("levelRange");
 
 function css(v){return getComputedStyle(body).getPropertyValue(v).trim();}
 function fmt(x){
-  if(!isFinite(x)) return "∞";
+  if(!isFinite(x)) return "âˆž";
   if(Math.abs(x)<0.0001 && x!==0) return x.toExponential(2);
   if(Math.abs(x)<10) return x.toFixed(4);
   return x.toFixed(2);
@@ -420,7 +420,7 @@ function drawMain(){
   const densT=countsT.map(c=>c/(Ts.length*bw)), densZ=countsZ.map(c=>c/(Zs.length*bw));
   const maxY=Math.max(.42,...densT,...densZ)*1.15;
   let h='<rect x="8" y="10" width="964" height="470" rx="20" fill="'+panel+'" stroke="'+border+'"/>';
-  h+=text(68,38,"histograms of infeasible Zₙ and feasible Tₙ",muted,13,850);
+  h+=text(68,38,"histograms of infeasible Zâ‚™ and feasible Tâ‚™",muted,13,850);
   for(let k=0;k<=5;k++) h+=line(X0,Y1-(Y1-Y0)*k/5,X1,Y1-(Y1-Y0)*k/5,grid,1,.85);
   for(let k=-4;k<=4;k++){
     const xx=px(k,xlo,xhi,X0,X1);
@@ -446,12 +446,12 @@ function drawMain(){
   h+='<rect x="730" y="72" width="205" height="272" rx="20" fill="'+panel2+'" stroke="'+border+'"/>';
   h+=text(752,104,"Current laws",textc,16,900);
   const rows=[
-    ["sd(Zₙ)",fmt(zst.sd),blue],
-    ["sd(Tₙ)",fmt(tst.sd),acc],
-    ["mean |T−Z|",fmt(replErr),warn],
+    ["sd(Zâ‚™)",fmt(zst.sd),blue],
+    ["sd(Tâ‚™)",fmt(tst.sd),acc],
+    ["mean |Tâˆ’Z|",fmt(replErr),warn],
     ["CDF gap T",fmt(kolmogorov(Ts)),violet],
-    ["mean Rₙ",fmt(stats(arr.map(d=>d.R)).mean),acc],
-    ["sd Rₙ",fmt(stats(arr.map(d=>d.R)).sd),acc]
+    ["mean Râ‚™",fmt(stats(arr.map(d=>d.R)).mean),acc],
+    ["sd Râ‚™",fmt(stats(arr.map(d=>d.R)).sd),acc]
   ];
   rows.forEach((r,i)=>{
     const y=138+i*31;
@@ -460,7 +460,7 @@ function drawMain(){
   });
   h+='<rect x="730" y="370" width="205" height="62" rx="16" fill="'+css("--accentSoft")+'" stroke="'+css("--accentLine")+'"/>';
   h+=text(752,398,"Slutsky reading",textc,13,900);
-  h+=text(752,420,scaleSelect.value==="biased"?"wrong constant: scale distorted":"Rₙ close to 1: laws match",muted,12,780);
+  h+=text(752,420,scaleSelect.value==="biased"?"wrong constant: scale distorted":"Râ‚™ close to 1: laws match",muted,12,780);
   svg.innerHTML=h;
 }
 function drawRatio(){
@@ -482,9 +482,9 @@ function drawRatio(){
     const bad=Math.abs(d.R-1)>.18;
     h+='<circle cx="'+x+'" cy="'+y+'" r="3.1" fill="'+(bad?warn:acc)+'" fill-opacity=".58"/>';
   }
-  h+=text(68,34,"points: (infeasible Zₙ, scale ratio Rₙ)",muted,12,850);
-  h+=text(X1,Y1+24,"Zₙ",muted,10,850,"end");
-  h+=text(X0-10,Y0+10,"Rₙ",muted,10,850,"end");
+  h+=text(68,34,"points: (infeasible Zâ‚™, scale ratio Râ‚™)",muted,12,850);
+  h+=text(X1,Y1+24,"Zâ‚™",muted,10,850,"end");
+  h+=text(X0-10,Y0+10,"Râ‚™",muted,10,850,"end");
   svg.innerHTML=h;
 }
 function drawCI(){
@@ -502,14 +502,14 @@ function drawCI(){
   h+=line(X0,Y1,X1,Y1,muted,1.2,.8);
   const thetaX=px(info.theta,lo,hi,X0,X1);
   h+=line(thetaX,Y0,thetaX,Y1,blue,2,.65,"7 5");
-  h+=text(thetaX,Y0-8,"θ",blue,11,900,"middle");
+  h+=text(thetaX,Y0-8,"Î¸",blue,11,900,"middle");
   intervals.forEach((d,i)=>{
     const y=Y0+10+i*(Y1-Y0-20)/(intervals.length-1);
     h+=line(px(d.lo,lo,hi,X0,X1),y,px(d.hi,lo,hi,X0,X1),y,d.cover?acc:warn,2.2,.82);
     h+='<circle cx="'+px(d.mean,lo,hi,X0,X1)+'" cy="'+y+'" r="2.6" fill="'+(d.cover?acc:warn)+'"/>';
   });
   h+='<rect x="64" y="262" width="385" height="18" rx="9" fill="'+css("--accentSoft")+'" stroke="'+css("--accentLine")+'"/>';
-  h+=text(78,275,"coverage ≈ "+fmt(cov.rate)+"   target level = "+fmt(Number(levelRange.value))+"   z = "+fmt(cov.z),textc,11,850);
+  h+=text(78,275,"coverage â‰ˆ "+fmt(cov.rate)+"   target level = "+fmt(Number(levelRange.value))+"   z = "+fmt(cov.z),textc,11,850);
   svg.innerHTML=h;
 }
 function updateText(){
@@ -522,25 +522,25 @@ function updateText(){
   document.getElementById("levelVal").textContent=fmt(level);
 
   document.getElementById("eqBox").innerHTML =
-    '<span class="formula">Tₙ = Zₙ / Rₙ, &nbsp; Rₙ = σ̂ₙ/σ</span>'+
-    '<span class="mathNote">'+info.label+' · '+scaleSelect.options[scaleSelect.selectedIndex].text+'</span>';
+    '<span class="formula">Tâ‚™ = Zâ‚™ / Râ‚™, &nbsp; Râ‚™ = ÏƒÌ‚â‚™/Ïƒ</span>'+
+    '<span class="mathNote">'+info.label+' Â· '+scaleSelect.options[scaleSelect.selectedIndex].text+'</span>';
 
   const cov=coverage(arr);
   const mini=[
-    ["mean Rₙ",fmt(Rst.mean)],
-    ["sd Rₙ",fmt(Rst.sd)],
-    ["mean |T−Z|",fmt(replErr)],
+    ["mean Râ‚™",fmt(Rst.mean)],
+    ["sd Râ‚™",fmt(Rst.sd)],
+    ["mean |Tâˆ’Z|",fmt(replErr)],
     ["coverage",fmt(cov.rate)],
-    ["θ",fmt(info.theta)],
-    ["σ",fmt(info.sigma)]
+    ["Î¸",fmt(info.theta)],
+    ["Ïƒ",fmt(info.sigma)]
   ];
   document.getElementById("miniGrid").innerHTML=mini.map(d=>'<div class="miniStat"><div class="k">'+d[0]+'</div><div class="v">'+d[1]+'</div></div>').join("");
 
   const logic=[
-    ["1","infeasible statistic: Zₙ ⇒ Z"],
-    ["2","replacement ratio: Rₙ →p 1"],
-    ["3","feasible statistic: Tₙ = Zₙ/Rₙ"],
-    ["→","Slutsky: Tₙ ⇒ Z"]
+    ["1","infeasible statistic: Zâ‚™ â‡’ Z"],
+    ["2","replacement ratio: Râ‚™ â†’p 1"],
+    ["3","feasible statistic: Tâ‚™ = Zâ‚™/Râ‚™"],
+    ["â†’","Slutsky: Tâ‚™ â‡’ Z"]
   ];
   document.getElementById("logicList").innerHTML=logic.map(it=>'<div class="logicItem"><span class="mark">'+it[0]+'</span><span>'+it[1]+'</span></div>').join("");
 
@@ -567,3 +567,4 @@ drawAll();
 </script>
 </body>
 </html>
+

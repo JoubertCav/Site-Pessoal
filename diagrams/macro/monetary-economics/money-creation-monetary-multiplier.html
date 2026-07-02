@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -380,7 +380,7 @@ svg {
       </p>
     </div>
     <div class="top-actions">
-      <button class="toggle" id="themeBtn" type="button">◐ Theme</button>
+      <button class="toggle" id="themeBtn" type="button">â— Theme</button>
       <button class="pill" id="animateBtn" type="button">Animate deposit rounds</button>
     </div>
   </header>
@@ -399,7 +399,7 @@ svg {
           <input id="base" type="range" min="500" max="10000" step="100" value="3000">
         </div>
         <div class="row">
-          <div class="label"><label for="injection">Base injection ΔB</label><span class="value" id="vInjection"></span></div>
+          <div class="label"><label for="injection">Base injection Î”B</label><span class="value" id="vInjection"></span></div>
           <input id="injection" type="range" min="0" max="2000" step="50" value="500">
         </div>
       </div>
@@ -504,7 +504,7 @@ svg {
               <li>Money creation is strongest when currency leakage and reserve ratios are low.</li>
               <li>Excess reserves act like a brake on the deposit multiplier.</li>
               <li>Bank-created money is inside money: deposits backed by loans and bank assets.</li>
-              <li>A base injection changes broad money by approximately m × ΔB in this simple model.</li>
+              <li>A base injection changes broad money by approximately m Ã— Î”B in this simple model.</li>
             </ul>
           </div>
         </div>
@@ -734,7 +734,7 @@ function updateLabels(d) {
   $("kMoney").textContent = fmt(d.M);
   $("kBankMoney").textContent = fmt(d.bankCreated);
   $("multBadge").textContent = `m = ${fmt(d.m, 2)}`;
-  $("roundBadge").textContent = `ΔM ≈ ${fmt(d.dM)}`;
+  $("roundBadge").textContent = `Î”M â‰ˆ ${fmt(d.dM)}`;
 }
 
 function drawBalance(d) {
@@ -807,7 +807,7 @@ function drawBalance(d) {
   statBox(84, 444, "currency C", fmt(d.C), gold);
   statBox(226, 444, "required RR", fmt(d.RR), blue);
   statBox(368, 444, "excess ER", fmt(d.ER), red);
-  statBox(510, 444, "ΔM from ΔB", fmt(d.dM), accent);
+  statBox(510, 444, "Î”M from Î”B", fmt(d.dM), accent);
 }
 
 function drawRounds(d) {
@@ -858,7 +858,7 @@ function drawRounds(d) {
 
   rect(roundsSvg, 78, 82, 154, 48, { fill: paper2, stroke: linec, rx: 16 });
   text(roundsSvg, 94, 101, "first injection", { fill: muted, size: 11, weight: 800 });
-  text(roundsSvg, 94, 118, `ΔB = ${fmt(d.dB)}`, { fill: accent, size: 16, weight: 850 });
+  text(roundsSvg, 94, 118, `Î”B = ${fmt(d.dB)}`, { fill: accent, size: 16, weight: 850 });
 
   rect(roundsSvg, 252, 82, 154, 48, { fill: paper2, stroke: linec, rx: 16 });
   text(roundsSvg, 268, 101, "shown deposits", { fill: muted, size: 11, weight: 800 });
@@ -918,3 +918,4 @@ update();
 </script>
 </body>
 </html>
+

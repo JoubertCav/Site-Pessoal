@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -541,7 +541,7 @@
 
     <section class="mapping">
       <div><strong>Map:</strong> contract curve in the Edgeworth box</div>
-      <div class="arrow">\(x \in \mathcal P\)  &nbsp;→&nbsp;  \((u^A(x),u^B(x)) \in \mathrm{UPF}\)</div>
+      <div class="arrow">\(x \in \mathcal P\)  &nbsp;â†’&nbsp;  \((u^A(x),u^B(x)) \in \mathrm{UPF}\)</div>
       <div class="note">Blue point in goods space and blue point in utility space represent the same efficient allocation.</div>
     </section>
 
@@ -593,12 +593,12 @@
       </div>
       <div class="card">
         <h2>Readout</h2>
-        <div class="metric"><span>Disagreement utility</span><span id="disUtil">—</span></div>
-        <div class="metric"><span>Chosen utility</span><span id="optUtil">—</span></div>
-        <div class="metric"><span>Chosen allocation \(x^A\)</span><span id="optAlloc">—</span></div>
-        <div class="metric"><span>Criterion value</span><span id="critVal">—</span></div>
-        <div class="metric"><span>At \(x^*\): \(MRS_A\)</span><span id="mrsA">—</span></div>
-        <div class="metric"><span>At \(x^*\): \(MRS_B\)</span><span id="mrsB">—</span></div>
+        <div class="metric"><span>Disagreement utility</span><span id="disUtil">â€”</span></div>
+        <div class="metric"><span>Chosen utility</span><span id="optUtil">â€”</span></div>
+        <div class="metric"><span>Chosen allocation \(x^A\)</span><span id="optAlloc">â€”</span></div>
+        <div class="metric"><span>Criterion value</span><span id="critVal">â€”</span></div>
+        <div class="metric"><span>At \(x^*\): \(MRS_A\)</span><span id="mrsA">â€”</span></div>
+        <div class="metric"><span>At \(x^*\): \(MRS_B\)</span><span id="mrsB">â€”</span></div>
       </div>
       <div class="card">
         <h2>What to notice</h2>
@@ -669,7 +669,7 @@
 
   function css(v) { return getComputedStyle($("app")).getPropertyValue(v).trim(); }
   function clamp(x,a,b){ return Math.max(a, Math.min(b, x)); }
-  function fmt(x,d=2){ return Number.isFinite(x) ? x.toFixed(d) : "—"; }
+  function fmt(x,d=2){ return Number.isFinite(x) ? x.toFixed(d) : "â€”"; }
 
   function sanitize() {
     const eps = 0.06;
@@ -884,8 +884,8 @@
     for (let i=1; i<Math.floor(state.X); i++) add(svg, "line", { x1: sx(i), y1: m.t, x2: sx(i), y2: m.t+bh, class: "grid-line" });
     for (let j=1; j<Math.floor(state.Y); j++) add(svg, "line", { x1: m.l, y1: sy(j), x2: m.l+bw, y2: sy(j), class: "grid-line" });
 
-    text(svg, m.l-8, m.t+bh+25, "Oᴬ", "svg-title", "end");
-    text(svg, m.l+bw+8, m.t-12, "Oᴮ", "svg-title");
+    text(svg, m.l-8, m.t+bh+25, "Oá´¬", "svg-title", "end");
+    text(svg, m.l+bw+8, m.t-12, "Oá´®", "svg-title");
     text(svg, m.l+bw/2, m.t+bh+45, "good 1 for A", "svg-label", "middle");
     text(svg, m.l-38, m.t+bh/2, "good 2 for A", "svg-label", "middle", -90);
 
@@ -911,7 +911,7 @@
     add(svg, "line", { x1: sx(x1), y1: sy(y1), x2: sx(x2), y2: sy(y2), class: "tangent" });
     text(svg, sx(opt.x)+12, sy(opt.y)+22, "common tangent", "svg-small");
 
-    drawPoint(svg, sx(d.x), sy(d.y), 6.8, css("--gold"), "ω");
+    drawPoint(svg, sx(d.x), sy(d.y), 6.8, css("--gold"), "Ï‰");
     drawPoint(svg, sx(opt.x), sy(opt.y), 7.8, css("--blue"), "x*");
   }
 
@@ -966,7 +966,7 @@
 
     $("criterionLabel").textContent = {
       utilitarian: "Utilitarian optimum",
-      weighted: `Weighted utilitarian, λ=${fmt(state.lambda,2)}`,
+      weighted: `Weighted utilitarian, Î»=${fmt(state.lambda,2)}`,
       rawls: "Rawlsian max-min point",
       nash: "Nash bargaining point"
     }[state.criterion];
@@ -1011,3 +1011,4 @@
 </script>
 </body>
 </html>
+

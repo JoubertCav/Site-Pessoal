@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -167,13 +167,13 @@ window.MathJax = { tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\['
 <div class="app" id="app">
   <header class="topbar">
     <div class="brand">
-      <div class="eyebrow">Real Analysis · sequences · compactness</div>
-      <h1>Bolzano–Weierstrass theorem</h1>
+      <div class="eyebrow">Real Analysis Â· sequences Â· compactness</div>
+      <h1>Bolzanoâ€“Weierstrass theorem</h1>
       <p class="subtitle">A bounded sequence cannot spread forever without leaving behind a convergent subsequence. The theorem turns boundedness into accumulation.</p>
     </div>
     <div class="actions">
-      <div class="pill">finite diagrams · infinite theorem</div>
-      <button class="themeBtn" id="themeBtn" type="button">◐ theme</button>
+      <div class="pill">finite diagrams Â· infinite theorem</div>
+      <button class="themeBtn" id="themeBtn" type="button">â— theme</button>
     </div>
   </header>
 
@@ -253,7 +253,7 @@ window.MathJax = { tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\['
           <div class="kpi"><div class="num" id="boundKpi">yes</div><div class="lab">bounded in the visible window?</div></div>
           <div class="kpi"><div class="num" id="insideKpi">0</div><div class="lab">terms inside \((L-\varepsilon,L+\varepsilon)\)</div></div>
           <div class="kpi"><div class="num" id="subKpi">0</div><div class="lab">selected subsequence terms</div></div>
-          <div class="kpi"><div class="num" id="diamKpi">—</div><div class="lab">tail spread after last selected term</div></div>
+          <div class="kpi"><div class="num" id="diamKpi">â€”</div><div class="lab">tail spread after last selected term</div></div>
         </div>
         <div style="height:12px"></div>
         <div class="notice" id="interpretation">
@@ -302,7 +302,7 @@ window.MathJax = { tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\['
       <div class="cardHead">
         <div>
           <h2>Compactness intuition</h2>
-          <p>Bolzano–Weierstrass for \(\mathbb R\) says bounded gives a real subsequential limit. Compactness adds: the limit stays inside the set.</p>
+          <p>Bolzanoâ€“Weierstrass for \(\mathbb R\) says bounded gives a real subsequential limit. Compactness adds: the limit stays inside the set.</p>
         </div>
       </div>
       <div class="cardBody">
@@ -353,7 +353,7 @@ const state = {
   model:'twocluster', N:160, L:0.70, eps:0.12, rule:'near', K:10, depth:6, tail:0
 };
 function css(name){return getComputedStyle(root).getPropertyValue(name).trim();}
-function fmt(x,d=3){ if(!Number.isFinite(x)) return '—'; return Number(x).toFixed(d).replace(/-0\.000/,'0.000'); }
+function fmt(x,d=3){ if(!Number.isFinite(x)) return 'â€”'; return Number(x).toFixed(d).replace(/-0\.000/,'0.000'); }
 function generate(model,N){
   const xs=[];
   for(let n=1;n<=N;n++){
@@ -460,7 +460,7 @@ function drawSeq(canvas,xs,sub,state,bisRows){
   ctx.setLineDash([]);
   // axes
   ctx.strokeStyle=line; ctx.lineWidth=1.2; ctx.strokeRect(padL,padT,plotW,plotH);
-  ctx.fillStyle=muted; ctx.font='12px system-ui'; ctx.fillText('n',w-padR-6,padT+plotH+20); ctx.fillText('xₙ',padL-35,padT+10);
+  ctx.fillStyle=muted; ctx.font='12px system-ui'; ctx.fillText('n',w-padR-6,padT+plotH+20); ctx.fillText('xâ‚™',padL-35,padT+10);
   for(let i=0;i<=4;i++){
     const val=yMin+i*(yMax-yMin)/4; const y=yMap(val); ctx.fillText(fmt(val,1),10,y+4);
   }
@@ -488,7 +488,7 @@ function drawSeq(canvas,xs,sub,state,bisRows){
   ctx.strokeStyle=line; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(sx0,lineY); ctx.lineTo(sx1,lineY); ctx.stroke();
   // bounded container
   ctx.strokeStyle=blue; ctx.lineWidth=7; ctx.globalAlpha=.45; ctx.beginPath(); ctx.moveTo(mapVal(yMin),lineY); ctx.lineTo(mapVal(yMax),lineY); ctx.stroke(); ctx.globalAlpha=1;
-  ctx.fillStyle=muted; ctx.font='12px system-ui'; ctx.fillText('value line: terms projected onto ℝ',sx0,stripY-20);
+  ctx.fillStyle=muted; ctx.font='12px system-ui'; ctx.fillText('value line: terms projected onto â„',sx0,stripY-20);
   // all values jittered by n
   for(const p of xs){
     const x=mapVal(Math.max(yMin,Math.min(yMax,p.x))); const jitter=((p.n*17)%29)-14;
@@ -537,7 +537,7 @@ function drawBisection(canvas,xs,state,bisRows){
   });
   const last=bisRows[bisRows.length-1];
   ctx.fillStyle=gold; ctx.font='13px system-ui';
-  ctx.fillText('center ≈ '+fmt((last.lo+last.hi)/2,4)+', length ≈ '+fmt(last.hi-last.lo,4),pad,24);
+  ctx.fillText('center â‰ˆ '+fmt((last.lo+last.hi)/2,4)+', length â‰ˆ '+fmt(last.hi-last.lo,4),pad,24);
 }
 function updateTable(rows){
   const body=$('intervalTable'); body.innerHTML='';
@@ -555,7 +555,7 @@ function updateText(xs,sub,bisRows){
   $('boundKpi').textContent = (state.model==='unbounded' && max>hi-0.1) ? 'no' : 'yes';
   $('insideKpi').textContent = xs.filter(p=>Math.abs(p.x-state.L)<state.eps).length;
   $('subKpi').textContent = sub.length;
-  let spread='—';
+  let spread='â€”';
   if(sub.length){ const last=sub[sub.length-1].n; const tail=xs.filter(p=>p.n>=last).map(p=>p.x); if(tail.length) spread=fmt(Math.max(...tail)-Math.min(...tail),3); }
   $('diamKpi').textContent=spread;
   let msg='';
@@ -592,3 +592,4 @@ bind(); render();
 </script>
 </body>
 </html>
+

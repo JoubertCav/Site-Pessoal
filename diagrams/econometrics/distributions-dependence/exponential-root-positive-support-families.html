@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -232,9 +232,9 @@
             <div class="muted small">Read top to bottom: start from a uniform draw, apply the structural map, and obtain a positive-support law.</div>
             <div class="pipeline">
               <div class="pipebox"><div class="tiny">uniform seed</div><div class="formula" data-katex="U\sim U(0,1)"></div></div>
-              <div class="arrow">↓</div>
+              <div class="arrow">â†“</div>
               <div class="pipebox"><div class="tiny" id="middleTitle">root mechanism</div><div id="middleFormula" class="formula"></div></div>
-              <div class="arrow">↓</div>
+              <div class="arrow">â†“</div>
               <div class="pipebox"><div class="tiny">positive-support law</div><div id="lawFormula" class="formula"></div></div>
             </div>
             <div class="support-strip"></div>
@@ -274,7 +274,7 @@ const $ = (id)=>document.getElementById(id);
 const state = { family:'exp' };
 const controls = ['lambda','shape','eta','t0'].map($);
 
-function fmt(x,d=2){ if(!isFinite(x)) return '∞'; return Number(x).toFixed(d); }
+function fmt(x,d=2){ if(!isFinite(x)) return 'âˆž'; return Number(x).toFixed(d); }
 function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
 
 function gamma(z){
@@ -415,7 +415,7 @@ function drawPdf(){
     const y=clamp(pdf(t0),0,ymax);
     svg.appendChild(svgEl('line',{x1:xs(t0),y1:y0+h,x2:xs(t0),y2:ys(y),class:'guide'}));
     svg.appendChild(svgEl('circle',{cx:xs(t0),cy:ys(y),r:4.5,class:'dot'}));
-    text(svg,xs(t0)+8,ys(y)+18,`F(t₀)=${fmt(cdf(t0),3)}`,'inklabel','start');
+    text(svg,xs(t0)+8,ys(y)+18,`F(tâ‚€)=${fmt(cdf(t0),3)}`,'inklabel','start');
   }
   text(svg,x0+w-2,y0+18,familyName()+' density','inklabel','end');
 }
@@ -456,7 +456,7 @@ function drawSurvival(){
   svg.appendChild(svgEl('line',{x1:xs(t0),y1:y0,x2:xs(t0),y2:y0+h,class:'guide'}));
   text(svg,x0+w-5,y0+18,'S(t)','inklabel','end');
   text(svg,x0+w-5,y0+h-12,'F(t)','inklabel','end');
-  text(svg,xs(t0)+8,y0+26,`S(t₀)=${fmt(survival(t0),3)}`,'inklabel','start');
+  text(svg,xs(t0)+8,y0+26,`S(tâ‚€)=${fmt(survival(t0),3)}`,'inklabel','start');
 }
 function hazardLabel(){
   if(state.family==='exp') return 'constant';
@@ -481,12 +481,12 @@ function renderAll(){
 function updateText(){
   const p=effParams(), raw=params(), mv=meanVar();
   $('lambdaVal').textContent=fmt(raw.lam,2);
-  $('etaVal').textContent=fmt(raw.eta,2)+`  ×${fmt(raw.mult,2)}`;
+  $('etaVal').textContent=fmt(raw.eta,2)+`  Ã—${fmt(raw.mult,2)}`;
   $('t0Val').textContent=fmt(raw.t0,2);
   $('shapeControl').style.opacity = state.family==='exp' ? .48 : 1;
   $('shape').disabled = state.family==='exp';
   $('shapeLabel').innerHTML = state.family==='gamma' ? 'gamma shape / arrival count <span class="math-inline" data-tex="r"></span>' : state.family==='weibull' ? 'Weibull shape <span class="math-inline" data-tex="k"></span>' : 'shape not needed';
-  $('shapeVal').textContent = state.family==='exp' ? '—' : fmt(raw.sh,2);
+  $('shapeVal').textContent = state.family==='exp' ? 'â€”' : fmt(raw.sh,2);
   $('meanMetric').textContent=fmt(mv.m,3);
   $('varMetric').textContent=fmt(mv.v,3);
   $('cdfMetric').textContent=fmt(cdf(raw.t0),3);
@@ -539,3 +539,4 @@ setTimeout(update,250);
 </script>
 </body>
 </html>
+

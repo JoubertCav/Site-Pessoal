@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -158,7 +158,7 @@
         <p class="subtitle">Bernoulli, binomial, categorical, and multinomial laws as the atomic geometry behind binary and finite-outcome models.</p>
       </div>
       <div class="top-actions">
-        <span class="pill" id="modePill">finite support · discrete mass</span>
+        <span class="pill" id="modePill">finite support Â· discrete mass</span>
         <button id="themeBtn" type="button">Dark mode</button>
       </div>
     </header>
@@ -227,7 +227,7 @@
           <div class="stats">
             <div class="stat"><b>mean</b><span id="meanStat">5.04</span></div>
             <div class="stat"><b>variance</b><span id="varStat">2.92</span></div>
-            <div class="stat"><b>support</b><span id="supportStat">{0,…,12}</span></div>
+            <div class="stat"><b>support</b><span id="supportStat">{0,â€¦,12}</span></div>
             <div class="stat"><b>parameter</b><span id="paramStat">p=0.42</span></div>
           </div>
         </div>
@@ -323,7 +323,7 @@
   }
   function reroll(){ state.seed = (Math.random()*1e9)>>>0; update(); }
   function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
-  function fmt(x,d=3){ return Number.isFinite(x) ? x.toFixed(d).replace(/\.0+$/,'').replace(/(\.\d*?)0+$/,'$1') : '—'; }
+  function fmt(x,d=3){ return Number.isFinite(x) ? x.toFixed(d).replace(/\.0+$/,'').replace(/(\.\d*?)0+$/,'$1') : 'â€”'; }
   function comb(n,k){ if(k<0||k>n)return 0; k=Math.min(k,n-k); let c=1; for(let i=1;i<=k;i++) c=c*(n-k+i)/i; return c; }
   const logFactCache=[0];
   function logFact(n){ for(let i=logFactCache.length;i<=n;i++) logFactCache[i]=logFactCache[i-1]+Math.log(i); return logFactCache[n]; }
@@ -385,11 +385,11 @@
         const E=bary([1-t,0,t],V), F=bary([0,1-t,t],V); line(svg,E.x,E.y,F.x,F.y,'simplexGrid');
       }
     }
-    text(svg,V[0].x,V[0].y-18,'a₁','ink'); text(svg,V[1].x-20,V[1].y+20,'a₂','ink'); text(svg,V[2].x+20,V[2].y+20,'a₃','ink');
+    text(svg,V[0].x,V[0].y-18,'aâ‚','ink'); text(svg,V[1].x-20,V[1].y+20,'aâ‚‚','ink'); text(svg,V[2].x+20,V[2].y+20,'aâ‚ƒ','ink');
     const P=bary(pi,V);
     line(svg,V[0].x,V[0].y,P.x,P.y,'pathAccent'); line(svg,V[1].x,V[1].y,P.x,P.y,'pathWarm'); line(svg,V[2].x,V[2].y,P.x,P.y,'pathWarm');
     circle(svg,P.x,P.y,12,'dot');
-    text(svg,210,288,`π = (${fmt(pi[0],2)}, ${fmt(pi[1],2)}, ${fmt(pi[2],2)})`,'txt');
+    text(svg,210,288,`Ï€ = (${fmt(pi[0],2)}, ${fmt(pi[1],2)}, ${fmt(pi[2],2)})`,'txt');
   }
 
   function drawBarChart(svg,labels,theory,sample,opts={}){
@@ -420,7 +420,7 @@
   }
 
   function drawCategoricalMain(pi,sim){
-    const labels=['a₁','a₂','a₃'];
+    const labels=['aâ‚','aâ‚‚','aâ‚ƒ'];
     const counts=[0,0,0];
     for(let r=0;r<sim;r++) counts[sampleCategorical(pi)]++;
     drawBarChart(els.mainSvg,labels,pi,counts.map(c=>c/sim),{xLabel:'finite alphabet'});
@@ -449,8 +449,8 @@
       if(state.showSample){ const emp=(sampleMap.get(d.x.join(','))||0)/sim; if(emp>0) circle(svg,P.x,P.y,2+12*Math.sqrt(emp/maxEmp),'', {fill:'none',stroke:css('--warm'),'stroke-width':1.4,opacity:.86}); }
     });
     const Pp=bary(pi,V); circle(svg,Pp.x,Pp.y,7,'dot');
-    text(svg,V[0].x,V[0].y-20,'N₁=m','ink'); text(svg,V[1].x-30,V[1].y+24,'N₂=m','ink'); text(svg,V[2].x+30,V[2].y+24,'N₃=m','ink');
-    text(svg,380,404,'count vectors live on the finite lattice  N₁ + N₂ + N₃ = m','txt');
+    text(svg,V[0].x,V[0].y-20,'Nâ‚=m','ink'); text(svg,V[1].x-30,V[1].y+24,'Nâ‚‚=m','ink'); text(svg,V[2].x+30,V[2].y+24,'Nâ‚ƒ=m','ink');
+    text(svg,380,404,'count vectors live on the finite lattice  Nâ‚ + Nâ‚‚ + Nâ‚ƒ = m','txt');
   }
 
   function setList(el,items){
@@ -525,7 +525,7 @@
       els.sideTitle.textContent='The probability simplex';
       els.sideSub.textContent='The whole law is one point inside the simplex.';
       renderInlineText(els.interpretation,'The vector <span data-katex="\\pi"></span> is the law. Moving inside the simplex reallocates mass across the finite alphabet without changing the support.');
-      els.reading.textContent=`The categorical law is the finite-alphabet analogue of Bernoulli. Current probability vector: π = ${piText}.`;
+      els.reading.textContent=`The categorical law is the finite-alphabet analogue of Bernoulli. Current probability vector: Ï€ = ${piText}.`;
       setList(els.noticeList,[
         '<strong>A law is a point:</strong> <span data-katex="\\pi\\in\\Delta^{K-1}"></span>.',
         '<strong>Labels matter:</strong> the same coordinates attached to different outcomes define a different statistical meaning.',
@@ -542,7 +542,7 @@
       els.sideTitle.textContent='Parameter simplex';
       els.sideSub.textContent='The probability vector governs the most likely region of the count lattice.';
       renderInlineText(els.interpretation,'The multinomial is the sum of one-hot categorical vectors. Its support is not a line but the lattice <span data-katex="x_1+x_2+x_3=m"></span>.');
-      els.reading.textContent=`Counts concentrate near mπ. Current probability vector: π = ${piText}.`;
+      els.reading.textContent=`Counts concentrate near mÏ€. Current probability vector: Ï€ = ${piText}.`;
       setList(els.noticeList,[
         '<strong>Counts are sufficient:</strong> order is discarded, frequencies remain.',
         '<strong>Generator becomes a power:</strong> <span data-katex="G_N(s)=G_Z(s)^m"></span>.',
@@ -560,13 +560,13 @@
     if(law==='bernoulli'){
       els.meanStat.textContent=fmt(p,3); els.varStat.textContent=fmt(p*(1-p),3); els.supportStat.textContent='{0,1}'; els.paramStat.textContent='p='+fmt(p,2);
     } else if(law==='binomial'){
-      els.meanStat.textContent=fmt(n*p,3); els.varStat.textContent=fmt(n*p*(1-p),3); els.supportStat.textContent='{0,…,'+n+'}'; els.paramStat.textContent='p='+fmt(p,2);
+      els.meanStat.textContent=fmt(n*p,3); els.varStat.textContent=fmt(n*p*(1-p),3); els.supportStat.textContent='{0,â€¦,'+n+'}'; els.paramStat.textContent='p='+fmt(p,2);
     } else if(law==='categorical'){
       const mu=pi[0]*1+pi[1]*2+pi[2]*3;
       const v=pi[0]*(1-mu)**2+pi[1]*(2-mu)**2+pi[2]*(3-mu)**2;
-      els.meanStat.textContent=fmt(mu,3); els.varStat.textContent=fmt(v,3); els.supportStat.textContent='{a₁,a₂,a₃}'; els.paramStat.textContent='π='+pi.map(x=>fmt(x,2)).join(',');
+      els.meanStat.textContent=fmt(mu,3); els.varStat.textContent=fmt(v,3); els.supportStat.textContent='{aâ‚,aâ‚‚,aâ‚ƒ}'; els.paramStat.textContent='Ï€='+pi.map(x=>fmt(x,2)).join(',');
     } else {
-      els.meanStat.textContent='mπ'; els.varStat.textContent='mπⱼ(1−πⱼ)'; els.supportStat.textContent='x₁+x₂+x₃='+m; els.paramStat.textContent='π='+pi.map(x=>fmt(x,2)).join(',');
+      els.meanStat.textContent='mÏ€'; els.varStat.textContent='mÏ€â±¼(1âˆ’Ï€â±¼)'; els.supportStat.textContent='xâ‚+xâ‚‚+xâ‚ƒ='+m; els.paramStat.textContent='Ï€='+pi.map(x=>fmt(x,2)).join(',');
     }
   }
 
@@ -574,7 +574,7 @@
     const law=els.lawSelect.value, p=+els.p.value, n=+els.n.value, m=+els.m.value, sim=+els.sim.value, pi=normalizedPi();
     els.pVal.textContent=fmt(p,2); els.nVal.textContent=n; els.mVal.textContent=m; els.simVal.textContent=sim;
     els.w1Val.textContent=fmt(+els.w1.value,1); els.w2Val.textContent=fmt(+els.w2.value,1); els.w3Val.textContent=fmt(+els.w3.value,1);
-    els.lawName.textContent=law; els.modePill.textContent = law==='multinomial' ? 'simplex lattice · count vectors' : law==='categorical' ? 'simplex · finite alphabet' : 'binary atoms · count law';
+    els.lawName.textContent=law; els.modePill.textContent = law==='multinomial' ? 'simplex lattice Â· count vectors' : law==='categorical' ? 'simplex Â· finite alphabet' : 'binary atoms Â· count law';
     els.binaryControls.classList.toggle('hidden', law==='categorical'||law==='multinomial');
     els.finiteControls.classList.toggle('hidden', law==='bernoulli'||law==='binomial');
     els.nControl.classList.toggle('hidden', law==='bernoulli');
@@ -597,3 +597,4 @@
 </script>
 </body>
 </html>
+

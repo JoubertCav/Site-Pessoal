@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -312,7 +312,7 @@
     }
     .advanced-editor summary::-webkit-details-marker { display: none; }
     .advanced-editor summary::before {
-      content: '▸';
+      content: 'â–¸';
       font-size: .75rem;
       transition: transform .16s ease;
     }
@@ -511,10 +511,10 @@
 <body>
   <div class="app" id="app" data-theme="light">
     <aside class="sidebar">
-      <div class="kicker">Laboratório de troca pura</div>
-      <h2>Preferências livres</h2>
-      <p class="muted">Escreva as utilidades, ajuste os parâmetros e arraste a dotação ou a alocação. A caixa recalcula indiferenças, lente, contrato, núcleo e preços.</p>
-      <h3>Preferências por agente</h3>
+      <div class="kicker">LaboratÃ³rio de troca pura</div>
+      <h2>PreferÃªncias livres</h2>
+      <p class="muted">Escreva as utilidades, ajuste os parÃ¢metros e arraste a dotaÃ§Ã£o ou a alocaÃ§Ã£o. A caixa recalcula indiferenÃ§as, lente, contrato, nÃºcleo e preÃ§os.</p>
+      <h3>PreferÃªncias por agente</h3>
       <div class="agent-grid">
         <div class="agent-card" id="agentCardA">
           <div class="agent-head">
@@ -534,7 +534,7 @@
           </div>
 
           <div class="param-box">
-            <label>Parâmetro α de A <span><strong id="vAlphaA">0.50</strong></span></label>
+            <label>ParÃ¢metro Î± de A <span><strong id="vAlphaA">0.50</strong></span></label>
             <div class="param-inline">
               <input id="alphaSlider" type="range" min="0.02" max="0.98" step="0.01" value="0.50">
               <input id="alphaInput" type="number" min="0.02" max="0.98" step="0.01" value="0.50">
@@ -542,7 +542,7 @@
           </div>
 
           <div class="param-box" id="rhoWrapA" hidden>
-            <label>Curvatura ρ de A <span><strong id="vRhoABox">-0.40</strong></span></label>
+            <label>Curvatura Ï de A <span><strong id="vRhoABox">-0.40</strong></span></label>
             <div class="param-inline">
               <input id="rhoASlider" type="range" min="-1.50" max="0.85" step="0.01" value="-0.40">
               <input id="rhoAInput" type="number" min="-1.50" max="0.85" step="0.01" value="-0.40">
@@ -561,7 +561,7 @@
           </div>
 
           <details class="advanced-editor">
-            <summary>Editor avançado de A</summary>
+            <summary>Editor avanÃ§ado de A</summary>
             <div class="field compact">
               <label>Agente A usa <span><span class="kbd">x1</span>, <span class="kbd">x2</span></span></label>
               <textarea id="exprA" spellcheck="false">x1^alpha * x2^(1-alpha)</textarea>
@@ -587,7 +587,7 @@
           </div>
 
           <div class="param-box">
-            <label>Parâmetro β de B <span><strong id="vBetaB">0.50</strong></span></label>
+            <label>ParÃ¢metro Î² de B <span><strong id="vBetaB">0.50</strong></span></label>
             <div class="param-inline">
               <input id="betaSlider" type="range" min="0.02" max="0.98" step="0.01" value="0.50">
               <input id="betaInput" type="number" min="0.02" max="0.98" step="0.01" value="0.50">
@@ -595,7 +595,7 @@
           </div>
 
           <div class="param-box" id="rhoWrapB" hidden>
-            <label>Curvatura ρ de B <span><strong id="vRhoBBox">-0.20</strong></span></label>
+            <label>Curvatura Ï de B <span><strong id="vRhoBBox">-0.20</strong></span></label>
             <div class="param-inline">
               <input id="rhoBSlider" type="range" min="-1.50" max="0.85" step="0.01" value="-0.20">
               <input id="rhoBInput" type="number" min="-1.50" max="0.85" step="0.01" value="-0.20">
@@ -614,7 +614,7 @@
           </div>
 
           <details class="advanced-editor">
-            <summary>Editor avançado de B</summary>
+            <summary>Editor avanÃ§ado de B</summary>
             <div class="field compact">
               <label>Agente B usa <span><span class="kbd">y1</span>, <span class="kbd">y2</span></span></label>
               <textarea id="exprB" spellcheck="false">y1^beta * y2^(1-beta)</textarea>
@@ -625,7 +625,7 @@
 
       <div class="editor-grid" style="margin-top:10px;">
         <div class="field">
-          <label>Parâmetros avançados opcionais <span>um por linha</span></label>
+          <label>ParÃ¢metros avanÃ§ados opcionais <span>um por linha</span></label>
           <textarea id="params" class="params" spellcheck="false">alpha = 0.50
 beta = 0.50
 rhoA = -0.40
@@ -636,55 +636,55 @@ aB = 1.40
 bB = 1.00</textarea>
         </div>
         <div class="field">
-          <label>Escala numérica <span>resolução</span></label>
+          <label>Escala numÃ©rica <span>resoluÃ§Ã£o</span></label>
           <select id="quality">
-            <option value="fast">rápida</option>
+            <option value="fast">rÃ¡pida</option>
             <option value="balanced" selected>equilibrada</option>
             <option value="high">alta</option>
           </select>
           <div style="height:8px"></div>
-          <button class="btn primary full" id="apply">Aplicar preferências</button>
+          <button class="btn primary full" id="apply">Aplicar preferÃªncias</button>
           <div style="height:8px"></div>
           <div class="notice-box">
-            Você pode usar os seletores de template acima sem escrever nada. O editor avançado continua disponível para funções personalizadas. Use <span class="kbd">sqrt</span>, <span class="kbd">log</span>, <span class="kbd">exp</span>, <span class="kbd">min</span>, <span class="kbd">max</span>, <span class="kbd">pow</span> e <span class="kbd">^</span>.
+            VocÃª pode usar os seletores de template acima sem escrever nada. O editor avanÃ§ado continua disponÃ­vel para funÃ§Ãµes personalizadas. Use <span class="kbd">sqrt</span>, <span class="kbd">log</span>, <span class="kbd">exp</span>, <span class="kbd">min</span>, <span class="kbd">max</span>, <span class="kbd">pow</span> e <span class="kbd">^</span>.
           </div>
         </div>
       </div>
 
-      <h3>Dotação agregada e inicial</h3>
+      <h3>DotaÃ§Ã£o agregada e inicial</h3>
       <div class="two">
         <div class="control"><label>Total bem 1 <span><strong id="vXbar">10</strong></span></label><input id="Xbar" type="range" min="4" max="20" step="1" value="10"></div>
         <div class="control"><label>Total bem 2 <span><strong id="vYbar">10</strong></span></label><input id="Ybar" type="range" min="4" max="20" step="1" value="10"></div>
       </div>
       <div class="two">
-        <div class="control"><label>ω₁ᴬ <span><strong id="vw1">4.00</strong></span></label><input id="w1" type="range" min="0.1" max="9.9" step="0.1" value="4"></div>
-        <div class="control"><label>ω₂ᴬ <span><strong id="vw2">6.00</strong></span></label><input id="w2" type="range" min="0.1" max="9.9" step="0.1" value="6"></div>
+        <div class="control"><label>Ï‰â‚á´¬ <span><strong id="vw1">4.00</strong></span></label><input id="w1" type="range" min="0.1" max="9.9" step="0.1" value="4"></div>
+        <div class="control"><label>Ï‰â‚‚á´¬ <span><strong id="vw2">6.00</strong></span></label><input id="w2" type="range" min="0.1" max="9.9" step="0.1" value="6"></div>
       </div>
 
-      <h3>Alocação exibida e preço</h3>
+      <h3>AlocaÃ§Ã£o exibida e preÃ§o</h3>
       <div class="two">
-        <div class="control"><label>x₁ᴬ <span><strong id="vx1">5.00</strong></span></label><input id="x1" type="range" min="0.1" max="9.9" step="0.1" value="5"></div>
-        <div class="control"><label>x₂ᴬ <span><strong id="vx2">5.00</strong></span></label><input id="x2" type="range" min="0.1" max="9.9" step="0.1" value="5"></div>
+        <div class="control"><label>xâ‚á´¬ <span><strong id="vx1">5.00</strong></span></label><input id="x1" type="range" min="0.1" max="9.9" step="0.1" value="5"></div>
+        <div class="control"><label>xâ‚‚á´¬ <span><strong id="vx2">5.00</strong></span></label><input id="x2" type="range" min="0.1" max="9.9" step="0.1" value="5"></div>
       </div>
-      <div class="control"><label>Preço relativo p₁/p₂ <span><strong id="vp">1.00</strong></span></label><input id="price" type="range" min="0.05" max="25" step="0.01" value="1"></div>
+      <div class="control"><label>PreÃ§o relativo pâ‚/pâ‚‚ <span><strong id="vp">1.00</strong></span></label><input id="price" type="range" min="0.05" max="25" step="0.01" value="1"></div>
 
-      <h3>Camadas geométricas</h3>
+      <h3>Camadas geomÃ©tricas</h3>
       <div class="check-grid">
         <label class="check"><input id="showLens" type="checkbox" checked> lente</label>
         <label class="check"><input id="showContract" type="checkbox" checked> contrato</label>
-        <label class="check"><input id="showCore" type="checkbox" checked> núcleo</label>
-        <label class="check"><input id="showBudget" type="checkbox" checked> orçamento</label>
+        <label class="check"><input id="showCore" type="checkbox" checked> nÃºcleo</label>
+        <label class="check"><input id="showBudget" type="checkbox" checked> orÃ§amento</label>
         <label class="check"><input id="showDemands" type="checkbox" checked> demandas</label>
         <label class="check"><input id="showTangents" type="checkbox" checked> tangentes</label>
-        <label class="check"><input id="showEndowmentCurves" type="checkbox" checked> curvas em ω</label>
-        <label class="check"><input id="showInvalid" type="checkbox"> domínio inválido</label>
+        <label class="check"><input id="showEndowmentCurves" type="checkbox" checked> curvas em Ï‰</label>
+        <label class="check"><input id="showInvalid" type="checkbox"> domÃ­nio invÃ¡lido</label>
       </div>
 
-      <h3>Ações</h3>
+      <h3>AÃ§Ãµes</h3>
       <div class="two">
-        <button class="btn primary" id="moveWalras">Mover x para xᵂ</button>
-        <button class="btn" id="setPriceWalras">Usar pᵂ</button>
-        <button class="btn" id="moveEndowment">Mover x para ω</button>
+        <button class="btn primary" id="moveWalras">Mover x para xáµ‚</button>
+        <button class="btn" id="setPriceWalras">Usar páµ‚</button>
+        <button class="btn" id="moveEndowment">Mover x para Ï‰</button>
         <button class="btn" id="reset">Reset</button>
       </div>
     </aside>
@@ -694,19 +694,19 @@ bB = 1.00</textarea>
         <div>
           <div class="kicker" id="moduleKicker">Caixa de Edgeworth generativa</div>
           <h1 id="moduleTitle">A caixa se forma a partir das utilidades</h1>
-          <p class="subtitle" id="moduleSubtitle">O app lê as funções de utilidade, calcula curvas de nível numericamente e aproxima objetos econômicos sem depender de uma forma funcional fixa.</p>
+          <p class="subtitle" id="moduleSubtitle">O app lÃª as funÃ§Ãµes de utilidade, calcula curvas de nÃ­vel numericamente e aproxima objetos econÃ´micos sem depender de uma forma funcional fixa.</p>
           <div class="tabs">
-            <button class="tab active" data-module="prefs"><b>1. Preferências</b><span>funções livres</span></button>
+            <button class="tab active" data-module="prefs"><b>1. PreferÃªncias</b><span>funÃ§Ãµes livres</span></button>
             <button class="tab" data-module="trade"><b>2. Trocas</b><span>lente de ganhos</span></button>
-            <button class="tab" data-module="eff"><b>3. Eficiência</b><span>MRS e contrato</span></button>
-            <button class="tab" data-module="prices"><b>4. Preços</b><span>Walras</span></button>
+            <button class="tab" data-module="eff"><b>3. EficiÃªncia</b><span>MRS e contrato</span></button>
+            <button class="tab" data-module="prices"><b>4. PreÃ§os</b><span>Walras</span></button>
           </div>
           <div class="focus-strip">
-            <span class="focus-chip">uᴬ(x₁,x₂)</span>
-            <span class="focus-chip">uᴮ(y₁,y₂)</span>
-            <span class="focus-chip">MRS por derivada numérica</span>
-            <span class="focus-chip">contrato por MRSᴬ = MRSᴮ</span>
-            <span class="focus-chip">demanda por maximização numérica</span>
+            <span class="focus-chip">uá´¬(xâ‚,xâ‚‚)</span>
+            <span class="focus-chip">uá´®(yâ‚,yâ‚‚)</span>
+            <span class="focus-chip">MRS por derivada numÃ©rica</span>
+            <span class="focus-chip">contrato por MRSá´¬ = MRSá´®</span>
+            <span class="focus-chip">demanda por maximizaÃ§Ã£o numÃ©rica</span>
           </div>
         </div>
         <button class="theme" id="theme"><span class="moon"></span><span id="themeText">Dark mode</span></button>
@@ -714,11 +714,11 @@ bB = 1.00</textarea>
 
       <section class="diagram-card">
         <div class="canvas">
-          <svg id="svg" viewBox="0 0 900 660" preserveAspectRatio="xMidYMid meet" aria-label="Caixa de Edgeworth interativa com preferências livres"></svg>
+          <svg id="svg" viewBox="0 0 900 660" preserveAspectRatio="xMidYMid meet" aria-label="Caixa de Edgeworth interativa com preferÃªncias livres"></svg>
           <div class="legend">
-            <span class="pill"><span class="dot"></span>indiferença A</span>
-            <span class="pill"><span class="dot gold"></span>indiferença B</span>
-            <span class="pill"><span class="dot red"></span>ω e contrato</span>
+            <span class="pill"><span class="dot"></span>indiferenÃ§a A</span>
+            <span class="pill"><span class="dot gold"></span>indiferenÃ§a B</span>
+            <span class="pill"><span class="dot red"></span>Ï‰ e contrato</span>
             <span class="pill"><span class="dot blue"></span>demandas</span>
             <span class="pill"><span class="dot black"></span>x atual</span>
           </div>
@@ -726,40 +726,40 @@ bB = 1.00</textarea>
 
         <div class="readout">
           <div class="card">
-            <h2>Funções ativas</h2>
+            <h2>FunÃ§Ãµes ativas</h2>
             <div class="formula"><strong>A:</strong> <code id="activeA"></code></div>
             <div style="height:8px"></div>
             <div class="formula"><strong>B:</strong> <code id="activeB"></code></div>
           </div>
 
           <div class="card">
-            <h2>Alocação atual</h2>
-            <div class="metric"><span>xᴬ</span><span id="rXA"></span></div>
-            <div class="metric"><span>xᴮ = e − xᴬ</span><span id="rXB"></span></div>
-            <div class="metric"><span>uᴬ(xᴬ)</span><span id="rUA"></span></div>
-            <div class="metric"><span>uᴮ(xᴮ)</span><span id="rUB"></span></div>
-            <div class="metric"><span>IR em relação a ω</span><span id="rIR"></span></div>
+            <h2>AlocaÃ§Ã£o atual</h2>
+            <div class="metric"><span>xá´¬</span><span id="rXA"></span></div>
+            <div class="metric"><span>xá´® = e âˆ’ xá´¬</span><span id="rXB"></span></div>
+            <div class="metric"><span>uá´¬(xá´¬)</span><span id="rUA"></span></div>
+            <div class="metric"><span>uá´®(xá´®)</span><span id="rUB"></span></div>
+            <div class="metric"><span>IR em relaÃ§Ã£o a Ï‰</span><span id="rIR"></span></div>
           </div>
 
           <div class="card">
-            <h2>Eficiência local</h2>
-            <div class="metric"><span>MRSᴬ</span><span id="rMRSA"></span></div>
-            <div class="metric"><span>MRSᴮ</span><span id="rMRSB"></span></div>
-            <div class="metric"><span>|log MRSᴬ/MRSᴮ|</span><span id="rGap"></span></div>
+            <h2>EficiÃªncia local</h2>
+            <div class="metric"><span>MRSá´¬</span><span id="rMRSA"></span></div>
+            <div class="metric"><span>MRSá´®</span><span id="rMRSB"></span></div>
+            <div class="metric"><span>|log MRSá´¬/MRSá´®|</span><span id="rGap"></span></div>
             <div class="metric"><span>Status</span><span id="rStatus"></span></div>
           </div>
 
           <div class="card">
-            <h2>Preços</h2>
+            <h2>PreÃ§os</h2>
             <div class="metric"><span>p atual</span><span id="rP"></span></div>
-            <div class="metric"><span>xᴬ*(p)</span><span id="rDA"></span></div>
-            <div class="metric"><span>e − xᴮ*(p)</span><span id="rDB"></span></div>
-            <div class="metric"><span>z₁(p), z₂(p)</span><span id="rZ"></span></div>
-            <div class="metric"><span>pᵂ aproximado</span><span id="rPW"></span></div>
+            <div class="metric"><span>xá´¬*(p)</span><span id="rDA"></span></div>
+            <div class="metric"><span>e âˆ’ xá´®*(p)</span><span id="rDB"></span></div>
+            <div class="metric"><span>zâ‚(p), zâ‚‚(p)</span><span id="rZ"></span></div>
+            <div class="metric"><span>páµ‚ aproximado</span><span id="rPW"></span></div>
           </div>
 
           <div class="card">
-            <h2>Diagnóstico</h2>
+            <h2>DiagnÃ³stico</h2>
             <div class="warning-list" id="diagnostics"></div>
           </div>
         </div>
@@ -767,7 +767,7 @@ bB = 1.00</textarea>
 
       <section class="bottom">
         <div class="panel">
-          <h2>Interpretação</h2>
+          <h2>InterpretaÃ§Ã£o</h2>
           <p class="muted" id="interpretation"></p>
         </div>
         <div class="panel">
@@ -783,15 +783,15 @@ bB = 1.00</textarea>
 
       <section class="surface-section">
         <div class="panel surface-intro">
-          <div class="kicker">Representação tridimensional</div>
-          <h2>Superfícies de utilidade e curvas de nível</h2>
-          <p class="muted">Abaixo da caixa de Edgeworth, o app mostra as duas superfícies de utilidade no mesmo gráfico 3D. A superfície de B é espelhada nas coordenadas da caixa, de modo que ela cresce na direção da origem de B, em sentido oposto à superfície de A. As curvas de nível são projetadas na base para conectar a geometria bidimensional à representação tridimensional.</p>
+          <div class="kicker">RepresentaÃ§Ã£o tridimensional</div>
+          <h2>SuperfÃ­cies de utilidade e curvas de nÃ­vel</h2>
+          <p class="muted">Abaixo da caixa de Edgeworth, o app mostra as duas superfÃ­cies de utilidade no mesmo grÃ¡fico 3D. A superfÃ­cie de B Ã© espelhada nas coordenadas da caixa, de modo que ela cresce na direÃ§Ã£o da origem de B, em sentido oposto Ã  superfÃ­cie de A. As curvas de nÃ­vel sÃ£o projetadas na base para conectar a geometria bidimensional Ã  representaÃ§Ã£o tridimensional.</p>
         </div>
         <div class="surface-grid">
           <div class="panel surface-card">
-            <h2>Superfícies conjuntas de A e B no mesmo gráfico</h2>
-            <div id="plot3dCombined" class="plot3d" aria-label="Superfícies 3D conjuntas das utilidades dos agentes A e B"></div>
-            <p class="surface-note">A superfície de A usa as coordenadas usuais da caixa. A superfície de B é desenhada nas mesmas coordenadas da caixa, mas com espelhamento: z = u<sup>B</sup>(X̄ − x<sub>1</sub><sup>A</sup>, Ȳ − x<sub>2</sub><sup>A</sup>). Assim, cada superfície cresce em direção à origem do respectivo agente.</p>
+            <h2>SuperfÃ­cies conjuntas de A e B no mesmo grÃ¡fico</h2>
+            <div id="plot3dCombined" class="plot3d" aria-label="SuperfÃ­cies 3D conjuntas das utilidades dos agentes A e B"></div>
+            <p class="surface-note">A superfÃ­cie de A usa as coordenadas usuais da caixa. A superfÃ­cie de B Ã© desenhada nas mesmas coordenadas da caixa, mas com espelhamento: z = u<sup>B</sup>(XÌ„ âˆ’ x<sub>1</sub><sup>A</sup>, È² âˆ’ x<sub>2</sub><sup>A</sup>). Assim, cada superfÃ­cie cresce em direÃ§Ã£o Ã  origem do respectivo agente.</p>
           </div>
         </div>
       </section>
@@ -836,45 +836,45 @@ bB = 1.00`,
       prefs: {
         kicker: 'Caixa de Edgeworth generativa',
         title: 'A caixa se forma a partir das utilidades',
-        subtitle: 'O usuário escreve uᴬ e uᴮ. O app amostra a caixa, calcula utilidades e desenha curvas de nível sem supor Cobb-Douglas ou CES.',
-        interpretation: 'A caixa não é um gráfico de uma função: é o conjunto factível. As curvas aparecem porque, em cada ponto da caixa, calculamos o par de cestas recebido por A e B.',
-        notice: ['A lê a partir da origem inferior esquerda.', 'B lê a partir da origem superior direita.', 'A expressão de B é avaliada nos próprios bens de B: y₁ = X̄ − x₁ᴬ e y₂ = Ȳ − x₂ᴬ.'],
-        eq: 'Factibilidade: xᴬ + xᴮ = e.  Escreva uᴬ(x₁,x₂) e uᴮ(y₁,y₂); o app desenha os conjuntos de nível.',
-        summary: 'A geometria da troca pura nasce da factibilidade e das preferências, não de uma forma funcional específica.'
+        subtitle: 'O usuÃ¡rio escreve uá´¬ e uá´®. O app amostra a caixa, calcula utilidades e desenha curvas de nÃ­vel sem supor Cobb-Douglas ou CES.',
+        interpretation: 'A caixa nÃ£o Ã© um grÃ¡fico de uma funÃ§Ã£o: Ã© o conjunto factÃ­vel. As curvas aparecem porque, em cada ponto da caixa, calculamos o par de cestas recebido por A e B.',
+        notice: ['A lÃª a partir da origem inferior esquerda.', 'B lÃª a partir da origem superior direita.', 'A expressÃ£o de B Ã© avaliada nos prÃ³prios bens de B: yâ‚ = XÌ„ âˆ’ xâ‚á´¬ e yâ‚‚ = È² âˆ’ xâ‚‚á´¬.'],
+        eq: 'Factibilidade: xá´¬ + xá´® = e.  Escreva uá´¬(xâ‚,xâ‚‚) e uá´®(yâ‚,yâ‚‚); o app desenha os conjuntos de nÃ­vel.',
+        summary: 'A geometria da troca pura nasce da factibilidade e das preferÃªncias, nÃ£o de uma forma funcional especÃ­fica.'
       },
       trade: {
-        kicker: 'Trocas voluntárias',
-        title: 'A lente de ganhos a partir da dotação ω',
-        subtitle: 'A região sombreada contém alocações que ambos preferem fracamente à dotação inicial.',
-        interpretation: 'A lente é a interseção dos conjuntos fracamente preferidos de A e B em relação à dotação. Se ela é grande, há muitos ganhos de troca; se colapsa, a dotação já está próxima da eficiência.',
-        notice: ['ω é o ponto de não troca.', 'Troca voluntária exige uᴬ(xᴬ) ≥ uᴬ(ωᴬ) e uᴮ(xᴮ) ≥ uᴮ(ωᴮ).', 'A lente pode ter formato estranho se as preferências não forem convexas ou monotônicas.'],
-        eq: 'G(ω) = {x ∈ F : uᴬ(xᴬ) ≥ uᴬ(ωᴬ) e uᴮ(e−xᴬ) ≥ uᴮ(e−ωᴬ)}.',
-        summary: 'A lente é uma região de melhorias paretianas fracas a partir da dotação inicial.'
+        kicker: 'Trocas voluntÃ¡rias',
+        title: 'A lente de ganhos a partir da dotaÃ§Ã£o Ï‰',
+        subtitle: 'A regiÃ£o sombreada contÃ©m alocaÃ§Ãµes que ambos preferem fracamente Ã  dotaÃ§Ã£o inicial.',
+        interpretation: 'A lente Ã© a interseÃ§Ã£o dos conjuntos fracamente preferidos de A e B em relaÃ§Ã£o Ã  dotaÃ§Ã£o. Se ela Ã© grande, hÃ¡ muitos ganhos de troca; se colapsa, a dotaÃ§Ã£o jÃ¡ estÃ¡ prÃ³xima da eficiÃªncia.',
+        notice: ['Ï‰ Ã© o ponto de nÃ£o troca.', 'Troca voluntÃ¡ria exige uá´¬(xá´¬) â‰¥ uá´¬(Ï‰á´¬) e uá´®(xá´®) â‰¥ uá´®(Ï‰á´®).', 'A lente pode ter formato estranho se as preferÃªncias nÃ£o forem convexas ou monotÃ´nicas.'],
+        eq: 'G(Ï‰) = {x âˆˆ F : uá´¬(xá´¬) â‰¥ uá´¬(Ï‰á´¬) e uá´®(eâˆ’xá´¬) â‰¥ uá´®(eâˆ’Ï‰á´¬)}.',
+        summary: 'A lente Ã© uma regiÃ£o de melhorias paretianas fracas a partir da dotaÃ§Ã£o inicial.'
       },
       eff: {
-        kicker: 'Eficiência de Pareto',
+        kicker: 'EficiÃªncia de Pareto',
         title: 'Contrato por igualdade de MRS',
-        subtitle: 'Nos pontos interiores regulares, a curva de contrato é aproximada por MRSᴬ(xᴬ) = MRSᴮ(xᴮ).',
-        interpretation: 'Quando as MRS diferem, as curvas de indiferença cruzam e existe uma pequena troca mutuamente benéfica. A igualdade de MRS elimina essa oportunidade marginal.',
-        notice: ['As derivadas são numéricas.', 'O núcleo é a parte da curva de contrato que também satisfaz racionalidade individual.', 'Em preferências não suaves, como Leontief, a tangência deve ser interpretada com cuidado.'],
-        eq: 'MRSᴵ = (∂uᴵ/∂bem 1)/(∂uᴵ/∂bem 2).  No interior: MRSᴬ(xᴬ) = MRSᴮ(e−xᴬ).',
-        summary: 'A condição de tangência é local e regular; o desenho também ajuda a perceber cantos, quebras e não convexidades.'
+        subtitle: 'Nos pontos interiores regulares, a curva de contrato Ã© aproximada por MRSá´¬(xá´¬) = MRSá´®(xá´®).',
+        interpretation: 'Quando as MRS diferem, as curvas de indiferenÃ§a cruzam e existe uma pequena troca mutuamente benÃ©fica. A igualdade de MRS elimina essa oportunidade marginal.',
+        notice: ['As derivadas sÃ£o numÃ©ricas.', 'O nÃºcleo Ã© a parte da curva de contrato que tambÃ©m satisfaz racionalidade individual.', 'Em preferÃªncias nÃ£o suaves, como Leontief, a tangÃªncia deve ser interpretada com cuidado.'],
+        eq: 'MRSá´µ = (âˆ‚uá´µ/âˆ‚bem 1)/(âˆ‚uá´µ/âˆ‚bem 2).  No interior: MRSá´¬(xá´¬) = MRSá´®(eâˆ’xá´¬).',
+        summary: 'A condiÃ§Ã£o de tangÃªncia Ã© local e regular; o desenho tambÃ©m ajuda a perceber cantos, quebras e nÃ£o convexidades.'
       },
       prices: {
-        kicker: 'Equilíbrio walrasiano',
-        title: 'Orçamento, demanda individual e clearing',
-        subtitle: 'Para p = (p₁,1), cada agente maximiza utilidade em sua reta orçamentária. O equilíbrio aproxima z₁(p)=0.',
-        interpretation: 'O ponto azul de A é sua escolha ótima ao preço atual. O ponto dourado é a escolha ótima de B traduzida para as coordenadas da caixa. Quando coincidem, os mercados limpam.',
-        notice: ['A reta orçamentária passa por ω.', 'O preço walrasiano é aproximado por busca numérica.', 'Se as preferências não forem convexas, podem existir múltiplas demandas ótimas.'],
-        eq: 'xᴵ*(p) ∈ argmax uᴵ(xᴵ) s.a. p·xᴵ ≤ p·ωᴵ.  Equilíbrio: xᴬ*(p) + xᴮ*(p) = e.',
-        summary: 'Preços descentralizam uma alocação quando escolhas individuais compatíveis com orçamento são conjuntamente factíveis.'
+        kicker: 'EquilÃ­brio walrasiano',
+        title: 'OrÃ§amento, demanda individual e clearing',
+        subtitle: 'Para p = (pâ‚,1), cada agente maximiza utilidade em sua reta orÃ§amentÃ¡ria. O equilÃ­brio aproxima zâ‚(p)=0.',
+        interpretation: 'O ponto azul de A Ã© sua escolha Ã³tima ao preÃ§o atual. O ponto dourado Ã© a escolha Ã³tima de B traduzida para as coordenadas da caixa. Quando coincidem, os mercados limpam.',
+        notice: ['A reta orÃ§amentÃ¡ria passa por Ï‰.', 'O preÃ§o walrasiano Ã© aproximado por busca numÃ©rica.', 'Se as preferÃªncias nÃ£o forem convexas, podem existir mÃºltiplas demandas Ã³timas.'],
+        eq: 'xá´µ*(p) âˆˆ argmax uá´µ(xá´µ) s.a. pÂ·xá´µ â‰¤ pÂ·Ï‰á´µ.  EquilÃ­brio: xá´¬*(p) + xá´®*(p) = e.',
+        summary: 'PreÃ§os descentralizam uma alocaÃ§Ã£o quando escolhas individuais compatÃ­veis com orÃ§amento sÃ£o conjuntamente factÃ­veis.'
       }
     };
 
     const sliders = ['Xbar','Ybar','w1','w2','x1','x2','price'];
     const checks = ['showLens','showContract','showCore','showBudget','showDemands','showTangents','showEndowmentCurves','showInvalid'];
 
-    function fmt(x,d=2) { return Number.isFinite(x) ? Number(x).toFixed(d) : '—'; }
+    function fmt(x,d=2) { return Number.isFinite(x) ? Number(x).toFixed(d) : 'â€”'; }
     function clamp(x,lo,hi) { return Math.max(lo, Math.min(hi, x)); }
     function ownBFromA(x,y) { return { x: state.Xbar - x, y: state.Ybar - y }; }
     function wB() { return { x: state.Xbar - state.w1, y: state.Ybar - state.w2 }; }
@@ -887,13 +887,13 @@ bB = 1.00`,
         const line = raw.replace(/#.*/,'').replace(/\/\/.*/,'').trim();
         if (!line) continue;
         const parts = line.split('=');
-        if (parts.length !== 2) { errors.push(`Parâmetro inválido: ${raw}`); continue; }
+        if (parts.length !== 2) { errors.push(`ParÃ¢metro invÃ¡lido: ${raw}`); continue; }
         const name = parts[0].trim();
         const valText = parts[1].trim();
-        if (!/^[A-Za-z_]\w*$/.test(name)) { errors.push(`Nome de parâmetro inválido: ${name}`); continue; }
-        if (RESERVED.has(name)) { errors.push(`Nome reservado não pode ser parâmetro: ${name}`); continue; }
+        if (!/^[A-Za-z_]\w*$/.test(name)) { errors.push(`Nome de parÃ¢metro invÃ¡lido: ${name}`); continue; }
+        if (RESERVED.has(name)) { errors.push(`Nome reservado nÃ£o pode ser parÃ¢metro: ${name}`); continue; }
         const val = Number(valText);
-        if (!Number.isFinite(val)) { errors.push(`Valor numérico inválido para ${name}`); continue; }
+        if (!Number.isFinite(val)) { errors.push(`Valor numÃ©rico invÃ¡lido para ${name}`); continue; }
         params[name] = val;
       }
       return { params, errors };
@@ -901,8 +901,8 @@ bB = 1.00`,
 
     function normalizeExpression(expr) {
       return expr
-        .replace(/[“”]/g, '"')
-        .replace(/[‘’]/g, "'")
+        .replace(/[â€œâ€]/g, '"')
+        .replace(/[â€˜â€™]/g, "'")
         .replace(/\bln\s*\(/g, 'ln(')
         .replace(/\^/g, '**');
     }
@@ -915,7 +915,7 @@ bB = 1.00`,
       const allowed = new Set(['x1','x2','y1','y2', ...FN_NAMES, ...CONST_NAMES, ...paramNames]);
       const unknown = [...new Set(identifiers.filter(id => !allowed.has(id)))];
       if (unknown.length) throw new Error(`${label}: nomes desconhecidos: ${unknown.join(', ')}`);
-      if (/[^A-Za-z0-9_+\-*\/().,\s]/.test(js)) throw new Error(`${label}: a expressão contém símbolos não permitidos.`);
+      if (/[^A-Za-z0-9_+\-*\/().,\s]/.test(js)) throw new Error(`${label}: a expressÃ£o contÃ©m sÃ­mbolos nÃ£o permitidos.`);
       const argNames = ['x1','x2','y1','y2', ...paramNames, ...FN_NAMES, ...CONST_NAMES];
       const fn = new Function(...argNames, `"use strict"; return (${js});`);
       const argValues = (x1,x2,y1,y2) => [x1,x2,y1,y2, ...paramNames.map(k => params[k]), ...FN_NAMES.map(k => FN_VALUES[k]), ...CONST_NAMES.map(k => FN_VALUES[k])];
@@ -1095,13 +1095,13 @@ bB = 1.00`,
         const m1 = MRSA(x,y), m2 = MRSB(b.x,b.y);
         if (!Number.isFinite(m1) || !Number.isFinite(m2) || m1 <= 0 || m2 <= 0) badMRS++;
       }
-      if (invalid/Math.max(1,total) > .08) notes.push({ type: 'warn', text: 'Parte relevante da caixa está fora do domínio da utilidade.' });
-      if (negA > 0) notes.push({ type: 'warn', text: 'A utilidade de A não parece monotônica em toda a caixa.' });
-      if (negB > 0) notes.push({ type: 'warn', text: 'A utilidade de B não parece monotônica em toda a caixa.' });
-      if (badMRS/Math.max(1,total) > .18) notes.push({ type: 'warn', text: 'A MRS não está bem definida em muitos pontos; contrato/tangência podem falhar.' });
+      if (invalid/Math.max(1,total) > .08) notes.push({ type: 'warn', text: 'Parte relevante da caixa estÃ¡ fora do domÃ­nio da utilidade.' });
+      if (negA > 0) notes.push({ type: 'warn', text: 'A utilidade de A nÃ£o parece monotÃ´nica em toda a caixa.' });
+      if (negB > 0) notes.push({ type: 'warn', text: 'A utilidade de B nÃ£o parece monotÃ´nica em toda a caixa.' });
+      if (badMRS/Math.max(1,total) > .18) notes.push({ type: 'warn', text: 'A MRS nÃ£o estÃ¡ bem definida em muitos pontos; contrato/tangÃªncia podem falhar.' });
       const ed = excessDemand();
-      if (ed.da.flat || ed.db.flat) notes.push({ type: 'warn', text: 'Pode haver múltiplos ótimos individuais ao preço atual.' });
-      if (!notes.length) notes.push({ type: 'ok', text: 'Preferências compiladas; domínio e MRS parecem numericamente estáveis.' });
+      if (ed.da.flat || ed.db.flat) notes.push({ type: 'warn', text: 'Pode haver mÃºltiplos Ã³timos individuais ao preÃ§o atual.' });
+      if (!notes.length) notes.push({ type: 'ok', text: 'PreferÃªncias compiladas; domÃ­nio e MRS parecem numericamente estÃ¡veis.' });
       state.diagnostics = notes;
     }
 
@@ -1141,8 +1141,8 @@ bB = 1.00`,
       $('notice').innerHTML = m.notice.map(x => `<li>${x}</li>`).join('');
       $('summaryEq').textContent = m.eq;
       $('summaryText').textContent = m.summary;
-      $('activeA').textContent = state.exprA || '—';
-      $('activeB').textContent = state.exprB || '—';
+      $('activeA').textContent = state.exprA || 'â€”';
+      $('activeB').textContent = state.exprB || 'â€”';
 
       const b = ownBFromA(state.x1,state.x2), wbv = wB();
       const ua = UA(state.x1,state.x2), ub = UB(b.x,b.y);
@@ -1159,7 +1159,7 @@ bB = 1.00`,
       $('rXB').textContent = `(${fmt(b.x)}, ${fmt(b.y)})`;
       $('rUA').textContent = fmt(ua,4);
       $('rUB').textContent = fmt(ub,4);
-      $('rIR').textContent = ir ? 'sim' : 'não';
+      $('rIR').textContent = ir ? 'sim' : 'nÃ£o';
       $('rIR').className = ir ? 'status-good' : 'status-warn';
       $('rMRSA').textContent = fmt(mrsa,4);
       $('rMRSB').textContent = fmt(mrsb,4);
@@ -1169,13 +1169,13 @@ bB = 1.00`,
       const bPoint = { x: state.Xbar - ed.db.x, y: state.Ybar - ed.db.y };
       $('rDB').textContent = `(${fmt(bPoint.x)}, ${fmt(bPoint.y)})`;
       $('rZ').textContent = `(${fmt(ed.z1,2)}, ${fmt(ed.z2,2)})`;
-      $('rPW').textContent = Number.isFinite(w.p) ? fmt(w.p,4) : '—';
+      $('rPW').textContent = Number.isFinite(w.p) ? fmt(w.p,4) : 'â€”';
       const st = $('rStatus');
       if (market) { st.textContent = 'mercados limpam'; st.className = 'status-good'; }
-      else if (eff && ir) { st.textContent = 'no núcleo'; st.className = 'status-good'; }
+      else if (eff && ir) { st.textContent = 'no nÃºcleo'; st.className = 'status-good'; }
       else if (eff) { st.textContent = 'eficiente'; st.className = 'status-warn'; }
       else if (!Number.isFinite(gap)) { st.textContent = 'MRS indefinida'; st.className = 'status-bad'; }
-      else { st.textContent = 'troca marginal possível'; st.className = 'status-bad'; }
+      else { st.textContent = 'troca marginal possÃ­vel'; st.className = 'status-bad'; }
 
       updateDiagnostics();
       $('diagnostics').innerHTML = state.diagnostics.map(n => `<div class="${n.type === 'err' ? 'err-item' : n.type === 'warn' ? 'warn-item' : 'ok-item'}">${n.text}</div>`).join('');
@@ -1259,15 +1259,15 @@ bB = 1.00`,
       for(let i=1;i<state.Xbar;i++) line(svg,sx(i),M.t,sx(i),M.t+BH,'thin');
       for(let j=1;j<state.Ybar;j++) line(svg,M.l,sy(j),M.l+BW,sy(j),'thin');
 
-      text(svg,M.l-10,M.t+BH+30,'Oᴬ','svg-title','end');
-      text(svg,M.l+BW+12,M.t-14,'Oᴮ','svg-title','start');
-      text(svg,M.l+BW/2,M.t+BH+52,'bem 1 para A  →','svg-label','middle');
+      text(svg,M.l-10,M.t+BH+30,'Oá´¬','svg-title','end');
+      text(svg,M.l+BW+12,M.t-14,'Oá´®','svg-title','start');
+      text(svg,M.l+BW/2,M.t+BH+52,'bem 1 para A  â†’','svg-label','middle');
       text(svg,M.l-50,M.t+BH/2,'bem 2 para A','svg-label','middle',-90);
-      text(svg,M.l+BW/2,M.t-34,'←  bem 1 para B','svg-label','middle');
+      text(svg,M.l+BW/2,M.t-34,'â†  bem 1 para B','svg-label','middle');
       text(svg,M.l+BW+52,M.t+BH/2,'bem 2 para B','svg-label','middle',90);
 
       if (!state.compiledA || !state.compiledB) {
-        text(svg, W/2, H/2, 'Corrija as funções de utilidade para formar a caixa.', 'svg-title', 'middle');
+        text(svg, W/2, H/2, 'Corrija as funÃ§Ãµes de utilidade para formar a caixa.', 'svg-title', 'middle');
         return;
       }
 
@@ -1299,7 +1299,7 @@ bB = 1.00`,
       if (state.showTangents) drawTangents(svg,sx,sy);
 
       const omega = circle(svg,sx(state.w1),sy(state.w2),8.5,red,'point'); omega.style.stroke = card;
-      text(svg,sx(state.w1)+12,sy(state.w2)+24,'ω','svg-title');
+      text(svg,sx(state.w1)+12,sy(state.w2)+24,'Ï‰','svg-title');
       omega.addEventListener('pointerdown', e => attachDrag(svg,e,(q)=>{ state.w1=ix(q.x); state.w2=iy(q.y); syncInputs(); render(); }));
 
       const current = circle(svg,sx(state.x1),sy(state.x2),9,textColor,'point'); current.style.stroke = card; current.style.filter = 'url(#glow)';
@@ -1352,7 +1352,7 @@ bB = 1.00`,
         candidates.forEach(q=>{ if(!unique.some(r=>Math.hypot(q[0]-r[0],q[1]-r[1])<1e-6)) unique.push(q); });
         if(unique.length>=2) {
           line(svg,sx(unique[0][0]),sy(unique[0][1]),sx(unique[1][0]),sy(unique[1][1]),'budget');
-          text(svg,(sx(unique[0][0])+sx(unique[1][0]))/2+10,(sy(unique[0][1])+sy(unique[1][1]))/2-10,'orçamento por ω','svg-small');
+          text(svg,(sx(unique[0][0])+sx(unique[1][0]))/2+10,(sy(unique[0][1])+sy(unique[1][1]))/2-10,'orÃ§amento por Ï‰','svg-small');
         }
       }
       function drawDemands(svg,sx,sy) {
@@ -1363,15 +1363,15 @@ bB = 1.00`,
         line(svg,sx(daInside.x),sy(daInside.y),sx(bInside.x),sy(bInside.y),'demand-line');
         const pa = circle(svg,sx(daInside.x),sy(daInside.y),7,blue,'point'); pa.style.stroke = card;
         const pb = circle(svg,sx(bInside.x),sy(bInside.y),7,gold,'point'); pb.style.stroke = card;
-        text(svg,sx(daInside.x)+10,sy(daInside.y)-10,'xᴬ*(p)','svg-small');
-        text(svg,sx(bInside.x)+10,sy(bInside.y)+22,'e − xᴮ*(p)','svg-small');
+        text(svg,sx(daInside.x)+10,sy(daInside.y)-10,'xá´¬*(p)','svg-small');
+        text(svg,sx(bInside.x)+10,sy(bInside.y)+22,'e âˆ’ xá´®*(p)','svg-small');
       }
       function drawWalras(svg,sx,sy) {
         const w=walras();
         if (!Number.isFinite(w.xA) || !Number.isFinite(w.yA)) return;
         const x = clamp(w.xA,0,state.Xbar), y = clamp(w.yA,0,state.Ybar);
         const pw = circle(svg,sx(x),sy(y),6.3,accent,'point'); pw.style.stroke = card;
-        text(svg,sx(x)+10,sy(y)-12,'xᵂ','svg-title');
+        text(svg,sx(x)+10,sy(y)-12,'xáµ‚','svg-title');
       }
       function drawTangents(svg,sx,sy) {
         const b=ownBFromA(state.x1,state.x2), ma=MRSA(state.x1,state.x2), mb=MRSB(b.x,b.y);
@@ -1465,7 +1465,7 @@ bB = 1.00`,
       const el = $('plot3dCombined');
       if (!el) return;
       if (typeof Plotly === 'undefined') {
-        el.innerHTML = '<div style="padding:14px;color:var(--muted);">Não foi possível carregar a visualização 3D.</div>';
+        el.innerHTML = '<div style="padding:14px;color:var(--muted);">NÃ£o foi possÃ­vel carregar a visualizaÃ§Ã£o 3D.</div>';
         return;
       }
       const th = plotTheme();
@@ -1493,35 +1493,35 @@ bB = 1.00`,
       const wbv = wB();
       const xB = ownBFromA(state.x1, state.x2);
 
-      const pointAEnd = { x: state.w1, y: state.w2, z: UA(state.w1, state.w2), label: 'ωᴬ', color: th.red };
-      const pointACur = { x: state.x1, y: state.x2, z: UA(state.x1, state.x2), label: 'xᴬ', color: th.blue };
-      const pointBEnd = { x: state.w1, y: state.w2, z: UB(wbv.x, wbv.y), label: 'ωᴮ', color: th.gold };
-      const pointBCur = { x: state.x1, y: state.x2, z: UB(xB.x, xB.y), label: 'xᴮ', color: th.accent };
+      const pointAEnd = { x: state.w1, y: state.w2, z: UA(state.w1, state.w2), label: 'Ï‰á´¬', color: th.red };
+      const pointACur = { x: state.x1, y: state.x2, z: UA(state.x1, state.x2), label: 'xá´¬', color: th.blue };
+      const pointBEnd = { x: state.w1, y: state.w2, z: UB(wbv.x, wbv.y), label: 'Ï‰á´®', color: th.gold };
+      const pointBCur = { x: state.x1, y: state.x2, z: UB(xB.x, xB.y), label: 'xá´®', color: th.accent };
 
       const traces = [
         {
           type: 'surface',
-          name: 'Superfície A',
+          name: 'SuperfÃ­cie A',
           x: surfaceA.xs,
           y: surfaceA.ys,
           z: surfaceA.z,
           colorscale: [[0, 'rgba(82,109,168,0.92)'], [1, th.accent]],
           opacity: 0.80,
           showscale: false,
-          hovertemplate: 'A<br>x₁ᴬ: %{x:.2f}<br>x₂ᴬ: %{y:.2f}<br>uᴬ: %{z:.3f}<extra></extra>',
+          hovertemplate: 'A<br>xâ‚á´¬: %{x:.2f}<br>xâ‚‚á´¬: %{y:.2f}<br>uá´¬: %{z:.3f}<extra></extra>',
           contours: { z: { show: true, usecolormap: true, highlightwidth: 1, project: { z: true } } },
           lighting: { ambient: 0.62, diffuse: 0.72, fresnel: 0.08, specular: 0.10, roughness: 0.92 }
         },
         {
           type: 'surface',
-          name: 'Superfície B (espelhada)',
+          name: 'SuperfÃ­cie B (espelhada)',
           x: xs,
           y: ys,
           z: zBMirrored,
           colorscale: [[0, 'rgba(173,90,79,0.90)'], [1, th.gold]],
           opacity: 0.68,
           showscale: false,
-          hovertemplate: 'B<br>coord. da caixa: (%{x:.2f}, %{y:.2f})<br>cesta de B: (' + '%{customdata[0]:.2f}, %{customdata[1]:.2f})' + '<br>uᴮ: %{z:.3f}<extra></extra>',
+          hovertemplate: 'B<br>coord. da caixa: (%{x:.2f}, %{y:.2f})<br>cesta de B: (' + '%{customdata[0]:.2f}, %{customdata[1]:.2f})' + '<br>uá´®: %{z:.3f}<extra></extra>',
           customdata: ys.map(y => xs.map(x => [state.Xbar - x, state.Ybar - y])),
           contours: { z: { show: true, usecolormap: true, highlightwidth: 1, project: { z: true } } },
           lighting: { ambient: 0.60, diffuse: 0.70, fresnel: 0.08, specular: 0.10, roughness: 0.94 }
@@ -1554,7 +1554,7 @@ bB = 1.00`,
         scene: {
           bgcolor: th.card,
           xaxis: {
-            title: 'x₁ᴬ (coordenadas da caixa)',
+            title: 'xâ‚á´¬ (coordenadas da caixa)',
             color: th.text,
             gridcolor: th.line,
             zerolinecolor: th.line,
@@ -1563,7 +1563,7 @@ bB = 1.00`,
             range: [0, state.Xbar]
           },
           yaxis: {
-            title: 'x₂ᴬ (coordenadas da caixa)',
+            title: 'xâ‚‚á´¬ (coordenadas da caixa)',
             color: th.text,
             gridcolor: th.line,
             zerolinecolor: th.line,
@@ -1572,7 +1572,7 @@ bB = 1.00`,
             range: [0, state.Ybar]
           },
           zaxis: {
-            title: 'nível de utilidade',
+            title: 'nÃ­vel de utilidade',
             color: th.text,
             gridcolor: th.line,
             zerolinecolor: th.line,
@@ -1774,3 +1774,4 @@ bB = 1.00`;
   </script>
 </body>
 </html>
+

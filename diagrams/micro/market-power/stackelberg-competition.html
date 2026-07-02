@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -90,7 +90,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
 <div class="app">
 <header>
   <div>
-    <div class="eyebrow"><span class="dot"></span> Microeconomics · Sequential oligopoly</div>
+    <div class="eyebrow"><span class="dot"></span> Microeconomics Â· Sequential oligopoly</div>
     <h1>Stackelberg with monopoly benchmark</h1>
     <p class="subtitle">One leader commits to output, then follower firms choose quantities. The app keeps the benchmark fixed: monopoly is the reference point, and entry by followers shows how Stackelberg moves price, output, profit, Lerner index, and welfare away from monopoly.</p>
   </div>
@@ -123,7 +123,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
       <div class="card formula"><div><div class="name">Inverse demand</div><div class="mathline">\(P(Q)=a-bQ\)</div></div><div class="soft-eq">all firms sell into one market</div></div>
       <div class="card formula"><div><div class="name">Monopoly benchmark</div><div class="mathline">\(Q^M=\frac{a-c}{2b},\quad P^M=\frac{a+c}{2}\)</div></div><div class="soft-eq">the reference point throughout the app</div></div>
       <div class="card formula"><div><div class="name">Follower subgame</div><div class="mathline">\(q_F(q_L)=\frac{a-c-bq_L}{b(m+1)}\)</div></div><div class="soft-eq">where \(m=N-1\) followers move second</div></div>
-      <div class="card formula"><div><div class="name">Leader commitment</div><div class="mathline">\(q_L^S=Q^M,\quad Q^S=Q^M\frac{2m+1}{m+1}\)</div></div><div class="soft-eq">monopoly output becomes the leader’s commitment</div></div>
+      <div class="card formula"><div><div class="name">Leader commitment</div><div class="mathline">\(q_L^S=Q^M,\quad Q^S=Q^M\frac{2m+1}{m+1}\)</div></div><div class="soft-eq">monopoly output becomes the leaderâ€™s commitment</div></div>
     </section>
 
     <section class="main-pair">
@@ -131,9 +131,9 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
         <div class="diagram-head">
           <div>
             <h2>Main diagram: market outcome relative to monopoly</h2>
-            <p>The same monopoly output appears as the leader’s commitment. Follower entry expands total output beyond monopoly, lowers price, and transfers surplus from firms to consumers.</p>
+            <p>The same monopoly output appears as the leaderâ€™s commitment. Follower entry expands total output beyond monopoly, lowers price, and transfers surplus from firms to consumers.</p>
           </div>
-          <span class="small">Q horizontal · price vertical</span>
+          <span class="small">Q horizontal Â· price vertical</span>
         </div>
         <svg id="marketSvg" viewBox="0 0 1120 620"></svg>
         <div class="legend">
@@ -148,10 +148,10 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
         <div class="metrics">
           <div class="metric"><div class="k">N</div><div class="v" id="mN"></div></div>
           <div class="metric"><div class="k">qL</div><div class="v" id="mqL"></div></div>
-          <div class="metric"><div class="k">ΣqF</div><div class="v" id="mqFtot"></div></div>
+          <div class="metric"><div class="k">Î£qF</div><div class="v" id="mqFtot"></div></div>
           <div class="metric"><div class="k">Q/QM</div><div class="v" id="mQratio"></div></div>
           <div class="metric"><div class="k">P/PM</div><div class="v" id="mPratio"></div></div>
-          <div class="metric"><div class="k">Π/ΠM</div><div class="v" id="mPiratio"></div></div>
+          <div class="metric"><div class="k">Î /Î M</div><div class="v" id="mPiratio"></div></div>
           <div class="metric"><div class="k">L/LM</div><div class="v" id="mLratio"></div></div>
           <div class="metric"><div class="k">W/WM</div><div class="v" id="mWratio"></div></div>
         </div>
@@ -163,7 +163,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
             <h2>Sequential structure</h2>
             <p>The leader chooses a point on the aggregate follower-response curve. The monopoly quantity is a vertical anchor: it is exactly the optimal leader commitment.</p>
           </div>
-          <span class="small">qL horizontal · total follower output vertical</span>
+          <span class="small">qL horizontal Â· total follower output vertical</span>
         </div>
         <svg id="reactSvg" viewBox="0 0 980 620"></svg>
         <div class="legend">
@@ -201,7 +201,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
         <h2>Interpretation</h2>
         <p id="interpretation"></p>
         <div class="notice-list">
-          <div class="notice"><strong>Monopoly as anchor.</strong> The leader’s optimal commitment equals the monopoly output. The difference is that followers enter afterward and expand total market quantity.</div>
+          <div class="notice"><strong>Monopoly as anchor.</strong> The leaderâ€™s optimal commitment equals the monopoly output. The difference is that followers enter afterward and expand total market quantity.</div>
           <div class="notice"><strong>Follower entry.</strong> More followers push total output upward, price and Lerner index downward, and consumer surplus upward.</div>
           <div class="notice"><strong>Sequential advantage.</strong> With one follower, the leader produces twice as much as the follower. With many followers, the leader still commits to monopoly output, but its monopoly-normalized profit falls because price is disciplined by follower entry.</div>
         </div>
@@ -231,7 +231,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
     mN:$("mN"), mqL:$("mqL"), mqFtot:$("mqFtot"), mQratio:$("mQratio"), mPratio:$("mPratio"), mPiratio:$("mPiratio"), mLratio:$("mLratio"), mWratio:$("mWratio")
   };
 
-  function fmt(x,d=2){ if(!Number.isFinite(x)) return '—'; if(Math.abs(x)>=100) return x.toFixed(1); return x.toFixed(d); }
+  function fmt(x,d=2){ if(!Number.isFinite(x)) return 'â€”'; if(Math.abs(x)>=100) return x.toFixed(1); return x.toFixed(d); }
   function clamp(x,lo,hi){ return Math.max(lo,Math.min(hi,x)); }
   function S(tag,a={}){ const e=document.createElementNS('http://www.w3.org/2000/svg',tag); for(const[k,v] of Object.entries(a)) e.setAttribute(k,v); return e; }
   function line(svg,x1,y1,x2,y2,cls){ svg.appendChild(S('line',{x1,y1,x2,y2,class:cls})); }
@@ -359,8 +359,8 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
     text(svg,X(0)-12,Y(m.focus.P)+4,'P','label','end'); text(svg,X(0)-12,Y(m.c)+4,'c','muted-label','end'); text(svg,X(0)-12,Y(m.base.PM)+4,'PM','muted-label','end');
 
     if(m.focus.Q>0) text(svg,X(m.focus.Q*.42),Y((m.a+m.focus.P)/2),'CS','label');
-    if(m.focus.qL>0 && m.focus.P>m.c) text(svg,X(m.focus.qL/2),Y((m.focus.P+m.c)/2)+4,'πL','label');
-    if(m.focus.qFTot>0 && m.focus.P>m.c) text(svg,X(m.focus.qL+m.focus.qFTot/2),Y((m.focus.P+m.c)/2)+4,'ΣπF','label');
+    if(m.focus.qL>0 && m.focus.P>m.c) text(svg,X(m.focus.qL/2),Y((m.focus.P+m.c)/2)+4,'Ï€L','label');
+    if(m.focus.qFTot>0 && m.focus.P>m.c) text(svg,X(m.focus.qL+m.focus.qFTot/2),Y((m.focus.P+m.c)/2)+4,'Î£Ï€F','label');
     if(m.base.Qe>m.focus.Q) text(svg,(X(m.focus.Q)+X(m.base.Qe))/2,Y((m.focus.P+m.c)/2)+4,'DWL','label');
     text(svg,X(qMax*.80),Y(Math.max(0,m.a-m.b*qMax*.80))-10,'Demand','label');
     text(svg,X(m.base.QM)+8,Y(m.base.PM)-12,'monopoly benchmark','muted-label','start');
@@ -372,7 +372,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
     const svg=els.reactSvg; svg.innerHTML='';
     const vb=svg.viewBox.baseVal, W=vb.width||980, H=vb.height||620, mar={l:78,r:28,t:28,b:64};
     const qMax=Math.max(m.base.Qe,m.S.qL,m.S.qFTot,m.C.qL,m.C.qFTot,m.focus.qL,m.focus.qFTot,1)*1.08;
-    const {X,Y}=axes(svg,W,H,mar,qMax,qMax,'ΣqF',5,5,'qL');
+    const {X,Y}=axes(svg,W,H,mar,qMax,qMax,'Î£qF',5,5,'qL');
     const response=[];
     for(let i=0;i<=260;i++){ const qL=qMax*i/260; const o=outcomeFromLeader(qL,m.N,m.base); response.push([X(qL),Y(o.qFTot)]); }
     path(svg,response,'curve-br2');
@@ -384,7 +384,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
     circle(svg,X(m.base.QM),Y(0),5.8,'point-d'); text(svg,X(m.base.QM)+9,Y(0)+24,'monopoly output','muted-label','start');
     if(els.bench.checked){ circle(svg,X(m.C.qL),Y(m.C.qFTot),6,'point-b'); text(svg,X(m.C.qL)+10,Y(m.C.qFTot)-14,'Cournot with N firms','muted-label','start'); }
     text(svg,X(qMax*.62),Y(Math.max(0,m.S.qFTot*.70)),'aggregate follower response','label');
-    text(svg,X(m.focus.qL),Y(0)+28,'qL','label'); text(svg,X(0)-12,Y(m.focus.qFTot)+4,'ΣqF','label','end');
+    text(svg,X(m.focus.qL),Y(0)+28,'qL','label'); text(svg,X(0)-12,Y(m.focus.qFTot)+4,'Î£qF','label','end');
   }
 
   function drawProfit(m){
@@ -415,8 +415,8 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
     const vals=[
       {lab:'Q', st:m.S.Q/mono.QM, co:m.C.Q/mono.QM},
       {lab:'P', st:m.S.P/mono.PM, co:m.C.P/mono.PM},
-      {lab:'Π', st:m.S.piTotal/mono.PiM, co:m.C.piTotal/mono.PiM},
-      {lab:'πL', st:m.S.piL/mono.PiM, co:m.C.piL/mono.PiM},
+      {lab:'Î ', st:m.S.piTotal/mono.PiM, co:m.C.piTotal/mono.PiM},
+      {lab:'Ï€L', st:m.S.piL/mono.PiM, co:m.C.piL/mono.PiM},
       {lab:'W', st:m.S.W/mono.WM, co:m.C.W/mono.WM},
       {lab:'L', st:(mono.LM?m.S.L/mono.LM:0), co:(mono.LM?m.C.L/mono.LM:0)}
     ];
@@ -454,9 +454,9 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
     const svg=els.profitSplitSvg; svg.innerHTML='';
     const vb=svg.viewBox.baseVal, W=vb.width||760, H=vb.height||360, mar={l:62,r:28,t:24,b:62};
     const vals=[
-      {lab:'πL/ΠM', val:m.S.piL/m.base.PiM, cls:'bar-a'},
-      {lab:'ΣπF/ΠM', val:m.S.piFTot/m.base.PiM, cls:'bar-b'},
-      {lab:'ΠS/ΠM', val:m.S.piTotal/m.base.PiM, cls:'bar-c'},
+      {lab:'Ï€L/Î M', val:m.S.piL/m.base.PiM, cls:'bar-a'},
+      {lab:'Î£Ï€F/Î M', val:m.S.piFTot/m.base.PiM, cls:'bar-b'},
+      {lab:'Î S/Î M', val:m.S.piTotal/m.base.PiM, cls:'bar-c'},
       {lab:'CS/CSM', val:m.S.CS/m.base.CSM, cls:'bar-d'},
       {lab:'DWL/DWLM', val:m.S.DWL/(m.M.DWL||1), cls:'bar-e'}
     ];
@@ -478,7 +478,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
     else if(m.focus.qL>m.base.QM) els.statusPill.textContent='leader is choosing above the monopoly benchmark';
     else els.statusPill.textContent='leader is exactly at the monopoly benchmark';
     const mFollowers=m.N-1;
-    els.interpretation.innerHTML = `There are ${m.N} firm${m.N===1?'':'s'}: one leader and ${mFollowers} follower${mFollowers===1?'':'s'}. The monopoly benchmark is QM = ${fmt(m.base.QM)} and PM = ${fmt(m.base.PM)}. At the Stackelberg optimum, the leader chooses qL = QM = ${fmt(m.S.qL)}. Followers then add ΣqF = ${fmt(m.S.qFTot)}, so total output becomes QS = ${fmt(m.S.Q)}, or ${fmt(m.S.Q/m.base.QM)} times monopoly output. Price falls to PS = ${fmt(m.S.P)}, equal to ${fmt(m.S.P/m.base.PM)} of the monopoly price. Total profit is ${fmt(m.S.piTotal/m.base.PiM)} of monopoly profit, while welfare is ${fmt(m.S.W/m.base.WM)} of monopoly welfare.`;
+    els.interpretation.innerHTML = `There are ${m.N} firm${m.N===1?'':'s'}: one leader and ${mFollowers} follower${mFollowers===1?'':'s'}. The monopoly benchmark is QM = ${fmt(m.base.QM)} and PM = ${fmt(m.base.PM)}. At the Stackelberg optimum, the leader chooses qL = QM = ${fmt(m.S.qL)}. Followers then add Î£qF = ${fmt(m.S.qFTot)}, so total output becomes QS = ${fmt(m.S.Q)}, or ${fmt(m.S.Q/m.base.QM)} times monopoly output. Price falls to PS = ${fmt(m.S.P)}, equal to ${fmt(m.S.P/m.base.PM)} of the monopoly price. Total profit is ${fmt(m.S.piTotal/m.base.PiM)} of monopoly profit, while welfare is ${fmt(m.S.W/m.base.WM)} of monopoly welfare.`;
   }
 
   function renderAllMath(){ if(!window.renderMathInElement) return; renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false}); }
@@ -491,3 +491,4 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
 </script>
 </body>
 </html>
+

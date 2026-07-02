@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -168,7 +168,7 @@
 <div class="wrap">
   <header>
     <div>
-      <div class="eyebrow">Real Analysis · Density</div>
+      <div class="eyebrow">Real Analysis Â· Density</div>
       <h1>Density of rationals and irrationals</h1>
       <p class="subtitle">Every open interval, however small, contains both rational and irrational points. The decimal picture gives intuition; the order-theoretic proof uses the Archimedean property and does not depend on base ten.</p>
     </div>
@@ -193,7 +193,7 @@
           </div>
         </div>
         <div class="formula" id="mainFormula">
-          ∀ a,b ∈ ℝ, &nbsp; a &lt; b &nbsp; ⇒ &nbsp; ∃ q ∈ ℚ, ∃ ξ ∈ ℝ∖ℚ : &nbsp; a &lt; q &lt; b and a &lt; ξ &lt; b.
+          âˆ€ a,b âˆˆ â„, &nbsp; a &lt; b &nbsp; â‡’ &nbsp; âˆƒ q âˆˆ â„š, âˆƒ Î¾ âˆˆ â„âˆ–â„š : &nbsp; a &lt; q &lt; b and a &lt; Î¾ &lt; b.
         </div>
         <div class="statgrid">
           <div class="stat"><div class="k">Interval</div><div class="v mono" id="statInterval"></div></div>
@@ -242,7 +242,7 @@
           </div>
           <span class="pill"><span class="dot"></span>rational construction</span>
         </div>
-        <div class="formula">Choose n ∈ ℕ with n(b − a) &gt; 1. Let m = ⌊na⌋ + 1. Then na &lt; m &lt; nb, so q = m/n ∈ (a,b).</div>
+        <div class="formula">Choose n âˆˆ â„• with n(b âˆ’ a) &gt; 1. Let m = âŒŠnaâŒ‹ + 1. Then na &lt; m &lt; nb, so q = m/n âˆˆ (a,b).</div>
       </div>
       <div class="svgbox"><svg id="scaledSvg" viewBox="0 0 900 250" role="img" aria-label="Scaled interval containing an integer"></svg></div>
     </div>
@@ -252,11 +252,11 @@
         <div class="card-title">
           <div>
             <h2>Irrational by shifting</h2>
-            <div class="small">Use a tiny irrational displacement τ and then shift a rational point.</div>
+            <div class="small">Use a tiny irrational displacement Ï„ and then shift a rational point.</div>
           </div>
           <span class="pill"><span class="dot warm"></span>irrational construction</span>
         </div>
-        <div class="formula">Choose τ = √2/k with 0 &lt; τ &lt; b − a. Pick r ∈ ℚ ∩ (a − τ, b − τ). Then ξ = r + τ is irrational and ξ ∈ (a,b).</div>
+        <div class="formula">Choose Ï„ = âˆš2/k with 0 &lt; Ï„ &lt; b âˆ’ a. Pick r âˆˆ â„š âˆ© (a âˆ’ Ï„, b âˆ’ Ï„). Then Î¾ = r + Ï„ is irrational and Î¾ âˆˆ (a,b).</div>
       </div>
       <div class="svgbox"><svg id="shiftSvg" viewBox="0 0 900 250" role="img" aria-label="Shifted interval construction of an irrational"></svg></div>
     </div>
@@ -282,10 +282,10 @@
           <div class="small">The theorem says both sets are everywhere, even though they are disjoint.</div>
         </div>
       </div>
-      <div class="proofline"><div class="num">1</div><p><span class="math">ℚ</span> has no open gap: every open interval touches it.</p></div>
-      <div class="proofline"><div class="num">2</div><p><span class="math">ℝ∖ℚ</span> also has no open gap: irrational points are just as dense.</p></div>
-      <div class="proofline"><div class="num">3</div><p>Density does <em>not</em> mean “many” in the cardinal sense. <span class="math">ℚ</span> is countable; <span class="math">ℝ∖ℚ</span> is uncountable.</p></div>
-      <div class="proofline"><div class="num">4</div><p>Topologically: <span class="math">cl(ℚ)=ℝ</span> and <span class="math">cl(ℝ∖ℚ)=ℝ</span>.</p></div>
+      <div class="proofline"><div class="num">1</div><p><span class="math">â„š</span> has no open gap: every open interval touches it.</p></div>
+      <div class="proofline"><div class="num">2</div><p><span class="math">â„âˆ–â„š</span> also has no open gap: irrational points are just as dense.</p></div>
+      <div class="proofline"><div class="num">3</div><p>Density does <em>not</em> mean â€œmanyâ€ in the cardinal sense. <span class="math">â„š</span> is countable; <span class="math">â„âˆ–â„š</span> is uncountable.</p></div>
+      <div class="proofline"><div class="num">4</div><p>Topologically: <span class="math">cl(â„š)=â„</span> and <span class="math">cl(â„âˆ–â„š)=â„</span>.</p></div>
     </div>
   </section>
 
@@ -297,13 +297,13 @@
       </div>
     </div>
     <div class="exam">
-      <div class="item"><strong>Rational density.</strong> Let <span class="formula-inline">a&lt;b</span>. By the Archimedean property, choose <span class="formula-inline">n∈ℕ</span> such that <span class="formula-inline">n(b−a)&gt;1</span>. Put <span class="formula-inline">m=⌊na⌋+1</span>. Then <span class="formula-inline">na&lt;m≤na+1&lt;nb</span>, hence <span class="formula-inline">a&lt;m/n&lt;b</span>.</div>
-      <div class="item"><strong>Irrational density.</strong> Pick <span class="formula-inline">k∈ℕ</span> so large that <span class="formula-inline">τ=√2/k&lt;b−a</span>. Since rationals are dense, choose <span class="formula-inline">r∈ℚ</span> with <span class="formula-inline">a−τ&lt;r&lt;b−τ</span>. Then <span class="formula-inline">ξ=r+τ∈(a,b)</span>, and <span class="formula-inline">ξ</span> is irrational.</div>
-      <div class="item"><strong>Topological form.</strong> A set <span class="formula-inline">D⊂ℝ</span> is dense iff every nonempty open interval intersects <span class="formula-inline">D</span>. Therefore <span class="formula-inline">ℚ</span> and <span class="formula-inline">ℝ∖ℚ</span> are both dense in <span class="formula-inline">ℝ</span>.</div>
+      <div class="item"><strong>Rational density.</strong> Let <span class="formula-inline">a&lt;b</span>. By the Archimedean property, choose <span class="formula-inline">nâˆˆâ„•</span> such that <span class="formula-inline">n(bâˆ’a)&gt;1</span>. Put <span class="formula-inline">m=âŒŠnaâŒ‹+1</span>. Then <span class="formula-inline">na&lt;mâ‰¤na+1&lt;nb</span>, hence <span class="formula-inline">a&lt;m/n&lt;b</span>.</div>
+      <div class="item"><strong>Irrational density.</strong> Pick <span class="formula-inline">kâˆˆâ„•</span> so large that <span class="formula-inline">Ï„=âˆš2/k&lt;bâˆ’a</span>. Since rationals are dense, choose <span class="formula-inline">râˆˆâ„š</span> with <span class="formula-inline">aâˆ’Ï„&lt;r&lt;bâˆ’Ï„</span>. Then <span class="formula-inline">Î¾=r+Ï„âˆˆ(a,b)</span>, and <span class="formula-inline">Î¾</span> is irrational.</div>
+      <div class="item"><strong>Topological form.</strong> A set <span class="formula-inline">DâŠ‚â„</span> is dense iff every nonempty open interval intersects <span class="formula-inline">D</span>. Therefore <span class="formula-inline">â„š</span> and <span class="formula-inline">â„âˆ–â„š</span> are both dense in <span class="formula-inline">â„</span>.</div>
     </div>
   </section>
 
-  <footer>Single-file HTML · no backend · pure SVG/JavaScript diagrams</footer>
+  <footer>Single-file HTML Â· no backend Â· pure SVG/JavaScript diagrams</footer>
 </div>
 <script>
 (function(){
@@ -314,7 +314,7 @@
   const resetBtn = $('resetBtn');
 
   function fmt(x, d=4){
-    if(!isFinite(x)) return '—';
+    if(!isFinite(x)) return 'â€”';
     const s = Number(x).toFixed(d).replace(/0+$/,'').replace(/\.$/,'');
     return s === '-0' ? '0' : s;
   }
@@ -396,13 +396,13 @@
     if(showQ){
       h += line(xq,114,xq,282,'tick');
       h += circle(xq,y,9,'pointQ');
-      h += text(xq,112,`q = ${niceFormulaQ(v.m,v.n)} ≈ ${fmt(v.q,4)}`,'label-ink');
+      h += text(xq,112,`q = ${niceFormulaQ(v.m,v.n)} â‰ˆ ${fmt(v.q,4)}`,'label-ink');
       h += `<path d="M${xq},123 C${xq-25},145 ${xq-25},172 ${xq},194" fill="none" stroke="var(--accent)" stroke-width="1.3" opacity=".55" marker-end="url(#arrow)"/>`;
     }
     if(showI){
       h += line(xi,122,xi,294,'tick');
       h += circle(xi,y,9,'pointI');
-      h += text(xi,317,`ξ = r + √2/${v.k} ≈ ${fmt(v.xi,4)}`,'label-ink');
+      h += text(xi,317,`Î¾ = r + âˆš2/${v.k} â‰ˆ ${fmt(v.xi,4)}`,'label-ink');
       h += `<path d="M${xi},303 C${xi+25},282 ${xi+25},243 ${xi},219" fill="none" stroke="var(--warm)" stroke-width="1.3" opacity=".55" marker-end="url(#arrow)"/>`;
     }
     h += text(70,52,'Two disjoint dense sets share every open interval.','label-ink','start');
@@ -430,7 +430,7 @@
     h += text(xA,y-22,`na=${fmt(A,3)}`,'label-serif');
     h += text(xB,y-22,`nb=${fmt(B,3)}`,'label-serif');
     h += text(xM,y-42,`integer m=${M}`,'label-ink');
-    h += text(70,40,`Scaled length: n(b−a) = ${v.n} · ${fmt(v.width,3)} = ${fmt(v.n*v.width,3)} > 1`,'label-ink','start');
+    h += text(70,40,`Scaled length: n(bâˆ’a) = ${v.n} Â· ${fmt(v.width,3)} = ${fmt(v.n*v.width,3)} > 1`,'label-ink','start');
     h += text(70,218,`Dividing back by n sends m to q=m/n inside the original interval.`,'label','start');
     svg.innerHTML = h;
   }
@@ -453,11 +453,11 @@
     h += circle(xxi,y1,8,'pointI');
     h += `<defs><marker id="arrow2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="var(--warm)"/></marker></defs>`;
     h += `<path d="M${xr},${y2-16} C${(xr+xxi)/2},${y2-58} ${(xr+xxi)/2},${y1+48} ${xxi},${y1+16}" fill="none" stroke="var(--warm)" stroke-width="1.6" opacity=".78" marker-end="url(#arrow2)"/>`;
-    h += text(70,37,`τ = √2/${v.k} ≈ ${fmt(v.tau,5)} < b−a`,'label-ink','start');
+    h += text(70,37,`Ï„ = âˆš2/${v.k} â‰ˆ ${fmt(v.tau,5)} < bâˆ’a`,'label-ink','start');
     h += text((xa+xb)/2,y1-21,'target interval (a,b)','label-ink');
-    h += text((xsA+xsB)/2,y2+35,'shifted interval (a−τ,b−τ)','label');
-    h += text(xr,y2-22,`r∈ℚ`,'label-ink');
-    h += text(xxi,y1+34,`ξ=r+τ∉ℚ`,'label-ink');
+    h += text((xsA+xsB)/2,y2+35,'shifted interval (aâˆ’Ï„,bâˆ’Ï„)','label');
+    h += text(xr,y2-22,`râˆˆâ„š`,'label-ink');
+    h += text(xxi,y1+34,`Î¾=r+Ï„âˆ‰â„š`,'label-ink');
     h += text(70,224,'Rational + nonzero irrational is irrational; the shift places it back in (a,b).','label','start');
     svg.innerHTML = h;
   }
@@ -471,7 +471,7 @@
       if(x>v.a && x<v.b) points.push(x);
     }
     const required = Math.max(1, Math.ceil(-Math.log10(v.width)) + 1);
-    $('decimalPill').textContent = `grid step 10⁻${v.depth}`;
+    $('decimalPill').textContent = `grid step 10â»${v.depth}`;
     let html = '';
     const rows = [
       {lab:'finite decimals', cls:'', arr:points.slice(0,42)},
@@ -486,7 +486,7 @@
       html += `</div></div>`;
     });
     const first = points[0];
-    html += `<div class="small">At this depth, ${points.length ? `the first finite decimal inside is <strong>${fmt(first, v.depth)}</strong>.` : `no finite decimal grid point appears; increase depth to at least about <strong>${required}</strong>.`} Finite decimals are rational, but the proof above works in any ordered Archimedean field setting for ℝ.</div>`;
+    html += `<div class="small">At this depth, ${points.length ? `the first finite decimal inside is <strong>${fmt(first, v.depth)}</strong>.` : `no finite decimal grid point appears; increase depth to at least about <strong>${required}</strong>.`} Finite decimals are rational, but the proof above works in any ordered Archimedean field setting for â„.</div>`;
     $('decimalStrip').innerHTML = html;
   }
 
@@ -498,14 +498,14 @@
     $('depthVal').textContent = v.depth;
     $('statInterval').textContent = `(${fmt(v.a,3)}, ${fmt(v.b,3)})`;
     $('statWidth').textContent = fmt(v.width,4);
-    $('statQ').textContent = `${v.m}/${v.n} ≈ ${fmt(v.q,5)}`;
-    $('statI').textContent = `${fmt(v.r,5)} + √2/${v.k} ≈ ${fmt(v.xi,5)}`;
-    $('interp').innerHTML = `Because <strong>n(b−a)=${fmt(v.n*v.width,3)}&gt;1</strong>, the scaled interval contains an integer <strong>m=${v.m}</strong>. Dividing by <strong>n=${v.n}</strong> gives a rational witness. For the irrational witness, shift by <strong>τ=√2/${v.k}</strong> and use rational density again.`;
+    $('statQ').textContent = `${v.m}/${v.n} â‰ˆ ${fmt(v.q,5)}`;
+    $('statI').textContent = `${fmt(v.r,5)} + âˆš2/${v.k} â‰ˆ ${fmt(v.xi,5)}`;
+    $('interp').innerHTML = `Because <strong>n(bâˆ’a)=${fmt(v.n*v.width,3)}&gt;1</strong>, the scaled interval contains an integer <strong>m=${v.m}</strong>. Dividing by <strong>n=${v.n}</strong> gives a rational witness. For the irrational witness, shift by <strong>Ï„=âˆš2/${v.k}</strong> and use rational density again.`;
     $('mainFormula').innerHTML = state.mode==='q'
-      ? `∀ a&lt;b, &nbsp; ∃ q∈ℚ : a&lt;q&lt;b. &nbsp; A rational point is forced by the integer grid after scaling.`
+      ? `âˆ€ a&lt;b, &nbsp; âˆƒ qâˆˆâ„š : a&lt;q&lt;b. &nbsp; A rational point is forced by the integer grid after scaling.`
       : state.mode==='i'
-      ? `∀ a&lt;b, &nbsp; ∃ ξ∈ℝ∖ℚ : a&lt;ξ&lt;b. &nbsp; Shift a rational point by a tiny irrational τ.`
-      : `∀ a,b ∈ ℝ, &nbsp; a &lt; b &nbsp; ⇒ &nbsp; ∃ q ∈ ℚ, ∃ ξ ∈ ℝ∖ℚ : &nbsp; a &lt; q &lt; b and a &lt; ξ &lt; b.`;
+      ? `âˆ€ a&lt;b, &nbsp; âˆƒ Î¾âˆˆâ„âˆ–â„š : a&lt;Î¾&lt;b. &nbsp; Shift a rational point by a tiny irrational Ï„.`
+      : `âˆ€ a,b âˆˆ â„, &nbsp; a &lt; b &nbsp; â‡’ &nbsp; âˆƒ q âˆˆ â„š, âˆƒ Î¾ âˆˆ â„âˆ–â„š : &nbsp; a &lt; q &lt; b and a &lt; Î¾ &lt; b.`;
     drawMain(v); drawScaled(v); drawShift(v); drawDecimal(v);
   }
 
@@ -530,3 +530,4 @@
 </script>
 </body>
 </html>
+

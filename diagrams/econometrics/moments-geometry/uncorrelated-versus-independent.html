@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -143,15 +143,15 @@
       </div>
       <div class="def">
         <div class="tag">Independent</div>
-        <div class="math">P(X∈A,Y∈B)=P(X∈A)P(Y∈B)<br>all measurable A,B</div>
+        <div class="math">P(XâˆˆA,YâˆˆB)=P(XâˆˆA)P(YâˆˆB)<br>all measurable A,B</div>
       </div>
       <div class="def">
         <div class="tag">Implication</div>
-        <div class="math">X ⟂ Y ⇒ Cov(X,Y)=0<br>if second moments exist</div>
+        <div class="math">X âŸ‚ Y â‡’ Cov(X,Y)=0<br>if second moments exist</div>
       </div>
       <div class="def">
         <div class="tag">Gaussian exception</div>
-        <div class="math">joint normal + ρ=0<br>⇒ independence</div>
+        <div class="math">joint normal + Ï=0<br>â‡’ independence</div>
       </div>
     </section>
 
@@ -164,10 +164,10 @@
           <select id="exampleSelect">
             <option value="independent">independent normals</option>
             <option value="gaussian">joint Gaussian</option>
-            <option value="parabola">classical nonlinear: Y = X² + noise</option>
-            <option value="circle">circle: X² + Y² ≈ 1</option>
+            <option value="parabola">classical nonlinear: Y = XÂ² + noise</option>
+            <option value="circle">circle: XÂ² + YÂ² â‰ˆ 1</option>
             <option value="cross">cross mixture: diagonal + anti-diagonal</option>
-            <option value="sign">sign dependence: Y = S·X</option>
+            <option value="sign">sign dependence: Y = SÂ·X</option>
           </select>
         </div>
 
@@ -177,7 +177,7 @@
         </div>
 
         <div class="control">
-          <label for="rhoRange">Gaussian ρ <span class="value" id="rhoVal">0.00</span></label>
+          <label for="rhoRange">Gaussian Ï <span class="value" id="rhoVal">0.00</span></label>
           <input id="rhoRange" type="range" min="-0.95" max="0.95" step="0.01" value="0"/>
         </div>
 
@@ -203,7 +203,7 @@
         </div>
 
         <div class="eqBox" id="eqBox">
-          X ⟂ Y ⇒ Cov(X,Y)=0, but Cov(X,Y)=0 ⇏ X ⟂ Y.
+          X âŸ‚ Y â‡’ Cov(X,Y)=0, but Cov(X,Y)=0 â‡ X âŸ‚ Y.
         </div>
 
         <div class="control">
@@ -232,7 +232,7 @@
           <div class="card plotCard">
             <div class="plotHead">
               <div class="plotTitle">Joint law versus product of marginals</div>
-              <div class="plotSub">independence means joint ≈ product</div>
+              <div class="plotSub">independence means joint â‰ˆ product</div>
             </div>
             <svg id="factorSvg" viewBox="0 0 520 305" preserveAspectRatio="xMidYMid meet"></svg>
           </div>
@@ -270,7 +270,7 @@
       </section>
     </main>
 
-    <footer>Minimal interactive notebook — uncorrelatedness as orthogonality, independence as factorization.</footer>
+    <footer>Minimal interactive notebook â€” uncorrelatedness as orthogonality, independence as factorization.</footer>
   </div>
 
 <script>
@@ -290,7 +290,7 @@ let data=[];
 
 function css(v){return getComputedStyle(body).getPropertyValue(v).trim();}
 function fmt(x){
-  if(!isFinite(x)) return "∞";
+  if(!isFinite(x)) return "âˆž";
   if(Math.abs(x)<10) return x.toFixed(4);
   return x.toFixed(2);
 }
@@ -497,7 +497,7 @@ function drawFactor(){
   h+='<rect x="'+xB+'" y="'+yA+'" width="'+size+'" height="'+size+'" fill="none" stroke="'+css("--border")+'"/>';
   h+=text(xA+size/2,yA+size+24,"joint",acc,12,900,"middle");
   h+=text(xB+size/2,yA+size+24,"product",warn,12,900,"middle");
-  h+=text(72,260,"gap = Σ |pᵢⱼ − pᵢpⱼ| = "+fmt(dep.l1),dep.l1<.18?acc:warn,12,900);
+  h+=text(72,260,"gap = Î£ |páµ¢â±¼ âˆ’ páµ¢pâ±¼| = "+fmt(dep.l1),dep.l1<.18?acc:warn,12,900);
   svg.innerHTML=h;
 }
 function drawConditional(){
@@ -506,8 +506,8 @@ function drawConditional(){
   const panel=css("--panel"), border=css("--border"), muted=css("--muted"), grid=css("--grid"), textc=css("--text");
   const acc=css("--accent"), blue=css("--blue"), warn=css("--warn"), violet=css("--violet");
   const groups=[
-    {name:"X < −b", s:cs.left, c:violet},
-    {name:"|X| ≤ b", s:cs.mid, c:acc},
+    {name:"X < âˆ’b", s:cs.left, c:violet},
+    {name:"|X| â‰¤ b", s:cs.mid, c:acc},
     {name:"X > b", s:cs.right, c:blue}
   ];
   let vals=[];
@@ -544,14 +544,14 @@ function updateText(){
 
   document.getElementById("eqBox").innerHTML =
     "Cov(X,Y)=<strong>"+fmt(cov)+"</strong>, Corr(X,Y)=<strong>"+fmt(r)+"</strong><br>"+
-    "independence gap ≈ <strong>"+fmt(dep.l1)+"</strong>.";
+    "independence gap â‰ˆ <strong>"+fmt(dep.l1)+"</strong>.";
 
   const gaussian=exampleSelect.value==="gaussian";
   const items=[
-    ["✓","independence implies zero covariance when moments exist"],
-    ["✓","zero covariance only means centered L² orthogonality"],
-    ["✓","nonlinear dependence may have zero correlation"],
-    ["→",gaussian?"Gaussian exception: zero ρ gives independence":"not Gaussian: zero ρ does not imply independence"]
+    ["âœ“","independence implies zero covariance when moments exist"],
+    ["âœ“","zero covariance only means centered LÂ² orthogonality"],
+    ["âœ“","nonlinear dependence may have zero correlation"],
+    ["â†’",gaussian?"Gaussian exception: zero Ï gives independence":"not Gaussian: zero Ï does not imply independence"]
   ];
   document.getElementById("logicList").innerHTML=items.map(it=>'<div class="logicItem"><span class="mark">'+it[0]+'</span><span>'+it[1]+'</span></div>').join("");
 
@@ -612,3 +612,4 @@ drawAll();
 </script>
 </body>
 </html>
+

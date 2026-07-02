@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -265,7 +265,7 @@
       min-height: 120px;
     }
     .node:not(:last-child)::after {
-      content: "→";
+      content: "â†’";
       position: absolute;
       right: -12px;
       top: 46%;
@@ -333,7 +333,7 @@
   <div class="wrap">
     <header class="hero">
       <section class="hero-main card">
-        <span class="eyebrow">Microeconomics · Industrial organization</span>
+        <span class="eyebrow">Microeconomics Â· Industrial organization</span>
         <h1>Entry barriers and limit pricing</h1>
         <p class="lead">
           A visual model of how sunk entry costs, residual demand, excess capacity, and limit prices interact. Move the sliders and watch the entrant's profit, incumbent's payoff, and deterrence threshold update together.
@@ -350,21 +350,21 @@
           <div class="status-top">
             <div>
               <div class="status-label">Current strategic outcome</div>
-              <div class="big-number" id="outcomeText">—</div>
+              <div class="big-number" id="outcomeText">â€”</div>
             </div>
-            <span class="status-badge" id="statusBadge">—</span>
+            <span class="status-badge" id="statusBadge">â€”</span>
           </div>
-          <div class="subtle" id="outcomeExplanation">—</div>
+          <div class="subtle" id="outcomeExplanation">â€”</div>
         </div>
         <div class="status-card">
           <div class="status-top">
             <div>
               <div class="status-label">Minimum deterrence capacity</div>
-              <div class="big-number"><span id="kdHero">—</span></div>
+              <div class="big-number"><span id="kdHero">â€”</span></div>
             </div>
-            <span class="status-badge" id="excessBadge">—</span>
+            <span class="status-badge" id="excessBadge">â€”</span>
           </div>
-          <div class="subtle" id="limitPriceHero">—</div>
+          <div class="subtle" id="limitPriceHero">â€”</div>
         </div>
       </aside>
     </header>
@@ -422,22 +422,22 @@
         <section class="kpi-grid">
           <div class="kpi">
             <div class="name">Limit price</div>
-            <div class="num" id="limitPriceKpi">—</div>
+            <div class="num" id="limitPriceKpi">â€”</div>
             <div class="hint">Price implied by incumbent commitment, \(p(K)=a-bK\).</div>
           </div>
           <div class="kpi">
             <div class="name">Entrant net profit</div>
-            <div class="num" id="entrantKpi">—</div>
-            <div class="hint" id="entrantHint">—</div>
+            <div class="num" id="entrantKpi">â€”</div>
+            <div class="hint" id="entrantHint">â€”</div>
           </div>
           <div class="kpi">
             <div class="name">Incumbent payoff</div>
-            <div class="num" id="incumbentKpi">—</div>
+            <div class="num" id="incumbentKpi">â€”</div>
             <div class="hint">Net of capacity cost. Compare with monopoly and accommodation.</div>
           </div>
           <div class="kpi">
             <div class="name">Excess capacity</div>
-            <div class="num" id="excessKpi">—</div>
+            <div class="num" id="excessKpi">â€”</div>
             <div class="hint">Capacity above monopoly quantity, \(\max\{K-q^M,0\}\).</div>
           </div>
         </section>
@@ -573,15 +573,15 @@
         <section class="scenario-row">
           <div class="scenario card">
             <h3>Structural barrier</h3>
-            <p id="structuralText">—</p>
+            <p id="structuralText">â€”</p>
           </div>
           <div class="scenario card">
             <h3>Strategic barrier</h3>
-            <p id="strategicText">—</p>
+            <p id="strategicText">â€”</p>
           </div>
         </section>
 
-        <div class="footer">Interactive teaching app · linear demand · residual-demand entry deterrence · KaTeX formulas</div>
+        <div class="footer">Interactive teaching app Â· linear demand Â· residual-demand entry deterrence Â· KaTeX formulas</div>
       </main>
     </div>
   </div>
@@ -601,8 +601,8 @@
 
     function n(x, d=1){ return Number(x).toFixed(d); }
     function money(x){
-      if (!isFinite(x)) return '—';
-      const sign = x < 0 ? '−' : '';
+      if (!isFinite(x)) return 'â€”';
+      const sign = x < 0 ? 'âˆ’' : '';
       return sign + Math.abs(x).toFixed(Math.abs(x) >= 100 ? 0 : 1);
     }
     function clamp(x, lo, hi){ return Math.max(lo, Math.min(hi, x)); }
@@ -716,11 +716,11 @@
 
       if(c.KD > 0 && c.KD < xMax){
         svg.appendChild(svgEl('line',{x1:g.x(c.KD),y1:g.y(0),x2:g.x(c.KD),y2:g.y(yMax),class:'barrier'}));
-        addText(svg,'Kᴰ',g.x(c.KD)+6,g.y(yMax*0.94),'annotation','start');
+        addText(svg,'Ká´°',g.x(c.KD)+6,g.y(yMax*0.94),'annotation','start');
       }
       if(c.qM > 0 && c.qM < xMax){
         svg.appendChild(svgEl('line',{x1:g.x(c.qM),y1:g.y(0),x2:g.x(c.qM),y2:g.y(yMax),class:'mono'}));
-        addText(svg,'qᴹ',g.x(c.qM)+6,g.y(yMax*0.86),'annotation','start');
+        addText(svg,'qá´¹',g.x(c.qM)+6,g.y(yMax*0.86),'annotation','start');
       }
       const Kx = g.x(p.K), Py = g.y(c.limitP);
       svg.appendChild(svgEl('line',{x1:Kx,y1:g.y(0),x2:Kx,y2:Py,class:'current'}));
@@ -850,7 +850,7 @@
       }
       svg.appendChild(svgEl('line',{x1:g.x(p.K),y1:g.y(0),x2:g.x(p.K),y2:g.y(maxY-minY),class:'current'}));
       addCircle(svg,g.x(p.K),y(c.piI),5,'var(--text)');
-      addText(svg,`π_I=${money(c.piI)}`,g.x(p.K)+8,y(c.piI)-10,'annotation','start');
+      addText(svg,`Ï€_I=${money(c.piI)}`,g.x(p.K)+8,y(c.piI)-10,'annotation','start');
     }
 
     function updateText(p, c){
@@ -872,9 +872,9 @@
         : `The entrant earns net profit ${money(c.netPiE)}, so the sunk entry cost is not covered.`;
 
       els.kdHero.textContent = n(c.KD,1);
-      els.excessBadge.textContent = c.requiredExtra > 0 ? `+${n(c.requiredExtra,1)} above qᴹ` : 'no excess needed';
+      els.excessBadge.textContent = c.requiredExtra > 0 ? `+${n(c.requiredExtra,1)} above qá´¹` : 'no excess needed';
       els.excessBadge.className = 'status-badge ' + (c.requiredExtra > 0 ? 'bad' : 'good');
-      els.limitPriceHero.textContent = `The just-deterring limit price is pᴰ = ${money(c.pD)}. Current p(K) = ${money(c.limitP)}.`;
+      els.limitPriceHero.textContent = `The just-deterring limit price is pá´° = ${money(c.pD)}. Current p(K) = ${money(c.limitP)}.`;
 
       els.limitPriceKpi.textContent = money(c.limitP);
       els.entrantKpi.textContent = money(c.netPiE);
@@ -942,3 +942,4 @@
   </script>
 </body>
 </html>
+

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -201,7 +201,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
 <div class="app">
 <header>
   <div>
-    <div class="eyebrow"><span class="dot"></span> Game Theory · Strategic Form</div>
+    <div class="eyebrow"><span class="dot"></span> Game Theory Â· Strategic Form</div>
     <h1>Normal-form games</h1>
     <p class="subtitle">A normal-form game is not a market diagram. It is a strategic object: players, strategy sets, payoff functions, and the logic of unilateral deviations.</p>
   </div>
@@ -238,16 +238,16 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
     </div>
 
     <div class="section-label">Row player payoffs</div>
-    <div class="control"><div class="label-row"><label for="a11">u₁(U,L)</label><span class="value" id="a11Val"></span></div><input id="a11" type="range" min="-5" max="8" step="1" value="3"></div>
-    <div class="control"><div class="label-row"><label for="a12">u₁(U,R)</label><span class="value" id="a12Val"></span></div><input id="a12" type="range" min="-5" max="8" step="1" value="0"></div>
-    <div class="control"><div class="label-row"><label for="a21">u₁(D,L)</label><span class="value" id="a21Val"></span></div><input id="a21" type="range" min="-5" max="8" step="1" value="5"></div>
-    <div class="control"><div class="label-row"><label for="a22">u₁(D,R)</label><span class="value" id="a22Val"></span></div><input id="a22" type="range" min="-5" max="8" step="1" value="1"></div>
+    <div class="control"><div class="label-row"><label for="a11">uâ‚(U,L)</label><span class="value" id="a11Val"></span></div><input id="a11" type="range" min="-5" max="8" step="1" value="3"></div>
+    <div class="control"><div class="label-row"><label for="a12">uâ‚(U,R)</label><span class="value" id="a12Val"></span></div><input id="a12" type="range" min="-5" max="8" step="1" value="0"></div>
+    <div class="control"><div class="label-row"><label for="a21">uâ‚(D,L)</label><span class="value" id="a21Val"></span></div><input id="a21" type="range" min="-5" max="8" step="1" value="5"></div>
+    <div class="control"><div class="label-row"><label for="a22">uâ‚(D,R)</label><span class="value" id="a22Val"></span></div><input id="a22" type="range" min="-5" max="8" step="1" value="1"></div>
 
     <div class="section-label">Column player payoffs</div>
-    <div class="control"><div class="label-row"><label for="b11">u₂(U,L)</label><span class="value" id="b11Val"></span></div><input id="b11" type="range" min="-5" max="8" step="1" value="3"></div>
-    <div class="control"><div class="label-row"><label for="b12">u₂(U,R)</label><span class="value" id="b12Val"></span></div><input id="b12" type="range" min="-5" max="8" step="1" value="5"></div>
-    <div class="control"><div class="label-row"><label for="b21">u₂(D,L)</label><span class="value" id="b21Val"></span></div><input id="b21" type="range" min="-5" max="8" step="1" value="0"></div>
-    <div class="control"><div class="label-row"><label for="b22">u₂(D,R)</label><span class="value" id="b22Val"></span></div><input id="b22" type="range" min="-5" max="8" step="1" value="1"></div>
+    <div class="control"><div class="label-row"><label for="b11">uâ‚‚(U,L)</label><span class="value" id="b11Val"></span></div><input id="b11" type="range" min="-5" max="8" step="1" value="3"></div>
+    <div class="control"><div class="label-row"><label for="b12">uâ‚‚(U,R)</label><span class="value" id="b12Val"></span></div><input id="b12" type="range" min="-5" max="8" step="1" value="5"></div>
+    <div class="control"><div class="label-row"><label for="b21">uâ‚‚(D,L)</label><span class="value" id="b21Val"></span></div><input id="b21" type="range" min="-5" max="8" step="1" value="0"></div>
+    <div class="control"><div class="label-row"><label for="b22">uâ‚‚(D,R)</label><span class="value" id="b22Val"></span></div><input id="b22" type="range" min="-5" max="8" step="1" value="1"></div>
 
     <div class="toggle-row">
       <div><div style="font-size:14px;">Best-response marks</div><div class="small">row and column markers</div></div>
@@ -288,7 +288,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
             <h2>Main diagram: payoff matrix</h2>
             <p>Read the matrix cell by cell. The first number is the row player's payoff; the second is the column player's payoff.</p>
           </div>
-          <span class="small">row chooses U/D · column chooses L/R</span>
+          <span class="small">row chooses U/D Â· column chooses L/R</span>
         </div>
         <svg id="matrixSvg" viewBox="0 0 1120 620"></svg>
         <div class="legend">
@@ -343,7 +343,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
         <p id="interpretation"></p>
         <div class="notice-list">
           <div class="notice"><strong>Normal form.</strong> Timing is suppressed. What matters is the set of strategies and the payoff assigned to every strategy profile.</div>
-          <div class="notice"><strong>Best responses first.</strong> Nash equilibrium is not “highest joint payoff.” It is mutual best response.</div>
+          <div class="notice"><strong>Best responses first.</strong> Nash equilibrium is not â€œhighest joint payoff.â€ It is mutual best response.</div>
           <div class="notice"><strong>Dominance is prior.</strong> A strictly dominated strategy is never optimal against any opponent strategy, so it can be eliminated before searching for equilibrium.</div>
         </div>
       </section>
@@ -393,7 +393,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
   function rect(svg,x,y,w,h,cls,rx=16){ svg.appendChild(S('rect',{x,y,width:w,height:h,class:cls,rx})); }
   function circle(svg,cx,cy,r,cls){ svg.appendChild(S('circle',{cx,cy,r,class:cls})); }
   function path(svg,d,cls){ svg.appendChild(S('path',{d,class:cls})); }
-  function fmt(x){ return Number.isFinite(x) ? String(x) : '—'; }
+  function fmt(x){ return Number.isFinite(x) ? String(x) : 'â€”'; }
   function defs(svg){
     const ds=S('defs');
     ds.innerHTML=`<marker id="arrowRow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="var(--row)"/></marker>
@@ -653,7 +653,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
       : `${selected} is not stable: ${d.row!==null?'the row player can profitably switch rows. ':''}${d.col!==null?'the column player can profitably switch columns.':''}`;
     els.interpretation.innerHTML=`${deviationText} The pure Nash equilibria are ${nashText}. Row dominance: <b>${g.rowDom}</b>. Column dominance: <b>${g.colDom}</b>. The current structure is classified as <b>${g.type}</b>.`;
   }
-  function short(x){ return x.replace(' strictly dominates ',' ≻ ').replace(' weakly dominates ',' ⪰ '); }
+  function short(x){ return x.replace(' strictly dominates ',' â‰» ').replace(' weakly dominates ',' âª° '); }
 
   function renderMath(target=document.body){
     if(!window.renderMathInElement) return;
@@ -693,3 +693,4 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
 </script>
 </body>
 </html>
+

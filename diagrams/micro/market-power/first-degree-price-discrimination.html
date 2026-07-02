@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -176,9 +176,9 @@
 <div class="app">
   <header>
     <div>
-      <div class="eyebrow"><span class="dot"></span> Microeconomics · Market Power</div>
+      <div class="eyebrow"><span class="dot"></span> Microeconomics Â· Market Power</div>
       <h1>First-degree price discrimination</h1>
-      <p class="subtitle">Perfect discrimination is not one price. It is a price schedule: each unit is sold at that buyer’s willingness to pay, so the monopolist captures the whole surplus area.</p>
+      <p class="subtitle">Perfect discrimination is not one price. It is a price schedule: each unit is sold at that buyerâ€™s willingness to pay, so the monopolist captures the whole surplus area.</p>
     </div>
     <button class="theme-btn" id="themeBtn">Dark mode</button>
   </header>
@@ -192,18 +192,18 @@
       <div class="control"><div class="label-row"><label for="c">Marginal cost <b>c</b></label><span class="value" id="cVal"></span></div><input id="c" type="range" min="0" max="130" step="1" value="30" /></div>
       <div class="control"><div class="label-row"><label for="qFocus">Focus quantity <b>q</b></label><span class="value" id="qFocusVal"></span></div><input id="qFocus" type="range" min="0" max="50" step="0.1" value="20" /></div>
 
-      <div class="toggle-row"><div><div style="font-size:14px;">Snap to efficient output</div><div class="small">q = qᴾᴰ</div></div><label class="switch"><input id="snapPD" type="checkbox" /><span class="slider-switch"></span></label></div>
+      <div class="toggle-row"><div><div style="font-size:14px;">Snap to efficient output</div><div class="small">q = qá´¾á´°</div></div><label class="switch"><input id="snapPD" type="checkbox" /><span class="slider-switch"></span></label></div>
       <div class="toggle-row"><div><div style="font-size:14px;">Show unit price slices</div><div class="small">each unit has its own price</div></div><label class="switch"><input id="slices" type="checkbox" checked /><span class="slider-switch"></span></label></div>
-      <div class="toggle-row"><div><div style="font-size:14px;">Show uniform monopoly</div><div class="small">comparison: qᴹ, pᴹ, DWL</div></div><label class="switch"><input id="showUniform" type="checkbox" checked /><span class="slider-switch"></span></label></div>
+      <div class="toggle-row"><div><div style="font-size:14px;">Show uniform monopoly</div><div class="small">comparison: qá´¹, pá´¹, DWL</div></div><label class="switch"><input id="showUniform" type="checkbox" checked /><span class="slider-switch"></span></label></div>
 
       <div class="pill" id="statusPill">Perfect-discrimination view</div>
     </aside>
 
     <main class="main">
       <section class="formula-row">
-        <div class="card formula"><div><div class="name">Demand</div><div class="math mathline">p(q) = a − bq</div></div><div class="soft-eq">reservation price of the marginal buyer</div></div>
-        <div class="card formula"><div><div class="name">Perfect discrimination</div><div class="math mathline">pᵢ = willingness to payᵢ</div></div><div class="soft-eq">not one market price</div></div>
-        <div class="card formula"><div><div class="name">Efficient quantity</div><div class="math mathline">p(q<span class="sup">PD</span>) = MC</div></div><div class="soft-eq">serve every buyer with value ≥ cost</div></div>
+        <div class="card formula"><div><div class="name">Demand</div><div class="math mathline">p(q) = a âˆ’ bq</div></div><div class="soft-eq">reservation price of the marginal buyer</div></div>
+        <div class="card formula"><div><div class="name">Perfect discrimination</div><div class="math mathline">páµ¢ = willingness to payáµ¢</div></div><div class="soft-eq">not one market price</div></div>
+        <div class="card formula"><div><div class="name">Efficient quantity</div><div class="math mathline">p(q<span class="sup">PD</span>) = MC</div></div><div class="soft-eq">serve every buyer with value â‰¥ cost</div></div>
         <div class="card formula"><div><div class="name">Surplus extraction</div><div class="math mathline">CS<span class="sup">PD</span> = 0</div></div><div class="formula-chip math">PS<span class="sup">PD</span> = TS<span class="sup">PD</span></div></div>
       </section>
 
@@ -213,7 +213,7 @@
             <h2>Main diagram: the price schedule</h2>
             <p>The vertical slices are the key: each unit is charged its own reservation price on the demand curve.</p>
           </div>
-          <span class="small">q horizontal · price/value vertical</span>
+          <span class="small">q horizontal Â· price/value vertical</span>
         </div>
         <svg id="marketSvg" viewBox="0 0 980 560" aria-label="First-degree price discrimination diagram"></svg>
         <div class="legend">
@@ -226,12 +226,12 @@
         <div class="metrics">
           <div class="metric"><div class="k">q</div><div class="v" id="qMetric"></div></div>
           <div class="metric"><div class="k">Price of marginal unit</div><div class="v" id="pMetric"></div></div>
-          <div class="metric"><div class="k">qᴹ</div><div class="v" id="qMMetric"></div></div>
-          <div class="metric"><div class="k">qᴾᴰ = qᴱ</div><div class="v" id="qPDMetric"></div></div>
-          <div class="metric"><div class="k">πᴹ</div><div class="v" id="piMMetric"></div></div>
-          <div class="metric"><div class="k">πᴾᴰ</div><div class="v" id="piPDMetric"></div></div>
-          <div class="metric"><div class="k">CSᴾᴰ</div><div class="v" id="csPDMetric"></div></div>
-          <div class="metric"><div class="k">DWLᴹ</div><div class="v" id="dwlMetric"></div></div>
+          <div class="metric"><div class="k">qá´¹</div><div class="v" id="qMMetric"></div></div>
+          <div class="metric"><div class="k">qá´¾á´° = qá´±</div><div class="v" id="qPDMetric"></div></div>
+          <div class="metric"><div class="k">Ï€á´¹</div><div class="v" id="piMMetric"></div></div>
+          <div class="metric"><div class="k">Ï€á´¾á´°</div><div class="v" id="piPDMetric"></div></div>
+          <div class="metric"><div class="k">CSá´¾á´°</div><div class="v" id="csPDMetric"></div></div>
+          <div class="metric"><div class="k">DWLá´¹</div><div class="v" id="dwlMetric"></div></div>
         </div>
       </section>
 
@@ -256,8 +256,8 @@
           <h2>Interpretation</h2>
           <p id="interpretation"></p>
           <div class="notice-list">
-            <div class="notice"><strong>Graphically.</strong> Perfect discrimination is the entire area between demand and marginal cost up to qᴾᴰ, cut into personalized price slices.</div>
-            <div class="notice"><strong>Efficiency.</strong> Output expands until the last buyer’s willingness to pay equals marginal cost. No mutually beneficial units are left out.</div>
+            <div class="notice"><strong>Graphically.</strong> Perfect discrimination is the entire area between demand and marginal cost up to qá´¾á´°, cut into personalized price slices.</div>
+            <div class="notice"><strong>Efficiency.</strong> Output expands until the last buyerâ€™s willingness to pay equals marginal cost. No mutually beneficial units are left out.</div>
             <div class="notice"><strong>Distribution.</strong> Efficiency is restored, but consumer surplus is extracted by the monopolist.</div>
           </div>
         </section>
@@ -266,10 +266,10 @@
       <section class="card panel">
         <h2>Exam-style summary</h2>
         <div class="summary">
-          <div class="summary-line"><span>1</span><div>Uniform monopoly sells all units at one price. It chooses qᴹ from MR = MC.</div></div>
-          <div class="summary-line"><span>2</span><div>First-degree price discrimination charges each unit a different price: pᵢ equals that buyer’s willingness to pay.</div></div>
-          <div class="summary-line"><span>3</span><div>The firm keeps selling until p(q) = MC, so qᴾᴰ = qᴱ.</div></div>
-          <div class="summary-line"><span>4</span><div>The outcome is efficient, but CSᴾᴰ = 0 and PSᴾᴰ = total surplus.</div></div>
+          <div class="summary-line"><span>1</span><div>Uniform monopoly sells all units at one price. It chooses qá´¹ from MR = MC.</div></div>
+          <div class="summary-line"><span>2</span><div>First-degree price discrimination charges each unit a different price: páµ¢ equals that buyerâ€™s willingness to pay.</div></div>
+          <div class="summary-line"><span>3</span><div>The firm keeps selling until p(q) = MC, so qá´¾á´° = qá´±.</div></div>
+          <div class="summary-line"><span>4</span><div>The outcome is efficient, but CSá´¾á´° = 0 and PSá´¾á´° = total surplus.</div></div>
         </div>
       </section>
     </main>
@@ -287,7 +287,7 @@
     interpretation:$("interpretation")
   };
 
-  function fmt(x,d=2){ if(!Number.isFinite(x)) return "—"; if(Math.abs(x)>=100) return x.toFixed(1); return x.toFixed(d); }
+  function fmt(x,d=2){ if(!Number.isFinite(x)) return "â€”"; if(Math.abs(x)>=100) return x.toFixed(1); return x.toFixed(d); }
   function clamp(x,lo,hi){ return Math.max(lo, Math.min(hi, x)); }
   function s(tag, attrs={}){ const el=document.createElementNS("http://www.w3.org/2000/svg", tag); for(const [k,v] of Object.entries(attrs)) el.setAttribute(k,v); return el; }
   function line(svg,x1,y1,x2,y2,cls){ svg.appendChild(s("line",{x1,y1,x2,y2,class:cls})); }
@@ -398,13 +398,13 @@
       line(svg,X(m.qM),Y(0),X(m.qM),Y(m.pM),"helper");
       line(svg,X(0),Y(m.pM),X(m.qM),Y(m.pM),"helper");
       circle(svg,X(m.qM),Y(m.pM),6.1,"point-accent");
-      text(svg,X(m.qM),Y(0)+28,"qᴹ","label");
-      text(svg,X(0)-14,Y(m.pM)+4,"pᴹ","label","end");
+      text(svg,X(m.qM),Y(0)+28,"qá´¹","label");
+      text(svg,X(0)-14,Y(m.pM)+4,"pá´¹","label","end");
     }
 
     line(svg,X(m.qPD),Y(0),X(m.qPD),Y(m.c),"helper");
     circle(svg,X(m.qPD),Y(m.c),5.5,"point");
-    text(svg,X(m.qPD),Y(0)+28,"qᴾᴰ = qᴱ","muted-label");
+    text(svg,X(m.qPD),Y(0)+28,"qá´¾á´° = qá´±","muted-label");
     text(svg,X(m.qPD)+10,Y(m.c)-12,"last unit priced at MC","muted-label","start");
 
     line(svg,X(m.q),Y(0),X(m.q),Y(m.p),"helper-focus");
@@ -443,7 +443,7 @@
       rect(svg,x,Y(top),w,Y(m.c)-Y(top),"slice-rect",4);
       circle(svg,X(center),Y(top),3.5,"point-focus");
       if(i===0) text(svg,X(center),Y(top)-10,"high WTP","muted-label");
-      if(i===n-1) text(svg,X(center),Y(top)-10,"last unit ≈ MC","muted-label");
+      if(i===n-1) text(svg,X(center),Y(top)-10,"last unit â‰ˆ MC","muted-label");
     }
     line(svg,X(0),Y(m.c),X(m.qPD),Y(m.c),"curve-mc");
     const dPts=[];
@@ -479,9 +479,9 @@
     circle(svg,X(m.q),Y(m.piPDAtQ),5.8,"point-focus");
     circle(svg,X(m.qM),Y(m.piM),5.6,"point-accent");
     circle(svg,X(m.qPD),Y(m.piPD),5.6,"point");
-    text(svg,X(m.q)+8,Y(m.piUAtQ)-10,"πᵁ(q)","muted-label","start");
-    text(svg,X(m.q)+8,Y(m.piPDAtQ)+18,"πᴾᴰ(q)","muted-label","start");
-    text(svg,X(m.qPD)+8,Y(m.piPD)-10,"max at qᴾᴰ","label","start");
+    text(svg,X(m.q)+8,Y(m.piUAtQ)-10,"Ï€áµ(q)","muted-label","start");
+    text(svg,X(m.q)+8,Y(m.piPDAtQ)+18,"Ï€á´¾á´°(q)","muted-label","start");
+    text(svg,X(m.qPD)+8,Y(m.piPD)-10,"max at qá´¾á´°","label","start");
     text(svg,X(xMax*0.58),Y(m.piPD*0.72)-10,"perfect discrimination profit","label");
     text(svg,X(xMax*0.36),Y(m.piM*0.86)+18,"uniform monopoly profit","muted-label");
   }
@@ -541,7 +541,7 @@
       ? `At this point the last unit is priced at marginal cost: <span class="math-inline">p(q^{PD}) = MC = ${fmt(m.c)}</span>. Earlier units still pay more, because they have higher willingness to pay.`
       : `At the chosen quantity, the marginal unit pays <span class="math-inline">p(q) = ${fmt(m.p)}</span>. Every earlier unit pays its own higher willingness-to-pay price.`;
     els.interpretation.innerHTML =
-      `Perfect discrimination is the vertical-slice picture: each slice between demand and marginal cost is extracted as producer surplus. ${sentence} Profit under perfect discrimination at this q is <span class="math-inline">π^{PD}(q) = ${fmt(m.piPDAtQ)}</span>, while uniform-pricing profit at the same q is <span class="math-inline">π^U(q) = ${fmt(m.piUAtQ)}</span>.`;
+      `Perfect discrimination is the vertical-slice picture: each slice between demand and marginal cost is extracted as producer surplus. ${sentence} Profit under perfect discrimination at this q is <span class="math-inline">Ï€^{PD}(q) = ${fmt(m.piPDAtQ)}</span>, while uniform-pricing profit at the same q is <span class="math-inline">Ï€^U(q) = ${fmt(m.piUAtQ)}</span>.`;
   }
 
   function update(){
@@ -573,3 +573,4 @@
 </script>
 </body>
 </html>
+

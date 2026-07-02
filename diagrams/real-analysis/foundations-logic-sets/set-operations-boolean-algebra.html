@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
@@ -365,14 +365,14 @@
         <div class="eyebrow">
           <span class="pill">Real Analysis Notebook</span>
           <span class="pill">Sets as predicates</span>
-          <span class="pill">Boolean algebra on 𝒫(U)</span>
+          <span class="pill">Boolean algebra on ð’«(U)</span>
         </div>
         <h1>Set Operations<br/>and Boolean Algebra</h1>
         <p class="subtitle">A set is a truth region inside a fixed universe. Boolean laws are not mysterious identities: they are pointwise logical equivalences, visible atom by atom.</p>
       </section>
       <aside class="theme-card">
         <div class="small">Interface</div>
-        <button id="themeToggle" class="theme-toggle" type="button"><span>Light mode</span><span>◐</span></button>
+        <button id="themeToggle" class="theme-toggle" type="button"><span>Light mode</span><span>â—</span></button>
       </aside>
     </header>
 
@@ -401,15 +401,15 @@
         </div>
         <div class="card-pad controls">
           <label class="control">
-            <div class="control-top"><span>Operation</span><span class="value" id="opSymbol">A ∪ B</span></div>
+            <div class="control-top"><span>Operation</span><span class="value" id="opSymbol">A âˆª B</span></div>
             <select id="operation">
-              <option value="union">Union: A ∪ B</option>
-              <option value="intersection">Intersection: A ∩ B</option>
-              <option value="Ac">Complement: Aᶜ</option>
-              <option value="Bc">Complement: Bᶜ</option>
-              <option value="AdiffB">Difference: A ∖ B</option>
-              <option value="BdiffA">Difference: B ∖ A</option>
-              <option value="symdiff">Symmetric difference: A △ B</option>
+              <option value="union">Union: A âˆª B</option>
+              <option value="intersection">Intersection: A âˆ© B</option>
+              <option value="Ac">Complement: Aá¶œ</option>
+              <option value="Bc">Complement: Bá¶œ</option>
+              <option value="AdiffB">Difference: A âˆ– B</option>
+              <option value="BdiffA">Difference: B âˆ– A</option>
+              <option value="symdiff">Symmetric difference: A â–³ B</option>
             </select>
           </label>
 
@@ -446,14 +446,14 @@
             <p class="card-note">Both sides shade the same subset of U. Equality means no atom differs.</p>
           </div>
           <select id="law" style="max-width:310px">
-            <option value="demorgan_union">De Morgan: (A ∪ B)ᶜ</option>
-            <option value="demorgan_intersection">De Morgan: (A ∩ B)ᶜ</option>
-            <option value="dist_inter">Distributivity: ∩ over ∪</option>
-            <option value="dist_union">Distributivity: ∪ over ∩</option>
+            <option value="demorgan_union">De Morgan: (A âˆª B)á¶œ</option>
+            <option value="demorgan_intersection">De Morgan: (A âˆ© B)á¶œ</option>
+            <option value="dist_inter">Distributivity: âˆ© over âˆª</option>
+            <option value="dist_union">Distributivity: âˆª over âˆ©</option>
             <option value="difference">Difference identity</option>
             <option value="symdiff">Symmetric difference identity</option>
-            <option value="absorption_inter">Absorption: A ∩ (A ∪ B)</option>
-            <option value="absorption_union">Absorption: A ∪ (A ∩ B)</option>
+            <option value="absorption_inter">Absorption: A âˆ© (A âˆª B)</option>
+            <option value="absorption_union">Absorption: A âˆª (A âˆ© B)</option>
           </select>
         </div>
         <div class="law-panel">
@@ -481,7 +481,7 @@
         </div>
         <div class="card-pad">
           <table class="truth-table" id="truthTable">
-            <thead><tr><th>A(x)</th><th>B(x)</th><th id="resHead">A ∪ B</th><th>atom</th></tr></thead>
+            <thead><tr><th>A(x)</th><th>B(x)</th><th id="resHead">A âˆª B</th><th>atom</th></tr></thead>
             <tbody></tbody>
           </table>
         </div>
@@ -505,7 +505,7 @@
         </div>
         <div class="card-pad notice">
           <div class="notice-item"><span class="dot"></span><span><b>The universe is fixed.</b> Complements are always relative to U, not to the whole plane.</span></div>
-          <div class="notice-item"><span class="dot"></span><span><b>Membership is logical.</b> x ∈ A ∪ B means A(x) ∨ B(x).</span></div>
+          <div class="notice-item"><span class="dot"></span><span><b>Membership is logical.</b> x âˆˆ A âˆª B means A(x) âˆ¨ B(x).</span></div>
           <div class="notice-item"><span class="dot"></span><span><b>Laws are pointwise.</b> Two sets are equal iff every point has the same truth value on both sides.</span></div>
           <div class="notice-item"><span class="dot"></span><span><b>Atoms explain everything.</b> If each atom is classified identically, the identities hold globally.</span></div>
         </div>
@@ -518,12 +518,12 @@
           </div>
         </div>
         <div class="card-pad summary">
-          <div>A ∪ B = {x ∈ U : A(x) ∨ B(x)}, &nbsp; A ∩ B = {x ∈ U : A(x) ∧ B(x)}.</div>
-          <div>Aᶜ = U ∖ A = {x ∈ U : ¬A(x)}, &nbsp; A ∖ B = A ∩ Bᶜ.</div>
-          <div>A △ B = (A ∖ B) ∪ (B ∖ A) = {x ∈ U : A(x) ⊕ B(x)}.</div>
-          <div>De Morgan: (A ∪ B)ᶜ = Aᶜ ∩ Bᶜ, &nbsp; (A ∩ B)ᶜ = Aᶜ ∪ Bᶜ.</div>
-          <div>Distributivity: A ∩ (B ∪ C) = (A ∩ B) ∪ (A ∩ C), &nbsp; A ∪ (B ∩ C) = (A ∪ B) ∩ (A ∪ C).</div>
-          <div>Method of proof: take arbitrary x ∈ U, translate membership into logic, simplify the proposition, translate back into sets.</div>
+          <div>A âˆª B = {x âˆˆ U : A(x) âˆ¨ B(x)}, &nbsp; A âˆ© B = {x âˆˆ U : A(x) âˆ§ B(x)}.</div>
+          <div>Aá¶œ = U âˆ– A = {x âˆˆ U : Â¬A(x)}, &nbsp; A âˆ– B = A âˆ© Bá¶œ.</div>
+          <div>A â–³ B = (A âˆ– B) âˆª (B âˆ– A) = {x âˆˆ U : A(x) âŠ• B(x)}.</div>
+          <div>De Morgan: (A âˆª B)á¶œ = Aá¶œ âˆ© Bá¶œ, &nbsp; (A âˆ© B)á¶œ = Aá¶œ âˆª Bá¶œ.</div>
+          <div>Distributivity: A âˆ© (B âˆª C) = (A âˆ© B) âˆª (A âˆ© C), &nbsp; A âˆª (B âˆ© C) = (A âˆª B) âˆ© (A âˆª C).</div>
+          <div>Method of proof: take arbitrary x âˆˆ U, translate membership into logic, simplify the proposition, translate back into sets.</div>
         </div>
       </section>
     </main>
@@ -577,13 +577,13 @@ function roundRect(ctx,x,y,w,h,r){
 
 function opMeta(op){
   return {
-    union:{symbol:'A ∪ B', formula:'A ∪ B = { x ∈ U : A(x) ∨ B(x) }', text:'true when x belongs to A, to B, or to both.'},
-    intersection:{symbol:'A ∩ B', formula:'A ∩ B = { x ∈ U : A(x) ∧ B(x) }', text:'true only on the common region.'},
-    Ac:{symbol:'Aᶜ', formula:'Aᶜ = U ∖ A = { x ∈ U : ¬A(x) }', text:'everything in U outside A.'},
-    Bc:{symbol:'Bᶜ', formula:'Bᶜ = U ∖ B = { x ∈ U : ¬B(x) }', text:'everything in U outside B.'},
-    AdiffB:{symbol:'A ∖ B', formula:'A ∖ B = A ∩ Bᶜ = { x ∈ U : A(x) ∧ ¬B(x) }', text:'points of A after removing the part also in B.'},
-    BdiffA:{symbol:'B ∖ A', formula:'B ∖ A = B ∩ Aᶜ = { x ∈ U : B(x) ∧ ¬A(x) }', text:'points of B after removing the part also in A.'},
-    symdiff:{symbol:'A △ B', formula:'A △ B = { x ∈ U : A(x) ⊕ B(x) }', text:'true when membership differs: in exactly one set.'}
+    union:{symbol:'A âˆª B', formula:'A âˆª B = { x âˆˆ U : A(x) âˆ¨ B(x) }', text:'true when x belongs to A, to B, or to both.'},
+    intersection:{symbol:'A âˆ© B', formula:'A âˆ© B = { x âˆˆ U : A(x) âˆ§ B(x) }', text:'true only on the common region.'},
+    Ac:{symbol:'Aá¶œ', formula:'Aá¶œ = U âˆ– A = { x âˆˆ U : Â¬A(x) }', text:'everything in U outside A.'},
+    Bc:{symbol:'Bá¶œ', formula:'Bá¶œ = U âˆ– B = { x âˆˆ U : Â¬B(x) }', text:'everything in U outside B.'},
+    AdiffB:{symbol:'A âˆ– B', formula:'A âˆ– B = A âˆ© Bá¶œ = { x âˆˆ U : A(x) âˆ§ Â¬B(x) }', text:'points of A after removing the part also in B.'},
+    BdiffA:{symbol:'B âˆ– A', formula:'B âˆ– A = B âˆ© Aá¶œ = { x âˆˆ U : B(x) âˆ§ Â¬A(x) }', text:'points of B after removing the part also in A.'},
+    symdiff:{symbol:'A â–³ B', formula:'A â–³ B = { x âˆˆ U : A(x) âŠ• B(x) }', text:'true when membership differs: in exactly one set.'}
   }[op];
 }
 
@@ -722,10 +722,10 @@ function updateControlsText(){
 }
 
 const atomInfo = [
-  {A:true,B:true, name:'A ∩ B', desc:'inside both sets'},
-  {A:true,B:false, name:'A ∩ Bᶜ', desc:'inside A only'},
-  {A:false,B:true, name:'Aᶜ ∩ B', desc:'inside B only'},
-  {A:false,B:false, name:'Aᶜ ∩ Bᶜ', desc:'outside both, but still inside U'}
+  {A:true,B:true, name:'A âˆ© B', desc:'inside both sets'},
+  {A:true,B:false, name:'A âˆ© Bá¶œ', desc:'inside A only'},
+  {A:false,B:true, name:'Aá¶œ âˆ© B', desc:'inside B only'},
+  {A:false,B:false, name:'Aá¶œ âˆ© Bá¶œ', desc:'outside both, but still inside U'}
 ];
 
 function updateTables(){
@@ -755,44 +755,44 @@ function updateTables(){
 
 const laws = {
   demorgan_union:{
-    left:'(A ∪ B)ᶜ', right:'Aᶜ ∩ Bᶜ', useC:false,
+    left:'(A âˆª B)á¶œ', right:'Aá¶œ âˆ© Bá¶œ', useC:false,
     L:({A,B})=>!(A||B), R:({A,B})=>(!A)&&(!B),
-    text:'Pointwise: ¬(A(x) ∨ B(x)) ⇔ ¬A(x) ∧ ¬B(x).'
+    text:'Pointwise: Â¬(A(x) âˆ¨ B(x)) â‡” Â¬A(x) âˆ§ Â¬B(x).'
   },
   demorgan_intersection:{
-    left:'(A ∩ B)ᶜ', right:'Aᶜ ∪ Bᶜ', useC:false,
+    left:'(A âˆ© B)á¶œ', right:'Aá¶œ âˆª Bá¶œ', useC:false,
     L:({A,B})=>!(A&&B), R:({A,B})=>(!A)||(!B),
-    text:'Pointwise: ¬(A(x) ∧ B(x)) ⇔ ¬A(x) ∨ ¬B(x).'
+    text:'Pointwise: Â¬(A(x) âˆ§ B(x)) â‡” Â¬A(x) âˆ¨ Â¬B(x).'
   },
   dist_inter:{
-    left:'A ∩ (B ∪ C)', right:'(A ∩ B) ∪ (A ∩ C)', useC:true,
+    left:'A âˆ© (B âˆª C)', right:'(A âˆ© B) âˆª (A âˆ© C)', useC:true,
     L:({A,B,C})=>A&&(B||C), R:({A,B,C})=>(A&&B)||(A&&C),
-    text:'Pointwise: A(x) ∧ (B(x) ∨ C(x)) ⇔ (A(x) ∧ B(x)) ∨ (A(x) ∧ C(x)).'
+    text:'Pointwise: A(x) âˆ§ (B(x) âˆ¨ C(x)) â‡” (A(x) âˆ§ B(x)) âˆ¨ (A(x) âˆ§ C(x)).'
   },
   dist_union:{
-    left:'A ∪ (B ∩ C)', right:'(A ∪ B) ∩ (A ∪ C)', useC:true,
+    left:'A âˆª (B âˆ© C)', right:'(A âˆª B) âˆ© (A âˆª C)', useC:true,
     L:({A,B,C})=>A||(B&&C), R:({A,B,C})=>(A||B)&&(A||C),
-    text:'Pointwise: A(x) ∨ (B(x) ∧ C(x)) ⇔ (A(x) ∨ B(x)) ∧ (A(x) ∨ C(x)).'
+    text:'Pointwise: A(x) âˆ¨ (B(x) âˆ§ C(x)) â‡” (A(x) âˆ¨ B(x)) âˆ§ (A(x) âˆ¨ C(x)).'
   },
   difference:{
-    left:'A ∖ B', right:'A ∩ Bᶜ', useC:false,
+    left:'A âˆ– B', right:'A âˆ© Bá¶œ', useC:false,
     L:({A,B})=>A&&!B, R:({A,B})=>A&&(!B),
     text:'Difference is not a new primitive: it is intersection with the complement.'
   },
   symdiff:{
-    left:'A △ B', right:'(A ∖ B) ∪ (B ∖ A)', useC:false,
+    left:'A â–³ B', right:'(A âˆ– B) âˆª (B âˆ– A)', useC:false,
     L:({A,B})=>A!==B, R:({A,B})=>(A&&!B)||(B&&!A),
     text:'Symmetric difference is exclusive-or: true exactly when memberships disagree.'
   },
   absorption_inter:{
-    left:'A ∩ (A ∪ B)', right:'A', useC:false,
+    left:'A âˆ© (A âˆª B)', right:'A', useC:false,
     L:({A,B})=>A&&(A||B), R:({A})=>A,
-    text:'Absorption: once A(x) is required, adding “or B(x)” changes nothing.'
+    text:'Absorption: once A(x) is required, adding â€œor B(x)â€ changes nothing.'
   },
   absorption_union:{
-    left:'A ∪ (A ∩ B)', right:'A', useC:false,
+    left:'A âˆª (A âˆ© B)', right:'A', useC:false,
     L:({A,B})=>A||(A&&B), R:({A})=>A,
-    text:'Absorption: A already contains the smaller condition A ∧ B.'
+    text:'Absorption: A already contains the smaller condition A âˆ§ B.'
   }
 };
 
@@ -870,3 +870,4 @@ renderAll();
 </script>
 </body>
 </html>
+

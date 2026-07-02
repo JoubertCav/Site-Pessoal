@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -136,7 +136,7 @@ svg{width:100%;height:auto;display:block;background:linear-gradient(180deg,var(-
         <h1>Indifference curves<br>and MRS</h1>
         <p class="sub">A geometric notebook for marginal rates of substitution, convexity, perfect substitutes, perfect complements, quasi-linear preferences, and kink points.</p>
       </div>
-      <button class="theme" id="themeBtn" aria-label="Toggle dark mode">☾</button>
+      <button class="theme" id="themeBtn" aria-label="Toggle dark mode">â˜¾</button>
     </div>
     <div class="nav" id="nav"></div>
     <div class="controls">
@@ -150,19 +150,19 @@ svg{width:100%;height:auto;display:block;background:linear-gradient(180deg,var(-
         </select>
       </div>
       <div class="control">
-        <label><span>Parameter α</span><b id="alphaVal">0.50</b></label>
+        <label><span>Parameter Î±</span><b id="alphaVal">0.50</b></label>
         <input id="alpha" type="range" min="0.15" max="0.85" step="0.01" value="0.50" />
       </div>
       <div class="control">
-        <label><span>Reference x₁</span><b id="xVal">4.00</b></label>
+        <label><span>Reference xâ‚</span><b id="xVal">4.00</b></label>
         <input id="x0" type="range" min="0.7" max="9.3" step="0.05" value="4.00" />
       </div>
       <div class="control">
-        <label><span>Reference x₂</span><b id="yVal">4.00</b></label>
+        <label><span>Reference xâ‚‚</span><b id="yVal">4.00</b></label>
         <input id="y0" type="range" min="0.7" max="9.3" step="0.05" value="4.00" />
       </div>
       <div class="control">
-        <label><span>Price ratio p₁/p₂</span><b id="pVal">1.00</b></label>
+        <label><span>Price ratio pâ‚/pâ‚‚</span><b id="pVal">1.00</b></label>
         <input id="priceRatio" type="range" min="0.20" max="4.00" step="0.02" value="1.00" />
       </div>
       <button id="snapBtn" class="miniButton">place reference at kink</button>
@@ -197,7 +197,7 @@ svg{width:100%;height:auto;display:block;background:linear-gradient(180deg,var(-
         </div>
         <div class="eqGrid" id="mathPanel">
           <div class="eqBox"><div class="label">Selected utility</div><div id="eqUtility"></div></div>
-          <div class="eqBox"><div class="label">Local object at x⁰</div><div id="eqLocal"></div></div>
+          <div class="eqBox"><div class="label">Local object at xâ°</div><div id="eqLocal"></div></div>
         </div>
         <div class="svgWrap">
           <svg id="mainSvg" viewBox="0 0 760 560" role="img" aria-label="Indifference curve diagram"></svg>
@@ -276,16 +276,16 @@ const els = {
   alphaVal:$('alphaVal'), xVal:$('xVal'), yVal:$('yVal'), pVal:$('pVal'), themeBtn:$('themeBtn'), snapBtn:$('snapBtn')
 };
 const families = {
-  cd:{name:'Cobb-Douglas', short:'CD', icon:'∂', subtitle:'smooth, strictly convex, diminishing MRS'},
-  subs:{name:'Perfect substitutes', short:'SUB', icon:'∥', subtitle:'linear indifference, constant MRS'},
-  comp:{name:'Perfect complements', short:'LEO', icon:'⌞', subtitle:'L-shaped indifference and a kink point'},
-  ql:{name:'Quasi-linear', short:'QL', icon:'↕', subtitle:'parallel vertical shifts, MRS depends only on x₁'}
+  cd:{name:'Cobb-Douglas', short:'CD', icon:'âˆ‚', subtitle:'smooth, strictly convex, diminishing MRS'},
+  subs:{name:'Perfect substitutes', short:'SUB', icon:'âˆ¥', subtitle:'linear indifference, constant MRS'},
+  comp:{name:'Perfect complements', short:'LEO', icon:'âŒž', subtitle:'L-shaped indifference and a kink point'},
+  ql:{name:'Quasi-linear', short:'QL', icon:'â†•', subtitle:'parallel vertical shifts, MRS depends only on xâ‚'}
 };
 const W=760,H=560, m={l:62,r:26,t:28,b:54}, xmax=10, ymax=10;
 const MW=420,MH=280, mm={l:48,r:20,t:24,b:42};
 const NS='http://www.w3.org/2000/svg';
 function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
-function fmt(x,d=2){ if(!Number.isFinite(x)) return '∞'; return Number(x).toFixed(d); }
+function fmt(x,d=2){ if(!Number.isFinite(x)) return 'âˆž'; return Number(x).toFixed(d); }
 function X(x){return m.l + (x/xmax)*(W-m.l-m.r);}
 function Y(y){return H-m.b - (y/ymax)*(H-m.t-m.b);}
 function MX(x){return mm.l + (x/xmax)*(MW-mm.l-mm.r);}
@@ -349,8 +349,8 @@ function drawGrid(svg){
   }
   line(svg,X(0),Y(0),X(10.25),Y(0),{stroke:ink,'stroke-width':1.4});
   line(svg,X(0),Y(0),X(0),Y(10.25),{stroke:ink,'stroke-width':1.4});
-  text(svg,X(10.05),Y(0)+35,'x₁',{'font-size':15,fill:ink,'font-weight':700});
-  text(svg,X(0)-26,Y(10.05),'x₂',{'font-size':15,fill:ink,'font-weight':700});
+  text(svg,X(10.05),Y(0)+35,'xâ‚',{'font-size':15,fill:ink,'font-weight':700});
+  text(svg,X(0)-26,Y(10.05),'xâ‚‚',{'font-size':15,fill:ink,'font-weight':700});
 }
 function segmentForLine(x0,y0,slope){
   const pts=[];
@@ -422,7 +422,7 @@ function drawCurves(svg,s,u0){
       poly(svg,pts,{fill:'none',stroke:main?accent:faint,'stroke-width':main?3:1.4,opacity:main?1:.58,'stroke-linecap':'round','stroke-linejoin':'round'});
     }
   });
-  text(svg,X(.28),Y(9.45),'higher utility ↑',{'font-size':12,fill:blue,'font-weight':700});
+  text(svg,X(.28),Y(9.45),'higher utility â†‘',{'font-size':12,fill:blue,'font-weight':700});
 }
 function drawMain(){
   const s=state(), svg=$('mainSvg'); clear(svg); drawGrid(svg);
@@ -441,11 +441,11 @@ function drawMain(){
   }
   circle(svg,X(s.x0),Y(s.y0),6.5,{fill:ink,stroke:paper,'stroke-width':2});
   circle(svg,X(s.x0),Y(s.y0),12,{fill:'none',stroke:accent,'stroke-width':1.8,opacity:.7});
-  text(svg,X(s.x0)+12,Y(s.y0)-14,'x⁰',{'font-size':13,fill:ink,'font-weight':800});
-  text(svg,X(8.1),Y(1.25),'budget slope = −p₁/p₂',{'font-size':12,fill:blue,'font-weight':700});
-  if(Number.isFinite(M)) text(svg,X(6.9),Y(7.9),'tangent slope = −MRS',{'font-size':12,fill:gold,'font-weight':700});
+  text(svg,X(s.x0)+12,Y(s.y0)-14,'xâ°',{'font-size':13,fill:ink,'font-weight':800});
+  text(svg,X(8.1),Y(1.25),'budget slope = âˆ’pâ‚/pâ‚‚',{'font-size':12,fill:blue,'font-weight':700});
+  if(Number.isFinite(M)) text(svg,X(6.9),Y(7.9),'tangent slope = âˆ’MRS',{'font-size':12,fill:gold,'font-weight':700});
   if(s.family==='subs') text(svg,X(.55),Y(.72),'parallel lines: constant MRS',{'font-size':12,fill:muted,'font-weight':700});
-  if(s.family==='ql') text(svg,X(.55),Y(.72),'vertical translations: same MU₂',{'font-size':12,fill:muted,'font-weight':700});
+  if(s.family==='ql') text(svg,X(.55),Y(.72),'vertical translations: same MUâ‚‚',{'font-size':12,fill:muted,'font-weight':700});
   if(s.family==='comp') text(svg,X(.55),Y(.72),'no smooth tangent at the kink',{'font-size':12,fill:bad,'font-weight':700});
 }
 function drawMrs(){
@@ -462,7 +462,7 @@ function drawMrs(){
   }
   line(svg,MX(0),MY(0,maxY),MX(10.15),MY(0,maxY),{stroke:ink,'stroke-width':1.3});
   line(svg,MX(0),MY(0,maxY),MX(0),MY(maxY,maxY),{stroke:ink,'stroke-width':1.3});
-  text(svg,MX(10.05),MY(0,maxY)+30,'x₁',{'font-size':12,fill:ink,'font-weight':700});
+  text(svg,MX(10.05),MY(0,maxY)+30,'xâ‚',{'font-size':12,fill:ink,'font-weight':700});
   text(svg,MX(0)-32,MY(maxY,maxY)-5,'MRS',{'font-size':12,fill:ink,'font-weight':700});
   const u0=currentLevel(s), {A,B,Q}=weights(s.alpha);
   if(s.family==='comp'){
@@ -470,7 +470,7 @@ function drawMrs(){
     add(svg,'rect',{x:MX(0),y:MY(maxY,maxY),width:MX(Math.min(k.x,10))-MX(0),height:MY(0,maxY)-MY(maxY,maxY),fill:css('--shadeBad'),stroke:'none'});
     add(svg,'rect',{x:MX(Math.min(k.x,10)),y:MY(.28,maxY),width:MX(10)-MX(Math.min(k.x,10)),height:MY(0,maxY)-MY(.28,maxY),fill:shade,stroke:'none'});
     line(svg,MX(k.x),MY(0,maxY),MX(k.x),MY(maxY,maxY),{stroke:gold,'stroke-width':2.2,'stroke-dasharray':'6 5'});
-    text(svg,MX(1.2),MY(4.35,maxY),'∞ on vertical arm',{'font-size':12,fill:bad,'font-weight':700});
+    text(svg,MX(1.2),MY(4.35,maxY),'âˆž on vertical arm',{'font-size':12,fill:bad,'font-weight':700});
     text(svg,MX(Math.min(k.x+1.2,8.5)),MY(.55,maxY),'0 on horizontal arm',{'font-size':12,fill:accent,'font-weight':700});
     text(svg,MX(k.x)+6,MY(4.9,maxY),'kink',{'font-size':11,fill:gold,'font-weight':800});
   }else{
@@ -488,9 +488,9 @@ function drawMrs(){
     const M=mrsAt(s,s.x0,s.y0);
     line(svg,MX(s.x0),MY(0,maxY),MX(s.x0),MY(Math.min(M,maxY),maxY),{stroke:blue,'stroke-width':1.6,'stroke-dasharray':'5 5'});
     circle(svg,MX(s.x0),MY(Math.min(M,maxY),maxY),5.5,{fill:blue,stroke:css('--paper'),'stroke-width':1.8});
-    text(svg,MX(s.x0)+8,MY(Math.min(M,maxY),maxY)-8,'at x⁰',{'font-size':11,fill:blue,'font-weight':800});
+    text(svg,MX(s.x0)+8,MY(Math.min(M,maxY),maxY)-8,'at xâ°',{'font-size':11,fill:blue,'font-weight':800});
     if(s.family==='subs') text(svg,MX(3),MY(Math.min(A/B,maxY),maxY)-10,'constant MRS',{'font-size':12,fill:accent,'font-weight':800});
-    if(s.family==='ql') text(svg,MX(5.2),MY(1.1,maxY),'depends only on x₁',{'font-size':12,fill:muted,'font-weight':700});
+    if(s.family==='ql') text(svg,MX(5.2),MY(1.1,maxY),'depends only on xâ‚',{'font-size':12,fill:muted,'font-weight':700});
   }
 }
 function utilityTex(s){
@@ -516,34 +516,34 @@ function localTex(s,M){
 }
 function notices(s,M){
   if(s.family==='cd') return [
-    ['1','Indifference curves are smooth and bowed toward the origin. Moving southeast along a curve raises x₁ and lowers x₂, so MRS falls.'],
+    ['1','Indifference curves are smooth and bowed toward the origin. Moving southeast along a curve raises xâ‚ and lowers xâ‚‚, so MRS falls.'],
     ['2','Strict convexity means averages of two indifferent bundles are strictly preferred. Geometrically, upper contour sets are strictly convex.'],
     ['3','Tangency is meaningful because the curve has a unique local slope at every positive bundle.']
   ];
   if(s.family==='subs') return [
     ['1','Indifference curves are straight because the goods trade at a constant subjective rate.'],
     ['2','Convexity holds, but strict convexity fails: mixtures of indifferent bundles can remain indifferent.'],
-    ['3','If MRS differs from p₁/p₂, utility maximization usually gives a corner, not an interior tangency.']
+    ['3','If MRS differs from pâ‚/pâ‚‚, utility maximization usually gives a corner, not an interior tangency.']
   ];
   if(s.family==='comp') return [
     ['1','The kink is the economically relevant point: extra units of only one good do not raise utility.'],
     ['2','MRS is not a single derivative at the kink. The vertical arm has infinite tradeoff; the horizontal arm has zero tradeoff.'],
-    ['3','Convexity appears as a north-east rectangle: the upper contour set is {x₁≥k₁ and x₂≥k₂}.']
+    ['3','Convexity appears as a north-east rectangle: the upper contour set is {xâ‚â‰¥kâ‚ and xâ‚‚â‰¥kâ‚‚}.']
   ];
   return [
-    ['1','Quasi-linear curves are vertical translations of each other: income shifts x₂, but the local MRS depends only on x₁.'],
-    ['2','The MRS falls as x₁ rises because ln x₁ is concave. This is diminishing marginal willingness to pay for good 1.'],
-    ['3','Interior demand for x₁ is pinned down by MRS=p₁/p₂, independent of income.']
+    ['1','Quasi-linear curves are vertical translations of each other: income shifts xâ‚‚, but the local MRS depends only on xâ‚.'],
+    ['2','The MRS falls as xâ‚ rises because ln xâ‚ is concave. This is diminishing marginal willingness to pay for good 1.'],
+    ['3','Interior demand for xâ‚ is pinned down by MRS=pâ‚/pâ‚‚, independent of income.']
   ];
 }
 function updateText(){
   const s=state(), fam=families[s.family], M=mrsAt(s,s.x0,s.y0), u=currentLevel(s), price=s.p;
   $('heroTitle').textContent = s.family==='comp' ? 'Kinks and nonsmooth indifference curves' : s.family==='subs' ? 'Linear indifference and constant MRS' : s.family==='ql' ? 'Quasi-linear indifference maps' : 'Smooth indifference curves and MRS';
-  $('heroText').textContent = s.family==='comp' ? 'Perfect complements make visible why MRS is not always a derivative. At the kink, there is no unique tangent slope.' : s.family==='subs' ? 'Perfect substitutes show that convex preferences may have straight indifference curves. The MRS is constant, so tangency is a knife-edge case.' : s.family==='ql' ? 'Quasi-linear preferences isolate the marginal tradeoff: MRS depends on x₁ only, while higher utility translates curves vertically.' : 'Cobb-Douglas preferences show the canonical smooth case: a unique tangent, diminishing MRS, and strictly convex upper contour sets.';
+  $('heroText').textContent = s.family==='comp' ? 'Perfect complements make visible why MRS is not always a derivative. At the kink, there is no unique tangent slope.' : s.family==='subs' ? 'Perfect substitutes show that convex preferences may have straight indifference curves. The MRS is constant, so tangency is a knife-edge case.' : s.family==='ql' ? 'Quasi-linear preferences isolate the marginal tradeoff: MRS depends on xâ‚ only, while higher utility translates curves vertically.' : 'Cobb-Douglas preferences show the canonical smooth case: a unique tangent, diminishing MRS, and strictly convex upper contour sets.';
   $('statusPill').textContent = fam.subtitle;
-  $('mainBadge').textContent = Number.isFinite(M) ? `MRS = ${fmt(M)}` : (M===Infinity ? 'MRS = ∞ on this arm' : 'MRS not unique at kink');
+  $('mainBadge').textContent = Number.isFinite(M) ? `MRS = ${fmt(M)}` : (M===Infinity ? 'MRS = âˆž on this arm' : 'MRS not unique at kink');
   $('readFamily').textContent = fam.name;
-  $('readMRS').innerHTML = Number.isFinite(M) ? fmt(M) : (M===Infinity ? '∞' : '<span class="warn">not unique</span>');
+  $('readMRS').innerHTML = Number.isFinite(M) ? fmt(M) : (M===Infinity ? 'âˆž' : '<span class="warn">not unique</span>');
   $('readPrice').textContent = fmt(price);
   let shape='', signal='';
   if(s.family==='cd') shape='smooth, monotone, strictly convex';
@@ -555,12 +555,12 @@ function updateText(){
     signal = Math.abs(diff)<.045 ? 'reference is approximately at the kink' : diff<0 ? 'good 1 is the limiting good; MRS is effectively infinite' : 'good 2 is the limiting good; MRS is effectively zero';
   }else if(s.family==='subs'){
     if(Math.abs(M-price)<.035) signal='knife-edge: every bundle on the budget line gives the same utility';
-    else if(M>price) signal='subjective value of x₁ exceeds market cost: corner toward good 1';
-    else signal='subjective value of x₁ is below market cost: corner toward good 2';
+    else if(M>price) signal='subjective value of xâ‚ exceeds market cost: corner toward good 1';
+    else signal='subjective value of xâ‚ is below market cost: corner toward good 2';
   }else{
-    if(Math.abs(M-price)<.06) signal='local tangency: MRS approximately equals p₁/p₂';
-    else if(M>price) signal='MRS>p₁/p₂: move toward more x₁ and less x₂ along a budget line';
-    else signal='MRS<p₁/p₂: move toward less x₁ and more x₂ along a budget line';
+    if(Math.abs(M-price)<.06) signal='local tangency: MRS approximately equals pâ‚/pâ‚‚';
+    else if(M>price) signal='MRS>pâ‚/pâ‚‚: move toward more xâ‚ and less xâ‚‚ along a budget line';
+    else signal='MRS<pâ‚/pâ‚‚: move toward less xâ‚ and more xâ‚‚ along a budget line';
   }
   $('readShape').textContent = shape;
   $('readSignal').textContent = signal;
@@ -588,7 +588,7 @@ function buildTiles(){
     cd:'Smooth benchmark. The tangent slope exists and MRS diminishes along the curve.',
     subs:'Straight indifference curves. MRS is constant; interior tangency is knife-edge.',
     comp:'L-shaped level sets. The kink is optimal under positive prices; no unique MRS at the kink.',
-    ql:'Vertical translations. MRS depends only on x₁, not on x₂.'
+    ql:'Vertical translations. MRS depends only on xâ‚, not on xâ‚‚.'
   };
   Object.entries(families).forEach(([key,f])=>{
     const t=document.createElement('div'); t.className='tile'; t.dataset.family=key;
@@ -618,11 +618,12 @@ function snapToKink(){
 els.snapBtn.addEventListener('click',snapToKink);
 els.themeBtn.addEventListener('click',()=>{
   const dark=document.documentElement.getAttribute('data-theme')==='dark';
-  if(dark){document.documentElement.removeAttribute('data-theme'); els.themeBtn.textContent='☾';}
-  else{document.documentElement.setAttribute('data-theme','dark'); els.themeBtn.textContent='☀';}
+  if(dark){document.documentElement.removeAttribute('data-theme'); els.themeBtn.textContent='â˜¾';}
+  else{document.documentElement.setAttribute('data-theme','dark'); els.themeBtn.textContent='â˜€';}
   update();
 });
 buildNav(); buildTiles(); update();
 </script>
 </body>
 </html>
+

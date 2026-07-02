@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -268,7 +268,7 @@ window.MathJax = {
 <div class="app" id="app">
   <header>
     <div>
-      <div class="kicker"><span class="dot"></span> Real Analysis · Metric spaces</div>
+      <div class="kicker"><span class="dot"></span> Real Analysis Â· Metric spaces</div>
       <h1>Sequential continuity</h1>
       <div class="subtitle">Continuity seen through convergent sequences: points approach the input, and their images must approach the value of the function.</div>
     </div>
@@ -482,7 +482,7 @@ window.MathJax = {
       f(x){ if(Math.abs(x)<1e-12) return 0; return x<0 ? -0.70 : 0.70; },
       notice:[
         'A jump is exposed by comparing sequences approaching from different sides.',
-        'An alternating sequence x_n→0 makes f(x_n) alternate between two separated values.',
+        'An alternating sequence x_nâ†’0 makes f(x_n) alternate between two separated values.',
         'Even a one-sided sequence may converge, but not necessarily to the value f(0).'
       ],
       verdict(seq){ return {kind:'bad', title:'continuity fails', text:'The domain sequence approaches 0, but the image sequence does not approach f(0)=0.'}; }
@@ -496,7 +496,7 @@ window.MathJax = {
       notice:[
         'A removable discontinuity is not detected by oscillation; the image sequence may converge.',
         'The problem is that the sequence converges to the punctured limit, not to f(0).',
-        'Continuity requires f(x_n)→f(a), not merely that f(x_n) has some limit.'
+        'Continuity requires f(x_n)â†’f(a), not merely that f(x_n) has some limit.'
       ],
       verdict(seq){ return {kind:'bad', title:'wrong limit', text:'The images settle near 1, while the function value is f(0)=0.22.'}; }
     },
@@ -508,7 +508,7 @@ window.MathJax = {
       f(x){ if(Math.abs(x)<1e-12) return 0; return Math.sin(1/x); },
       notice:[
         'Oscillation is revealed by sequences that hit different phases while still approaching 0.',
-        'One can choose x_n→0 with f(x_n)=1 and another with f(x_n)=-1.',
+        'One can choose x_nâ†’0 with f(x_n)=1 and another with f(x_n)=-1.',
         'A single alternating witness already prevents the image sequence from converging.'
       ],
       verdict(seq){ return {kind:'bad', title:'no image limit', text:'The input sequence converges to 0, but the image sequence keeps separated subsequential limits.'}; }
@@ -658,7 +658,7 @@ window.MathJax = {
       svgEl('circle',{cx:sm.X(d.x),cy:strip.y0+10,r:d.n>=tailN?3.2:2.2,class:d.n>=tailN?'tail-dot':'seq-dot',opacity:d.n>=tailN?.85:.42},mainSvg);
     });
     svgEl('circle',{cx:sm.X(0),cy:strip.y0+10,r:4.5,class:'filled-dot'},mainSvg);
-    svgEl('text',{x:strip.x0,y:strip.y0-8,class:'label'},mainSvg).textContent='domain collapse: xₙ → 0';
+    svgEl('text',{x:strip.x0,y:strip.y0-8,class:'label'},mainSvg).textContent='domain collapse: xâ‚™ â†’ 0';
   }
 
   function renderSeqSvg(fnKey, spec, seq, tailN, band){
@@ -679,7 +679,7 @@ window.MathJax = {
     svgEl('line',{x1:bot.x0,y1:mb.Y(spec.fa),x2:bot.x0+bot.w,y2:mb.Y(spec.fa),class:'target-line'},seqSvg);
     if(spec.candidate !== null && spec.candidate !== spec.fa){
       svgEl('line',{x1:bot.x0,y1:mb.Y(spec.candidate),x2:bot.x0+bot.w,y2:mb.Y(spec.candidate),class:'limit-line'},seqSvg);
-      svgEl('text',{x:bot.x0+bot.w-8,y:mb.Y(spec.candidate)-8,'text-anchor':'end',class:'label'},seqSvg).textContent='limit along xₙ';
+      svgEl('text',{x:bot.x0+bot.w-8,y:mb.Y(spec.candidate)-8,'text-anchor':'end',class:'label'},seqSvg).textContent='limit along xâ‚™';
     }
     if(fnKey==='oscillatory'){
       svgEl('line',{x1:bot.x0,y1:mb.Y(1),x2:bot.x0+bot.w,y2:mb.Y(1),class:'limit-line'},seqSvg);
@@ -697,8 +697,8 @@ window.MathJax = {
     });
     svgEl('line',{x1:tailX,y1:top.y0-10,x2:tailX,y2:bot.y0+bot.h+10,class:'a-line'},seqSvg);
     svgEl('text',{x:tailX+6,y:top.y0-15,class:'label-strong'},seqSvg).textContent='N';
-    svgEl('text',{x:top.x0,y:top.y0-14,class:'label-strong'},seqSvg).textContent='domain sequence: xₙ → 0';
-    svgEl('text',{x:bot.x0,y:bot.y0-14,class:'label-strong'},seqSvg).textContent='image sequence: f(xₙ) should → f(0)';
+    svgEl('text',{x:top.x0,y:top.y0-14,class:'label-strong'},seqSvg).textContent='domain sequence: xâ‚™ â†’ 0';
+    svgEl('text',{x:bot.x0,y:bot.y0-14,class:'label-strong'},seqSvg).textContent='image sequence: f(xâ‚™) should â†’ f(0)';
     svgEl('text',{x:top.x0+top.w,y:top.y0+top.h+22,'text-anchor':'end',class:'label'},seqSvg).textContent='n';
     svgEl('text',{x:bot.x0+bot.w,y:bot.y0+bot.h+22,'text-anchor':'end',class:'label'},seqSvg).textContent='n';
     svgEl('text',{x:top.x0+top.w-8,y:mt.Y(0)-8,'text-anchor':'end',class:'label'},seqSvg).textContent='0';
@@ -719,11 +719,11 @@ window.MathJax = {
     els.domainStatus.className='mini status-good';
     const tail = seq.slice(Math.max(0,tailN-1));
     const maxDomain = Math.max(...tail.map(d=>Math.abs(d.x)));
-    els.domainStatus.innerHTML = `<b>Domain sequence</b><p>For the displayed tail, max |xₙ−0| ≈ ${fmt(maxDomain)}. The inputs are collapsing toward 0.</p>`;
+    els.domainStatus.innerHTML = `<b>Domain sequence</b><p>For the displayed tail, max |xâ‚™âˆ’0| â‰ˆ ${fmt(maxDomain)}. The inputs are collapsing toward 0.</p>`;
     els.imageStatus.className = 'mini ' + (verdict.kind==='good' ? 'status-good' : 'status-bad');
     const maxImage = Math.max(...tail.map(d=>Math.abs(spec.f(d.x)-spec.fa)));
     const imageRange = Math.max(...tail.map(d=>spec.f(d.x))) - Math.min(...tail.map(d=>spec.f(d.x)));
-    const extra = verdict.kind==='good' ? `max |f(xₙ)−f(0)| ≈ ${fmt(maxImage)}.` : `tail spread ≈ ${fmt(imageRange)}, max |f(xₙ)−f(0)| ≈ ${fmt(maxImage)}.`;
+    const extra = verdict.kind==='good' ? `max |f(xâ‚™)âˆ’f(0)| â‰ˆ ${fmt(maxImage)}.` : `tail spread â‰ˆ ${fmt(imageRange)}, max |f(xâ‚™)âˆ’f(0)| â‰ˆ ${fmt(maxImage)}.`;
     els.imageStatus.innerHTML = `<b>Image sequence</b><p>${verdict.text} ${extra}</p>`;
     els.notice1.textContent = spec.notice[0];
     els.notice2.textContent = spec.notice[1];
@@ -774,3 +774,4 @@ window.MathJax = {
 </script>
 </body>
 </html>
+

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -296,10 +296,10 @@
   <div class="app" id="app" data-theme="light">
     <header class="topbar">
       <div class="brand">
-        <div class="mark">♞</div>
+        <div class="mark">â™ž</div>
         <div>
           <h1>Extensive-Form Games</h1>
-          <p>Game trees · information sets · backward induction · subgame perfection</p>
+          <p>Game trees Â· information sets Â· backward induction Â· subgame perfection</p>
         </div>
       </div>
       <div class="theme-switch" aria-label="Theme switch">
@@ -322,14 +322,14 @@
           </select>
 
           <div class="control-section">
-            <div class="section-head"><strong>Entry game payoffs</strong><span class="hint">P1 · P2</span></div>
+            <div class="section-head"><strong>Entry game payoffs</strong><span class="hint">P1 Â· P2</span></div>
             <div class="pay-row" data-row="share"><span class="name">Share</span><input id="share1" type="range" min="-6" max="8" step="0.5" value="2"><span class="num" id="share1v">2</span><input id="share2" class="blue-range" type="range" min="-6" max="8" step="0.5" value="2"><span class="num" id="share2v">2</span></div>
             <div class="pay-row" data-row="fight"><span class="name">War</span><input id="fight1" type="range" min="-6" max="8" step="0.5" value="-1"><span class="num" id="fight1v">-1</span><input id="fight2" class="blue-range" type="range" min="-6" max="8" step="0.5" value="1"><span class="num" id="fight2v">1</span></div>
             <div class="pay-row" data-row="out"><span class="name">Out</span><input id="out1" type="range" min="-6" max="8" step="0.5" value="0"><span class="num" id="out1v">0</span><input id="out2" class="blue-range" type="range" min="-6" max="8" step="0.5" value="4"><span class="num" id="out2v">4</span></div>
           </div>
 
           <div class="control-section">
-            <div class="section-head"><strong>Information-set payoffs</strong><span class="hint">P1 · P2</span></div>
+            <div class="section-head"><strong>Information-set payoffs</strong><span class="hint">P1 Â· P2</span></div>
             <div class="pay-row"><span class="name">Top u</span><input id="tu1" type="range" min="-4" max="8" step="0.5" value="3"><span class="num" id="tu1v">3</span><input id="tu2" class="blue-range" type="range" min="-4" max="8" step="0.5" value="1"><span class="num" id="tu2v">1</span></div>
             <div class="pay-row"><span class="name">Top d</span><input id="td1" type="range" min="-4" max="8" step="0.5" value="0"><span class="num" id="td1v">0</span><input id="td2" class="blue-range" type="range" min="-4" max="8" step="0.5" value="0"><span class="num" id="td2v">0</span></div>
             <div class="pay-row"><span class="name">Bot u</span><input id="bu1" type="range" min="-4" max="8" step="0.5" value="1"><span class="num" id="bu1v">1</span><input id="bu2" class="blue-range" type="range" min="-4" max="8" step="0.5" value="3"><span class="num" id="bu2v">3</span></div>
@@ -337,16 +337,16 @@
           </div>
 
           <div class="control-section">
-            <div class="section-head"><strong>Belief at information set</strong><span class="hint" id="beliefV">μ = 0.50</span></div>
+            <div class="section-head"><strong>Belief at information set</strong><span class="hint" id="beliefV">Î¼ = 0.50</span></div>
             <input id="belief" type="range" min="0" max="1" step="0.01" value="0.5" />
             <div class="toggle-row">
               <span>Show solution path</span>
               <button id="solutionToggle" class="mini-toggle on" aria-label="Toggle solution path"></button>
             </div>
             <div class="btns">
-              <button class="btn primary" id="biBtn">▷ Backward induction</button>
-              <button class="btn" id="nashBtn">⚖ SPNE / Nash comparison</button>
-              <button class="btn" id="resetBtn">↻ Reset defaults</button>
+              <button class="btn primary" id="biBtn">â–· Backward induction</button>
+              <button class="btn" id="nashBtn">âš– SPNE / Nash comparison</button>
+              <button class="btn" id="resetBtn">â†» Reset defaults</button>
             </div>
           </div>
         </section>
@@ -417,7 +417,7 @@
               <div class="note good">
                 <h3>Interpretation</h3>
                 <p id="entryInterpretation">Solve the incumbent node first. Since accommodation gives Player 2 more than fighting, the credible continuation is accommodate.</p>
-                <div class="big" id="entryOutcome">Enter → Accommodate</div>
+                <div class="big" id="entryOutcome">Enter â†’ Accommodate</div>
               </div>
               <div class="note amber">
                 <h3>Backward induction logic</h3>
@@ -479,7 +479,7 @@
               </div>
               <div class="note amber">
                 <h3>Belief calculation</h3>
-                <p id="beliefText">At μ = 0.50, Player 2 compares expected payoffs from u and d.</p>
+                <p id="beliefText">At Î¼ = 0.50, Player 2 compares expected payoffs from u and d.</p>
                 <div class="big" id="beliefChoice">u is optimal</div>
               </div>
               <div class="note">
@@ -529,7 +529,7 @@
 
   function updateValues(){
     ids.forEach(id => { const v = $(id+'v'); if(v) v.textContent = fmt(val(id)); });
-    $('beliefV').textContent = `μ = ${val('belief').toFixed(2)}`;
+    $('beliefV').textContent = `Î¼ = ${val('belief').toFixed(2)}`;
   }
 
   function entrySolution(){
@@ -585,14 +585,14 @@
     setPayActive('outBox', showSolution && outChosen);
 
     const incText = s.chosenInc === 'A'
-      ? `The incumbent accommodates because ${fmt(s.sh.p2)} ≥ ${fmt(s.fi.p2)}.`
+      ? `The incumbent accommodates because ${fmt(s.sh.p2)} â‰¥ ${fmt(s.fi.p2)}.`
       : `The incumbent fights because ${fmt(s.fi.p2)} > ${fmt(s.sh.p2)}.`;
     const entText = s.entrant === 'E'
       ? `Entry yields Player 1 payoff ${fmt(s.enterP1)}, which is at least staying out ${fmt(s.out.p1)}.`
       : `Entry would yield Player 1 payoff ${fmt(s.enterP1)}, below staying out ${fmt(s.out.p1)}.`;
     $('entryInterpretation').textContent = `${incText} ${entText}`;
     $('entryOutcome').textContent = s.entrant === 'E'
-      ? `Enter → ${s.chosenInc === 'A' ? 'Accommodate' : 'Fight'}`
+      ? `Enter â†’ ${s.chosenInc === 'A' ? 'Accommodate' : 'Fight'}`
       : `Out; off path: ${s.chosenInc === 'A' ? 'Accommodate' : 'Fight'}`;
     $('credibilityText').textContent = s.chosenInc === 'A'
       ? `A price-war threat is not credible: if reached, the incumbent prefers share market ${pair(s.sh.p1,s.sh.p2)} to price war ${pair(s.fi.p1,s.fi.p2)}.`
@@ -631,7 +631,7 @@
     const mu = val('belief');
     const euU = mu*val('tu2') + (1-mu)*val('bu2');
     const euD = mu*val('td2') + (1-mu)*val('bd2');
-    $('beliefText').textContent = `At μ = ${mu.toFixed(2)}, Player 2 gets EU(u) = ${euU.toFixed(2)} and EU(d) = ${euD.toFixed(2)}.`;
+    $('beliefText').textContent = `At Î¼ = ${mu.toFixed(2)}, Player 2 gets EU(u) = ${euU.toFixed(2)} and EU(d) = ${euD.toFixed(2)}.`;
     $('beliefChoice').textContent = Math.abs(euU-euD)<1e-9 ? 'u and d tie' : (euU>euD ? 'u is optimal' : 'd is optimal');
 
     const {ne} = pureNE();
@@ -723,3 +723,4 @@
 </script>
 </body>
 </html>
+

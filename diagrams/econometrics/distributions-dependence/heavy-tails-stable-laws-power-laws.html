@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -266,7 +266,7 @@ const $ = id => document.getElementById(id);
 const state = { mode:'pareto' };
 const modeButtons = [...document.querySelectorAll('[data-mode]')];
 
-function fmt(x,d=2){ return isFinite(x) ? Number(x).toFixed(d) : '∞'; }
+function fmt(x,d=2){ return isFinite(x) ? Number(x).toFixed(d) : 'âˆž'; }
 function clamp(x,a,b){ return Math.max(a,Math.min(b,x)); }
 function clear(el){ el.innerHTML=''; }
 function svgEl(tag, attrs={}){ const e=document.createElementNS('http://www.w3.org/2000/svg',tag); for(const k in attrs) e.setAttribute(k,attrs[k]); return e; }
@@ -347,9 +347,9 @@ function drawParetoMain(){
     const y=paretoPdf(t,a);
     svg.appendChild(svgEl('line',{x1:xs(t),y1:y0+h,x2:xs(t),y2:ys(y),class:'guide'}));
     svg.appendChild(svgEl('circle',{cx:xs(t),cy:ys(y),r:5,class:'dot'}));
-    text(svg,xs(t)+8,ys(y)-8,`P(X>x₀)=${fmt(paretoSurv(t,a),3)}`,'inklabel','start');
+    text(svg,xs(t)+8,ys(y)-8,`P(X>xâ‚€)=${fmt(paretoSurv(t,a),3)}`,'inklabel','start');
   }
-  text(svg,x0+w-4,y0+18,`Pareto tail index α = ${fmt(a,2)}`,'inklabel','end');
+  text(svg,x0+w-4,y0+18,`Pareto tail index Î± = ${fmt(a,2)}`,'inklabel','end');
   legend([{className:'sw',label:'Pareto density'},{className:'sw2',label:'tail probability beyond threshold'}]);
 }
 function drawParetoSecondary(){
@@ -358,7 +358,7 @@ function drawParetoSecondary(){
   const x0=58,y0=34,w=504,h=220;
   const lxMin=0, lxMax=Math.log10(80), lyMin=-5, lyMax=0;
   const xs=L=>x0+w*(L-lxMin)/(lxMax-lxMin), ys=L=>y0+h-h*(L-lyMin)/(lyMax-lyMin);
-  axes(svg,{x0,y0,w,h,xMin:1,xMax:80,yMin:lyMin,yMax:lyMax,xLabel:'log₁₀ x',yLabel:'log₁₀ survival',ticksX:4,ticksY:5});
+  axes(svg,{x0,y0,w,h,xMin:1,xMax:80,yMin:lyMin,yMax:lyMax,xLabel:'logâ‚â‚€ x',yLabel:'logâ‚â‚€ survival',ticksX:4,ticksY:5});
   const pareto=[], expo=[];
   for(let i=0;i<=360;i++){
     const x=1+(80-1)*i/360;
@@ -411,7 +411,7 @@ function drawCauchySecondary(){
     svg.appendChild(svgEl('rect',{x:b[0],y:b[1],width:b[2],height:b[3],rx:18,fill:'var(--paper2)',class:'barstroke'}));
     text(svg,b[0]+b[2]/2,b[1]+19,b[4],'label');
     svgKatex(svg,b[0]+b[2]/2,b[1]+31,b[5],{w:b[2]-12,h:26,cls:'svgmath small'});
-    if(i<2) text(svg,b[0]+b[2]+18,b[1]+39,'→','inklabel');
+    if(i<2) text(svg,b[0]+b[2]+18,b[1]+39,'â†’','inklabel');
   });
   const bx=88,by=170,bw=400,bh=36;
   svg.appendChild(svgEl('rect',{x:bx,y:by,width:bw,height:bh,rx:999,fill:'var(--paper2)',class:'barstroke'}));
@@ -441,7 +441,7 @@ function drawGcltMain(){
   svg.appendChild(svgEl('path',{d:pathLine(ptsN,xs,ys),class:'curve3','clip-path':'url(#clipG)'}));
   svg.appendChild(svgEl('path',{d:pathLine(ptsStable,xs,ys),class:'curve','clip-path':'url(#clipG)'}));
   text(svg,x0+w-4,y0+18,a<2?'stable scaling beats Gaussian scaling':'finite variance moves toward Gaussian logic','inklabel','end');
-  legend([{className:'sw',label:'α-stable tail-shape proxy'},{className:'sw3',label:'Gaussian benchmark'}]);
+  legend([{className:'sw',label:'Î±-stable tail-shape proxy'},{className:'sw3',label:'Gaussian benchmark'}]);
 }
 function drawGcltSecondary(){
   const svg=$('secondarySvg'); clear(svg);
@@ -492,7 +492,7 @@ function drawVarianceMain(){
     svg.appendChild(svgEl('line',{x1:xs(tNow),y1:y0+h,x2:xs(tNow),y2:ys(yNow),class:'guide'}));
     svg.appendChild(svgEl('circle',{cx:xs(tNow),cy:ys(yNow),r:5,class:'dot'}));
   }
-  legend([{className:'sw',label:'truncated second moment'},{className:'sw3',label:'finite limit when α > 2'}]);
+  legend([{className:'sw',label:'truncated second moment'},{className:'sw3',label:'finite limit when Î± > 2'}]);
 }
 function drawVarianceSecondary(){
   const svg=$('secondarySvg'); clear(svg);
@@ -512,7 +512,7 @@ function drawVarianceSecondary(){
   svg.appendChild(svgEl('path',{d:pathLine([[0,0],[1,1]],xs,ys),class:'curve3'}));
   svg.appendChild(svgEl('path',{d:pathLine(pts,xs,ys),class:'curve'}));
   const topShare=vals[0]/total;
-  text(svg,x0+w-4,y0+18,`largest square share ≈ ${fmt(topShare,2)}`,'inklabel','end');
+  text(svg,x0+w-4,y0+18,`largest square share â‰ˆ ${fmt(topShare,2)}`,'inklabel','end');
   svgKatex(svg,310,292,String.raw`E[X^2]<\infty\iff \alpha>2`,{w:320,h:32});
 }
 
@@ -599,12 +599,12 @@ function updateTexts(){
     $('secondarySub').textContent='A power law becomes a straight line after taking logs.';
     $('badge').innerHTML=String.raw`tail: <span class="math-inline" data-katex="\bar F(x)=x^{-\alpha}"></span>`;
     setKatex($('definition'),String.raw`P(X>x)=x^{-\alpha},\qquad f(x)=\alpha x^{-\alpha-1},\qquad x\ge1`);
-    $('meanMetric').textContent=a>1?fmt(paretoMean(a),2):'∞';
-    $('varMetric').textContent=a>2?fmt(paretoVar(a),2):'∞';
+    $('meanMetric').textContent=a>1?fmt(paretoMean(a),2):'âˆž';
+    $('varMetric').textContent=a>2?fmt(paretoVar(a),2):'âˆž';
     $('tailMetric').textContent=fmt(paretoSurv(p.threshold,a),4);
     $('logicMetric').textContent=a<2?'non-Gaussian tails':'finite variance zone';
-    $('interpText').textContent='Power laws assign much more probability to extreme outcomes than exponential or Gaussian tails. The tail index α controls which moments exist.';
-    $('noticeText').textContent='When α falls below 2, variance is infinite. When α falls below 1, even the mean is infinite. Tail behavior dominates averages.';
+    $('interpText').textContent='Power laws assign much more probability to extreme outcomes than exponential or Gaussian tails. The tail index Î± controls which moments exist.';
+    $('noticeText').textContent='When Î± falls below 2, variance is infinite. When Î± falls below 1, even the mean is infinite. Tail behavior dominates averages.';
     $('summaryText').innerHTML=String.raw`Pareto moments obey <span class="math-inline" data-katex="E[X^q]<\infty\iff q<\alpha"></span>.`;
   } else if(state.mode==='cauchy'){
     const tail=2*(1-cauchyCdf(2*p.scale,p.scale));
@@ -615,25 +615,25 @@ function updateTexts(){
     $('badge').innerHTML=String.raw`stable: <span class="math-inline" data-katex="\bar X_n\overset d=X_1"></span>`;
     setKatex($('definition'),String.raw`X_i\sim C(0,\gamma)\quad\Longrightarrow\quad \frac{X_1+\cdots+X_n}{n}\sim C(0,\gamma)`);
     $('meanMetric').textContent='undefined';
-    $('varMetric').textContent='∞';
+    $('varMetric').textContent='âˆž';
     $('tailMetric').textContent=fmt(tail,4);
-    $('logicMetric').textContent='stable, α=1';
+    $('logicMetric').textContent='stable, Î±=1';
     $('interpText').textContent='The Cauchy law is stable with tail index one. Its sample average does not concentrate around a population mean.';
-    $('noticeText').textContent='The dashed Gaussian benchmark shows the intuition that fails: normal averages shrink at rate √n, but Cauchy averages do not shrink at all.';
+    $('noticeText').textContent='The dashed Gaussian benchmark shows the intuition that fails: normal averages shrink at rate âˆšn, but Cauchy averages do not shrink at all.';
     $('summaryText').innerHTML=String.raw`Cauchy has no finite mean, no finite variance, and satisfies <span class="math-inline" data-katex="(X_1+\cdots+X_n)/n\overset d=X_1"></span>.`;
   } else if(state.mode==='gclt'){
     $('mainTitle').textContent='Generalized central limit logic';
     $('mainSub').innerHTML=String.raw`With infinite variance, sums scale like <span class="math-inline" data-katex="n^{1/\alpha}"></span>, not <span class="math-inline" data-katex="\sqrt n"></span>.`;
     $('secondaryTitle').textContent='Scaling comparison';
-    $('secondarySub').textContent='Heavy-tailed sums require larger normalization when α < 2.';
+    $('secondarySub').textContent='Heavy-tailed sums require larger normalization when Î± < 2.';
     $('badge').innerHTML=String.raw`stable index: <span class="math-inline" data-katex="\alpha"></span>`;
     setKatex($('definition'),String.raw`\frac{X_1+\cdots+X_n-b_n}{n^{1/\alpha}}\Rightarrow S_\alpha,\qquad 0<\alpha<2`);
-    $('meanMetric').textContent=a>1?'finite':'∞';
-    $('varMetric').textContent=a>2?'finite':'∞';
+    $('meanMetric').textContent=a>1?'finite':'âˆž';
+    $('varMetric').textContent=a>2?'finite':'âˆž';
     $('tailMetric').textContent='heavy';
     $('logicMetric').textContent=a<2?'stable limit':'Gaussian limit';
     $('interpText').textContent='The classical CLT is not the only possible limit theorem. Heavy-tailed sums can converge to non-Gaussian stable laws.';
-    $('noticeText').textContent='The generalized scaling curve grows faster than √n when α<2. This reflects the influence of rare, very large terms.';
+    $('noticeText').textContent='The generalized scaling curve grows faster than âˆšn when Î±<2. This reflects the influence of rare, very large terms.';
     $('summaryText').innerHTML=String.raw`Classical CLT requires finite variance. If tails are regularly varying with index <span class="math-inline" data-katex="\alpha<2"></span>, stable limits replace Gaussian limits.`;
   } else if(state.mode==='variance'){
     $('mainTitle').textContent='Infinite variance as visible divergence';
@@ -642,11 +642,11 @@ function updateTexts(){
     $('secondarySub').textContent='In heavy tails, a few extremes can determine the sample variance.';
     $('badge').innerHTML=String.raw`criterion: <span class="math-inline" data-katex="\alpha>2"></span>`;
     setKatex($('definition'),String.raw`E[X^2\mathbf 1\{X\le t\}]=\alpha\int_1^t x^{1-\alpha}\,dx`);
-    $('meanMetric').textContent=a>1?fmt(paretoMean(a),2):'∞';
-    $('varMetric').textContent=a>2?fmt(paretoVar(a),2):'∞';
+    $('meanMetric').textContent=a>1?fmt(paretoMean(a),2):'âˆž';
+    $('varMetric').textContent=a>2?fmt(paretoVar(a),2):'âˆž';
     $('tailMetric').textContent=fmt(paretoSurv(p.threshold,a),4);
     $('logicMetric').textContent=a>2?'variance finite':'variance infinite';
-    $('interpText').textContent='If α≤2, the second moment does not settle down as the cutoff increases. Sample variance remains unstable because tail extremes matter at every scale.';
+    $('interpText').textContent='If Î±â‰¤2, the second moment does not settle down as the cutoff increases. Sample variance remains unstable because tail extremes matter at every scale.';
     $('noticeText').textContent='The diagonal benchmark in the secondary plot represents equal contribution. Curvature above it means a few large observations dominate squared variation.';
     $('summaryText').innerHTML=String.raw`For Pareto tails, <span class="math-inline" data-katex="\operatorname{Var}(X)<\infty"></span> only when <span class="math-inline" data-katex="\alpha>2"></span>.`;
   } else {
@@ -690,3 +690,4 @@ window.addEventListener('load',()=>{ renderAll(); draw(); });
 </script>
 </body>
 </html>
+

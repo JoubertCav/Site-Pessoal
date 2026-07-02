@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -128,7 +128,7 @@
   <div class="wrap">
     <header>
       <div>
-        <h1>Markov, Chebyshev, Hölder, and Minkowski</h1>
+        <h1>Markov, Chebyshev, HÃ¶lder, and Minkowski</h1>
         <div class="subtitle">
           Inequalities are geometric safety rails: moments control tail probability; norms control products, sums, and covariance.
           The point is not sharp prediction, but a guaranteed envelope that works with limited information.
@@ -140,19 +140,19 @@
     <section class="defs">
       <div class="def">
         <div class="tag">Markov</div>
-        <div class="math">X≥0, a&gt;0<br>P(X≥a) ≤ E[X]/a</div>
+        <div class="math">Xâ‰¥0, a&gt;0<br>P(Xâ‰¥a) â‰¤ E[X]/a</div>
       </div>
       <div class="def">
         <div class="tag">Chebyshev</div>
-        <div class="math">P(|X−μ|≥t) ≤ Var(X)/t²</div>
+        <div class="math">P(|Xâˆ’Î¼|â‰¥t) â‰¤ Var(X)/tÂ²</div>
       </div>
       <div class="def">
-        <div class="tag">Hölder / covariance</div>
-        <div class="math">E|XY| ≤ ||X||<sub>p</sub>||Y||<sub>q</sub><br>|Cov(X,Y)|≤σ<sub>X</sub>σ<sub>Y</sub></div>
+        <div class="tag">HÃ¶lder / covariance</div>
+        <div class="math">E|XY| â‰¤ ||X||<sub>p</sub>||Y||<sub>q</sub><br>|Cov(X,Y)|â‰¤Ïƒ<sub>X</sub>Ïƒ<sub>Y</sub></div>
       </div>
       <div class="def">
         <div class="tag">Minkowski</div>
-        <div class="math">||X+Y||<sub>p</sub> ≤ ||X||<sub>p</sub>+||Y||<sub>p</sub></div>
+        <div class="math">||X+Y||<sub>p</sub> â‰¤ ||X||<sub>p</sub>+||Y||<sub>p</sub></div>
       </div>
     </section>
 
@@ -165,8 +165,8 @@
           <select id="ineqSelect">
             <option value="markov">Markov: tail from first moment</option>
             <option value="chebyshev">Chebyshev: deviation from variance</option>
-            <option value="holder">Hölder: product from norms</option>
-            <option value="minkowski">Minkowski: triangle in Lᵖ</option>
+            <option value="holder">HÃ¶lder: product from norms</option>
+            <option value="minkowski">Minkowski: triangle in Láµ–</option>
             <option value="covariance">Covariance: Cauchy-Schwarz</option>
           </select>
         </div>
@@ -211,7 +211,7 @@
         </div>
 
         <div class="eqBox" id="eqBox">
-          P(X≥a) ≤ E[X]/a.
+          P(Xâ‰¥a) â‰¤ E[X]/a.
         </div>
 
         <div class="control">
@@ -258,13 +258,13 @@
           <div class="card cardPad">
             <div class="panelTitle">Interpretation</div>
             <div class="smallText" id="interpretText">
-              Markov and Chebyshev turn moments into tail guarantees. Hölder and Minkowski turn Lᵖ geometry into product and sum guarantees.
+              Markov and Chebyshev turn moments into tail guarantees. HÃ¶lder and Minkowski turn Láµ– geometry into product and sum guarantees.
             </div>
             <div class="summary">
               <div><strong>Markov.</strong><br>For nonnegative variables, large values cannot occupy too much probability mass if the mean is small.</div>
               <div><strong>Chebyshev.</strong><br>Variance controls probability of being far from the mean without assuming normality.</div>
-              <div><strong>Hölder / covariance.</strong><br>Products and covariance are controlled by norm lengths.</div>
-              <div><strong>Minkowski.</strong><br>The Lᵖ norm obeys triangle geometry: the norm of a sum is no larger than the sum of norms.</div>
+              <div><strong>HÃ¶lder / covariance.</strong><br>Products and covariance are controlled by norm lengths.</div>
+              <div><strong>Minkowski.</strong><br>The Láµ– norm obeys triangle geometry: the norm of a sum is no larger than the sum of norms.</div>
             </div>
           </div>
 
@@ -278,7 +278,7 @@
       </section>
     </main>
 
-    <footer>Minimal interactive notebook — deviation bounds and Lᵖ norm geometry.</footer>
+    <footer>Minimal interactive notebook â€” deviation bounds and Láµ– norm geometry.</footer>
   </div>
 
 <script>
@@ -297,7 +297,7 @@ const m=10;
 
 function css(v){return getComputedStyle(body).getPropertyValue(v).trim();}
 function fmt(x){
-  if(!isFinite(x)) return "∞";
+  if(!isFinite(x)) return "âˆž";
   if(Math.abs(x)<.001 && x!==0) return x.toExponential(2);
   if(Math.abs(x)<10) return x.toFixed(4);
   return x.toFixed(2);
@@ -493,7 +493,7 @@ function drawTailMain(){
     h+=line(lx,y0,lx,y1,warn,2.2,.8,"7 5");
     h+=line(rx,y0,rx,y1,warn,2.2,.8,"7 5");
     h+=line(px(s.mean,s.lo,s.hi,x0,x1),y0,px(s.mean,s.lo,s.hi,x0,x1),y1,blue,2,.65);
-    h+=text(px(s.mean,s.lo,s.hi,x0,x1),y0-10,"μ",blue,12,900,"middle");
+    h+=text(px(s.mean,s.lo,s.hi,x0,x1),y0-10,"Î¼",blue,12,900,"middle");
   }
   h+=text(x0,y1+25,fmt(s.lo),muted,11,800);
   h+=text(x1,y1+25,fmt(s.hi),muted,11,800,"end");
@@ -521,7 +521,7 @@ function drawNormMain(){
   const zero=py(0,ymin,ymax,y0,y1);
   const slot=(x1-x0)/m;
   let h=`<rect x="8" y="10" width="964" height="415" rx="20" fill="${panel}" stroke="${border}"/>`;
-  h+=text(64,38,ineq==="holder"?"Hölder controls products by lengths":ineq==="minkowski"?"Minkowski is triangle geometry in Lᵖ":"Covariance is an inner product of centered variables",muted,13,850);
+  h+=text(64,38,ineq==="holder"?"HÃ¶lder controls products by lengths":ineq==="minkowski"?"Minkowski is triangle geometry in Láµ–":"Covariance is an inner product of centered variables",muted,13,850);
   for(let i=0;i<=5;i++){const yy=y1-(y1-y0)*i/5;h+=line(x0,yy,x1,yy,grid,1,.85)}
   h+=line(x0,zero,x1,zero,muted,1.2,.8);
   h+=line(x0,y0,x0,y1,muted,1.2,.8);
@@ -541,14 +541,14 @@ function drawNormMain(){
       const rad=3+10*prod/(1+prod);
       h+=`<circle cx="${cx}" cy="${zero+26}" r="${rad}" fill="${warn}" fill-opacity=".32" stroke="${warn}" stroke-opacity=".55"/>`;
     }
-    h+=text(cx,y1+24,`ω${i+1}`,muted,10,750,"middle");
+    h+=text(cx,y1+24,`Ï‰${i+1}`,muted,10,750,"middle");
   }
   h+=text(64,58,"U",acc,12,900);
   h+=text(93,58,"V",blue,12,900);
   if(ineq==="minkowski") h+=text(122,58,"U+V",warn,12,900);
   else h+=text(122,58,"|UV|",warn,12,900);
   h+=`<rect x="670" y="72" width="240" height="190" rx="20" fill="${css("--panel2")}" stroke="${border}"/>`;
-  const title=ineq==="holder"?"Hölder":ineq==="minkowski"?"Minkowski":"Covariance bound";
+  const title=ineq==="holder"?"HÃ¶lder":ineq==="minkowski"?"Minkowski":"Covariance bound";
   h+=text(694,105,title,textc,16,900);
   h+=text(694,138,`left side = ${fmt(met.lhs)}`,warn,14,900);
   h+=text(694,168,`right side = ${fmt(met.rhs)}`,blue,14,900);
@@ -560,11 +560,11 @@ function drawNormMain(){
     h+=text(694,224,`||U||p+||V||p=${fmt(met.rhs)}`,muted,12,800);
   }else{
     h+=text(694,198,`Cov = ${fmt(met.cov)}`,acc,13,850);
-    h+=text(694,224,`σXσY = ${fmt(met.rhs)}`,muted,12,800);
+    h+=text(694,224,`ÏƒXÏƒY = ${fmt(met.rhs)}`,muted,12,800);
   }
   h+=`<rect x="670" y="292" width="240" height="74" rx="18" fill="${css("--panel2")}" stroke="${border}"/>`;
   h+=text(694,323,"Gap",textc,15,900);
-  h+=text(694,348,`bound − actual = ${fmt(met.rhs-met.lhs)}`,muted,13,850);
+  h+=text(694,348,`bound âˆ’ actual = ${fmt(met.rhs-met.lhs)}`,muted,13,850);
   svg.innerHTML=h;
 }
 function drawBound(){
@@ -610,9 +610,9 @@ function drawNorm(){
       const varW=clamp(Math.sqrt(met.var)/(+threshold.value+Math.sqrt(met.var)),0,1);
       h+=`<rect x="${x0}" y="${y-36}" width="${(x1-x0)*varW}" height="72" rx="16" fill="${acc}" fill-opacity=".20" stroke="${acc}" stroke-opacity=".45"/>`;
       h+=line((x0+x1)/2,y-60,(x0+x1)/2,y+60,blue,2,.8);
-      h+=text((x0+x1)/2,y-72,"μ",blue,12,900,"middle");
+      h+=text((x0+x1)/2,y-72,"Î¼",blue,12,900,"middle");
       h+=text(82,42,"Chebyshev uses variance as spread budget",textc,13,900);
-      h+=text(82,236,"large deviation probability cannot exceed Var/t²",muted,12,800);
+      h+=text(82,236,"large deviation probability cannot exceed Var/tÂ²",muted,12,800);
     }
   }else{
     const met=currentMetrics();
@@ -631,11 +631,11 @@ function drawNorm(){
     if(ineq==="minkowski"){
       h+=`<path d="M ${cx} ${cy} L ${cx+ux+vx} ${cy+uy+vy}" stroke="${warn}" stroke-width="3.2" stroke-dasharray="7 5"/>`;
       h+=text(78,42,"triangle geometry",textc,13,900);
-      h+=text(78,236,"direct path ≤ broken path",muted,12,800);
+      h+=text(78,236,"direct path â‰¤ broken path",muted,12,800);
     }else{
       h+=`<path d="M ${cx+ux} ${cy+uy} L ${cx+vx} ${cy+vy}" stroke="${warn}" stroke-width="1.4" stroke-opacity=".55" stroke-dasharray="6 5"/>`;
       h+=text(78,42,ineq==="holder"?"product controlled by two lengths":"covariance controlled by two standard deviations",textc,13,900);
-      h+=text(78,236,ineq==="holder"?"alignment cannot exceed Hölder envelope":"correlation cannot have magnitude above one",muted,12,800);
+      h+=text(78,236,ineq==="holder"?"alignment cannot exceed HÃ¶lder envelope":"correlation cannot have magnitude above one",muted,12,800);
     }
     h+=text(cx+ux+8,cy+uy+4,"U",acc,12,900);
     h+=text(cx+vx+8,cy+vy+4,"V",blue,12,900);
@@ -656,32 +656,32 @@ function updateText(){
   const interp=document.getElementById("interpretText"), notice=document.getElementById("noticeText"), mainSub=document.getElementById("mainSub");
   let items=[];
   if(ineq==="markov"){
-    eq.innerHTML=`P(X≥a) ≤ E[X]/a<br>actual = <strong>${fmt(met.actual)}</strong>, bound = <strong>${fmt(met.bound)}</strong>.`;
-    items=[["✓","requires X≥0"],["✓","uses only the first moment"],["→","large tail mass must raise the mean"]];
+    eq.innerHTML=`P(Xâ‰¥a) â‰¤ E[X]/a<br>actual = <strong>${fmt(met.actual)}</strong>, bound = <strong>${fmt(met.bound)}</strong>.`;
+    items=[["âœ“","requires Xâ‰¥0"],["âœ“","uses only the first moment"],["â†’","large tail mass must raise the mean"]];
     interp.innerHTML="Markov's inequality treats the mean as a budget. If much probability sits beyond a, then the mean must be at least a times that tail probability.";
     notice.innerHTML="Markov is usually loose, but it is extremely general: no density shape or variance assumption is needed.";
     mainSub.innerHTML="The shaded right tail is paid for by the mean.";
   }else if(ineq==="chebyshev"){
-    eq.innerHTML=`P(|X−μ|≥t) ≤ Var(X)/t²<br>actual = <strong>${fmt(met.actual)}</strong>, bound = <strong>${fmt(met.bound)}</strong>.`;
-    items=[["✓","requires finite variance"],["✓","no normality needed"],["→","variance controls mass far from μ"]];
-    interp.innerHTML="Chebyshev says variance is a spread budget. The farther the band around μ, the less probability can live outside it.";
+    eq.innerHTML=`P(|Xâˆ’Î¼|â‰¥t) â‰¤ Var(X)/tÂ²<br>actual = <strong>${fmt(met.actual)}</strong>, bound = <strong>${fmt(met.bound)}</strong>.`;
+    items=[["âœ“","requires finite variance"],["âœ“","no normality needed"],["â†’","variance controls mass far from Î¼"]];
+    interp.innerHTML="Chebyshev says variance is a spread budget. The farther the band around Î¼, the less probability can live outside it.";
     notice.innerHTML="The normal curve is not required. Chebyshev works for any distribution with finite variance.";
-    mainSub.innerHTML="Outside the band μ±t, deviation mass is controlled by Var(X).";
+    mainSub.innerHTML="Outside the band Î¼Â±t, deviation mass is controlled by Var(X).";
   }else if(ineq==="holder"){
-    eq.innerHTML=`E|UV| ≤ ||U||p||V||q, 1/p+1/q=1<br>left = <strong>${fmt(met.lhs)}</strong>, right = <strong>${fmt(met.rhs)}</strong>.`;
-    items=[["✓","choose conjugate exponents p and q"],["✓","product is controlled by two norms"],["→","Cauchy-Schwarz is p=q=2"]];
-    interp.innerHTML="Hölder is the master product inequality. It says the weighted product cannot exceed the product of two compatible lengths.";
+    eq.innerHTML=`E|UV| â‰¤ ||U||p||V||q, 1/p+1/q=1<br>left = <strong>${fmt(met.lhs)}</strong>, right = <strong>${fmt(met.rhs)}</strong>.`;
+    items=[["âœ“","choose conjugate exponents p and q"],["âœ“","product is controlled by two norms"],["â†’","Cauchy-Schwarz is p=q=2"]];
+    interp.innerHTML="HÃ¶lder is the master product inequality. It says the weighted product cannot exceed the product of two compatible lengths.";
     notice.innerHTML="As alignment increases, the product approaches its norm envelope. The exponents p and q trade how each variable is measured.";
-    mainSub.innerHTML="Products are bounded by compatible Lᵖ lengths.";
+    mainSub.innerHTML="Products are bounded by compatible Láµ– lengths.";
   }else if(ineq==="minkowski"){
-    eq.innerHTML=`||U+V||p ≤ ||U||p+||V||p<br>left = <strong>${fmt(met.lhs)}</strong>, right = <strong>${fmt(met.rhs)}</strong>.`;
-    items=[["✓","requires p≥1"],["✓","Lᵖ norm behaves like length"],["→","sum vector is shorter than broken path"]];
-    interp.innerHTML="Minkowski is the triangle inequality for random variables. In Lᵖ space, adding functions cannot make the norm exceed the sum of their norms.";
+    eq.innerHTML=`||U+V||p â‰¤ ||U||p+||V||p<br>left = <strong>${fmt(met.lhs)}</strong>, right = <strong>${fmt(met.rhs)}</strong>.`;
+    items=[["âœ“","requires pâ‰¥1"],["âœ“","Láµ– norm behaves like length"],["â†’","sum vector is shorter than broken path"]];
+    interp.innerHTML="Minkowski is the triangle inequality for random variables. In Láµ– space, adding functions cannot make the norm exceed the sum of their norms.";
     notice.innerHTML="The inequality becomes tighter when U and V point in similar directions across states.";
     mainSub.innerHTML="The norm of a sum is a direct path; the sum of norms is the broken path.";
   }else{
-    eq.innerHTML=`|Cov(U,V)| ≤ σU σV<br>|Cov| = <strong>${fmt(met.lhs)}</strong>, σUσV = <strong>${fmt(met.rhs)}</strong>.`;
-    items=[["✓","center both variables"],["✓","covariance is an inner product"],["→","correlation is bounded by ±1"]];
+    eq.innerHTML=`|Cov(U,V)| â‰¤ ÏƒU ÏƒV<br>|Cov| = <strong>${fmt(met.lhs)}</strong>, ÏƒUÏƒV = <strong>${fmt(met.rhs)}</strong>.`;
+    items=[["âœ“","center both variables"],["âœ“","covariance is an inner product"],["â†’","correlation is bounded by Â±1"]];
     interp.innerHTML="Covariance is an inner product between centered random variables. Cauchy-Schwarz says this inner product cannot exceed the product of their standard-deviation lengths.";
     notice.innerHTML="Correlation is geometrically a cosine: it measures alignment after centering.";
     mainSub.innerHTML="Covariance is controlled by standard-deviation lengths.";
@@ -714,3 +714,4 @@ drawAll();
 </script>
 </body>
 </html>
+

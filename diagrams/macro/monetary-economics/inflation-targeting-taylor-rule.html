@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -378,7 +378,7 @@ svg {
       </p>
     </div>
     <div class="top-actions">
-      <button class="toggle" id="themeBtn" type="button">◐ Theme</button>
+      <button class="toggle" id="themeBtn" type="button">â— Theme</button>
       <button class="pill" id="animateBtn" type="button">Animate demand shock</button>
     </div>
   </header>
@@ -393,11 +393,11 @@ svg {
       <div class="group">
         <div class="group-label">Targets and state</div>
         <div class="row">
-          <div class="label"><label for="piTarget">Inflation target π*</label><span class="value" id="vPiTarget"></span></div>
+          <div class="label"><label for="piTarget">Inflation target Ï€*</label><span class="value" id="vPiTarget"></span></div>
           <input id="piTarget" type="range" min="0" max="6" step="0.1" value="2.0">
         </div>
         <div class="row">
-          <div class="label"><label for="inflation">Current inflation π</label><span class="value" id="vInflation"></span></div>
+          <div class="label"><label for="inflation">Current inflation Ï€</label><span class="value" id="vInflation"></span></div>
           <input id="inflation" type="range" min="-2" max="12" step="0.1" value="4.0">
         </div>
         <div class="row">
@@ -413,11 +413,11 @@ svg {
           <input id="neutralRate" type="range" min="-1" max="5" step="0.1" value="1.0">
         </div>
         <div class="row">
-          <div class="label"><label for="phiPi">Inflation response φπ</label><span class="value" id="vPhiPi"></span></div>
+          <div class="label"><label for="phiPi">Inflation response Ï†Ï€</label><span class="value" id="vPhiPi"></span></div>
           <input id="phiPi" type="range" min="0" max="3" step="0.05" value="1.5">
         </div>
         <div class="row">
-          <div class="label"><label for="phiY">Output-gap response φx</label><span class="value" id="vPhiY"></span></div>
+          <div class="label"><label for="phiY">Output-gap response Ï†x</label><span class="value" id="vPhiY"></span></div>
           <input id="phiY" type="range" min="0" max="2" step="0.05" value="0.5">
         </div>
       </div>
@@ -425,11 +425,11 @@ svg {
       <div class="group">
         <div class="group-label">Interest-rate smoothing</div>
         <div class="row">
-          <div class="label"><label for="smoothing">Smoothing ρ</label><span class="value" id="vSmoothing"></span></div>
+          <div class="label"><label for="smoothing">Smoothing Ï</label><span class="value" id="vSmoothing"></span></div>
           <input id="smoothing" type="range" min="0" max="0.95" step="0.05" value="0.65">
         </div>
         <div class="row">
-          <div class="label"><label for="previousRate">Previous policy rate i₋₁</label><span class="value" id="vPreviousRate"></span></div>
+          <div class="label"><label for="previousRate">Previous policy rate iâ‚‹â‚</label><span class="value" id="vPreviousRate"></span></div>
           <input id="previousRate" type="range" min="0" max="15" step="0.1" value="5.0">
         </div>
         <div class="row">
@@ -441,7 +441,7 @@ svg {
       <div class="group">
         <div class="group-label">Shock persistence</div>
         <div class="row">
-          <div class="label"><label for="persistence">Gap persistence λ</label><span class="value" id="vPersistence"></span></div>
+          <div class="label"><label for="persistence">Gap persistence Î»</label><span class="value" id="vPersistence"></span></div>
           <input id="persistence" type="range" min="0" max="0.95" step="0.05" value="0.65">
         </div>
         <div class="row">
@@ -457,8 +457,8 @@ svg {
           <div class="eqbox">
             <div class="eq-title">Taylor-rule target rate</div>
             <div class="equations">
-              <div class="line">iᵀ = r* + π* + φπ(π − π*) + φx x</div>
-              <div class="line">inflation gap: π − π*</div>
+              <div class="line">iáµ€ = r* + Ï€* + Ï†Ï€(Ï€ âˆ’ Ï€*) + Ï†x x</div>
+              <div class="line">inflation gap: Ï€ âˆ’ Ï€*</div>
               <div class="line">output gap: x = percent deviation of output from potential</div>
             </div>
           </div>
@@ -466,11 +466,11 @@ svg {
           <div class="eqbox">
             <div class="eq-title">Interest-rate smoothing</div>
             <div class="equations">
-              <div class="line">i = ρ i₋₁ + (1 − ρ)iᵀ</div>
-              <div class="line">Taylor principle: φπ &gt; 1</div>
+              <div class="line">i = Ï iâ‚‹â‚ + (1 âˆ’ Ï)iáµ€</div>
+              <div class="line">Taylor principle: Ï†Ï€ &gt; 1</div>
               <div class="line">ELB: i = max(ELB, i)</div>
             </div>
-            <div class="note">With φπ &gt; 1, a rise in inflation raises the nominal rate by more than one-for-one, increasing the real policy rate.</div>
+            <div class="note">With Ï†Ï€ &gt; 1, a rise in inflation raises the nominal rate by more than one-for-one, increasing the real policy rate.</div>
           </div>
         </div>
 
@@ -510,9 +510,9 @@ svg {
             <span>computed live</span>
           </div>
           <div class="kpis">
-            <div class="kpi"><small>Taylor target iᵀ</small><strong id="kTargetRate"></strong></div>
+            <div class="kpi"><small>Taylor target iáµ€</small><strong id="kTargetRate"></strong></div>
             <div class="kpi"><small>Smoothed rate i</small><strong id="kPolicyRate"></strong></div>
-            <div class="kpi"><small>Real rate i − π</small><strong id="kRealRate"></strong></div>
+            <div class="kpi"><small>Real rate i âˆ’ Ï€</small><strong id="kRealRate"></strong></div>
             <div class="kpi"><small>Inflation gap</small><strong id="kPiGap"></strong></div>
           </div>
           <div class="notice">
@@ -520,8 +520,8 @@ svg {
             <ul>
               <li>A positive inflation gap pushes the Taylor-rule rate upward.</li>
               <li>A positive output gap also pushes the policy rate upward.</li>
-              <li>Higher ρ makes policy adjust slowly, even when the rule says rates should move sharply.</li>
-              <li>When φπ &gt; 1, the real rate rises after inflation increases.</li>
+              <li>Higher Ï makes policy adjust slowly, even when the rule says rates should move sharply.</li>
+              <li>When Ï†Ï€ &gt; 1, the real rate rises after inflation increases.</li>
             </ul>
           </div>
         </div>
@@ -549,10 +549,10 @@ svg {
           <div class="notice">
             <h4>Exam-style summary</h4>
             <ul>
-              <li>Taylor rule: iᵀ = r* + π* + φπ(π − π*) + φx x.</li>
-              <li>Inflation targeting means policy reacts to deviations from π*.</li>
-              <li>Taylor principle: φπ &gt; 1 stabilizes inflation in simple New Keynesian logic.</li>
-              <li>Smoothing: i = ρi₋₁ + (1−ρ)iᵀ.</li>
+              <li>Taylor rule: iáµ€ = r* + Ï€* + Ï†Ï€(Ï€ âˆ’ Ï€*) + Ï†x x.</li>
+              <li>Inflation targeting means policy reacts to deviations from Ï€*.</li>
+              <li>Taylor principle: Ï†Ï€ &gt; 1 stabilizes inflation in simple New Keynesian logic.</li>
+              <li>Smoothing: i = Ïiâ‚‹â‚ + (1âˆ’Ï)iáµ€.</li>
             </ul>
           </div>
         </div>
@@ -825,10 +825,10 @@ function drawReaction(d) {
   line(reactionSvg, x0, py, px, py, { stroke: muted, sw: 1, dash: "5 5" });
   circle(reactionSvg, px, py, 11, { fill: accent, opacity: .16 });
   const dot = circle(reactionSvg, px, py, 6.2, { fill: accent, stroke: ink, sw: 1.25 });
-  dot.addEventListener("mousemove", ev => tip(ev, `<b>Taylor target</b><br>Inflation gap: ${d.piGap >= 0 ? "+" : ""}${pp(d.piGap)}<br>Output gap: ${d.xGap >= 0 ? "+" : ""}${pp(d.xGap)}<br>iᵀ = ${pp(d.targetRate)}`));
+  dot.addEventListener("mousemove", ev => tip(ev, `<b>Taylor target</b><br>Inflation gap: ${d.piGap >= 0 ? "+" : ""}${pp(d.piGap)}<br>Output gap: ${d.xGap >= 0 ? "+" : ""}${pp(d.xGap)}<br>iáµ€ = ${pp(d.targetRate)}`));
   dot.addEventListener("mouseleave", untip);
 
-  text(reactionSvg, x0 + W, y0 + 30, "inflation gap π − π*", { fill: muted, size: 12, anchor: "end", weight: 740 });
+  text(reactionSvg, x0 + W, y0 + 30, "inflation gap Ï€ âˆ’ Ï€*", { fill: muted, size: 12, anchor: "end", weight: 740 });
   text(reactionSvg, x0 - 22, y0 - H - 8, "policy rate i", { fill: muted, size: 12, weight: 740 });
   text(reactionSvg, X(0) + 7, y0 - H + 18, "target", { fill: muted, size: 10.5, weight: 800 });
   text(reactionSvg, x0 + W - 8, Yp(d.elb) - 7, "ELB", { fill: red, size: 10.5, weight: 800, anchor: "end" });
@@ -844,7 +844,7 @@ function drawReaction(d) {
   badge(410, 82, "output response", d.yContribution, gold);
 
   rect(reactionSvg, 104, 408, 552, 36, { fill: paper2, stroke: linec, rx: 15, opacity: .98 });
-  text(reactionSvg, 124, 431, `iᵀ = r* + π* + φπ(π − π*) + φx x = ${pp(d.targetRate)}`, {
+  text(reactionSvg, 124, 431, `iáµ€ = r* + Ï€* + Ï†Ï€(Ï€ âˆ’ Ï€*) + Ï†x x = ${pp(d.targetRate)}`, {
     fill: accent,
     size: 13.4,
     weight: 850
@@ -934,7 +934,7 @@ function drawDynamics(d) {
   mini(424, 130, "real rate", pp(d.realRate), purple);
 
   rect(dynamicsSvg, 78, 58, 268, 30, { fill: paper2, stroke: linec, rx: 13 });
-  text(dynamicsSvg, 96, 78, `ρ = ${fmt(d.rho,2)}: gradual adjustment toward the target rate`, {
+  text(dynamicsSvg, 96, 78, `Ï = ${fmt(d.rho,2)}: gradual adjustment toward the target rate`, {
     fill: muted,
     size: 10.8,
     weight: 800
@@ -992,3 +992,4 @@ update();
 </script>
 </body>
 </html>
+

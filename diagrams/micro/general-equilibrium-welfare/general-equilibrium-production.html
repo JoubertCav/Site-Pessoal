@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
@@ -313,7 +313,7 @@
     function syncInputs(){ ids.forEach(id => $(id).value = state[id]); }
     function css(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
     function clamp(x,a,b){ return Math.max(a, Math.min(b, x)); }
-    function fmt(x,d=2){ return isFinite(x) ? Number(x).toFixed(d) : "—"; }
+    function fmt(x,d=2){ return isFinite(x) ? Number(x).toFixed(d) : "â€”"; }
 
     function renderKatex(){
       if(!window.katex) return;
@@ -406,7 +406,7 @@
       $("outY").textContent = `(${fmt(E.y.y1)}, ${fmt(E.y.y2)})`;
       $("outMRT").textContent = fmt(E.y.mrt,3);
       $("outValue").textContent = fmt(E.V,2);
-      $("boxSize").textContent = `${fmt(E.y.y1)} × ${fmt(E.y.y2)}`;
+      $("boxSize").textContent = `${fmt(E.y.y1)} Ã— ${fmt(E.y.y2)}`;
       $("dA").textContent = `(${fmt(E.dA.x1)}, ${fmt(E.dA.x2)})`;
       $("dB").textContent = `(${fmt(E.bAsA.x1)}, ${fmt(E.bAsA.x2)})`;
       $("z1").textContent = fmt(E.z1,3);
@@ -464,10 +464,10 @@
       line(svg,m.l,m.t+bh,m.l+bw,m.t+bh,axis,1.55); line(svg,m.l,m.t,m.l,m.t+bh,axis,1.55);
       line(svg,m.l+bw,m.t,m.l+bw,m.t+bh,axis,1.15); line(svg,m.l,m.t,m.l+bw,m.t,axis,1.15);
       for(let i=1;i<6;i++){ line(svg,m.l+i*bw/6,m.t,m.l+i*bw/6,m.t+bh,grid,1); line(svg,m.l,m.t+i*bh/6,m.l+bw,m.t+i*bh/6,grid,1); }
-      textEl(svg,m.l-8,m.t+bh+27,"Oᴬ","svg-title","end"); textEl(svg,m.l+bw+10,m.t-14,"Oᴮ","svg-title","start");
-      textEl(svg,m.l+bw/2,m.t+bh+47,"good 1 for A  →","svg-label","middle");
+      textEl(svg,m.l-8,m.t+bh+27,"Oá´¬","svg-title","end"); textEl(svg,m.l+bw+10,m.t-14,"Oá´®","svg-title","start");
+      textEl(svg,m.l+bw/2,m.t+bh+47,"good 1 for A  â†’","svg-label","middle");
       textEl(svg,m.l-46,m.t+bh/2,"good 2 for A","svg-label","middle",-90);
-      textEl(svg,m.l+bw/2,m.t-27,"←  good 1 for B","svg-label","middle");
+      textEl(svg,m.l+bw/2,m.t-27,"â†  good 1 for B","svg-label","middle");
 
       const claim = { x1:state.theta*Y1, x2:state.theta*Y2 };
       line(svg,sx(0),sy(0),sx(Y1),sy(Y2),css("--border-strong"),1.25,"3 5");
@@ -481,9 +481,9 @@
       circle(svg,sx(claim.x1),sy(claim.x2),8.2,red,panel,3,"pt ptClaim");
       circle(svg,sx(E.dA.x1),sy(E.dA.x2),8.4,accent,panel,3,"pt ptA");
       circle(svg,sx(E.bAsA.x1),sy(E.bAsA.x2),8.4,gold,panel,3,"pt ptB");
-      textEl(svg,sx(claim.x1)+11,sy(claim.x2)+22,"ωA=θy","svg-title");
+      textEl(svg,sx(claim.x1)+11,sy(claim.x2)+22,"Ï‰A=Î¸y","svg-title");
       textEl(svg,sx(E.dA.x1)+12,sy(E.dA.x2)-12,"xA(p)","svg-title");
-      textEl(svg,sx(E.bAsA.x1)+12,sy(E.bAsA.x2)+22,"y−xB(p)","svg-title");
+      textEl(svg,sx(E.bAsA.x1)+12,sy(E.bAsA.x2)+22,"yâˆ’xB(p)","svg-title");
     }
 
     function clippedLineInBox(p,c,X,Y){
@@ -574,3 +574,4 @@
   </script>
 </body>
 </html>
+

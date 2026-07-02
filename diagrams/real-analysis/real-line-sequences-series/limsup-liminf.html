@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -116,7 +116,7 @@
 <div class="wrap">
   <header>
     <div>
-      <div class="kicker">Real Analysis · sequences</div>
+      <div class="kicker">Real Analysis Â· sequences</div>
       <h1>Limsup and liminf</h1>
       <div class="subtitle">Tail suprema, tail infima, oscillation, subsequential limits, and the convergence criterion. The app computes finite-window shadows, while the formulas state the infinite objects.</div>
     </div>
@@ -132,11 +132,11 @@
       <div class="control">
         <label for="sequenceSelect">Sequence</label>
         <select id="sequenceSelect">
-          <option value="alt" selected>xₙ = (-1)ⁿ + 1/n</option>
-          <option value="inv">xₙ = 1/n</option>
-          <option value="decayosc">xₙ = sin(n)/√n</option>
-          <option value="sin">xₙ = sin(n)</option>
-          <option value="escape">xₙ = √n</option>
+          <option value="alt" selected>xâ‚™ = (-1)â¿ + 1/n</option>
+          <option value="inv">xâ‚™ = 1/n</option>
+          <option value="decayosc">xâ‚™ = sin(n)/âˆšn</option>
+          <option value="sin">xâ‚™ = sin(n)</option>
+          <option value="escape">xâ‚™ = âˆšn</option>
         </select>
       </div>
       <div class="control">
@@ -148,7 +148,7 @@
         <input id="NRange" type="range" min="1" max="120" value="18" step="1" />
       </div>
       <div class="control">
-        <label>Witness tolerance <span class="value" id="epsText">ε = 0.15</span></label>
+        <label>Witness tolerance <span class="value" id="epsText">Îµ = 0.15</span></label>
         <input id="epsRange" type="range" min="0.03" max="0.6" value="0.15" step="0.01" />
       </div>
       <div class="control" style="display:flex;gap:10px;flex-wrap:wrap">
@@ -156,10 +156,10 @@
         <button id="animateBtn">Animate tail</button>
       </div>
       <div class="formula" id="definitionBox">
-        sₙ = sup { xₖ : k ≥ n }<br>
-        iₙ = inf { xₖ : k ≥ n }<br>
-        limsup xₙ = lim sₙ<br>
-        liminf xₙ = lim iₙ
+        sâ‚™ = sup { xâ‚– : k â‰¥ n }<br>
+        iâ‚™ = inf { xâ‚– : k â‰¥ n }<br>
+        limsup xâ‚™ = lim sâ‚™<br>
+        liminf xâ‚™ = lim iâ‚™
       </div>
     </aside>
 
@@ -175,16 +175,16 @@
         <div class="module-head">
           <div>
             <h2>Moving tail envelopes</h2>
-            <div class="muted">For each N, ignore the first N−1 terms. The remaining tail has a finite-window maximum and minimum. In the theorem, these are infinite-tail suprema and infima.</div>
+            <div class="muted">For each N, ignore the first Nâˆ’1 terms. The remaining tail has a finite-window maximum and minimum. In the theorem, these are infinite-tail suprema and infima.</div>
           </div>
-          <span class="pill" id="formulaPill">xₙ = (-1)ⁿ + 1/n</span>
+          <span class="pill" id="formulaPill">xâ‚™ = (-1)â¿ + 1/n</span>
         </div>
         <div class="card plot" id="mainPlot"></div>
         <div class="legend"><span><span class="dot"></span>selected tail</span><span><span class="dot upper"></span>finite tail supremum</span><span><span class="dot lower"></span>finite tail infimum</span><span><span class="dot gray"></span>early terms</span></div>
         <div class="stats">
-          <div class="stat"><div class="small">selected term</div><div class="big" id="xNStat">—</div></div>
-          <div class="stat"><div class="small">sᴹ_N</div><div class="big" id="supStat">—</div></div>
-          <div class="stat"><div class="small">iᴹ_N</div><div class="big" id="infStat">—</div></div>
+          <div class="stat"><div class="small">selected term</div><div class="big" id="xNStat">â€”</div></div>
+          <div class="stat"><div class="small">sá´¹_N</div><div class="big" id="supStat">â€”</div></div>
+          <div class="stat"><div class="small">iá´¹_N</div><div class="big" id="infStat">â€”</div></div>
         </div>
         <div style="height:14px"></div>
         <div class="notice" id="interpretationBox"></div>
@@ -194,7 +194,7 @@
         <div class="module-head">
           <div>
             <h2>Nested tail intervals</h2>
-            <div class="muted">The tail after n lives inside [iₙ, sₙ]. If the lengths sₙ−iₙ shrink to 0, the sequence has no room to oscillate.</div>
+            <div class="muted">The tail after n lives inside [iâ‚™, sâ‚™]. If the lengths sâ‚™âˆ’iâ‚™ shrink to 0, the sequence has no room to oscillate.</div>
           </div>
           <span class="pill">[inf tail, sup tail]</span>
         </div>
@@ -230,14 +230,14 @@
             <h2>Convergence criterion</h2>
             <div class="muted">For a bounded real sequence, convergence is exactly collapse of upper and lower tail limits.</div>
           </div>
-          <span class="pill" id="diagnosisPill">—</span>
+          <span class="pill" id="diagnosisPill">â€”</span>
         </div>
         <div class="two">
           <div class="card plot" id="criterionPlot"></div>
           <div class="stack">
-            <div class="card pad"><div class="section-title"><h3>Exact theorem</h3></div><div class="formula">xₙ → L<br>⇔ limsup xₙ = liminf xₙ = L<br><br>For bounded (xₙ):<br>cluster set is squeezed into one point.</div></div>
+            <div class="card pad"><div class="section-title"><h3>Exact theorem</h3></div><div class="formula">xâ‚™ â†’ L<br>â‡” limsup xâ‚™ = liminf xâ‚™ = L<br><br>For bounded (xâ‚™):<br>cluster set is squeezed into one point.</div></div>
             <div class="notice" id="diagnosisText"></div>
-            <div class="card pad"><div class="section-title"><h3>Exam summary</h3></div><div class="exam"><div>Define sₙ = sup{xₖ:k≥n}; then sₙ decreases.</div><div>Define iₙ = inf{xₖ:k≥n}; then iₙ increases.</div><div>limsup xₙ = infₙ sₙ and liminf xₙ = supₙ iₙ.</div><div>xₙ converges ⇔ limsup xₙ = liminf xₙ.</div></div></div>
+            <div class="card pad"><div class="section-title"><h3>Exam summary</h3></div><div class="exam"><div>Define sâ‚™ = sup{xâ‚–:kâ‰¥n}; then sâ‚™ decreases.</div><div>Define iâ‚™ = inf{xâ‚–:kâ‰¥n}; then iâ‚™ increases.</div><div>limsup xâ‚™ = infâ‚™ sâ‚™ and liminf xâ‚™ = supâ‚™ iâ‚™.</div><div>xâ‚™ converges â‡” limsup xâ‚™ = liminf xâ‚™.</div></div></div>
           </div>
         </div>
       </section>
@@ -252,31 +252,31 @@
 
   const seqs = {
     inv:{
-      formula:'xₙ = 1/n', exact:'limsup = liminf = 0', limsup:0, liminf:0, bounded:true, converges:true, cluster:'{0}',
+      formula:'xâ‚™ = 1/n', exact:'limsup = liminf = 0', limsup:0, liminf:0, bounded:true, converges:true, cluster:'{0}',
       f:n=>1/n,
       note:'Every sufficiently late term is close to 0. The upper and lower tail envelopes both collapse to the same point.',
       witness:(M)=>({hi:range(Math.max(1,M-11),M),lo:range(Math.max(1,M-11),M)})
     },
     alt:{
-      formula:'xₙ = (-1)ⁿ + 1/n', exact:'limsup = 1, liminf = −1', limsup:1, liminf:-1, bounded:true, converges:false, cluster:'{−1, 1}',
+      formula:'xâ‚™ = (-1)â¿ + 1/n', exact:'limsup = 1, liminf = âˆ’1', limsup:1, liminf:-1, bounded:true, converges:false, cluster:'{âˆ’1, 1}',
       f:n=>(n%2===0?1:-1)+1/n,
-      note:'The sequence has two persistent tails: even terms approach 1 and odd terms approach −1. The tail gap does not vanish.',
+      note:'The sequence has two persistent tails: even terms approach 1 and odd terms approach âˆ’1. The tail gap does not vanish.',
       witness:(M)=>({hi:range(1,M).filter(n=>n%2===0).slice(-12),lo:range(1,M).filter(n=>n%2===1).slice(-12)})
     },
     decayosc:{
-      formula:'xₙ = sin(n)/√n', exact:'limsup = liminf = 0', limsup:0, liminf:0, bounded:true, converges:true, cluster:'{0}',
+      formula:'xâ‚™ = sin(n)/âˆšn', exact:'limsup = liminf = 0', limsup:0, liminf:0, bounded:true, converges:true, cluster:'{0}',
       f:n=>Math.sin(n)/Math.sqrt(n),
       note:'The terms oscillate, but the amplitude decays. The tail interval eventually becomes tiny around 0.',
       witness:(M)=>({hi:blockExtremes(M,10,n=>Math.sin(n)/Math.sqrt(n),'max'),lo:blockExtremes(M,10,n=>Math.sin(n)/Math.sqrt(n),'min')})
     },
     sin:{
-      formula:'xₙ = sin(n)', exact:'limsup = 1, liminf = −1', limsup:1, liminf:-1, bounded:true, converges:false, cluster:'[−1,1]',
+      formula:'xâ‚™ = sin(n)', exact:'limsup = 1, liminf = âˆ’1', limsup:1, liminf:-1, bounded:true, converges:false, cluster:'[âˆ’1,1]',
       f:n=>Math.sin(n),
-      note:'Because integer angles wander densely modulo 2π, the sequence has subsequences close to every value in [−1,1].',
+      note:'Because integer angles wander densely modulo 2Ï€, the sequence has subsequences close to every value in [âˆ’1,1].',
       witness:(M)=>({hi:topIndices(M,n=>Math.sin(n),12,true),lo:topIndices(M,n=>Math.sin(n),12,false)})
     },
     escape:{
-      formula:'xₙ = √n', exact:'limsup = liminf = +∞', limsup:Infinity, liminf:Infinity, bounded:false, converges:false, cluster:'no real cluster value',
+      formula:'xâ‚™ = âˆšn', exact:'limsup = liminf = +âˆž', limsup:Infinity, liminf:Infinity, bounded:false, converges:false, cluster:'no real cluster value',
       f:n=>Math.sqrt(n),
       note:'The sequence is monotone but unbounded. It has no real subsequential limit and no real limsup/liminf.',
       witness:(M)=>({hi:range(Math.max(1,M-11),M),lo:range(1,Math.min(12,M))})
@@ -291,8 +291,8 @@
     return {sup,inf};
   }
   function fmt(x){
-    if(x===Infinity)return '+∞'; if(x===-Infinity)return '−∞'; if(Number.isNaN(x))return '—';
-    const y=Math.abs(x)<1e-10?0:x; return (Math.round(y*1000)/1000).toString().replace('-', '−');
+    if(x===Infinity)return '+âˆž'; if(x===-Infinity)return 'âˆ’âˆž'; if(Number.isNaN(x))return 'â€”';
+    const y=Math.abs(x)<1e-10?0:x; return (Math.round(y*1000)/1000).toString().replace('-', 'âˆ’');
   }
   function topIndices(M,f,count,largest){
     return range(1,M).map(n=>({n,v:f(n)})).sort((a,b)=>largest?b.v-a.v:a.v-b.v).slice(0,count).map(o=>o.n).sort((a,b)=>a-b);
@@ -362,9 +362,9 @@
       const n=i+1; const active=n>=st.N; const selected=n===st.N;
       html+=`<circle cx="${sc.x(n)}" cy="${sc.y(a[i])}" r="${selected?5.3:active?3.2:2.45}" fill="${selected?c.accent:active?c.ink:c.muted}" opacity="${selected?1:active?.76:.28}"/>`;
     }
-    html+=`<text x="${sx+8}" y="${m.t+17}" fill="${c.accent}" font-size="12" font-family="monospace">tail k ≥ ${st.N}</text>`;
-    html+=`<text x="${w-m.r-8}" y="${ySup-8}" text-anchor="end" fill="${c.upper}" font-size="12">sᴹ_N</text>`;
-    html+=`<text x="${w-m.r-8}" y="${yInf+17}" text-anchor="end" fill="${c.lower}" font-size="12">iᴹ_N</text>`;
+    html+=`<text x="${sx+8}" y="${m.t+17}" fill="${c.accent}" font-size="12" font-family="monospace">tail k â‰¥ ${st.N}</text>`;
+    html+=`<text x="${w-m.r-8}" y="${ySup-8}" text-anchor="end" fill="${c.upper}" font-size="12">sá´¹_N</text>`;
+    html+=`<text x="${w-m.r-8}" y="${yInf+17}" text-anchor="end" fill="${c.lower}" font-size="12">iá´¹_N</text>`;
     html+=`<text x="${w/2}" y="${h-7}" text-anchor="middle" fill="${c.muted}" font-size="11">index n</text></svg>`;
     $('mainPlot').innerHTML=html;
   }
@@ -383,7 +383,7 @@
     let htm=`<svg viewBox="0 0 ${W} ${H}"><rect width="${W}" height="${H}" rx="18" fill="${c.bg}"/>`+gridSmall(W,H,mm,0,max*1.1,c);
     htm+=`<path d="${linePath(osc.map((v,i)=>[sc.x(i+1),sc.y(v)]))}" fill="none" stroke="${c.accent}" stroke-width="2.6"/>`;
     htm+=`<circle cx="${sc.x(st.N)}" cy="${sc.y(osc[st.N-1])}" r="5" fill="${c.upper}"/><text x="${W/2}" y="${H-7}" text-anchor="middle" fill="${c.muted}" font-size="11">n</text></svg>`;
-    htm+=`<div class="muted" style="font-size:12px;margin:8px 4px 0">ωᴹ_N = sᴹ_N − iᴹ_N = <span class="mono">${fmt(osc[st.N-1])}</span></div>`;
+    htm+=`<div class="muted" style="font-size:12px;margin:8px 4px 0">Ï‰á´¹_N = sá´¹_N âˆ’ iá´¹_N = <span class="mono">${fmt(osc[st.N-1])}</span></div>`;
     $('oscPlot').innerHTML=htm;
   }
   function gridSmall(w,h,m,yMin,yMax,c){let s='';for(let j=0;j<=4;j++){const y=m.t+j*(h-m.t-m.b)/4;const val=yMax-j*(yMax-yMin)/4;s+=`<line x1="${m.l}" x2="${w-m.r}" y1="${y}" y2="${y}" stroke="${c.grid}"/><text x="${m.l-8}" y="${y+4}" text-anchor="end" fill="${c.muted}" font-size="10">${fmt(val)}</text>`;}s+=`<line x1="${m.l}" x2="${w-m.r}" y1="${h-m.b}" y2="${h-m.b}" stroke="${c.line}"/>`;return s;}
@@ -395,8 +395,8 @@
     if(Number.isFinite(seq.liminf)) html+=`<line x1="${m.l}" x2="${w-m.r}" y1="${sc.y(seq.liminf)}" y2="${sc.y(seq.liminf)}" stroke="${c.lower}" stroke-dasharray="6 6"/>`;
     for(let i=0;i<a.length;i++){const n=i+1; let col=c.muted,r=2.35,op=.27; if(hi.has(n)){col=c.upper;r=4.8;op=.96;} if(lo.has(n)){col=c.lower;r=4.8;op=.96;} html+=`<circle cx="${sc.x(n)}" cy="${sc.y(a[i])}" r="${r}" fill="${col}" opacity="${op}"/>`;}
     html+=`<text x="${w/2}" y="${h-7}" text-anchor="middle" fill="${c.muted}" font-size="11">index n</text></svg>`; $('subseqPlot').innerHTML=html;
-    const rows=Math.max(sub.hi.length,sub.lo.length,1); let tbl='<tr><th>j</th><th>upper nⱼ</th><th>xₙⱼ</th><th>lower mⱼ</th><th>xₘⱼ</th></tr>';
-    for(let j=0;j<Math.min(12,rows);j++){const hn=sub.hi[j],ln=sub.lo[j]; tbl+=`<tr><td>${j+1}</td><td>${hn??'—'}</td><td>${hn?fmt(seq.f(hn)):'—'}</td><td>${ln??'—'}</td><td>${ln?fmt(seq.f(ln)):'—'}</td></tr>`;}
+    const rows=Math.max(sub.hi.length,sub.lo.length,1); let tbl='<tr><th>j</th><th>upper nâ±¼</th><th>xâ‚™â±¼</th><th>lower mâ±¼</th><th>xâ‚˜â±¼</th></tr>';
+    for(let j=0;j<Math.min(12,rows);j++){const hn=sub.hi[j],ln=sub.lo[j]; tbl+=`<tr><td>${j+1}</td><td>${hn??'â€”'}</td><td>${hn?fmt(seq.f(hn)):'â€”'}</td><td>${ln??'â€”'}</td><td>${ln?fmt(seq.f(ln)):'â€”'}</td></tr>`;}
     $('subseqTable').innerHTML=tbl;
   }
   function drawCriterion(st,seq,a,te){
@@ -408,12 +408,12 @@
   }
   function update(){
     const st=current(), seq=seqs[st.key], a=values(seq,st.M), te=tailExtremes(a);
-    $('MText').textContent='M = '+st.M; $('NText').textContent='N = '+st.N; $('epsText').textContent='ε = '+fmt(st.eps); $('formulaPill').textContent=seq.formula;
+    $('MText').textContent='M = '+st.M; $('NText').textContent='N = '+st.N; $('epsText').textContent='Îµ = '+fmt(st.eps); $('formulaPill').textContent=seq.formula;
     $('xNStat').textContent=fmt(a[st.N-1]); $('supStat').textContent=fmt(te.sup[st.N-1]); $('infStat').textContent=fmt(te.inf[st.N-1]);
-    $('interpretationBox').innerHTML=`<b>${seq.exact}</b><br>${seq.note}<br><br><span class="muted">Current finite-window gap:</span> <span class="mono">sᴹ_N − iᴹ_N = ${fmt(te.sup[st.N-1]-te.inf[st.N-1])}</span>.`;
-    $('intervalText').innerHTML=`For this example, <b>${seq.exact}</b>. The displayed [iᴹ_n, sᴹ_n] are finite-window shadows of [i_n, s_n]. In the actual theorem, the supremum and infimum are taken over all k ≥ n.`;
-    $('subseqText').innerHTML=seq.bounded?`The theoretical cluster picture is <span class="mono">${seq.cluster}</span>. A subsequential limit is a value reached by some subsequence, not necessarily by the whole sequence.`:`This sequence is not bounded. Bolzano–Weierstrass does not apply in ℝ; the displayed points drift right/up without real cluster value.`;
-    $('diagnosisPill').textContent=seq.converges?'convergent':'not convergent in ℝ';
+    $('interpretationBox').innerHTML=`<b>${seq.exact}</b><br>${seq.note}<br><br><span class="muted">Current finite-window gap:</span> <span class="mono">sá´¹_N âˆ’ iá´¹_N = ${fmt(te.sup[st.N-1]-te.inf[st.N-1])}</span>.`;
+    $('intervalText').innerHTML=`For this example, <b>${seq.exact}</b>. The displayed [iá´¹_n, sá´¹_n] are finite-window shadows of [i_n, s_n]. In the actual theorem, the supremum and infimum are taken over all k â‰¥ n.`;
+    $('subseqText').innerHTML=seq.bounded?`The theoretical cluster picture is <span class="mono">${seq.cluster}</span>. A subsequential limit is a value reached by some subsequence, not necessarily by the whole sequence.`:`This sequence is not bounded. Bolzanoâ€“Weierstrass does not apply in â„; the displayed points drift right/up without real cluster value.`;
+    $('diagnosisPill').textContent=seq.converges?'convergent':'not convergent in â„';
     $('diagnosisText').className='notice '+(seq.converges?'':'warning');
     $('diagnosisText').innerHTML=seq.converges?`The two infinite tail limits agree: <b>${seq.exact}</b>. Hence every sufficiently late tail is trapped near one real number.`:(!seq.bounded?`The sequence is unbounded. Extended notation says <b>${seq.exact}</b>, but there is no real limit.`:`The infinite tail limits remain separated: <b>${seq.exact}</b>. Therefore the sequence cannot converge.`);
     drawMain(st,seq,a,te); drawIntervals(st,seq,a,te); drawSubseq(st,seq,a); drawCriterion(st,seq,a,te);
@@ -429,3 +429,4 @@
 </script>
 </body>
 </html>
+

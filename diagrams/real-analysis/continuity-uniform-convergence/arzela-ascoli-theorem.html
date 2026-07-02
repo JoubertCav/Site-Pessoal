@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -93,7 +93,7 @@
     .theme .label{font-size:.92rem;color:var(--muted);min-width:70px}
     .switch{position:relative;width:70px;height:36px;border-radius:999px;background:var(--switch);border:1px solid var(--line)}
     .switch:before,.switch:after{position:absolute;top:50%;transform:translateY(-50%);font-size:13px;opacity:.75}
-    .switch:before{content:"☀";left:10px}.switch:after{content:"☾";right:10px}
+    .switch:before{content:"â˜€";left:10px}.switch:after{content:"â˜¾";right:10px}
     .knob{position:absolute;left:3px;top:3px;width:28px;height:28px;border-radius:50%;background:var(--thumb);border:1px solid var(--line);box-shadow:0 4px 12px rgba(0,0,0,.16);transition:left .25s ease;display:grid;place-items:center;font-size:13px}
     body.dark .knob{left:37px}
 
@@ -144,7 +144,7 @@
   <div class="wrap">
     <header>
       <div>
-        <h1>Arzelà–Ascoli theorem</h1>
+        <h1>ArzelÃ â€“Ascoli theorem</h1>
         <p class="subtitle">A bounded and equicontinuous family cannot oscillate wildly or escape vertically. In \(C(K)\), this is the geometric reason subsequences converge uniformly.</p>
       </div>
       <div class="actions">
@@ -153,7 +153,7 @@
         <div class="pill">uniformly convergent subsequences</div>
         <div id="theme" class="theme" role="button" tabindex="0">
           <span id="themeLabel" class="label">light mode</span>
-          <div class="switch"><div id="knob" class="knob">☀</div></div>
+          <div class="switch"><div id="knob" class="knob">â˜€</div></div>
         </div>
       </div>
     </header>
@@ -223,7 +223,7 @@
               <h2>Main diagram</h2>
               <p>Left: graphs in \(C(K)\). Right: the same sequence as points in function space. Teal means compact behavior; coral means failure.</p>
             </div>
-            <div id="status" class="status">Arzelà–Ascoli applies</div>
+            <div id="status" class="status">ArzelÃ â€“Ascoli applies</div>
           </div>
 
           <div class="split">
@@ -383,14 +383,14 @@
 
   const css=v=>getComputedStyle(document.body).getPropertyValue(v).trim();
   const lin=(x,a,b,c,d)=>c+(x-a)*(d-c)/(b-a);
-  const fmt=x=>(x<0?'−':'')+Math.abs(x).toFixed(2);
+  const fmt=x=>(x<0?'âˆ’':'')+Math.abs(x).toFixed(2);
 
   function setTheme(t){
     state.theme=t;
     document.body.classList.toggle('dark', t==='dark');
     localStorage.setItem('aa-theme',t);
     el.themeLabel.textContent=t==='dark'?'dark mode':'light mode';
-    el.knob.textContent=t==='dark'?'☾':'☀';
+    el.knob.textContent=t==='dark'?'â˜¾':'â˜€';
     render();
   }
 
@@ -550,9 +550,9 @@
 
     el.boundMetric.textContent=ex.bounded?'bounded':'not bounded';
     el.equicontMetric.textContent=ex.equicont?'equicontinuous':'not equicontinuous';
-    el.subMetric.textContent=ex.compact?`error ≈ ${err.toFixed(3)}`:'not guaranteed';
+    el.subMetric.textContent=ex.compact?`error â‰ˆ ${err.toFixed(3)}`:'not guaranteed';
     el.compactMetric.textContent=ex.compact?'relatively compact':'fails';
-    el.status.textContent=ex.compact?'Arzelà–Ascoli applies':'hypothesis fails';
+    el.status.textContent=ex.compact?'ArzelÃ â€“Ascoli applies':'hypothesis fails';
     el.status.style.color=compactCol;
     el.status.style.background=ex.compact?css('--accentSoft'):css('--badSoft');
   }
@@ -591,9 +591,9 @@
       <path d="${path(vals,X,Y)}" fill="none" stroke="${col}" stroke-width="3" stroke-linecap="round"/>
       <line x1="${X(state.delta)}" y1="${plot.y}" x2="${X(state.delta)}" y2="${plot.y+plot.h}" stroke="${css('--gold')}" stroke-dasharray="6 6" stroke-width="2"/>
       <circle cx="${X(state.delta)}" cy="${Y(curr)}" r="7.5" fill="${col}" stroke="${css('--paper')}" stroke-width="2.4"/>
-      ${text(plot.x+10,Y(state.eps)-9,'ε',{size:14,fill:css('--limit'),weight:700})}
-      ${text(X(state.delta)+10,Y(curr)-10,`ω(δ)≈${curr.toFixed(2)}`,{size:14,fill:col,weight:700})}
-      ${text(plot.x+plot.w-8,plot.y+plot.h+24,'δ',{size:13,fill:css('--muted'),anchor:'end'})}
+      ${text(plot.x+10,Y(state.eps)-9,'Îµ',{size:14,fill:css('--limit'),weight:700})}
+      ${text(X(state.delta)+10,Y(curr)-10,`Ï‰(Î´)â‰ˆ${curr.toFixed(2)}`,{size:14,fill:col,weight:700})}
+      ${text(plot.x+plot.w-8,plot.y+plot.h+24,'Î´',{size:13,fill:css('--muted'),anchor:'end'})}
 
       <rect x="${bars.x}" y="${bars.y}" width="${bars.w}" height="${bars.h}" rx="20" fill="${ex.bounded?css('--accentSoft'):css('--badSoft')}" stroke="${css('--line')}"/>
       <line x1="${bars.x+15}" y1="${bars.y+70}" x2="${bars.x+bars.w-15}" y2="${bars.y+70}" stroke="${css('--limit')}" stroke-dasharray="7 6" stroke-width="2"/>
@@ -688,3 +688,4 @@
 </script>
 </body>
 </html>
+

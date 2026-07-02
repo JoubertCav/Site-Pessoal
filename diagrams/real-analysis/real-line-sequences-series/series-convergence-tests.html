@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -184,7 +184,7 @@ svg{width:100%;height:auto;display:block}
 <div class="app" id="app">
   <header class="header">
     <div>
-      <div class="eyebrow">Real Analysis · Series</div>
+      <div class="eyebrow">Real Analysis Â· Series</div>
       <h1>Series convergence tests</h1>
       <p class="subtitle">Partial sums are the object. Tests are lenses that decide whether the sequence \(S_N=\sum_{n=1}^N a_n\) settles to a real number.</p>
     </div>
@@ -197,16 +197,16 @@ svg{width:100%;height:auto;display:block}
   <main class="grid">
     <aside class="card controls">
       <h2>Controls</h2>
-      <div class="symbol" id="formulaBox">aₙ = 1/nᵖ</div>
+      <div class="symbol" id="formulaBox">aâ‚™ = 1/náµ–</div>
 
       <div class="control">
         <label>Series family</label>
         <select id="family">
-          <option value="pseries">p-series · aₙ = 1/nᵖ</option>
-          <option value="geometric">geometric · aₙ = rⁿ⁻¹</option>
-          <option value="altp">alternating p-series · (-1)ⁿ⁺¹/nᵖ</option>
-          <option value="logseries">log series · 1/(n(log n)^α)</option>
-          <option value="exprpoly">exponential-polynomial · nᵠrⁿ</option>
+          <option value="pseries">p-series Â· aâ‚™ = 1/náµ–</option>
+          <option value="geometric">geometric Â· aâ‚™ = râ¿â»Â¹</option>
+          <option value="altp">alternating p-series Â· (-1)â¿âºÂ¹/náµ–</option>
+          <option value="logseries">log series Â· 1/(n(log n)^Î±)</option>
+          <option value="exprpoly">exponential-polynomial Â· náµ râ¿</option>
         </select>
       </div>
 
@@ -221,7 +221,7 @@ svg{width:100%;height:auto;display:block}
       </div>
 
       <div class="control" id="alphaWrap">
-        <label><span>α</span><span class="value" id="alphaVal">1.30</span></label>
+        <label><span>Î±</span><span class="value" id="alphaVal">1.30</span></label>
         <input id="alpha" type="range" min="0.40" max="2.40" step="0.05" value="1.30" />
       </div>
 
@@ -236,7 +236,7 @@ svg{width:100%;height:auto;display:block}
       </div>
 
       <div class="control">
-        <label><span>ε tube around last value</span><span class="value" id="epsVal">0.08</span></label>
+        <label><span>Îµ tube around last value</span><span class="value" id="epsVal">0.08</span></label>
         <input id="eps" type="range" min="0.01" max="0.50" step="0.01" value="0.08" />
       </div>
 
@@ -266,10 +266,10 @@ svg{width:100%;height:auto;display:block}
           </div>
         </div>
         <div class="metric-row">
-          <div class="metric"><div class="label">Displayed S_N</div><div class="num" id="SN">—</div><div class="small">finite partial sum</div></div>
-          <div class="metric"><div class="label">a_N</div><div class="num" id="aN">—</div><div class="small">necessary condition: aₙ→0</div></div>
-          <div class="metric"><div class="label">Ratio/root lens</div><div class="num" id="RR">—</div><div class="small">finite estimates, not a proof alone</div></div>
-          <div class="metric"><div class="label">Verdict</div><div class="num" id="verdict">—</div><div class="small" id="verdictSmall">according to known theorem</div></div>
+          <div class="metric"><div class="label">Displayed S_N</div><div class="num" id="SN">â€”</div><div class="small">finite partial sum</div></div>
+          <div class="metric"><div class="label">a_N</div><div class="num" id="aN">â€”</div><div class="small">necessary condition: aâ‚™â†’0</div></div>
+          <div class="metric"><div class="label">Ratio/root lens</div><div class="num" id="RR">â€”</div><div class="small">finite estimates, not a proof alone</div></div>
+          <div class="metric"><div class="label">Verdict</div><div class="num" id="verdict">â€”</div><div class="small" id="verdictSmall">according to known theorem</div></div>
         </div>
       </div>
 
@@ -277,9 +277,9 @@ svg{width:100%;height:auto;display:block}
         <div class="card panel">
           <h2>Symbolic core</h2>
           <div class="symbol">
-            ∑aₙ converges ⇔ S_N = ∑ₙ₌₁ᴺ aₙ has a finite limit.<br>
-            Absolute convergence: ∑|aₙ| &lt; ∞ ⇒ ∑aₙ converges.<br>
-            Cauchy criterion: ∀ε&gt;0 ∃N: m&gt;n≥N ⇒ |aₙ₊₁+⋯+a_m|&lt;ε.
+            âˆ‘aâ‚™ converges â‡” S_N = âˆ‘â‚™â‚Œâ‚á´º aâ‚™ has a finite limit.<br>
+            Absolute convergence: âˆ‘|aâ‚™| &lt; âˆž â‡’ âˆ‘aâ‚™ converges.<br>
+            Cauchy criterion: âˆ€Îµ&gt;0 âˆƒN: m&gt;nâ‰¥N â‡’ |aâ‚™â‚Šâ‚+â‹¯+a_m|&lt;Îµ.
           </div>
           <div class="status" id="testStatus"><span class="dot"></span><span>Lens ready</span></div>
           <div class="notice" id="interpretation">The graph of S_N is the sequence whose convergence we care about.</div>
@@ -288,10 +288,10 @@ svg{width:100%;height:auto;display:block}
           <h2>What to notice</h2>
           <p id="noticeText">A series is not a curve; it is a sequence of partial sums. The terms may go to zero and the series may still diverge.</p>
           <div class="law-grid">
-            <div class="law"><strong>Necessary test</strong><code>aₙ ↛ 0 ⇒ ∑aₙ diverges.</code></div>
-            <div class="law"><strong>Positive series</strong><code>convergence ⇔ partial sums bounded above.</code></div>
-            <div class="law"><strong>Absolute first</strong><code>∑|aₙ| convergent ⇒ ∑aₙ convergent.</code></div>
-            <div class="law"><strong>Conditional</strong><code>∑aₙ converges but ∑|aₙ| diverges.</code></div>
+            <div class="law"><strong>Necessary test</strong><code>aâ‚™ â†› 0 â‡’ âˆ‘aâ‚™ diverges.</code></div>
+            <div class="law"><strong>Positive series</strong><code>convergence â‡” partial sums bounded above.</code></div>
+            <div class="law"><strong>Absolute first</strong><code>âˆ‘|aâ‚™| convergent â‡’ âˆ‘aâ‚™ convergent.</code></div>
+            <div class="law"><strong>Conditional</strong><code>âˆ‘aâ‚™ converges but âˆ‘|aâ‚™| diverges.</code></div>
           </div>
         </div>
       </div>
@@ -305,17 +305,17 @@ svg{width:100%;height:auto;display:block}
       <div class="card panel">
         <h2>Compact exam-style summary</h2>
         <table class="table">
-          <tr><td>Partial sums</td><td>Study S_N=∑ₙ₌₁ᴺaₙ. The series converges iff (S_N) converges in ℝ.</td></tr>
-          <tr><td>Absolute convergence</td><td>If ∑|aₙ| converges, then ∑aₙ converges. If ∑aₙ converges but ∑|aₙ| diverges, convergence is conditional.</td></tr>
-          <tr><td>Comparison</td><td>For nonnegative terms: 0≤aₙ≤bₙ and ∑bₙ converges ⇒ ∑aₙ converges. If 0≤bₙ≤aₙ and ∑bₙ diverges ⇒ ∑aₙ diverges.</td></tr>
+          <tr><td>Partial sums</td><td>Study S_N=âˆ‘â‚™â‚Œâ‚á´ºaâ‚™. The series converges iff (S_N) converges in â„.</td></tr>
+          <tr><td>Absolute convergence</td><td>If âˆ‘|aâ‚™| converges, then âˆ‘aâ‚™ converges. If âˆ‘aâ‚™ converges but âˆ‘|aâ‚™| diverges, convergence is conditional.</td></tr>
+          <tr><td>Comparison</td><td>For nonnegative terms: 0â‰¤aâ‚™â‰¤bâ‚™ and âˆ‘bâ‚™ converges â‡’ âˆ‘aâ‚™ converges. If 0â‰¤bâ‚™â‰¤aâ‚™ and âˆ‘bâ‚™ diverges â‡’ âˆ‘aâ‚™ diverges.</td></tr>
           <tr><td>Ratio/root</td><td>L&lt;1 gives absolute convergence. L&gt;1 gives divergence. L=1 is inconclusive.</td></tr>
-          <tr><td>Alternating</td><td>If bₙ↓0, then ∑(-1)ⁿ⁺¹bₙ converges and |S−S_N|≤b_{N+1}.</td></tr>
-          <tr><td>Condensation</td><td>If aₙ≥0 is nonincreasing, then ∑aₙ converges iff ∑2ᵏa_{2ᵏ} converges.</td></tr>
+          <tr><td>Alternating</td><td>If bâ‚™â†“0, then âˆ‘(-1)â¿âºÂ¹bâ‚™ converges and |Sâˆ’S_N|â‰¤b_{N+1}.</td></tr>
+          <tr><td>Condensation</td><td>If aâ‚™â‰¥0 is nonincreasing, then âˆ‘aâ‚™ converges iff âˆ‘2áµa_{2áµ} converges.</td></tr>
         </table>
       </div>
     </section>
   </main>
-  <div class="footer">Self-contained HTML · no external libraries · diagrams computed from finite windows</div>
+  <div class="footer">Self-contained HTML Â· no external libraries Â· diagrams computed from finite windows</div>
 </div>
 
 <script>
@@ -336,7 +336,7 @@ svg{width:100%;height:auto;display:block}
   });
 
   function fmt(x, digits=4){
-    if(!Number.isFinite(x)) return '∞';
+    if(!Number.isFinite(x)) return 'âˆž';
     const ax=Math.abs(x);
     if(ax>9999 || (ax>0 && ax<0.001)) return x.toExponential(2);
     return x.toFixed(digits).replace(/\.0+$/,'').replace(/(\.\d*?)0+$/,'$1');
@@ -368,20 +368,20 @@ svg{width:100%;height:auto;display:block}
 
   function theoretical(s){
     if(s.family==='pseries'){
-      return {type:s.p>1?'good':'bad', verdict:s.p>1?'converges':'diverges', detail:s.p>1?'p>1':'p≤1', formula:'aₙ = 1/nᵖ', limit: null};
+      return {type:s.p>1?'good':'bad', verdict:s.p>1?'converges':'diverges', detail:s.p>1?'p>1':'pâ‰¤1', formula:'aâ‚™ = 1/náµ–', limit: null};
     }
     if(s.family==='geometric'){
-      return {type:s.r<1?'good':'bad', verdict:s.r<1?'converges':'diverges', detail:s.r<1?'|r|<1':'r≥1', formula:'aₙ = rⁿ⁻¹', limit:s.r<1?1/(1-s.r):null};
+      return {type:s.r<1?'good':'bad', verdict:s.r<1?'converges':'diverges', detail:s.r<1?'|r|<1':'râ‰¥1', formula:'aâ‚™ = râ¿â»Â¹', limit:s.r<1?1/(1-s.r):null};
     }
     if(s.family==='altp'){
       const abs=s.p>1;
-      return {type:abs?'good':'warn', verdict:abs?'absolutely conv.':'conditionally conv.', detail:abs?'p>1':'0<p≤1', formula:'aₙ = (-1)ⁿ⁺¹/nᵖ', limit:null};
+      return {type:abs?'good':'warn', verdict:abs?'absolutely conv.':'conditionally conv.', detail:abs?'p>1':'0<pâ‰¤1', formula:'aâ‚™ = (-1)â¿âºÂ¹/náµ–', limit:null};
     }
     if(s.family==='logseries'){
-      return {type:s.alpha>1?'good':'bad', verdict:s.alpha>1?'converges':'diverges', detail:s.alpha>1?'α>1':'α≤1', formula:'aₙ = 1/((n+1)(log(n+1))ᵅ)', limit:null};
+      return {type:s.alpha>1?'good':'bad', verdict:s.alpha>1?'converges':'diverges', detail:s.alpha>1?'Î±>1':'Î±â‰¤1', formula:'aâ‚™ = 1/((n+1)(log(n+1))áµ…)', limit:null};
     }
     if(s.family==='exprpoly'){
-      return {type:s.r<1?'good':'bad', verdict:s.r<1?'converges':'diverges', detail:s.r<1?'exponential wins':'terms do not decay enough', formula:'aₙ = nᵠrⁿ', limit:null};
+      return {type:s.r<1?'good':'bad', verdict:s.r<1?'converges':'diverges', detail:s.r<1?'exponential wins':'terms do not decay enough', formula:'aâ‚™ = náµ râ¿', limit:null};
     }
   }
 
@@ -465,7 +465,7 @@ svg{width:100%;height:auto;display:block}
     const step=Math.max(1,Math.floor(s.N/28));
     for(let i=0;i<d.S.length;i+=step) E('circle',{cx:sc.x(i+1),cy:sc.y(d.S[i]),r:2.7,class:'pointA'},svg);
     E('circle',{cx:sc.x(s.N),cy:sc.y(last),r:5,class:'pointB'},svg);
-    text(svg,pad.l,18,'partial sums S_N = a₁+⋯+a_N','big-annotation');
+    text(svg,pad.l,18,'partial sums S_N = aâ‚+â‹¯+a_N','big-annotation');
     text(svg,w/2,h-12,'N','annotation','middle');
     text(svg,12,h/2,'S_N','annotation','middle').setAttribute('transform','rotate(-90 12 '+h/2+')');
   }
@@ -501,7 +501,7 @@ svg{width:100%;height:auto;display:block}
     E('line',{x1:pad.l,x2:w-pad.r,y1:sc.y(1),y2:sc.y(1),class:'limit-line'},svg);
     E('path',{d:pathFrom(ratios.map(v=>Number.isFinite(v)?v:0),sc),class:'curveB'},svg);
     E('path',{d:pathFrom(roots.map(v=>Number.isFinite(v)?v:0),sc),class:'curveA'},svg);
-    text(svg,pad.l,18,'ratio |aₙ₊₁/aₙ| and root |aₙ|¹/ⁿ','big-annotation');
+    text(svg,pad.l,18,'ratio |aâ‚™â‚Šâ‚/aâ‚™| and root |aâ‚™|Â¹/â¿','big-annotation');
     text(svg,w-pad.r-6,sc.y(1)-7,'threshold 1','annotation','end');
   }
 
@@ -519,7 +519,7 @@ svg{width:100%;height:auto;display:block}
       E('rect',{x,y:sc.y(v),width:bw,height:Math.max(1,sc.y(0)-sc.y(v)),class:'termbar',rx:5},svg);
       text(svg,x+bw/2,h-24,'2^'+k,'annotation','middle');
     }
-    text(svg,pad.l,18,'condensed terms 2ᵏa₂ᵏ','big-annotation');
+    text(svg,pad.l,18,'condensed terms 2áµaâ‚‚áµ','big-annotation');
   }
 
   function drawLens(s,d){
@@ -536,7 +536,7 @@ svg{width:100%;height:auto;display:block}
     const vals=d.S.concat(d.A); const sc=chartScales(vals,w,h,pad,s.N); grid(svg,w,h,pad,sc);
     E('path',{d:pathFrom(d.S,sc),class:'curveA'},svg);
     E('path',{d:pathFrom(d.A,sc),class:'curveB'},svg);
-    text(svg,pad.l,22,'S_N versus absolute partial sums A_N = ∑|a_n|','big-annotation');
+    text(svg,pad.l,22,'S_N versus absolute partial sums A_N = âˆ‘|a_n|','big-annotation');
     text(svg,w-pad.r-10,sc.y(d.S[d.S.length-1])-8,'S_N','annotation','end');
     text(svg,w-pad.r-10,sc.y(d.A[d.A.length-1])+16,'A_N','annotation','end');
   }
@@ -546,7 +546,7 @@ svg{width:100%;height:auto;display:block}
     E('path',{d:pathFrom(d.A,sc),class:'curveB'},svg);
     const step=Math.max(1,Math.floor(s.N/30));
     for(let i=0;i<d.A.length;i+=step) E('circle',{cx:sc.x(i+1),cy:sc.y(d.A[i]),r:3,class:'pointB'},svg);
-    text(svg,pad.l,22,'absolute partial sums A_N = |a₁|+⋯+|a_N|','big-annotation');
+    text(svg,pad.l,22,'absolute partial sums A_N = |aâ‚|+â‹¯+|a_N|','big-annotation');
     text(svg,pad.l,48,'If A_N converges, then S_N converges. If A_N escapes, S_N may still converge conditionally.','annotation');
   }
 
@@ -582,7 +582,7 @@ svg{width:100%;height:auto;display:block}
     E('path',{d:pathFrom(ratios.map(v=>Number.isFinite(v)?v:0),sc),class:'curveB'},svg);
     E('path',{d:pathFrom(roots.map(v=>Number.isFinite(v)?v:0),sc),class:'curveA'},svg);
     text(svg,pad.l,22,'ratio test and root test: threshold at 1','big-annotation');
-    text(svg,pad.l,48,'L<1 ⇒ absolute convergence; L>1 ⇒ divergence; L=1 ⇒ inconclusive.','annotation');
+    text(svg,pad.l,48,'L<1 â‡’ absolute convergence; L>1 â‡’ divergence; L=1 â‡’ inconclusive.','annotation');
   }
 
   function drawAlternatingLens(svg,w,h,pad,s,d){
@@ -592,7 +592,7 @@ svg{width:100%;height:auto;display:block}
     E('path',{d:pathFrom(d.S,sc),class:'curveA'},svg);
     E('line',{x1:pad.l,x2:w-pad.r,y1:sc.y(last),y2:sc.y(last),class:'limit-line'},svg);
     text(svg,pad.l,22,'alternating lens: even and odd partial sums squeeze the limit','big-annotation');
-    text(svg,pad.l,48,'When b_n↓0, the true error satisfies |S−S_N|≤b_{N+1}. The band shows this finite error scale.','annotation');
+    text(svg,pad.l,48,'When b_nâ†“0, the true error satisfies |Sâˆ’S_N|â‰¤b_{N+1}. The band shows this finite error scale.','annotation');
   }
 
   function drawCondensationLens(svg,w,h,pad,s,d){
@@ -606,7 +606,7 @@ svg{width:100%;height:auto;display:block}
       E('rect',{x,y:sc.y(v),width:bw,height:Math.max(1,sc.y(0)-sc.y(v)),class:'termbar',rx:7},svg);
       text(svg,x+bw/2,h-20,'k='+k,'annotation','middle');
     }
-    text(svg,pad.l,22,'Cauchy condensation: compare ∑a_n with ∑2ᵏa₂ᵏ','big-annotation');
+    text(svg,pad.l,22,'Cauchy condensation: compare âˆ‘a_n with âˆ‘2áµaâ‚‚áµ','big-annotation');
     text(svg,pad.l,48,'Applies only to nonnegative nonincreasing a_n. The bars are condensed terms.','annotation');
   }
 
@@ -614,40 +614,40 @@ svg{width:100%;height:auto;display:block}
     const th=theoretical(s), rhat=ratioEstimate(s), roothat=rootEstimate(s);
     $('SN').textContent=fmt(d.S[d.S.length-1],5);
     $('aN').textContent=fmt(d.a[d.a.length-1],5);
-    $('RR').textContent='ρ≈'+fmt(rhat,3)+' · √≈'+fmt(roothat,3);
+    $('RR').textContent='Ïâ‰ˆ'+fmt(rhat,3)+' Â· âˆšâ‰ˆ'+fmt(roothat,3);
     $('verdict').textContent=th.verdict;
     $('verdictSmall').textContent=th.detail;
     const dotClass=th.type==='good'?'good':th.type==='warn'?'warn':'bad';
-    $('testStatus').innerHTML='<span class="dot '+dotClass+'"></span><span>'+th.verdict+' · '+th.detail+'</span>';
+    $('testStatus').innerHTML='<span class="dot '+dotClass+'"></span><span>'+th.verdict+' Â· '+th.detail+'</span>';
 
     let interp='The graph of S_N is the sequence whose convergence we care about.';
     let notice='A series is not a curve; it is a sequence of partial sums. The terms may go to zero and the series may still diverge.';
     let lensText='The selected test is displayed as a finite visual shadow of the theorem. Use the theorem conditions, not the picture alone.';
     if(s.family==='pseries'){
-      interp=s.p>1?'For p>1, positive partial sums increase but remain bounded above.':'For p≤1, terms go to zero but the positive partial sums are unbounded.';
-      notice='The p-series is the classic warning: a_n→0 is necessary, not sufficient. The harmonic case p=1 diverges.';
+      interp=s.p>1?'For p>1, positive partial sums increase but remain bounded above.':'For pâ‰¤1, terms go to zero but the positive partial sums are unbounded.';
+      notice='The p-series is the classic warning: a_nâ†’0 is necessary, not sufficient. The harmonic case p=1 diverges.';
     }
     if(s.family==='geometric'){
-      interp=s.r<1?'A fixed ratio below 1 makes the remaining tail shrink geometrically.':'When r≥1, the terms do not tend to zero, so the series diverges immediately.';
+      interp=s.r<1?'A fixed ratio below 1 makes the remaining tail shrink geometrically.':'When râ‰¥1, the terms do not tend to zero, so the series diverges immediately.';
       notice='The geometric series is the model case for the ratio test: the ratio is exactly r.';
     }
     if(s.family==='altp'){
       interp='Alternation can make partial sums converge by cancellation. Absolute convergence still depends on the positive p-series.';
-      notice=s.p>1?'Here convergence is absolute: cancellation is not needed.':'Here convergence is conditional: ∑a_n converges, but ∑|a_n| diverges.';
+      notice=s.p>1?'Here convergence is absolute: cancellation is not needed.':'Here convergence is conditional: âˆ‘a_n converges, but âˆ‘|a_n| diverges.';
     }
     if(s.family==='logseries'){
-      interp=s.alpha>1?'Condensation turns the logarithmic series into a p-series in k with exponent α>1.':'Condensation turns this into a divergent p-series in k with exponent α≤1.';
-      notice='Logarithmic factors are too weak at α≤1, but become strong enough when α>1.';
+      interp=s.alpha>1?'Condensation turns the logarithmic series into a p-series in k with exponent Î±>1.':'Condensation turns this into a divergent p-series in k with exponent Î±â‰¤1.';
+      notice='Logarithmic factors are too weak at Î±â‰¤1, but become strong enough when Î±>1.';
     }
     if(s.family==='exprpoly'){
-      interp=s.r<1?'Exponential decay dominates any polynomial growth n^q.':'If r≥1 and q≥0, the terms fail to decay to zero.';
+      interp=s.r<1?'Exponential decay dominates any polynomial growth n^q.':'If râ‰¥1 and qâ‰¥0, the terms fail to decay to zero.';
       notice='Ratio and root tests are built to detect exponential scale. Polynomial factors disappear in the limit.';
     }
-    if(lens==='absolute') lensText='Absolute convergence asks whether A_N=∑|a_n| converges. This is stronger than convergence of S_N.';
+    if(lens==='absolute') lensText='Absolute convergence asks whether A_N=âˆ‘|a_n| converges. This is stronger than convergence of S_N.';
     if(lens==='comparison') lensText='Comparison is order-theoretic: once terms are nonnegative, inequalities between terms transfer boundedness of partial sums.';
     if(lens==='ratioRoot') lensText='Ratio/root tests are decisive away from 1 and deliberately inconclusive at 1.';
     if(lens==='alternating') lensText='Alternating convergence uses geometry of nested intervals between even and odd partial sums.';
-    if(lens==='condensation') lensText='Condensation groups dyadic blocks. It requires a_n≥0 and nonincreasing.';
+    if(lens==='condensation') lensText='Condensation groups dyadic blocks. It requires a_nâ‰¥0 and nonincreasing.';
     $('interpretation').textContent=interp;
     $('noticeText').textContent=notice;
     $('lensText').textContent=lensText;
@@ -678,3 +678,4 @@ svg{width:100%;height:auto;display:block}
 </script>
 </body>
 </html>
+

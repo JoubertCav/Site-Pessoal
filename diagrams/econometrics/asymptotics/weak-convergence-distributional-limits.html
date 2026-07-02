@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -120,28 +120,28 @@
     <div class="def">
       <div class="tag">CDF criterion</div>
       <div class="math">
-        <span class="formula">X<sub>n</sub> ⇒ X ⇔ F<sub>n</sub>(x) → F(x)</span>
+        <span class="formula">X<sub>n</sub> â‡’ X â‡” F<sub>n</sub>(x) â†’ F(x)</span>
         <span class="mathNote">only at continuity points of \(F\)</span>
       </div>
     </div>
     <div class="def">
       <div class="tag">Law, not paths</div>
       <div class="math">
-        <span class="formula">𝓛(X<sub>n</sub>) ⇒ 𝓛(X)</span>
+        <span class="formula">ð“›(X<sub>n</sub>) â‡’ ð“›(X)</span>
         <span class="mathNote">no common-space closeness required</span>
       </div>
     </div>
     <div class="def">
       <div class="tag">Test functions</div>
       <div class="math">
-        <span class="formula">E[g(X<sub>n</sub>)] → E[g(X)]</span>
+        <span class="formula">E[g(X<sub>n</sub>)] â†’ E[g(X)]</span>
         <span class="mathNote">for bounded continuous \(g\)</span>
       </div>
     </div>
     <div class="def">
       <div class="tag">Portmanteau</div>
       <div class="math">
-        <span class="formula">limsup P<sub>n</sub>(C) ≤ P(C)</span>
+        <span class="formula">limsup P<sub>n</sub>(C) â‰¤ P(C)</span>
         <span class="mathNote">closed \(C\); reverse inequality for open sets</span>
       </div>
     </div>
@@ -155,11 +155,11 @@
         <label for="exampleSelect">Canonical limit</label>
         <select id="exampleSelect">
           <option value="normal">smooth laws: N(0,1+1/n)</option>
-          <option value="atom">atom shift: δ<sub>1/n</sub> ⇒ δ<sub>0</sub></option>
-          <option value="twoatom">two atoms: {0, 1+1/n} ⇒ {0,1}</option>
-          <option value="uniform">grid law ⇒ Uniform[0,1]</option>
-          <option value="binomial">standardized Binomial ⇒ Normal</option>
-          <option value="escape">escaping mass: δ<sub>n</sub></option>
+          <option value="atom">atom shift: Î´<sub>1/n</sub> â‡’ Î´<sub>0</sub></option>
+          <option value="twoatom">two atoms: {0, 1+1/n} â‡’ {0,1}</option>
+          <option value="uniform">grid law â‡’ Uniform[0,1]</option>
+          <option value="binomial">standardized Binomial â‡’ Normal</option>
+          <option value="escape">escaping mass: Î´<sub>n</sub></option>
         </select>
       </div>
 
@@ -184,7 +184,7 @@
       </div>
 
       <div class="control">
-        <label for="widthRange">Test width τ <span class="value" id="widthVal">0.80</span></label>
+        <label for="widthRange">Test width Ï„ <span class="value" id="widthVal">0.80</span></label>
         <input id="widthRange" type="range" min="0.20" max="2.00" step="0.05" value="0.80"/>
       </div>
 
@@ -252,7 +252,7 @@
     </section>
   </main>
 
-  <footer>Minimal interactive notebook — CDF convergence, continuity points, Portmanteau intuition, and asymptotic approximations.</footer>
+  <footer>Minimal interactive notebook â€” CDF convergence, continuity points, Portmanteau intuition, and asymptotic approximations.</footer>
 </div>
 
 <script>
@@ -267,7 +267,7 @@ const widthRange=document.getElementById("widthRange");
 
 function css(v){return getComputedStyle(body).getPropertyValue(v).trim();}
 function fmt(x){
-  if(!isFinite(x)) return "∞";
+  if(!isFinite(x)) return "âˆž";
   if(Math.abs(x)<0.0001 && x!==0) return x.toExponential(2);
   if(Math.abs(x)<10) return x.toFixed(4);
   return x.toFixed(2);
@@ -374,12 +374,12 @@ function weakStatus(p){
   return true;
 }
 function exampleFormula(p){
-  if(p.ex==="normal") return "Xₙ ∼ N(0, 1+1/n) ⇒ N(0,1)";
-  if(p.ex==="atom") return "δ₁/ₙ ⇒ δ₀";
-  if(p.ex==="twoatom") return "θδ₀ + (1−θ)δ₁₊₁/ₙ ⇒ θδ₀ + (1−θ)δ₁";
-  if(p.ex==="uniform") return "Uniform grid {0,1/n,…,1} ⇒ Uniform[0,1]";
-  if(p.ex==="binomial") return "(Bin(n,θ)−nθ)/√(nθ(1−θ)) ⇒ N(0,1)";
-  if(p.ex==="escape") return "δₙ: mass escapes to infinity, no weak limit on ℝ";
+  if(p.ex==="normal") return "Xâ‚™ âˆ¼ N(0, 1+1/n) â‡’ N(0,1)";
+  if(p.ex==="atom") return "Î´â‚/â‚™ â‡’ Î´â‚€";
+  if(p.ex==="twoatom") return "Î¸Î´â‚€ + (1âˆ’Î¸)Î´â‚â‚Šâ‚/â‚™ â‡’ Î¸Î´â‚€ + (1âˆ’Î¸)Î´â‚";
+  if(p.ex==="uniform") return "Uniform grid {0,1/n,â€¦,1} â‡’ Uniform[0,1]";
+  if(p.ex==="binomial") return "(Bin(n,Î¸)âˆ’nÎ¸)/âˆš(nÎ¸(1âˆ’Î¸)) â‡’ N(0,1)";
+  if(p.ex==="escape") return "Î´â‚™: mass escapes to infinity, no weak limit on â„";
   return "";
 }
 function cdfPath(p,target,xlo,xhi,X0,X1,Y0,Y1){
@@ -438,9 +438,9 @@ function drawMain(){
 
   h+='<rect x="730" y="72" width="205" height="272" rx="20" fill="'+panel2+'" stroke="'+border+'"/>';
   h+=text(752,104,"At selected x",textc,16,900);
-  h+=text(752,140,"Fₙ(x)",acc,13,900)+text(915,140,fmt(Fn),textc,13,850,"end");
+  h+=text(752,140,"Fâ‚™(x)",acc,13,900)+text(915,140,fmt(Fn),textc,13,850,"end");
   h+=text(752,172,p.ex==="escape"?"visual limit":"F(x)",blue,13,900)+text(915,172,fmt(F),textc,13,850,"end");
-  h+=text(752,204,"|Fₙ−F|",warn,13,900)+text(915,204,fmt(Math.abs(Fn-F)),textc,13,850,"end");
+  h+=text(752,204,"|Fâ‚™âˆ’F|",warn,13,900)+text(915,204,fmt(Math.abs(Fn-F)),textc,13,850,"end");
   h+=text(752,236,"continuity point",muted,12,850)+text(915,236,cont?"yes":"no",cont?acc:warn,12,850,"end");
   h+=text(752,268,"weak convergence",muted,12,850)+text(915,268,ok?"yes":"no",ok?acc:warn,12,850,"end");
 
@@ -595,14 +595,14 @@ function drawTest(){
   h+='<path d="'+path+'" fill="none" stroke="'+violet+'" stroke-width="2.4"/>';
   const a=p.c-p.tau, b=p.c+p.tau;
   h+='<rect x="'+px(clamp(a,xlo,xhi),xlo,xhi,X0,X1)+'" y="'+Y0+'" width="'+Math.max(0,px(clamp(b,xlo,xhi),xlo,xhi,X0,X1)-px(clamp(a,xlo,xhi),xlo,xhi,X0,X1))+'" height="'+(Y1-Y0)+'" fill="'+css("--accentSoft")+'" stroke="none"/>';
-  h+=text(68,34,"bounded continuous test g and interval (c−τ,c+τ]",muted,12,850);
+  h+=text(68,34,"bounded continuous test g and interval (câˆ’Ï„,c+Ï„]",muted,12,850);
 
   const eg=expectationG(p,false), egT=expectationG(p,true);
   const ip=intervalProb(p,false), ipT=intervalProb(p,true);
   const bars=[
-    {label:"E g(Xₙ)",v:eg,c:acc},
+    {label:"E g(Xâ‚™)",v:eg,c:acc},
     {label:"E g(X)",v:egT,c:blue},
-    {label:"Pₙ(I)",v:ip,c:warn},
+    {label:"Pâ‚™(I)",v:ip,c:warn},
     {label:"P(I)",v:ipT,c:violet}
   ];
   const base=262, top=210, xs=[105,205,320,420], maxV=Math.max(1,...bars.map(d=>d.v))*1.08;
@@ -622,10 +622,10 @@ function updateText(){
   document.getElementById("thetaVal").textContent=fmt(p.th);
   document.getElementById("centerVal").textContent=fmt(p.c);
   document.getElementById("widthVal").textContent=fmt(p.tau);
-  document.getElementById("eqBox").innerHTML='<span class="formula">'+exampleFormula(p)+'</span><span class="mathNote">'+(weak?"weak convergence holds":"no weak limit in ℝ")+'</span>';
+  document.getElementById("eqBox").innerHTML='<span class="formula">'+exampleFormula(p)+'</span><span class="mathNote">'+(weak?"weak convergence holds":"no weak limit in â„")+'</span>';
 
   const mini=[
-    ["Fₙ(x)",fmt(Fn)],
+    ["Fâ‚™(x)",fmt(Fn)],
     [p.ex==="escape"?"visual F":"F(x)",fmt(F)],
     ["|gap|",fmt(Math.abs(Fn-F))],
     ["cont. point",cont?"yes":"no"],
@@ -635,10 +635,10 @@ function updateText(){
   document.getElementById("miniGrid").innerHTML=mini.map(d=>'<div class="miniStat"><div class="k">'+d[0]+'</div><div class="v">'+d[1]+'</div></div>').join("");
 
   const logic=[
-    ["✓","CDF convergence is tested only at continuity points"],
-    ["✓","moving atoms may fail exactly at the limiting jump"],
-    ["✓","bounded continuous tests smooth small shifts"],
-    ["→","escaping mass means lack of tightness, hence no weak limit"]
+    ["âœ“","CDF convergence is tested only at continuity points"],
+    ["âœ“","moving atoms may fail exactly at the limiting jump"],
+    ["âœ“","bounded continuous tests smooth small shifts"],
+    ["â†’","escaping mass means lack of tightness, hence no weak limit"]
   ];
   document.getElementById("logicList").innerHTML=logic.map(it=>'<div class="logicItem"><span class="mark">'+it[0]+'</span><span>'+it[1]+'</span></div>').join("");
 
@@ -648,7 +648,7 @@ function updateText(){
   if(p.ex==="twoatom") interp="One atom is fixed at 0 and the other approaches 1. The CDF can fail at the limiting jump x=1 while the laws still converge weakly.";
   if(p.ex==="uniform") interp="The grid law fills the interval. The step CDF becomes the continuous uniform CDF; the jumps shrink as n grows.";
   if(p.ex==="binomial") interp="This is the CLT geometry: a discrete standardized law becomes close to the continuous standard normal law.";
-  if(p.ex==="escape") interp="The atom moves to infinity. For each fixed x, \(F_n(x)\to0\), but this pointwise limit is not a probability CDF on ℝ. Mass is not tight.";
+  if(p.ex==="escape") interp="The atom moves to infinity. For each fixed x, \(F_n(x)\to0\), but this pointwise limit is not a probability CDF on â„. Mass is not tight.";
   document.getElementById("interpretText").innerHTML=interp;
 
   let notice="Weak convergence is about laws, not pathwise closeness.";
@@ -671,3 +671,4 @@ drawAll();
 </script>
 </body>
 </html>
+

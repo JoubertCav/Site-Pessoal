@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8" />
@@ -159,9 +159,9 @@
 <div class="app">
   <header>
     <div>
-      <div class="eyebrow">R<sup>n</sup> topology · continuity as a pullback test</div>
+      <div class="eyebrow">R<sup>n</sup> topology Â· continuity as a pullback test</div>
       <h1>Topological continuity</h1>
-      <p class="subtitle">Open sets live in the target. Continuity asks whether their inverse images remain open in the domain. The diagram below makes this “backward” condition visible in ℝ², the geometric model for ℝⁿ.</p>
+      <p class="subtitle">Open sets live in the target. Continuity asks whether their inverse images remain open in the domain. The diagram below makes this â€œbackwardâ€ condition visible in â„Â², the geometric model for â„â¿.</p>
     </div>
     <div class="top-actions">
       <div class="pill" id="globalStatus">continuous map</div>
@@ -173,17 +173,17 @@
     <div class="card definition">
       <div class="def-title">minimal definition</div>
       <div class="formula">
-        <span class="accent">f : X ⊂ ℝⁿ → Y ⊂ ℝᵐ</span> is continuous<br>
-        ⇔ for every open V ⊂ Y,<br>
-        <span class="accent">f⁻¹(V)</span> is open in X.<br>
+        <span class="accent">f : X âŠ‚ â„â¿ â†’ Y âŠ‚ â„áµ</span> is continuous<br>
+        â‡” for every open V âŠ‚ Y,<br>
+        <span class="accent">fâ»Â¹(V)</span> is open in X.<br>
         Equivalently: closed sets pull back to closed sets.
       </div>
     </div>
     <div class="mini-grid">
-      <div class="mini card"><b>Metric form</b><span>For each a ∈ X: x → a ⇒ f(x) → f(a). In Euclidean spaces this is equivalent to the open-set test.</span></div>
-      <div class="mini card"><b>Homeomorphism</b><span>A bijection h with h and h⁻¹ continuous. It preserves the whole topology: opens, closeds, boundaries, convergence.</span></div>
+      <div class="mini card"><b>Metric form</b><span>For each a âˆˆ X: x â†’ a â‡’ f(x) â†’ f(a). In Euclidean spaces this is equivalent to the open-set test.</span></div>
+      <div class="mini card"><b>Homeomorphism</b><span>A bijection h with h and hâ»Â¹ continuous. It preserves the whole topology: opens, closeds, boundaries, convergence.</span></div>
       <div class="mini card"><b>Preimage first</b><span>Continuity does not say images of open sets are open. That stronger behavior comes from the inverse map.</span></div>
-      <div class="mini card"><b>Relative topology</b><span>“Open in X” means U = X ∩ O, with O open in ℝⁿ.</span></div>
+      <div class="mini card"><b>Relative topology</b><span>â€œOpen in Xâ€ means U = X âˆ© O, with O open in â„â¿.</span></div>
     </div>
   </section>
 
@@ -225,7 +225,7 @@
         <input type="range" id="radius" min="0.20" max="1.45" step="0.01" value="0.78">
       </div>
       <div class="control">
-        <label><strong>Deformation α</strong><span id="alphaVal">0.72</span></label>
+        <label><strong>Deformation Î±</strong><span id="alphaVal">0.72</span></label>
         <input type="range" id="alpha" min="0.00" max="1.25" step="0.01" value="0.72">
       </div>
       <div class="control">
@@ -251,22 +251,22 @@
       <section class="card diagram-card">
         <div class="diagram-head">
           <div>
-            <h2>The preimage test in ℝⁿ</h2>
+            <h2>The preimage test in â„â¿</h2>
             <p>Right: choose an open or closed set in the target. Left: see exactly which domain points land inside it.</p>
           </div>
           <div class="map-chip" id="mapChip">f is a homeomorphism</div>
         </div>
         <div class="dual">
           <div class="plotbox">
-            <div class="plot-title"><b>Domain X ⊂ ℝ²</b><span>highlight: f⁻¹(A)</span></div>
+            <div class="plot-title"><b>Domain X âŠ‚ â„Â²</b><span>highlight: fâ»Â¹(A)</span></div>
             <canvas class="plot-canvas" id="domainCanvas" width="640" height="540"></canvas>
           </div>
           <div class="plotbox">
-            <div class="plot-title"><b>Target Y ⊂ ℝ²</b><span>chosen set A</span></div>
+            <div class="plot-title"><b>Target Y âŠ‚ â„Â²</b><span>chosen set A</span></div>
             <canvas class="plot-canvas" id="targetCanvas" width="640" height="540"></canvas>
           </div>
         </div>
-        <div class="arrow-row"><div class="arrow-core">x ∈ f⁻¹(A) ⇔ f(x) ∈ A</div></div>
+        <div class="arrow-row"><div class="arrow-core">x âˆˆ fâ»Â¹(A) â‡” f(x) âˆˆ A</div></div>
       </section>
 
       <section class="lower">
@@ -275,22 +275,22 @@
           <div class="logic-grid">
             <div class="logic-card">
               <div class="k">open preimage criterion</div>
-              <div class="math">V open in Y<br>⇒ f⁻¹(V) open in X</div>
+              <div class="math">V open in Y<br>â‡’ fâ»Â¹(V) open in X</div>
               <p>Continuity is a statement about how target neighborhoods pull back to domain neighborhoods.</p>
             </div>
             <div class="logic-card">
               <div class="k">closed preimage criterion</div>
-              <div class="math">C closed in Y<br>⇒ f⁻¹(C) closed in X</div>
-              <p>Equivalent because complements commute with preimages: f⁻¹(Y ∖ C) = X ∖ f⁻¹(C).</p>
+              <div class="math">C closed in Y<br>â‡’ fâ»Â¹(C) closed in X</div>
+              <p>Equivalent because complements commute with preimages: fâ»Â¹(Y âˆ– C) = X âˆ– fâ»Â¹(C).</p>
             </div>
             <div class="logic-card">
               <div class="k">metric equivalence</div>
-              <div class="math">∀ε > 0 ∃δ > 0:<br>∥x − a∥ < δ ⇒ ∥f(x) − f(a)∥ < ε</div>
-              <p>In ℝⁿ, this pointwise condition is equivalent to the topological one.</p>
+              <div class="math">âˆ€Îµ > 0 âˆƒÎ´ > 0:<br>âˆ¥x âˆ’ aâˆ¥ < Î´ â‡’ âˆ¥f(x) âˆ’ f(a)âˆ¥ < Îµ</div>
+              <p>In â„â¿, this pointwise condition is equivalent to the topological one.</p>
             </div>
             <div class="logic-card">
               <div class="k">homeomorphism</div>
-              <div class="math">h bijective, h continuous,<br>h⁻¹ continuous</div>
+              <div class="math">h bijective, h continuous,<br>hâ»Â¹ continuous</div>
               <p>Then U is open in X iff h(U) is open in Y. The topology is unchanged, only redrawn.</p>
             </div>
           </div>
@@ -298,7 +298,7 @@
         <section class="card notice">
           <h3>What to notice</h3>
           <ul id="noticeList">
-            <li>The continuity test goes backward: target open set V, domain preimage f⁻¹(V).</li>
+            <li>The continuity test goes backward: target open set V, domain preimage fâ»Â¹(V).</li>
             <li>A non-injective continuous map may still pass every preimage test.</li>
             <li>Images of open sets can fail to be open unless the inverse map is continuous.</li>
             <li>A discontinuity is exposed by one open set whose preimage is not open.</li>
@@ -309,11 +309,11 @@
       <section class="card exam">
         <h3>Compact exam summary</h3>
         <div class="exam-grid">
-          <div class="exam-item"><b>Continuity</b><div>f : X → Y continuous<br>⇔ for all V ⊂ Y open,<br>f⁻¹(V) open in X.</div></div>
-          <div class="exam-item"><b>Closed sets</b><div>f continuous<br>⇔ for all C ⊂ Y closed,<br>f⁻¹(C) closed in X.</div></div>
-          <div class="exam-item"><b>Homeomorphism</b><div>h : X → Y homeomorphism<br>⇔ h bijective and both<br>h, h⁻¹ continuous.</div></div>
+          <div class="exam-item"><b>Continuity</b><div>f : X â†’ Y continuous<br>â‡” for all V âŠ‚ Y open,<br>fâ»Â¹(V) open in X.</div></div>
+          <div class="exam-item"><b>Closed sets</b><div>f continuous<br>â‡” for all C âŠ‚ Y closed,<br>fâ»Â¹(C) closed in X.</div></div>
+          <div class="exam-item"><b>Homeomorphism</b><div>h : X â†’ Y homeomorphism<br>â‡” h bijective and both<br>h, hâ»Â¹ continuous.</div></div>
         </div>
-        <div class="small-note">The drawings use ℝ² because it is visible. The definitions are the same in ℝⁿ with Euclidean open balls, or in metric spaces with metric balls.</div>
+        <div class="small-note">The drawings use â„Â² because it is visible. The definitions are the same in â„â¿ with Euclidean open balls, or in metric spaces with metric balls.</div>
       </section>
     </section>
   </main>
@@ -387,7 +387,7 @@
     const data = {
       shear:{formula:`f(x,y)=(x+${s.alpha.toFixed(2)}\u00b7sin(1.15y), y)`, cont:true, homeo:true, label:'homeomorphism'},
       linear:{formula:`f(x,y)=\u03bb R_\u03b8(x,y)`, cont:true, homeo:true, label:'homeomorphism'},
-      fold:{formula:`f(x,y)=(x²-${(0.78+0.22*s.alpha).toFixed(2)}, y)`, cont:true, homeo:false, label:'continuous, not injective'},
+      fold:{formula:`f(x,y)=(xÂ²-${(0.78+0.22*s.alpha).toFixed(2)}, y)`, cont:true, homeo:false, label:'continuous, not injective'},
       collapse:{formula:`f(x,y)=(x,0)`, cont:true, homeo:false, label:'continuous, not open'},
       spike:{formula:`f(0,0)=(0,0),  f(x,y)=(1,0) otherwise`, cont:false, homeo:false, label:'discontinuous'}
     };
@@ -587,7 +587,7 @@
     if(meta.homeo) interp += ' Since the inverse is also continuous, open sets are preserved in both directions.';
     if(s.map==='fold') interp += ' The fold passes the preimage test but is not injective: two domain points can have the same image.';
     if(s.map==='collapse') interp += ' The collapse passes the preimage test, but an open ball can map to a line segment, not to an open set.';
-    if(s.map==='spike') interp = 'This map fails continuity. The diagnostic open ball around f(0,0) has preimage {0}, a single point, which is not open in \u211d².';
+    if(s.map==='spike') interp = 'This map fails continuity. The diagnostic open ball around f(0,0) has preimage {0}, a single point, which is not open in \u211dÂ².';
     $('interpretationBox').innerHTML = `<b>Interpretation</b>${interp}`;
   }
 
@@ -634,3 +634,4 @@
 </script>
 </body>
 </html>
+

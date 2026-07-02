@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -627,7 +627,7 @@
   <main class="main">
     <header class="topbar">
       <div>
-        <div class="eyebrow">Microeconomic theory · pure exchange</div>
+        <div class="eyebrow">Microeconomic theory Â· pure exchange</div>
         <h1>First and Second Welfare Theorems</h1>
         <p class="subtitle">The First Welfare Theorem says that a Walrasian equilibrium is Pareto efficient. The Second Welfare Theorem says that, under convexity and complete markets, efficient allocations can be decentralized by redistributing endowments and then letting prices do the rest.</p>
       </div>
@@ -790,7 +790,7 @@
   }
 
   function fmt(x, d=2) {
-    if (!Number.isFinite(x)) return "—";
+    if (!Number.isFinite(x)) return "â€”";
     if (Math.abs(x) < 0.0005) x = 0;
     return Number(x).toFixed(d);
   }
@@ -1059,11 +1059,11 @@
     for (let i = 1; i < Math.floor(state.X); i++) add(svg, "line", { x1: sx(i), y1: m.t, x2: sx(i), y2: m.t + bh, class: "grid-line" });
     for (let j = 1; j < Math.floor(state.Y); j++) add(svg, "line", { x1: m.l, y1: sy(j), x2: m.l + bw, y2: sy(j), class: "grid-line" });
 
-    text(svg, m.l - 10, m.t + bh + 28, "Oᴬ", "svg-title", "end");
-    text(svg, m.l + bw + 10, m.t - 14, "Oᴮ", "svg-title", "start");
-    text(svg, m.l + bw / 2, m.t + bh + 50, "good 1 for A  →", "svg-label", "middle");
+    text(svg, m.l - 10, m.t + bh + 28, "Oá´¬", "svg-title", "end");
+    text(svg, m.l + bw + 10, m.t - 14, "Oá´®", "svg-title", "start");
+    text(svg, m.l + bw / 2, m.t + bh + 50, "good 1 for A  â†’", "svg-label", "middle");
     text(svg, m.l - 42, m.t + bh / 2, "good 2 for A", "svg-label", "middle", -90);
-    text(svg, m.l + bw / 2, m.t - 32, "←  good 1 for B", "svg-label", "middle");
+    text(svg, m.l + bw / 2, m.t - 32, "â†  good 1 for B", "svg-label", "middle");
 
     const contract = sampleContract(250);
     add(svg, "path", { d: pathFrom(contract.map(q => [sx(q.x), sy(q.y)])), class: "contract" });
@@ -1089,12 +1089,12 @@
     drawIndiff(svg, sx, sy, target.x, target.y, "B", gold, true);
 
     point(svg, sx(state.wX), sy(state.wY), 7.2, red, panel);
-    text(svg, sx(state.wX) + 11, sy(state.wY) + 22, "ω", "svg-title");
+    text(svg, sx(state.wX) + 11, sy(state.wY) + 22, "Ï‰", "svg-title");
 
     point(svg, sx(trial.A.x), sy(trial.A.y), 5.3, accent, panel);
-    text(svg, sx(trial.A.x) + 10, sy(trial.A.y) - 10, "xᴬ(p)", "svg-small");
+    text(svg, sx(trial.A.x) + 10, sy(trial.A.y) - 10, "xá´¬(p)", "svg-small");
     point(svg, sx(trial.BfromA.x), sy(trial.BfromA.y), 5.3, gold, panel);
-    text(svg, sx(trial.BfromA.x) + 10, sy(trial.BfromA.y) + 20, "e−xᴮ(p)", "svg-small");
+    text(svg, sx(trial.BfromA.x) + 10, sy(trial.BfromA.y) + 20, "eâˆ’xá´®(p)", "svg-small");
 
     if (Math.hypot(trial.A.x - trial.BfromA.x, trial.A.y - trial.BfromA.y) > 0.14) {
       add(svg, "line", { x1: sx(trial.A.x), y1: sy(trial.A.y), x2: sx(trial.BfromA.x), y2: sy(trial.BfromA.y), stroke: red, "stroke-width": 2, "stroke-dasharray": "3 5", opacity: 0.9 });
@@ -1105,10 +1105,10 @@
     text(svg, sx(eq.A.x) + 12, sy(eq.A.y) - 13, "x*", "svg-title");
 
     point(svg, sx(target.x), sy(target.y), 7.2, ink, panel);
-    text(svg, sx(target.x) + 12, sy(target.y) - 13, "xᵀ", "svg-title");
+    text(svg, sx(target.x) + 12, sy(target.y) - 13, "xáµ€", "svg-title");
 
     point(svg, sx(omegaTilde.x), sy(omegaTilde.y), 6.5, gold, panel);
-    text(svg, sx(omegaTilde.x) + 11, sy(omegaTilde.y) + 20, "ω̃", "svg-title");
+    text(svg, sx(omegaTilde.x) + 11, sy(omegaTilde.y) + 20, "Ï‰Ìƒ", "svg-title");
 
     add(svg, "line", { x1: sx(omegaTilde.x), y1: sy(omegaTilde.y), x2: sx(target.x), y2: sy(target.y), stroke: gold, "stroke-width": 1.7, "stroke-dasharray": "2 6", opacity: 0.9 });
 
@@ -1242,3 +1242,4 @@
 </script>
 </body>
 </html>
+

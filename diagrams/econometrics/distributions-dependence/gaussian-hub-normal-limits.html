@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -283,7 +283,7 @@ const $ = id => document.getElementById(id);
 const state = { mode:'standard' };
 const modeButtons = [...document.querySelectorAll('[data-mode]')];
 
-function fmt(x,d=2){ return isFinite(x) ? Number(x).toFixed(d) : '∞'; }
+function fmt(x,d=2){ return isFinite(x) ? Number(x).toFixed(d) : 'âˆž'; }
 function clamp(x,a,b){ return Math.max(a,Math.min(b,x)); }
 function clear(el){ el.innerHTML=''; }
 function svgEl(tag, attrs={}){ const e=document.createElementNS('http://www.w3.org/2000/svg',tag); for(const k in attrs) e.setAttribute(k,attrs[k]); return e; }
@@ -374,7 +374,7 @@ function drawStandardMain(){
   const z=(point-mu)/sig, y=normalPdf(point,mu,sig);
   svg.appendChild(svgEl('line',{x1:xs(point),y1:y0+h,x2:xs(point),y2:ys(y),class:'guide'}));
   svg.appendChild(svgEl('circle',{cx:xs(point),cy:ys(y),r:5,class:'dot'}));
-  text(svg,xs(mu),y0+h+30,'μ','inklabel');
+  text(svg,xs(mu),y0+h+30,'Î¼','inklabel');
   text(svg,xs(point)+8,ys(y)-8,`z = ${fmt(z,2)}`,'inklabel','start');
   text(svg,x0+w-4,y0+18,'standardization moves x-units into z-units','inklabel','end');
   legend([{className:'sw',label:'current normal law'},{className:'sw3',label:'standard normal benchmark'}]);
@@ -515,7 +515,7 @@ function drawLimitsMain(){
   svg.appendChild(svgEl('path',{d:pathLine(ptsN,xs,ys),class:'curve','clip-path':'url(#clipLim)'}));
   svg.appendChild(svgEl('line',{x1:xs(m.mean),y1:y0+h,x2:xs(m.mean),y2:ys(normalPdf(m.mean,m.mean,m.sd)),class:'guide'}));
   text(svg,xs(m.mean)+8,ys(normalPdf(m.mean,m.mean,m.sd))-8,'matching mean','inklabel','start');
-  text(svg,x0+w-4,y0+18,m.label+' → normal approximation','inklabel','end');
+  text(svg,x0+w-4,y0+18,m.label+' â†’ normal approximation','inklabel','end');
   legend([{className:'sw2',label:'exact law'},{className:'sw',label:'matched normal limit'}]);
 }
 
@@ -544,7 +544,7 @@ function drawMultiMain(){
   const {rho,ratio}=params();
   const x0=72,y0=30,w=728,h=330, xMin=-4,xMax=4,yMin=-3.3,yMax=3.3;
   const xs=x=>x0+w*(x-xMin)/(xMax-xMin), ys=y=>y0+h-h*(y-yMin)/(yMax-yMin);
-  axes(svg,{x0,y0,w,h,xMin,xMax,yMin,yMax,xLabel:'x₁',yLabel:'x₂',ticksX:4,ticksY:4});
+  axes(svg,{x0,y0,w,h,xMin,xMax,yMin,yMax,xLabel:'xâ‚',yLabel:'xâ‚‚',ticksX:4,ticksY:4});
   const s1=1.25, s2=s1*ratio;
   const tr=s1*s1+s2*s2, det=s1*s1*s2*s2*(1-rho*rho);
   const disc=Math.sqrt(Math.max(0,tr*tr-4*det));
@@ -639,11 +639,11 @@ function updateTexts(){
     $('stdMetric').textContent='normal closed';
     $('geomMetric').textContent=p.a<0?'reflect + scale':'scale + shift';
     $('interpText').textContent='Linear transformations do not break Gaussianity. A negative coefficient reflects the axis; a larger absolute coefficient widens the bell.';
-    $('noticeText').textContent='The variance does not multiply by a; it multiplies by a². This is the simplest form of the multivariate covariance rule.';
+    $('noticeText').textContent='The variance does not multiply by a; it multiplies by aÂ². This is the simplest form of the multivariate covariance rule.';
     $('summaryText').innerHTML=String.raw`More generally, if <span class="math-inline" data-katex="X"></span> is Gaussian and <span class="math-inline" data-katex="A"></span> is linear, then <span class="math-inline" data-katex="AX+b"></span> is Gaussian.`;
   } else if(state.mode==='limits'){
     const m=limitMoments();
-    $('mainTitle').textContent='Binomial–Poisson–gamma normal limits';
+    $('mainTitle').textContent='Binomialâ€“Poissonâ€“gamma normal limits';
     $('mainSub').innerHTML=String.raw`After centering and scaling, many laws approach the Gaussian shape.`;
     $('secondaryTitle').textContent='Standardized error shape';
     $('secondarySub').textContent='Normal approximation means shape convergence after matching center and scale.';
@@ -663,8 +663,8 @@ function updateTexts(){
     $('secondarySub').textContent='Every one-dimensional shadow of a multivariate normal is normal.';
     $('badge').innerHTML=String.raw`law: <span class="math-inline" data-katex="N_d(\mu,\Sigma)"></span>`;
     setKatex($('definition'),String.raw`X\sim N_d(\mu,\Sigma),\qquad a^\top X\sim N(a^\top\mu,a^\top\Sigma a)`);
-    $('centerMetric').textContent='vector μ';
-    $('scaleMetric').textContent='matrix Σ';
+    $('centerMetric').textContent='vector Î¼';
+    $('scaleMetric').textContent='matrix Î£';
     $('stdMetric').textContent='elliptical contours';
     $('geomMetric').textContent='linear shadows';
     $('interpText').textContent='The multivariate normal is not merely several normal marginals. Its covariance matrix determines the orientation and thickness of the probability ellipses.';
@@ -695,3 +695,4 @@ window.addEventListener('load',()=>{ renderAll(); draw(); });
 </script>
 </body>
 </html>
+

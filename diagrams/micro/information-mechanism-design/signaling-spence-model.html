@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
@@ -357,8 +357,8 @@
   const $ = id => document.getElementById(id);
   const ids = ['yL','yH','piH','kL','kH','eS','eP','muO','eD'];
   const svgNS = 'http://www.w3.org/2000/svg';
-  const fmt = (x,d=2)=>Number.isFinite(x)?x.toFixed(d):'—';
-  const pct = x=>Number.isFinite(x)?(100*x).toFixed(0)+'%':'—';
+  const fmt = (x,d=2)=>Number.isFinite(x)?x.toFixed(d):'â€”';
+  const pct = x=>Number.isFinite(x)?(100*x).toFixed(0)+'%':'â€”';
   const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 
   function C(){
@@ -480,7 +480,7 @@
     const wO=wage(p.muO,p);
     svg.appendChild(circle(X(p.eD),Y(wO),8,{fill:c.violet,stroke:c.paper,sw:3}));
     svg.appendChild(text(X(p.eD),Y(wO)-24,'off-path wage',{anchor:'middle',size:12,fill:c.violet,weight:950}));
-    svg.appendChild(text(420,32,'Beliefs → expected productivity → wage',{anchor:'middle',size:14,fill:c.muted,weight:900}));
+    svg.appendChild(text(420,32,'Beliefs â†’ expected productivity â†’ wage',{anchor:'middle',size:14,fill:c.muted,weight:900}));
   }
 
   function drawCosts(s,p){
@@ -522,8 +522,8 @@
       svg.appendChild(text(L+W+18,y+H/2,fmt(val,2),{size:14,fill:ok?c.good:c.danger,weight:950}));
       svg.appendChild(text(L+W+92,y+H/2,ineq,{size:12,fill:c.muted,weight:850}));
     }
-    bar(88,'Low IC: low type must find mimicry too expensive',s.cL,'≥ premium',c.danger,s.lowIC);
-    bar(220,'High IC: high type must find signaling cheap enough',s.cH,'≤ premium',c.good,s.highIC);
+    bar(88,'Low IC: low type must find mimicry too expensive',s.cL,'â‰¥ premium',c.danger,s.lowIC);
+    bar(220,'High IC: high type must find signaling cheap enough',s.cH,'â‰¤ premium',c.good,s.highIC);
     svg.appendChild(text(380,338,'Same premium, different costs: this is the whole Spence mechanism.',{anchor:'middle',size:13,fill:c.muted,weight:900}));
   }
 
@@ -549,7 +549,7 @@
     svg.appendChild(circle(root.x,root.y,28,{stroke:c.violet,sw:2.4})); svg.appendChild(text(root.x,root.y,'Nature',{anchor:'middle',size:12,fill:c.violet,weight:950}));
     svg.appendChild(line(root.x+28,root.y-8,Lnode.x-28,Lnode.y,{stroke:c.violet,width:2.4,'marker-end':'url(#arrow)'}));
     svg.appendChild(line(root.x+28,root.y+8,Hnode.x-28,Hnode.y,{stroke:c.violet,width:2.4,'marker-end':'url(#arrow)'}));
-    [[Lnode,'Low type',c.danger,'prob. 1 − π'],[Hnode,'High type',c.good,'prob. π']].forEach(d=>{
+    [[Lnode,'Low type',c.danger,'prob. 1 âˆ’ Ï€'],[Hnode,'High type',c.good,'prob. Ï€']].forEach(d=>{
       svg.appendChild(circle(d[0].x,d[0].y,26,{stroke:d[2],sw:2.2}));
       svg.appendChild(text(d[0].x,d[0].y,d[1],{anchor:'middle',size:12,fill:d[2],weight:950}));
       svg.appendChild(text(d[0].x,d[0].y+40,d[3],{anchor:'middle',size:11,fill:c.muted,weight:900}));
@@ -568,7 +568,7 @@
     svg.appendChild(text(wL.x,wL.y+14,fmt(p.yL,0),{anchor:'middle',size:12,fill:c.muted,weight:900}));
     svg.appendChild(text(wH.x,wH.y-8,'high wage',{anchor:'middle',size:13,fill:c.blue,weight:950}));
     svg.appendChild(text(wH.x,wH.y+14,fmt(p.yH,0),{anchor:'middle',size:12,fill:c.muted,weight:900}));
-    svg.appendChild(text(430,326,'Different signals → different beliefs → different wages.',{anchor:'middle',size:13,fill:c.muted,weight:900}));
+    svg.appendChild(text(430,326,'Different signals â†’ different beliefs â†’ different wages.',{anchor:'middle',size:13,fill:c.muted,weight:900}));
   }
 
   function drawPooling(s,p){
@@ -616,9 +616,9 @@
 
   function table(s,p){
     const rows=[
-      ['Separating candidate',s.sepLow,s.sepHigh,'low signal → low wage; high signal → high wage'],
-      ['Low type mimics high',s.lowMimic,'—','high signal is believed high'],
-      ['Pooling candidate',s.poolLow,s.poolHigh,'common signal → average wage'],
+      ['Separating candidate',s.sepLow,s.sepHigh,'low signal â†’ low wage; high signal â†’ high wage'],
+      ['Low type mimics high',s.lowMimic,'â€”','high signal is believed high'],
+      ['Pooling candidate',s.poolLow,s.poolHigh,'common signal â†’ average wage'],
       ['Deviation from pooling',s.devLow,s.devHigh,'off-path belief determines wage']
     ];
     $('payoffTable').innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td>${typeof r[1]==='number'?fmt(r[1],2):r[1]}</td><td>${typeof r[2]==='number'?fmt(r[2],2):r[2]}</td><td>${r[3]}</td></tr>`).join('');
@@ -677,3 +677,4 @@
 </script>
 </body>
 </html>
+

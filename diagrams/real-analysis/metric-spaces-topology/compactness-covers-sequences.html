@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -127,7 +127,7 @@ svg{width:100%;height:auto;display:block;overflow:visible}
 <body>
 <div class="app" id="app">
   <div class="topbar">
-    <div class="brand"><div class="index">05</div><span>Real analysis · topology in ℝⁿ</span></div>
+    <div class="brand"><div class="index">05</div><span>Real analysis Â· topology in â„â¿</span></div>
     <button class="themeBtn" id="themeBtn">Dark mode</button>
   </div>
 
@@ -139,27 +139,27 @@ svg{width:100%;height:auto;display:block;overflow:visible}
         <span class="pill">open-cover compactness</span>
         <span class="pill">sequential compactness</span>
         <span class="pill">finite subcovers</span>
-        <span class="pill">Heine–Borel in ℝⁿ</span>
+        <span class="pill">Heineâ€“Borel in â„â¿</span>
       </div>
     </div>
     <div class="card theorem">
-      <h2>Central equivalence in ℝⁿ</h2>
+      <h2>Central equivalence in â„â¿</h2>
       <div class="eqBlock eq big">
-        K ⊂ ℝⁿ is compact<br>
-        ⇔ every open cover of K has a finite subcover<br>
-        ⇔ every sequence in K has a subsequence converging to a point of K<br>
-        ⇔ K is closed and bounded.
+        K âŠ‚ â„â¿ is compact<br>
+        â‡” every open cover of K has a finite subcover<br>
+        â‡” every sequence in K has a subsequence converging to a point of K<br>
+        â‡” K is closed and bounded.
       </div>
       <div class="stack eq">
-        <div class="arrowEq"><span class="tag">cover lens</span> K ⊂ ⋃<sub>α∈A</sub> U<sub>α</sub> ⇒ K ⊂ U<sub>α₁</sub> ∪ ··· ∪ U<sub>αₘ</sub></div>
-        <div class="arrowEq"><span class="tag">sequence lens</span> x<sub>k</sub> ∈ K ⇒ ∃ k<sub>j</sub> ↑ ∞ with x<sub>kⱼ</sub> → x ∈ K</div>
+        <div class="arrowEq"><span class="tag">cover lens</span> K âŠ‚ â‹ƒ<sub>Î±âˆˆA</sub> U<sub>Î±</sub> â‡’ K âŠ‚ U<sub>Î±â‚</sub> âˆª Â·Â·Â· âˆª U<sub>Î±â‚˜</sub></div>
+        <div class="arrowEq"><span class="tag">sequence lens</span> x<sub>k</sub> âˆˆ K â‡’ âˆƒ k<sub>j</sub> â†‘ âˆž with x<sub>kâ±¼</sub> â†’ x âˆˆ K</div>
       </div>
     </div>
   </section>
 
   <section class="controls">
     <div class="control">
-      <label for="setType">set in ℝⁿ</label>
+      <label for="setType">set in â„â¿</label>
       <select id="setType">
         <option value="closedDisk">closed bounded ball</option>
         <option value="openDisk">open bounded ball</option>
@@ -176,7 +176,7 @@ svg{width:100%;height:auto;display:block;overflow:visible}
         <option value="sup">sup norm</option>
         <option value="taxicab">taxicab norm</option>
       </select>
-      <div class="value">same topology on ℝⁿ</div>
+      <div class="value">same topology on â„â¿</div>
     </div>
     <div class="control">
       <label for="coverLevel">finite cover attempt</label>
@@ -189,9 +189,9 @@ svg{width:100%;height:auto;display:block;overflow:visible}
       <div class="value" id="seqValue">N = 42</div>
     </div>
     <div class="control">
-      <label for="eps">ε-neighborhood</label>
+      <label for="eps">Îµ-neighborhood</label>
       <input id="eps" type="range" min="8" max="36" value="18" />
-      <div class="value" id="epsValue">ε = 0.18</div>
+      <div class="value" id="epsValue">Îµ = 0.18</div>
     </div>
   </section>
 
@@ -240,21 +240,21 @@ svg{width:100%;height:auto;display:block;overflow:visible}
       <h3>Definition</h3>
       <div class="eq">
         K compact<br>
-        ⇔ for every family of open sets {U<sub>α</sub>}<sub>α∈A</sub>,<br>
-        K ⊂ ⋃<sub>α∈A</sub>U<sub>α</sub><br>
-        implies K ⊂ U<sub>α₁</sub>∪···∪U<sub>αₘ</sub>.
+        â‡” for every family of open sets {U<sub>Î±</sub>}<sub>Î±âˆˆA</sub>,<br>
+        K âŠ‚ â‹ƒ<sub>Î±âˆˆA</sub>U<sub>Î±</sub><br>
+        implies K âŠ‚ U<sub>Î±â‚</sub>âˆªÂ·Â·Â·âˆªU<sub>Î±â‚˜</sub>.
       </div>
       <p class="note">This is the topological definition. It uses open sets, not sequences.</p>
     </div>
     <div class="card mini notice">
       <h3>What to notice</h3>
-      <p id="noticeText"><strong>Closed + bounded</strong> is the special simplification valid in ℝⁿ. The actual topological object is the finite-subcover property.</p>
+      <p id="noticeText"><strong>Closed + bounded</strong> is the special simplification valid in â„â¿. The actual topological object is the finite-subcover property.</p>
     </div>
     <div class="card mini exam">
       <h3>Exam summary</h3>
       <ul>
-        <li><strong>In ℝⁿ:</strong> compact ⇔ closed and bounded.</li>
-        <li><strong>Metric spaces:</strong> compact ⇔ sequentially compact.</li>
+        <li><strong>In â„â¿:</strong> compact â‡” closed and bounded.</li>
+        <li><strong>Metric spaces:</strong> compact â‡” sequentially compact.</li>
         <li><strong>Not closed:</strong> sequences may converge to a missing boundary point.</li>
         <li><strong>Not bounded:</strong> sequences may escape with no convergent subsequence.</li>
         <li><strong>Finite sets:</strong> compact in every metric space.</li>
@@ -292,7 +292,7 @@ function grid(svg){
   }
   el('line',{x1:X(-2),y1:Y(0),x2:X(2),y2:Y(0),stroke:css('--line'),'stroke-width':1.2},g);
   el('line',{x1:X(0),y1:Y(-1.45),x2:X(0),y2:Y(1.45),stroke:css('--line'),'stroke-width':1.2},g);
-  el('text',{x:X(1.85),y:Y(0)-8,fill:css('--muted'),'font-size':12},g).textContent='coordinate slice of ℝⁿ';
+  el('text',{x:X(1.85),y:Y(0)-8,fill:css('--muted'),'font-size':12},g).textContent='coordinate slice of â„â¿';
 }
 function normBallPath(x,y,r,norm){
   const px=X(x), py=Y(y), R=r*scale;
@@ -427,16 +427,16 @@ function sequenceDiagram(){
     addLabel(svg,data.kind.startsWith('bad')?'limit outside K':'limit in K',data.limit[0]+.08,data.limit[1]+.12,data.kind.startsWith('bad')?bad:subColor);
   }
   if(data.kind==='goodFinite') addLabel(svg,'a repeated value gives a constant subsequence',-.98,-1.18,subColor);
-  if(data.kind==='good') addLabel(svg,'highlighted subsequence enters every ε-ball',-.98,-1.18,subColor);
+  if(data.kind==='good') addLabel(svg,'highlighted subsequence enters every Îµ-ball',-.98,-1.18,subColor);
   if(data.kind==='badBoundary') addLabel(svg,'sequence converges, but the limit is missing',-.98,-1.18,bad);
 }
 function updateText(){
   const type=els.setType.value, m=+els.coverLevel.value, N=+els.seqCount.value, eps=(+els.eps.value/100).toFixed(2);
   els.coverValue.textContent='m = '+m;
   els.seqValue.textContent='N = '+N;
-  els.epsValue.textContent='ε = '+eps;
+  els.epsValue.textContent='Îµ = '+eps;
   const statusMap={
-    closedDisk:['compact','finite subcover visible','subsequence converges in K','good','Closed bounded ball: compact by Heine–Borel. Covers have finite subcovers; sequences have convergent subsequences inside.'],
+    closedDisk:['compact','finite subcover visible','subsequence converges in K','good','Closed bounded ball: compact by Heineâ€“Borel. Covers have finite subcovers; sequences have convergent subsequences inside.'],
     openDisk:['not compact','finite subcover fails','limit can leave K','bad','Open bounded ball: bounded but not closed. A sequence can approach the boundary, and a natural open cover has no finite subcover.'],
     halfRect:['not compact','finite subcover fails','missing boundary limit','bad','Bounded but not closed: the missing face is invisible to boundedness but visible to sequences and covers.'],
     strip:['not compact','unbounded cover obstruction','sequence escapes','bad','Closed but unbounded: finite cover windows miss the tails, and sequences can escape every bounded region.'],
@@ -452,8 +452,8 @@ function updateText(){
     els.coverCaption.innerHTML='<strong>Topological characterization:</strong> the visible cover is only a finite sample, but compactness says every open cover admits some finite subcover.';
     els.seqCaption.innerHTML='<strong>Sequential characterization:</strong> the highlighted subsequence approaches a point that remains inside K.';
   } else if(type==='openDisk'){
-    els.coverCaption.innerHTML='<strong>No finite subcover:</strong> the nested cover B(0,1−1/m) covers the open ball only in the infinite union.';
-    els.seqCaption.innerHTML='<strong>Sequential failure:</strong> x<sub>n</sub> → boundary point, but that boundary point is not in K.';
+    els.coverCaption.innerHTML='<strong>No finite subcover:</strong> the nested cover B(0,1âˆ’1/m) covers the open ball only in the infinite union.';
+    els.seqCaption.innerHTML='<strong>Sequential failure:</strong> x<sub>n</sub> â†’ boundary point, but that boundary point is not in K.';
   } else if(type==='halfRect'){
     els.coverCaption.innerHTML='<strong>No finite subcover:</strong> a finite attempt leaves a strip near the missing face.';
     els.seqCaption.innerHTML='<strong>Sequential failure:</strong> a sequence may converge to the missing face, outside the set.';
@@ -464,10 +464,11 @@ function updateText(){
     els.coverCaption.innerHTML='<strong>Finite compactness:</strong> choose one cover element around each point; finitely many points gives finitely many choices.';
     els.seqCaption.innerHTML='<strong>Pigeonhole subsequence:</strong> infinitely many sequence terms must repeat one of the finitely many points.';
   }
-  els.noticeText.innerHTML='<strong>'+s[0][0].toUpperCase()+s[0].slice(1)+':</strong> '+s[4]+' In ℝⁿ, the bridge between both pictures is exactly closed + bounded.';
+  els.noticeText.innerHTML='<strong>'+s[0][0].toUpperCase()+s[0].slice(1)+':</strong> '+s[4]+' In â„â¿, the bridge between both pictures is exactly closed + bounded.';
 }
 function update(){updateText();coverDiagram();sequenceDiagram();}
 update();
 </script>
 </body>
 </html>
+

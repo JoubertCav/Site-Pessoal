@@ -181,8 +181,7 @@ p {
   transform: scaleX(1);
 }
 
-.theme-toggle,
-.lang-toggle {
+.theme-toggle {
   min-height: 2rem;
   padding: 0.2rem 0.7rem;
   border: 1px solid var(--line);
@@ -193,15 +192,7 @@ p {
   font: inherit;
 }
 
-.lang-toggle {
-  font-family: var(--sans);
-  font-size: 0.78rem;
-  font-weight: 650;
-  letter-spacing: 0.04em;
-}
-
-.theme-toggle:hover,
-.lang-toggle:hover {
+.theme-toggle:hover {
   color: var(--claret);
   border-color: var(--claret);
 }
@@ -901,8 +892,7 @@ p {
   }
 
   .nav-links a,
-  .theme-toggle,
-  .lang-toggle {
+  .theme-toggle {
     min-height: 2.35rem;
     display: inline-flex;
     align-items: center;

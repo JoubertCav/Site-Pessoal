@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -319,7 +319,7 @@ input[type="range"]{accent-color:var(--accent)}
 <div class="app">
   <header class="topbar">
     <div class="brand">
-      <div class="eyebrow">Metric spaces · completion</div>
+      <div class="eyebrow">Metric spaces Â· completion</div>
       <h1>Completeness and Completion</h1>
       <p class="subtitle">Completeness is the principle that every Cauchy behavior has a point already inside the space. Completion adds precisely the missing limits, represented by equivalence classes of Cauchy sequences.</p>
     </div>
@@ -329,15 +329,15 @@ input[type="range"]{accent-color:var(--accent)}
   <section class="card pad">
     <div class="theory">
       <div class="node"><div><b>X</b><br><span>original metric space</span></div></div>
-      <div class="arrow">→</div>
+      <div class="arrow">â†’</div>
       <div class="node"><div><b>C(X)</b><br><span>Cauchy sequences in X</span></div></div>
-      <div class="arrow">→</div>
-      <div class="node"><div><b>X̂ = C(X)/∼</b><br><span>quotient by asymptotic equality</span></div></div>
+      <div class="arrow">â†’</div>
+      <div class="node"><div><b>XÌ‚ = C(X)/âˆ¼</b><br><span>quotient by asymptotic equality</span></div></div>
     </div>
     <div class="formulas">
-      <div class="formula"><b>Cauchy</b><span class="math">∀ε &gt; 0 ∃N : m,n ≥ N ⇒ d(xₘ,xₙ) &lt; ε</span></div>
-      <div class="formula"><b>Equivalence</b><span class="math">(xₙ) ∼ (yₙ) ⇔ d(xₙ,yₙ) → 0</span></div>
-      <div class="formula"><b>Embedding</b><span class="math">ι(x) = [x,x,x,…], with ι(X) dense in X̂</span></div>
+      <div class="formula"><b>Cauchy</b><span class="math">âˆ€Îµ &gt; 0 âˆƒN : m,n â‰¥ N â‡’ d(xâ‚˜,xâ‚™) &lt; Îµ</span></div>
+      <div class="formula"><b>Equivalence</b><span class="math">(xâ‚™) âˆ¼ (yâ‚™) â‡” d(xâ‚™,yâ‚™) â†’ 0</span></div>
+      <div class="formula"><b>Embedding</b><span class="math">Î¹(x) = [x,x,x,â€¦], with Î¹(X) dense in XÌ‚</span></div>
     </div>
   </section>
 
@@ -353,15 +353,15 @@ input[type="range"]{accent-color:var(--accent)}
           <div class="control">
             <label for="modelSelect">Space and sequence</label>
             <select id="modelSelect">
-              <option value="qSqrt2">X = ℚ, rational sequence → √2</option>
-              <option value="punctured">X = ℝ \ {0}, sequence 1/n</option>
+              <option value="qSqrt2">X = â„š, rational sequence â†’ âˆš2</option>
+              <option value="punctured">X = â„ \ {0}, sequence 1/n</option>
               <option value="openInterval">X = (0,1), sequence 1/(n+1)</option>
-              <option value="realConvergent">X = ℝ, convergent oscillation</option>
-              <option value="nonCauchy">X = ℝ, non-Cauchy oscillation</option>
+              <option value="realConvergent">X = â„, convergent oscillation</option>
+              <option value="nonCauchy">X = â„, non-Cauchy oscillation</option>
             </select>
           </div>
           <div class="control">
-            <label for="epsRange">ε <span id="epsVal"></span></label>
+            <label for="epsRange">Îµ <span id="epsVal"></span></label>
             <input id="epsRange" type="range" min="0.02" max="0.36" step="0.01" value="0.14" />
           </div>
           <div class="control">
@@ -421,11 +421,11 @@ input[type="range"]{accent-color:var(--accent)}
 
   <section class="card pad proof-grid">
     <div class="steps" id="proofSteps">
-      <button class="step active" data-step="0">1 · Cauchy sequences</button>
-      <button class="step" data-step="1">2 · Quotient relation</button>
-      <button class="step" data-step="2">3 · Metric on classes</button>
-      <button class="step" data-step="3">4 · Dense embedding</button>
-      <button class="step" data-step="4">5 · Completeness</button>
+      <button class="step active" data-step="0">1 Â· Cauchy sequences</button>
+      <button class="step" data-step="1">2 Â· Quotient relation</button>
+      <button class="step" data-step="2">3 Â· Metric on classes</button>
+      <button class="step" data-step="3">4 Â· Dense embedding</button>
+      <button class="step" data-step="4">5 Â· Completeness</button>
     </div>
     <div class="proofbox" id="proofBox"></div>
   </section>
@@ -434,19 +434,19 @@ input[type="range"]{accent-color:var(--accent)}
     <div class="card pad">
       <h2>What to notice</h2>
       <ul>
-        <li><b>Convergent ⇒ Cauchy</b> in every metric space.</li>
-        <li><b>Cauchy ⇒ convergent</b> is the extra property called completeness.</li>
+        <li><b>Convergent â‡’ Cauchy</b> in every metric space.</li>
+        <li><b>Cauchy â‡’ convergent</b> is the extra property called completeness.</li>
         <li>Completion adds points for missing Cauchy behavior, not for arbitrary sequences.</li>
-        <li>The copy of X inside X̂ is dense through constant sequences.</li>
+        <li>The copy of X inside XÌ‚ is dense through constant sequences.</li>
       </ul>
     </div>
     <div class="card pad">
       <h2>Exam summary</h2>
       <ul>
         <li><b>Complete:</b> every Cauchy sequence converges in the space.</li>
-        <li><b>Completion:</b> a complete metric space X̂ with an isometric dense embedding ι:X→X̂.</li>
-        <li><b>Construction:</b> X̂ = C(X)/∼, where (xₙ)∼(yₙ) iff d(xₙ,yₙ)→0.</li>
-        <li><b>Metric:</b> d̂([xₙ],[yₙ]) = limₙ d(xₙ,yₙ).</li>
+        <li><b>Completion:</b> a complete metric space XÌ‚ with an isometric dense embedding Î¹:Xâ†’XÌ‚.</li>
+        <li><b>Construction:</b> XÌ‚ = C(X)/âˆ¼, where (xâ‚™)âˆ¼(yâ‚™) iff d(xâ‚™,yâ‚™)â†’0.</li>
+        <li><b>Metric:</b> dÌ‚([xâ‚™],[yâ‚™]) = limâ‚™ d(xâ‚™,yâ‚™).</li>
       </ul>
     </div>
   </section>
@@ -480,61 +480,61 @@ function ceilSqrt(n){const p=Math.pow(10,Math.min(n,14));return Math.ceil(sqrt2*
 
 const models={
   qSqrt2:{
-    title:'X = ℚ with the usual metric',
-    short:'ℚ',
-    seqLabel:'decimal truncations of √2',
+    title:'X = â„š with the usual metric',
+    short:'â„š',
+    seqLabel:'decimal truncations of âˆš2',
     domain:[1.18,1.62],
-    limit:sqrt2, limitLabel:'√2',
+    limit:sqrt2, limitLabel:'âˆš2',
     inX:false, complete:false, cauchy:true,
-    completion:'ℝ',
+    completion:'â„',
     seq:n=>truncSqrt(n),
     base:'dense',
-    missing:'√2 ∉ ℚ',
-    interp:'The sequence is rational at every finite stage. It is Cauchy in ℚ, but its intended limit √2 is not rational. The completion adds the missing real point.'
+    missing:'âˆš2 âˆ‰ â„š',
+    interp:'The sequence is rational at every finite stage. It is Cauchy in â„š, but its intended limit âˆš2 is not rational. The completion adds the missing real point.'
   },
   punctured:{
-    title:'X = ℝ \\ {0} with the usual metric',
-    short:'ℝ \\ {0}',
-    seqLabel:'xₙ = 1/n',
+    title:'X = â„ \\ {0} with the usual metric',
+    short:'â„ \\ {0}',
+    seqLabel:'xâ‚™ = 1/n',
     domain:[-.18,1.12],
     limit:0, limitLabel:'0',
     inX:false, complete:false, cauchy:true,
-    completion:'ℝ',
+    completion:'â„',
     seq:n=>1/n,
     base:'punctured',
     missing:'0 removed',
-    interp:'The terms remain in ℝ \\ {0}, but their natural limit is the deleted point 0. The sequence is Cauchy without converging in the original space.'
+    interp:'The terms remain in â„ \\ {0}, but their natural limit is the deleted point 0. The sequence is Cauchy without converging in the original space.'
   },
   openInterval:{
     title:'X = (0,1) with the usual metric',
     short:'(0,1)',
-    seqLabel:'xₙ = 1/(n+1)',
+    seqLabel:'xâ‚™ = 1/(n+1)',
     domain:[-.08,1.08],
     limit:0, limitLabel:'0',
     inX:false, complete:false, cauchy:true,
-    completion:'[0,1] locally; ℝ if embedded globally',
+    completion:'[0,1] locally; â„ if embedded globally',
     seq:n=>1/(n+1),
     base:'interval',
     missing:'endpoint not in X',
     interp:'A Cauchy sequence in an open interval can run toward a missing endpoint. This is why open intervals are not complete in the inherited Euclidean metric.'
   },
   realConvergent:{
-    title:'X = ℝ with the usual metric',
-    short:'ℝ',
-    seqLabel:'xₙ = 0.8 + (-1)ⁿ·0.7/(n+2)',
+    title:'X = â„ with the usual metric',
+    short:'â„',
+    seqLabel:'xâ‚™ = 0.8 + (-1)â¿Â·0.7/(n+2)',
     domain:[0.25,1.15],
     limit:.8, limitLabel:'0.8',
     inX:true, complete:true, cauchy:true,
-    completion:'nothing new: ℝ is already complete',
+    completion:'nothing new: â„ is already complete',
     seq:n=>.8 + (n%2 ? -1 : 1)*.7/(n+2),
     base:'real',
     missing:'none',
-    interp:'Here the Cauchy behavior has its limit inside the space. Completeness says that this always happens for sequences in ℝ.'
+    interp:'Here the Cauchy behavior has its limit inside the space. Completeness says that this always happens for sequences in â„.'
   },
   nonCauchy:{
-    title:'X = ℝ with the usual metric',
-    short:'ℝ',
-    seqLabel:'xₙ = (-1)ⁿ·0.65',
+    title:'X = â„ with the usual metric',
+    short:'â„',
+    seqLabel:'xâ‚™ = (-1)â¿Â·0.65',
     domain:[-.95,.95],
     limit:null, limitLabel:'none',
     inX:false, complete:true, cauchy:false,
@@ -581,8 +581,8 @@ function mathText(parent,x,y,str,anchor='middle',size=17,fill=null){
   return text(parent,x,y,str,anchor,size,fill||css('--ink'),'Georgia, Cambria, serif');
 }
 function mapX(v,domain,left,width){return left + (v-domain[0])/(domain[1]-domain[0])*width;}
-function fmt(x){if(x===null || !Number.isFinite(x)) return '—'; if(Math.abs(x)<1e-4) return x.toExponential(1); return x.toFixed(4).replace(/0+$/,'').replace(/\.$/,'');}
-function sub(n){return String(n).replace(/[0-9]/g,d=>'₀₁₂₃₄₅₆₇₈₉'[+d]);}
+function fmt(x){if(x===null || !Number.isFinite(x)) return 'â€”'; if(Math.abs(x)<1e-4) return x.toExponential(1); return x.toFixed(4).replace(/0+$/,'').replace(/\.$/,'');}
+function sub(n){return String(n).replace(/[0-9]/g,d=>'â‚€â‚â‚‚â‚ƒâ‚„â‚…â‚†â‚‡â‚ˆâ‚‰'[+d]);}
 function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
 function tailStats(seq,N,M){const vals=[]; for(let n=N;n<=M;n++) vals.push(seq(n)); return {min:Math.min(...vals), max:Math.max(...vals), diam:Math.max(...vals)-Math.min(...vals)};}
 
@@ -596,7 +596,7 @@ function axis(g,left,right,y,label){
 }
 function drawSpace(g,model,left,width,y,completed=false){
   const right=left+width;
-  axis(g,left,right,y, completed ? 'completed space X̂' : 'original space X');
+  axis(g,left,right,y, completed ? 'completed space XÌ‚' : 'original space X');
   if(model.base==='dense'){
     for(let q=2;q<=18;q++){
       for(let p=Math.ceil(model.domain[0]*q);p<=Math.floor(model.domain[1]*q);p++){
@@ -621,7 +621,7 @@ function drawSpace(g,model,left,width,y,completed=false){
     const lx=mapX(model.limit,model.domain,left,width);
     if(completed || model.inX){
       add(g,'circle',{cx:lx,cy:y,r:10,fill:css('--good'),stroke:css('--paper'),'stroke-width':3});
-      text(g,lx,y-28,model.limitLabel+' ∈ '+(completed?'X̂':'X'),'middle',13,css('--good'));
+      text(g,lx,y-28,model.limitLabel+' âˆˆ '+(completed?'XÌ‚':'X'),'middle',13,css('--good'));
     }else{
       add(g,'circle',{cx:lx,cy:y,r:10,fill:css('--paper'),stroke:css('--bad'),'stroke-width':3});
       text(g,lx,y-28,model.missing,'middle',13,css('--bad'));
@@ -635,7 +635,7 @@ function drawSequenceOnLine(g,model,left,width,y,N,M,eps,mode){
     const a=mapX(model.limit-eps,model.domain,left,width);
     const b=mapX(model.limit+eps,model.domain,left,width);
     add(g,'rect',{x:Math.min(a,b),y:y-64,width:Math.abs(b-a),height:128,rx:20,fill:css('--accent'),opacity:.075,stroke:css('--accent'),'stroke-width':1.2,'stroke-dasharray':'6 7'});
-    text(g,lx,y-78,'ε-neighborhood of '+model.limitLabel,'middle',13,css('--accent'));
+    text(g,lx,y-78,'Îµ-neighborhood of '+model.limitLabel,'middle',13,css('--accent'));
   }
   const tx1=mapX(stats.min,model.domain,left,width);
   const tx2=mapX(stats.max,model.domain,left,width);
@@ -674,7 +674,7 @@ function drawMain(){
   drawSpace(svg,model,L,W,yBot,true);
   drawSequenceOnLine(svg,model,L,W,yBot,N,M,eps,'bottom');
 
-  if(model.limit!==null && !model.inX) mathText(svg,630,520,'The class [xₙ] is the point added at '+model.limitLabel,'middle',19,css('--good'));
+  if(model.limit!==null && !model.inX) mathText(svg,630,520,'The class [xâ‚™] is the point added at '+model.limitLabel,'middle',19,css('--good'));
   if(model.inX) mathText(svg,630,520,'No new point is needed: the Cauchy behavior already converges in X.','middle',19,css('--good'));
   if(!model.cauchy) mathText(svg,630,520,'The sequence is not Cauchy, so it is not an element of C(X).','middle',19,css('--bad'));
 
@@ -684,7 +684,7 @@ function drawMain(){
   els.actualStatus.innerHTML=model.cauchy?'<span class="badge good">Cauchy</span>':'<span class="badge bad">not Cauchy</span>';
   els.limitStatus.innerHTML=model.limit===null?'no limit':(model.inX?'<span class="badge good">yes</span>':'<span class="badge bad">no</span>');
   els.diameterStatus.textContent=fmt(stats.diam);
-  els.completionStatus.textContent=model.complete?'no new limits':(model.limit===null?'only Cauchy classes':'the class [xₙ]');
+  els.completionStatus.textContent=model.complete?'no new limits':(model.limit===null?'only Cauchy classes':'the class [xâ‚™]');
   els.interpretation.textContent=model.interp;
 }
 function comparisonSequences(model,kind){
@@ -695,9 +695,9 @@ function comparisonSequences(model,kind){
     target=clamp(target,model.domain[0]+.08,model.domain[1]-.08);
     return {x, y:n=>target + .06/(n+2), yName:'Cauchy sequence with a different target', yCauchy:true, equivalent:false, note:'Both rows are Cauchy, but their distance does not tend to zero. They become different points in the completion.'};
   }
-  if(els.model.value==='qSqrt2') return {x, y:n=>ceilSqrt(n), yName:'upper decimal approximations of √2', yCauchy:true, equivalent:true, note:'Lower and upper rational approximations define the same completed point because their distance tends to zero.'};
-  if(els.model.value==='punctured') return {x, y:n=>1/(n+2), yName:'yₙ = 1/(n+2)', yCauchy:true, equivalent:true, note:'Both sequences chase the deleted point 0; the completion identifies them.'};
-  if(els.model.value==='openInterval') return {x, y:n=>1/(n+3), yName:'yₙ = 1/(n+3)', yCauchy:true, equivalent:true, note:'Different speeds toward the same missing endpoint define the same equivalence class.'};
+  if(els.model.value==='qSqrt2') return {x, y:n=>ceilSqrt(n), yName:'upper decimal approximations of âˆš2', yCauchy:true, equivalent:true, note:'Lower and upper rational approximations define the same completed point because their distance tends to zero.'};
+  if(els.model.value==='punctured') return {x, y:n=>1/(n+2), yName:'yâ‚™ = 1/(n+2)', yCauchy:true, equivalent:true, note:'Both sequences chase the deleted point 0; the completion identifies them.'};
+  if(els.model.value==='openInterval') return {x, y:n=>1/(n+3), yName:'yâ‚™ = 1/(n+3)', yCauchy:true, equivalent:true, note:'Different speeds toward the same missing endpoint define the same equivalence class.'};
   if(els.model.value==='realConvergent') return {x, y:n=>.8 + .08/(n+2), yName:'another sequence converging to 0.8', yCauchy:true, equivalent:true, note:'In a complete space, classes exist, but each class is already represented by an ordinary point of X.'};
   return {x, y:n=>n%2?-.65:.65, yName:'the same oscillation', yCauchy:false, equivalent:false, note:'Non-Cauchy sequences are excluded from completion.'};
 }
@@ -707,9 +707,9 @@ function drawClass(){
   const L=120,W=1020,y1=150,y2=310;
   add(svg,'rect',{x:0,y:0,width:1260,height:460,fill:'transparent'});
   mathText(svg,630,42,'Quotient test: when do two Cauchy sequences become one point?','middle',23);
-  text(svg,630,70,'(xₙ) ∼ (yₙ) precisely when d(xₙ,yₙ) → 0','middle',14,css('--muted'));
-  axis(svg,L,L+W,y1,'first row: xₙ');
-  axis(svg,L,L+W,y2,'second row: yₙ');
+  text(svg,630,70,'(xâ‚™) âˆ¼ (yâ‚™) precisely when d(xâ‚™,yâ‚™) â†’ 0','middle',14,css('--muted'));
+  axis(svg,L,L+W,y1,'first row: xâ‚™');
+  axis(svg,L,L+W,y2,'second row: yâ‚™');
   text(svg,L+8,y1-48,model.seqLabel,'start',13,css('--muted'));
   text(svg,L+8,y2-48,comp.yName,'start',13,css('--muted'));
 
@@ -728,7 +728,7 @@ function drawClass(){
   }
   const tailDist=Math.max(...distances.slice(N-1));
   const color=comp.equivalent?css('--good'):(comp.yCauchy?css('--warm'):css('--bad'));
-  mathText(svg,630,405,'max plotted tail distance ≈ '+fmt(tailDist),'middle',19,color);
+  mathText(svg,630,405,'max plotted tail distance â‰ˆ '+fmt(tailDist),'middle',19,color);
 
   els.classNVal.textContent=N;
   els.classDistance.textContent=fmt(tailDist);
@@ -737,11 +737,11 @@ function drawClass(){
 }
 
 const proofSteps=[
-  {title:'1. Start with Cauchy sequences', equation:'C(X) = { (xₙ) : (xₙ) is Cauchy in X }', body:'Completion begins only with sequences whose tails become internally small. Arbitrary sequences are not part of the construction.'},
-  {title:'2. Identify asymptotically equal sequences', equation:'(xₙ) ∼ (yₙ) ⇔ d(xₙ,yₙ) → 0', body:'This is the precise meaning of “they are trying to become the same missing point.”'},
-  {title:'3. Define the metric on classes', equation:'d̂([xₙ],[yₙ]) = limₙ d(xₙ,yₙ)', body:'Because the representatives are Cauchy, this real limit exists; because of the equivalence relation, it does not depend on the representatives.'},
-  {title:'4. Embed the original space densely', equation:'ι(x) = [x,x,x,…]', body:'Each point becomes a constant Cauchy sequence. The embedding is isometric, and constant representatives approximate every class.'},
-  {title:'5. The completion is complete', equation:'Every Cauchy sequence in X̂ converges in X̂', body:'The quotient construction adds exactly enough points so that all Cauchy behavior has a limit.'}
+  {title:'1. Start with Cauchy sequences', equation:'C(X) = { (xâ‚™) : (xâ‚™) is Cauchy in X }', body:'Completion begins only with sequences whose tails become internally small. Arbitrary sequences are not part of the construction.'},
+  {title:'2. Identify asymptotically equal sequences', equation:'(xâ‚™) âˆ¼ (yâ‚™) â‡” d(xâ‚™,yâ‚™) â†’ 0', body:'This is the precise meaning of â€œthey are trying to become the same missing point.â€'},
+  {title:'3. Define the metric on classes', equation:'dÌ‚([xâ‚™],[yâ‚™]) = limâ‚™ d(xâ‚™,yâ‚™)', body:'Because the representatives are Cauchy, this real limit exists; because of the equivalence relation, it does not depend on the representatives.'},
+  {title:'4. Embed the original space densely', equation:'Î¹(x) = [x,x,x,â€¦]', body:'Each point becomes a constant Cauchy sequence. The embedding is isometric, and constant representatives approximate every class.'},
+  {title:'5. The completion is complete', equation:'Every Cauchy sequence in XÌ‚ converges in XÌ‚', body:'The quotient construction adds exactly enough points so that all Cauchy behavior has a limit.'}
 ];
 function renderProof(i=0){
   document.querySelectorAll('.step').forEach(s=>s.classList.toggle('active',+s.dataset.step===i));
@@ -761,3 +761,4 @@ renderAll();
 </script>
 </body>
 </html>
+

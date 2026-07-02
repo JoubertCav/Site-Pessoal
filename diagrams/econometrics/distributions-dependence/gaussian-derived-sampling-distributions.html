@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -172,7 +172,7 @@
       <div class="muted small">Move degrees of freedom and the observed statistic. The exact reference law and rejection geometry update immediately.</div>
 
       <div class="seg" aria-label="mode buttons">
-        <button data-mode="chisq" class="active">χ²</button>
+        <button data-mode="chisq" class="active">Ï‡Â²</button>
         <button data-mode="t">Student t</button>
         <button data-mode="f">F</button>
         <button data-mode="cauchy">Cauchy</button>
@@ -269,7 +269,7 @@ const $ = id => document.getElementById(id);
 const state = { mode:'chisq' };
 const modeButtons = [...document.querySelectorAll('[data-mode]')];
 
-function fmt(x,d=2){ return isFinite(x) ? Number(x).toFixed(d) : '∞'; }
+function fmt(x,d=2){ return isFinite(x) ? Number(x).toFixed(d) : 'âˆž'; }
 function clamp(x,a,b){ return Math.max(a,Math.min(b,x)); }
 function clear(el){ el.innerHTML=''; }
 function svgEl(tag, attrs={}){ const e=document.createElementNS('http://www.w3.org/2000/svg',tag); for(const k in attrs) e.setAttribute(k,attrs[k]); return e; }
@@ -383,14 +383,14 @@ function drawDensity({pdf,cdf,xMin,xMax,stat,title,rightTail=true,twoTail=false,
 function drawChiMain(){
   const p=params(), nu=p.df1, stat=clamp(p.stat*nu/4,0.05,nu+5*Math.sqrt(2*nu));
   const xMax=Math.max(nu+5*Math.sqrt(2*nu),stat*1.15,6);
-  drawDensity({pdf:x=>chiPdf(x,nu),cdf:x=>chiCdf(x,nu),xMin:0,xMax,stat,title:`χ² with ${nu} degrees of freedom`});
+  drawDensity({pdf:x=>chiPdf(x,nu),cdf:x=>chiCdf(x,nu),xMin:0,xMax,stat,title:`Ï‡Â² with ${nu} degrees of freedom`});
   $('statVal').textContent=fmt(stat,2);
-  legend([{className:'sw',label:'χ² density'},{className:'sw2',label:'right-tail probability'}]);
+  legend([{className:'sw',label:'Ï‡Â² density'},{className:'sw2',label:'right-tail probability'}]);
 }
 function drawTMain(){
   const p=params(), nu=p.df1, stat=p.stat*1.1;
   drawDensity({pdf:x=>tPdf(x,nu),cdf:x=>tCdf(x,nu),xMin:-6,xMax:6,stat,title:`Student t with ${nu} degrees of freedom`,twoTail:true});
-  $('statVal').textContent='± '+fmt(stat,2);
+  $('statVal').textContent='Â± '+fmt(stat,2);
   legend([{className:'sw',label:'t density'},{className:'sw2',label:'two-sided p-value'}]);
 }
 function drawFMain(){
@@ -402,7 +402,7 @@ function drawFMain(){
 function drawCauchyMain(){
   const p=params(), stat=p.stat*1.1;
   drawDensity({pdf:cauchyPdf,cdf:cauchyCdf,xMin:-10,xMax:10,stat,title:'Cauchy as a normal ratio',twoTail:true});
-  $('statVal').textContent='± '+fmt(stat,2);
+  $('statVal').textContent='Â± '+fmt(stat,2);
   legend([{className:'sw',label:'Cauchy density'},{className:'sw2',label:'extreme-ratio tails'}]);
 }
 
@@ -423,7 +423,7 @@ function drawGeneratorSecondary(){
     svg.appendChild(svgEl('rect',{x:b.x,y:b.y,width:b.w,height:b.h,rx:18,fill:'var(--paper2)',class:'barstroke'}));
     text(svg,b.x+b.w/2,b.y+19,b.title,'label');
     svgKatex(svg,b.x+b.w/2,b.y+30,b.tex,{w:b.w-16,h:30,cls:'svgmath small'});
-    if(i<2) text(svg,b.x+b.w+17,b.y+39,'→','inklabel');
+    if(i<2) text(svg,b.x+b.w+17,b.y+39,'â†’','inklabel');
   });
   const yy=174, bx=72, bw=430, bh=34;
   const parts = state.mode==='chisq'
@@ -455,7 +455,7 @@ function drawWishartMain(){
   const {rho,wishNu}=params();
   const x0=72,y0=30,w=728,h=330, xMin=-4,xMax=4,yMin=-3.4,yMax=3.4;
   const xs=x=>x0+w*(x-xMin)/(xMax-xMin), ys=y=>y0+h-h*(y-yMin)/(yMax-yMin);
-  axes(svg,{x0,y0,w,h,xMin,xMax,yMin,yMax,xLabel:'x₁',yLabel:'x₂',ticksX:4,ticksY:4});
+  axes(svg,{x0,y0,w,h,xMin,xMax,yMin,yMax,xLabel:'xâ‚',yLabel:'xâ‚‚',ticksX:4,ticksY:4});
   const s1=1.15, s2=1.45;
   const trueMat=[[s1*s1,rho*s1*s2],[rho*s1*s2,s2*s2]];
   const shrink=Math.sqrt(wishNu/(wishNu+9));
@@ -503,7 +503,7 @@ function drawWishartSecondary(){
     svg.appendChild(svgEl('rect',{x:bx,y:yy,width:bw,height:bh,rx:16,fill:'var(--paper2)',class:'barstroke'}));
     text(svg,bx-10,yy+27,r[0],'label','end');
     svgKatex(svg,bx+bw/2,yy+8,r[1],{w:bw-20,h:28,cls:'svgmath small'});
-    if(i<2) text(svg,bx+bw/2,yy+62,'↓','inklabel');
+    if(i<2) text(svg,bx+bw/2,yy+62,'â†“','inklabel');
   });
   svgKatex(svg,312,292,String.raw`\operatorname{E}[W]=\nu\Sigma,\qquad S=W/\nu`,{w:430,h:32});
 }
@@ -560,7 +560,7 @@ function updateTexts(){
     $('badge').innerHTML=String.raw`pivot: <span class="math-inline" data-katex="t_\nu"></span>`;
     setKatex($('definition'),String.raw`T=\frac{Z}{\sqrt{U/\nu}},\qquad Z\sim N(0,1),\ U\sim\chi^2_\nu,\ Z\perp U`);
     $('centerMetric').textContent='0';
-    $('spreadMetric').textContent=nu>2 ? fmt(Math.sqrt(nu/(nu-2)),2) : '∞';
+    $('spreadMetric').textContent=nu>2 ? fmt(Math.sqrt(nu/(nu-2)),2) : 'âˆž';
     $('tailMetric').textContent=fmt(tail,4);
     $('testMetric').textContent='mean pivot';
     $('interpText').innerHTML=String.raw`Student's <span class="math-inline" data-katex="t"></span> appears because <span class="math-inline" data-katex="\sigma"></span> is replaced by <span class="math-inline" data-katex="S"></span>. The extra uncertainty produces heavier tails.`;
@@ -574,7 +574,7 @@ function updateTexts(){
     $('secondarySub').textContent='Large ratios move into the right rejection region.';
     $('badge').innerHTML=String.raw`ratio law: <span class="math-inline" data-katex="F_{\nu_1,\nu_2}"></span>`;
     setKatex($('definition'),String.raw`F=\frac{U_1/\nu_1}{U_2/\nu_2},\qquad U_j\sim\chi^2_{\nu_j}\ \text{independent}`);
-    $('centerMetric').textContent=d2>2 ? fmt(d2/(d2-2),2) : '∞';
+    $('centerMetric').textContent=d2>2 ? fmt(d2/(d2-2),2) : 'âˆž';
     $('spreadMetric').textContent='right-skewed';
     $('tailMetric').textContent=fmt(tail,4);
     $('testMetric').textContent='variance ratio';
@@ -603,12 +603,12 @@ function updateTexts(){
     $('secondarySub').textContent='Sample covariance is random ellipse geometry.';
     $('badge').innerHTML=String.raw`matrix law: <span class="math-inline" data-katex="W_p(\nu,\Sigma)"></span>`;
     setKatex($('definition'),String.raw`W=\sum_{i=1}^{\nu}X_iX_i^\top\sim W_p(\nu,\Sigma),\qquad X_i\sim N_p(0,\Sigma)`);
-    $('centerMetric').textContent='νΣ';
+    $('centerMetric').textContent='Î½Î£';
     $('spreadMetric').textContent='matrix-valued';
     $('tailMetric').textContent='elliptic variation';
     $('testMetric').textContent='covariance inference';
     $('interpText').textContent='Wishart is what happens when chi-square becomes multivariate. Instead of one variance estimate, the sample contains an entire covariance matrix.';
-    $('noticeText').textContent='As information ν grows, the sample covariance ellipse stabilizes around the true covariance ellipse.';
+    $('noticeText').textContent='As information Î½ grows, the sample covariance ellipse stabilizes around the true covariance ellipse.';
     $('summaryText').innerHTML=String.raw`If data are multivariate normal, then the centered scatter matrix has a Wishart law. This gives exact covariance-matrix inference under Gaussian sampling.`;
   }
   renderAll();
@@ -632,3 +632,4 @@ window.addEventListener('load',()=>{ renderAll(); draw(); });
 </script>
 </body>
 </html>
+

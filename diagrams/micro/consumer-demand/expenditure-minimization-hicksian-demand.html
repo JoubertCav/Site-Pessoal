@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -194,7 +194,7 @@ svg{display:block;width:100%;height:auto}
         <small>Duality, compensated demand, Shephard's lemma, primal-dual identities</small>
       </div>
     </div>
-    <button class="theme-btn" id="themeToggle" type="button">☾ Dark mode</button>
+    <button class="theme-btn" id="themeToggle" type="button">â˜¾ Dark mode</button>
   </div>
 </div>
 
@@ -323,7 +323,7 @@ svg{display:block;width:100%;height:auto}
     </section>
   </main>
 </div>
-<div class="footer">Interactive microeconomic notebook · one-file HTML · KaTeX equations · SVG geometry</div>
+<div class="footer">Interactive microeconomic notebook Â· one-file HTML Â· KaTeX equations Â· SVG geometry</div>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -346,7 +346,7 @@ $('themeToggle').addEventListener('click', () => {
   const root = document.documentElement;
   const dark = root.getAttribute('data-theme') === 'dark';
   root.setAttribute('data-theme', dark ? 'light' : 'dark');
-  $('themeToggle').textContent = dark ? '☾ Dark mode' : '☼ Light mode';
+  $('themeToggle').textContent = dark ? 'â˜¾ Dark mode' : 'â˜¼ Light mode';
   update();
 });
 
@@ -354,7 +354,7 @@ document.documentElement.setAttribute('data-theme','light');
 
 function num(id){return parseFloat($(id).value)}
 function fmt(x, d=3){
-  if(!isFinite(x)) return '—';
+  if(!isFinite(x)) return 'â€”';
   if(Math.abs(x) >= 1000) return x.toExponential(2);
   if(Math.abs(x) < 0.001 && x !== 0) return x.toExponential(2);
   return Number(x).toFixed(d).replace(/\.?0+$/,'');
@@ -403,7 +403,7 @@ function cesPriceIndex(p){
   return Math.pow(S, 1/(1-sigma));
 }
 function cesSolution(p){
-  if(Math.abs(p.rho) < 0.025) return {...cdSolution(p), status:'CES ≈ Cobb-Douglas', case:'interior'};
+  if(Math.abs(p.rho) < 0.025) return {...cdSolution(p), status:'CES â‰ˆ Cobb-Douglas', case:'interior'};
   const sigma = 1/(1-p.rho), a=p.alpha, b=1-a;
   const P = cesPriceIndex(p);
   const e = p.u * P;
@@ -457,7 +457,7 @@ function quasiSolution(p){
     return {x1:xInterior,x2:yInterior,e,case:'interior',mrs:p.p1/p.p2,status:'Interior tangency',differentiable:true};
   }
   const x = Math.exp(p.u/p.q), y=0, e=p.p1*x;
-  return {x1:x,x2:y,e,case:'corner',mrs:p.q/x,status:'KKT corner: x₂ = 0',differentiable:true};
+  return {x1:x,x2:y,e,case:'corner',mrs:p.q/x,status:'KKT corner: xâ‚‚ = 0',differentiable:true};
 }
 function quasiIndirect(p,m){
   const xInterior = p.q*p.p2/p.p1;
@@ -504,7 +504,7 @@ function finiteDerivatives(p){
 
 function utilityName(p){
   if(p.family==='cd') return `u(x)=x_1^{${fmt(p.alpha,2)}}x_2^{${fmt(1-p.alpha,2)}}`;
-  if(p.family==='ces') return `u(x)=[αx_1^ρ+(1-α)x_2^ρ]^{1/ρ}`;
+  if(p.family==='ces') return `u(x)=[Î±x_1^Ï+(1-Î±)x_2^Ï]^{1/Ï}`;
   if(p.family==='leontief') return `u(x)=min{x_1/a,x_2/b}`;
   if(p.family==='linear') return `u(x)=ax_1+bx_2`;
   return `u(x)=x_2+a ln x_1`;
@@ -531,8 +531,8 @@ function drawAxes(svg, W,H,margin,xmax,ymax){
   }
   s+=`<line class="axis" x1="${L}" y1="${T+ih}" x2="${L+iw}" y2="${T+ih}"/>`;
   s+=`<line class="axis" x1="${L}" y1="${T+ih}" x2="${L}" y2="${T}"/>`;
-  s+=`<text class="annotation-muted" x="${L+iw}" y="${T+ih+42}" text-anchor="end">good 1, x₁</text>`;
-  s+=`<text class="annotation-muted" x="${L-42}" y="${T+8}" text-anchor="start" transform="rotate(-90 ${L-42},${T+8})">good 2, x₂</text>`;
+  s+=`<text class="annotation-muted" x="${L+iw}" y="${T+ih+42}" text-anchor="end">good 1, xâ‚</text>`;
+  s+=`<text class="annotation-muted" x="${L-42}" y="${T+8}" text-anchor="start" transform="rotate(-90 ${L-42},${T+8})">good 2, xâ‚‚</text>`;
   return {s,X,Y,iw,ih};
 }
 function lineSegmentForCost(e,p,xmax,ymax){
@@ -717,8 +717,8 @@ function drawMain(p,sol,ghost=null,target=null,t=1){
   s+=`<line class="price-ray" x1="${X(sol.x1)}" y1="${Y(0)}" x2="${X(sol.x1)}" y2="${Y(sol.x2)}"/>`;
   s+=`<line class="price-ray" x1="${X(0)}" y1="${Y(sol.x2)}" x2="${X(sol.x1)}" y2="${Y(sol.x2)}"/>`;
   s+=`<circle class="point" cx="${X(sol.x1)}" cy="${Y(sol.x2)}" r="7"/>`;
-  s+=`<text class="annotation" x="${X(sol.x1)+10}" y="${Y(sol.x2)-10}">h(p,ū)</text>`;
-  s+=`<text class="annotation-muted" x="${X(Math.min(xmax*.92,sol.e/p.p1*.92))}" y="${Y(Math.max(0.2,0))+26}" text-anchor="end">isocost: p·x=e</text>`;
+  s+=`<text class="annotation" x="${X(sol.x1)+10}" y="${Y(sol.x2)-10}">h(p,uÌ„)</text>`;
+  s+=`<text class="annotation-muted" x="${X(Math.min(xmax*.92,sol.e/p.p1*.92))}" y="${Y(Math.max(0.2,0))+26}" text-anchor="end">isocost: pÂ·x=e</text>`;
   if(p.family==='leontief') s+=`<text class="annotation-muted" x="${X(sol.x1)+10}" y="${Y(sol.x2)+18}">kink: fixed proportions</text>`;
   if(p.family==='linear') s+=`<text class="annotation-muted" x="${X(sol.x1)+10}" y="${Y(sol.x2)+18}">corner or continuum</text>`;
   if(p.family==='quasi' && sol.case==='corner') s+=`<text class="annotation-muted" x="${X(sol.x1)+10}" y="${Y(sol.x2)-12}">KKT boundary</text>`;
@@ -767,8 +767,8 @@ function drawDemand(p,sol,ghost=null,target=null,t=1){
   s+=`<line x1="${X(p.p1)}" y1="${Y(0)}" x2="${X(p.p1)}" y2="${Y(sol.x1)}" stroke="${css('--purple')}" stroke-width="1.4" stroke-dasharray="4 5" opacity=".75"/>`;
   s+=`<circle class="point2" cx="${X(p.p1)}" cy="${Y(sol.x1)}" r="6"/>`;
   s+=`<text class="annotation" x="${X(p.p1)+9}" y="${Y(sol.x1)-8}">current</text>`;
-  s+=`<text class="annotation-muted" x="${W-24}" y="${H-14}" text-anchor="end">p₁</text>`;
-  s+=`<text class="annotation-muted" x="${22}" y="${28}" text-anchor="start">h₁</text>`;
+  s+=`<text class="annotation-muted" x="${W-24}" y="${H-14}" text-anchor="end">pâ‚</text>`;
+  s+=`<text class="annotation-muted" x="${22}" y="${28}" text-anchor="start">hâ‚</text>`;
   svg.innerHTML=s;
 }
 
@@ -832,7 +832,7 @@ function updateNotices(p,sol){
   let items=[];
   if(sol.case==='interior'){
     items.push(`At an interior optimum, the target indifference curve is tangent to the lowest isocost line.`);
-    items.push(`The geometric condition is MRS = p₁/p₂; here both sides are approximately ${fmt(p.p1/p.p2,3)}.`);
+    items.push(`The geometric condition is MRS = pâ‚/pâ‚‚; here both sides are approximately ${fmt(p.p1/p.p2,3)}.`);
   }
   if(sol.case==='kink'){
     items.push(`For Leontief preferences, the optimizer is the kink of the target indifference curve.`);
@@ -857,9 +857,9 @@ function update(){
   setText('p1Val', fmt(p.p1,2)); setText('p2Val', fmt(p.p2,2)); setText('uVal', fmt(p.u,2)); setText('mVal', fmt(p.m,2));
   setText('alphaVal', fmt(p.alpha,2)); setText('rhoVal', fmt(p.rho,2)); setText('aVal', fmt(p.a,2)); setText('bVal', fmt(p.b,2)); setText('qVal', fmt(p.q,2));
   setText('h1Out', fmt(sol.x1,3)); setText('h2Out', fmt(sol.x2,3)); setText('eOut', money(sol.e)); setText('caseOut', sol.case);
-  setText('h1Sub', 'units of good 1'); setText('h2Sub', 'units of good 2'); setText('eSub', `minimum cost at ū=${fmt(p.u,2)}`); setText('caseSub', sol.status);
+  setText('h1Sub', 'units of good 1'); setText('h2Sub', 'units of good 2'); setText('eSub', `minimum cost at uÌ„=${fmt(p.u,2)}`); setText('caseSub', sol.status);
   const ratio = p.p1/p.p2;
-  $('tangentBadge').textContent = sol.case==='interior' ? `MRS ≈ p₁/p₂ = ${fmt(ratio,2)}` : sol.status;
+  $('tangentBadge').textContent = sol.case==='interior' ? `MRS â‰ˆ pâ‚/pâ‚‚ = ${fmt(ratio,2)}` : sol.status;
   const share1= p.p1*sol.x1/sol.e, share2=p.p2*sol.x2/sol.e;
   setText('sharesOut', `${fmt(100*share1,1)}% , ${fmt(100*share2,1)}%`);
   const ders=finiteDerivatives(p);
@@ -880,3 +880,4 @@ update();
 </script>
 </body>
 </html>
+

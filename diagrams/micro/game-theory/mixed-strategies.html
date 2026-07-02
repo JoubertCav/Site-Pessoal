@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8" />
@@ -591,14 +591,14 @@
 <div class="app" data-theme="light" id="app">
   <header>
     <div>
-      <div class="eyebrow"><span class="dot"></span> Microeconomics · game theory</div>
+      <div class="eyebrow"><span class="dot"></span> Microeconomics Â· game theory</div>
       <h1>Mixed Strategies</h1>
       <p class="subtitle">
         A mixed equilibrium is not randomness for its own sake. It is an indifference device: each player chooses probabilities that make the opponent just willing to randomize over the support.
       </p>
     </div>
     <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
-      <span id="themeIcon">☾</span><span id="themeText">Dark mode</span>
+      <span id="themeIcon">â˜¾</span><span id="themeText">Dark mode</span>
     </button>
   </header>
 
@@ -667,7 +667,7 @@
           <div class="diagram-header">
             <div>
               <h2>Expected-payoff geometry</h2>
-              <p>The opponent’s mixing probability is on the horizontal axis. The crossing of the two payoff lines is the indifference condition.</p>
+              <p>The opponentâ€™s mixing probability is on the horizontal axis. The crossing of the two payoff lines is the indifference condition.</p>
             </div>
             <span class="tag" id="eqTag">interior mixed equilibrium</span>
           </div>
@@ -766,12 +766,12 @@
         <div class="card pad">
           <div class="section-title">
             <h2>Compact exam summary</h2>
-            <span class="small">2×2 mixed equilibrium</span>
+            <span class="small">2Ã—2 mixed equilibrium</span>
           </div>
           <div class="summary-list">
             <div class="summary-line">
               <div class="num">1</div>
-              <div><strong>Write expected payoffs.</strong><span>Each pure strategy generates an affine payoff line in the opponent’s mixing probability.</span></div>
+              <div><strong>Write expected payoffs.</strong><span>Each pure strategy generates an affine payoff line in the opponentâ€™s mixing probability.</span></div>
             </div>
             <div class="summary-line">
               <div class="num">2</div>
@@ -779,11 +779,11 @@
             </div>
             <div class="summary-line">
               <div class="num">3</div>
-              <div><strong>Check feasibility.</strong><span>If p*, q* ∈ [0,1], the full-support mixed equilibrium is valid. If not, check pure or boundary-support equilibria.</span></div>
+              <div><strong>Check feasibility.</strong><span>If p*, q* âˆˆ [0,1], the full-support mixed equilibrium is valid. If not, check pure or boundary-support equilibria.</span></div>
             </div>
             <div class="summary-line">
               <div class="num">4</div>
-              <div><strong>Interpret.</strong><span>Equilibrium probabilities are chosen to remove profitable pure deviations from the opponent’s support.</span></div>
+              <div><strong>Interpret.</strong><span>Equilibrium probabilities are chosen to remove profitable pure deviations from the opponentâ€™s support.</span></div>
             </div>
           </div>
           <div class="eq-card" style="margin-top:14px;margin-bottom:0">
@@ -812,11 +812,11 @@
   const C = name => css().getPropertyValue(name).trim();
 
   const fmt = x => {
-    if(!Number.isFinite(x)) return '—';
+    if(!Number.isFinite(x)) return 'â€”';
     const y = Math.abs(x) < 1e-10 ? 0 : x;
     return Number.isInteger(y) ? String(y) : y.toFixed(2);
   };
-  const fmtProb = x => Number.isFinite(x) ? (Math.abs(x)<1e-10?0:x).toFixed(2) : '—';
+  const fmtProb = x => Number.isFinite(x) ? (Math.abs(x)<1e-10?0:x).toFixed(2) : 'â€”';
   const clamp = (x,a,b) => Math.max(a, Math.min(b,x));
   const nearly = (x,y,tol=.08) => Math.abs(x-y) <= tol;
 
@@ -875,7 +875,7 @@
     const nextTheme = dark ? 'light' : 'dark';
     app.setAttribute('data-theme', nextTheme);
     rootEl.setAttribute('data-theme', nextTheme);
-    document.getElementById('themeIcon').textContent = dark ? '☾' : '☀';
+    document.getElementById('themeIcon').textContent = dark ? 'â˜¾' : 'â˜€';
     document.getElementById('themeText').textContent = dark ? 'Dark mode' : 'Light mode';
     draw();
   });
@@ -1233,3 +1233,4 @@
 </script>
 </body>
 </html>
+

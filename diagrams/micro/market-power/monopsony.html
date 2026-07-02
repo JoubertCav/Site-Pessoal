@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -164,7 +164,7 @@
 <div class="app">
   <header>
     <div>
-      <div class="eyebrow"><span class="dot"></span> Microeconomics · Input Markets</div>
+      <div class="eyebrow"><span class="dot"></span> Microeconomics Â· Input Markets</div>
       <h1>Monopsony</h1>
       <p class="subtitle">A cleaner and more coherent view of upward-sloping labor supply, marginal expenditure, buyer power, and the distortions in wages and employment.</p>
     </div>
@@ -181,7 +181,7 @@
       <div class="control"><div class="label-row"><label for="B">MRP slope <b>B</b></label><span class="value" id="BVal"></span></div><input id="B" type="range" min="0.3" max="4.0" step="0.1" value="1.2" /></div>
       <div class="control"><div class="label-row"><label for="LFocus">Focus employment <b>L</b></label><span class="value" id="LFocusVal"></span></div><input id="LFocus" type="range" min="0" max="50" step="0.1" value="20" /></div>
 
-      <div class="toggle-row"><div><div style="font-size:14px;">Snap to monopsony</div><div class="small">L = Lᴹ</div></div><label class="switch"><input id="snapM" type="checkbox" /><span class="slider-switch"></span></label></div>
+      <div class="toggle-row"><div><div style="font-size:14px;">Snap to monopsony</div><div class="small">L = Lá´¹</div></div><label class="switch"><input id="snapM" type="checkbox" /><span class="slider-switch"></span></label></div>
       <div class="toggle-row"><div><div style="font-size:14px;">Show welfare areas</div><div class="small">rent and DWL</div></div><label class="switch"><input id="areas" type="checkbox" checked /><span class="slider-switch"></span></label></div>
       <div class="toggle-row"><div><div style="font-size:14px;">Show competitive benchmark</div><div class="small">MRP = w</div></div><label class="switch"><input id="comp" type="checkbox" checked /><span class="slider-switch"></span></label></div>
 
@@ -192,7 +192,7 @@
       <section class="formula-row">
         <div class="card formula"><div><div class="name">Supply wage</div><div class="math mathline">w(L) = a + bL</div></div><div class="soft-eq">wage required to hire L workers</div></div>
         <div class="card formula"><div><div class="name">Marginal expenditure</div><div class="math mathline">ME(L) = a + 2bL</div></div><div class="soft-eq">the cost of one more worker to the firm</div></div>
-        <div class="card formula"><div><div class="name">Marginal revenue product</div><div class="math mathline">MRP(L) = A − BL</div></div><div class="soft-eq">value created by the marginal worker</div></div>
+        <div class="card formula"><div><div class="name">Marginal revenue product</div><div class="math mathline">MRP(L) = A âˆ’ BL</div></div><div class="soft-eq">value created by the marginal worker</div></div>
         <div class="card formula"><div><div class="name">Optimality and benchmark</div><div class="math mathline">ME(L<span class="sup">M</span>) = MRP(L<span class="sup">M</span>)</div></div><div class="formula-chip math">MRP(L<span class="sup">C</span>) = w(L<span class="sup">C</span>)</div></div>
       </section>
 
@@ -202,7 +202,7 @@
             <h2>Main diagram</h2>
             <p>Choose employment on the main graph. The same employment level is used in the supporting function plots.</p>
           </div>
-          <span class="small">employment horizontal · value vertical</span>
+          <span class="small">employment horizontal Â· value vertical</span>
         </div>
         <svg id="marketSvg" viewBox="0 0 980 560" aria-label="Main monopsony diagram"></svg>
         <div class="legend">
@@ -217,8 +217,8 @@
           <div class="metric"><div class="k">w(L)</div><div class="v" id="wMetric"></div></div>
           <div class="metric"><div class="k">ME(L)</div><div class="v" id="meMetric"></div></div>
           <div class="metric"><div class="k">MRP(L)</div><div class="v" id="mrpMetric"></div></div>
-          <div class="metric"><div class="k">Lᴹ</div><div class="v" id="LMMetric"></div></div>
-          <div class="metric"><div class="k">Lᶜ</div><div class="v" id="LCMetric"></div></div>
+          <div class="metric"><div class="k">Lá´¹</div><div class="v" id="LMMetric"></div></div>
+          <div class="metric"><div class="k">Lá¶œ</div><div class="v" id="LCMetric"></div></div>
         </div>
       </section>
 
@@ -232,7 +232,7 @@
           <svg id="mrpSvg" viewBox="0 0 720 340" aria-label="Labor demand"></svg>
         </section>
         <section class="card mini-card">
-          <div class="mini-head"><h3>Distortion wedges</h3><span class="mini-sub">ME − w and MRP − w</span></div>
+          <div class="mini-head"><h3>Distortion wedges</h3><span class="mini-sub">ME âˆ’ w and MRP âˆ’ w</span></div>
           <svg id="wedgeSvg" viewBox="0 0 720 340" aria-label="Distortion wedges"></svg>
         </section>
       </section>
@@ -243,7 +243,7 @@
           <p id="interpretation"></p>
           <div class="notice-list">
             <div class="notice"><strong>Technical core.</strong> The firm does not compare the wage directly to MRP when supply is upward sloping. It compares <span class="math-inline">ME</span> to <span class="math-inline">MRP</span>.</div>
-            <div class="notice"><strong>Wage distortion.</strong> The chosen wage is read from the supply curve at <span class="math-inline">L^M</span>, so the firm pays less than the worker’s marginal revenue product.</div>
+            <div class="notice"><strong>Wage distortion.</strong> The chosen wage is read from the supply curve at <span class="math-inline">L^M</span>, so the firm pays less than the workerâ€™s marginal revenue product.</div>
             <div class="notice"><strong>Employment distortion.</strong> Since <span class="math-inline">ME &gt; w</span>, the equality <span class="math-inline">ME = MRP</span> occurs before the competitive quantity.</div>
           </div>
         </section>
@@ -278,7 +278,7 @@
     interpretation:$("interpretation"), notice1:$("notice1"), notice2:$("notice2"), notice3:$("notice3")
   };
 
-  function fmt(x,d=2){ if(!Number.isFinite(x)) return '—'; if(Math.abs(x)>=100) return x.toFixed(1); return x.toFixed(d); }
+  function fmt(x,d=2){ if(!Number.isFinite(x)) return 'â€”'; if(Math.abs(x)>=100) return x.toFixed(1); return x.toFixed(d); }
   function clamp(x,lo,hi){ return Math.max(lo, Math.min(hi, x)); }
   function s(tag, attrs={}){ const el=document.createElementNS('http://www.w3.org/2000/svg', tag); for(const [k,v] of Object.entries(attrs)) el.setAttribute(k,v); return el; }
   function line(svg,x1,y1,x2,y2,cls){ svg.appendChild(s('line',{x1,y1,x2,y2,class:cls})); }
@@ -350,10 +350,10 @@
     line(svg,X(0),Y(m.wM),X(m.LM),Y(m.wM),'helper');
     circle(svg,X(m.LM),Y(m.wM),6.1,'point-accent');
     circle(svg,X(m.LM),Y(m.A-m.B*m.LM),5.4,'point');
-    text(svg,X(m.LM),Y(0)+28,'Lᴹ','label');
-    text(svg,X(0)-14,Y(m.wM)+4,'wᴹ','label','end');
+    text(svg,X(m.LM),Y(0)+28,'Lá´¹','label');
+    text(svg,X(0)-14,Y(m.wM)+4,'wá´¹','label','end');
 
-    if(els.comp.checked){ line(svg,X(m.LC),Y(0),X(m.LC),Y(m.wC),'helper'); circle(svg,X(m.LC),Y(m.wC),5.2,'point'); text(svg,X(m.LC),Y(0)+28,'Lᶜ','muted-label'); }
+    if(els.comp.checked){ line(svg,X(m.LC),Y(0),X(m.LC),Y(m.wC),'helper'); circle(svg,X(m.LC),Y(m.wC),5.2,'point'); text(svg,X(m.LC),Y(0)+28,'Lá¶œ','muted-label'); }
 
     line(svg,X(m.L),Y(0),X(m.L),Y(m.w),'helper-focus');
     line(svg,X(0),Y(m.w),X(m.L),Y(m.w),'helper-focus');
@@ -389,7 +389,7 @@
     line(svg,X(m.LM),margin.top,X(m.LM),margin.top+ih,'helper');
     circle(svg,X(m.L),Y(m.w),6,'point-focus'); circle(svg,X(m.L),Y(m.ME),6,'point-focus');
     text(svg,X(m.L)+8,Y(m.w)-10,'w(L)','muted-label','start'); text(svg,X(m.L)+8,Y(m.ME)+18,'ME(L)','muted-label','start');
-    text(svg,X(m.LM),margin.top+ih+22,'Lᴹ','muted-label'); text(svg,X(m.L),margin.top+ih+22,'L','label');
+    text(svg,X(m.LM),margin.top+ih+22,'Lá´¹','muted-label'); text(svg,X(m.L),margin.top+ih+22,'L','label');
   }
 
   function drawMRP(m){
@@ -400,7 +400,7 @@
     const pts=[]; for(let i=0;i<=260;i++){ const L=m.Lmax*i/260; pts.push([X(L),Y(Math.max(0,m.A-m.B*L))]); }
     path(svg,pts,'curve-mrp');
     line(svg,X(m.L),margin.top,X(m.L),margin.top+ih,'helper-focus'); line(svg,X(m.LM),margin.top,X(m.LM),margin.top+ih,'helper');
-    circle(svg,X(m.L),Y(m.MRP),6,'point-focus'); text(svg,X(m.L)+8,Y(m.MRP)-10,'MRP(L)','muted-label','start'); text(svg,X(m.LM),margin.top+ih+22,'Lᴹ','muted-label'); text(svg,X(m.L),margin.top+ih+22,'L','label');
+    circle(svg,X(m.L),Y(m.MRP),6,'point-focus'); text(svg,X(m.L)+8,Y(m.MRP)-10,'MRP(L)','muted-label','start'); text(svg,X(m.LM),margin.top+ih+22,'Lá´¹','muted-label'); text(svg,X(m.L),margin.top+ih+22,'L','label');
   }
 
   function drawWedges(m){
@@ -417,19 +417,19 @@
     path(svg,ePts,'curve-focus'); path(svg,mdPts,'curve-mrp');
     line(svg,X(m.L),margin.top,X(m.L),margin.top+ih,'helper-focus'); line(svg,X(m.LM),margin.top,X(m.LM),margin.top+ih,'helper');
     circle(svg,X(m.L),Y(m.expWedge),6,'point-focus'); circle(svg,X(m.L),Y(m.markdown),6,'point-focus');
-    text(svg,X(m.L)+8,Y(m.expWedge)+18,'ME − w','muted-label','start'); text(svg,X(m.L)+8,Y(m.markdown)-10,'MRP − w','muted-label','start'); text(svg,X(m.LM),margin.top+ih+22,'Lᴹ','muted-label'); text(svg,X(m.L),margin.top+ih+22,'L','label');
+    text(svg,X(m.L)+8,Y(m.expWedge)+18,'ME âˆ’ w','muted-label','start'); text(svg,X(m.L)+8,Y(m.markdown)-10,'MRP âˆ’ w','muted-label','start'); text(svg,X(m.LM),margin.top+ih+22,'Lá´¹','muted-label'); text(svg,X(m.L),margin.top+ih+22,'L','label');
   }
 
   function updateText(m){
     els.aVal.textContent=fmt(m.a,0); els.bVal.textContent=fmt(m.b,1); els.AVal.textContent=fmt(m.A,0); els.BVal.textContent=fmt(m.B,1); els.LFocusVal.textContent=fmt(m.L);
     els.LMetric.textContent=fmt(m.L); els.wMetric.textContent=fmt(m.w); els.meMetric.textContent=fmt(m.ME); els.mrpMetric.textContent=fmt(m.MRP); els.LMMetric.textContent=fmt(m.LM); els.LCMetric.textContent=fmt(m.LC);
-    els.statusPill.textContent = els.snapM.checked ? 'Snapped to Lᴹ' : 'Linked employment view';
+    els.statusPill.textContent = els.snapM.checked ? 'Snapped to Lá´¹' : 'Linked employment view';
 
     const nearM = Math.abs(m.L-m.LM)<0.08;
     const sentence = nearM
       ? `At this employment, the firm is essentially at the monopsony optimum: <span class="math-inline">ME(L^M)=MRP(L^M)=${fmt(m.ME)}</span>, while the wage paid is only <span class="math-inline">w^M=${fmt(m.w)}</span>.`
       : `At this employment, compare three values directly: <span class="math-inline">w(L)=${fmt(m.w)}</span>, <span class="math-inline">ME(L)=${fmt(m.ME)}</span>, and <span class="math-inline">MRP(L)=${fmt(m.MRP)}</span>.`;
-    els.interpretation.innerHTML = `The chosen employment is <span class="math-inline">L=${fmt(m.L)}</span>. This single quantity determines the market wage, the firm’s marginal expenditure, and the worker’s marginal revenue product. ${sentence}`;
+    els.interpretation.innerHTML = `The chosen employment is <span class="math-inline">L=${fmt(m.L)}</span>. This single quantity determines the market wage, the firmâ€™s marginal expenditure, and the workerâ€™s marginal revenue product. ${sentence}`;
 
     els.notice1.innerHTML = `<strong>Buyer power wedge.</strong> The gap <span class="math-inline">ME-w=${fmt(m.expWedge)}</span> shows the extra cost created by upward-sloping labor supply.`;
     els.notice2.innerHTML = `<strong>Employment distortion.</strong> Monopsony hires <span class="math-inline">L^M=${fmt(m.LM)}</span>, but competition would hire <span class="math-inline">L^C=${fmt(m.LC)}</span>. The shortfall is <span class="math-inline">${fmt(m.LC-m.LM)}</span>.`;
@@ -452,3 +452,4 @@
 </script>
 </body>
 </html>
+

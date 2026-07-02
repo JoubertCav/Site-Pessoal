@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -213,7 +213,7 @@ svg{width:100%; height:100%; display:block;}
       </p>
     </div>
     <div class="top-actions">
-      <button class="toggle" id="themeBtn" type="button">◐ Theme</button>
+      <button class="toggle" id="themeBtn" type="button">â— Theme</button>
       <button class="pill" id="shockBtn" type="button">Expectation shock</button>
     </div>
   </header>
@@ -236,7 +236,7 @@ svg{width:100%; height:100%; display:block;}
           <input id="k" type="range" min="0.10" max="1.20" step="0.01" value="0.55">
         </div>
         <div class="row">
-          <div class="label"><label for="eta">Inflation semi-elasticity η</label><span class="value" id="veta"></span></div>
+          <div class="label"><label for="eta">Inflation semi-elasticity Î·</label><span class="value" id="veta"></span></div>
           <input id="eta" type="range" min="0.5" max="8" step="0.1" value="2.2">
         </div>
       </div>
@@ -244,7 +244,7 @@ svg{width:100%; height:100%; display:block;}
       <div class="group">
         <div class="group-label">Current regime</div>
         <div class="row">
-          <div class="label"><label for="pi">Current inflation π</label><span class="value" id="vpi"></span></div>
+          <div class="label"><label for="pi">Current inflation Ï€</label><span class="value" id="vpi"></span></div>
           <input id="pi" type="range" min="0" max="2.00" step="0.01" value="0.25">
         </div>
         <div class="row">
@@ -252,7 +252,7 @@ svg{width:100%; height:100%; display:block;}
           <input id="need" type="range" min="0" max="40" step="0.2" value="9.0">
         </div>
         <div class="row">
-          <div class="label"><label for="expect">Expected-inflation premium χ</label><span class="value" id="vexpect"></span></div>
+          <div class="label"><label for="expect">Expected-inflation premium Ï‡</label><span class="value" id="vexpect"></span></div>
           <input id="expect" type="range" min="0" max="2.0" step="0.05" value="0.20">
         </div>
       </div>
@@ -326,9 +326,9 @@ svg{width:100%; height:100%; display:block;}
             <span>computed live</span>
           </div>
           <div class="kpis">
-            <div class="kpi"><small>Real balances m(π)</small><strong id="kMoney"></strong></div>
-            <div class="kpi"><small>Seigniorage s(π)</small><strong id="kSeig"></strong></div>
-            <div class="kpi"><small>Peak inflation π*</small><strong id="kPeak"></strong></div>
+            <div class="kpi"><small>Real balances m(Ï€)</small><strong id="kMoney"></strong></div>
+            <div class="kpi"><small>Seigniorage s(Ï€)</small><strong id="kSeig"></strong></div>
+            <div class="kpi"><small>Peak inflation Ï€*</small><strong id="kPeak"></strong></div>
             <div class="kpi"><small>Risk status</small><strong id="kRisk"></strong></div>
           </div>
           <div class="notice">
@@ -522,7 +522,7 @@ function updateLabels(d){
   $("kPeak").textContent = pct(d.peakPiBase,1);
   $("kRisk").textContent = d.status;
 
-  $("lafferBadge").textContent = `π* = ${pct(d.peakPiBase,1)}`;
+  $("lafferBadge").textContent = `Ï€* = ${pct(d.peakPiBase,1)}`;
   $("riskBadge").textContent = state.shock ? "expectations shocked" : "baseline expectations";
 }
 
@@ -587,18 +587,18 @@ function drawLaffer(d){
 
   rect(lafferSvg, 82, 82, 150, 42, {fill:paper2, stroke:linec, rx:14});
   text(lafferSvg, 96, 99, "real balances", {fill:muted, size:10.5, weight:800});
-  text(lafferSvg, 96, 116, `m(π) = ${fmt(d.money,2)}`, {fill:gold, size:13.2, weight:850});
+  text(lafferSvg, 96, 116, `m(Ï€) = ${fmt(d.money,2)}`, {fill:gold, size:13.2, weight:850});
 
   rect(lafferSvg, 248, 82, 150, 42, {fill:paper2, stroke:linec, rx:14});
   text(lafferSvg, 262, 99, "current revenue", {fill:muted, size:10.5, weight:800});
-  text(lafferSvg, 262, 116, `s(π) = ${fmt(d.sNow,2)}`, {fill:accent, size:13.2, weight:850});
+  text(lafferSvg, 262, 116, `s(Ï€) = ${fmt(d.sNow,2)}`, {fill:accent, size:13.2, weight:850});
 
   rect(lafferSvg, 414, 82, 150, 42, {fill:paper2, stroke:linec, rx:14});
   text(lafferSvg, 428, 99, "maximum revenue", {fill:muted, size:10.5, weight:800});
   text(lafferSvg, 428, 116, `smax = ${fmt(d.sMax,2)}`, {fill:blue, size:13.2, weight:850});
 
-  text(lafferSvg, x0+W, y0+30, "inflation rate π", {fill:muted, size:12, anchor:"end", weight:740});
-  text(lafferSvg, x0-22, y0-H-8, "real seigniorage s(π)", {fill:muted, size:12, weight:740});
+  text(lafferSvg, x0+W, y0+30, "inflation rate Ï€", {fill:muted, size:12, anchor:"end", weight:740});
+  text(lafferSvg, x0-22, y0-H-8, "real seigniorage s(Ï€)", {fill:muted, size:12, weight:740});
 
   rect(lafferSvg, 104, 430, 552, 36, {fill:paper2, stroke:linec, rx:15, opacity:.98});
   const msg = d.gap <= 0
@@ -649,8 +649,8 @@ function drawRisk(d){
   circle(riskSvg, currX, currY, 5.8, {fill:accent, stroke:ink, sw:1.15});
   text(riskSvg, currX+8, currY-8, `m = ${fmt(d.money,1)}`, {fill:accent, size:10.8, weight:830});
 
-  text(riskSvg, x0+W, y0+22, "inflation π", {fill:muted, size:11.5, anchor:"end", weight:740});
-  text(riskSvg, x0-18, y0-H+4, "m(π)", {fill:muted, size:11.5, weight:740});
+  text(riskSvg, x0+W, y0+22, "inflation Ï€", {fill:muted, size:11.5, anchor:"end", weight:740});
+  text(riskSvg, x0-18, y0-H+4, "m(Ï€)", {fill:muted, size:11.5, weight:740});
 
   // Right: risk ladder / financing relation
   const rx=350, ry=242, RW=188, RH=164;
@@ -685,7 +685,7 @@ function drawRisk(d){
   line(riskSvg, 94, 312, 112, 312, {stroke:accent, sw:2.4});
   text(riskSvg, 120, 316, "current demand", {fill:muted, size:10.3, weight:760});
   line(riskSvg, 196, 312, 214, 312, {stroke:purple, sw:2.0, dash:"6 7"});
-  text(riskSvg, 222, 316, "after χ shock", {fill:muted, size:10.3, weight:760});
+  text(riskSvg, 222, 316, "after Ï‡ shock", {fill:muted, size:10.3, weight:760});
 
   rect(riskSvg, 80, 350, 458, 24, {fill:paper2, stroke:linec, rx:11, opacity:.96});
   const riskText = d.gap <= 0
@@ -718,3 +718,4 @@ update();
 </script>
 </body>
 </html>
+

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -471,7 +471,7 @@ svg {
       </p>
     </div>
     <div class="top-actions">
-      <button class="toggle" id="themeBtn" type="button">◐ Theme</button>
+      <button class="toggle" id="themeBtn" type="button">â— Theme</button>
       <button class="pill" id="shockBtn" type="button">Animate liquidity shock</button>
     </div>
   </header>
@@ -547,9 +547,9 @@ svg {
           <div class="eqbox">
             <div class="eq-title">Minimal symbolic model</div>
             <div class="equations">
-              <div class="line">B ≡ C + R</div>
-              <div class="line">M₁ ≡ C + D</div>
-              <div class="line">M₂ ≡ M₁ + S + T + F</div>
+              <div class="line">B â‰¡ C + R</div>
+              <div class="line">Mâ‚ â‰¡ C + D</div>
+              <div class="line">Mâ‚‚ â‰¡ Mâ‚ + S + T + F</div>
               <div class="line">P = MV / Y</div>
             </div>
           </div>
@@ -557,8 +557,8 @@ svg {
           <div class="eqbox">
             <div class="eq-title">Money multiplier geometry</div>
             <div class="equations">
-              <div class="line">c ≡ C/D, &nbsp; rr ≡ R/D</div>
-              <div class="line">M₁ / B = (1 + c)/(rr + c)</div>
+              <div class="line">c â‰¡ C/D, &nbsp; rr â‰¡ R/D</div>
+              <div class="line">Mâ‚ / B = (1 + c)/(rr + c)</div>
             </div>
             <div class="note">Stylized taxonomy. Official definitions differ across countries, but the liquidity logic is the same.</div>
           </div>
@@ -639,7 +639,7 @@ svg {
           <div class="notice">
             <h4>Exam-style summary</h4>
             <ul>
-              <li>Money aggregates are nested by liquidity, not by “importance.”</li>
+              <li>Money aggregates are nested by liquidity, not by â€œimportance.â€</li>
               <li>Central-bank money is not the same as broad money.</li>
               <li>Deposits make M1 exceed the monetary base when the banking system creates inside money.</li>
               <li>MV = PY links money to nominal expenditure; it is not by itself a full causal theory.</li>
@@ -1003,7 +1003,7 @@ function drawQuantity(d) {
 
   rect(quantitySvg, 88, 32, 188, 48, { fill: paper2, stroke: linec, rx: 16 });
   text(quantitySvg, 104, 51, "identity", { fill: muted, size: 11, weight: 800 });
-  text(quantitySvg, 104, 67, `${state.aggregate} · V = P · Y`, { fill: ink, size: 17, weight: 850 });
+  text(quantitySvg, 104, 67, `${state.aggregate} Â· V = P Â· Y`, { fill: ink, size: 17, weight: 850 });
 
   rect(quantitySvg, 376, 32, 154, 48, { fill: paper2, stroke: linec, rx: 16 });
   text(quantitySvg, 392, 51, "current price level", { fill: muted, size: 11, weight: 800 });
@@ -1077,3 +1077,4 @@ update();
 </script>
 </body>
 </html>
+

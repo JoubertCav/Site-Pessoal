@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -449,7 +449,7 @@
 <div class="app">
   <header>
     <div>
-      <div class="eyebrow"><span class="dot"></span> Microeconomics · monopoly as a geometric maximization problem</div>
+      <div class="eyebrow"><span class="dot"></span> Microeconomics Â· monopoly as a geometric maximization problem</div>
       <h1>Monopoly choice</h1>
       <p class="subtitle">The monopolist chooses a quantity by maximizing the vertical distance between total revenue and total cost. The marginal condition is the local version of that geometry.</p>
     </div>
@@ -460,7 +460,7 @@
     <aside class="card controls">
       <div class="card-head">
         <h2>Parameters</h2>
-        <span class="small">linear demand · affine MC</span>
+        <span class="small">linear demand Â· affine MC</span>
       </div>
 
       <div class="control">
@@ -489,7 +489,7 @@
       </div>
 
       <div class="toggle-row">
-        <div><div style="font-size:14px;">Welfare regions</div><div class="small">CS · PS · DWL</div></div>
+        <div><div style="font-size:14px;">Welfare regions</div><div class="small">CS Â· PS Â· DWL</div></div>
         <label class="switch"><input id="areas" type="checkbox" checked><span class="sliderSwitch"></span></label>
       </div>
 
@@ -510,19 +510,19 @@
       <section class="formula-grid">
         <div class="card formula">
           <div class="name">Problem</div>
-          <div class="math">max<sub>q≥0</sub> π(q) = (a−bq)q − [F+cq+½dq²]</div>
+          <div class="math">max<sub>qâ‰¥0</sub> Ï€(q) = (aâˆ’bq)q âˆ’ [F+cq+Â½dqÂ²]</div>
         </div>
         <div class="card formula">
           <div class="name">First-order condition</div>
-          <div class="math">π′(q) = MR(q) − MC(q) = 0</div>
+          <div class="math">Ï€â€²(q) = MR(q) âˆ’ MC(q) = 0</div>
         </div>
         <div class="card formula">
           <div class="name">Interior monopoly quantity</div>
-          <div class="math">q<sup>M</sup> = (a−c)/(2b+d)</div>
+          <div class="math">q<sup>M</sup> = (aâˆ’c)/(2b+d)</div>
         </div>
         <div class="card formula">
           <div class="name">Price and markup</div>
-          <div class="math">p<sup>M</sup>=a−bq<sup>M</sup><br>(p−MC)/p = −1/ε</div>
+          <div class="math">p<sup>M</sup>=aâˆ’bq<sup>M</sup><br>(pâˆ’MC)/p = âˆ’1/Îµ</div>
         </div>
       </section>
 
@@ -542,11 +542,11 @@
           <span class="legend-item"><span class="swatch dwl"></span> DWL</span>
         </div>
         <div class="metrics">
-          <div class="metric"><div class="k">qᴹ</div><div class="v" id="qMMetric"></div></div>
-          <div class="metric"><div class="k">pᴹ</div><div class="v" id="pMMetric"></div></div>
-          <div class="metric"><div class="k">qᶜ</div><div class="v" id="qCMetric"></div></div>
+          <div class="metric"><div class="k">qá´¹</div><div class="v" id="qMMetric"></div></div>
+          <div class="metric"><div class="k">pá´¹</div><div class="v" id="pMMetric"></div></div>
+          <div class="metric"><div class="k">qá¶œ</div><div class="v" id="qCMetric"></div></div>
           <div class="metric"><div class="k">Markup</div><div class="v" id="markupMetric"></div></div>
-          <div class="metric"><div class="k">Profit π(qᴹ)</div><div class="v" id="profitMetric"></div></div>
+          <div class="metric"><div class="k">Profit Ï€(qá´¹)</div><div class="v" id="profitMetric"></div></div>
           <div class="metric"><div class="k">DWL</div><div class="v" id="dwlMetric"></div></div>
         </div>
       </section>
@@ -557,14 +557,14 @@
             <h2>Profit maximization geometry</h2>
             <p>The optimal quantity maximizes the vertical gap between total revenue and total cost. At the maximum, the two total curves have parallel tangents: slope(TR)=MR and slope(TC)=MC.</p>
           </div>
-          <span class="small">total plane · profit curve</span>
+          <span class="small">total plane Â· profit curve</span>
         </div>
         <svg id="profitSvg" viewBox="0 0 980 510" role="img" aria-label="Total revenue total cost and profit maximization diagram"></svg>
         <div class="legend">
           <span class="legend-item"><span class="swatch"></span> Total revenue</span>
           <span class="legend-item"><span class="swatch tc"></span> Total cost</span>
           <span class="legend-item"><span class="swatch area"></span> profit lens</span>
-          <span class="legend-item"><span class="swatch pi"></span> π(q)</span>
+          <span class="legend-item"><span class="swatch pi"></span> Ï€(q)</span>
         </div>
       </section>
 
@@ -573,7 +573,7 @@
           <h2>Interpretation</h2>
           <p id="interpretation"></p>
           <div class="notice-list">
-            <div class="notice"><strong>Global object.</strong> Monopoly is a vertical-gap problem: choose q to maximize TR(q)−TC(q).</div>
+            <div class="notice"><strong>Global object.</strong> Monopoly is a vertical-gap problem: choose q to maximize TR(q)âˆ’TC(q).</div>
             <div class="notice"><strong>Local condition.</strong> At the largest vertical gap, the total curves stop pulling apart: MR(q)=MC(q).</div>
             <div class="notice"><strong>Welfare distortion.</strong> The monopolist stops before D(q)=MC(q), leaving gains from trade unrealized.</div>
           </div>
@@ -582,11 +582,11 @@
         <div class="card panel">
           <h2>Exam-style summary</h2>
           <div class="summary">
-            <div class="summary-line"><span>1</span><div>Write <span class="math">TR(q)=(a-bq)q</span> and <span class="math">TC(q)=F+cq+½dq²</span>.</div></div>
-            <div class="summary-line"><span>2</span><div>Then <span class="math">π(q)=TR(q)-TC(q)</span> is strictly concave because <span class="math">π″(q)=−2b−d&lt;0</span>.</div></div>
-            <div class="summary-line"><span>3</span><div>Interior FOC: <span class="math">a−2bq=c+dq</span>, hence <span class="math">qᴹ=(a−c)/(2b+d)</span>.</div></div>
-            <div class="summary-line"><span>4</span><div>Price is not chosen independently: <span class="math">pᴹ=a−bqᴹ</span>.</div></div>
-            <div class="summary-line"><span>5</span><div>Efficiency solves <span class="math">D(qᶜ)=MC(qᶜ)</span>. Since <span class="math">MR&lt;D</span> for <span class="math">q&gt;0</span>, <span class="math">qᴹ&lt;qᶜ</span>.</div></div>
+            <div class="summary-line"><span>1</span><div>Write <span class="math">TR(q)=(a-bq)q</span> and <span class="math">TC(q)=F+cq+Â½dqÂ²</span>.</div></div>
+            <div class="summary-line"><span>2</span><div>Then <span class="math">Ï€(q)=TR(q)-TC(q)</span> is strictly concave because <span class="math">Ï€â€³(q)=âˆ’2bâˆ’d&lt;0</span>.</div></div>
+            <div class="summary-line"><span>3</span><div>Interior FOC: <span class="math">aâˆ’2bq=c+dq</span>, hence <span class="math">qá´¹=(aâˆ’c)/(2b+d)</span>.</div></div>
+            <div class="summary-line"><span>4</span><div>Price is not chosen independently: <span class="math">pá´¹=aâˆ’bqá´¹</span>.</div></div>
+            <div class="summary-line"><span>5</span><div>Efficiency solves <span class="math">D(qá¶œ)=MC(qá¶œ)</span>. Since <span class="math">MR&lt;D</span> for <span class="math">q&gt;0</span>, <span class="math">qá´¹&lt;qá¶œ</span>.</div></div>
           </div>
         </div>
       </section>
@@ -611,7 +611,7 @@
   };
 
   const fmt = (x, k = 2) => {
-    if (!Number.isFinite(x)) return '—';
+    if (!Number.isFinite(x)) return 'â€”';
     if (Math.abs(x) >= 1000) return x.toFixed(0);
     if (Math.abs(x) >= 100) return x.toFixed(1);
     return x.toFixed(k);
@@ -748,9 +748,9 @@
       svg.appendChild(svgEl('circle', { cx: X(m.qM), cy: Y(m.mcM), r: 5.5, class: 'point' }));
       svg.appendChild(text(X(m.qM) + 10, Y(m.pM) - 13, 'read price from demand', 'label', 'start'));
       svg.appendChild(text(X(m.qM) + 10, Y(m.mcM) + 22, 'choose q where MR=MC', 'mutedLabel', 'start'));
-      svg.appendChild(text(X(m.qM), Y(0) + 28, 'qᴹ', 'label'));
-      svg.appendChild(text(X(0) - 14, Y(m.pM) + 4, 'pᴹ', 'label', 'end'));
-      svg.appendChild(text(X(0) - 14, Y(m.mcM) + 4, 'MCᴹ', 'mutedLabel', 'end'));
+      svg.appendChild(text(X(m.qM), Y(0) + 28, 'qá´¹', 'label'));
+      svg.appendChild(text(X(0) - 14, Y(m.pM) + 4, 'pá´¹', 'label', 'end'));
+      svg.appendChild(text(X(0) - 14, Y(m.mcM) + 4, 'MCá´¹', 'mutedLabel', 'end'));
 
       const xb = X(m.qM) - 26;
       svg.appendChild(line(xb, Y(m.pM), xb, Y(m.mcM), 'bracket'));
@@ -761,11 +761,11 @@
       if (els.comp.checked) {
         svg.appendChild(line(X(m.qC), Y(0), X(m.qC), Y(m.pC), 'helper'));
         svg.appendChild(svgEl('circle', { cx: X(m.qC), cy: Y(m.pC), r: 5.3, class: 'point' }));
-        svg.appendChild(text(X(m.qC), Y(0) + 28, 'qᶜ', 'mutedLabel'));
+        svg.appendChild(text(X(m.qC), Y(0) + 28, 'qá¶œ', 'mutedLabel'));
         svg.appendChild(text(X(m.qC) + 9, Y(m.pC) - 12, 'efficient point', 'mutedLabel', 'start'));
       }
     } else {
-      svg.appendChild(text(margin.left + width / 2, margin.top + height / 2, 'Corner: no positive monopoly output because a ≤ c', 'label'));
+      svg.appendChild(text(margin.left + width / 2, margin.top + height / 2, 'Corner: no positive monopoly output because a â‰¤ c', 'label'));
     }
   }
 
@@ -811,7 +811,7 @@
     svg.appendChild(text(left.left + left.width, left.top + left.height + 47, 'q', 'label'));
     svg.appendChild(text(left.left - 42, left.top + 8, 'money', 'label'));
     svg.appendChild(text(right.left + right.width, right.top + right.height + 45, 'q', 'label'));
-    svg.appendChild(text(right.left - 35, right.top + 8, 'π', 'label'));
+    svg.appendChild(text(right.left - 35, right.top + 8, 'Ï€', 'label'));
 
     if (m.active) {
       let segment = [];
@@ -839,7 +839,7 @@
 
     svg.appendChild(text(XL(qMax * .45), YL(m.TR(qMax * .45)) - 14, 'TR(q)=p(q)q', 'label'));
     svg.appendChild(text(XL(qMax * .78), YL(m.TC(qMax * .78)) - 13, 'TC(q)', 'label'));
-    svg.appendChild(text(XR(qMax * .72), YR(samples[Math.floor(samples.length * .72)].pi) - 10, 'π(q)', 'label'));
+    svg.appendChild(text(XR(qMax * .72), YR(samples[Math.floor(samples.length * .72)].pi) - 10, 'Ï€(q)', 'label'));
 
     if (m.active) {
       const trM = m.TR(m.qM), tcM = m.TC(m.qM), piM = trM - tcM;
@@ -856,9 +856,9 @@
       svg.appendChild(svgEl('circle', { cx: XL(m.qM), cy: YL(trM), r: 5.8, class: 'pointAccent' }));
       svg.appendChild(svgEl('circle', { cx: XL(m.qM), cy: YL(tcM), r: 5.8, class: 'pointWarm' }));
       svg.appendChild(svgEl('circle', { cx: XR(m.qM), cy: YR(piM), r: 6.3, class: 'pointAccent' }));
-      svg.appendChild(text(XL(m.qM), left.top + left.height + 24, 'qᴹ', 'label'));
-      svg.appendChild(text(XR(m.qM), right.top + right.height + 24, 'qᴹ', 'label'));
-      svg.appendChild(text(XR(m.qM) + 8, YR(piM) - 12, 'maximum π', 'label', 'start'));
+      svg.appendChild(text(XL(m.qM), left.top + left.height + 24, 'qá´¹', 'label'));
+      svg.appendChild(text(XR(m.qM), right.top + right.height + 24, 'qá´¹', 'label'));
+      svg.appendChild(text(XR(m.qM) + 8, YR(piM) - 12, 'maximum Ï€', 'label', 'start'));
 
       if (els.tangent.checked) {
         const slope = m.MR(m.qM);
@@ -870,11 +870,11 @@
         svg.appendChild(path(tcTang, 'tangent'));
         svg.appendChild(text(XL(q2) + 6, YL(trM + slope * (q2 - m.qM)) - 2, 'slope TR = MR', 'tinyLabel', 'start'));
         svg.appendChild(text(XL(q2) + 6, YL(tcM + slope * (q2 - m.qM)) + 12, 'slope TC = MC', 'tinyLabel', 'start'));
-        svg.appendChild(text(XL(m.qM) - 12, Math.min(YL(trM), YL(tcM)) - 22, 'parallel tangents ⇔ MR=MC', 'mutedLabel', 'end'));
+        svg.appendChild(text(XL(m.qM) - 12, Math.min(YL(trM), YL(tcM)) - 22, 'parallel tangents â‡” MR=MC', 'mutedLabel', 'end'));
       }
 
       svg.appendChild(line(right.left, YR(0), right.left + right.width, YR(0), 'minorline'));
-      svg.appendChild(text(right.left + right.width - 3, YR(0) - 7, 'π=0', 'tinyLabel', 'end'));
+      svg.appendChild(text(right.left + right.width - 3, YR(0) - 7, 'Ï€=0', 'tinyLabel', 'end'));
     }
   }
 
@@ -886,25 +886,25 @@
     out.F.textContent = fmt(m.F, 0);
 
     out.qM.textContent = fmt(m.qM);
-    out.pM.textContent = m.active ? fmt(m.pM) : '—';
+    out.pM.textContent = m.active ? fmt(m.pM) : 'â€”';
     out.qC.textContent = fmt(m.qC);
     out.markup.textContent = fmt(m.markup);
     out.profit.textContent = fmt(m.profit);
     out.dwl.textContent = fmt(m.dwl);
 
     const viable = m.profit >= 0;
-    els.statusPill.textContent = !m.active ? 'Corner: qᴹ=0' : viable ? 'Interior optimum · positive profit' : 'Interior q · negative accounting profit';
+    els.statusPill.textContent = !m.active ? 'Corner: qá´¹=0' : viable ? 'Interior optimum Â· positive profit' : 'Interior q Â· negative accounting profit';
 
     if (!m.active) {
-      out.interpretation.innerHTML = 'Since <span class="math">a≤c</span>, the marginal cost at zero output is already above the highest willingness to pay. The monopoly quantity is the corner <span class="math">qᴹ=0</span>.';
+      out.interpretation.innerHTML = 'Since <span class="math">aâ‰¤c</span>, the marginal cost at zero output is already above the highest willingness to pay. The monopoly quantity is the corner <span class="math">qá´¹=0</span>.';
       return;
     }
 
     out.interpretation.innerHTML =
-      `The total-revenue curve and total-cost curve are farthest apart at <span class="math">qᴹ=${fmt(m.qM)}</span>. ` +
+      `The total-revenue curve and total-cost curve are farthest apart at <span class="math">qá´¹=${fmt(m.qM)}</span>. ` +
       `At that same point, their slopes are equal: <span class="math">MR=MC=${fmt(m.mcM)}</span>. ` +
-      `The firm charges <span class="math">pᴹ=${fmt(m.pM)}</span>, creating markup <span class="math">${fmt(m.markup)}</span>. ` +
-      `The efficient quantity is <span class="math">qᶜ=${fmt(m.qC)}</span>, so the missing interval <span class="math">[qᴹ,qᶜ]</span> is the geometric source of deadweight loss.`;
+      `The firm charges <span class="math">pá´¹=${fmt(m.pM)}</span>, creating markup <span class="math">${fmt(m.markup)}</span>. ` +
+      `The efficient quantity is <span class="math">qá¶œ=${fmt(m.qC)}</span>, so the missing interval <span class="math">[qá´¹,qá¶œ]</span> is the geometric source of deadweight loss.`;
   }
 
   function update() {
@@ -931,3 +931,4 @@
 </script>
 </body>
 </html>
+

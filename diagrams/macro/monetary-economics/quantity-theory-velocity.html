@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -443,7 +443,7 @@ svg {
       </p>
     </div>
     <div class="top-actions">
-      <button class="toggle" id="themeBtn" type="button">◐ Theme</button>
+      <button class="toggle" id="themeBtn" type="button">â— Theme</button>
       <button class="pill" id="animateBtn" type="button">Animate velocity shock</button>
     </div>
   </header>
@@ -458,17 +458,17 @@ svg {
       <div class="group">
         <div class="group-label">Initial levels</div>
         <div class="row">
-          <div class="label"><label for="money0">Money stock M₀</label><span class="value" id="vMoney0"></span></div>
+          <div class="label"><label for="money0">Money stock Mâ‚€</label><span class="value" id="vMoney0"></span></div>
           <input id="money0" type="range" min="500" max="10000" step="100" value="4000">
         </div>
 
         <div class="row">
-          <div class="label"><label for="velocity0">Velocity V₀</label><span class="value" id="vVelocity0"></span></div>
+          <div class="label"><label for="velocity0">Velocity Vâ‚€</label><span class="value" id="vVelocity0"></span></div>
           <input id="velocity0" type="range" min="0.5" max="8" step="0.1" value="2.0">
         </div>
 
         <div class="row">
-          <div class="label"><label for="output0">Real output Y₀</label><span class="value" id="vOutput0"></span></div>
+          <div class="label"><label for="output0">Real output Yâ‚€</label><span class="value" id="vOutput0"></span></div>
           <input id="output0" type="range" min="1000" max="20000" step="100" value="8000">
         </div>
       </div>
@@ -476,7 +476,7 @@ svg {
       <div class="group">
         <div class="group-label">Growth rates</div>
         <div class="row">
-          <div class="label"><label for="moneyGrowth">Money growth μ</label><span class="value" id="vMoneyGrowth"></span></div>
+          <div class="label"><label for="moneyGrowth">Money growth Î¼</label><span class="value" id="vMoneyGrowth"></span></div>
           <input id="moneyGrowth" type="range" min="-5" max="30" step="0.25" value="8">
         </div>
 
@@ -499,7 +499,7 @@ svg {
         </div>
 
         <div class="row">
-          <div class="label"><label for="persistence">Shock persistence ρ</label><span class="value" id="vPersistence"></span></div>
+          <div class="label"><label for="persistence">Shock persistence Ï</label><span class="value" id="vPersistence"></span></div>
           <input id="persistence" type="range" min="0" max="0.95" step="0.05" value="0.55">
         </div>
 
@@ -516,17 +516,17 @@ svg {
           <div class="eqbox">
             <div class="eq-title">Equation of exchange</div>
             <div class="equations">
-              <div class="line">Mₜ Vₜ = Pₜ Yₜ</div>
-              <div class="line">Pₜ = MₜVₜ / Yₜ</div>
-              <div class="line">Nominal spending = money × velocity</div>
+              <div class="line">Mâ‚œ Vâ‚œ = Pâ‚œ Yâ‚œ</div>
+              <div class="line">Pâ‚œ = Mâ‚œVâ‚œ / Yâ‚œ</div>
+              <div class="line">Nominal spending = money Ã— velocity</div>
             </div>
           </div>
 
           <div class="eqbox">
             <div class="eq-title">Growth-rate form</div>
             <div class="equations">
-              <div class="line">π ≈ μ + v − g</div>
-              <div class="line">inflation ≈ money growth + velocity growth − output growth</div>
+              <div class="line">Ï€ â‰ˆ Î¼ + v âˆ’ g</div>
+              <div class="line">inflation â‰ˆ money growth + velocity growth âˆ’ output growth</div>
             </div>
             <div class="note">With stable velocity, sustained inflation is mainly the excess of money growth over real output growth.</div>
           </div>
@@ -552,7 +552,7 @@ svg {
                 <h3>Inflation decomposition</h3>
                 <p>Inflation is the part of nominal spending growth not absorbed by real output growth.</p>
               </div>
-              <div class="badge" id="inflationBadge">π</div>
+              <div class="badge" id="inflationBadge">Ï€</div>
             </div>
             <div class="svgbox small">
               <svg id="growthSvg" viewBox="0 0 620 390" preserveAspectRatio="xMidYMid meet"></svg>
@@ -568,10 +568,10 @@ svg {
             <span>computed live</span>
           </div>
           <div class="kpis">
-            <div class="kpi"><small>Current price P₀</small><strong id="kP0"></strong></div>
+            <div class="kpi"><small>Current price Pâ‚€</small><strong id="kP0"></strong></div>
             <div class="kpi"><small>Long-run inflation</small><strong id="kPiLR"></strong></div>
-            <div class="kpi"><small>Final price Pᵀ</small><strong id="kPT"></strong></div>
-            <div class="kpi"><small>Velocity Vᵀ</small><strong id="kVT"></strong></div>
+            <div class="kpi"><small>Final price Páµ€</small><strong id="kPT"></strong></div>
+            <div class="kpi"><small>Velocity Váµ€</small><strong id="kVT"></strong></div>
           </div>
           <div class="notice">
             <h4>What to notice</h4>
@@ -579,7 +579,7 @@ svg {
               <li>Higher money growth raises nominal spending growth.</li>
               <li>Higher real output growth absorbs nominal spending growth and lowers inflation.</li>
               <li>Velocity shocks move prices even without a money-stock change.</li>
-              <li>If velocity is stable, π ≈ μ − g.</li>
+              <li>If velocity is stable, Ï€ â‰ˆ Î¼ âˆ’ g.</li>
             </ul>
           </div>
         </div>
@@ -608,8 +608,8 @@ svg {
             <h4>Exam-style summary</h4>
             <ul>
               <li>Equation of exchange: MV = PY.</li>
-              <li>Taking logs: log P = log M + log V − log Y.</li>
-              <li>Growth form: π ≈ μ + v − g.</li>
+              <li>Taking logs: log P = log M + log V âˆ’ log Y.</li>
+              <li>Growth form: Ï€ â‰ˆ Î¼ + v âˆ’ g.</li>
               <li>Classical quantity theory adds stable V and long-run real-output determination.</li>
             </ul>
           </div>
@@ -807,8 +807,8 @@ function updateLabels(d) {
   $("kPiLR").textContent = pct(d.piLR, 2);
   $("kPT").textContent = fmt(d.final.P, 2);
   $("kVT").textContent = fmt(d.final.V, 2);
-  $("priceBadge").textContent = `Pᵀ = ${fmt(d.final.P, 2)}`;
-  $("inflationBadge").textContent = `π ≈ ${pct(d.piLR, 2)}`;
+  $("priceBadge").textContent = `Páµ€ = ${fmt(d.final.P, 2)}`;
+  $("inflationBadge").textContent = `Ï€ â‰ˆ ${pct(d.piLR, 2)}`;
 }
 
 function drawLevels(d) {
@@ -896,7 +896,7 @@ function drawLevels(d) {
     text(levelsSvg, x + 14, y + 33, value, { fill: color, size: 13.4, weight: 850 });
   }
 
-  miniCard(88, 82, "identity", "M · V = P · Y", ink);
+  miniCard(88, 82, "identity", "M Â· V = P Â· Y", ink);
   miniCard(258, 82, "final P", fmt(last.P, 2), red);
   miniCard(428, 82, "final V", fmt(last.V, 2), purple);
 
@@ -911,14 +911,14 @@ function drawLevels(d) {
   legend(196, 452, purple, "4 6", "V");
   legend(268, 452, blue, "6 6", "Y");
   legend(340, 452, red, "", "P");
-  text(levelsSvg, 418, 456, "Price rises when M·V grows faster than real output Y.", {
+  text(levelsSvg, 418, 456, "Price rises when MÂ·V grows faster than real output Y.", {
     fill: muted,
     size: 11.4,
     weight: 780
   });
 
   rect(levelsSvg, 104, 474, 552, 30, { fill: paper2, stroke: linec, rx: 14, opacity: .96 });
-  text(levelsSvg, 124, 494, `Final equation: MᵀVᵀ / Yᵀ = Pᵀ = ${fmt(last.P, 2)}`, {
+  text(levelsSvg, 124, 494, `Final equation: Máµ€Váµ€ / Yáµ€ = Páµ€ = ${fmt(last.P, 2)}`, {
     fill: red,
     size: 11.5,
     weight: 820
@@ -951,13 +951,13 @@ function drawGrowth(d) {
     line(growthSvg, x0, gy, x0 + W, gy, { stroke: linec, sw: 1, opacity: .34 });
   }
 
-  text(growthSvg, x0, 86, "π ≈ μ + v − g", { fill: muted, size: 12, weight: 800 });
+  text(growthSvg, x0, 86, "Ï€ â‰ˆ Î¼ + v âˆ’ g", { fill: muted, size: 12, weight: 800 });
 
   const vals = [
-    { label: "μ", val: d.mu, color: accent, name: "money growth" },
+    { label: "Î¼", val: d.mu, color: accent, name: "money growth" },
     { label: "v", val: d.vg, color: purple, name: "velocity growth" },
-    { label: "−g", val: -d.g, color: blue, name: "minus output growth" },
-    { label: "π", val: d.piLR, color: red, name: "inflation" }
+    { label: "âˆ’g", val: -d.g, color: blue, name: "minus output growth" },
+    { label: "Ï€", val: d.piLR, color: red, name: "inflation" }
   ];
 
   const maxAbs = Math.max(0.04, ...vals.map(o => Math.abs(o.val))) * 1.34;
@@ -1011,7 +1011,7 @@ function drawGrowth(d) {
   circle(growthSvg, X(last.t), Yp(last.pi), 6.1, { fill: red, stroke: ink, sw: 1.15 });
 
   text(growthSvg, x1 + W2, y1 + 22, "time", { fill: muted, size: 11.5, anchor: "end", weight: 740 });
-  text(growthSvg, x1 - 18, y1 - H2 + 4, "π", { fill: muted, size: 11.5, weight: 740 });
+  text(growthSvg, x1 - 18, y1 - H2 + 4, "Ï€", { fill: muted, size: 11.5, weight: 740 });
 
   function mini(x, y, label, value, color) {
     rect(growthSvg, x, y, 132, 32, { fill: paper2, stroke: linec, rx: 12 });
@@ -1081,3 +1081,4 @@ update();
 </script>
 </body>
 </html>
+
