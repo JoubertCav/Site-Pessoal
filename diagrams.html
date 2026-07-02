@@ -21,7 +21,7 @@
   <meta property="og:image" content="https://joubertcav.github.io/site/assets/images/profile.png">
   <meta name="twitter:card" content="summary">
     <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-<title>Diagrams | Joubert Cavalcante</title>
+<title data-i18n="title.diagrams">Diagrams | Joubert Cavalcante</title>
   <link rel="stylesheet" href="assets/styles.css">
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
@@ -35,18 +35,19 @@
 </head>
 
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
+  <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
   <header class="site-header">
     <div class="wrap nav">
       <a class="brand" href="index.html"><span class="brand-mark">JC</span><span>Joubert Cavalcante</span></a>
       <nav class="nav-links" aria-label="Main navigation">
-        <a href="index.html">Presentation</a>
-        <a href="works.html">Works</a>
-        <a href="teaching.html">Lecture Notes</a>
-        <a href="anpec.html">ANPEC</a>
-        <a href="diagrams.html" aria-current="page">Diagrams</a>
-        <a href="contact.html">Contact</a>
-        <a href="donation.html">Donation</a>
+        <a href="index.html" data-i18n="nav.presentation">Presentation</a>
+        <a href="works.html" data-i18n="nav.works">Works</a>
+        <a href="teaching.html" data-i18n="nav.lecture">Lecture Notes</a>
+        <a href="anpec.html" data-i18n="nav.anpec">ANPEC</a>
+        <a href="diagrams.html" aria-current="page" data-i18n="nav.diagrams">Diagrams</a>
+        <a href="contact.html" data-i18n="nav.contact">Contact</a>
+        <a href="donation.html" data-i18n="nav.donation">Donation</a>
+        <button class="lang-toggle" type="button" data-lang-toggle>PT</button>
         <button class="theme-toggle" type="button" data-theme-toggle>Dark</button>
       </nav>
     </div>
@@ -55,44 +56,44 @@
   <main id="main">
     <section class="page-hero">
       <div class="wrap">
-        <p class="eyebrow">Diagrams</p>
-        <h1>Diagram libraries.</h1>
-        <p class="page-motto">Libera sit scientia.</p>
+        <p class="eyebrow" data-i18n="dg.eyebrow">Diagrams</p>
+        <h1 data-i18n="dg.h1">Diagram libraries.</h1>
+        <p class="page-motto" data-i18n="dg.motto">Libera sit scientia.</p>
       </div>
     </section>
 
     <section class="section">
       <div class="wrap section-grid">
-        <div class="section-label">Libraries</div>
+        <div class="section-label" data-i18n="dg.label">Libraries</div>
         <div>
           <div class="section-copy">
-            <h2>Diagram collections</h2>
-            <p class="lead">Interactive, browser-based diagrams that build up the core results of each field
+            <h2 data-i18n="dg.h2">Diagram collections</h2>
+            <p class="lead" data-i18n="dg.lead">Interactive, browser-based diagrams that build up the core results of each field
               step by step. Choose a library to begin.</p>
           </div>
           <div class="folder-grid">
             <a class="folder-card" href="diagrams/real-analysis.html">
               <span>01</span>
-              <h3>Real Analysis for Economists</h3>
-              <p>Logic, sets, real numbers, topology, differentiation, optimization, fixed points, convexity, measure,
+              <h3 data-i18n="dg.ra">Real Analysis for Economists</h3>
+              <p data-i18n="dg.ra.p">Logic, sets, real numbers, topology, differentiation, optimization, fixed points, convexity, measure,
                 and equilibrium.</p>
             </a>
             <a class="folder-card" href="diagrams/econometrics.html">
               <span>02</span>
-              <h3>Probability and Statistical Inference</h3>
-              <p>Measure, random variables, integration, moments, distributions, asymptotics, estimation, testing,
+              <h3 data-i18n="dg.prob">Probability and Statistical Inference</h3>
+              <p data-i18n="dg.prob.p">Measure, random variables, integration, moments, distributions, asymptotics, estimation, testing,
                 Bayesian inference, and econometric foundations.</p>
             </a>
             <a class="folder-card" href="diagrams/micro.html">
               <span>03</span>
-              <h3>Microeconomics</h3>
-              <p>Consumer demand, producer theory, competitive markets, market power, game theory, welfare, information,
+              <h3 data-i18n="dg.micro">Microeconomics</h3>
+              <p data-i18n="dg.micro.p">Consumer demand, producer theory, competitive markets, market power, game theory, welfare, information,
                 and intertemporal choice.</p>
             </a>
             <a class="folder-card" href="diagrams/macro.html">
               <span>04</span>
-              <h3>Macroeconomics</h3>
-              <p>Measurement, money, IS-LM, AS-AD, Phillips curves, microfoundations, growth, open economy, fiscal
+              <h3 data-i18n="dg.macro">Macroeconomics</h3>
+              <p data-i18n="dg.macro.p">Measurement, money, IS-LM, AS-AD, Phillips curves, microfoundations, growth, open economy, fiscal
                 policy, and debt dynamics.</p>
             </a>
           </div>
@@ -105,6 +106,7 @@
     <div class="wrap">&copy; 2026 Joubert Cavalcante.</div>
   </footer>
   <script src="assets/theme.js"></script>
+  <script src="assets/i18n.js"></script>
 </body>
 
 </html>

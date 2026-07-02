@@ -20,7 +20,7 @@
   <meta property="og:image" content="https://joubertcav.github.io/site/assets/images/profile.png">
   <meta name="twitter:card" content="summary">
     <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-<title>Donation | Joubert Cavalcante</title>
+<title data-i18n="title.donation">Donation | Joubert Cavalcante</title>
   <link rel="stylesheet" href="assets/styles.css">
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
@@ -34,18 +34,19 @@
 </head>
 
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
+  <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
   <header class="site-header">
     <div class="wrap nav">
       <a class="brand" href="index.html"><span class="brand-mark">JC</span><span>Joubert Cavalcante</span></a>
       <nav class="nav-links" aria-label="Main navigation">
-        <a href="index.html">Presentation</a>
-        <a href="works.html">Works</a>
-        <a href="teaching.html">Lecture Notes</a>
-        <a href="anpec.html">ANPEC</a>
-        <a href="diagrams.html">Diagrams</a>
-        <a href="contact.html">Contact</a>
-        <a href="donation.html" aria-current="page">Donation</a>
+        <a href="index.html" data-i18n="nav.presentation">Presentation</a>
+        <a href="works.html" data-i18n="nav.works">Works</a>
+        <a href="teaching.html" data-i18n="nav.lecture">Lecture Notes</a>
+        <a href="anpec.html" data-i18n="nav.anpec">ANPEC</a>
+        <a href="diagrams.html" data-i18n="nav.diagrams">Diagrams</a>
+        <a href="contact.html" data-i18n="nav.contact">Contact</a>
+        <a href="donation.html" aria-current="page" data-i18n="nav.donation">Donation</a>
+        <button class="lang-toggle" type="button" data-lang-toggle>PT</button>
         <button class="theme-toggle" type="button" data-theme-toggle>Dark</button>
       </nav>
     </div>
@@ -54,40 +55,40 @@
   <main id="main">
     <section class="page-hero">
       <div class="wrap">
-        <p class="eyebrow">Donation</p>
-        <h1>Support open lecture notes and diagrams.</h1>
-        <p class="subtitle">All materials on this site are free to use. Contributions help keep them that way — funding
+        <p class="eyebrow" data-i18n="dn.eyebrow">Donation</p>
+        <h1 data-i18n="dn.h1">Support open lecture notes and diagrams.</h1>
+        <p class="subtitle" data-i18n="dn.subtitle">All materials on this site are free to use. Contributions help keep them that way — funding
           new lecture notes, better diagrams, and expanded teaching resources.</p>
       </div>
     </section>
 
     <section class="section">
       <div class="wrap section-grid">
-        <div class="section-label">Support</div>
+        <div class="section-label" data-i18n="dn.label">Support</div>
         <div>
           <div class="section-copy">
-            <h2>Ways to contribute</h2>
-            <p class="lead">Any amount is appreciated, and there is no obligation — the material stays open
+            <h2 data-i18n="dn.h2">Ways to contribute</h2>
+            <p class="lead" data-i18n="dn.lead">Any amount is appreciated, and there is no obligation — the material stays open
               either way.</p>
           </div>
           <div class="donation-grid">
             <article class="donation-card">
               <span>01</span>
               <h3>Pix</h3>
-              <button class="copy-button" type="button" data-copy-value="8994cad8-69ac-468c-adf2-5f455f87a76c">Copy Pix
+              <button class="copy-button" type="button" data-copy-value="8994cad8-69ac-468c-adf2-5f455f87a76c" data-i18n="dn.pix.copy">Copy Pix
                 key</button>
             </article>
             <article class="donation-card">
               <span>02</span>
-              <h3>PayPal or Stripe</h3>
-              <a href="#">Open donation link</a>
+              <h3 data-i18n="dn.paypal">PayPal or Stripe</h3>
+              <a href="#" data-i18n="dn.paypal.link">Open donation link</a>
             </article>
             <article class="donation-card">
               <span>03</span>
-              <h3>Other support</h3>
-              <p>For books, grants, collaborations, or institutional support, get in touch and we can find the best
+              <h3 data-i18n="dn.other">Other support</h3>
+              <p data-i18n="dn.other.p">For books, grants, collaborations, or institutional support, get in touch and we can find the best
                 arrangement.</p>
-              <a href="contact.html">Contact</a>
+              <a href="contact.html" data-i18n="dn.other.contact">Contact</a>
             </article>
           </div>
         </div>
@@ -99,6 +100,7 @@
     <div class="wrap">&copy; 2026 Joubert Cavalcante.</div>
   </footer>
   <script src="assets/theme.js"></script>
+  <script src="assets/i18n.js"></script>
   <script>
     document.querySelectorAll("[data-copy-value]").forEach(function (button) {
       button.addEventListener("click", async function () {
