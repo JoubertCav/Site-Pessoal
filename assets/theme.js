@@ -15,9 +15,15 @@
       favicon.href = new URL(theme === "dark" ? "favicon-dark.svg" : "favicon-light.svg", favicon.href).href;
     }
     document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
-      button.textContent = theme === "dark" ? "Light" : "Dark";
+      // If the i18n layer is present, let it localize the label; otherwise fall back to English.
+      if (typeof window.jcThemeLabel === "function") {
+        button.textContent = window.jcThemeLabel(theme);
+      } else {
+        button.textContent = theme === "dark" ? "Light" : "Dark";
+      }
       button.setAttribute("aria-label", theme === "dark" ? "Switch to light mode" : "Switch to dark mode");
     });
+    document.dispatchEvent(new CustomEvent("jc:themechange", { detail: { theme: theme } }));
   }
 
   applyTheme(preferredTheme());

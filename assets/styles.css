@@ -16,6 +16,8 @@
   --shadow-soft: 0 18px 48px rgba(38, 30, 22, 0.08);
   --max: 1120px;
   --gutter: clamp(1.25rem, 3vw, 2rem);
+  --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --serif: Georgia, "Times New Roman", serif;
 }
 
 [data-theme="dark"] {
@@ -179,7 +181,8 @@ p {
   transform: scaleX(1);
 }
 
-.theme-toggle {
+.theme-toggle,
+.lang-toggle {
   min-height: 2rem;
   padding: 0.2rem 0.7rem;
   border: 1px solid var(--line);
@@ -190,7 +193,15 @@ p {
   font: inherit;
 }
 
-.theme-toggle:hover {
+.lang-toggle {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+}
+
+.theme-toggle:hover,
+.lang-toggle:hover {
   color: var(--claret);
   border-color: var(--claret);
 }
@@ -773,6 +784,33 @@ p {
   font-size: 0.88rem;
 }
 
+.skip-link {
+  position: absolute;
+  left: 0.75rem;
+  top: -3rem;
+  z-index: 50;
+  padding: 0.55rem 0.95rem;
+  border: 1px solid var(--claret);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--claret);
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 650;
+  text-decoration: none;
+  transition: top 160ms ease;
+}
+
+.skip-link:focus {
+  top: 0.75rem;
+}
+
+:focus-visible {
+  outline: 2px solid var(--claret);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
 @media (max-width: 900px) {
   body {
     font-size: 16px;
@@ -863,7 +901,8 @@ p {
   }
 
   .nav-links a,
-  .theme-toggle {
+  .theme-toggle,
+  .lang-toggle {
     min-height: 2.35rem;
     display: inline-flex;
     align-items: center;
@@ -986,5 +1025,19 @@ p {
   .hero h1,
   .page-hero h1 {
     font-size: 2.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://joubertcav.github.io/site/sitemap.xml
