@@ -18,16 +18,24 @@
 
     gtag('config', 'G-NHXHEJP1G0');
   </script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
   <script>
-    window.MathJax = {
-      tex: {
-        inlineMath: [['\\(','\\)'], ['$', '$']],
-        displayMath: [['\\[','\\]']]
-      },
-      svg: { fontCache: 'global' }
-    };
+    function escapeMathAttr(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+    function mathInline(tex){return `<span class="math-slot" data-display="false" data-tex="${escapeMathAttr(tex)}"></span>`;}
+    function mathDisplay(tex){return `<span class="math-slot display" data-display="true" data-tex="${escapeMathAttr(tex)}"></span>`;}
+    function typesetMath(root=document.body){
+      if(!window.katex){ window.setTimeout(()=>typesetMath(root),60); return; }
+      root.querySelectorAll('.math-slot[data-tex]').forEach(el=>{
+        const tex = el.getAttribute('data-tex') || '';
+        const displayMode = el.getAttribute('data-display') === 'true';
+        try{ katex.render(tex, el, {displayMode, throwOnError:false, strict:'ignore'}); }
+        catch(e){ el.textContent = tex; }
+      });
+    }
+    window.addEventListener("load",()=>typesetMath(document.body));
   </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
   <style>
     :root{
       --bg:#f5f1e8;
@@ -195,6 +203,13 @@
       .failure-grid,.footer-strip{grid-template-columns:1fr}
       .wrap{padding:18px 14px 28px}
     }
+
+    .math-slot{display:inline-block;max-width:100%;vertical-align:baseline}
+    .math-slot.display{display:block;max-width:100%;overflow-x:auto;overflow-y:hidden}
+    .math-slot.display .katex-display{margin:.18em 0;text-align:left}
+    .eqbox,.summary-box,.note-box,.strip-box,.failure-card p,.metric-card p{overflow-wrap:anywhere}
+    .eqbox .katex{font-size:1.02em}
+
   </style>
 </head>
 <body>
@@ -202,17 +217,17 @@
     <div class="topbar">
       <div class="headline">
         <h1>Uniform continuity</h1>
-        <p>Ordinary continuity gives a \(\delta\) that may depend on the point. Uniform continuity gives <strong>one global \(\delta\)</strong> that works everywhere on the domain.</p>
+        <p>Ordinary continuity gives a <span class="math-slot" data-display="false" data-tex="\delta"></span> that may depend on the point. Uniform continuity gives <strong>one global <span class="math-slot" data-display="false" data-tex="\delta"></span></strong> that works everywhere on the domain.</p>
       </div>
       <div class="top-actions">
-        <div class="chip">one \(\delta\) for all \(x,y\)</div>
-        <div class="chip">Heineâ€“Cantor: compact + continuous â‡’ uniformly continuous</div>
+        <div class="chip">one <span class="math-slot" data-display="false" data-tex="\delta"></span> for all <span class="math-slot" data-display="false" data-tex="x,y"></span></div>
+        <div class="chip">Heine–Cantor: compact + continuous ⇒ uniformly continuous</div>
         <div id="themeToggle" class="theme-toggle" role="button" aria-label="Toggle dark and light mode" tabindex="0">
           <span class="label" id="themeLabel">light mode</span>
           <div class="switch">
-            <span class="icon sun">â˜€</span>
-            <span class="icon moon">â˜¾</span>
-            <div class="thumb" id="themeThumb">â˜€</div>
+            <span class="icon sun">☀</span>
+            <span class="icon moon">☾</span>
+            <div class="thumb" id="themeThumb">☀</div>
           </div>
         </div>
       </div>
@@ -223,37 +238,33 @@
         <div class="section-head">
           <div>
             <h2>Controls</h2>
-            <p>Test whether a chosen global \(\delta\) works for the selected \(\varepsilon\).</p>
+            <p>Test whether a chosen global <span class="math-slot" data-display="false" data-tex="\delta"></span> works for the selected <span class="math-slot" data-display="false" data-tex="\varepsilon"></span>.</p>
           </div>
           <div class="mini-chip">diagram first</div>
         </div>
 
         <div class="eqbox">
-          \[
-          \forall \varepsilon>0\ \exists \delta>0:\
-          |x-y|<\delta \Rightarrow |f(x)-f(y)|<\varepsilon
-          \]
-          \[
-          \text{same }\delta\text{ for all }x,y
-          \]
+          <span class="math-slot display" data-display="true" data-tex="\forall \varepsilon&gt;0\ \exists \delta&gt;0:\
+          |x-y|&lt;\delta \Rightarrow |f(x)-f(y)|&lt;\varepsilon"></span>
+          <span class="math-slot display" data-display="true" data-tex="\text{same }\delta\text{ for all }x,y"></span>
         </div>
 
         <div class="control-group">
           <label for="exampleSelect">Example <small id="exampleLabel"></small></label>
           <select id="exampleSelect">
-            <option value="sinCompact">\(\sin x\) on \([0,2\pi]\)</option>
-            <option value="sqrtCompact">\(\sqrt{x}\) on \([0,1]\)</option>
-            <option value="x2Compact">\(x^2\) on \([-2,2]\)</option>
-            <option value="x2R">\(x^2\) on \(\mathbb R\) (viewed on \([-3,3]\))</option>
-            <option value="invOpen">\(1/x\) on \((0,1)\)</option>
+            <option value="sinCompact">sin x on [0, 2π]</option>
+            <option value="sqrtCompact">sqrt(x) on [0, 1]</option>
+            <option value="x2Compact">x² on [-2, 2]</option>
+            <option value="x2R">x² on R (viewed on [-3, 3])</option>
+            <option value="invOpen">1/x on (0, 1)</option>
           </select>
         </div>
         <div class="control-group">
-          <label for="epsSlider">\(\varepsilon\) <small id="epsVal"></small></label>
+          <label for="epsSlider"><span class="math-slot" data-display="false" data-tex="\varepsilon"></span> <small id="epsVal"></small></label>
           <input id="epsSlider" type="range" min="0.08" max="1.5" step="0.02" value="0.50" />
         </div>
         <div class="control-group">
-          <label for="deltaSlider">candidate global \(\delta\) <small id="deltaVal"></small></label>
+          <label for="deltaSlider">candidate global <span class="math-slot" data-display="false" data-tex="\delta"></span> <small id="deltaVal"></small></label>
           <input id="deltaSlider" type="range" min="0.02" max="1.6" step="0.02" value="0.40" />
         </div>
         <div class="control-group">
@@ -262,17 +273,17 @@
         </div>
 
         <div id="compactMessage" class="note-box"></div>
-        <div class="summary-box"><strong>Heineâ€“Cantor.</strong> If \(K\subset\mathbb R^n\) is compact and \(f:K\to\mathbb R\) is continuous, then \(f\) is uniformly continuous on \(K\).</div>
+        <div class="summary-box"><strong>Heine–Cantor.</strong> If <span class="math-slot" data-display="false" data-tex="K\subset\mathbb R^n"></span> is compact and <span class="math-slot" data-display="false" data-tex="f:K\to\mathbb R"></span> is continuous, then <span class="math-slot" data-display="false" data-tex="f"></span> is uniformly continuous on <span class="math-slot" data-display="false" data-tex="K"></span>.</div>
       </aside>
 
       <main class="main">
         <section class="card hero">
           <div class="hero-top">
             <div>
-              <h2 style="margin:0; font-family:Georgia, 'Times New Roman', serif; letter-spacing:-.02em">Global \(\delta\) control</h2>
-              <p>The same horizontal scale \(\delta\) is tested at many places. Green means the resulting vertical change stays below \(\varepsilon\). Red exhibits failure.</p>
+              <h2 style="margin:0; font-family:Georgia, 'Times New Roman', serif; letter-spacing:-.02em">Global <span class="math-slot" data-display="false" data-tex="\delta"></span> control</h2>
+              <p>The same horizontal scale <span class="math-slot" data-display="false" data-tex="\delta"></span> is tested at many places. Green means the resulting vertical change stays below <span class="math-slot" data-display="false" data-tex="\varepsilon"></span>. Red exhibits failure.</p>
             </div>
-            <div id="heroStatus" class="status">global \(\delta\) works</div>
+            <div id="heroStatus" class="status">global <span class="math-slot" data-display="false" data-tex="\delta"></span> works</div>
           </div>
 
           <div class="two-col">
@@ -287,12 +298,12 @@
               </div>
               <div class="metric-card">
                 <h4>Current test</h4>
-                <p>Maximum observed output change under \(|x-y|<\delta\).</p>
+                <p>Maximum observed output change under <span class="math-slot" data-display="false" data-tex="|x-y|&lt;\delta"></span>.</p>
                 <span class="value" id="oscillationBadge"></span>
               </div>
               <div class="metric-card">
                 <h4>Worst pair</h4>
-                <p>The most difficult location for the current \(\delta\).</p>
+                <p>The most difficult location for the current <span class="math-slot" data-display="false" data-tex="\delta"></span>.</p>
                 <span class="value" id="witnessBadge"></span>
               </div>
             </div>
@@ -304,7 +315,7 @@
             <div class="section-head">
               <div>
                 <h3>Ordinary continuity vs uniform continuity</h3>
-                <p>The curve below shows the local \(\delta_x\) needed at each point for the chosen \(\varepsilon\).</p>
+                <p>The curve below shows the local <span class="math-slot" data-display="false" data-tex="\delta_x"></span> needed at each point for the chosen <span class="math-slot" data-display="false" data-tex="\varepsilon"></span>.</p>
               </div>
               <div class="mini-chip">local vs global</div>
             </div>
@@ -325,21 +336,21 @@
               <div class="failure-card">
                 <h4>Noncompact growth</h4>
                 <svg id="miniGrowth" class="mini-svg" viewBox="0 0 260 180"></svg>
-                <p>For \(x^2\) on \(\mathbb R\), distant regions need smaller and smaller local \(\delta_x\).</p>
+                <p>For <span class="math-slot" data-display="false" data-tex="x^2"></span> on <span class="math-slot" data-display="false" data-tex="\mathbb R"></span>, distant regions need smaller and smaller local <span class="math-slot" data-display="false" data-tex="\delta_x"></span>.</p>
               </div>
               <div class="failure-card">
                 <h4>Boundary singularity</h4>
                 <svg id="miniBoundary" class="mini-svg" viewBox="0 0 260 180"></svg>
-                <p>For \(1/x\) on \((0,1)\), local \(\delta_x\) collapses near \(0\).</p>
+                <p>For <span class="math-slot" data-display="false" data-tex="1/x"></span> on <span class="math-slot" data-display="false" data-tex="(0,1)"></span>, local <span class="math-slot" data-display="false" data-tex="\delta_x"></span> collapses near <span class="math-slot" data-display="false" data-tex="0"></span>.</p>
               </div>
             </div>
           </section>
         </div>
 
         <section class="footer-strip">
-          <div class="strip-box"><strong>Ordinary continuity.</strong> For each point \(a\) and each \(\varepsilon>0\), there exists a \(\delta_a\) that may depend on \(a\).</div>
-          <div class="strip-box"><strong>Uniform continuity.</strong> For each \(\varepsilon>0\), one \(\delta\) works simultaneously for every pair \(x,y\) in the domain.</div>
-          <div class="strip-box"><strong>Geometric test.</strong> The graph has no region where a fixed horizontal move can create a vertical jump larger than \(\varepsilon\).</div>
+          <div class="strip-box"><strong>Ordinary continuity.</strong> For each point <span class="math-slot" data-display="false" data-tex="a"></span> and each <span class="math-slot" data-display="false" data-tex="\varepsilon&gt;0"></span>, there exists a <span class="math-slot" data-display="false" data-tex="\delta_a"></span> that may depend on <span class="math-slot" data-display="false" data-tex="a"></span>.</div>
+          <div class="strip-box"><strong>Uniform continuity.</strong> For each <span class="math-slot" data-display="false" data-tex="\varepsilon&gt;0"></span>, one <span class="math-slot" data-display="false" data-tex="\delta"></span> works simultaneously for every pair <span class="math-slot" data-display="false" data-tex="x,y"></span> in the domain.</div>
+          <div class="strip-box"><strong>Geometric test.</strong> The graph has no region where a fixed horizontal move can create a vertical jump larger than <span class="math-slot" data-display="false" data-tex="\varepsilon"></span>.</div>
         </section>
       </main>
     </div>
@@ -366,7 +377,7 @@
         openLeft:false,
         openRight:false,
         description:'continuous on a compact interval',
-        formula:'f(x)=âˆšx',
+        formula:'f(x)=√x',
         f:x=>Math.sqrt(Math.max(0,x))
       },
       x2Compact: {
@@ -377,7 +388,7 @@
         openLeft:false,
         openRight:false,
         description:'continuous on a compact interval',
-        formula:'f(x)=xÂ²',
+        formula:'f(x)=x²',
         f:x=>x*x
       },
       x2R: {
@@ -387,8 +398,8 @@
         compact:false,
         openLeft:true,
         openRight:true,
-        description:'view of a noncompact domain â„',
-        formula:'f(x)=xÂ² on â„',
+        description:'view of a noncompact domain ℝ',
+        formula:'f(x)=x² on ℝ',
         f:x=>x*x
       },
       invOpen: {
@@ -437,7 +448,7 @@
     };
 
     const css = name => getComputedStyle(document.body).getPropertyValue(name).trim();
-    const fmt = x => (x < 0 ? 'âˆ’' : '') + Math.abs(x).toFixed(2);
+    const fmt = x => (x < 0 ? '−' : '') + Math.abs(x).toFixed(2);
     const mapLinear = (x,a,b,c,d) => c + (x-a)*(d-c)/(b-a);
 
     function setTheme(theme){
@@ -445,7 +456,7 @@
       document.body.classList.toggle('dark', theme === 'dark');
       localStorage.setItem('uniform-cont-theme', theme);
       els.themeLabel.textContent = theme === 'dark' ? 'dark mode' : 'light mode';
-      els.themeThumb.textContent = theme === 'dark' ? 'â˜¾' : 'â˜€';
+      els.themeThumb.textContent = theme === 'dark' ? '☾' : '☀';
       renderAll();
     }
 
@@ -600,9 +611,9 @@
       els.mainSvg.innerHTML = `
         <rect x="0" y="0" width="${W}" height="${H}" rx="24" fill="${css('--panel-2')}"/>
 
-        ${svgText(dom.x, 58, 'same Î´ tested everywhere on the domain', {size:22, weight:700, family:'Georgia, serif'})}
+        ${svgText(dom.x, 58, 'same δ tested everywhere on the domain', {size:22, weight:700, family:'Georgia, serif'})}
         ${svgText(graph.x, 228, 'graph of f : local vertical responses to the same horizontal scale', {size:22, weight:700, family:'Georgia, serif'})}
-        ${svgText(gauge.x-4, 58, 'Îµ target', {size:22, weight:700, family:'Georgia, serif'})}
+        ${svgText(gauge.x-4, 58, 'ε target', {size:22, weight:700, family:'Georgia, serif'})}
 
         <rect x="${dom.x}" y="${dom.y}" width="${dom.w}" height="${dom.h}" rx="22" fill="${css('--accent-soft')}" stroke="${css('--line')}"/>
         <line x1="${dom.x+30}" y1="${dom.y+dom.h/2}" x2="${dom.x+dom.w-30}" y2="${dom.y+dom.h/2}" stroke="${css('--muted')}" stroke-width="2.2"/>
@@ -611,7 +622,7 @@
         ${ex.openRight ? `<circle cx="${XD(b)}" cy="${dom.y+dom.h/2}" r="6" fill="${css('--panel-2')}" stroke="${css('--text')}" stroke-width="2.2"/>` : `<circle cx="${XD(b)}" cy="${dom.y+dom.h/2}" r="6" fill="${css('--text')}"/>`}
         ${svgText(XD(a), dom.y+dom.h/2-26, ex.openLeft ? '(' : '[', {anchor:'middle', size:22, family:'Georgia, serif', fill:css('--muted')})}
         ${svgText(XD(b), dom.y+dom.h/2-26, ex.openRight ? ')' : ']', {anchor:'middle', size:22, family:'Georgia, serif', fill:css('--muted')})}
-        ${svgText(dom.x+dom.w-84, dom.y+26, `Î´ = ${delta.toFixed(2)}`, {size:16, fill:css('--accent'), weight:700})}
+        ${svgText(dom.x+dom.w-84, dom.y+26, `δ = ${delta.toFixed(2)}`, {size:16, fill:css('--accent'), weight:700})}
 
         <rect x="${graph.x}" y="${graph.y}" width="${graph.w}" height="${graph.h}" rx="24" fill="rgba(255,255,255,.02)" stroke="${css('--line')}"/>
         ${grid}
@@ -622,9 +633,9 @@
         <circle cx="${wx1}" cy="${wy1}" r="6.6" fill="${wcol}" stroke="${css('--panel-2')}" stroke-width="2.2"/>
         <circle cx="${wx2}" cy="${wy2}" r="6.6" fill="${wcol}" stroke="${css('--panel-2')}" stroke-width="2.2"/>
         <line x1="${wx2+12}" y1="${Math.min(wy1,wy2)}" x2="${wx2+12}" y2="${Math.max(wy1,wy2)}" stroke="${wcol}" stroke-width="3"/>
-        ${svgText(wx2+20, (wy1+wy2)/2-6, `|Î”f| = ${worst.diff.toFixed(2)}`, {size:15, fill:wcol, weight:700})}
-        ${svgText(graph.x+12, graph.y+24, 'green: within Îµ', {size:14, fill:css('--accent'), weight:700})}
-        ${svgText(graph.x+134, graph.y+24, 'red: exceeds Îµ', {size:14, fill:css('--accent-2'), weight:700})}
+        ${svgText(wx2+20, (wy1+wy2)/2-6, `|Δf| = ${worst.diff.toFixed(2)}`, {size:15, fill:wcol, weight:700})}
+        ${svgText(graph.x+12, graph.y+24, 'green: within ε', {size:14, fill:css('--accent'), weight:700})}
+        ${svgText(graph.x+134, graph.y+24, 'red: exceeds ε', {size:14, fill:css('--accent-2'), weight:700})}
         ${svgText(graph.x+graph.w-12, graph.y+graph.h+24, 'x', {size:14, fill:css('--muted'), anchor:'end'})}
         ${svgText(graph.x+12, graph.y+18, 'f(x)', {size:14, fill:css('--muted'), family:'Georgia, serif'})}
 
@@ -635,19 +646,19 @@
         <rect x="${gaugeMid-22}" y="${Math.min(epsTop,epsBottom)}" width="44" height="${Math.abs(epsBottom-epsTop)}" rx="22" fill="rgba(95,127,157,.18)" stroke="${css('--accent-3')}" stroke-width="1.4"/>
         <circle cx="${gaugeMid}" cy="${epsTop}" r="7.8" fill="${css('--accent-3')}" stroke="${css('--panel-2')}" stroke-width="2.4"/>
         <circle cx="${gaugeMid}" cy="${epsBottom}" r="7.8" fill="${css('--accent-3')}" stroke="${css('--panel-2')}" stroke-width="2.4"/>
-        ${svgText(gaugeMid, epsTop-14, '+Îµ/2', {anchor:'middle', size:14, fill:css('--accent-3'), weight:700})}
-        ${svgText(gaugeMid, epsBottom+26, 'âˆ’Îµ/2', {anchor:'middle', size:14, fill:css('--accent-3'), weight:700})}
-        ${svgText(gaugeMid, gauge.y+gauge.h-8, `Îµ = ${eps.toFixed(2)}`, {anchor:'middle', size:15, fill:css('--accent-3'), weight:700})}
+        ${svgText(gaugeMid, epsTop-14, '+ε/2', {anchor:'middle', size:14, fill:css('--accent-3'), weight:700})}
+        ${svgText(gaugeMid, epsBottom+26, '−ε/2', {anchor:'middle', size:14, fill:css('--accent-3'), weight:700})}
+        ${svgText(gaugeMid, gauge.y+gauge.h-8, `ε = ${eps.toFixed(2)}`, {anchor:'middle', size:15, fill:css('--accent-3'), weight:700})}
       `;
 
       els.domainTypeText.textContent = ex.compact ? 'compact interval' : 'noncompact / open setting';
       els.domainBadge.textContent = domainBadge;
-      els.oscillationBadge.textContent = `max |f(x)-f(y)| â‰ˆ ${stats.maxDiff.toFixed(2)}`;
-      els.witnessBadge.textContent = `x â‰ˆ ${fmt(worst.x)}, y â‰ˆ ${fmt(worst.y)}`;
+      els.oscillationBadge.textContent = `max |f(x)-f(y)| ≈ ${stats.maxDiff.toFixed(2)}`;
+      els.witnessBadge.textContent = `x ≈ ${fmt(worst.x)}, y ≈ ${fmt(worst.y)}`;
       els.compactMessage.innerHTML = stats.works
-        ? `For the current \(\varepsilon=${eps.toFixed(2)}\), the chosen global \(\delta=${delta.toFixed(2)}\) keeps every tested pair below \(\varepsilon\).`
-        : `For the current \(\varepsilon=${eps.toFixed(2)}\), the chosen global \(\delta=${delta.toFixed(2)}\) fails: some pair satisfies \(|x-y|<\delta\) but produces \(|f(x)-f(y)|\ge \varepsilon\).`;
-      els.heroStatus.textContent = stats.works ? 'global Î´ works' : 'global Î´ fails';
+        ? `For the current ${mathInline(`\\varepsilon=${eps.toFixed(2)}`)}, the chosen global ${mathInline(`\\delta=${delta.toFixed(2)}`)} keeps every tested pair below ${mathInline('\\varepsilon')}.`
+        : `For the current ${mathInline(`\\varepsilon=${eps.toFixed(2)}`)}, the chosen global ${mathInline(`\\delta=${delta.toFixed(2)}`)} fails: some pair satisfies ${mathInline('|x-y|<\\delta')} but produces ${mathInline('|f(x)-f(y)|\\ge\\varepsilon')}.`;
+      els.heroStatus.textContent = stats.works ? 'global δ works' : 'global δ fails';
       els.heroStatus.style.color = stats.works ? css('--ok') : css('--warn');
       els.heroStatus.style.background = stats.works ? 'rgba(36,108,86,.08)' : 'rgba(164,90,79,.08)';
     }
@@ -681,19 +692,19 @@
 
       els.profileSvg.innerHTML = `
         <rect x="0" y="0" width="${W}" height="${H}" rx="22" fill="${css('--panel-2')}"/>
-        ${svgText(chart.x, 26, 'local admissible Î´â‚“ for the chosen Îµ', {size:20, weight:700, family:'Georgia, serif'})}
+        ${svgText(chart.x, 26, 'local admissible δₓ for the chosen ε', {size:20, weight:700, family:'Georgia, serif'})}
         <rect x="${chart.x}" y="${chart.y}" width="${chart.w}" height="${chart.h}" rx="20" fill="rgba(255,255,255,.02)" stroke="${css('--line')}"/>
         ${grid}
         <line x1="${chart.x}" y1="${chart.y+chart.h}" x2="${chart.x+chart.w}" y2="${chart.y+chart.h}" stroke="${css('--line')}" stroke-width="1.3"/>
         <line x1="${chart.x}" y1="${chart.y}" x2="${chart.x}" y2="${chart.y+chart.h}" stroke="${css('--line')}" stroke-width="1.3"/>
         <path d="${path}" fill="none" stroke="${css('--text')}" stroke-width="3.1" stroke-linecap="round"/>
         <line x1="${chart.x}" y1="${Y(state.delta)}" x2="${chart.x+chart.w}" y2="${Y(state.delta)}" stroke="${deltaCol}" stroke-width="2.4" stroke-dasharray="8 6"/>
-        ${svgText(chart.x+10, Y(state.delta)-10, 'chosen global Î´', {size:14, fill:deltaCol, weight:700})}
+        ${svgText(chart.x+10, Y(state.delta)-10, 'chosen global δ', {size:14, fill:deltaCol, weight:700})}
         <circle cx="${X(profile.minX)}" cy="${Y(minR)}" r="7.4" fill="${css('--accent-3')}" stroke="${css('--panel-2')}" stroke-width="2.2"/>
-        ${svgText(X(profile.minX)+10, Y(minR)-12, `inf local scale â‰ˆ ${minR.toFixed(2)}`, {size:14, fill:css('--accent-3'), weight:700})}
+        ${svgText(X(profile.minX)+10, Y(minR)-12, `inf local scale ≈ ${minR.toFixed(2)}`, {size:14, fill:css('--accent-3'), weight:700})}
         ${svgText(chart.x+chart.w-8, chart.y+chart.h+24, 'x', {size:14, fill:css('--muted'), anchor:'end'})}
-        ${svgText(chart.x+8, chart.y+18, 'Î´â‚“', {size:14, fill:css('--muted'), family:'Georgia, serif'})}
-        ${svgText(chart.x+10, chart.y+chart.h+44, canShowGlobal ? 'uniform continuity appears as the local Î´â‚“ profile staying above a positive floor' : 'the local Î´â‚“ profile sinks toward 0, so no positive global Î´ survives', {size:14, fill:css('--muted')})}
+        ${svgText(chart.x+8, chart.y+18, 'δₓ', {size:14, fill:css('--muted'), family:'Georgia, serif'})}
+        ${svgText(chart.x+10, chart.y+chart.h+44, canShowGlobal ? 'uniform continuity appears as the local δₓ profile staying above a positive floor' : 'the local δₓ profile sinks toward 0, so no positive global δ survives', {size:14, fill:css('--muted')})}
       `;
     }
 
@@ -741,7 +752,7 @@
       renderProfile();
       renderMiniGrowth();
       renderMiniBoundary();
-      if(window.MathJax) MathJax.typesetPromise().catch(()=>{});
+      typesetMath(document.body);
     }
 
     function syncState(){

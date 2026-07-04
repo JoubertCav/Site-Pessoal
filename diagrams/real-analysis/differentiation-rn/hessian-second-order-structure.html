@@ -18,14 +18,29 @@
 
     gtag('config', 'G-NHXHEJP1G0');
   </script>
-
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
   <script>
-    window.MathJax = {
-      tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
-      svg: { fontCache: 'global' }
-    };
+    function escapeMathAttr(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+    function mathInline(tex){return `<span class="math-slot" data-display="false" data-tex="${escapeMathAttr(tex)}"></span>`;}
+    function mathDisplay(tex){return `<span class="math-slot display" data-display="true" data-tex="${escapeMathAttr(tex)}"></span>`;}
+    function renderMathText(s){
+      return String(s)
+        .replace(/\\[(.*?)\\]/gs, (_,tex)=>mathDisplay(tex))
+        .replace(/\\((.*?)\\)/gs, (_,tex)=>mathInline(tex));
+    }
+    function typesetMath(root=document.body){
+      if(!window.katex){ window.setTimeout(()=>typesetMath(root),60); return; }
+      root.querySelectorAll('.math-slot[data-tex]').forEach(el=>{
+        const tex = el.getAttribute('data-tex') || '';
+        const displayMode = el.getAttribute('data-display') === 'true';
+        try{ katex.render(tex, el, {displayMode, throwOnError:false, strict:'ignore'}); }
+        catch(e){ el.textContent = tex; }
+      });
+    }
+    window.addEventListener("load",()=>typesetMath(document.body));
   </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
   <script defer src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
 
   <style>
@@ -97,7 +112,7 @@
     .theme .label{font-size:.92rem;color:var(--muted);min-width:70px}
     .switch{position:relative;width:70px;height:36px;border-radius:999px;background:var(--switch);border:1px solid var(--line)}
     .switch:before,.switch:after{position:absolute;top:50%;transform:translateY(-50%);font-size:13px;opacity:.75}
-    .switch:before{content:"â˜€";left:10px}.switch:after{content:"â˜¾";right:10px}
+    .switch:before{content:"☀";left:10px}.switch:after{content:"☾";right:10px}
     .knob{position:absolute;left:3px;top:3px;width:28px;height:28px;border-radius:50%;background:var(--thumb);border:1px solid var(--line);box-shadow:0 4px 12px rgba(0,0,0,.16);transition:left .25s ease;display:grid;place-items:center;font-size:13px}
     body.dark .knob{left:37px}
 
@@ -148,6 +163,13 @@
 
     @media(max-width:1240px){.layout{grid-template-columns:1fr}aside{position:static}.split,.grid2{grid-template-columns:1fr}}
     @media(max-width:900px){.footer,.pair,.explainRow{grid-template-columns:1fr}.wrap{padding:18px 14px 28px}#mainPlot{height:580px}#contourPlot{height:430px}}
+
+    .math-slot{display:inline-block;max-width:100%;vertical-align:baseline}
+    .math-slot.display{display:block;max-width:100%;overflow-x:auto;overflow-y:hidden}
+    .math-slot.display .katex-display{margin:.18em 0;text-align:left}
+    .eq,.note,.footer div,.metric p,.explainBox p,.explainMini p{overflow-wrap:anywhere}
+    .eq .katex{font-size:1.02em}
+
   </style>
 </head>
 <body>
@@ -163,7 +185,7 @@
         <div class="pill">directional curvature classification</div>
         <div id="theme" class="theme" role="button" tabindex="0">
           <span id="themeLabel" class="label">light mode</span>
-          <div class="switch"><div id="knob" class="knob">â˜€</div></div>
+          <div class="switch"><div id="knob" class="knob">☀</div></div>
         </div>
       </div>
     </header>
@@ -173,38 +195,28 @@
         <div class="head">
           <div>
             <h2>Controls</h2>
-            <p>Choose a function, inspect a point \(a\), and compare the true surface with its quadratic approximation.</p>
+            <p>Choose a function, inspect a point <span class="math-slot" data-display="false" data-tex="a"></span>, and compare the true surface with its quadratic approximation.</p>
           </div>
-          <div class="tag">\(H_f(a)\)</div>
+          <div class="tag"><span class="math-slot" data-display="false" data-tex="H_f(a)"></span></div>
         </div>
 
         <div class="eq">
-          \[
-          f(a+h)\approx f(a)+\nabla f(a)\cdot h+\tfrac12 h^\top H_f(a)h
-          \]
-          \[
-          H_f(a)=
+          <span class="math-slot display" data-display="true" data-tex="f(a+h)\approx f(a)+\nabla f(a)\cdot h+\tfrac12 h^\top H_f(a)h"></span>
+          <span class="math-slot display" data-display="true" data-tex="H_f(a)=
           \begin{pmatrix}
-          f_{xx}(a) & f_{xy}(a)\\
-          f_{yx}(a) & f_{yy}(a)
-          \end{pmatrix}
-          \]
-          \[
-          D=\det H_f(a),\qquad
-          \text{at a critical point:}
-          \]
-          \[
-          D>0,\ f_{xx}>0 \Rightarrow \text{local min},\quad
-          D>0,\ f_{xx}<0 \Rightarrow \text{local max}
-          \]
-          \[
-          D<0 \Rightarrow \text{saddle},\qquad
-          D=0 \Rightarrow \text{inconclusive}
-          \]
+          f_{xx}(a) &amp; f_{xy}(a)\\
+          f_{yx}(a) &amp; f_{yy}(a)
+          \end{pmatrix}"></span>
+          <span class="math-slot display" data-display="true" data-tex="D=\det H_f(a),\qquad
+          \text{at a critical point:}"></span>
+          <span class="math-slot display" data-display="true" data-tex="D&gt;0,\ f_{xx}&gt;0 \Rightarrow \text{local min},\quad
+          D&gt;0,\ f_{xx}&lt;0 \Rightarrow \text{local max}"></span>
+          <span class="math-slot display" data-display="true" data-tex="D&lt;0 \Rightarrow \text{saddle},\qquad
+          D=0 \Rightarrow \text{inconclusive}"></span>
         </div>
 
         <div class="control">
-          <label>Function \(f\) <small id="funcLabel"></small></label>
+          <label>Function <span class="math-slot" data-display="false" data-tex="f"></span> <small id="funcLabel"></small></label>
           <select id="funcSelect">
             <option value="bowl">positive definite bowl</option>
             <option value="dome">negative definite dome</option>
@@ -223,7 +235,7 @@
         </div>
 
         <div class="control">
-          <label>Base point \(a=(a_1,a_2)\) <small id="pointLabel"></small></label>
+          <label>Base point <span class="math-slot" data-display="false" data-tex="a=(a_1,a_2)"></span> <small id="pointLabel"></small></label>
           <div class="pair">
             <input id="pxSlider" type="range" min="-1.6" max="1.6" step="0.01" value="0.25">
             <input id="pySlider" type="range" min="-1.6" max="1.6" step="0.01" value="-0.15">
@@ -231,12 +243,12 @@
         </div>
 
         <div class="control">
-          <label>Quadratic patch radius \(\rho\) <small id="rhoLabel"></small></label>
+          <label>Quadratic patch radius <span class="math-slot" data-display="false" data-tex="\rho"></span> <small id="rhoLabel"></small></label>
           <input id="rhoSlider" type="range" min="0.20" max="1.00" step="0.01" value="0.52">
         </div>
 
         <div class="control">
-          <label>Direction angle \(\theta\) <small id="thetaLabel"></small></label>
+          <label>Direction angle <span class="math-slot" data-display="false" data-tex="\theta"></span> <small id="thetaLabel"></small></label>
           <input id="thetaSlider" type="range" min="0" max="6.28318" step="0.01" value="0.65">
         </div>
 
@@ -254,7 +266,7 @@
           <div class="heroTop">
             <div>
               <h2>Main 3D surface and quadratic model</h2>
-              <p>Green: the true graph of \(f\). Blue: the local second-order model \(q(h)=f(a)+\nabla f(a)\cdot h+\frac12 h^\top H(a)h\). Gold: the selected point \(P\). The red and violet arrows show principal curvature directions determined by Hessian eigenvectors.</p>
+              <p>Green: the true graph of <span class="math-slot" data-display="false" data-tex="f"></span>. Blue: the local second-order model <span class="math-slot" data-display="false" data-tex="q(h)=f(a)+\nabla f(a)\cdot h+\frac12 h^\top H(a)h"></span>. Gold: the selected point <span class="math-slot" data-display="false" data-tex="P"></span>. The red and violet arrows show principal curvature directions determined by Hessian eigenvectors.</p>
             </div>
             <div id="status" class="status">second-order classification</div>
           </div>
@@ -266,7 +278,7 @@
             <div class="metrics">
               <div class="metric">
                 <h4>Gradient test</h4>
-                <p>The second-order test is for critical points, so first inspect \(\nabla f(a)\).</p>
+                <p>The second-order test is for critical points, so first inspect <span class="math-slot" data-display="false" data-tex="\nabla f(a)"></span>.</p>
                 <strong id="gradMetric"></strong>
               </div>
               <div class="metric">
@@ -276,7 +288,7 @@
               </div>
               <div class="metric">
                 <h4>Directional curvature</h4>
-                <p>Along the chosen unit vector \(u\), the second directional derivative is \(u^\top H(a)u\).</p>
+                <p>Along the chosen unit vector <span class="math-slot" data-display="false" data-tex="u"></span>, the second directional derivative is <span class="math-slot" data-display="false" data-tex="u^\top H(a)u"></span>.</p>
                 <strong id="dirMetric"></strong>
               </div>
               <div class="metric">
@@ -286,7 +298,7 @@
               </div>
               <div class="metric">
                 <h4>Quadratic remainder</h4>
-                <p>Difference between \(f\) and its second-order model on a short step.</p>
+                <p>Difference between <span class="math-slot" data-display="false" data-tex="f"></span> and its second-order model on a short step.</p>
                 <strong id="errorMetric"></strong>
               </div>
             </div>
@@ -295,11 +307,11 @@
           <div class="explainRow">
             <div class="explainBox">
               <h4>Quadratic form</h4>
-              <p>The Hessian enters through \(\tfrac12 h^\top Hh\). This term is the first one capable of distinguishing bowl, dome, and saddle behavior once the linear part disappears.</p>
+              <p>The Hessian enters through <span class="math-slot" data-display="false" data-tex="\tfrac12 h^\top Hh"></span>. This term is the first one capable of distinguishing bowl, dome, and saddle behavior once the linear part disappears.</p>
             </div>
             <div class="explainBox">
               <h4>Definiteness</h4>
-              <p>If \(h^\top Hh>0\) for all nonzero \(h\), the quadratic form is positive definite and the graph curves upward in every direction. Negative definite means the opposite. Mixed signs produce saddles.</p>
+              <p>If <span class="math-slot" data-display="false" data-tex="h^\top Hh&gt;0"></span> for all nonzero <span class="math-slot" data-display="false" data-tex="h"></span>, the quadratic form is positive definite and the graph curves upward in every direction. Negative definite means the opposite. Mixed signs produce saddles.</p>
             </div>
             <div class="explainBox">
               <h4>Eigen-directions</h4>
@@ -313,7 +325,7 @@
             <div class="head">
               <div>
                 <h3>2D contours and principal directions</h3>
-                <p>The contour pattern around \(a\) reveals the second-order type. Near a minimum or maximum the contours are nested ellipses; near a saddle they cross in hyperbolic fashion.</p>
+                <p>The contour pattern around <span class="math-slot" data-display="false" data-tex="a"></span> reveals the second-order type. Near a minimum or maximum the contours are nested ellipses; near a saddle they cross in hyperbolic fashion.</p>
               </div>
               <div class="tag">contour geometry</div>
             </div>
@@ -330,7 +342,7 @@
             <div class="head">
               <div>
                 <h3>Directional curvature as the angle changes</h3>
-                <p>The function \(u^\top H(a)u\) over the unit circle shows how curvature depends on direction. Its maxima and minima occur along Hessian eigenvectors.</p>
+                <p>The function <span class="math-slot" data-display="false" data-tex="u^\top H(a)u"></span> over the unit circle shows how curvature depends on direction. Its maxima and minima occur along Hessian eigenvectors.</p>
               </div>
               <div class="tag">Rayleigh quotient on the circle</div>
             </div>
@@ -349,7 +361,7 @@
             <div class="head">
               <div>
                 <h3>Principal 1D slices</h3>
-                <p>Restrict \(f\) to the two principal curvature directions. These slices reveal the local one-dimensional shape encoded by the Hessian eigenvalues.</p>
+                <p>Restrict <span class="math-slot" data-display="false" data-tex="f"></span> to the two principal curvature directions. These slices reveal the local one-dimensional shape encoded by the Hessian eigenvalues.</p>
               </div>
               <div class="tag">eigenvalue slices</div>
             </div>
@@ -375,14 +387,14 @@
             </div>
             <div class="explainMini">
               <h4>Short explanation</h4>
-              <p>The determinant decides whether the quadratic form keeps the same sign or changes sign. If it keeps the same sign, \(f_{xx}\) tells whether the local shape opens upward or downward.</p>
+              <p>The determinant decides whether the quadratic form keeps the same sign or changes sign. If it keeps the same sign, <span class="math-slot" data-display="false" data-tex="f_{xx}"></span> tells whether the local shape opens upward or downward.</p>
             </div>
           </section>
         </div>
 
         <section class="footer">
           <div><strong>Second-order model.</strong> Near any point, the Hessian determines the local quadratic correction to the tangent plane.</div>
-          <div><strong>At critical points.</strong> When the gradient vanishes, the Hessian becomes the leading local term and therefore decides the local geometryâ€”except in degenerate cases.</div>
+          <div><strong>At critical points.</strong> When the gradient vanishes, the Hessian becomes the leading local term and therefore decides the local geometry—except in degenerate cases.</div>
           <div><strong>Degeneracy.</strong> If the Hessian is singular or zero, the usual second-order test may fail. Then higher-order terms decide the true local behavior.</div>
         </section>
       </main>
@@ -393,7 +405,7 @@
   const examples = {
     bowl:{
       label:'positive definite bowl',
-      formula:'\\[f(x,y)=(x-0.25)^2+0.35(x-0.25)(y+0.15)+1.45(y+0.15)^2.\\]',
+      formula:'f(x,y)=(x-0.25)^2+0.35(x-0.25)(y+0.15)+1.45(y+0.15)^2.',
       notice:'A classical local minimum. At the distinguished critical point the Hessian is positive definite, so every nearby direction bends upward.',
       point:[0.25,-0.15],
       f:(x,y)=>{const X=x-0.25,Y=y+0.15; return X*X+0.35*X*Y+1.45*Y*Y;},
@@ -405,7 +417,7 @@
     },
     dome:{
       label:'negative definite dome',
-      formula:'\\[f(x,y)=-1.10(x+0.35)^2-0.25(x+0.35)(y-0.25)-0.90(y-0.25)^2.\\]',
+      formula:'f(x,y)=-1.10(x+0.35)^2-0.25(x+0.35)(y-0.25)-0.90(y-0.25)^2.',
       notice:'A classical local maximum. The Hessian is negative definite, so every principal slice opens downward.',
       point:[-0.35,0.25],
       f:(x,y)=>{const X=x+0.35,Y=y-0.25; return -1.10*X*X-0.25*X*Y-0.90*Y*Y;},
@@ -417,7 +429,7 @@
     },
     saddle:{
       label:'indefinite saddle',
-      formula:'\\[f(x,y)=0.90(x+0.10)^2-1.20(y-0.05)^2+0.55(x+0.10)(y-0.05).\\]',
+      formula:'f(x,y)=0.90(x+0.10)^2-1.20(y-0.05)^2+0.55(x+0.10)(y-0.05).',
       notice:'At the distinguished point the Hessian is indefinite: some directions curve up and some curve down, which creates the saddle geometry.',
       point:[-0.10,0.05],
       f:(x,y)=>{const X=x+0.10,Y=y-0.05; return 0.90*X*X-1.20*Y*Y+0.55*X*Y;},
@@ -429,7 +441,7 @@
     },
     flatmin:{
       label:'degenerate flat minimum',
-      formula:'\\[f(x,y)=x^4+0.50y^2.\\]',
+      formula:'f(x,y)=x^4+0.50y^2.',
       notice:'The distinguished point is a true local minimum, but the Hessian is only semidefinite. The ordinary second-order test is therefore inconclusive even though the point is a minimum.',
       point:[0,0],
       f:(x,y)=>x*x*x*x+0.50*y*y,
@@ -441,7 +453,7 @@
     },
     monkey:{
       label:'degenerate monkey saddle',
-      formula:'\\[f(x,y)=x^3-3xy^2.\\]',
+      formula:'f(x,y)=x^3-3xy^2.',
       notice:'At the origin the Hessian vanishes completely, so the second-order test says nothing. Higher-order terms reveal the true saddle-type behavior.',
       point:[0,0],
       f:(x,y)=>x*x*x-3*x*y*y,
@@ -500,9 +512,9 @@
   const dot=(a,b)=>a.reduce((s,x,i)=>s+x*b[i],0);
   const matVec=(A,v)=>[A[0][0]*v[0]+A[0][1]*v[1], A[1][0]*v[0]+A[1][1]*v[1]];
   const fmt=x=>{
-    if(!Number.isFinite(x)) return 'â€”';
+    if(!Number.isFinite(x)) return '—';
     if(Math.abs(x)>9999) return x.toExponential(2);
-    return (x<0?'âˆ’':'')+Math.abs(x).toFixed(3);
+    return (x<0?'−':'')+Math.abs(x).toFixed(3);
   };
   const fmtVec=v=>`(${fmt(v[0])}, ${fmt(v[1])})`;
   const lin=(x,a,b,c,d)=>c+(x-a)*(d-c)/(b-a);
@@ -554,7 +566,7 @@
     document.body.classList.toggle('dark',t==='dark');
     localStorage.setItem('hessian-second-order-theme',t);
     el.themeLabel.textContent=t==='dark'?'dark mode':'light mode';
-    el.knob.textContent=t==='dark'?'â˜¾':'â˜€';
+    el.knob.textContent=t==='dark'?'☾':'☀';
     if(state.initialized) render();
   }
 
@@ -624,7 +636,7 @@
         hovertemplate:'x=%{x:.3f}<br>y=%{y:.3f}<br>z=%{z:.3f}<extra></extra>'
       },
       {
-        type:'surface', x:qx,qy,qz,
+        type:'surface', x:qx, y:qy, z:qz,
         colorscale:[[0,css('--modelSoft')],[1,css('--model')]],
         opacity:0.58, showscale:false,
         hovertemplate:'quadratic model<extra></extra>'
@@ -720,14 +732,14 @@
         type:'scatter', mode:'lines+markers+text',
         x:[p[0]-L*e1[0], p[0]+L*e1[0]], y:[p[1]-L*e1[1], p[1]+L*e1[1]],
         marker:{size:[0,7],color:css('--bad')}, line:{color:css('--bad'),width:4},
-        text:['','eâ‚'], textposition:'top center', textfont:{size:12,color:css('--bad')},
+        text:['','e₁'], textposition:'top center', textfont:{size:12,color:css('--bad')},
         hoverinfo:'skip', showlegend:false
       },
       {
         type:'scatter', mode:'lines+markers+text',
         x:[p[0]-L*e2[0], p[0]+L*e2[0]], y:[p[1]-L*e2[1], p[1]+L*e2[1]],
         marker:{size:[0,7],color:css('--violet')}, line:{color:css('--violet'),width:4},
-        text:['','eâ‚‚'], textposition:'bottom center', textfont:{size:12,color:css('--violet')},
+        text:['','e₂'], textposition:'bottom center', textfont:{size:12,color:css('--violet')},
         hoverinfo:'skip', showlegend:false
       },
       {
@@ -771,7 +783,7 @@
     const th2=((Math.atan2(C.eig.v2[1],C.eig.v2[0])%(2*Math.PI))+2*Math.PI)%(2*Math.PI);
     el.curvSvg.innerHTML = `
       <rect x="0" y="0" width="${W}" height="${H}" rx="22" fill="${css('--paper')}"/>
-      ${text(plot.x,40,'uáµ€ H(a) u on the unit circle',{size:22,weight:700,family:'Georgia, serif'})}
+      ${text(plot.x,40,'uᵀ H(a) u on the unit circle',{size:22,weight:700,family:'Georgia, serif'})}
       <rect x="${plot.x}" y="${plot.y}" width="${plot.w}" height="${plot.h}" rx="22" fill="transparent" stroke="${css('--line')}"/>
       ${grid}
       <line x1="${X(0)}" y1="${Y(0)}" x2="${X(2*Math.PI)}" y2="${Y(0)}" stroke="${css('--line')}" stroke-width="1.8"/>
@@ -781,9 +793,9 @@
       <line x1="${X(th1)}" y1="${plot.y}" x2="${X(th1)}" y2="${plot.y+plot.h}" stroke="${css('--bad')}" stroke-dasharray="5 5" stroke-width="2.0"/>
       <line x1="${X(th2)}" y1="${plot.y}" x2="${X(th2)}" y2="${plot.y+plot.h}" stroke="${css('--violet')}" stroke-dasharray="5 5" stroke-width="2.0"/>
       ${text(X(state.theta)+8,Y(C.dir2)-8,'chosen direction',{size:14,fill:css('--gold'),weight:700})}
-      ${text(X(th1)+8,plot.y+26,'eâ‚', {size:13,fill:css('--bad'),weight:700})}
-      ${text(X(th2)+8,plot.y+48,'eâ‚‚', {size:13,fill:css('--violet'),weight:700})}
-      ${text(plot.x+plot.w-8,plot.y+plot.h+28,'Î¸', {size:15,fill:css('--muted'),weight:700,anchor:'end'})}
+      ${text(X(th1)+8,plot.y+26,'e₁', {size:13,fill:css('--bad'),weight:700})}
+      ${text(X(th2)+8,plot.y+48,'e₂', {size:13,fill:css('--violet'),weight:700})}
+      ${text(plot.x+plot.w-8,plot.y+plot.h+28,'θ', {size:15,fill:css('--muted'),weight:700,anchor:'end'})}
     `;
   }
 
@@ -814,14 +826,14 @@
     }
     el.sliceSvg.innerHTML = `
       <rect x="0" y="0" width="${W}" height="${H}" rx="22" fill="${css('--paper')}"/>
-      ${text(plot.x,40,'principal slices: s â†¦ f(a + s eáµ¢) âˆ’ f(a)',{size:22,weight:700,family:'Georgia, serif'})}
+      ${text(plot.x,40,'principal slices: s â†¦ f(a + s eáµ¢) − f(a)',{size:22,weight:700,family:'Georgia, serif'})}
       <rect x="${plot.x}" y="${plot.y}" width="${plot.w}" height="${plot.h}" rx="22" fill="transparent" stroke="${css('--line')}"/>
       ${grid}
       <line x1="${X(sMin)}" y1="${Y(0)}" x2="${X(sMax)}" y2="${Y(0)}" stroke="${css('--line')}" stroke-width="1.8"/>
       <path d="${path(d1,X,Y)}" fill="none" stroke="${css('--bad')}" stroke-width="3.5"/>
       <path d="${path(d2,X,Y)}" fill="none" stroke="${css('--violet')}" stroke-width="3.5"/>
-      ${text(X(0.52),Y(d1[Math.floor(d1.length*0.74)].y)-10,'slice along eâ‚', {size:14,fill:css('--bad'),weight:700})}
-      ${text(X(0.40),Y(d2[Math.floor(d2.length*0.67)].y)+18,'slice along eâ‚‚', {size:14,fill:css('--violet'),weight:700})}
+      ${text(X(0.52),Y(d1[Math.floor(d1.length*0.74)].y)-10,'slice along e₁', {size:14,fill:css('--bad'),weight:700})}
+      ${text(X(0.40),Y(d2[Math.floor(d2.length*0.67)].y)+18,'slice along e₂', {size:14,fill:css('--violet'),weight:700})}
       ${text(plot.x+plot.w-8,plot.y+plot.h+28,'s', {size:15,fill:css('--muted'),weight:700,anchor:'end'})}
     `;
   }
@@ -834,23 +846,23 @@
     const cls=C.cls;
     el.logicSvg.innerHTML = `
       <rect x="0" y="0" width="${W}" height="${H}" rx="22" fill="${css('--paper')}"/>
-      ${text(78,40,'classification map using D = det(H) and fâ‚“â‚“',{size:22,weight:700,family:'Georgia, serif'})}
+      ${text(78,40,'classification map using D = det(H) and fₓₓ',{size:22,weight:700,family:'Georgia, serif'})}
 
       <rect x="86" y="92" width="396" height="356" rx="22" fill="transparent" stroke="${css('--line')}"/>
       <line x1="284" y1="92" x2="284" y2="448" stroke="${css('--line')}" stroke-width="2"/>
       <line x1="86" y1="270" x2="482" y2="270" stroke="${css('--line')}" stroke-width="2"/>
       ${text(382,462,'D = det(H)', {size:14,fill:css('--muted'),weight:700})}
-      ${text(96,108,'fâ‚“â‚“', {size:14,fill:css('--muted'),weight:700})}
+      ${text(96,108,'fₓₓ', {size:14,fill:css('--muted'),weight:700})}
 
       <rect x="286" y="94" width="194" height="174" rx="18" fill="${css('--goodSoft')}" stroke="${css('--good')}"/>
       <rect x="286" y="272" width="194" height="174" rx="18" fill="${css('--badSoft')}" stroke="${css('--bad')}"/>
       <rect x="88" y="94" width="194" height="352" rx="18" fill="${css('--violetSoft')}" stroke="${css('--violet')}"/>
 
-      ${text(382,138,'D > 0, fâ‚“â‚“ > 0', {size:18,fill:css('--good'),weight:700,anchor:'middle',family:'Georgia, serif'})}
+      ${text(382,138,'D > 0, fₓₓ > 0', {size:18,fill:css('--good'),weight:700,anchor:'middle',family:'Georgia, serif'})}
       ${text(382,170,'positive definite', {size:16,fill:css('--good'),weight:700,anchor:'middle'})}
       ${text(382,198,'local minimum', {size:18,fill:css('--good'),weight:700,anchor:'middle'})}
 
-      ${text(382,318,'D > 0, fâ‚“â‚“ < 0', {size:18,fill:css('--bad'),weight:700,anchor:'middle',family:'Georgia, serif'})}
+      ${text(382,318,'D > 0, fₓₓ < 0', {size:18,fill:css('--bad'),weight:700,anchor:'middle',family:'Georgia, serif'})}
       ${text(382,350,'negative definite', {size:16,fill:css('--bad'),weight:700,anchor:'middle'})}
       ${text(382,378,'local maximum', {size:18,fill:css('--bad'),weight:700,anchor:'middle'})}
 
@@ -863,12 +875,12 @@
 
       <rect x="560" y="106" width="320" height="312" rx="22" fill="${css('--card')}" stroke="${css('--line')}"/>
       ${text(580,142,'Current algebraic data',{size:20,weight:700,family:'Georgia, serif'})}
-      ${text(580,184,`det(H) â‰ˆ ${fmt(C.det)}`,{size:17,fill:css('--muted'),weight:700})}
-      ${text(580,214,`fâ‚“â‚“(a) â‰ˆ ${fmt(C.H[0][0])}`,{size:17,fill:css('--muted'),weight:700})}
-      ${text(580,244,`trace(H) â‰ˆ ${fmt(C.tr)}`,{size:17,fill:css('--muted'),weight:700})}
+      ${text(580,184,`det(H) ≈ ${fmt(C.det)}`,{size:17,fill:css('--muted'),weight:700})}
+      ${text(580,214,`fₓₓ(a) ≈ ${fmt(C.H[0][0])}`,{size:17,fill:css('--muted'),weight:700})}
+      ${text(580,244,`trace(H) ≈ ${fmt(C.tr)}`,{size:17,fill:css('--muted'),weight:700})}
       ${text(580,282,`classification: ${cls.label}`,{size:18,fill:cls.color,weight:700,family:'Georgia, serif'})}
       ${text(580,314,cls.detail,{size:15,fill:css('--muted'),weight:700})}
-      ${text(580,356,'Remember: if âˆ‡f(a) â‰  0,',{size:15,fill:css('--muted'),weight:700})}
+      ${text(580,356,'Remember: if ∇f(a) ≠ 0,',{size:15,fill:css('--muted'),weight:700})}
       ${text(580,382,'the point is not yet a candidate',{size:15,fill:css('--muted'),weight:700})}
       ${text(580,408,'for the standard second-order test.',{size:15,fill:css('--muted'),weight:700})}
     `;
@@ -887,27 +899,27 @@
 
     el.matrixBox.textContent =
       `a = ${fmtVec(C.a)}\n` +
-      `âˆ‡f(a) = ${fmtVec(C.grad)}\n` +
+      `∇f(a) = ${fmtVec(C.grad)}\n` +
       `H(a) = [[${fmt(C.H[0][0])}, ${fmt(C.H[0][1])}],\n` +
       `        [${fmt(C.H[1][0])}, ${fmt(C.H[1][1])}]]\n` +
-      `Î»â‚ â‰ˆ ${fmt(C.eig.l1)},  Î»â‚‚ â‰ˆ ${fmt(C.eig.l2)}\n` +
-      `eâ‚ â‰ˆ ${fmtVec(C.eig.v1)}\n` +
-      `eâ‚‚ â‰ˆ ${fmtVec(C.eig.v2)}`;
-    el.formulaBox.innerHTML=C.ex.formula;
-    el.noticeBox.innerHTML=C.ex.notice;
+      `λ₁ ≈ ${fmt(C.eig.l1)},  λ₂ ≈ ${fmt(C.eig.l2)}\n` +
+      `e₁ ≈ ${fmtVec(C.eig.v1)}\n` +
+      `e₂ ≈ ${fmtVec(C.eig.v2)}`;
+    el.formulaBox.innerHTML=mathDisplay(C.ex.formula);
+    el.noticeBox.innerHTML=renderMathText(C.ex.notice);
 
-    el.status.textContent = `${C.cls.label} Â· ${C.cls.detail}`;
+    el.status.textContent = `${C.cls.label} · ${C.cls.detail}`;
     el.status.style.color = C.cls.color;
     el.status.style.background = state.theme==='dark'
       ? `color-mix(in srgb, ${C.cls.color} 18%, transparent)`
       : `color-mix(in srgb, ${C.cls.color} 12%, transparent)`;
 
-    el.gradMetric.textContent = `âˆ‡f(a) â‰ˆ ${fmtVec(C.grad)} ;  ||âˆ‡f(a)|| â‰ˆ ${fmt(norm(C.grad))}`;
-    el.hessMetric.textContent = `det â‰ˆ ${fmt(C.det)} ;  tr â‰ˆ ${fmt(C.tr)} ;  eigenvalues â‰ˆ (${fmt(C.eig.l1)}, ${fmt(C.eig.l2)})`;
-    el.dirMetric.textContent = `u â‰ˆ ${fmtVec(C.u)} ;  uáµ€Hu â‰ˆ ${fmt(C.dir2)}`;
+    el.gradMetric.textContent = `∇f(a) ≈ ${fmtVec(C.grad)} ;  ||∇f(a)|| ≈ ${fmt(norm(C.grad))}`;
+    el.hessMetric.textContent = `det ≈ ${fmt(C.det)} ;  tr ≈ ${fmt(C.tr)} ;  eigenvalues ≈ (${fmt(C.eig.l1)}, ${fmt(C.eig.l2)})`;
+    el.dirMetric.textContent = `u ≈ ${fmtVec(C.u)} ;  uᵀHu ≈ ${fmt(C.dir2)}`;
     el.classMetric.textContent = C.cls.label;
     el.classMetric.style.color = C.cls.color;
-    el.errorMetric.textContent = `f(a+h)âˆ’q(h) â‰ˆ ${fmt(C.err)}`;
+    el.errorMetric.textContent = `f(a+h)−q(h) ≈ ${fmt(C.err)}`;
   }
 
   function render(){
@@ -917,7 +929,7 @@
     renderCurvSvg();
     renderSliceSvg();
     renderLogicSvg();
-    if(window.MathJax) MathJax.typesetPromise().catch(()=>{});
+    typesetMath(document.body);
   }
 
   function sync(){

@@ -18,14 +18,29 @@
 
     gtag('config', 'G-NHXHEJP1G0');
   </script>
-
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
   <script>
-    window.MathJax = {
-      tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
-      svg: { fontCache: 'global' }
-    };
+    function escapeMathAttr(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+    function mathInline(tex){return `<span class="math-slot" data-display="false" data-tex="${escapeMathAttr(tex)}"></span>`;}
+    function mathDisplay(tex){return `<span class="math-slot display" data-display="true" data-tex="${escapeMathAttr(tex)}"></span>`;}
+    function renderMathText(s){
+      return String(s)
+        .replace(/\\[(.*?)\\]/gs, (_,tex)=>mathDisplay(tex))
+        .replace(/\\((.*?)\\)/gs, (_,tex)=>mathInline(tex));
+    }
+    function typesetMath(root=document.body){
+      if(!window.katex){ window.setTimeout(()=>typesetMath(root),60); return; }
+      root.querySelectorAll('.math-slot[data-tex]').forEach(el=>{
+        const tex = el.getAttribute('data-tex') || '';
+        const displayMode = el.getAttribute('data-display') === 'true';
+        try{ katex.render(tex, el, {displayMode, throwOnError:false, strict:'ignore'}); }
+        catch(e){ el.textContent = tex; }
+      });
+    }
+    window.addEventListener("load",()=>typesetMath(document.body));
   </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
 
   <style>
     :root{
@@ -99,7 +114,7 @@
     .theme .label{font-size:.92rem;color:var(--muted);min-width:70px}
     .switch{position:relative;width:70px;height:36px;border-radius:999px;background:var(--switch);border:1px solid var(--line)}
     .switch:before,.switch:after{position:absolute;top:50%;transform:translateY(-50%);font-size:13px;opacity:.75}
-    .switch:before{content:"â˜€";left:10px}.switch:after{content:"â˜¾";right:10px}
+    .switch:before{content:"☀";left:10px}.switch:after{content:"☾";right:10px}
     .knob{position:absolute;left:3px;top:3px;width:28px;height:28px;border-radius:50%;background:var(--thumb);border:1px solid var(--line);box-shadow:0 4px 12px rgba(0,0,0,.16);transition:left .25s ease;display:grid;place-items:center;font-size:13px}
     body.dark .knob{left:37px}
 
@@ -146,6 +161,13 @@
     .footer div{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:12px 13px;font-size:.92rem;line-height:1.42}
     @media(max-width:1240px){.layout{grid-template-columns:1fr}aside{position:static}.split,.grid2{grid-template-columns:1fr}}
     @media(max-width:900px){.footer,.explainRow{grid-template-columns:1fr}.wrap{padding:18px 14px 28px}}
+
+    .math-slot{display:inline-block;max-width:100%;vertical-align:baseline}
+    .math-slot.display{display:block;max-width:100%;overflow-x:auto;overflow-y:hidden}
+    .math-slot.display .katex-display{margin:.18em 0;text-align:left}
+    .eq,.note,.footer div,.metric p,.explainBox p,.explainMini p{overflow-wrap:anywhere}
+    .eq .katex{font-size:1.02em}
+
   </style>
 </head>
 <body>
@@ -153,7 +175,7 @@
     <header>
       <div>
         <h1>Implicit function theorem</h1>
-        <p class="subtitle">The theorem says that a level equation \(F(x,y)=c\) can be solved locally as a graph when the differential has full rank. In \(\mathbb R^2\), this means \(\nabla F(a)\neq 0\): the level set is a smooth curve, its tangent space is the kernel of \(DF(a)\), and one coordinate can be solved as a function of the other.</p>
+        <p class="subtitle">The theorem says that a level equation <span class="math-slot" data-display="false" data-tex="F(x,y)=c"></span> can be solved locally as a graph when the differential has full rank. In <span class="math-slot" data-display="false" data-tex="\mathbb R^2"></span>, this means <span class="math-slot" data-display="false" data-tex="\nabla F(a)\neq 0"></span>: the level set is a smooth curve, its tangent space is the kernel of <span class="math-slot" data-display="false" data-tex="DF(a)"></span>, and one coordinate can be solved as a function of the other.</p>
       </div>
       <div class="actions">
         <div class="pill">level set geometry</div>
@@ -161,7 +183,7 @@
         <div class="pill">tangent space + 3D section</div>
         <div id="theme" class="theme" role="button" tabindex="0">
           <span id="themeLabel" class="label">light mode</span>
-          <div class="switch"><div id="knob" class="knob">â˜€</div></div>
+          <div class="switch"><div id="knob" class="knob">☀</div></div>
         </div>
       </div>
     </header>
@@ -173,40 +195,30 @@
             <h2>Controls</h2>
             <p>Choose a level equation, a point on the level set, and how to solve locally.</p>
           </div>
-          <div class="tag">\(F(x,y)=c\)</div>
+          <div class="tag"><span class="math-slot" data-display="false" data-tex="F(x,y)=c"></span></div>
         </div>
 
         <div class="eq">
-          \[
-          F(x,y)=c,\qquad \nabla F(a)\neq 0
-          \]
-          \[
-          \Longrightarrow \ \{F=c\}
-          \text{ is locally a smooth curve near } a
-          \]
-          \[
-          F_y(a)\neq 0 \Rightarrow y=\varphi(x)\text{ locally}
-          \]
-          \[
-          F_x(a)\neq 0 \Rightarrow x=\psi(y)\text{ locally}
-          \]
-          \[
-          T_a\{F=c\}=\ker DF(a),\qquad
-          \nabla F(a)\perp T_a\{F=c\}
-          \]
+          <span class="math-slot display" data-display="true" data-tex="F(x,y)=c,\qquad \nabla F(a)\neq 0"></span>
+          <span class="math-slot display" data-display="true" data-tex="\Longrightarrow \ \{F=c\}
+          \text{ is locally a smooth curve near } a"></span>
+          <span class="math-slot display" data-display="true" data-tex="F_y(a)\neq 0 \Rightarrow y=\varphi(x)\text{ locally}"></span>
+          <span class="math-slot display" data-display="true" data-tex="F_x(a)\neq 0 \Rightarrow x=\psi(y)\text{ locally}"></span>
+          <span class="math-slot display" data-display="true" data-tex="T_a\{F=c\}=\ker DF(a),\qquad
+          \nabla F(a)\perp T_a\{F=c\}"></span>
         </div>
 
         <div class="control">
           <label>Example <small id="exampleLabel"></small></label>
           <select id="exampleSelect">
-            <option value="circle">circle: \(x^2+y^2=c\)</option>
-            <option value="parabola">sideways parabola: \(y^2-x=c\)</option>
-            <option value="cross">hyperbolic cross: \(y^2-x^2=c\)</option>
+            <option value="circle">circle: x² + y² = c</option>
+            <option value="parabola">sideways parabola: y² − x = c</option>
+            <option value="cross">hyperbolic cross: y² − x² = c</option>
           </select>
         </div>
 
         <div class="control">
-          <label>Level \(c\) <small id="levelLabel"></small></label>
+          <label>Level <span class="math-slot" data-display="false" data-tex="c"></span> <small id="levelLabel"></small></label>
           <input id="levelSlider" type="range" min="-1.20" max="1.60" step="0.01" value="0.80">
         </div>
 
@@ -219,13 +231,13 @@
           <label>Local solve as <small id="solveLabel"></small></label>
           <select id="solveSelect">
             <option value="auto">auto</option>
-            <option value="y">\(y=\varphi(x)\)</option>
-            <option value="x">\(x=\psi(y)\)</option>
+            <option value="y">y = φ(x)</option>
+            <option value="x">x = ψ(y)</option>
           </select>
         </div>
 
         <div class="control">
-          <label>Local window radius \(\rho\) <small id="rhoLabel"></small></label>
+          <label>Local window radius <span class="math-slot" data-display="false" data-tex="\rho"></span> <small id="rhoLabel"></small></label>
           <input id="rhoSlider" type="range" min="0.18" max="0.90" step="0.01" value="0.42">
         </div>
 
@@ -243,7 +255,7 @@
           <div class="heroTop">
             <div>
               <h2>Main theorem picture</h2>
-              <p>Left: the global level set \(F(x,y)=c\) with a highlighted point \(a\), its tangent line, and its normal vector \(\nabla F(a)\). Right: the local graph picture. If the chosen derivative is nonzero, the level set becomes the graph of a function in a small window.</p>
+              <p>Left: the global level set <span class="math-slot" data-display="false" data-tex="F(x,y)=c"></span> with a highlighted point <span class="math-slot" data-display="false" data-tex="a"></span>, its tangent line, and its normal vector <span class="math-slot" data-display="false" data-tex="\nabla F(a)"></span>. Right: the local graph picture. If the chosen derivative is nonzero, the level set becomes the graph of a function in a small window.</p>
             </div>
             <div id="status" class="status">regular point test</div>
           </div>
@@ -255,7 +267,7 @@
             <div class="metrics">
               <div class="metric">
                 <h4>Rank test</h4>
-                <p>Regularity is \(\operatorname{rank} DF(a)=1\), equivalently \(\nabla F(a)\neq 0\).</p>
+                <p>Regularity is <span class="math-slot" data-display="false" data-tex="\operatorname{rank} DF(a)=1"></span>, equivalently <span class="math-slot" data-display="false" data-tex="\nabla F(a)\neq 0"></span>.</p>
                 <strong id="rankMetric"></strong>
               </div>
               <div class="metric">
@@ -284,15 +296,15 @@
           <div class="explainRow">
             <div class="explainBox">
               <h4>Regular level set</h4>
-              <p>When \(\nabla F(a)\neq 0\), the level set is a smooth one-dimensional manifold near \(a\): visually, just one clean curve with a well-defined tangent.</p>
+              <p>When <span class="math-slot" data-display="false" data-tex="\nabla F(a)\neq 0"></span>, the level set is a smooth one-dimensional manifold near <span class="math-slot" data-display="false" data-tex="a"></span>: visually, just one clean curve with a well-defined tangent.</p>
             </div>
             <div class="explainBox">
               <h4>Local solvability</h4>
-              <p>If \(F_y(a)\neq 0\), then the curve can be written as \(y=\varphi(x)\). If instead \(F_x(a)\neq 0\), then \(x=\psi(y)\). The right panel makes this local graph explicit.</p>
+              <p>If <span class="math-slot" data-display="false" data-tex="F_y(a)\neq 0"></span>, then the curve can be written as <span class="math-slot" data-display="false" data-tex="y=\varphi(x)"></span>. If instead <span class="math-slot" data-display="false" data-tex="F_x(a)\neq 0"></span>, then <span class="math-slot" data-display="false" data-tex="x=\psi(y)"></span>. The right panel makes this local graph explicit.</p>
             </div>
             <div class="explainBox">
               <h4>Failure at singular points</h4>
-              <p>When \(\nabla F(a)=0\), the regular level-set picture can fail: the set may pinch, cross, or stop being a graph. The theorem correctly refuses to conclude.</p>
+              <p>When <span class="math-slot" data-display="false" data-tex="\nabla F(a)=0"></span>, the regular level-set picture can fail: the set may pinch, cross, or stop being a graph. The theorem correctly refuses to conclude.</p>
             </div>
           </div>
         </section>
@@ -302,16 +314,16 @@
             <div class="head">
               <div>
                 <h3>Tangent-space interpretation</h3>
-                <p>For \(F:\mathbb R^2\to\mathbb R\), the derivative \(DF(a)\) is a row vector. Its kernel is the tangent line. The gradient is orthogonal to that kernel.</p>
+                <p>For <span class="math-slot" data-display="false" data-tex="F:\mathbb R^2\to\mathbb R"></span>, the derivative <span class="math-slot" data-display="false" data-tex="DF(a)"></span> is a row vector. Its kernel is the tangent line. The gradient is orthogonal to that kernel.</p>
               </div>
-              <div class="tag">\(\ker DF(a)\)</div>
+              <div class="tag"><span class="math-slot" data-display="false" data-tex="\ker DF(a)"></span></div>
             </div>
             <div class="svgBox">
               <svg id="tangentSvg" class="plotSvg" viewBox="0 0 1120 560"></svg>
             </div>
             <div class="explainMini">
               <h4>Short explanation</h4>
-              <p>The tangent line is the set of first-order displacements \(h\) that do not change the level value: \(DF(a)\,h=0\). This is why it is the kernel of the derivative.</p>
+              <p>The tangent line is the set of first-order displacements <span class="math-slot" data-display="false" data-tex="h"></span> that do not change the level value: <span class="math-slot" data-display="false" data-tex="DF(a)\,h=0"></span>. This is why it is the kernel of the derivative.</p>
             </div>
           </section>
 
@@ -319,9 +331,9 @@
             <div class="head">
               <div>
                 <h3>Surface-section picture</h3>
-                <p>The curve \(F(x,y)=c\) is the intersection of the surface \(z=F(x,y)\) with the horizontal plane \(z=c\). Regularity means the intersection is transverse and locally smooth.</p>
+                <p>The curve <span class="math-slot" data-display="false" data-tex="F(x,y)=c"></span> is the intersection of the surface <span class="math-slot" data-display="false" data-tex="z=F(x,y)"></span> with the horizontal plane <span class="math-slot" data-display="false" data-tex="z=c"></span>. Regularity means the intersection is transverse and locally smooth.</p>
               </div>
-              <div class="tag">\(z=F(x,y)\)</div>
+              <div class="tag"><span class="math-slot" data-display="false" data-tex="z=F(x,y)"></span></div>
             </div>
             <div class="svgBox">
               <svg id="surfaceSvg" class="plotSvg" viewBox="0 0 1120 560"></svg>
@@ -334,8 +346,8 @@
         </div>
 
         <section class="footer">
-          <div><strong>Test.</strong> In \(\mathbb R^2\), regularity is simply \(\nabla F(a)\neq 0\).</div>
-          <div><strong>Conclusion.</strong> Near a regular point, the level equation defines a smooth local graph and the level set has tangent line \(\ker DF(a)\).</div>
+          <div><strong>Test.</strong> In <span class="math-slot" data-display="false" data-tex="\mathbb R^2"></span>, regularity is simply <span class="math-slot" data-display="false" data-tex="\nabla F(a)\neq 0"></span>.</div>
+          <div><strong>Conclusion.</strong> Near a regular point, the level equation defines a smooth local graph and the level set has tangent line <span class="math-slot" data-display="false" data-tex="\ker DF(a)"></span>.</div>
           <div><strong>Choice of variable.</strong> The nonzero partial determines which variable can be solved as a function of the other.</div>
         </section>
       </main>
@@ -346,7 +358,7 @@
   const examples = {
     circle:{
       label:'circle',
-      formula:'\\[F(x,y)=x^2+y^2,\\qquad F(x,y)=c.\\]',
+      formula:'F(x,y)=x^2+y^2,\\qquad F(x,y)=c.',
       note:'For \(c>0\) the level set is a circle and every point is regular. At \(c=0\), the level set collapses to the singular point \((0,0)\).',
       getLevel:c=>Math.max(0,c),
       F:(x,y,c)=>x*x+y*y-c,
@@ -382,7 +394,7 @@
     },
     parabola:{
       label:'sideways parabola',
-      formula:'\\[F(x,y)=y^2-x,\\qquad F(x,y)=c \iff x=y^2-c.\\]',
+      formula:String.raw`F(x,y)=y^2-x,\qquad F(x,y)=c \iff x=y^2-c.`,
       note:'This level set is always regular because \((F_x,F_y)=(-1,2y)\) never vanishes. At the vertex, \(F_y=0\), so the theorem does not solve for \(y\), but it still solves for \(x\).',
       getLevel:c=>c,
       F:(x,y,c)=>y*y-x-c,
@@ -413,7 +425,7 @@
     },
     cross:{
       label:'hyperbolic cross',
-      formula:'\\[F(x,y)=y^2-x^2,\\qquad F(x,y)=c.\\]',
+      formula:'F(x,y)=y^2-x^2,\\qquad F(x,y)=c.',
       note:'For \(c\neq0\), the level set is a smooth hyperbola. At \(c=0\), it becomes the crossing pair \(y=\pm x\), singular at the origin because \(\nabla F(0,0)=0\).',
       getLevel:c=>c,
       F:(x,y,c)=>y*y-x*x-c,
@@ -515,9 +527,9 @@
 
   const css=v=>getComputedStyle(document.body).getPropertyValue(v).trim();
   const fmt=x=>{
-    if(!Number.isFinite(x)) return 'â€”';
+    if(!Number.isFinite(x)) return '—';
     if(Math.abs(x)>9999) return x.toExponential(2);
-    return (x<0?'âˆ’':'')+Math.abs(x).toFixed(3);
+    return (x<0?'−':'')+Math.abs(x).toFixed(3);
   };
   const fmtVec=v=>`(${fmt(v[0])}, ${fmt(v[1])})`;
   const norm=v=>Math.hypot(v[0],v[1]);
@@ -549,7 +561,7 @@
     document.body.classList.toggle('dark',t==='dark');
     localStorage.setItem('ift-implicit-theme',t);
     el.themeLabel.textContent=t==='dark'?'dark mode':'light mode';
-    el.knob.textContent=t==='dark'?'â˜¾':'â˜€';
+    el.knob.textContent=t==='dark'?'☾':'☀';
     if(state.initialized) render();
   }
 
@@ -575,7 +587,7 @@
     const tnorm = norm(tangent) || 1;
     const tdir = [tangent[0]/tnorm, tangent[1]/tnorm];
     const gdir = regular ? [Fx/gradNorm, Fy/gradNorm] : [0,0];
-    let slopeText='â€”', tangentSlope=null;
+    let slopeText='—', tangentSlope=null;
     if(regular){
       if(solveVar==='y' && canSolveY){
         tangentSlope = -Fx/Fy;
@@ -636,7 +648,7 @@
       leftOverlay += `
         <line x1="${LX(p1[0])}" y1="${LY(p1[1])}" x2="${LX(p2[0])}" y2="${LY(p2[1])}" stroke="${css('--bad')}" stroke-width="3.2"/>
         ${arrow(LX(ax),LY(ay),LX(n2[0]),LY(n2[1]),css('--violet'),3.4)}
-        ${txt(LX(n2[0])+8,LY(n2[1])-8,'âˆ‡F(a)',{size:14,fill:css('--violet'),weight:750})}
+        ${txt(LX(n2[0])+8,LY(n2[1])-8,'∇F(a)',{size:14,fill:css('--violet'),weight:750})}
         ${txt(LX(p2[0])+10,LY(p2[1])+18,'tangent', {size:14,fill:css('--bad'),weight:750})}
       `;
     }
@@ -645,8 +657,8 @@
     let rightContent = `
       <line x1="${RX(-rho)}" y1="${RY(0)}" x2="${RX(rho)}" y2="${RY(0)}" stroke="${css('--line')}" stroke-width="1.6"/>
       <line x1="${RX(0)}" y1="${RY(-rho)}" x2="${RX(0)}" y2="${RY(rho)}" stroke="${css('--line')}" stroke-width="1.6"/>
-      ${txt(RX(rho)-4,RY(0)-10,C.solveVar==='x'?'Î”y':'Î”x',{size:14,fill:css('--muted'),weight:700,anchor:'end'})}
-      ${txt(RX(0)+10,RY(-rho)+14,C.solveVar==='x'?'Î”x':'Î”y',{size:14,fill:css('--muted'),weight:700})}
+      ${txt(RX(rho)-4,RY(0)-10,C.solveVar==='x'?'Δy':'Δx',{size:14,fill:css('--muted'),weight:700,anchor:'end'})}
+      ${txt(RX(0)+10,RY(-rho)+14,C.solveVar==='x'?'Δx':'Δy',{size:14,fill:css('--muted'),weight:700})}
       <circle cx="${RX(0)}" cy="${RY(0)}" r="6" fill="${css('--gold')}" stroke="${css('--paper')}" stroke-width="2"/>
       ${txt(RX(0)+8,RY(0)-8,'a',{size:14,fill:css('--gold'),weight:800})}
     `;
@@ -678,7 +690,7 @@
         rightContent += `
           <path d="${polyline(graphPts,p=>[RX(p[0]),RY(p[1])])}" fill="none" stroke="${css('--good')}" stroke-width="4"/>
           <path d="${polyline(tanPts,p=>[RX(p[0]),RY(p[1])])}" fill="none" stroke="${css('--bad')}" stroke-width="2.8" stroke-dasharray="8 6"/>
-          ${txt(RX(rho)-6,RY(graphPts.length?graphPts[graphPts.length-1][1]:0)-14,'y = Ï†(x)',{size:15,fill:css('--good'),weight:750,anchor:'end'})}
+          ${txt(RX(rho)-6,RY(graphPts.length?graphPts[graphPts.length-1][1]:0)-14,'y = φ(x)',{size:15,fill:css('--good'),weight:750,anchor:'end'})}
           ${txt(RX(rho)-6,RY(C.tangentSlope*rho)+18,'linear tangent',{size:14,fill:css('--bad'),weight:750,anchor:'end'})}
         `;
       } else {
@@ -696,7 +708,7 @@
         rightContent += `
           <path d="${polyline(graphPts,p=>[RX(p[0]),RY(p[1])])}" fill="none" stroke="${css('--good')}" stroke-width="4"/>
           <path d="${polyline(tanPts,p=>[RX(p[0]),RY(p[1])])}" fill="none" stroke="${css('--bad')}" stroke-width="2.8" stroke-dasharray="8 6"/>
-          ${txt(RX(rho)-6,RY(graphPts.length?graphPts[graphPts.length-1][1]:0)-14,'x = Ïˆ(y)',{size:15,fill:css('--good'),weight:750,anchor:'end'})}
+          ${txt(RX(rho)-6,RY(graphPts.length?graphPts[graphPts.length-1][1]:0)-14,'x = ψ(y)',{size:15,fill:css('--good'),weight:750,anchor:'end'})}
           ${txt(RX(rho)-6,RY(C.tangentSlope*rho)+18,'linear tangent',{size:14,fill:css('--bad'),weight:750,anchor:'end'})}
         `;
       }
@@ -730,7 +742,7 @@
 
       <rect x="510" y="670" width="400" height="58" rx="20" fill="${C.regular?css('--goodSoft'):css('--badSoft')}" stroke="${css('--line')}"/>
       ${txt(710,693,C.regular?'regular point: smooth local level curve':'singular point: theorem does not conclude',{size:18,fill:statusColor,weight:800,family:'Georgia, serif',anchor:'middle'})}
-      ${txt(710,715,`â€–âˆ‡F(a)â€– â‰ˆ ${fmt(C.gradNorm)}`,{size:14,fill:css('--muted'),weight:700,anchor:'middle'})}
+      ${txt(710,715,`‖∇F(a)‖ ≈ ${fmt(C.gradNorm)}`,{size:14,fill:css('--muted'),weight:700,anchor:'middle'})}
     `;
   }
 
@@ -758,7 +770,7 @@
         <line x1="${X(p1[0])}" y1="${Y(p1[1])}" x2="${X(p2[0])}" y2="${Y(p2[1])}" stroke="${css('--good')}" stroke-width="3.8"/>
         ${arrow(X(0),Y(0),X(g2[0]),Y(g2[1]),css('--violet'),3.6)}
         ${txt(X(p2[0])+10,Y(p2[1])+16,'ker DF(a)',{size:15,fill:css('--good'),weight:750})}
-        ${txt(X(g2[0])+10,Y(g2[1])-10,'âˆ‡F(a)',{size:15,fill:css('--violet'),weight:750})}
+        ${txt(X(g2[0])+10,Y(g2[1])-10,'∇F(a)',{size:15,fill:css('--violet'),weight:750})}
       `;
     } else {
       leftContent += `
@@ -795,7 +807,7 @@
       ${txt(right.x+28,right.y+252,algebra[2],{size:16,fill:css('--muted'),weight:700})}
       ${C.regular
         ? `<rect x="${right.x+24}" y="${right.y+296}" width="388" height="106" rx="20" fill="${css('--goodSoft')}" stroke="${css('--line')}"/>
-           ${txt(right.x+218,right.y+332,'âˆ‡F(a) âŸ‚ ker DF(a)',{size:24,fill:css('--good'),weight:800,anchor:'middle',family:'Georgia, serif'})}
+           ${txt(right.x+218,right.y+332,'∇F(a) ⊥ ker DF(a)',{size:24,fill:css('--good'),weight:800,anchor:'middle',family:'Georgia, serif'})}
            ${txt(right.x+218,right.y+362,'normal direction versus tangent direction',{size:14,fill:css('--muted'),weight:650,anchor:'middle'})}`
         : `<rect x="${right.x+24}" y="${right.y+296}" width="388" height="106" rx="20" fill="${css('--badSoft')}" stroke="${css('--line')}"/>
            ${txt(right.x+218,right.y+332,'no regular manifold structure is guaranteed',{size:20,fill:css('--bad'),weight:800,anchor:'middle',family:'Georgia, serif'})}
@@ -868,7 +880,7 @@
       ${txt(qa[0]+10,qa[1]-10,'a on z=c',{size:14,fill:css('--gold'),weight:750})}
       ${txt(corners[1][0]+16,corners[1][1]-10,'z = c',{size:15,fill:css('--model'),weight:750})}
       <rect x="344" y="492" width="430" height="42" rx="18" fill="${C.regular?css('--goodSoft'):css('--badSoft')}" stroke="${css('--line')}"/>
-      ${txt(559,519,C.regular?'transverse cut â†’ smooth local intersection':'singular cut â†’ local smoothness is not guaranteed',{size:17,fill:C.regular?css('--good'):css('--bad'),weight:800,family:'Georgia, serif',anchor:'middle'})}
+      ${txt(559,519,C.regular?'transverse cut → smooth local intersection':'singular cut → local smoothness is not guaranteed',{size:17,fill:C.regular?css('--good'):css('--bad'),weight:800,family:'Georgia, serif',anchor:'middle'})}
     `;
   }
 
@@ -876,7 +888,7 @@
     const C=current();
     el.exampleLabel.textContent = C.ex.label;
     el.levelLabel.textContent = fmt(C.c);
-    el.paramLabel.textContent = C.ex.paramName + ' Â· ' + fmt(state.param);
+    el.paramLabel.textContent = C.ex.paramName + ' · ' + fmt(state.param);
     el.solveLabel.textContent = (C.solveVar==='none'?'none':(C.solveVar==='x'?'solve x':'solve y'));
     el.rhoLabel.textContent = fmt(state.rho);
     [el.levelSlider, el.paramSlider, el.rhoSlider].forEach(fill);
@@ -884,24 +896,24 @@
     el.matrixBox.textContent =
       `a = ${fmtVec(C.a)}\n` +
       `F(a) = ${fmt(C.c)}\n` +
-      `âˆ‡F(a) = ${fmtVec(C.grad)}\n` +
+      `∇F(a) = ${fmtVec(C.grad)}\n` +
       `rank DF(a) = ${C.regular ? '1' : '0'}\n` +
       `solve for y? ${C.canSolveY ? 'yes' : 'no'}\n` +
       `solve for x? ${C.canSolveX ? 'yes' : 'no'}`;
-    el.formulaBox.innerHTML = C.ex.formula;
-    el.noticeBox.innerHTML = C.ex.note;
+    el.formulaBox.innerHTML = mathDisplay(String(C.ex.formula).replace(/^\\\[/,'').replace(/\\\]$/,''));
+    el.noticeBox.innerHTML = renderMathText(C.ex.note);
 
     const statusColor = C.regular ? css('--good') : css('--bad');
-    el.status.textContent = C.regular ? 'regular point Â· smooth local level curve' : 'singular point Â· theorem does not conclude';
+    el.status.textContent = C.regular ? 'regular point · smooth local level curve' : 'singular point · theorem does not conclude';
     el.status.style.color = statusColor;
     el.status.style.background = C.regular ? css('--goodSoft') : css('--badSoft');
 
-    el.rankMetric.textContent = C.regular ? 'rank 1 Â· regular level set' : 'rank 0 Â· singular point';
-    el.gradMetric.textContent = `âˆ‡F(a) â‰ˆ ${fmtVec(C.grad)}`;
+    el.rankMetric.textContent = C.regular ? 'rank 1 · regular level set' : 'rank 0 · singular point';
+    el.gradMetric.textContent = `∇F(a) ≈ ${fmtVec(C.grad)}`;
     if(C.solveVar==='none'){
       el.solveMetric.textContent = 'no coordinate can be solved by the theorem here';
     } else if(C.possible){
-      el.solveMetric.textContent = C.solveVar==='y' ? 'yes Â· y = Ï†(x) locally' : 'yes Â· x = Ïˆ(y) locally';
+      el.solveMetric.textContent = C.solveVar==='y' ? 'yes · y = φ(x) locally' : 'yes · x = ψ(y) locally';
     } else {
       el.solveMetric.textContent = C.solveVar==='y'
         ? (C.canSolveX ? 'not for y, but x can be solved' : 'not solvable by the theorem here')
@@ -910,7 +922,7 @@
     el.slopeMetric.textContent = C.slopeText;
     el.warnMetric.textContent = C.regular ? 'no singularity at the chosen point' : 'gradient vanishes';
 
-    if(window.MathJax) MathJax.typesetPromise().catch(()=>{});
+    typesetMath(document.body);
   }
 
   function render(){

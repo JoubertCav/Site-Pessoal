@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -19,13 +19,9 @@
     gtag('config', 'G-NHXHEJP1G0');
   </script>
 
-  <script>
-    window.MathJax = {
-      tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
-      svg: { fontCache: 'global' }
-    };
-  </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" onload="window.__katexReady=true; if(window.__renderMath) window.__renderMath();"></script>
 
   <style>
     :root{
@@ -63,7 +59,7 @@
     .theme .label{font-size:.92rem;color:var(--muted);min-width:70px}
     .switch{position:relative;width:70px;height:36px;border-radius:999px;background:var(--switch);border:1px solid var(--line)}
     .switch:before,.switch:after{position:absolute;top:50%;transform:translateY(-50%);font-size:13px;opacity:.75}
-    .switch:before{content:"â˜€";left:10px}.switch:after{content:"â˜¾";right:10px}
+    .switch:before{content:"☀";left:10px}.switch:after{content:"☾";right:10px}
     .knob{position:absolute;left:3px;top:3px;width:28px;height:28px;border-radius:50%;background:var(--thumb);border:1px solid var(--line);box-shadow:0 4px 12px rgba(0,0,0,.16);transition:left .25s ease;display:grid;place-items:center;font-size:13px}
     body.dark .knob{left:37px}
 
@@ -119,7 +115,7 @@
         <div class="pill">wide view</div>
         <div id="theme" class="theme" role="button" tabindex="0">
           <span id="themeLabel" class="label">light mode</span>
-          <div class="switch"><div id="knob" class="knob">â˜€</div></div>
+          <div class="switch"><div id="knob" class="knob">☀</div></div>
         </div>
       </div>
     </header>
@@ -143,11 +139,11 @@
         <div class="control">
           <label>Function <small id="fnLabel"></small></label>
           <select id="functionSelect">
-            <option value="exp">\(e^x\)</option>
-            <option value="sin">\(\sin x\)</option>
-            <option value="cos">\(\cos x\)</option>
-            <option value="log">\(\log(1+x)\)</option>
-            <option value="geom">\(\frac{1}{1-x}\)</option>
+            <option value="exp">e^x</option>
+            <option value="sin">sin x</option>
+            <option value="cos">cos x</option>
+            <option value="log">log(1+x)</option>
+            <option value="geom">1/(1−x)</option>
           </select>
         </div>
 
@@ -337,9 +333,9 @@
   const lin=(x,a,b,c,d)=>c+(x-a)*(d-c)/(b-a);
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   const fmt=x=>{
-    if(!Number.isFinite(x)) return 'â€”';
+    if(!Number.isFinite(x)) return '—';
     if(Math.abs(x)>9999) return x.toExponential(2);
-    return (x<0?'âˆ’':'')+Math.abs(x).toFixed(4);
+    return (x<0?'−':'')+Math.abs(x).toFixed(4);
   };
 
   function setTheme(t){
@@ -347,7 +343,7 @@
     document.body.classList.toggle('dark',t==='dark');
     localStorage.setItem('taylor-clean-plot-theme',t);
     el.themeLabel.textContent=t==='dark'?'dark mode':'light mode';
-    el.knob.textContent=t==='dark'?'â˜¾':'â˜€';
+    el.knob.textContent=t==='dark'?'☾':'☀';
     render();
   }
 
@@ -363,6 +359,20 @@
   function path(points,X,Y){
     return points.map((p,i)=>`${i?'L':'M'} ${X(p.x).toFixed(2)} ${Y(p.y).toFixed(2)}`).join(' ');
   }
+
+  function typesetMath(){
+    if(!window.renderMathInElement) return;
+    renderMathInElement(document.body,{
+      delimiters:[
+        {left:'$$',right:'$$',display:true},
+        {left:'\\[',right:'\\]',display:true},
+        {left:'\\(',right:'\\)',display:false}
+      ],
+      throwOnError:false,
+      ignoredTags:['script','noscript','style','textarea','pre','code','option']
+    });
+  }
+  window.__renderMath = typesetMath;
 
   function windowData(){
     const fn=funcs[state.fn];
@@ -431,7 +441,7 @@
 
     el.mainSvg.innerHTML=`
       <rect x="0" y="0" width="${W}" height="${H}" rx="26" fill="${css('--paper')}"/>
-      ${text(plot.x,42,'function f and Taylor polynomial Tâ‚™',{size:23,weight:700,family:'Georgia, serif'})}
+      ${text(plot.x,42,'function f and Taylor polynomial Tₙ',{size:23,weight:700,family:'Georgia, serif'})}
       <rect x="${plot.x}" y="${plot.y}" width="${plot.w}" height="${plot.h}" rx="22" fill="transparent" stroke="${css('--line')}"/>
       ${grid}
       ${xAxis}
@@ -449,13 +459,13 @@
       <circle cx="${plot.x+38}" cy="${plot.y+45}" r="5.5" fill="${css('--f')}"/>
       ${text(plot.x+52,plot.y+50,'function f',{size:14,fill:css('--muted')})}
       <circle cx="${plot.x+142}" cy="${plot.y+45}" r="5.5" fill="${css('--p')}"/>
-      ${text(plot.x+156,plot.y+50,'Taylor polynomial Tâ‚™',{size:14,fill:css('--muted')})}
+      ${text(plot.x+156,plot.y+50,'Taylor polynomial Tₙ',{size:14,fill:css('--muted')})}
     `;
 
     el.polyMetric.textContent=`T_${D.n}`;
-    el.valueMetric.textContent=`f(x)â‰ˆ${fmt(y)}; Tâ‚™(x)â‰ˆ${fmt(p)}`;
-    el.errMetric.textContent=`f(x)âˆ’Tâ‚™(x)â‰ˆ${fmt(err)}`;
-    el.centerMetric.textContent=`matched at aâ‰ˆ${fmt(D.a)}`;
+    el.valueMetric.textContent=`f(x)≈${fmt(y)}; Tₙ(x)≈${fmt(p)}`;
+    el.errMetric.textContent=`f(x)−Tₙ(x)≈${fmt(err)}`;
+    el.centerMetric.textContent=`matched at a≈${fmt(D.a)}`;
     el.status.textContent=`${D.fn.label}, degree ${D.n}`;
   }
 
@@ -480,7 +490,7 @@
 
     el.errorSvg.innerHTML=`
       <rect x="0" y="0" width="${W}" height="${H}" rx="22" fill="${css('--paper')}"/>
-      ${text(plot.x,34,'error curve: f âˆ’ Tâ‚™',{size:20,weight:700,family:'Georgia, serif'})}
+      ${text(plot.x,34,'error curve: f − Tₙ',{size:20,weight:700,family:'Georgia, serif'})}
       <rect x="${plot.x}" y="${plot.y}" width="${plot.w}" height="${plot.h}" rx="20" fill="transparent" stroke="${css('--line')}"/>
       ${grid}
       ${zero}
@@ -500,16 +510,16 @@
       const y=box.y+42+k*34;
       lines += `<line x1="${box.x+24}" y1="${y+10}" x2="${box.x+box.w-24}" y2="${y+10}" stroke="${css('--line')}" opacity=".75"/>`;
       lines += text(box.x+44,y,`k=${k}`,{size:14,fill:css('--muted'),weight:700});
-      lines += text(box.x+130,y,`fâ½${k}â¾(a) = Tâ‚™â½${k}â¾(a)`,{size:16,fill:css('--f'),weight:700});
+      lines += text(box.x+130,y,`f⁽${k}⁾(a) = Tₙ⁽${k}⁾(a)`,{size:16,fill:css('--f'),weight:700});
       lines += text(box.x+500,y,`matched`,{size:14,fill:css('--gold'),weight:700});
     }
     if(D.n+1>8){
-      lines += text(box.x+box.w/2,box.y+42+8*34,'â€¦',{size:22,fill:css('--muted'),weight:700,anchor:'middle'});
+      lines += text(box.x+box.w/2,box.y+42+8*34,'…',{size:22,fill:css('--muted'),weight:700,anchor:'middle'});
     }
 
     el.contactSvg.innerHTML=`
       <rect x="0" y="0" width="${W}" height="${H}" rx="22" fill="${css('--paper')}"/>
-      ${text(box.x,36,'what Tâ‚™ copies at the center',{size:20,weight:700,family:'Georgia, serif'})}
+      ${text(box.x,36,'what Tₙ copies at the center',{size:20,weight:700,family:'Georgia, serif'})}
       <rect x="${box.x}" y="${box.y}" width="${box.w}" height="${box.h}" rx="24" fill="${css('--fSoft')}" stroke="${css('--line')}"/>
       ${lines}
       <rect x="${box.x+120}" y="420" width="620" height="58" rx="18" fill="${css('--card')}" stroke="${css('--line')}"/>
@@ -534,7 +544,7 @@
     renderMain();
     renderError();
     renderContact();
-    if(window.MathJax) MathJax.typesetPromise().catch(()=>{});
+    typesetMath();
   }
 
   function sync(){
@@ -571,6 +581,7 @@
   el.viewSlider.value=state.view;
   el.xSlider.value=state.xT;
   setTheme(state.theme);
+  window.addEventListener('load', typesetMath);
 </script>
 </body>
 </html>

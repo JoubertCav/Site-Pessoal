@@ -18,14 +18,29 @@
 
     gtag('config', 'G-NHXHEJP1G0');
   </script>
-
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
   <script>
-    window.MathJax = {
-      tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
-      svg: { fontCache: 'global' }
-    };
+    function escapeMathAttr(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+    function mathInline(tex){return `<span class="math-slot" data-display="false" data-tex="${escapeMathAttr(tex)}"></span>`;}
+    function mathDisplay(tex){return `<span class="math-slot display" data-display="true" data-tex="${escapeMathAttr(tex)}"></span>`;}
+    function renderMathText(s){
+      return String(s)
+        .replace(/\\[(.*?)\\]/gs, (_,tex)=>mathDisplay(tex))
+        .replace(/\\((.*?)\\)/gs, (_,tex)=>mathInline(tex));
+    }
+    function typesetMath(root=document.body){
+      if(!window.katex){ window.setTimeout(()=>typesetMath(root),60); return; }
+      root.querySelectorAll('.math-slot[data-tex]').forEach(el=>{
+        const tex = el.getAttribute('data-tex') || '';
+        const displayMode = el.getAttribute('data-display') === 'true';
+        try{ katex.render(tex, el, {displayMode, throwOnError:false, strict:'ignore'}); }
+        catch(e){ el.textContent = tex; }
+      });
+    }
+    window.addEventListener("load",()=>typesetMath(document.body));
   </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
   <script defer src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
 
   <style>
@@ -97,7 +112,7 @@
     .theme .label{font-size:.92rem;color:var(--muted);min-width:70px}
     .switch{position:relative;width:70px;height:36px;border-radius:999px;background:var(--switch);border:1px solid var(--line)}
     .switch:before,.switch:after{position:absolute;top:50%;transform:translateY(-50%);font-size:13px;opacity:.75}
-    .switch:before{content:"â˜€";left:10px}.switch:after{content:"â˜¾";right:10px}
+    .switch:before{content:"☀";left:10px}.switch:after{content:"☾";right:10px}
     .knob{position:absolute;left:3px;top:3px;width:28px;height:28px;border-radius:50%;background:var(--thumb);border:1px solid var(--line);box-shadow:0 4px 12px rgba(0,0,0,.16);transition:left .25s ease;display:grid;place-items:center;font-size:13px}
     body.dark .knob{left:37px}
 
@@ -149,6 +164,13 @@
 
     @media(max-width:1240px){.layout{grid-template-columns:1fr}aside{position:static}.split,.grid2{grid-template-columns:1fr}}
     @media(max-width:900px){.footer,.pair,.explainRow{grid-template-columns:1fr}.wrap{padding:18px 14px 28px}#mainPlot{height:560px}#levelPlot,#basisPlot{height:420px}}
+
+    .math-slot{display:inline-block;max-width:100%;vertical-align:baseline}
+    .math-slot.display{display:block;max-width:100%;overflow-x:auto;overflow-y:hidden}
+    .math-slot.display .katex-display{margin:.18em 0;text-align:left}
+    .eq,.note,.footer div,.metric p,.explainBox p,.explainMini p{overflow-wrap:anywhere}
+    .eq .katex{font-size:1.02em}
+
   </style>
 </head>
 
@@ -157,7 +179,7 @@
     <header>
       <div>
         <h1>Gradient, tangent planes, and level sets</h1>
-        <p class="subtitle">The gradient points in the direction of steepest ascent, the tangent plane is the best local affine approximation to the graph, and the level set geometry is controlled by orthogonality: \(\nabla f(a)\) is normal to the contour through \(a\).</p>
+        <p class="subtitle">The gradient points in the direction of steepest ascent, the tangent plane is the best local affine approximation to the graph, and the level set geometry is controlled by orthogonality: <span class="math-slot" data-display="false" data-tex="\nabla f(a)"></span> is normal to the contour through <span class="math-slot" data-display="false" data-tex="a"></span>.</p>
       </div>
       <div class="actions">
         <div class="pill">interactive 3D surface</div>
@@ -165,7 +187,7 @@
         <div class="pill">normal and tangent directions</div>
         <div id="theme" class="theme" role="button" tabindex="0">
           <span id="themeLabel" class="label">light mode</span>
-          <div class="switch"><div id="knob" class="knob">â˜€</div></div>
+          <div class="switch"><div id="knob" class="knob">☀</div></div>
         </div>
       </div>
     </header>
@@ -175,27 +197,21 @@
         <div class="head">
           <div>
             <h2>Controls</h2>
-            <p>Choose a surface \(z=f(x,y)\), a base point \(a\), and a direction \(u\).</p>
+            <p>Choose a surface <span class="math-slot" data-display="false" data-tex="z=f(x,y)"></span>, a base point <span class="math-slot" data-display="false" data-tex="a"></span>, and a direction <span class="math-slot" data-display="false" data-tex="u"></span>.</p>
           </div>
-          <div class="tag">\(\nabla f(a)\)</div>
+          <div class="tag"><span class="math-slot" data-display="false" data-tex="\nabla f(a)"></span></div>
         </div>
 
         <div class="eq">
-          \[
-          \nabla f(a)=\big(f_x(a),f_y(a)\big),
+          <span class="math-slot display" data-display="true" data-tex="\nabla f(a)=\big(f_x(a),f_y(a)\big),
           \qquad
-          D_u f(a)=\nabla f(a)\cdot u
-          \]
-          \[
-          z=f(a)+f_x(a)(x-a_1)+f_y(a)(y-a_2)
-          \]
-          \[
-          \text{If }f(x,y)=c,\ \text{then }\nabla f(a)\perp T_aL_c
-          \]
+          D_u f(a)=\nabla f(a)\cdot u"></span>
+          <span class="math-slot display" data-display="true" data-tex="z=f(a)+f_x(a)(x-a_1)+f_y(a)(y-a_2)"></span>
+          <span class="math-slot display" data-display="true" data-tex="\text{If }f(x,y)=c,\ \text{then }\nabla f(a)\perp T_aL_c"></span>
         </div>
 
         <div class="control">
-          <label>Surface \(f\) <small id="funcLabel"></small></label>
+          <label>Surface <span class="math-slot" data-display="false" data-tex="f"></span> <small id="funcLabel"></small></label>
           <select id="funcSelect">
             <option value="paraboloid">quadratic bowl</option>
             <option value="saddle">saddle surface</option>
@@ -205,7 +221,7 @@
         </div>
 
         <div class="control">
-          <label>Base point \(a=(a_1,a_2)\) <small id="pointLabel"></small></label>
+          <label>Base point <span class="math-slot" data-display="false" data-tex="a=(a_1,a_2)"></span> <small id="pointLabel"></small></label>
           <div class="pair">
             <input id="pxSlider" type="range" min="-1.4" max="1.4" step="0.01" value="0.35">
             <input id="pySlider" type="range" min="-1.4" max="1.4" step="0.01" value="-0.20">
@@ -213,12 +229,12 @@
         </div>
 
         <div class="control">
-          <label>Direction angle \(\theta\) <small id="thetaLabel"></small></label>
+          <label>Direction angle <span class="math-slot" data-display="false" data-tex="\theta"></span> <small id="thetaLabel"></small></label>
           <input id="thetaSlider" type="range" min="0" max="6.28318" step="0.01" value="0.90">
         </div>
 
         <div class="control">
-          <label>Plane patch radius \(\rho\) <small id="rhoLabel"></small></label>
+          <label>Plane patch radius <span class="math-slot" data-display="false" data-tex="\rho"></span> <small id="rhoLabel"></small></label>
           <input id="rhoSlider" type="range" min="0.18" max="1.00" step="0.01" value="0.52">
         </div>
 
@@ -241,7 +257,7 @@
           <div class="heroTop">
             <div>
               <h2>Main 3D surface and tangent plane</h2>
-              <p>Green: the true surface \(z=f(x,y)\). Blue: the tangent plane at \(P=(a,f(a))\). Gold: the selected direction in the domain. Red: the tangent-plane directional vector. Violet: the graph normal \((-f_x,-f_y,1)\). Drag to rotate.</p>
+              <p>Green: the true surface <span class="math-slot" data-display="false" data-tex="z=f(x,y)"></span>. Blue: the tangent plane at <span class="math-slot" data-display="false" data-tex="P=(a,f(a))"></span>. Gold: the selected direction in the domain. Red: the tangent-plane directional vector. Violet: the graph normal <span class="math-slot" data-display="false" data-tex="(-f_x,-f_y,1)"></span>. Drag to rotate.</p>
             </div>
             <div id="status" class="status">best affine approximation</div>
           </div>
@@ -258,7 +274,7 @@
               </div>
               <div class="metric">
                 <h4>Directional derivative</h4>
-                <p>Slope along the chosen unit vector \(u\).</p>
+                <p>Slope along the chosen unit vector <span class="math-slot" data-display="false" data-tex="u"></span>.</p>
                 <strong id="dirMetric"></strong>
               </div>
               <div class="metric">
@@ -268,12 +284,12 @@
               </div>
               <div class="metric">
                 <h4>Level-set tangent direction</h4>
-                <p>A tangent vector to the contour is orthogonal to \(\nabla f(a)\).</p>
+                <p>A tangent vector to the contour is orthogonal to <span class="math-slot" data-display="false" data-tex="\nabla f(a)"></span>.</p>
                 <strong id="tanMetric"></strong>
               </div>
               <div class="metric">
                 <h4>Normal to the graph</h4>
-                <p>\((-f_x(a),-f_y(a),1)\) is orthogonal to the tangent plane.</p>
+                <p><span class="math-slot" data-display="false" data-tex="(-f_x(a),-f_y(a),1)"></span> is orthogonal to the tangent plane.</p>
                 <strong id="normalMetric"></strong>
               </div>
             </div>
@@ -281,15 +297,15 @@
           <div class="explainRow">
             <div class="explainBox">
               <h4>Gradient</h4>
-              <p>The gradient lives in the \((x,y)\)-plane. It points in the direction where the function increases fastest, and its length is the maximal slope at the point.</p>
+              <p>The gradient lives in the <span class="math-slot" data-display="false" data-tex="(x,y)"></span>-plane. It points in the direction where the function increases fastest, and its length is the maximal slope at the point.</p>
             </div>
             <div class="explainBox">
               <h4>Tangent plane</h4>
-              <p>The tangent plane is the best local affine approximation to the surface. Very near \(a\), the graph and the plane are almost indistinguishable to first order.</p>
+              <p>The tangent plane is the best local affine approximation to the surface. Very near <span class="math-slot" data-display="false" data-tex="a"></span>, the graph and the plane are almost indistinguishable to first order.</p>
             </div>
             <div class="explainBox">
               <h4>Normals and level sets</h4>
-              <p>The same gradient that controls steepest ascent is also normal to the contour through \(a\). This links 3D graph geometry to 2D level-set geometry.</p>
+              <p>The same gradient that controls steepest ascent is also normal to the contour through <span class="math-slot" data-display="false" data-tex="a"></span>. This links 3D graph geometry to 2D level-set geometry.</p>
             </div>
           </div>
         </section>
@@ -299,7 +315,7 @@
             <div class="head">
               <div>
                 <h3>Level sets and normal directions</h3>
-                <p>The contour through \(a\) is the level set \(f(x,y)=f(a)\). The gradient is normal to that contour, and the directional derivative is its projection onto \(u\).</p>
+                <p>The contour through <span class="math-slot" data-display="false" data-tex="a"></span> is the level set <span class="math-slot" data-display="false" data-tex="f(x,y)=f(a)"></span>. The gradient is normal to that contour, and the directional derivative is its projection onto <span class="math-slot" data-display="false" data-tex="u"></span>.</p>
               </div>
               <div class="tag">contour geometry</div>
             </div>
@@ -308,7 +324,7 @@
             </div>
             <div class="explainMini">
               <h4>Short explanation</h4>
-              <p>A level set is the set of points where the function has the same value. Moving along that contour does not change \(f\), so the tangent direction must be orthogonal to the gradient.</p>
+              <p>A level set is the set of points where the function has the same value. Moving along that contour does not change <span class="math-slot" data-display="false" data-tex="f"></span>, so the tangent direction must be orthogonal to the gradient.</p>
             </div>
           </section>
 
@@ -316,7 +332,7 @@
             <div class="head">
               <div>
                 <h3>Directional derivative by angle</h3>
-                <p>As the direction rotates, the slope follows \(D_u f(a)=|\nabla f(a)|\cos(\theta-\theta_\nabla)\).</p>
+                <p>As the direction rotates, the slope follows <span class="math-slot" data-display="false" data-tex="D_u f(a)=|\nabla f(a)|\cos(\theta-\theta_\nabla)"></span>.</p>
               </div>
               <div class="tag">cosine law</div>
             </div>
@@ -325,7 +341,7 @@
             </div>
             <div class="explainMini">
               <h4>Short explanation</h4>
-              <p>The directional derivative depends only on the angle between \(u\) and \(\nabla f(a)\). It is largest when \(u\) points with the gradient, zero when \(u\) is tangent to the level set, and most negative in the opposite direction.</p>
+              <p>The directional derivative depends only on the angle between <span class="math-slot" data-display="false" data-tex="u"></span> and <span class="math-slot" data-display="false" data-tex="\nabla f(a)"></span>. It is largest when <span class="math-slot" data-display="false" data-tex="u"></span> points with the gradient, zero when <span class="math-slot" data-display="false" data-tex="u"></span> is tangent to the level set, and most negative in the opposite direction.</p>
             </div>
           </section>
         </div>
@@ -335,7 +351,7 @@
             <div class="head">
               <div>
                 <h3>3D tangent basis and normal</h3>
-                <p>The tangent plane is spanned by \(r_x=(1,0,f_x)\) and \(r_y=(0,1,f_y)\). Their cross product gives a normal direction.</p>
+                <p>The tangent plane is spanned by <span class="math-slot" data-display="false" data-tex="r_x=(1,0,f_x)"></span> and <span class="math-slot" data-display="false" data-tex="r_y=(0,1,f_y)"></span>. Their cross product gives a normal direction.</p>
               </div>
               <div class="tag">tangent space</div>
             </div>
@@ -344,7 +360,7 @@
             </div>
             <div class="explainMini">
               <h4>Short explanation</h4>
-              <p>The tangent plane is generated by two independent tangent vectors, one coming from changing \(x\) and one from changing \(y\). Their cross product produces a normal vector, which encodes the plane's orientation in space.</p>
+              <p>The tangent plane is generated by two independent tangent vectors, one coming from changing <span class="math-slot" data-display="false" data-tex="x"></span> and one from changing <span class="math-slot" data-display="false" data-tex="y"></span>. Their cross product produces a normal vector, which encodes the plane's orientation in space.</p>
             </div>
           </section>
 
@@ -352,23 +368,23 @@
             <div class="head">
               <div>
                 <h3>Orthogonality on the level set</h3>
-                <p>Any tangent vector \(v\) to the contour satisfies \(\nabla f(a)\cdot v=0\). The gradient kills tangent motion along the level set.</p>
+                <p>Any tangent vector <span class="math-slot" data-display="false" data-tex="v"></span> to the contour satisfies <span class="math-slot" data-display="false" data-tex="\nabla f(a)\cdot v=0"></span>. The gradient kills tangent motion along the level set.</p>
               </div>
-              <div class="tag">\(\nabla f \perp T_aL_c\)</div>
+              <div class="tag"><span class="math-slot" data-display="false" data-tex="\nabla f \perp T_aL_c"></span></div>
             </div>
             <div class="svgBox">
               <svg id="orthoSvg" class="plotSvg" viewBox="0 0 980 520"></svg>
             </div>
             <div class="explainMini">
               <h4>Short explanation</h4>
-              <p>The identity \(\nabla f(a)\cdot v=0\) says that the gradient ignores motion along the contour. Only the component of a direction that points across level sets contributes to the change in the function value.</p>
+              <p>The identity <span class="math-slot" data-display="false" data-tex="\nabla f(a)\cdot v=0"></span> says that the gradient ignores motion along the contour. Only the component of a direction that points across level sets contributes to the change in the function value.</p>
             </div>
           </section>
         </div>
 
         <section class="footer">
           <div><strong>Gradient.</strong> It lives in the domain plane. Its direction is steepest ascent and its norm is the maximal directional derivative.</div>
-          <div><strong>Tangent plane.</strong> The graph of \(f\) is locally approximated by the affine plane with slopes \(f_x(a)\) and \(f_y(a)\).</div>
+          <div><strong>Tangent plane.</strong> The graph of <span class="math-slot" data-display="false" data-tex="f"></span> is locally approximated by the affine plane with slopes <span class="math-slot" data-display="false" data-tex="f_x(a)"></span> and <span class="math-slot" data-display="false" data-tex="f_y(a)"></span>.</div>
           <div><strong>Level-set geometry.</strong> Contours are tangent to vectors orthogonal to the gradient, so the gradient is the canonical normal direction.</div>
         </section>
       </main>
@@ -379,7 +395,7 @@
   const surfaces = {
     paraboloid:{
       label:'quadratic bowl',
-      formula:'\\[f(x,y)=0.45x^2+0.25xy+0.60y^2.\\]',
+      formula:'f(x,y)=0.45x^2+0.25xy+0.60y^2.',
       notice:'A smooth convex bowl. The gradient points outward from the bottom, and the tangent plane changes smoothly across the surface.',
       suggested:[0.35,-0.20],
       f:(x,y)=>0.45*x*x+0.25*x*y+0.60*y*y,
@@ -388,7 +404,7 @@
     },
     saddle:{
       label:'saddle surface',
-      formula:'\\[f(x,y)=0.70x^2-0.55y^2+0.25xy.\\]',
+      formula:'f(x,y)=0.70x^2-0.55y^2+0.25xy.',
       notice:'A saddle has uphill and downhill directions at the same point. The gradient still gives the unique steepest ascent direction in the domain.',
       suggested:[0.50,0.28],
       f:(x,y)=>0.70*x*x-0.55*y*y+0.25*x*y,
@@ -397,7 +413,7 @@
     },
     ripple:{
       label:'oscillatory surface',
-      formula:'\\[f(x,y)=\\sin(1.1x)\\cos(0.9y).\\]',
+      formula:'f(x,y)=\\sin(1.1x)\\cos(0.9y).',
       notice:'Here the slope directions oscillate. The gradient and level-set picture make those local changes visible immediately.',
       suggested:[0.55,0.40],
       f:(x,y)=>Math.sin(1.1*x)*Math.cos(0.9*y),
@@ -406,7 +422,7 @@
     },
     gaussian:{
       label:'Gaussian bump',
-      formula:'\\[f(x,y)=e^{-0.8(x^2+y^2)}+0.12x.\\]',
+      formula:'f(x,y)=e^{-0.8(x^2+y^2)}+0.12x.',
       notice:'Near the bump, the gradient points outward from the high peak, tilted slightly by the linear term.',
       suggested:[0.55,-0.15],
       f:(x,y)=>Math.exp(-0.8*(x*x+y*y))+0.12*x,
@@ -463,9 +479,9 @@
   const norm=v=>Math.hypot(...v);
   const dot=(a,b)=>a[0]*b[0]+a[1]*b[1];
   const fmt=x=>{
-    if(!Number.isFinite(x)) return 'â€”';
+    if(!Number.isFinite(x)) return '—';
     if(Math.abs(x)>9999) return x.toExponential(2);
-    return (x<0?'âˆ’':'')+Math.abs(x).toFixed(3);
+    return (x<0?'−':'')+Math.abs(x).toFixed(3);
   };
   const fmtVec=v=>`(${fmt(v[0])}, ${fmt(v[1])})`;
   function fill(input){
@@ -487,7 +503,7 @@
             <path d="M ${x2} ${y2} L ${hx1} ${hy1} M ${x2} ${y2} L ${hx2} ${hy2}" stroke="${color}" stroke-width="${w}" fill="none" stroke-linecap="round"/>`;
   }
   function matrixStr(g, nvec){
-    return `âˆ‡f(a) = ${fmtVec(g)}\n|âˆ‡f(a)| = ${fmt(norm(g))}\nN_graph = (${fmt(nvec[0])}, ${fmt(nvec[1])}, ${fmt(nvec[2])})`;
+    return `∇f(a) = ${fmtVec(g)}\n|∇f(a)| = ${fmt(norm(g))}\nN_graph = (${fmt(nvec[0])}, ${fmt(nvec[1])}, ${fmt(nvec[2])})`;
   }
 
   function setTheme(t){
@@ -495,7 +511,7 @@
     document.body.classList.toggle('dark',t==='dark');
     localStorage.setItem('gradient-tangent-level-sets-theme',t);
     el.themeLabel.textContent=t==='dark'?'dark mode':'light mode';
-    el.knob.textContent=t==='dark'?'â˜¾':'â˜€';
+    el.knob.textContent=t==='dark'?'☾':'☀';
     if(state.initialized) render();
   }
 
@@ -667,7 +683,7 @@
         x:[p[0],gradTip[0]], y:[p[1],gradTip[1]],
         marker:{size:[0,7], color:css('--gold')},
         line:{color:css('--gold'), width:4},
-        text:['','âˆ‡f(a)'], textposition:'top center',
+        text:['','∇f(a)'], textposition:'top center',
         textfont:{size:12,color:css('--gold')},
         hoverinfo:'skip', showlegend:false
       },
@@ -795,7 +811,7 @@
       <line x1="${X(state.theta)}" y1="${plot.y}" x2="${X(state.theta)}" y2="${plot.y+plot.h}" stroke="${css('--gold')}" stroke-dasharray="6 6" stroke-width="2.4"/>
       <circle cx="${X(state.theta)}" cy="${Y(C.Du)}" r="6" fill="${css('--gold')}"/>
       ${text(X(state.theta)+8,Y(C.Du)-8,'current slope',{size:14,fill:css('--gold'),weight:700})}
-      ${text(plot.x+plot.w-10,plot.y+plot.h+28,'Î¸',{size:15,fill:css('--muted'),weight:700,anchor:'end'})}
+      ${text(plot.x+plot.w-10,plot.y+plot.h+28,'θ',{size:15,fill:css('--muted'),weight:700,anchor:'end'})}
       ${text(plot.x+12,plot.y+26,'D_u f(a)',{size:15,fill:css('--muted'),weight:700})}
     `;
   }
@@ -827,20 +843,20 @@
 
       <circle cx="${center.x}" cy="${center.y}" r="6" fill="${css('--bad')}"/>
       ${text(center.x+8,center.y-8,'a on the level set',{size:15,fill:css('--bad'),weight:700})}
-      ${text(gradTip.x+8,gradTip.y-8,'âˆ‡f(a)',{size:15,fill:css('--gold'),weight:700})}
+      ${text(gradTip.x+8,gradTip.y-8,'∇f(a)',{size:15,fill:css('--gold'),weight:700})}
       ${text(tanTip.x+8,tanTip.y+18,'v tangent', {size:15,fill:css('--violet'),weight:700})}
       ${text(dirTip.x+8,dirTip.y-8,'u', {size:15,fill:css('--model'),weight:700})}
-      ${text(projTip.x+8,projTip.y+18,'projection of u on âˆ‡f', {size:15,fill:css('--good'),weight:700})}
+      ${text(projTip.x+8,projTip.y+18,'projection of u on ∇f', {size:15,fill:css('--good'),weight:700})}
 
       <path d="M ${center.x} ${center.y} L ${center.x+26*tdir[0]} ${center.y-26*tdir[1]} L ${center.x+26*(tdir[0]+gdir[0])} ${center.y-26*(tdir[1]+gdir[1])}" fill="none" stroke="${css('--line')}" stroke-width="2"/>
       <rect x="640" y="100" width="232" height="220" rx="22" fill="${css('--card')}" stroke="${css('--line')}"/>
       ${text(660,136,'What the picture says',{size:20,weight:700,family:'Georgia, serif'})}
       ${text(660,172,'â€¢ contour tangent v satisfies', {size:14,fill:css('--muted'),weight:700})}
-      ${text(682,196,'âˆ‡f(a) Â· v = 0', {size:18,fill:css('--violet'),weight:700,family:'Georgia, serif'})}
+      ${text(682,196,'∇f(a) · v = 0', {size:18,fill:css('--violet'),weight:700,family:'Georgia, serif'})}
       ${text(660,234,'â€¢ directional slope along u is', {size:14,fill:css('--muted'),weight:700})}
-      ${text(682,258,'D_u f(a) = âˆ‡f(a) Â· u', {size:18,fill:css('--model'),weight:700,family:'Georgia, serif'})}
+      ${text(682,258,'D_u f(a) = ∇f(a) · u', {size:18,fill:css('--model'),weight:700,family:'Georgia, serif'})}
       ${text(660,296,'â€¢ maximal slope occurs when', {size:14,fill:css('--muted'),weight:700})}
-      ${text(682,320,'u is parallel to âˆ‡f(a)', {size:18,fill:css('--gold'),weight:700,family:'Georgia, serif'})}
+      ${text(682,320,'u is parallel to ∇f(a)', {size:18,fill:css('--gold'),weight:700,family:'Georgia, serif'})}
     `;
   }
 
@@ -854,14 +870,14 @@
     [el.pxSlider,el.pySlider,el.thetaSlider,el.rhoSlider,el.scaleSlider].forEach(fill);
 
     el.matrixBox.textContent=matrixStr(C.g,C.ngraph);
-    el.formulaBox.innerHTML=C.fobj.formula;
-    el.noticeBox.innerHTML=C.fobj.notice;
+    el.formulaBox.innerHTML=mathDisplay(C.fobj.formula);
+    el.noticeBox.innerHTML=renderMathText(C.fobj.notice);
 
-    el.gradMetric.textContent=`âˆ‡f(a) â‰ˆ ${fmtVec(C.g)} ;  |âˆ‡f(a)| â‰ˆ ${fmt(norm(C.g))}`;
-    el.dirMetric.textContent=`u â‰ˆ ${fmtVec(C.u)} ;  D_u f(a) â‰ˆ ${fmt(C.Du)}`;
-    el.planeMetric.textContent=`z â‰ˆ ${fmt(C.z0)} + ${fmt(C.g[0])}(x-${fmt(C.a[0])}) + ${fmt(C.g[1])}(y-${fmt(C.a[1])})`;
-    el.tanMetric.textContent=`one tangent direction: ${fmtVec(C.tvec)} ;  dot â‰ˆ ${fmt(dot(C.g,C.tvec))}`;
-    el.normalMetric.textContent=`N â‰ˆ (${fmt(C.ngraph[0])}, ${fmt(C.ngraph[1])}, 1.000)`;
+    el.gradMetric.textContent=`∇f(a) ≈ ${fmtVec(C.g)} ;  |∇f(a)| ≈ ${fmt(norm(C.g))}`;
+    el.dirMetric.textContent=`u ≈ ${fmtVec(C.u)} ;  D_u f(a) ≈ ${fmt(C.Du)}`;
+    el.planeMetric.textContent=`z ≈ ${fmt(C.z0)} + ${fmt(C.g[0])}(x-${fmt(C.a[0])}) + ${fmt(C.g[1])}(y-${fmt(C.a[1])})`;
+    el.tanMetric.textContent=`one tangent direction: ${fmtVec(C.tvec)} ;  dot ≈ ${fmt(dot(C.g,C.tvec))}`;
+    el.normalMetric.textContent=`N ≈ (${fmt(C.ngraph[0])}, ${fmt(C.ngraph[1])}, 1.000)`;
   }
 
   function render(){
@@ -871,7 +887,7 @@
     renderBasisPlot();
     renderAngleSvg();
     renderOrthoSvg();
-    if(window.MathJax) MathJax.typesetPromise().catch(()=>{});
+    typesetMath(document.body);
   }
 
   function sync(){

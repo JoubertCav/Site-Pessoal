@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -19,13 +19,9 @@
     gtag('config', 'G-NHXHEJP1G0');
   </script>
 
-  <script>
-    window.MathJax = {
-      tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
-      svg: { fontCache: 'global' }
-    };
-  </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
   <script defer src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
 
   <style>
@@ -85,7 +81,7 @@
     .theme .label{font-size:.92rem;color:var(--muted);min-width:70px}
     .switch{position:relative;width:70px;height:36px;border-radius:999px;background:var(--switch);border:1px solid var(--line)}
     .switch:before,.switch:after{position:absolute;top:50%;transform:translateY(-50%);font-size:13px;opacity:.75}
-    .switch:before{content:"â˜€";left:10px}.switch:after{content:"â˜¾";right:10px}
+    .switch:before{content:"☀";left:10px}.switch:after{content:"☾";right:10px}
     .knob{position:absolute;left:3px;top:3px;width:28px;height:28px;border-radius:50%;background:var(--thumb);border:1px solid var(--line);box-shadow:0 4px 12px rgba(0,0,0,.16);transition:left .25s ease;display:grid;place-items:center;font-size:13px}
     body.dark .knob{left:37px}
 
@@ -155,7 +151,7 @@
         <div class="pill">tangent plane vs surface</div>
         <div id="theme" class="theme" role="button" tabindex="0">
           <span id="themeLabel" class="label">light mode</span>
-          <div class="switch"><div id="knob" class="knob">â˜€</div></div>
+          <div class="switch"><div id="knob" class="knob">☀</div></div>
         </div>
       </div>
     </header>
@@ -251,7 +247,7 @@
                 <strong id="linMetric"></strong>
               </div>
               <div class="metric">
-                <h4>FrÃ©chet test</h4>
+                <h4>Fréchet test</h4>
                 <p>Does one linear approximation work in every direction?</p>
                 <strong id="frechetMetric"></strong>
               </div>
@@ -307,7 +303,7 @@
                 <h3>Normalized remainder</h3>
                 <p>The decisive test: \(|r(h)|/\|h\|\to0\) along every approach path.</p>
               </div>
-              <div class="tag">FrÃ©chet</div>
+              <div class="tag">Fréchet</div>
             </div>
             <div class="svgBox">
               <svg id="remainderSvg" class="plotSvg" viewBox="0 0 900 520"></svg>
@@ -467,9 +463,9 @@
   const lin=(x,a,b,c,d)=>c+(x-a)*(d-c)/(b-a);
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   const fmt=x=>{
-    if(!Number.isFinite(x)) return 'â€”';
+    if(!Number.isFinite(x)) return '—';
     if(Math.abs(x)>9999) return x.toExponential(2);
-    return (x<0?'âˆ’':'')+Math.abs(x).toFixed(3);
+    return (x<0?'−':'')+Math.abs(x).toFixed(3);
   };
   function fill(input){
     const min=+input.min,max=+input.max,val=+input.value;
@@ -487,7 +483,7 @@
     document.body.classList.toggle('dark',t==='dark');
     localStorage.setItem('partial-interactive-3d-theme',t);
     el.themeLabel.textContent=t==='dark'?'dark mode':'light mode';
-    el.knob.textContent=t==='dark'?'â˜¾':'â˜€';
+    el.knob.textContent=t==='dark'?'☾':'☀';
     if(state.initialized) render();
   }
 
@@ -732,8 +728,8 @@
       <circle cx="${X(C.end[0])}" cy="${Y(C.end[1])}" r="7" fill="${css('--bad')}" stroke="${css('--paper')}" stroke-width="2.4"/>
       <rect x="580" y="120" width="250" height="190" rx="24" fill="${css('--card')}" stroke="${css('--line')}"/>
       ${text(605,160,'Coordinate tests',{size:19,weight:700,family:'Georgia, serif'})}
-      ${text(605,198,'âˆ‚x: horizontal only',{size:14,fill:css('--model'),weight:700})}
-      ${text(605,226,'âˆ‚y: vertical only',{size:14,fill:css('--model'),weight:700})}
+      ${text(605,198,'∂x: horizontal only',{size:14,fill:css('--model'),weight:700})}
+      ${text(605,226,'∂y: vertical only',{size:14,fill:css('--model'),weight:700})}
       ${text(605,266,'Differentiability: all directions',{size:14,fill:css('--bad'),weight:700})}
     `;
   }
@@ -792,7 +788,7 @@
     const col=C.ex.frechet==='passes'?css('--good'):css('--bad');
     el.angleSvg.innerHTML=`
       <rect x="0" y="0" width="${W}" height="${H}" rx="22" fill="${css('--paper')}"/>
-      ${text(plot.x,34,'directional derivative by angle Î¸',{size:20,weight:700,family:'Georgia, serif'})}
+      ${text(plot.x,34,'directional derivative by angle θ',{size:20,weight:700,family:'Georgia, serif'})}
       <rect x="${plot.x}" y="${plot.y}" width="${plot.w}" height="${plot.h}" rx="20" fill="transparent" stroke="${css('--line')}"/>
       ${grid}
       <line x1="${plot.x}" y1="${Y(0)}" x2="${plot.x+plot.w}" y2="${Y(0)}" stroke="${css('--line')}" stroke-width="2"/>
@@ -981,14 +977,28 @@
     el.comment.innerHTML=C.ex.comment;
 
     const dd=directionDerivative(C.ex,C.a,state.theta);
-    el.partialMetric.textContent=`f_x(a)â‰ˆ${fmt(C.grad[0])},  f_y(a)â‰ˆ${fmt(C.grad[1])}`;
-    el.dirMetric.textContent=Number.isFinite(dd)?`D_v f(a)â‰ˆ${fmt(dd)}`:'not defined';
-    el.linMetric.textContent=`planeâ‰ˆ${fmt(C.linPred)} ; actualâ‰ˆ${fmt(C.actual)}`;
-    el.frechetMetric.textContent=C.ex.frechet==='passes'?'yes: |r(h)|/||h|| â†’ 0':'no: some path breaks the plane';
+    el.partialMetric.textContent=`f_x(a)≈${fmt(C.grad[0])},  f_y(a)≈${fmt(C.grad[1])}`;
+    el.dirMetric.textContent=Number.isFinite(dd)?`D_v f(a)≈${fmt(dd)}`:'not defined';
+    el.linMetric.textContent=`plane≈${fmt(C.linPred)} ; actual≈${fmt(C.actual)}`;
+    el.frechetMetric.textContent=C.ex.frechet==='passes'?'yes: |r(h)|/||h|| → 0':'no: some path breaks the plane';
 
     el.status.textContent=C.ex.status;
     el.status.style.color=C.ex.frechet==='passes'?css('--good'):css('--bad');
     el.status.style.background=C.ex.frechet==='passes'?css('--goodSoft'):css('--badSoft');
+  }
+
+  function typesetMath(){
+    if(!window.renderMathInElement) return;
+    renderMathInElement(document.body, {
+      delimiters: [
+        {left: "\\[", right: "\\]", display: true},
+        {left: "\\(", right: "\\)", display: false},
+        {left: "$$", right: "$$", display: true},
+        {left: "$", right: "$", display: false}
+      ],
+      throwOnError: false,
+      ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code", "option"]
+    });
   }
 
   function render(){
@@ -1000,7 +1010,7 @@
     renderRemainder();
     renderCoord(el.xSlicePlot,'x');
     renderCoord(el.ySlicePlot,'y');
-    if(window.MathJax) MathJax.typesetPromise().catch(()=>{});
+    typesetMath();
   }
 
   function sync(){

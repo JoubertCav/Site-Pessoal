@@ -18,14 +18,9 @@
 
     gtag('config', 'G-NHXHEJP1G0');
   </script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 
-  <script>
-    window.MathJax = {
-      tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
-      svg: { fontCache: 'global' }
-    };
-  </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 
   <style>
     :root{
@@ -89,7 +84,7 @@
     .theme .label{font-size:.92rem;color:var(--muted);min-width:70px}
     .switch{position:relative;width:70px;height:36px;border-radius:999px;background:var(--switch);border:1px solid var(--line)}
     .switch:before,.switch:after{position:absolute;top:50%;transform:translateY(-50%);font-size:13px;opacity:.75}
-    .switch:before{content:"â˜€";left:10px}.switch:after{content:"â˜¾";right:10px}
+    .switch:before{content:"☀";left:10px}.switch:after{content:"☾";right:10px}
     .knob{position:absolute;left:3px;top:3px;width:28px;height:28px;border-radius:50%;background:var(--thumb);border:1px solid var(--line);box-shadow:0 4px 12px rgba(0,0,0,.16);transition:left .25s ease;display:grid;place-items:center;font-size:13px}
     body.dark .knob{left:37px}
 
@@ -134,6 +129,13 @@
     .footer div{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:12px 13px;font-size:.92rem;line-height:1.42}
     @media(max-width:1180px){.layout{grid-template-columns:1fr}aside{position:static}.split,.lower{grid-template-columns:1fr}}
     @media(max-width:900px){.smallGrid,.footer{grid-template-columns:1fr}.wrap{padding:18px 14px 28px}}
+
+    .math-slot{display:inline-block;max-width:100%;vertical-align:baseline}
+    .math-slot.display{display:block;overflow-x:auto;overflow-y:hidden;padding:2px 0}
+    .math-slot.display .katex-display{margin:.2em 0;text-align:left}
+    .eq,.note,.metric p,.footer div,.mini p{overflow-wrap:anywhere}
+    .eq .katex,.note .katex,.footer .katex{font-size:1.02em}
+
   </style>
 </head>
 <body>
@@ -145,10 +147,10 @@
       </div>
       <div class="actions">
         <div class="pill">moving error bands</div>
-        <div class="pill">sup norm \( \|f_n-f\|_\infty \)</div>
+        <div class="pill">sup norm <span class="math-slot" data-display="false" data-tex="\|f_n-f\|_\infty"></span></div>
         <div id="theme" class="theme" role="button" tabindex="0">
           <span id="themeLabel" class="label">light mode</span>
-          <div class="switch"><div id="knob" class="knob">â˜€</div></div>
+          <div class="switch"><div id="knob" class="knob">☀</div></div>
         </div>
       </div>
     </header>
@@ -158,36 +160,30 @@
         <div class="head">
           <div>
             <h2>Controls</h2>
-            <p>Change \(n\), the band width, and the function sequence.</p>
+            <p>Change <span class="math-slot" data-display="false" data-tex="n"></span>, the band width, and the function sequence.</p>
           </div>
           <div class="tag">visual test</div>
         </div>
 
-        <div class="eq">
-          \[
-          f_n\to f\ \text{uniformly}
-          \quad\Longleftrightarrow\quad
-          \|f_n-f\|_\infty\to0
-          \]
-        </div>
+        <div class="eq"><span class="math-slot display" data-display="true" data-tex="f_n\to f\ \text{uniformly}\quad\Longleftrightarrow\quad \|f_n-f\|_\infty\to0"></span></div>
 
         <div class="control">
           <label>Sequence <small id="exLabel"></small></label>
           <select id="example">
-            <option value="linear">\(f_n(x)=x/n\) on \([0,1]\)</option>
-            <option value="power">\(f_n(x)=x^n\) on \([0,1]\)</option>
-            <option value="sine">\(f_n(x)=\sin(nx)/n\) on \([0,2\pi]\)</option>
-            <option value="spike">moving spike on \([0,1]\)</option>
+            <option value="linear">f_n(x)=x/n on [0,1]</option>
+            <option value="power">f_n(x)=x^n on [0,1]</option>
+            <option value="sine">f_n(x)=sin(nx)/n on [0,2π]</option>
+            <option value="spike">moving spike on [0,1]</option>
           </select>
         </div>
 
         <div class="control">
-          <label>Index \(n\) <small id="nLabel"></small></label>
+          <label>Index <span class="math-slot" data-display="false" data-tex="n"></span> <small id="nLabel"></small></label>
           <input id="nSlider" type="range" min="1" max="80" step="1" value="8">
         </div>
 
         <div class="control">
-          <label>Error band \( \varepsilon \) <small id="epsLabel"></small></label>
+          <label>Error band <span class="math-slot" data-display="false" data-tex="\varepsilon"></span> <small id="epsLabel"></small></label>
           <input id="epsSlider" type="range" min="0.03" max="0.8" step="0.01" value="0.18">
         </div>
 
@@ -205,7 +201,7 @@
           <div class="heroTop">
             <div>
               <h2>Band test: does the whole graph fit?</h2>
-              <p>Top: curve versus band. Bottom: error versus \(\varepsilon\).</p>
+              <p>Top: curve versus band. Bottom: error versus <span class="math-slot" data-display="false" data-tex="\varepsilon"></span>.</p>
             </div>
             <div id="status" class="status">inside band</div>
           </div>
@@ -217,7 +213,7 @@
             <div class="metrics">
               <div class="metric">
                 <h4>Convergence type</h4>
-                <p>What happens as \(n\to\infty\).</p>
+                <p>What happens as <span class="math-slot" data-display="false" data-tex="n\to\infty"></span>.</p>
                 <strong id="typeMetric"></strong>
               </div>
               <div class="metric">
@@ -232,7 +228,7 @@
               </div>
               <div class="metric">
                 <h4>Current band</h4>
-                <p>Whether \(E_n<\varepsilon\).</p>
+                <p>Whether <span class="math-slot" data-display="false" data-tex="E_n&lt;\varepsilon"></span>.</p>
                 <strong id="bandMetric"></strong>
               </div>
             </div>
@@ -265,25 +261,25 @@
               <div class="mini">
                 <h4>Continuity</h4>
                 <svg id="mini1" class="plotSvg" viewBox="0 0 260 170"></svg>
-                <p>\(x^n\) has continuous terms but a discontinuous pointwise limit.</p>
+                <p><span class="math-slot" data-display="false" data-tex="x^n"></span> has continuous terms but a discontinuous pointwise limit.</p>
               </div>
               <div class="mini">
                 <h4>Integrals</h4>
                 <svg id="mini2" class="plotSvg" viewBox="0 0 260 170"></svg>
-                <p>Spikes converge pointwise to \(0\), while area may stay positive.</p>
+                <p>Spikes converge pointwise to <span class="math-slot" data-display="false" data-tex="0"></span>, while area may stay positive.</p>
               </div>
               <div class="mini">
                 <h4>Derivatives</h4>
                 <svg id="mini3" class="plotSvg" viewBox="0 0 260 170"></svg>
-                <p>\(\sin(nx)/n\to0\) uniformly, but derivatives oscillate.</p>
+                <p><span class="math-slot" data-display="false" data-tex="\sin(nx)/n\to0"></span> uniformly, but derivatives oscillate.</p>
               </div>
             </div>
           </section>
         </div>
 
         <section class="footer">
-          <div><strong>Pointwise.</strong> Each fixed \(x\) converges.</div>
-          <div><strong>Uniform.</strong> One \(N\) works for all \(x\).</div>
+          <div><strong>Pointwise.</strong> Each fixed <span class="math-slot" data-display="false" data-tex="x"></span> converges.</div>
+          <div><strong>Uniform.</strong> One <span class="math-slot" data-display="false" data-tex="N"></span> works for all <span class="math-slot" data-display="false" data-tex="x"></span>.</div>
           <div><strong>Visual rule.</strong> The whole curve enters every band.</div>
         </section>
       </main>
@@ -291,31 +287,50 @@
   </div>
 
   <script>
+
+    function escapeMathAttr(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+    function mathDisplay(tex){return `<span class="math-slot display" data-display="true" data-tex="${escapeMathAttr(tex)}"></span>`;}
+    function mathInline(tex){return `<span class="math-slot" data-display="false" data-tex="${escapeMathAttr(tex)}"></span>`;}
+    function renderMathText(s){
+      return String(s)
+        .replace(/\\\[(.*?)\\\]/gs, (_,tex)=>mathDisplay(tex))
+        .replace(/\\\((.*?)\\\)/gs, (_,tex)=>mathInline(tex));
+    }
+    function typesetMath(root=document.body){
+      if(!window.katex){ window.setTimeout(()=>typesetMath(root),60); return; }
+      root.querySelectorAll('.math-slot[data-tex]').forEach(el=>{
+        const tex=el.getAttribute('data-tex')||'';
+        const displayMode=el.getAttribute('data-display')==='true';
+        try{ katex.render(tex, el, {displayMode, throwOnError:false, strict:'ignore'}); }
+        catch(err){ el.textContent=''; el.title=tex; }
+      });
+    }
+
     const examples = {
       linear:{
         label:'uniform',
-        formula:'\\[ f_n(x)=x/n,\\quad f(x)=0,\\quad E_n=1/n. \\]',
-        comment:'The whole graph collapses to zero. Once \(1/n<\\varepsilon\), every point is inside the band.',
+        formula:'f_n(x)=x/n,\\quad f(x)=0,\\quad E_n=1/n.',
+        comment:'The whole graph collapses to zero. Once \(1/n<\varepsilon\), every point is inside the band.',
         domain:[0,1], range:[-0.08,1.05], uniform:true,
         f:(x,n)=>x/n, lim:x=>0, sup:n=>1/n, type:'uniform convergence'
       },
       power:{
         label:'pointwise only',
-        formula:'\\[ f_n(x)=x^n,\\quad f(x)=0\\ (x<1),\\quad f(1)=1. \\]',
+        formula:'f_n(x)=x^n,\\quad f(x)=0\\ (x<1),\\quad f(1)=1.',
         comment:'For each fixed \(x<1\), \(x^n\\to0\). But a boundary layer near \(1\) always escapes the band.',
         domain:[0,1], range:[-0.08,1.1], uniform:false,
         f:(x,n)=>Math.pow(x,n), lim:x=>Math.abs(x-1)<1e-10?1:0, sup:n=>1, type:'pointwise, not uniform'
       },
       sine:{
         label:'uniform',
-        formula:'\\[ f_n(x)=\\sin(nx)/n,\\quad f(x)=0,\\quad E_n=1/n. \\]',
+        formula:'f_n(x)=\\sin(nx)/n,\\quad f(x)=0,\\quad E_n=1/n.',
         comment:'The oscillation frequency increases, but the amplitude shrinks uniformly.',
         domain:[0,2*Math.PI], range:[-1.05,1.05], uniform:true,
         f:(x,n)=>Math.sin(n*x)/n, lim:x=>0, sup:n=>1/n, type:'uniform convergence'
       },
       spike:{
         label:'pointwise only',
-        formula:'\\[ f_n(x)=\\max(0,1-n|x-1/n|),\\quad f(x)=0. \\]',
+        formula:'f_n(x)=\\max\\{0,1-n|x-1/n|\\},\\quad f(x)=0.',
         comment:'The spike moves into the origin and narrows. Every fixed point eventually sees zero, but the sup height stays \(1\).',
         domain:[0,1], range:[-0.08,1.1], uniform:false,
         f:(x,n)=>Math.max(0,1-n*Math.abs(x-1/n)), lim:x=>0, sup:n=>1, type:'pointwise, not uniform'
@@ -335,13 +350,13 @@
 
     const css=v=>getComputedStyle(document.body).getPropertyValue(v).trim();
     const lin=(x,a,b,c,d)=>c+(x-a)*(d-c)/(b-a);
-    const fmt=x=>(x<0?'âˆ’':'')+Math.abs(x).toFixed(2);
+    const fmt=x=>(x<0?'−':'')+Math.abs(x).toFixed(2);
 
     function setTheme(t){
       state.theme=t; document.body.classList.toggle('dark',t==='dark');
       localStorage.setItem('clean-pw-theme',t);
       el.themeLabel.textContent=t==='dark'?'dark mode':'light mode';
-      el.knob.textContent=t==='dark'?'â˜¾':'â˜€';
+      el.knob.textContent=t==='dark'?'☾':'☀';
       render();
     }
     function fill(input){
@@ -419,8 +434,8 @@
       const col=st.inside?css('--accent'):css('--bad');
       el.mainSvg.innerHTML=`
         <rect x="0" y="0" width="${W}" height="${H}" rx="26" fill="${css('--paper')}"/>
-        ${text(top.x,42,'graph view: moving Îµ-band', {size:21,weight:700,family:'Georgia, serif'})}
-        ${text(err.x,530,'error view: |fâ‚™ âˆ’ f|', {size:19,weight:700,family:'Georgia, serif'})}
+        ${text(top.x,42,'graph view: moving epsilon-band', {size:21,weight:700,family:'Georgia, serif'})}
+        ${text(err.x,530,'error view: |fₙ − f|', {size:19,weight:700,family:'Georgia, serif'})}
         ${text(gauge.x-10,82,'sup norm', {size:19,weight:700,family:'Georgia, serif'})}
 
         <rect x="${top.x}" y="${top.y}" width="${top.w}" height="${top.h}" rx="22" fill="transparent" stroke="${css('--line')}"/>
@@ -435,7 +450,7 @@
         <circle cx="${X(st.wx)}" cy="${Y(st.lim)}" r="6.4" fill="${css('--paper')}" stroke="${col}" stroke-width="2.2"/>
         <rect x="${top.x+18}" y="${top.y+16}" width="284" height="42" rx="15" fill="${css('--paper')}" stroke="${css('--line')}"/>
         <circle cx="${top.x+36}" cy="${top.y+42}" r="5" fill="${css('--limit')}"/>
-        ${text(top.x+48,top.y+47,'limit / Îµ-band',{size:13,fill:css('--muted')})}
+        ${text(top.x+48,top.y+47,'limit / epsilon-band',{size:13,fill:css('--muted')})}
         <circle cx="${top.x+154}" cy="${top.y+42}" r="5" fill="${css('--accent')}"/>
         ${text(top.x+166,top.y+47,'inside',{size:13,fill:css('--muted')})}
         <circle cx="${top.x+226}" cy="${top.y+42}" r="5" fill="${css('--bad')}"/>
@@ -446,7 +461,7 @@
         <line x1="${err.x}" y1="${YE(state.eps)}" x2="${err.x+err.w}" y2="${YE(state.eps)}" stroke="${css('--limit')}" stroke-width="2.2" stroke-dasharray="8 7"/>
         <path d="${path(epts,XE,YE)}" fill="none" stroke="${col}" stroke-width="3"/>
         <circle cx="${XE(st.wx)}" cy="${YE(st.sup)}" r="7" fill="${col}" stroke="${css('--paper')}" stroke-width="2.2"/>
-        ${text(err.x+10,YE(state.eps)-10,'Îµ',{size:14,fill:css('--limit'),weight:700})}
+        ${text(err.x+10,YE(state.eps)-10,'ε',{size:14,fill:css('--limit'),weight:700})}
         ${text(err.x+err.w-8,err.y+err.h+24,'x',{size:13,fill:css('--muted'),anchor:'end'})}
 
         <rect x="${gauge.x}" y="${gauge.y}" width="${gauge.w}" height="${gauge.h}" rx="24" fill="${st.inside?css('--accentSoft'):css('--badSoft')}" stroke="${css('--line')}"/>
@@ -454,13 +469,13 @@
         <rect x="${gauge.x+gauge.w/2-20}" y="${YG(st.sup)}" width="40" height="${YG(0)-YG(st.sup)}" rx="18" fill="${st.inside?css('--accentSoft'):css('--badSoft')}" stroke="${col}" stroke-width="1.6"/>
         <line x1="${gauge.x+18}" y1="${YG(state.eps)}" x2="${gauge.x+gauge.w-18}" y2="${YG(state.eps)}" stroke="${css('--limit')}" stroke-width="2.2" stroke-dasharray="7 6"/>
         <circle cx="${gauge.x+gauge.w/2}" cy="${YG(st.sup)}" r="8" fill="${col}" stroke="${css('--paper')}" stroke-width="2.4"/>
-        ${text(gauge.x+gauge.w/2,YG(state.eps)-12,'Îµ',{size:14,fill:css('--limit'),weight:700,anchor:'middle'})}
-        ${text(gauge.x+gauge.w/2,YG(st.sup)-12,'Eâ‚™',{size:14,fill:col,weight:700,anchor:'middle'})}
-        ${text(gauge.x+gauge.w/2,gauge.y+gauge.h+34, st.inside?'Eâ‚™ < Îµ':'Eâ‚™ â‰¥ Îµ',{size:15,fill:col,weight:700,anchor:'middle'})}
+        ${text(gauge.x+gauge.w/2,YG(state.eps)-12,'ε',{size:14,fill:css('--limit'),weight:700,anchor:'middle'})}
+        ${text(gauge.x+gauge.w/2,YG(st.sup)-12,'Eₙ',{size:14,fill:col,weight:700,anchor:'middle'})}
+        ${text(gauge.x+gauge.w/2,gauge.y+gauge.h+34, st.inside?'Eₙ < ε':'Eₙ ≥ ε',{size:15,fill:col,weight:700,anchor:'middle'})}
       `;
       el.typeMetric.textContent=ex.type;
-      el.supMetric.textContent=`Eâ‚™ â‰ˆ ${st.sup.toFixed(3)}`;
-      el.worstMetric.textContent=`x â‰ˆ ${fmt(st.wx)}`;
+      el.supMetric.textContent=`Eₙ ≈ ${st.sup.toFixed(3)}`;
+      el.worstMetric.textContent=`x ≈ ${fmt(st.wx)}`;
       el.bandMetric.textContent=st.inside?'whole graph inside':'some part outside';
       el.status.textContent=st.inside?'whole graph fits':'some part escapes';
       el.status.style.color=col;
@@ -478,17 +493,17 @@
       const curr=ex.sup(state.n), col=curr<state.eps?css('--accent'):css('--bad');
       el.supSvg.innerHTML=`
         <rect x="0" y="0" width="${W}" height="${H}" rx="22" fill="${css('--paper')}"/>
-        ${text(plot.x,28,'global error sequence  Eâ‚™ = ||fâ‚™âˆ’f||âˆž',{size:20,weight:700,family:'Georgia, serif'})}
+        ${text(plot.x,28,'global error sequence  Eₙ = ||fₙ−f||∞',{size:20,weight:700,family:'Georgia, serif'})}
         <rect x="${plot.x}" y="${plot.y}" width="${plot.w}" height="${plot.h}" rx="20" fill="transparent" stroke="${css('--line')}"/>
         ${grid}
         <line x1="${plot.x}" y1="${Y(state.eps)}" x2="${plot.x+plot.w}" y2="${Y(state.eps)}" stroke="${css('--limit')}" stroke-width="2.2" stroke-dasharray="8 7"/>
         <path d="${p}" fill="none" stroke="${css('--text')}" stroke-width="3" stroke-linecap="round"/>
         <line x1="${X(state.n)}" y1="${plot.y}" x2="${X(state.n)}" y2="${plot.y+plot.h}" stroke="${css('--accent')}" stroke-width="2" stroke-dasharray="6 5"/>
         <circle cx="${X(state.n)}" cy="${Y(curr)}" r="7.5" fill="${col}" stroke="${css('--paper')}" stroke-width="2.3"/>
-        ${text(plot.x+12,Y(state.eps)-10,'Îµ',{size:14,fill:css('--limit'),weight:700})}
+        ${text(plot.x+12,Y(state.eps)-10,'ε',{size:14,fill:css('--limit'),weight:700})}
         ${text(X(state.n)+10,Y(curr)-10,`n=${state.n}`,{size:14,fill:col,weight:700})}
         ${text(plot.x+plot.w-8,plot.y+plot.h+24,'n',{size:13,fill:css('--muted'),anchor:'end'})}
-        ${text(plot.x+plot.w-8,392,ex.uniform?'uniform: Eâ‚™ tends to 0':'not uniform: Eâ‚™ does not tend to 0',{size:14,fill:ex.uniform?css('--accent'):css('--bad'),weight:700,anchor:'end'})}
+        ${text(plot.x+plot.w-8,392,ex.uniform?'uniform: Eₙ tends to 0':'not uniform: Eₙ does not tend to 0',{size:14,fill:ex.uniform?css('--accent'):css('--bad'),weight:700,anchor:'end'})}
       `;
     }
 
@@ -497,7 +512,7 @@
       const frame=(svg,title)=>`<rect x="0" y="0" width="${W}" height="${H}" rx="14" fill="${css('--paper')}"/><rect x="12" y="10" width="236" height="28" rx="12" fill="${css('--card')}" stroke="${css('--line')}"/>${text(24,29,title,{size:12,weight:700})}`+svg;
       let X=x=>lin(x,0,1,24,238), Y=y=>lin(y,0,1,150,48), pts=[];
       for(let i=0;i<120;i++){let x=i/119;pts.push(`${i?'L':'M'} ${X(x)} ${Y(x**8)}`)}
-      el.mini1.innerHTML=frame(`<line x1="20" y1="${Y(0)}" x2="240" y2="${Y(0)}" stroke="${css('--line')}"/><path d="${pts.join(' ')}" fill="none" stroke="${css('--bad')}" stroke-width="2.7"/><line x1="24" y1="${Y(0)}" x2="238" y2="${Y(0)}" stroke="${css('--limit')}" stroke-width="2" stroke-dasharray="6 5"/><circle cx="${X(1)}" cy="${Y(1)}" r="6" fill="${css('--limit')}"/><circle cx="${X(1)}" cy="${Y(0)}" r="5.5" fill="${css('--paper')}" stroke="${css('--limit')}" stroke-width="2"/>`,'xâ¿ limit');
+      el.mini1.innerHTML=frame(`<line x1="20" y1="${Y(0)}" x2="240" y2="${Y(0)}" stroke="${css('--line')}"/><path d="${pts.join(' ')}" fill="none" stroke="${css('--bad')}" stroke-width="2.7"/><line x1="24" y1="${Y(0)}" x2="238" y2="${Y(0)}" stroke="${css('--limit')}" stroke-width="2" stroke-dasharray="6 5"/><circle cx="${X(1)}" cy="${Y(1)}" r="6" fill="${css('--limit')}"/><circle cx="${X(1)}" cy="${Y(0)}" r="5.5" fill="${css('--paper')}" stroke="${css('--limit')}" stroke-width="2"/>`,'xⁿ limit');
 
       X=x=>lin(x,0,1,24,238); Y=y=>lin(y,0,5,150,48);
       el.mini2.innerHTML=frame(`<line x1="20" y1="${Y(0)}" x2="240" y2="${Y(0)}" stroke="${css('--line')}"/><polygon points="${X(.10)},${Y(0)} ${X(.22)},${Y(4)} ${X(.34)},${Y(0)}" fill="${css('--badSoft')}" stroke="${css('--bad')}" stroke-width="2.4"/><line x1="24" y1="${Y(0)}" x2="238" y2="${Y(0)}" stroke="${css('--limit')}" stroke-width="2" stroke-dasharray="6 5"/>`,'moving spike');
@@ -513,14 +528,14 @@
       el.nLabel.textContent=state.n;
       el.epsLabel.textContent=state.eps.toFixed(2);
       fill(el.nSlider); fill(el.epsSlider);
-      el.formula.innerHTML=ex.formula;
-      el.comment.innerHTML=ex.comment;
+      el.formula.innerHTML=mathDisplay(ex.formula);
+      el.comment.innerHTML=renderMathText(ex.comment);
       el.play.textContent=state.playing?'pause':'play';
     }
 
     function render(){
       update(); renderMain(); renderSup(); renderMinis();
-      if(window.MathJax) MathJax.typesetPromise().catch(()=>{});
+      typesetMath(document.body);
     }
 
     function sync(){

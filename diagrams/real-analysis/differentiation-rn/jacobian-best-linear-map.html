@@ -18,14 +18,32 @@
 
     gtag('config', 'G-NHXHEJP1G0');
   </script>
-
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
   <script>
-    window.MathJax = {
-      tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
-      svg: { fontCache: 'global' }
-    };
+    function escapeMathAttr(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+    function mathInline(tex){return `<span class="math-slot" data-display="false" data-tex="${escapeMathAttr(tex)}"></span>`;}
+    function mathDisplay(tex){return `<span class="math-slot display" data-display="true" data-tex="${escapeMathAttr(tex)}"></span>`;}
+    function renderMathText(s){
+      return String(s)
+        .replace(/\\[(.*?)\\]/gs, (_,tex)=>mathDisplay(tex))
+        .replace(/\\((.*?)\\)/gs, (_,tex)=>mathInline(tex));
+    }
+    function stripMathDelimiters(s){
+      return String(s).replace(/^\\[/,'').replace(/\\]$/,'');
+    }
+    function typesetMath(root=document.body){
+      if(!window.katex){ window.setTimeout(()=>typesetMath(root),60); return; }
+      root.querySelectorAll('.math-slot[data-tex]').forEach(el=>{
+        const tex = el.getAttribute('data-tex') || '';
+        const displayMode = el.getAttribute('data-display') === 'true';
+        try{ katex.render(tex, el, {displayMode, throwOnError:false, strict:'ignore'}); }
+        catch(e){ el.textContent = tex; }
+      });
+    }
+    window.addEventListener("load",()=>typesetMath(document.body));
   </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
   <script defer src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
 
   <style>
@@ -97,7 +115,7 @@
     .theme .label{font-size:.92rem;color:var(--muted);min-width:70px}
     .switch{position:relative;width:70px;height:36px;border-radius:999px;background:var(--switch);border:1px solid var(--line)}
     .switch:before,.switch:after{position:absolute;top:50%;transform:translateY(-50%);font-size:13px;opacity:.75}
-    .switch:before{content:"â˜€";left:10px}.switch:after{content:"â˜¾";right:10px}
+    .switch:before{content:"☀";left:10px}.switch:after{content:"☾";right:10px}
     .knob{position:absolute;left:3px;top:3px;width:28px;height:28px;border-radius:50%;background:var(--thumb);border:1px solid var(--line);box-shadow:0 4px 12px rgba(0,0,0,.16);transition:left .25s ease;display:grid;place-items:center;font-size:13px}
     body.dark .knob{left:37px}
 
@@ -153,6 +171,13 @@
     .footer div{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:12px 13px;font-size:.92rem;line-height:1.42}
     @media(max-width:1240px){.layout{grid-template-columns:1fr}aside{position:static}.split,.grid2{grid-template-columns:1fr}}
     @media(max-width:900px){.smallGrid,.footer,.pair,.matrix{grid-template-columns:1fr}.wrap{padding:18px 14px 28px}#mainPlot{height:560px}.mini3d{height:300px}}
+
+    .math-slot{display:inline-block;max-width:100%;vertical-align:baseline}
+    .math-slot.display{display:block;max-width:100%;overflow-x:auto;overflow-y:hidden}
+    .math-slot.display .katex-display{margin:.18em 0;text-align:left}
+    .eq,.note,.footer div,.metric p,.mini p{overflow-wrap:anywhere}
+    .eq .katex{font-size:1.02em}
+
   </style>
 </head>
 
@@ -161,15 +186,15 @@
     <header>
       <div>
         <h1>Jacobian as best linear map</h1>
-        <p class="subtitle">The Jacobian is the matrix of the total derivative: it is the best local linear map. This app makes the approximation visible through local deformation, column vectors, and the chain rule in \(\mathbb R^n\).</p>
+        <p class="subtitle">The Jacobian is the matrix of the total derivative: it is the best local linear map. This app makes the approximation visible through local deformation, column vectors, and the chain rule in <span class="math-slot" data-display="false" data-tex="\mathbb R^n"></span>.</p>
       </div>
       <div class="actions">
         <div class="pill">interactive 3D geometry</div>
         <div class="pill">local deformation</div>
-        <div class="pill">chain rule in \(\mathbb R^n\)</div>
+        <div class="pill">chain rule in <span class="math-slot" data-display="false" data-tex="\mathbb R^n"></span></div>
         <div id="theme" class="theme" role="button" tabindex="0">
           <span id="themeLabel" class="label">light mode</span>
-          <div class="switch"><div id="knob" class="knob">â˜€</div></div>
+          <div class="switch"><div id="knob" class="knob">☀</div></div>
         </div>
       </div>
     </header>
@@ -179,24 +204,20 @@
         <div class="head">
           <div>
             <h2>Controls</h2>
-            <p>Choose a nonlinear map \(F:\mathbb R^2\to\mathbb R^2\), a base point \(a\), and a local displacement \(h\).</p>
+            <p>Choose a nonlinear map <span class="math-slot" data-display="false" data-tex="F:\mathbb R^2\to\mathbb R^2"></span>, a base point <span class="math-slot" data-display="false" data-tex="a"></span>, and a local displacement <span class="math-slot" data-display="false" data-tex="h"></span>.</p>
           </div>
-          <div class="tag">\(J_F(a)\)</div>
+          <div class="tag"><span class="math-slot" data-display="false" data-tex="J_F(a)"></span></div>
         </div>
 
         <div class="eq">
-          \[
-          F(a+h)=F(a)+J_F(a)h+r(h),
+          <span class="math-slot display" data-display="true" data-tex="F(a+h)=F(a)+J_F(a)h+r(h),
           \qquad
-          \frac{\|r(h)\|}{\|h\|}\to 0.
-          \]
-          \[
-          DF(a)\equiv J_F(a):\mathbb R^n\to\mathbb R^m
-          \]
+          \frac{\|r(h)\|}{\|h\|}\to 0."></span>
+          <span class="math-slot display" data-display="true" data-tex="DF(a)\equiv J_F(a):\mathbb R^n\to\mathbb R^m"></span>
         </div>
 
         <div class="control">
-          <label>Inner map \(F\) <small id="mapLabel"></small></label>
+          <label>Inner map <span class="math-slot" data-display="false" data-tex="F"></span> <small id="mapLabel"></small></label>
           <select id="mapSelect">
             <option value="shear">quadratic shear</option>
             <option value="twist">radial twist</option>
@@ -206,7 +227,7 @@
         </div>
 
         <div class="control">
-          <label>Outer map \(G\) for chain rule <small id="outerLabel"></small></label>
+          <label>Outer map <span class="math-slot" data-display="false" data-tex="G"></span> for chain rule <small id="outerLabel"></small></label>
           <select id="outerSelect">
             <option value="affine">affine stretch</option>
             <option value="nonlinear">nonlinear bend</option>
@@ -214,7 +235,7 @@
         </div>
 
         <div class="control">
-          <label>Base point \(a=(a_1,a_2)\) <small id="pointLabel"></small></label>
+          <label>Base point <span class="math-slot" data-display="false" data-tex="a=(a_1,a_2)"></span> <small id="pointLabel"></small></label>
           <div class="pair">
             <input id="pxSlider" type="range" min="-1.2" max="1.2" step="0.01" value="0.25">
             <input id="pySlider" type="range" min="-1.2" max="1.2" step="0.01" value="-0.15">
@@ -222,27 +243,27 @@
         </div>
 
         <div class="control">
-          <label>Displacement angle \(\theta\) <small id="thetaLabel"></small></label>
+          <label>Displacement angle <span class="math-slot" data-display="false" data-tex="\theta"></span> <small id="thetaLabel"></small></label>
           <input id="thetaSlider" type="range" min="0" max="6.28318" step="0.01" value="0.70">
         </div>
 
         <div class="control">
-          <label>Displacement length \(t\) <small id="tLabel"></small></label>
+          <label>Displacement length <span class="math-slot" data-display="false" data-tex="t"></span> <small id="tLabel"></small></label>
           <input id="tSlider" type="range" min="0.04" max="0.85" step="0.01" value="0.34">
         </div>
 
         <div class="control">
-          <label>Neighborhood radius \(\rho\) <small id="rhoLabel"></small></label>
+          <label>Neighborhood radius <span class="math-slot" data-display="false" data-tex="\rho"></span> <small id="rhoLabel"></small></label>
           <input id="rhoSlider" type="range" min="0.18" max="1.05" step="0.01" value="0.55">
         </div>
 
         <div class="matrix">
           <div class="miniMatrix">
-            <strong>\(J_F(a)\)</strong>
+            <strong><span class="math-slot" data-display="false" data-tex="J_F(a)"></span></strong>
             <div id="jacBox" class="matrixBox"></div>
           </div>
           <div class="miniMatrix">
-            <strong>\(J_G(F(a))\)</strong>
+            <strong><span class="math-slot" data-display="false" data-tex="J_G(F(a))"></span></strong>
             <div id="outerJacBox" class="matrixBox"></div>
           </div>
         </div>
@@ -256,7 +277,7 @@
           <div class="heroTop">
             <div>
               <h2>Main 3D local deformation</h2>
-              <p>The lower plane is the domain near \(a\). The upper plane shows the true image patch \(F(a+u)\) and the Jacobian's linear image \(F(a)+J_F(a)u\). Drag to rotate.</p>
+              <p>The lower plane is the domain near <span class="math-slot" data-display="false" data-tex="a"></span>. The upper plane shows the true image patch <span class="math-slot" data-display="false" data-tex="F(a+u)"></span> and the Jacobian's linear image <span class="math-slot" data-display="false" data-tex="F(a)+J_F(a)u"></span>. Drag to rotate.</p>
             </div>
             <div id="status" class="status">best local linear map</div>
           </div>
@@ -268,12 +289,12 @@
             <div class="metrics">
               <div class="metric">
                 <h4>Total derivative</h4>
-                <p>Action of \(J_F(a)\) on the chosen vector \(h\).</p>
+                <p>Action of <span class="math-slot" data-display="false" data-tex="J_F(a)"></span> on the chosen vector <span class="math-slot" data-display="false" data-tex="h"></span>.</p>
                 <strong id="linMetric"></strong>
               </div>
               <div class="metric">
                 <h4>True increment</h4>
-                <p>The actual increment \(F(a+h)-F(a)\).</p>
+                <p>The actual increment <span class="math-slot" data-display="false" data-tex="F(a+h)-F(a)"></span>.</p>
                 <strong id="actualMetric"></strong>
               </div>
               <div class="metric">
@@ -283,12 +304,12 @@
               </div>
               <div class="metric">
                 <h4>Area scaling</h4>
-                <p>\(\det J_F(a)\) gives local signed area deformation in \(\mathbb R^2\).</p>
+                <p><span class="math-slot" data-display="false" data-tex="\det J_F(a)"></span> gives local signed area deformation in <span class="math-slot" data-display="false" data-tex="\mathbb R^2"></span>.</p>
                 <strong id="detMetric"></strong>
               </div>
               <div class="metric">
                 <h4>Chain rule test</h4>
-                <p>Compare \(J_{G\circ F}(a)\) with \(J_G(F(a))J_F(a)\).</p>
+                <p>Compare <span class="math-slot" data-display="false" data-tex="J_{G\circ F}(a)"></span> with <span class="math-slot" data-display="false" data-tex="J_G(F(a))J_F(a)"></span>.</p>
                 <strong id="chainMetric"></strong>
               </div>
             </div>
@@ -299,7 +320,7 @@
           <section class="card panel">
             <div class="head">
               <div>
-                <h3>Domain patch \(\to\) image patch</h3>
+                <h3>Domain patch <span class="math-slot" data-display="false" data-tex="\to"></span> image patch</h3>
                 <p>The green curved image is the true deformation. The blue parallelogram is the linear image given by the Jacobian.</p>
               </div>
               <div class="tag">best local fit</div>
@@ -313,7 +334,7 @@
             <div class="head">
               <div>
                 <h3>Columns of the Jacobian</h3>
-                <p>The columns of \(J_F(a)\) are the images of the basis vectors \(e_1,e_2\). They generate the linearized local shape.</p>
+                <p>The columns of <span class="math-slot" data-display="false" data-tex="J_F(a)"></span> are the images of the basis vectors <span class="math-slot" data-display="false" data-tex="e_1,e_2"></span>. They generate the linearized local shape.</p>
               </div>
               <div class="tag">matrix picture</div>
             </div>
@@ -328,7 +349,7 @@
             <div class="head">
               <div>
                 <h3>Local remainder decay</h3>
-                <p>For differentiability, the normalized error \(\|F(a+h)-F(a)-J_F(a)h\|/\|h\|\) tends to \(0\) as \(h\to0\).</p>
+                <p>For differentiability, the normalized error <span class="math-slot" data-display="false" data-tex="\|F(a+h)-F(a)-J_F(a)h\|/\|h\|"></span> tends to <span class="math-slot" data-display="false" data-tex="0"></span> as <span class="math-slot" data-display="false" data-tex="h\to0"></span>.</p>
               </div>
               <div class="tag">differentiability test</div>
             </div>
@@ -341,9 +362,9 @@
             <div class="head">
               <div>
                 <h3>Chain rule as composition of linear maps</h3>
-                <p>The derivative of \(G\circ F\) is the composition of the two Jacobians at the right points.</p>
+                <p>The derivative of <span class="math-slot" data-display="false" data-tex="G\circ F"></span> is the composition of the two Jacobians at the right points.</p>
               </div>
-              <div class="tag">\(J_{G\circ F}=J_GJ_F\)</div>
+              <div class="tag"><span class="math-slot" data-display="false" data-tex="J_{G\circ F}=J_GJ_F"></span></div>
             </div>
             <div class="svgBox">
               <svg id="chainSvg" class="plotSvg" viewBox="0 0 980 520"></svg>
@@ -355,14 +376,14 @@
           <div class="head">
             <div>
               <h3>Interactive 3D basis slices</h3>
-              <p>Each small 3D diagram isolates one coordinate column picture: moving only in the \(x\)- or \(y\)-direction and observing the local linear response.</p>
+              <p>Each small 3D diagram isolates one coordinate column picture: moving only in the <span class="math-slot" data-display="false" data-tex="x"></span>- or <span class="math-slot" data-display="false" data-tex="y"></span>-direction and observing the local linear response.</p>
             </div>
             <div class="tag">3D too</div>
           </div>
           <div class="smallGrid">
             <div class="mini">
               <div class="miniTop">
-                <h4>\(e_1\)-direction slice</h4>
+                <h4><span class="math-slot" data-display="false" data-tex="e_1"></span>-direction slice</h4>
                 <div class="hintPill">drag to rotate</div>
               </div>
               <div id="basisXPlot" class="mini3d"></div>
@@ -371,11 +392,11 @@
                 <span><i style="background:var(--bad)"></i>slice image</span>
                 <span><i style="background:var(--model)"></i>linear response</span>
               </div>
-              <p>The first column of \(J_F(a)\) is the linear response to \(e_1\).</p>
+              <p>The first column of <span class="math-slot" data-display="false" data-tex="J_F(a)"></span> is the linear response to <span class="math-slot" data-display="false" data-tex="e_1"></span>.</p>
             </div>
             <div class="mini">
               <div class="miniTop">
-                <h4>\(e_2\)-direction slice</h4>
+                <h4><span class="math-slot" data-display="false" data-tex="e_2"></span>-direction slice</h4>
                 <div class="hintPill">drag to rotate</div>
               </div>
               <div id="basisYPlot" class="mini3d"></div>
@@ -384,7 +405,7 @@
                 <span><i style="background:var(--bad)"></i>slice image</span>
                 <span><i style="background:var(--model)"></i>linear response</span>
               </div>
-              <p>The second column of \(J_F(a)\) is the linear response to \(e_2\).</p>
+              <p>The second column of <span class="math-slot" data-display="false" data-tex="J_F(a)"></span> is the linear response to <span class="math-slot" data-display="false" data-tex="e_2"></span>.</p>
             </div>
           </div>
         </section>
@@ -392,7 +413,7 @@
         <section class="footer">
           <div><strong>Best linear map.</strong> The Jacobian is not just a matrix of partials: it is the unique linear map that matches the first-order local deformation.</div>
           <div><strong>Columns and determinant.</strong> Columns show where basis directions go; the determinant shows local signed area scaling and orientation.</div>
-          <div><strong>Chain rule.</strong> Linearization commutes with composition: first linearize \(F\), then linearize \(G\) at \(F(a)\).</div>
+          <div><strong>Chain rule.</strong> Linearization commutes with composition: first linearize <span class="math-slot" data-display="false" data-tex="F"></span>, then linearize <span class="math-slot" data-display="false" data-tex="G"></span> at <span class="math-slot" data-display="false" data-tex="F(a)"></span>.</div>
         </section>
       </main>
     </div>
@@ -402,7 +423,7 @@
   const maps = {
     shear:{
       label:'quadratic shear',
-      formula:'\\[F(x,y)=\\big(x+0.55y^2,\\ y+0.35x^2\\big).\\]',
+      formula:String.raw`F(x,y)=\big(x+0.55y^2,\ y+0.35x^2\big).`,
       notice:'A mild nonlinear shear. The image of a small square is curved, but the Jacobian still gives the best local parallelogram.',
       suggested:[0.25,-0.15],
       f:(x,y)=>[x+0.55*y*y, y+0.35*x*x],
@@ -410,7 +431,7 @@
     },
     twist:{
       label:'radial twist',
-      formula:'\\[F(x,y)=R_{0.9r}(x,y),\\quad r=\\sqrt{x^2+y^2}.\\]',
+      formula:String.raw`F(x,y)=R_{0.9r}(x,y),\quad r=\sqrt{x^2+y^2}.`,
       notice:'The map rotates by an angle depending on radius. Near one fixed base point, this nonlinear twist still looks almost linear.',
       suggested:[0.55,0.20],
       f:(x,y)=>{
@@ -436,7 +457,7 @@
     },
     bend:{
       label:'saddle bend',
-      formula:'\\[F(x,y)=\\big(x+0.5xy,\\ y+0.25(x^2-y^2)\\big).\\]',
+      formula:String.raw`F(x,y)=\big(x+0.5xy,\ y+0.25(x^2-y^2)\big).`,
       notice:'The first component shears with the product \(xy\), while the second bends like a saddle. The Jacobian captures the local deformation at \(a\).',
       suggested:[0.35,-0.28],
       f:(x,y)=>[x+0.5*x*y, y+0.25*(x*x-y*y)],
@@ -444,7 +465,7 @@
     },
     exp:{
       label:'exponential stretch',
-      formula:'\\[F(x,y)=\\big(e^{0.35x}\\cos(0.3y)-1,\\ e^{0.35x}\\sin(0.3y)\\big).\\]',
+      formula:String.raw`F(x,y)=\big(e^{0.35x}\cos(0.3y)-1,\ e^{0.35x}\sin(0.3y)\big).`,
       notice:'This map combines angular bending and exponential stretching. Close to a point, the Jacobian is the correct first-order model.',
       suggested:[0.45,0.35],
       f:(x,y)=>{
@@ -461,13 +482,13 @@
   const outers = {
     affine:{
       label:'affine stretch',
-      formula:'\\[G(u,v)=\\big(1.2u+0.4v,\\ -0.3u+0.9v\\big).\\]',
+      formula:String.raw`G(u,v)=\big(1.2u+0.4v,\ -0.3u+0.9v\big).`,
       g:(u,v)=>[1.2*u+0.4*v,-0.3*u+0.9*v],
       J:(u,v)=>[[1.2,0.4],[-0.3,0.9]]
     },
     nonlinear:{
       label:'nonlinear bend',
-      formula:'\\[G(u,v)=\\big(u+0.25v^2,\\ v+0.2u^2\\big).\\]',
+      formula:String.raw`G(u,v)=\big(u+0.25v^2,\ v+0.2u^2\big).`,
       g:(u,v)=>[u+0.25*v*v, v+0.2*u*u],
       J:(u,v)=>[[1,0.5*v],[0.4*u,1]]
     }
@@ -525,9 +546,9 @@
   const lin=(x,a,b,c,d)=>c+(x-a)*(d-c)/(b-a);
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   const fmt=x=>{
-    if(!Number.isFinite(x)) return 'â€”';
+    if(!Number.isFinite(x)) return '—';
     if(Math.abs(x)>9999) return x.toExponential(2);
-    return (x<0?'âˆ’':'')+Math.abs(x).toFixed(3);
+    return (x<0?'−':'')+Math.abs(x).toFixed(3);
   };
   const fmtVec=v=>`(${fmt(v[0])}, ${fmt(v[1])})`;
   const matVec=(A,v)=>[A[0][0]*v[0]+A[0][1]*v[1], A[1][0]*v[0]+A[1][1]*v[1]];
@@ -556,7 +577,7 @@
             <path d="M ${x2} ${y2} L ${hx1} ${hy1} M ${x2} ${y2} L ${hx2} ${hy2}" stroke="${color}" stroke-width="${w}" fill="none" stroke-linecap="round"/>`;
   }
   function matString(A){
-    return `âŽ¡ ${fmt(A[0][0]).padStart(6,' ')}   ${fmt(A[0][1]).padStart(6,' ')} âŽ¤\nâŽ£ ${fmt(A[1][0]).padStart(6,' ')}   ${fmt(A[1][1]).padStart(6,' ')} âŽ¦`;
+    return `⎡ ${fmt(A[0][0]).padStart(6,' ')}   ${fmt(A[0][1]).padStart(6,' ')} ⎤\n⎣ ${fmt(A[1][0]).padStart(6,' ')}   ${fmt(A[1][1]).padStart(6,' ')} ⎦`;
   }
 
   function setTheme(t){
@@ -564,7 +585,7 @@
     document.body.classList.toggle('dark',t==='dark');
     localStorage.setItem('jacobian-best-linear-map-theme',t);
     el.themeLabel.textContent=t==='dark'?'dark mode':'light mode';
-    el.knob.textContent=t==='dark'?'â˜¾':'â˜€';
+    el.knob.textContent=t==='dark'?'☾':'☀';
     if(state.initialized) render();
   }
 
@@ -688,7 +709,7 @@
         bgcolor:'rgba(0,0,0,0)',
         xaxis:{title:'coordinate 1', color:css('--muted'), gridcolor:css('--grid'), zerolinecolor:css('--line'), showbackground:true, backgroundcolor:axisBg},
         yaxis:{title:'coordinate 2', color:css('--muted'), gridcolor:css('--grid'), zerolinecolor:css('--line'), showbackground:true, backgroundcolor:axisBg},
-        zaxis:{title:'domain â†’ image', color:css('--muted'), gridcolor:css('--grid'), zerolinecolor:css('--line'), showbackground:true, backgroundcolor:axisBg, range:[-0.1,2.05], tickvals:[0,H,H+0.04], ticktext:['domain','true image','linear image']},
+        zaxis:{title:'domain → image', color:css('--muted'), gridcolor:css('--grid'), zerolinecolor:css('--line'), showbackground:true, backgroundcolor:axisBg, range:[-0.1,2.05], tickvals:[0,H,H+0.04], ticktext:['domain','true image','linear image']},
         aspectmode:'manual',
         aspectratio:{x:1.05,y:1.0,z:0.72},
         camera:{eye:{x:1.65,y:1.45,z:0.94}}
@@ -812,8 +833,8 @@
 
       <circle cx="${X(C.Fa[0])}" cy="${Y(C.Fa[1])}" r="6" fill="${css('--gold')}"/>
       ${text(X(C.Fa[0])+8,Y(C.Fa[1])-8,'F(a)',{size:15,fill:css('--gold'),weight:700})}
-      ${text(X(C.Fa[0]+c1[0])+6,Y(C.Fa[1]+c1[1])-6,'column 1 = J(a)eâ‚',{size:14,fill:css('--good'),weight:700})}
-      ${text(X(C.Fa[0]+c2[0])+6,Y(C.Fa[1]+c2[1])+16,'column 2 = J(a)eâ‚‚',{size:14,fill:css('--violet'),weight:700})}
+      ${text(X(C.Fa[0]+c1[0])+6,Y(C.Fa[1]+c1[1])-6,'column 1 = J(a)e₁',{size:14,fill:css('--good'),weight:700})}
+      ${text(X(C.Fa[0]+c2[0])+6,Y(C.Fa[1]+c2[1])+16,'column 2 = J(a)e₂',{size:14,fill:css('--violet'),weight:700})}
       ${text(X(C.pred[0])+6,Y(C.pred[1])-8,'J(a)h',{size:14,fill:css('--model'),weight:700})}
       ${text(X(C.actual[0])+6,Y(C.actual[1])+16,'actual increment',{size:14,fill:css('--bad'),weight:700})}
 
@@ -856,7 +877,7 @@
       <path d="${path(data,X,Y)}" fill="none" stroke="${css('--bad')}" stroke-width="3.4"/>
       <line x1="${X(state.t)}" y1="${plot.y}" x2="${X(state.t)}" y2="${plot.y+plot.h}" stroke="${css('--gold')}" stroke-dasharray="6 6" stroke-width="2.2"/>
       ${text(X(state.t)+8,plot.y+26,'selected t',{size:14,fill:css('--gold'),weight:700})}
-      ${text(plot.x+plot.w-8,plot.y+plot.h+28,'t â†’ 0',{size:14,fill:css('--muted'),weight:700,anchor:'end'})}
+      ${text(plot.x+plot.w-8,plot.y+plot.h+28,'t → 0',{size:14,fill:css('--muted'),weight:700,anchor:'end'})}
     `;
   }
 
@@ -894,8 +915,8 @@
       ${text(132,370,'Chain rule matrix identity',{size:22,weight:700,family:'Georgia, serif'})}
       ${text(132,406,`J_F(a) = ${fmtVec([C.J[0][0],C.J[0][1]])} / ${fmtVec([C.J[1][0],C.J[1][1]])}`,{size:14,fill:css('--muted'),weight:700})}
       ${text(132,430,`J_G(F(a))J_F(a) h = ${fmtVec(direct)}`,{size:15,fill:css('--good'),weight:700})}
-      ${text(512,430,`actual composed increment â‰ˆ ${fmtVec(C.compInc)}`,{size:15,fill:css('--bad'),weight:700})}
-      ${text(132,455,'\u2192 the composition of the two Jacobians is the best first-order map for Gâˆ˜F at a.',{size:15,fill:css('--muted'),weight:700})}
+      ${text(512,430,`actual composed increment ≈ ${fmtVec(C.compInc)}`,{size:15,fill:css('--bad'),weight:700})}
+      ${text(132,455,'\u2192 the composition of the two Jacobians is the best first-order map for G∘F at a.',{size:15,fill:css('--muted'),weight:700})}
     `;
   }
 
@@ -965,14 +986,14 @@
 
     el.jacBox.textContent=matString(C.J);
     el.outerJacBox.textContent=matString(C.JG);
-    el.formulaBox.innerHTML=C.map.formula + '<br>' + C.outer.formula;
-    el.noticeBox.innerHTML=C.map.notice;
+    el.formulaBox.innerHTML=mathDisplay(stripMathDelimiters(C.map.formula)) + '<br>' + mathDisplay(stripMathDelimiters(C.outer.formula));
+    el.noticeBox.innerHTML=renderMathText(C.map.notice);
 
-    el.linMetric.textContent=`J_F(a)h â‰ˆ ${fmtVec(C.Jh)}`;
-    el.actualMetric.textContent=`F(a+h)-F(a) â‰ˆ ${fmtVec(C.inc)}`;
-    el.errorMetric.textContent=`remainder â‰ˆ ${fmtVec(C.rem)} ;  ratio â‰ˆ ${fmt(norm(C.rem)/norm(C.h))}`;
-    el.detMetric.textContent=`det J_F(a) â‰ˆ ${fmt(det(C.J))}`;
-    el.chainMetric.textContent=`product error ratio â‰ˆ ${fmt(norm(C.compRem)/norm(C.h))}`;
+    el.linMetric.textContent=`J_F(a)h ≈ ${fmtVec(C.Jh)}`;
+    el.actualMetric.textContent=`F(a+h)-F(a) ≈ ${fmtVec(C.inc)}`;
+    el.errorMetric.textContent=`remainder ≈ ${fmtVec(C.rem)} ;  ratio ≈ ${fmt(norm(C.rem)/norm(C.h))}`;
+    el.detMetric.textContent=`det J_F(a) ≈ ${fmt(det(C.J))}`;
+    el.chainMetric.textContent=`product error ratio ≈ ${fmt(norm(C.compRem)/norm(C.h))}`;
   }
 
   function render(){
@@ -985,7 +1006,7 @@
     renderChain();
     renderBasisPlot(el.basisXPlot,'x');
     renderBasisPlot(el.basisYPlot,'y');
-    if(window.MathJax) MathJax.typesetPromise().catch(()=>{});
+    typesetMath(document.body);
   }
 
   function sync(){

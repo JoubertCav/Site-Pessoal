@@ -18,13 +18,9 @@
 
   gtag('config', 'G-NHXHEJP1G0');
 </script>
-<script>
-window.MathJax = {
-  tex: { inlineMath: [['\\(','\\)'], ['$', '$']], displayMath: [['\\[','\\]']] },
-  svg: { fontCache: 'global' }
-};
-</script>
-<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+
 <style>
   :root{
     --bg:#f7f3ea;
@@ -145,11 +141,13 @@ window.MathJax = {
   }
   .formula .math{font-size:1.03rem}
 
-  /* Prevent oversized MathJax/SVG labels from taking over the visual panel. */
-  .mjx-container{max-width:100%; overflow-x:auto; overflow-y:hidden; line-height:1.15 !important;}
-  .formula .mjx-container[display="true"]{font-size:1.02rem !important; margin:0 !important;}
-  .summary .mjx-container[display="true"]{font-size:.98rem !important; margin:0 !important;}
-  .visual-card .mjx-container{font-size:1rem !important;}
+  .math-slot{display:inline-block;max-width:100%;vertical-align:baseline}
+  .math-slot.display{display:block;overflow-x:auto;overflow-y:hidden;padding:2px 0}
+  .math-slot.display .katex-display{margin:.18em 0;text-align:left}
+  .formula .katex-display{font-size:1.02rem}
+  .summary .katex-display{font-size:.98rem}
+  .visual-card .katex{font-size:1rem}
+  .mini,.notice p,.summary li,.formula .math{overflow-wrap:anywhere}
   .control-card{position:sticky; top:16px; padding:17px}
   .section-title{
     display:flex;
@@ -222,7 +220,6 @@ window.MathJax = {
   .visual-head p{margin:0;color:var(--muted);font-size:.94rem;max-width:700px}
   .svgwrap{padding:8px 12px 12px}
   .svgwrap > svg{width:100%; height:auto; display:block}
-  .mjx-container svg{width:auto !important; max-width:100% !important; height:auto !important; display:inline-block !important}
   .axis{stroke:var(--axis); stroke-width:1.1}
   .gridline{stroke:var(--grid); stroke-width:1}
   .fn{fill:none; stroke:var(--ink); stroke-width:2.15; stroke-linecap:round; stroke-linejoin:round}
@@ -268,7 +265,7 @@ window.MathJax = {
 <div class="app" id="app">
   <header>
     <div>
-      <div class="kicker"><span class="dot"></span> Real Analysis Â· Metric spaces</div>
+      <div class="kicker"><span class="dot"></span> Real Analysis · Metric spaces</div>
       <h1>Sequential continuity</h1>
       <div class="subtitle">Continuity seen through convergent sequences: points approach the input, and their images must approach the value of the function.</div>
     </div>
@@ -281,19 +278,11 @@ window.MathJax = {
   <section class="equation-card">
     <div class="card formula">
       <small>Sequential criterion</small>
-      <div class="math">\[
-      f \text{ continuous at } a
-      \Longleftrightarrow
-      \forall (x_n),\ x_n\to a \Rightarrow f(x_n)\to f(a).
-      \]</div>
+      <div class="math"><span class="math-slot display" data-display="true" data-tex="f \text{ continuous at } a \Longleftrightarrow \forall (x_n),\ x_n\to a \Rightarrow f(x_n)\to f(a)."></span></div>
     </div>
     <div class="card formula">
       <small>Failure mode</small>
-      <div class="math">\[
-      f \text{ not continuous at } a
-      \Longleftrightarrow
-      \exists (x_n):\ x_n\to a,\quad f(x_n)\not\to f(a).
-      \]</div>
+      <div class="math"><span class="math-slot display" data-display="true" data-tex="f \text{ not continuous at } a \Longleftrightarrow \exists (x_n):\ x_n\to a,\quad f(x_n)\not\to f(a)."></span></div>
     </div>
   </section>
 
@@ -301,7 +290,7 @@ window.MathJax = {
     <aside class="card control-card">
       <div class="section-title">
         <h2>Controls</h2>
-        <span class="badge">at \(a=0\)</span>
+        <span class="badge">at <span class="math-slot" data-display="false" data-tex="a=0"></span></span>
       </div>
 
       <div class="control">
@@ -318,10 +307,10 @@ window.MathJax = {
         <label for="seqSelect">Sequence test <span id="seqTag">alternating</span></label>
         <select id="seqSelect">
           <option value="best">best diagnostic witness</option>
-          <option value="right">right approach: \(x_n=c/(n+1)\)</option>
-          <option value="left">left approach: \(x_n=-c/(n+1)\)</option>
-          <option value="alternating">two-sided: \((-1)^n c/(n+1)\)</option>
-          <option value="geometric">fast approach: \(c r^n\)</option>
+          <option value="right">right approach: x_n=c/(n+1)</option>
+          <option value="left">left approach: x_n=-c/(n+1)</option>
+          <option value="alternating">two-sided: (-1)^n c/(n+1)</option>
+          <option value="geometric">fast approach: c r^n</option>
           <option value="oscWitness">oscillation witness</option>
         </select>
       </div>
@@ -332,12 +321,12 @@ window.MathJax = {
       </div>
 
       <div class="control">
-        <label for="tailSlider">Tail begins at \(N\) <span id="tailVal">18</span></label>
+        <label for="tailSlider">Tail begins at <span class="math-slot" data-display="false" data-tex="N"></span> <span id="tailVal">18</span></label>
         <input id="tailSlider" type="range" min="3" max="80" step="1" value="18" />
       </div>
 
       <div class="control">
-        <label for="scaleSlider">Approach scale \(c\) <span id="scaleVal">1.20</span></label>
+        <label for="scaleSlider">Approach scale <span class="math-slot" data-display="false" data-tex="c"></span> <span id="scaleVal">1.20</span></label>
         <input id="scaleSlider" type="range" min="0.35" max="1.55" step="0.01" value="1.20" />
       </div>
 
@@ -357,11 +346,11 @@ window.MathJax = {
       <div class="readout">
         <div class="mini" id="domainStatus">
           <b>Domain sequence</b>
-          <p>The selected \(x_n\) approaches \(0\).</p>
+          <p>The selected <span class="math-slot" data-display="false" data-tex="x_n"></span> approaches <span class="math-slot" data-display="false" data-tex="0"></span>.</p>
         </div>
         <div class="mini" id="imageStatus">
           <b>Image sequence</b>
-          <p>Change the example to see whether \(f(x_n)\to f(0)\).</p>
+          <p>Change the example to see whether <span class="math-slot" data-display="false" data-tex="f(x_n)\to f(0)"></span>.</p>
         </div>
       </div>
     </aside>
@@ -396,21 +385,19 @@ window.MathJax = {
       <div class="panel-grid">
         <div class="card notice">
           <h3>What to notice</h3>
-          <div class="line"><span class="mark"></span><p id="notice1">A sequence can approach \(a\) from the right, left, or both sides. A continuous function cannot distinguish these approaches in the limit.</p></div>
+          <div class="line"><span class="mark"></span><p id="notice1">A sequence can approach <span class="math-slot" data-display="false" data-tex="a"></span> from the right, left, or both sides. A continuous function cannot distinguish these approaches in the limit.</p></div>
           <div class="line"><span class="mark"></span><p id="notice2">For discontinuity, one carefully chosen sequence is enough to disprove continuity.</p></div>
-          <div class="line"><span class="mark"></span><p id="notice3">A removable discontinuity is subtle: \(f(x_n)\) may converge, but to the wrong value.</p></div>
+          <div class="line"><span class="mark"></span><p id="notice3">A removable discontinuity is subtle: <span class="math-slot" data-display="false" data-tex="f(x_n)"></span> may converge, but to the wrong value.</p></div>
         </div>
 
         <div class="card summary">
           <h3>Exam-style summary</h3>
-          <div class="math">\[
-          x_n\to a \quad\Longrightarrow\quad f(x_n)\to f(a)
-          \]</div>
+          <div class="math"><span class="math-slot display" data-display="true" data-tex="x_n\to a \quad\Longrightarrow\quad f(x_n)\to f(a)"></span></div>
           <ul>
-            <li>To prove continuity: take an arbitrary sequence \((x_n)\) with \(x_n\to a\).</li>
-            <li>To disprove continuity: exhibit one sequence \(x_n\to a\) with bad image behavior.</li>
+            <li>To prove continuity: take an arbitrary sequence <span class="math-slot" data-display="false" data-tex="(x_n)"></span> with <span class="math-slot" data-display="false" data-tex="x_n\to a"></span>.</li>
+            <li>To disprove continuity: exhibit one sequence <span class="math-slot" data-display="false" data-tex="x_n\to a"></span> with bad image behavior.</li>
             <li>Jump: two one-sided limits disagree.</li>
-            <li>Removable: the punctured limit exists but differs from \(f(a)\).</li>
+            <li>Removable: the punctured limit exists but differs from <span class="math-slot" data-display="false" data-tex="f(a)"></span>.</li>
             <li>Oscillatory: image sequences fail to settle.</li>
           </ul>
         </div>
@@ -422,6 +409,25 @@ window.MathJax = {
 </div>
 
 <script>
+
+function escapeMathAttr(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function mathDisplay(tex){return `<span class="math-slot display" data-display="true" data-tex="${escapeMathAttr(tex)}"></span>`;}
+function mathInline(tex){return `<span class="math-slot" data-display="false" data-tex="${escapeMathAttr(tex)}"></span>`;}
+function renderMathText(s){
+  return String(s)
+    .replace(/\\\[(.*?)\\\]/gs, (_,tex)=>mathDisplay(tex))
+    .replace(/\\\((.*?)\\\)/gs, (_,tex)=>mathInline(tex));
+}
+function typesetMath(root=document.body){
+  if(!window.katex){ window.setTimeout(()=>typesetMath(root),60); return; }
+  root.querySelectorAll('.math-slot[data-tex]').forEach(el=>{
+    const tex=el.getAttribute('data-tex')||'';
+    const displayMode=el.getAttribute('data-display')==='true';
+    try{ katex.render(tex, el, {displayMode, throwOnError:false, strict:'ignore'}); }
+    catch(err){ el.textContent=''; el.title=tex; }
+  });
+}
+
 (function(){
   const root = document.documentElement;
   const app = document.getElementById('app');
@@ -478,11 +484,11 @@ window.MathJax = {
       label:'jump',
       fa: 0.00,
       candidate: null,
-      formula:'f(x)=-0.70\;(x<0),\ f(0)=0,\ f(x)=0.70\;(x>0)',
+      formula:'f(x)=-0.70 for x<0; f(0)=0; f(x)=0.70 for x>0',
       f(x){ if(Math.abs(x)<1e-12) return 0; return x<0 ? -0.70 : 0.70; },
       notice:[
         'A jump is exposed by comparing sequences approaching from different sides.',
-        'An alternating sequence x_nâ†’0 makes f(x_n) alternate between two separated values.',
+        'An alternating sequence x_n→0 makes f(x_n) alternate between two separated values.',
         'Even a one-sided sequence may converge, but not necessarily to the value f(0).'
       ],
       verdict(seq){ return {kind:'bad', title:'continuity fails', text:'The domain sequence approaches 0, but the image sequence does not approach f(0)=0.'}; }
@@ -491,12 +497,12 @@ window.MathJax = {
       label:'removable',
       fa: 0.22,
       candidate: 1.00,
-      formula:'f(x)=\sin(3x)/(3x)\;(x\ne0),\quad f(0)=0.22',
+      formula:'f(x)=sin(3x)/(3x) for x≠0; f(0)=0.22',
       f(x){ if(Math.abs(x)<1e-10) return 0.22; return Math.sin(3*x)/(3*x); },
       notice:[
         'A removable discontinuity is not detected by oscillation; the image sequence may converge.',
         'The problem is that the sequence converges to the punctured limit, not to f(0).',
-        'Continuity requires f(x_n)â†’f(a), not merely that f(x_n) has some limit.'
+        'Continuity requires f(x_n)→f(a), not merely that f(x_n) has some limit.'
       ],
       verdict(seq){ return {kind:'bad', title:'wrong limit', text:'The images settle near 1, while the function value is f(0)=0.22.'}; }
     },
@@ -504,11 +510,11 @@ window.MathJax = {
       label:'oscillatory',
       fa: 0.00,
       candidate: null,
-      formula:'f(x)=\sin(1/x)\;(x\ne0),\quad f(0)=0',
+      formula:'f(x)=sin(1/x) for x≠0; f(0)=0',
       f(x){ if(Math.abs(x)<1e-12) return 0; return Math.sin(1/x); },
       notice:[
         'Oscillation is revealed by sequences that hit different phases while still approaching 0.',
-        'One can choose x_nâ†’0 with f(x_n)=1 and another with f(x_n)=-1.',
+        'One can choose x_n→0 with f(x_n)=1 and another with f(x_n)=-1.',
         'A single alternating witness already prevents the image sequence from converging.'
       ],
       verdict(seq){ return {kind:'bad', title:'no image limit', text:'The input sequence converges to 0, but the image sequence keeps separated subsequential limits.'}; }
@@ -658,7 +664,7 @@ window.MathJax = {
       svgEl('circle',{cx:sm.X(d.x),cy:strip.y0+10,r:d.n>=tailN?3.2:2.2,class:d.n>=tailN?'tail-dot':'seq-dot',opacity:d.n>=tailN?.85:.42},mainSvg);
     });
     svgEl('circle',{cx:sm.X(0),cy:strip.y0+10,r:4.5,class:'filled-dot'},mainSvg);
-    svgEl('text',{x:strip.x0,y:strip.y0-8,class:'label'},mainSvg).textContent='domain collapse: xâ‚™ â†’ 0';
+    svgEl('text',{x:strip.x0,y:strip.y0-8,class:'label'},mainSvg).textContent='domain collapse: xₙ → 0';
   }
 
   function renderSeqSvg(fnKey, spec, seq, tailN, band){
@@ -679,7 +685,7 @@ window.MathJax = {
     svgEl('line',{x1:bot.x0,y1:mb.Y(spec.fa),x2:bot.x0+bot.w,y2:mb.Y(spec.fa),class:'target-line'},seqSvg);
     if(spec.candidate !== null && spec.candidate !== spec.fa){
       svgEl('line',{x1:bot.x0,y1:mb.Y(spec.candidate),x2:bot.x0+bot.w,y2:mb.Y(spec.candidate),class:'limit-line'},seqSvg);
-      svgEl('text',{x:bot.x0+bot.w-8,y:mb.Y(spec.candidate)-8,'text-anchor':'end',class:'label'},seqSvg).textContent='limit along xâ‚™';
+      svgEl('text',{x:bot.x0+bot.w-8,y:mb.Y(spec.candidate)-8,'text-anchor':'end',class:'label'},seqSvg).textContent='limit along xₙ';
     }
     if(fnKey==='oscillatory'){
       svgEl('line',{x1:bot.x0,y1:mb.Y(1),x2:bot.x0+bot.w,y2:mb.Y(1),class:'limit-line'},seqSvg);
@@ -697,8 +703,8 @@ window.MathJax = {
     });
     svgEl('line',{x1:tailX,y1:top.y0-10,x2:tailX,y2:bot.y0+bot.h+10,class:'a-line'},seqSvg);
     svgEl('text',{x:tailX+6,y:top.y0-15,class:'label-strong'},seqSvg).textContent='N';
-    svgEl('text',{x:top.x0,y:top.y0-14,class:'label-strong'},seqSvg).textContent='domain sequence: xâ‚™ â†’ 0';
-    svgEl('text',{x:bot.x0,y:bot.y0-14,class:'label-strong'},seqSvg).textContent='image sequence: f(xâ‚™) should â†’ f(0)';
+    svgEl('text',{x:top.x0,y:top.y0-14,class:'label-strong'},seqSvg).textContent='domain sequence: xₙ → 0';
+    svgEl('text',{x:bot.x0,y:bot.y0-14,class:'label-strong'},seqSvg).textContent='image sequence: f(xₙ) should → f(0)';
     svgEl('text',{x:top.x0+top.w,y:top.y0+top.h+22,'text-anchor':'end',class:'label'},seqSvg).textContent='n';
     svgEl('text',{x:bot.x0+bot.w,y:bot.y0+bot.h+22,'text-anchor':'end',class:'label'},seqSvg).textContent='n';
     svgEl('text',{x:top.x0+top.w-8,y:mt.Y(0)-8,'text-anchor':'end',class:'label'},seqSvg).textContent='0';
@@ -719,16 +725,16 @@ window.MathJax = {
     els.domainStatus.className='mini status-good';
     const tail = seq.slice(Math.max(0,tailN-1));
     const maxDomain = Math.max(...tail.map(d=>Math.abs(d.x)));
-    els.domainStatus.innerHTML = `<b>Domain sequence</b><p>For the displayed tail, max |xâ‚™âˆ’0| â‰ˆ ${fmt(maxDomain)}. The inputs are collapsing toward 0.</p>`;
+    els.domainStatus.innerHTML = `<b>Domain sequence</b><p>For the displayed tail, max |xₙ−0| ≈ ${fmt(maxDomain)}. The inputs are collapsing toward 0.</p>`;
     els.imageStatus.className = 'mini ' + (verdict.kind==='good' ? 'status-good' : 'status-bad');
     const maxImage = Math.max(...tail.map(d=>Math.abs(spec.f(d.x)-spec.fa)));
     const imageRange = Math.max(...tail.map(d=>spec.f(d.x))) - Math.min(...tail.map(d=>spec.f(d.x)));
-    const extra = verdict.kind==='good' ? `max |f(xâ‚™)âˆ’f(0)| â‰ˆ ${fmt(maxImage)}.` : `tail spread â‰ˆ ${fmt(imageRange)}, max |f(xâ‚™)âˆ’f(0)| â‰ˆ ${fmt(maxImage)}.`;
+    const extra = verdict.kind==='good' ? `max |f(xₙ)−f(0)| ≈ ${fmt(maxImage)}.` : `tail spread ≈ ${fmt(imageRange)}, max |f(xₙ)−f(0)| ≈ ${fmt(maxImage)}.`;
     els.imageStatus.innerHTML = `<b>Image sequence</b><p>${verdict.text} ${extra}</p>`;
     els.notice1.textContent = spec.notice[0];
     els.notice2.textContent = spec.notice[1];
     els.notice3.textContent = spec.notice[2];
-    if(window.MathJax && MathJax.typesetPromise){ MathJax.typesetPromise([els.domainStatus, els.imageStatus]).catch(()=>{}); }
+    typesetMath(document.body);
   }
 
   function update(){
@@ -745,6 +751,7 @@ window.MathJax = {
     updateText(fnKey, spec, seqKey, seq, tailN, band);
     renderMain(fnKey, spec, seq, tailN, band);
     renderSeqSvg(fnKey, spec, seq, tailN, band);
+    typesetMath(document.body);
   }
 
   function setMode(mode){

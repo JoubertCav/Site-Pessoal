@@ -18,14 +18,29 @@
 
     gtag('config', 'G-NHXHEJP1G0');
   </script>
-
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
   <script>
-    window.MathJax = {
-      tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
-      svg: { fontCache: 'global' }
-    };
+    function escapeMathAttr(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+    function mathInline(tex){return `<span class="math-slot" data-display="false" data-tex="${escapeMathAttr(tex)}"></span>`;}
+    function mathDisplay(tex){return `<span class="math-slot display" data-display="true" data-tex="${escapeMathAttr(tex)}"></span>`;}
+    function renderMathText(s){
+      return String(s)
+        .replace(/\\[(.*?)\\]/gs, (_,tex)=>mathDisplay(tex))
+        .replace(/\\((.*?)\\)/gs, (_,tex)=>mathInline(tex));
+    }
+    function typesetMath(root=document.body){
+      if(!window.katex){ window.setTimeout(()=>typesetMath(root),60); return; }
+      root.querySelectorAll('.math-slot[data-tex]').forEach(el=>{
+        const tex = el.getAttribute('data-tex') || '';
+        const displayMode = el.getAttribute('data-display') === 'true';
+        try{ katex.render(tex, el, {displayMode, throwOnError:false, strict:'ignore'}); }
+        catch(e){ el.textContent = tex; }
+      });
+    }
+    window.addEventListener("load",()=>typesetMath(document.body));
   </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
 
   <style>
     :root{
@@ -98,7 +113,7 @@
     .theme .label{font-size:.92rem;color:var(--muted);min-width:70px}
     .switch{position:relative;width:70px;height:36px;border-radius:999px;background:var(--switch);border:1px solid var(--line)}
     .switch:before,.switch:after{position:absolute;top:50%;transform:translateY(-50%);font-size:13px;opacity:.75}
-    .switch:before{content:"â˜€";left:10px}.switch:after{content:"â˜¾";right:10px}
+    .switch:before{content:"☀";left:10px}.switch:after{content:"☾";right:10px}
     .knob{position:absolute;left:3px;top:3px;width:28px;height:28px;border-radius:50%;background:var(--thumb);border:1px solid var(--line);box-shadow:0 4px 12px rgba(0,0,0,.16);transition:left .25s ease;display:grid;place-items:center;font-size:13px}
     body.dark .knob{left:37px}
 
@@ -147,6 +162,13 @@
 
     @media(max-width:1240px){.layout{grid-template-columns:1fr}aside{position:static}.split,.grid2{grid-template-columns:1fr}}
     @media(max-width:900px){.footer,.pair,.explainRow{grid-template-columns:1fr}.wrap{padding:18px 14px 28px}}
+
+    .math-slot{display:inline-block;max-width:100%;vertical-align:baseline}
+    .math-slot.display{display:block;max-width:100%;overflow-x:auto;overflow-y:hidden}
+    .math-slot.display .katex-display{margin:.18em 0;text-align:left}
+    .eq,.note,.footer div,.metric p,.explainBox p,.explainMini p{overflow-wrap:anywhere}
+    .eq .katex{font-size:1.02em}
+
   </style>
 </head>
 <body>
@@ -154,15 +176,15 @@
     <header>
       <div>
         <h1>Inverse function theorem</h1>
-        <p class="subtitle">The right picture for the theorem is a microscope: zoom near \(a\), replace \(F\) by its best linear map \(DF(a)\), and ask whether that linear map collapses any direction. If it does not, \(F\) is locally reversible.</p>
+        <p class="subtitle">The right picture for the theorem is a microscope: zoom near <span class="math-slot" data-display="false" data-tex="a"></span>, replace <span class="math-slot" data-display="false" data-tex="F"></span> by its best linear map <span class="math-slot" data-display="false" data-tex="DF(a)"></span>, and ask whether that linear map collapses any direction. If it does not, <span class="math-slot" data-display="false" data-tex="F"></span> is locally reversible.</p>
       </div>
       <div class="actions">
         <div class="pill">clean local microscope</div>
-        <div class="pill">domain disk â†’ image patch</div>
+        <div class="pill">domain disk → image patch</div>
         <div class="pill">regular versus singular geometry</div>
         <div id="theme" class="theme" role="button" tabindex="0">
           <span id="themeLabel" class="label">light mode</span>
-          <div class="switch"><div id="knob" class="knob">â˜€</div></div>
+          <div class="switch"><div id="knob" class="knob">☀</div></div>
         </div>
       </div>
     </header>
@@ -178,26 +200,18 @@
         </div>
 
         <div class="eq">
-          \[
-          F:\mathbb R^n\to\mathbb R^n,\quad F\in C^1,
-          \qquad \det DF(a)\neq0
-          \]
-          \[
-          \Longrightarrow
+          <span class="math-slot display" data-display="true" data-tex="F:\mathbb R^n\to\mathbb R^n,\quad F\in C^1,
+          \qquad \det DF(a)\neq0"></span>
+          <span class="math-slot display" data-display="true" data-tex="\Longrightarrow
           \exists U\ni a,\ V\ni F(a):
-          F|_U:U\to V\text{ is a }C^1\text{ diffeomorphism}
-          \]
-          \[
-          D(F^{-1})(F(a))=(DF(a))^{-1}
-          \]
-          \[
-          \det DF(a)=0
-          \quad\text{means the theorem gives no local inverse.}
-          \]
+          F|_U:U\to V\text{ is a }C^1\text{ diffeomorphism}"></span>
+          <span class="math-slot display" data-display="true" data-tex="D(F^{-1})(F(a))=(DF(a))^{-1}"></span>
+          <span class="math-slot display" data-display="true" data-tex="\det DF(a)=0
+          \quad\text{means the theorem gives no local inverse.}"></span>
         </div>
 
         <div class="control">
-          <label>Map \(F\) <small id="mapLabel"></small></label>
+          <label>Map <span class="math-slot" data-display="false" data-tex="F"></span> <small id="mapLabel"></small></label>
           <select id="mapSelect">
             <option value="twist">regular smooth twist</option>
             <option value="square">complex square: local vs global</option>
@@ -215,7 +229,7 @@
         </div>
 
         <div class="control">
-          <label>Base point \(a=(a_1,a_2)\) <small id="pointLabel"></small></label>
+          <label>Base point <span class="math-slot" data-display="false" data-tex="a=(a_1,a_2)"></span> <small id="pointLabel"></small></label>
           <div class="pair">
             <input id="pxSlider" type="range" min="-1.4" max="1.4" step="0.01" value="0.45">
             <input id="pySlider" type="range" min="-1.4" max="1.4" step="0.01" value="-0.35">
@@ -223,7 +237,7 @@
         </div>
 
         <div class="control">
-          <label>Microscope radius \(\rho\) <small id="rhoLabel"></small></label>
+          <label>Microscope radius <span class="math-slot" data-display="false" data-tex="\rho"></span> <small id="rhoLabel"></small></label>
           <input id="rhoSlider" type="range" min="0.14" max="0.72" step="0.01" value="0.34">
         </div>
 
@@ -233,7 +247,7 @@
         </div>
 
         <div class="control">
-          <label>Target perturbation angle \(\theta\) <small id="thetaLabel"></small></label>
+          <label>Target perturbation angle <span class="math-slot" data-display="false" data-tex="\theta"></span> <small id="thetaLabel"></small></label>
           <input id="thetaSlider" type="range" min="0" max="6.28318" step="0.01" value="0.82">
         </div>
 
@@ -251,7 +265,7 @@
           <div class="heroTop">
             <div>
               <h2>Main theorem diagram</h2>
-              <p>Left: a small disk \(U\) around \(a\). Right: its image under \(F\). The dashed blue ellipse is the linear prediction \(F(a)+DF(a)(U-a)\). If the dashed ellipse has area, the nonlinear image is locally reversible.</p>
+              <p>Left: a small disk <span class="math-slot" data-display="false" data-tex="U"></span> around <span class="math-slot" data-display="false" data-tex="a"></span>. Right: its image under <span class="math-slot" data-display="false" data-tex="F"></span>. The dashed blue ellipse is the linear prediction <span class="math-slot" data-display="false" data-tex="F(a)+DF(a)(U-a)"></span>. If the dashed ellipse has area, the nonlinear image is locally reversible.</p>
             </div>
             <div id="status" class="status">local diffeomorphism test</div>
           </div>
@@ -268,12 +282,12 @@
               </div>
               <div class="metric">
                 <h4>Local inverse</h4>
-                <p>Nearby target \(y\) traced back to a source point.</p>
+                <p>Nearby target <span class="math-slot" data-display="false" data-tex="y"></span> traced back to a source point.</p>
                 <strong id="invMetric"></strong>
               </div>
               <div class="metric">
                 <h4>Linear inverse</h4>
-                <p>First approximation \(a+(DF(a))^{-1}(y-F(a))\).</p>
+                <p>First approximation <span class="math-slot" data-display="false" data-tex="a+(DF(a))^{-1}(y-F(a))"></span>.</p>
                 <strong id="linMetric"></strong>
               </div>
               <div class="metric">
@@ -292,15 +306,15 @@
           <div class="explainRow">
             <div class="explainBox">
               <h4>Nonsingular Jacobian</h4>
-              <p>Invertibility of \(DF(a)\) means the local linear map sends small disks to non-collapsed ellipses. No direction is lost.</p>
+              <p>Invertibility of <span class="math-slot" data-display="false" data-tex="DF(a)"></span> means the local linear map sends small disks to non-collapsed ellipses. No direction is lost.</p>
             </div>
             <div class="explainBox">
               <h4>Local diffeomorphism</h4>
-              <p>The conclusion is local: around \(a\), \(F\) has a smooth inverse even if the same map may fail to be globally one-to-one elsewhere.</p>
+              <p>The conclusion is local: around <span class="math-slot" data-display="false" data-tex="a"></span>, <span class="math-slot" data-display="false" data-tex="F"></span> has a smooth inverse even if the same map may fail to be globally one-to-one elsewhere.</p>
             </div>
             <div class="explainBox">
               <h4>Singular failure</h4>
-              <p>If \(\det DF(a)=0\), the theorem no longer applies. The examples show typical failures: folding or angle-doubling at the origin.</p>
+              <p>If <span class="math-slot" data-display="false" data-tex="\det DF(a)=0"></span>, the theorem no longer applies. The examples show typical failures: folding or angle-doubling at the origin.</p>
             </div>
           </div>
         </section>
@@ -310,7 +324,7 @@
             <div class="head">
               <div>
                 <h3>Jacobian microscope</h3>
-                <p>This removes the nonlinear map and shows only \(h\mapsto DF(a)h\). A circle becomes an ellipse if \(DF(a)\) is nonsingular and collapses when singular.</p>
+                <p>This removes the nonlinear map and shows only <span class="math-slot" data-display="false" data-tex="h\mapsto DF(a)h"></span>. A circle becomes an ellipse if <span class="math-slot" data-display="false" data-tex="DF(a)"></span> is nonsingular and collapses when singular.</p>
               </div>
               <div class="tag">linear core</div>
             </div>
@@ -342,9 +356,9 @@
         </div>
 
         <section class="footer">
-          <div><strong>IFT condition.</strong> \(F\in C^1\), same input/output dimension, and \(\det DF(a)\neq0\).</div>
-          <div><strong>Geometric meaning.</strong> A small neighborhood around \(a\) is deformed without folding or flattening into a neighborhood around \(F(a)\).</div>
-          <div><strong>Derivative of inverse.</strong> The inverse map has derivative \((DF(a))^{-1}\) at \(F(a)\).</div>
+          <div><strong>IFT condition.</strong> <span class="math-slot" data-display="false" data-tex="F\in C^1"></span>, same input/output dimension, and <span class="math-slot" data-display="false" data-tex="\det DF(a)\neq0"></span>.</div>
+          <div><strong>Geometric meaning.</strong> A small neighborhood around <span class="math-slot" data-display="false" data-tex="a"></span> is deformed without folding or flattening into a neighborhood around <span class="math-slot" data-display="false" data-tex="F(a)"></span>.</div>
+          <div><strong>Derivative of inverse.</strong> The inverse map has derivative <span class="math-slot" data-display="false" data-tex="(DF(a))^{-1}"></span> at <span class="math-slot" data-display="false" data-tex="F(a)"></span>.</div>
         </section>
       </main>
     </div>
@@ -354,7 +368,7 @@
   const maps = {
     twist:{
       label:'regular smooth twist',
-      formula:'\\[F(x,y)=\\big(x+0.32\\sin y,\\ y+0.24\\sin x\\big).\\]',
+      formula:String.raw`F(x,y)=\big(x+0.32\sin y,\ y+0.24\sin x\big).`,
       notice:'A gentle nonlinear deformation. In the visible range its determinant stays away from zero, so the theorem applies robustly.',
       regular:[0.45,-0.35],
       singular:[0,0],
@@ -364,7 +378,7 @@
     },
     square:{
       label:'complex square map',
-      formula:'\\[F(x,y)=\\big(x^2-y^2,\\ 2xy\\big).\\]',
+      formula:String.raw`F(x,y)=\big(x^2-y^2,\ 2xy\big).`,
       notice:'Away from the origin the map is locally invertible. At the origin the Jacobian is zero; nearby targets usually have two square-root preimages.',
       regular:[0.80,0.45],
       singular:[0,0],
@@ -374,7 +388,7 @@
     },
     fold:{
       label:'fold map',
-      formula:'\\[F(x,y)=\\big(x^2+0.20y,\\ y\\big).\\]',
+      formula:String.raw`F(x,y)=\big(x^2+0.20y,\ y\big).`,
       notice:'The singular set is the vertical line \(x=0\). The image folds across this line, so one nearby target can have two nearby source points.',
       regular:[0.82,0.20],
       singular:[0,0.20],
@@ -440,9 +454,9 @@
     return [[A[1][1]/d,-A[0][1]/d],[-A[1][0]/d,A[0][0]/d]];
   };
   const fmt=x=>{
-    if(!Number.isFinite(x)) return 'â€”';
+    if(!Number.isFinite(x)) return '—';
     if(Math.abs(x)>9999) return x.toExponential(2);
-    return (x<0?'âˆ’':'')+Math.abs(x).toFixed(3);
+    return (x<0?'−':'')+Math.abs(x).toFixed(3);
   };
   const fmtVec=v=>`(${fmt(v[0])}, ${fmt(v[1])})`;
   const lin=(x,a,b,c,d)=>c+(x-a)*(d-c)/(b-a);
@@ -481,7 +495,7 @@
     document.body.classList.toggle('dark',t==='dark');
     localStorage.setItem('ift-refined-theme',t);
     el.themeLabel.textContent=t==='dark'?'dark mode':'light mode';
-    el.knob.textContent=t==='dark'?'â˜¾':'â˜€';
+    el.knob.textContent=t==='dark'?'☾':'☀';
     if(state.initialized) render();
   }
 
@@ -677,7 +691,7 @@
 
       <rect x="510" y="642" width="400" height="64" rx="22" fill="${Math.abs(C.det)>0.06?css('--goodSoft'):css('--badSoft')}" stroke="${css('--line')}"/>
       ${txt(710,668,Math.abs(C.det)>0.06?'non-collapsed local image: inverse theorem applies':'collapsed/folded local image: theorem does not apply',{size:17,fill:color,weight:800,family:'Georgia, serif',anchor:'middle'})}
-      ${txt(710,694,`det DF(a) â‰ˆ ${fmt(C.det)}`,{size:15,fill:css('--muted'),weight:750,anchor:'middle'})}
+      ${txt(710,694,`det DF(a) ≈ ${fmt(C.det)}`,{size:15,fill:css('--muted'),weight:750,anchor:'middle'})}
     `;
   }
 
@@ -712,7 +726,7 @@
       ${arrow(X(0),Y(0),X(r*0.72),Y(0),css('--gold'),3)}
       ${arrow(X(0),Y(0),X(0),Y(r*0.72),css('--violet'),3)}
       <circle cx="${X(hLin[0])}" cy="${Y(hLin[1])}" r="6" fill="${css('--model')}" stroke="${css('--paper')}" stroke-width="2"/>
-      ${txt(X(hLin[0])+8,Y(hLin[1])-8,'Jâ»Â¹Î·',{size:14,fill:css('--model'),weight:750})}
+      ${txt(X(hLin[0])+8,Y(hLin[1])-8,'J⁻¹η',{size:14,fill:css('--model'),weight:750})}
 
       ${makeAxes(right,KX,KY)}
       <path d="${polyline(ell,p=>[KX(p[0]),KY(p[1])])}" fill="${Math.abs(C.det)>0.06?css('--goodSoft'):css('--badSoft')}" stroke="${color}" stroke-width="3.2"/>
@@ -720,14 +734,14 @@
       ${arrow(KX(0),KY(0),KX(matVec(C.J,[r*0.72,0])[0]),KY(matVec(C.J,[r*0.72,0])[1]),css('--gold'),3)}
       ${arrow(KX(0),KY(0),KX(matVec(C.J,[0,r*0.72])[0]),KY(matVec(C.J,[0,r*0.72])[1]),css('--violet'),3)}
       <circle cx="${KX(C.eta[0])}" cy="${KY(C.eta[1])}" r="6" fill="${css('--model')}" stroke="${css('--paper')}" stroke-width="2"/>
-      ${txt(KX(C.eta[0])+8,KY(C.eta[1])-8,'Î·',{size:14,fill:css('--model'),weight:750})}
+      ${txt(KX(C.eta[0])+8,KY(C.eta[1])-8,'η',{size:14,fill:css('--model'),weight:750})}
 
       <path d="M 565 265 C 590 265, 600 265, 618 265" fill="none" stroke="${css('--line')}" stroke-width="2.6" marker-end="url(#marr)"/>
       ${txt(590,246,'DF(a)',{size:20,fill:css('--muted'),weight:800,family:'Georgia, serif',anchor:'middle'})}
 
       <rect x="432" y="520" width="316" height="58" rx="20" fill="${Math.abs(C.det)>0.06?css('--goodSoft'):css('--badSoft')}" stroke="${css('--line')}"/>
       ${txt(590,544,Math.abs(C.det)>0.06?'ellipse has nonzero area':'ellipse collapses toward a segment',{size:17,fill:color,weight:800,family:'Georgia, serif',anchor:'middle'})}
-      ${txt(590,568,`area scale = |det DF(a)| â‰ˆ ${fmt(Math.abs(C.det))}`,{size:14,fill:css('--muted'),weight:750,anchor:'middle'})}
+      ${txt(590,568,`area scale = |det DF(a)| ≈ ${fmt(Math.abs(C.det))}`,{size:14,fill:css('--muted'),weight:750,anchor:'middle'})}
     `;
   }
 
@@ -833,18 +847,18 @@
       `det DF(a) = ${fmt(C.det)}\n`+
       (C.Ji?`DF(a)^(-1) = [[${fmt(C.Ji[0][0])}, ${fmt(C.Ji[0][1])}],\n            [${fmt(C.Ji[1][0])}, ${fmt(C.Ji[1][1])}]]`:'DF(a)^(-1) does not exist');
 
-    el.formulaBox.innerHTML=C.mp.formula;
-    el.noticeBox.innerHTML=C.mp.notice;
+    el.formulaBox.innerHTML=mathDisplay(String(C.mp.formula).replace(/^\\\[/,'').replace(/\\\]$/,''));
+    el.noticeBox.innerHTML=renderMathText(C.mp.notice);
 
     const regular=Math.abs(C.det)>0.06;
     const col=regular?css('--good'):css('--bad');
-    el.status.textContent=regular?'regular point Â· local diffeomorphism':'singular point Â· theorem does not apply';
+    el.status.textContent=regular?'regular point · local diffeomorphism':'singular point · theorem does not apply';
     el.status.style.color=col;
     el.status.style.background=regular?css('--goodSoft'):css('--badSoft');
 
-    el.detMetric.textContent=`det DF(a) â‰ˆ ${fmt(C.det)}`;
-    el.invMetric.textContent=regular&&C.inv.ok?`unique nearby preimage Â· residual ${fmt(C.inv.residual)}`:(C.two?'two nearby preimages appear':'no local inverse guaranteed');
-    el.linMetric.textContent=C.xLin?`linear preimage â‰ˆ ${fmtVec(C.xLin)}`:'no linear inverse';
+    el.detMetric.textContent=`det DF(a) ≈ ${fmt(C.det)}`;
+    el.invMetric.textContent=regular&&C.inv.ok?`unique nearby preimage · residual ${fmt(C.inv.residual)}`:(C.two?'two nearby preimages appear':'no local inverse guaranteed');
+    el.linMetric.textContent=C.xLin?`linear preimage ≈ ${fmtVec(C.xLin)}`:'no linear inverse';
     el.oriMetric.textContent=C.det>0.06?'orientation preserved':(C.det<-0.06?'orientation reversed':'orientation collapses');
     el.warnMetric.textContent=regular?'non-collapsed local image':(C.two?'fold/branching behavior':'rank loss / collapse');
   }
@@ -854,7 +868,7 @@
     renderMainSvg();
     renderMicroSvg();
     renderFailureSvg();
-    if(window.MathJax) MathJax.typesetPromise().catch(()=>{});
+    typesetMath(document.body);
   }
 
   function sync(){

@@ -18,14 +18,29 @@
 
     gtag('config', 'G-NHXHEJP1G0');
   </script>
-
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
   <script>
-    window.MathJax = {
-      tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
-      svg: { fontCache: 'global' }
-    };
+    function escapeMathAttr(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+    function mathInline(tex){return `<span class="math-slot" data-display="false" data-tex="${escapeMathAttr(tex)}"></span>`;}
+    function mathDisplay(tex){return `<span class="math-slot display" data-display="true" data-tex="${escapeMathAttr(tex)}"></span>`;}
+    function renderMathText(s){
+      return String(s)
+        .replace(/\\[(.*?)\\]/gs, (_,tex)=>mathDisplay(tex))
+        .replace(/\\((.*?)\\)/gs, (_,tex)=>mathInline(tex));
+    }
+    function typesetMath(root=document.body){
+      if(!window.katex){ window.setTimeout(()=>typesetMath(root),60); return; }
+      root.querySelectorAll('.math-slot[data-tex]').forEach(el=>{
+        const tex = el.getAttribute('data-tex') || '';
+        const displayMode = el.getAttribute('data-display') === 'true';
+        try{ katex.render(tex, el, {displayMode, throwOnError:false, strict:'ignore'}); }
+        catch(e){ el.textContent = tex; }
+      });
+    }
+    window.addEventListener("load",()=>typesetMath(document.body));
   </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
   <script defer src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
 
   <style>
@@ -97,7 +112,7 @@
     .theme .label{font-size:.92rem;color:var(--muted);min-width:70px}
     .switch{position:relative;width:70px;height:36px;border-radius:999px;background:var(--switch);border:1px solid var(--line)}
     .switch:before,.switch:after{position:absolute;top:50%;transform:translateY(-50%);font-size:13px;opacity:.75}
-    .switch:before{content:"â˜€";left:10px}.switch:after{content:"â˜¾";right:10px}
+    .switch:before{content:"☀";left:10px}.switch:after{content:"☾";right:10px}
     .knob{position:absolute;left:3px;top:3px;width:28px;height:28px;border-radius:50%;background:var(--thumb);border:1px solid var(--line);box-shadow:0 4px 12px rgba(0,0,0,.16);transition:left .25s ease;display:grid;place-items:center;font-size:13px}
     body.dark .knob{left:37px}
 
@@ -148,6 +163,14 @@
 
     @media(max-width:1240px){.layout{grid-template-columns:1fr}aside{position:static}.split,.grid2{grid-template-columns:1fr}}
     @media(max-width:900px){.footer,.pair,.explainRow{grid-template-columns:1fr}.wrap{padding:18px 14px 28px}#mainPlot{height:580px}#contourPlot{height:430px}}
+
+    .math-slot{display:inline-block;max-width:100%;vertical-align:baseline}
+    .math-slot.display{display:block;max-width:100%;overflow-x:auto;overflow-y:hidden}
+    .math-slot.display .katex-display{margin:.18em 0;text-align:left}
+    .eq,.note,.footer div,.metric p,.explainBox p,.explainMini p{overflow-wrap:anywhere}
+    .eq .katex{font-size:1.01em}
+    .note .math-slot.display .katex-display{margin:.12em 0}
+
   </style>
 </head>
 <body>
@@ -155,7 +178,7 @@
     <header>
       <div>
         <h1>Constrained extrema</h1>
-        <p class="subtitle">The constrained extremum problem asks where an objective \(f\) is largest or smallest while motion is restricted to a constraint manifold. The geometry combines 3D surfaces, 2D contours, normal directions, and second-order tests.</p>
+        <p class="subtitle">The constrained extremum problem asks where an objective <span class="math-slot" data-display="false" data-tex="f"></span> is largest or smallest while motion is restricted to a constraint manifold. The geometry combines 3D surfaces, 2D contours, normal directions, and second-order tests.</p>
       </div>
       <div class="actions">
         <div class="pill">3D surface and lifted constraint</div>
@@ -163,7 +186,7 @@
         <div class="pill">Lagrange and normal-cone view</div>
         <div id="theme" class="theme" role="button" tabindex="0">
           <span id="themeLabel" class="label">light mode</span>
-          <div class="switch"><div id="knob" class="knob">â˜€</div></div>
+          <div class="switch"><div id="knob" class="knob">☀</div></div>
         </div>
       </div>
     </header>
@@ -173,34 +196,26 @@
         <div class="head">
           <div>
             <h2>Controls</h2>
-            <p>Choose an objective \(f\), a smooth closed constraint, and a point along the constraint.</p>
+            <p>Choose an objective <span class="math-slot" data-display="false" data-tex="f"></span>, a smooth closed constraint, and a point along the constraint.</p>
           </div>
           <div class="tag">Lagrange view</div>
         </div>
 
         <div class="eq">
-          \[
-          \text{maximize/minimize } f(x,y)
-          \quad\text{subject to } x\in M
-          \]
-          \[
-          \text{At a smooth constrained critical point,}
-          \quad \nabla f(a)=\lambda n(a)
-          \]
-          \[
-          \phi(\theta):=f(r(\theta)),
+          <span class="math-slot display" data-display="true" data-tex="\text{maximize/minimize } f(x,y)
+          \quad\text{subject to } x\in M"></span>
+          <span class="math-slot display" data-display="true" data-tex="\text{At a smooth constrained critical point,}
+          \quad \nabla f(a)=\lambda n(a)"></span>
+          <span class="math-slot display" data-display="true" data-tex="\phi(\theta):=f(r(\theta)),
           \qquad
-          \phi'(\theta_0)=0
-          \]
-          \[
-          \phi''(\theta_0)>0 \Rightarrow \text{local min},
+          \phi'(\theta_0)=0"></span>
+          <span class="math-slot display" data-display="true" data-tex="\phi''(\theta_0)&gt;0 \Rightarrow \text{local min},
           \qquad
-          \phi''(\theta_0)<0 \Rightarrow \text{local max}
-          \]
+          \phi''(\theta_0)&lt;0 \Rightarrow \text{local max}"></span>
         </div>
 
         <div class="control">
-          <label>Objective \(f\) <small id="objLabel"></small></label>
+          <label>Objective <span class="math-slot" data-display="false" data-tex="f"></span> <small id="objLabel"></small></label>
           <select id="objSelect">
             <option value="bowl">tilted bowl</option>
             <option value="saddle">saddle</option>
@@ -210,7 +225,7 @@
         </div>
 
         <div class="control">
-          <label>Constraint manifold \(M\) <small id="consLabel"></small></label>
+          <label>Constraint manifold <span class="math-slot" data-display="false" data-tex="M"></span> <small id="consLabel"></small></label>
           <select id="consSelect">
             <option value="circle">circle</option>
             <option value="ellipse">ellipse</option>
@@ -219,7 +234,7 @@
         </div>
 
         <div class="control">
-          <label>Constraint size \(R\) <small id="sizeLabel"></small></label>
+          <label>Constraint size <span class="math-slot" data-display="false" data-tex="R"></span> <small id="sizeLabel"></small></label>
           <input id="sizeSlider" type="range" min="0.55" max="1.35" step="0.01" value="0.95">
         </div>
 
@@ -234,7 +249,7 @@
         </div>
 
         <div class="control">
-          <label>Constraint parameter \(\theta\) <small id="thetaLabel"></small></label>
+          <label>Constraint parameter <span class="math-slot" data-display="false" data-tex="\theta"></span> <small id="thetaLabel"></small></label>
           <input id="thetaSlider" type="range" min="0" max="6.28318" step="0.002" value="0.60">
         </div>
 
@@ -257,7 +272,7 @@
           <div class="heroTop">
             <div>
               <h2>Main 3D constrained picture</h2>
-              <p>Green: the objective surface \(z=f(x,y)\). Red: the lifted constraint curve \(z=f(r(\theta))\). Blue: the tangent plane at the selected point. Gold: the surface normal direction generated by the active constraint normal. At a constrained extremum, the lifted-curve tangent has zero vertical slope.</p>
+              <p>Green: the objective surface <span class="math-slot" data-display="false" data-tex="z=f(x,y)"></span>. Red: the lifted constraint curve <span class="math-slot" data-display="false" data-tex="z=f(r(\theta))"></span>. Blue: the tangent plane at the selected point. Gold: the surface normal direction generated by the active constraint normal. At a constrained extremum, the lifted-curve tangent has zero vertical slope.</p>
             </div>
             <div id="status" class="status">restricted critical point test</div>
           </div>
@@ -269,17 +284,17 @@
             <div class="metrics">
               <div class="metric">
                 <h4>Value on the constraint</h4>
-                <p>Current point \(a=r(\theta)\) and its objective value.</p>
+                <p>Current point <span class="math-slot" data-display="false" data-tex="a=r(\theta)"></span> and its objective value.</p>
                 <strong id="valueMetric"></strong>
               </div>
               <div class="metric">
                 <h4>Lagrange condition</h4>
-                <p>Residual of \(\nabla f(a)-\lambda n(a)\).</p>
+                <p>Residual of <span class="math-slot" data-display="false" data-tex="\nabla f(a)-\lambda n(a)"></span>.</p>
                 <strong id="lagrangeMetric"></strong>
               </div>
               <div class="metric">
                 <h4>Tangential derivative</h4>
-                <p>The derivative of \(\phi(\theta)=f(r(\theta))\).</p>
+                <p>The derivative of <span class="math-slot" data-display="false" data-tex="\phi(\theta)=f(r(\theta))"></span>.</p>
                 <strong id="tanMetric"></strong>
               </div>
               <div class="metric">
@@ -289,7 +304,7 @@
               </div>
               <div class="metric">
                 <h4>Normal cone view</h4>
-                <p>For the filled feasible region, the normal cone is the ray \(\{\mu n(a):\mu\ge0\}\).</p>
+                <p>For the filled feasible region, the normal cone is the ray <span class="math-slot" data-display="false" data-tex="\{\mu n(a):\mu\ge0\}"></span>.</p>
                 <strong id="coneMetric"></strong>
               </div>
             </div>
@@ -302,11 +317,11 @@
             </div>
             <div class="explainBox">
               <h4>Constraint manifold</h4>
-              <p>The constraint is a smooth curve \(M\subset\mathbb R^2\). Restricting \(f\) to \(M\) turns the problem into a one-variable problem \(\phi(\theta)=f(r(\theta))\).</p>
+              <p>The constraint is a smooth curve <span class="math-slot" data-display="false" data-tex="M\subset\mathbb R^2"></span>. Restricting <span class="math-slot" data-display="false" data-tex="f"></span> to <span class="math-slot" data-display="false" data-tex="M"></span> turns the problem into a one-variable problem <span class="math-slot" data-display="false" data-tex="\phi(\theta)=f(r(\theta))"></span>.</p>
             </div>
             <div class="explainBox">
               <h4>Second-order test</h4>
-              <p>Once \(\phi'(\theta_0)=0\), the sign of \(\phi''(\theta_0)\) distinguishes local minima from local maxima along the constraint.</p>
+              <p>Once <span class="math-slot" data-display="false" data-tex="\phi'(\theta_0)=0"></span>, the sign of <span class="math-slot" data-display="false" data-tex="\phi''(\theta_0)"></span> distinguishes local minima from local maxima along the constraint.</p>
             </div>
           </div>
         </section>
@@ -316,7 +331,7 @@
             <div class="head">
               <div>
                 <h3>2D contours and constraint tangency</h3>
-                <p>A constrained extremum occurs where a contour of \(f\) is tangent to the constraint. The objective gradient is then parallel to the constraint normal and orthogonal to the tangent direction.</p>
+                <p>A constrained extremum occurs where a contour of <span class="math-slot" data-display="false" data-tex="f"></span> is tangent to the constraint. The objective gradient is then parallel to the constraint normal and orthogonal to the tangent direction.</p>
               </div>
               <div class="tag">2D geometry</div>
             </div>
@@ -332,8 +347,8 @@
           <section class="card panel">
             <div class="head">
               <div>
-                <h3>Reduced 1D problem \(\phi(\theta)=f(r(\theta))\)</h3>
-                <p>The constrained problem becomes a one-dimensional problem along the parameter \(\theta\). Its derivative and curvature give the first- and second-order tests.</p>
+                <h3>Reduced 1D problem <span class="math-slot" data-display="false" data-tex="\phi(\theta)=f(r(\theta))"></span></h3>
+                <p>The constrained problem becomes a one-dimensional problem along the parameter <span class="math-slot" data-display="false" data-tex="\theta"></span>. Its derivative and curvature give the first- and second-order tests.</p>
               </div>
               <div class="tag">1D restriction</div>
             </div>
@@ -342,7 +357,7 @@
             </div>
             <div class="explainMini">
               <h4>Short explanation</h4>
-              <p>Once the constraint is parameterized, the problem is classical calculus again: find where \(\phi'(\theta)=0\), then inspect \(\phi''(\theta)\) to determine whether the point is a constrained minimum or maximum.</p>
+              <p>Once the constraint is parameterized, the problem is classical calculus again: find where <span class="math-slot" data-display="false" data-tex="\phi'(\theta)=0"></span>, then inspect <span class="math-slot" data-display="false" data-tex="\phi''(\theta)"></span> to determine whether the point is a constrained minimum or maximum.</p>
             </div>
           </section>
         </div>
@@ -352,7 +367,7 @@
             <div class="head">
               <div>
                 <h3>Normal cone picture</h3>
-                <p>Replace the equality manifold by the filled feasible region \(K\) bounded by the same curve. At a smooth boundary point, the normal cone is a ray generated by the outward normal.</p>
+                <p>Replace the equality manifold by the filled feasible region <span class="math-slot" data-display="false" data-tex="K"></span> bounded by the same curve. At a smooth boundary point, the normal cone is a ray generated by the outward normal.</p>
               </div>
               <div class="tag">first-order inequality view</div>
             </div>
@@ -378,14 +393,14 @@
             </div>
             <div class="explainMini">
               <h4>Short explanation</h4>
-              <p>The tangent component tells you how much \(f\) changes if you move along the constraint. Constrained criticality means that this component is zero, leaving only the normal component.</p>
+              <p>The tangent component tells you how much <span class="math-slot" data-display="false" data-tex="f"></span> changes if you move along the constraint. Constrained criticality means that this component is zero, leaving only the normal component.</p>
             </div>
           </section>
         </div>
 
         <section class="footer">
           <div><strong>Geometric condition.</strong> On a smooth manifold, constrained extrema happen where the objective gradient has no allowed tangential component.</div>
-          <div><strong>Multiplier meaning.</strong> The number \(\lambda\) measures how strongly the objective gradient aligns with the active normal direction.</div>
+          <div><strong>Multiplier meaning.</strong> The number <span class="math-slot" data-display="false" data-tex="\lambda"></span> measures how strongly the objective gradient aligns with the active normal direction.</div>
           <div><strong>Second order.</strong> After the first-order tangency condition, the curvature of the restricted function decides min versus max along the constraint.</div>
         </section>
       </main>
@@ -396,7 +411,7 @@
   const objectives = {
     bowl:{
       label:'tilted bowl',
-      formula:'\\[f(x,y)=0.55(x-0.25)^2+0.85(y+0.35)^2+0.20xy+0.16x-0.08y.\\]',
+      formula:'f(x,y)=0.55(x-0.25)^2+0.85(y+0.35)^2+0.20xy+0.16x-0.08y.',
       notice:'A convex objective: along a compact constraint it has both a constrained maximum and a constrained minimum.',
       f:(x,y)=>0.55*(x-0.25)*(x-0.25)+0.85*(y+0.35)*(y+0.35)+0.20*x*y+0.16*x-0.08*y,
       fx:(x,y)=>1.10*(x-0.25)+0.20*y+0.16,
@@ -404,7 +419,7 @@
     },
     saddle:{
       label:'saddle',
-      formula:'\\[f(x,y)=0.75x^2-0.58y^2+0.22xy+0.10x.\\]',
+      formula:'f(x,y)=0.75x^2-0.58y^2+0.22xy+0.10x.',
       notice:'A saddle has uphill and downhill directions at the same point, yet along a closed constraint you still obtain ordinary extrema of the restricted problem.',
       f:(x,y)=>0.75*x*x-0.58*y*y+0.22*x*y+0.10*x,
       fx:(x,y)=>1.50*x+0.22*y+0.10,
@@ -412,7 +427,7 @@
     },
     ripple:{
       label:'oscillatory',
-      formula:'\\[f(x,y)=0.55\\sin(1.2x)+0.45\\cos(1.35y)+0.12xy.\\]',
+      formula:'f(x,y)=0.55\\sin(1.2x)+0.45\\cos(1.35y)+0.12xy.',
       notice:'The objective oscillates, so the restriction to the constraint can have several local minima and maxima.',
       f:(x,y)=>0.55*Math.sin(1.2*x)+0.45*Math.cos(1.35*y)+0.12*x*y,
       fx:(x,y)=>0.66*Math.cos(1.2*x)+0.12*y,
@@ -420,7 +435,7 @@
     },
     gaussian:{
       label:'Gaussian hill',
-      formula:'\\[f(x,y)=1.15e^{-0.75((x-0.3)^2+1.1(y+0.1)^2)}+0.10x-0.05y.\\]',
+      formula:'f(x,y)=1.15e^{-0.75((x-0.3)^2+1.1(y+0.1)^2)}+0.10x-0.05y.',
       notice:'A smooth hill: on a closed constraint, the highest point is geometrically clear and the lowest point typically occurs on the opposite side.',
       f:(x,y)=>1.15*Math.exp(-0.75*((x-0.3)*(x-0.3)+1.1*(y+0.1)*(y+0.1)))+0.10*x-0.05*y,
       fx:(x,y)=>{
@@ -437,19 +452,19 @@
   const constraints = {
     circle:{
       label:'circle',
-      formula:'\\[M=\\{(x,y):x^2+y^2=R^2\\},\\qquad r(\\theta)=\\big(R\\cos\\theta,R\\sin\\theta\\big).\\]',
+      formula:'M=\\{(x,y):x^2+y^2=R^2\\},\\qquad r(\\theta)=\\big(R\\cos\\theta,R\\sin\\theta\\big).',
       notice:'The simplest closed smooth manifold. The feasible region \(K\) is the disk bounded by the circle.',
       r:(th,R)=>[R*Math.cos(th), R*Math.sin(th)]
     },
     ellipse:{
       label:'ellipse',
-      formula:'\\[r(\\theta)=\\big(1.22R\\cos\\theta,\\ 0.74R\\sin\\theta\\big).\\]',
+      formula:'r(\\theta)=\\big(1.22R\\cos\\theta,\\ 0.74R\\sin\\theta\\big).',
       notice:'The ellipse stretches the geometry differently in two directions, so the constrained extremum is no longer radially symmetric.',
       r:(th,R)=>[1.22*R*Math.cos(th), 0.74*R*Math.sin(th)]
     },
     rounded:{
       label:'rounded diamond',
-      formula:'\\[r(\\theta)=\\rho(\\theta)(\\cos\\theta,\\sin\\theta),\\qquad \\rho(\\theta)=\\frac{R}{\\big(|\\cos\\theta|^4+|\\sin\\theta|^4\\big)^{1/4}}.\\]',
+      formula:'r(\\theta)=\\rho(\\theta)(\\cos\\theta,\\sin\\theta),\\qquad \\rho(\\theta)=\\frac{R}{\\big(|\\cos\\theta|^4+|\\sin\\theta|^4\\big)^{1/4}}.',
       notice:'A smooth rounded-diamond shape. It is still a one-dimensional manifold, but the curvature varies strongly around the boundary.',
       r:(th,R)=>{
         const c=Math.cos(th), s=Math.sin(th);
@@ -507,9 +522,9 @@
   const dot=(a,b)=>a[0]*b[0]+a[1]*b[1];
   const norm=v=>Math.hypot(...v);
   const fmt=x=>{
-    if(!Number.isFinite(x)) return 'â€”';
+    if(!Number.isFinite(x)) return '—';
     if(Math.abs(x)>9999) return x.toExponential(2);
-    return (x<0?'âˆ’':'')+Math.abs(x).toFixed(3);
+    return (x<0?'−':'')+Math.abs(x).toFixed(3);
   };
   const fmtVec=v=>`(${fmt(v[0])}, ${fmt(v[1])})`;
   function fill(input){
@@ -536,7 +551,7 @@
     document.body.classList.toggle('dark',t==='dark');
     localStorage.setItem('constrained-extrema-theme',t);
     el.themeLabel.textContent=t==='dark'?'dark mode':'light mode';
-    el.knob.textContent=t==='dark'?'â˜¾':'â˜€';
+    el.knob.textContent=t==='dark'?'☾':'☀';
     if(state.initialized) render();
   }
 
@@ -805,7 +820,7 @@
         type:'scatter', mode:'lines+markers+text',
         x:[p[0],gradTip[0]], y:[p[1],gradTip[1]],
         marker:{size:[0,7],color:css('--gold')}, line:{color:css('--gold'),width:4},
-        text:['','âˆ‡f(a)'], textposition:'top center', textfont:{size:12,color:css('--gold')},
+        text:['','∇f(a)'], textposition:'top center', textfont:{size:12,color:css('--gold')},
         hoverinfo:'skip', showlegend:false
       },
       {
@@ -871,8 +886,8 @@
       <line x1="${X(C.th)}" y1="${plot.y}" x2="${X(C.th)}" y2="${plot.y+plot.h}" stroke="${pickColor}" stroke-width="2.4" stroke-dasharray="6 6"/>
       <circle cx="${X(C.th)}" cy="${Y(C.z0)}" r="6" fill="${pickColor}"/>
       ${text(X(C.th)+8,Y(C.z0)-8,'selected point',{size:14,fill:pickColor,weight:700})}
-      ${text(plot.x+10,plot.y+24,`Ï†'(Î¸) â‰ˆ ${fmt(C.d1)},   Ï†''(Î¸) â‰ˆ ${fmt(C.d2)}`,{size:14,fill:css('--muted'),weight:700})}
-      ${text(plot.x+plot.w-8,plot.y+plot.h+28,'Î¸',{size:15,fill:css('--muted'),weight:700,anchor:'end'})}
+      ${text(plot.x+10,plot.y+24,`φ'(θ) ≈ ${fmt(C.d1)},   φ''(θ) ≈ ${fmt(C.d2)}`,{size:14,fill:css('--muted'),weight:700})}
+      ${text(plot.x+plot.w-8,plot.y+plot.h+28,'θ',{size:15,fill:css('--muted'),weight:700,anchor:'end'})}
     `;
   }
 
@@ -892,7 +907,7 @@
     const minusGrad=[p[0]-0.40*C.grad[0], p[1]-0.40*C.grad[1]];
     const plusGrad=[p[0]+0.40*C.grad[0], p[1]+0.40*C.grad[1]];
     const choose = C.kind.includes('min') ? minusGrad : plusGrad;
-    const chooseLabel = C.kind.includes('min') ? 'âˆ’âˆ‡f(a)' : 'âˆ‡f(a)';
+    const chooseLabel = C.kind.includes('min') ? '−∇f(a)' : '∇f(a)';
 
     el.coneSvg.innerHTML = `
       <rect x="0" y="0" width="${W}" height="${H}" rx="22" fill="${css('--paper')}"/>
@@ -909,11 +924,11 @@
       <rect x="${side.x}" y="${side.y}" width="${side.w}" height="${side.h}" rx="22" fill="${css('--card')}" stroke="${css('--line')}"/>
       ${text(side.x+18,side.y+34,'Normal cone statement',{size:20,weight:700,family:'Georgia, serif'})}
       ${text(side.x+18,side.y+76,'For a smooth boundary point:',{size:14,fill:css('--muted'),weight:700})}
-      ${text(side.x+24,side.y+102,'N_K(a)= { Î¼ n(a) : Î¼ â‰¥ 0 }',{size:18,fill:css('--violet'),weight:700,family:'Georgia, serif'})}
+      ${text(side.x+24,side.y+102,'N_K(a)= { μ n(a) : μ ≥ 0 }',{size:18,fill:css('--violet'),weight:700,family:'Georgia, serif'})}
       ${text(side.x+18,side.y+146,'Boundary minima of f over K satisfy',{size:14,fill:css('--muted'),weight:700})}
-      ${text(side.x+24,side.y+172,'âˆ’âˆ‡f(a) âˆˆ N_K(a)',{size:18,fill:css('--gold'),weight:700,family:'Georgia, serif'})}
+      ${text(side.x+24,side.y+172,'−∇f(a) ∈ N_K(a)',{size:18,fill:css('--gold'),weight:700,family:'Georgia, serif'})}
       ${text(side.x+18,side.y+214,'Boundary maxima satisfy',{size:14,fill:css('--muted'),weight:700})}
-      ${text(side.x+24,side.y+240,'âˆ‡f(a) âˆˆ N_K(a)',{size:18,fill:css('--gold'),weight:700,family:'Georgia, serif'})}
+      ${text(side.x+24,side.y+240,'∇f(a) ∈ N_K(a)',{size:18,fill:css('--gold'),weight:700,family:'Georgia, serif'})}
     `;
   }
 
@@ -931,7 +946,7 @@
 
     el.decompSvg.innerHTML = `
       <rect x="0" y="0" width="${W}" height="${H}" rx="22" fill="${css('--paper')}"/>
-      ${text(76,40,'decompose âˆ‡f(a) into tangent + normal parts',{size:22,weight:700,family:'Georgia, serif'})}
+      ${text(76,40,'decompose ∇f(a) into tangent + normal parts',{size:22,weight:700,family:'Georgia, serif'})}
 
       <rect x="${left.x}" y="${left.y}" width="${left.w}" height="${left.h}" rx="22" fill="transparent" stroke="${css('--line')}"/>
       <line x1="${left.x+20}" y1="${center.y}" x2="${left.x+left.w-20}" y2="${center.y}" stroke="${css('--grid')}"/>
@@ -941,7 +956,7 @@
       ${arrow(center.x,center.y,nTip.x,nTip.y,css('--violet'),4)}
       ${arrow(center.x,center.y,tanProj.x,tanProj.y,css('--model'),4,'6 5')}
       ${arrow(center.x,center.y,norProj.x,norProj.y,css('--violet'),4,'6 5')}
-      ${text(gTip.x+8,gTip.y-8,'âˆ‡f(a)',{size:14,fill:css('--gold'),weight:700})}
+      ${text(gTip.x+8,gTip.y-8,'∇f(a)',{size:14,fill:css('--gold'),weight:700})}
       ${text(tTip.x+8,tTip.y+18,'tangent', {size:14,fill:css('--model'),weight:700})}
       ${text(nTip.x+8,nTip.y-8,'normal', {size:14,fill:css('--violet'),weight:700})}
       ${text(tanProj.x+8,tanProj.y-8,'tangential part', {size:13,fill:css('--model'),weight:700})}
@@ -949,13 +964,13 @@
 
       <rect x="${right.x}" y="${right.y}" width="${right.w}" height="${right.h}" rx="22" fill="${css('--card')}" stroke="${css('--line')}"/>
       ${text(right.x+18,right.y+34,'Algebraic statement',{size:20,weight:700,family:'Georgia, serif'})}
-      ${text(right.x+18,right.y+78,'âˆ‡f(a) = (âˆ‡fÂ·t)t + (âˆ‡fÂ·n)n',{size:18,fill:css('--gold'),weight:700,family:'Georgia, serif'})}
+      ${text(right.x+18,right.y+78,'∇f(a) = (∇f·t)t + (∇f·n)n',{size:18,fill:css('--gold'),weight:700,family:'Georgia, serif'})}
       ${text(right.x+18,right.y+120,'Tangential coefficient:',{size:14,fill:css('--muted'),weight:700})}
-      ${text(right.x+24,right.y+146,`âˆ‡f(a)Â·t â‰ˆ ${fmt(C.tangentPart)}`,{size:18,fill:css('--model'),weight:700,family:'Georgia, serif'})}
+      ${text(right.x+24,right.y+146,`∇f(a)·t ≈ ${fmt(C.tangentPart)}`,{size:18,fill:css('--model'),weight:700,family:'Georgia, serif'})}
       ${text(right.x+18,right.y+190,'Normal coefficient:',{size:14,fill:css('--muted'),weight:700})}
-      ${text(right.x+24,right.y+216,`âˆ‡f(a)Â·n â‰ˆ ${fmt(C.normalPart)}`,{size:18,fill:css('--violet'),weight:700,family:'Georgia, serif'})}
+      ${text(right.x+24,right.y+216,`∇f(a)·n ≈ ${fmt(C.normalPart)}`,{size:18,fill:css('--violet'),weight:700,family:'Georgia, serif'})}
       ${text(right.x+18,right.y+260,'At a constrained critical point,', {size:14,fill:css('--muted'),weight:700})}
-      ${text(right.x+24,right.y+286,'âˆ‡f(a)Â·t = 0', {size:18,fill:css('--bad'),weight:700,family:'Georgia, serif'})}
+      ${text(right.x+24,right.y+286,'∇f(a)·t = 0', {size:18,fill:css('--bad'),weight:700,family:'Georgia, serif'})}
       ${text(right.x+24,right.y+316,'so only the normal part remains.', {size:16,fill:css('--muted'),weight:700})}
     `;
   }
@@ -973,20 +988,20 @@
     el.matrixBox.textContent =
       `a = ${fmtVec(C.a)}\n` +
       `f(a) = ${fmt(C.z0)}\n` +
-      `âˆ‡f(a) = ${fmtVec(C.grad)}\n` +
+      `∇f(a) = ${fmtVec(C.grad)}\n` +
       `t(a) = ${fmtVec(C.tu)}\n` +
       `n(a) = ${fmtVec(C.n)}\n` +
-      `Î» â‰ˆ ${fmt(C.lam)}`;
-    el.formulaBox.innerHTML = C.obj.formula + '<br>' + C.cons.formula;
-    el.noticeBox.innerHTML = C.obj.notice + '<br><br>' + C.cons.notice;
+      `λ ≈ ${fmt(C.lam)}`;
+    el.formulaBox.innerHTML = mathDisplay(C.obj.formula) + mathDisplay(C.cons.formula);
+    el.noticeBox.innerHTML = renderMathText(C.obj.notice) + '<br><br>' + renderMathText(C.cons.notice);
 
     const crit = Math.abs(C.d1)<0.03 ? 'almost critical' : 'not critical yet';
-    el.status.textContent = `${C.kind} Â· ${crit}`;
-    el.valueMetric.textContent = `a â‰ˆ ${fmtVec(C.a)} ;  f(a) â‰ˆ ${fmt(C.z0)}`;
-    el.lagrangeMetric.textContent = `Î» â‰ˆ ${fmt(C.lam)} ;  residual â‰ˆ ${fmt(norm(C.residual))}`;
-    el.tanMetric.textContent = `Ï†'(Î¸) â‰ˆ ${fmt(C.d1)} ;  tangential part â‰ˆ ${fmt(C.tangentPart)}`;
-    el.secondMetric.textContent = `Ï†''(Î¸) â‰ˆ ${fmt(C.d2)} ;  classification: ${C.kind}`;
-    el.coneMetric.textContent = `normal ray direction n(a) â‰ˆ ${fmtVec(C.n)}`;
+    el.status.textContent = `${C.kind} · ${crit}`;
+    el.valueMetric.textContent = `a ≈ ${fmtVec(C.a)} ;  f(a) ≈ ${fmt(C.z0)}`;
+    el.lagrangeMetric.textContent = `λ ≈ ${fmt(C.lam)} ;  residual ≈ ${fmt(norm(C.residual))}`;
+    el.tanMetric.textContent = `φ'(θ) ≈ ${fmt(C.d1)} ;  tangential part ≈ ${fmt(C.tangentPart)}`;
+    el.secondMetric.textContent = `φ''(θ) ≈ ${fmt(C.d2)} ;  classification: ${C.kind}`;
+    el.coneMetric.textContent = `normal ray direction n(a) ≈ ${fmtVec(C.n)}`;
   }
 
   function render(){
@@ -996,7 +1011,7 @@
     renderPhiSvg();
     renderConeSvg();
     renderDecompSvg();
-    if(window.MathJax) MathJax.typesetPromise().catch(()=>{});
+    typesetMath(document.body);
   }
 
   function sync(){

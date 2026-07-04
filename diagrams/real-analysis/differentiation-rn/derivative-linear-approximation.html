@@ -18,14 +18,29 @@
 
     gtag('config', 'G-NHXHEJP1G0');
   </script>
-
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
   <script>
-    window.MathJax = {
-      tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
-      svg: { fontCache: 'global' }
-    };
+    function escapeMathAttr(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+    function mathInline(tex){return `<span class="math-slot" data-display="false" data-tex="${escapeMathAttr(tex)}"></span>`;}
+    function mathDisplay(tex){return `<span class="math-slot display" data-display="true" data-tex="${escapeMathAttr(tex)}"></span>`;}
+    function renderMathText(s){
+      return String(s)
+        .replace(/\\[(.*?)\\]/gs, (_,tex)=>mathDisplay(tex))
+        .replace(/\\((.*?)\\)/gs, (_,tex)=>mathInline(tex));
+    }
+    function typesetMath(root=document.body){
+      if(!window.katex){ window.setTimeout(()=>typesetMath(root),60); return; }
+      root.querySelectorAll('.math-slot[data-tex]').forEach(el=>{
+        const tex = el.getAttribute('data-tex') || '';
+        const displayMode = el.getAttribute('data-display') === 'true';
+        try{ katex.render(tex, el, {displayMode, throwOnError:false, strict:'ignore'}); }
+        catch(e){ el.textContent = tex; }
+      });
+    }
+    window.addEventListener("load",()=>typesetMath(document.body));
   </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
 
   <style>
     :root{
@@ -90,7 +105,7 @@
     .theme .label{font-size:.92rem;color:var(--muted);min-width:70px}
     .switch{position:relative;width:70px;height:36px;border-radius:999px;background:var(--switch);border:1px solid var(--line)}
     .switch:before,.switch:after{position:absolute;top:50%;transform:translateY(-50%);font-size:13px;opacity:.75}
-    .switch:before{content:"â˜€";left:10px}.switch:after{content:"â˜¾";right:10px}
+    .switch:before{content:"☀";left:10px}.switch:after{content:"☾";right:10px}
     .knob{position:absolute;left:3px;top:3px;width:28px;height:28px;border-radius:50%;background:var(--thumb);border:1px solid var(--line);box-shadow:0 4px 12px rgba(0,0,0,.16);transition:left .25s ease;display:grid;place-items:center;font-size:13px}
     body.dark .knob{left:37px}
 
@@ -134,6 +149,13 @@
     .footer div{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:12px 13px;font-size:.92rem;line-height:1.42}
     @media(max-width:1180px){.layout{grid-template-columns:1fr}aside{position:static}.split,.lower{grid-template-columns:1fr}}
     @media(max-width:900px){.smallGrid,.footer{grid-template-columns:1fr}.wrap{padding:18px 14px 28px}}
+
+    .math-slot{display:inline-block;max-width:100%;vertical-align:baseline}
+    .math-slot.display{display:block;max-width:100%;overflow-x:auto;overflow-y:hidden}
+    .math-slot.display .katex-display{margin:.18em 0;text-align:left}
+    .eq,.note,.footer div,.metric p,.mini p{overflow-wrap:anywhere}
+    .eq .katex{font-size:1.02em}
+
   </style>
 </head>
 
@@ -147,10 +169,10 @@
       <div class="actions">
         <div class="pill">affine tangent model</div>
         <div class="pill">little-o error</div>
-        <div class="pill">continuity â‰  differentiability</div>
+        <div class="pill">continuity ≠ differentiability</div>
         <div id="theme" class="theme" role="button" tabindex="0">
           <span id="themeLabel" class="label">light mode</span>
-          <div class="switch"><div id="knob" class="knob">â˜€</div></div>
+          <div class="switch"><div id="knob" class="knob">☀</div></div>
         </div>
       </div>
     </header>
@@ -166,45 +188,41 @@
         </div>
 
         <div class="eq">
-          \[
-          f(a+h)=f(a)+L(h)+r(h),
+          <span class="math-slot display" data-display="true" data-tex="f(a+h)=f(a)+L(h)+r(h),
           \qquad
-          \frac{r(h)}{|h|}\to0.
-          \]
-          \[
-          L(h)=f'(a)h,\qquad A_a(x)=f(a)+f'(a)(x-a).
-          \]
+          \frac{r(h)}{|h|}\to0."></span>
+          <span class="math-slot display" data-display="true" data-tex="L(h)=f'(a)h,\qquad A_a(x)=f(a)+f'(a)(x-a)."></span>
         </div>
 
         <div class="control">
           <label>Function <small id="fnLabel"></small></label>
           <select id="functionSelect">
-            <option value="cubic">smooth: \(x^3-x\)</option>
-            <option value="sin">smooth: \(\sin x\)</option>
-            <option value="sqrt">one-sided: \(\sqrt{x}\)</option>
-            <option value="abs">corner: \(|x|\)</option>
-            <option value="cusp">cusp: \(|x|^{2/3}\)</option>
-            <option value="flat">flat but nonlinear: \(x^2\sin(1/x)\)</option>
+            <option value="cubic">smooth: x³ − x</option>
+            <option value="sin">smooth: sin x</option>
+            <option value="sqrt">one-sided: sqrt(x)</option>
+            <option value="abs">corner: |x|</option>
+            <option value="cusp">cusp: |x|^(2/3)</option>
+            <option value="flat">flat but nonlinear: x² sin(1/x)</option>
           </select>
         </div>
 
         <div class="control">
-          <label>Base point \(a\) <small id="aLabel"></small></label>
+          <label>Base point <span class="math-slot" data-display="false" data-tex="a"></span> <small id="aLabel"></small></label>
           <input id="aSlider" type="range" min="-2" max="2" step="0.01" value="0.6">
         </div>
 
         <div class="control">
-          <label>Zoom radius \(\rho\) <small id="rhoLabel"></small></label>
+          <label>Zoom radius <span class="math-slot" data-display="false" data-tex="\rho"></span> <small id="rhoLabel"></small></label>
           <input id="rhoSlider" type="range" min="0.04" max="1.5" step="0.01" value="0.55">
         </div>
 
         <div class="control">
-          <label>Displacement \(h\) <small id="hLabel"></small></label>
+          <label>Displacement <span class="math-slot" data-display="false" data-tex="h"></span> <small id="hLabel"></small></label>
           <input id="hSlider" type="range" min="-1.2" max="1.2" step="0.01" value="0.35">
         </div>
 
         <div class="control">
-          <label>Candidate slope \(m\) <small id="mLabel"></small></label>
+          <label>Candidate slope <span class="math-slot" data-display="false" data-tex="m"></span> <small id="mLabel"></small></label>
           <input id="mSlider" type="range" min="-5" max="5" step="0.01" value="0.08">
         </div>
 
@@ -243,17 +261,17 @@
               </div>
               <div class="metric">
                 <h4>Model used</h4>
-                <p>\(A_m(x)=f(a)+m(x-a)\).</p>
+                <p><span class="math-slot" data-display="false" data-tex="A_m(x)=f(a)+m(x-a)"></span>.</p>
                 <strong id="modelMetric"></strong>
               </div>
               <div class="metric">
                 <h4>Current error</h4>
-                <p>\(r_m(h)=f(a+h)-A_m(a+h)\).</p>
+                <p><span class="math-slot" data-display="false" data-tex="r_m(h)=f(a+h)-A_m(a+h)"></span>.</p>
                 <strong id="errMetric"></strong>
               </div>
               <div class="metric">
                 <h4>Normalized error</h4>
-                <p>\(|r_m(h)|/|h|\).</p>
+                <p><span class="math-slot" data-display="false" data-tex="|r_m(h)|/|h|"></span>.</p>
                 <strong id="ratioMetric"></strong>
               </div>
             </div>
@@ -265,7 +283,7 @@
             <div class="head">
               <div>
                 <h3>Two diagnostics</h3>
-                <p>Secant slopes and normalized error near \(h=0\).</p>
+                <p>Secant slopes and normalized error near <span class="math-slot" data-display="false" data-tex="h=0"></span>.</p>
               </div>
               <div class="tag">limit tests</div>
             </div>
@@ -311,9 +329,9 @@
         </section>
 
         <section class="footer">
-          <div><strong>Derivative.</strong> The number \(f'(a)\) is the unique slope \(m\) such that \(f(a+h)-f(a)-mh=o(|h|)\).</div>
-          <div><strong>Affine model.</strong> The tangent approximation is \(A_a(x)=f(a)+f'(a)(x-a)\).</div>
-          <div><strong>Higher dimensions.</strong> Replace \(f'(a)h\) by a linear map \(Df(a)h\): \(f(a+h)=f(a)+Df(a)h+o(\|h\|)\).</div>
+          <div><strong>Derivative.</strong> The number <span class="math-slot" data-display="false" data-tex="f'(a)"></span> is the unique slope <span class="math-slot" data-display="false" data-tex="m"></span> such that <span class="math-slot" data-display="false" data-tex="f(a+h)-f(a)-mh=o(|h|)"></span>.</div>
+          <div><strong>Affine model.</strong> The tangent approximation is <span class="math-slot" data-display="false" data-tex="A_a(x)=f(a)+f'(a)(x-a)"></span>.</div>
+          <div><strong>Higher dimensions.</strong> Replace <span class="math-slot" data-display="false" data-tex="f'(a)h"></span> by a linear map <span class="math-slot" data-display="false" data-tex="Df(a)h"></span>: <span class="math-slot" data-display="false" data-tex="f(a+h)=f(a)+Df(a)h+o(\|h\|)"></span>.</div>
         </section>
       </main>
     </div>
@@ -323,7 +341,7 @@
   const funcs = {
     cubic:{
       label:'differentiable',
-      formula:'\\[ f(x)=x^3-x,\\qquad f\\prime(a)=3a^2-1. \\]',
+      formula:'f(x)=x^3-x,\\qquad f^{\\prime}(a)=3a^2-1.',
       comment:'A smooth curve. The tangent line becomes the curve after zooming enough.',
       domain:[-2.5,2.5], range:[-5,5], suggestedA:.6, suggestedH:.35,
       f:x=>x*x*x-x,
@@ -332,7 +350,7 @@
     },
     sin:{
       label:'differentiable',
-      formula:'\\[ f(x)=\\sin x,\\qquad f\\prime(a)=\\cos a. \\]',
+      formula:'f(x)=\\sin x,\\qquad f^{\\prime}(a)=\\cos a.',
       comment:'The tangent line is the first-order piece; the remaining error is roughly quadratic.',
       domain:[-3.2,3.2], range:[-1.6,1.6], suggestedA:.8, suggestedH:.35,
       f:x=>Math.sin(x),
@@ -341,7 +359,7 @@
     },
     sqrt:{
       label:'right differentiable at 0',
-      formula:'\\[ f(x)=\\sqrt{x},\\qquad x\\ge0. \\]',
+      formula:'f(x)=\\sqrt{x},\\qquad x\\ge0.',
       comment:'At interior points the tangent works. At \(0\), the slope is not finite: the graph is continuous but not differentiable as a finite linear approximation.',
       domain:[0,4], range:[-.2,2.2], suggestedA:.7, suggestedH:.35,
       f:x=>x<0?NaN:Math.sqrt(x),
@@ -350,7 +368,7 @@
     },
     abs:{
       label:'not differentiable at 0',
-      formula:'\\[ f(x)=|x|. \\]',
+      formula:'f(x)=|x|.',
       comment:'At \(0\), left and right slopes disagree. Continuity is not enough.',
       domain:[-2.2,2.2], range:[-.3,2.2], suggestedA:0, suggestedH:.35,
       f:x=>Math.abs(x),
@@ -359,7 +377,7 @@
     },
     cusp:{
       label:'not differentiable at 0',
-      formula:'\\[ f(x)=|x|^{2/3}. \\]',
+      formula:'f(x)=|x|^{2/3}.',
       comment:'The cusp has no finite tangent slope at \(0\). The normalized error does not go to zero for any finite slope.',
       domain:[-2.2,2.2], range:[-.25,1.9], suggestedA:0, suggestedH:.35,
       f:x=>Math.pow(Math.abs(x),2/3),
@@ -368,7 +386,7 @@
     },
     flat:{
       label:'differentiable at 0',
-      formula:'\\[ f(0)=0,\\quad f(x)=x^2\\sin(1/x). \\]',
+      formula:'f(0)=0,\\quad f(x)=x^2\\sin(1/x).',
       comment:'At \(0\), the derivative exists and equals \(0\), even though nearby slopes oscillate. The error is still \(o(|h|)\).',
       domain:[-1.6,1.6], range:[-.45,.45], suggestedA:0, suggestedH:.25,
       f:x=>Math.abs(x)<1e-8?0:x*x*Math.sin(1/x),
@@ -421,8 +439,8 @@
   const lin=(x,a,b,c,d)=>c+(x-a)*(d-c)/(b-a);
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   const fmt=x=>{
-    if(!Number.isFinite(x)) return 'âˆž';
-    return (x<0?'âˆ’':'')+Math.abs(x).toFixed(3);
+    if(!Number.isFinite(x)) return '∞';
+    return (x<0?'−':'')+Math.abs(x).toFixed(3);
   };
 
   function setTheme(t){
@@ -430,7 +448,7 @@
     document.body.classList.toggle('dark', t==='dark');
     localStorage.setItem('derivative-complete-theme', t);
     el.themeLabel.textContent=t==='dark'?'dark mode':'light mode';
-    el.knob.textContent=t==='dark'?'â˜¾':'â˜€';
+    el.knob.textContent=t==='dark'?'☾':'☀';
     render();
   }
 
@@ -549,7 +567,7 @@
       <circle cx="${X(D.x)}" cy="${Y(D.fx)}" r="7.2" fill="${col}" stroke="${css('--paper')}" stroke-width="2.3"/>
       <circle cx="${X(D.x)}" cy="${Y(D.A)}" r="6.6" fill="${css('--paper')}" stroke="${css('--model')}" stroke-width="2.3"/>
 
-      ${text(safeX(X(D.x)+12), safeY((Y(D.fx)+Y(D.A))/2-7), `râ‚˜(h)â‰ˆ${fmt(D.r)}`,{size:14,fill:col,weight:700})}
+      ${text(safeX(X(D.x)+12), safeY((Y(D.fx)+Y(D.A))/2-7), `rₘ(h)≈${fmt(D.r)}`,{size:14,fill:col,weight:700})}
       ${text(X(D.a),plot.y+plot.h+24,'a',{size:14,fill:css('--gold'),weight:700,anchor:'middle'})}
       ${text(X(D.x),plot.y+plot.h+24,'a+h',{size:14,fill:col,weight:700,anchor:'middle'})}
 
@@ -567,13 +585,13 @@
       <line x1="${map.x+map.w/2}" y1="${map.y+map.h/2}" x2="${map.x+map.w/2+clamp(55*D.h/state.rho,-58,58)}" y2="${map.y+map.h/2-clamp(70*D.m*D.h,-135,135)}" stroke="${css('--model')}" stroke-width="4" stroke-linecap="round"/>
       <circle cx="${map.x+map.w/2}" cy="${map.y+map.h/2}" r="7" fill="${css('--gold')}"/>
       <circle cx="${map.x+map.w/2+clamp(55*D.h/state.rho,-58,58)}" cy="${map.y+map.h/2-clamp(70*D.m*D.h,-135,135)}" r="7" fill="${css('--model')}" stroke="${css('--paper')}" stroke-width="2.3"/>
-      ${text(map.x+map.w/2,map.y+map.h+32,`m h â‰ˆ ${fmt(D.m*D.h)}`,{size:15,fill:css('--model'),weight:700,anchor:'middle'})}
+      ${text(map.x+map.w/2,map.y+map.h+32,`m h ≈ ${fmt(D.m*D.h)}`,{size:15,fill:css('--model'),weight:700,anchor:'middle'})}
     `;
 
-    el.derMetric.textContent = Number.isFinite(D.d) ? `fâ€²(a) â‰ˆ ${fmt(D.d)}` : 'does not exist';
-    el.modelMetric.textContent = `m â‰ˆ ${fmt(D.m)}`;
-    el.errMetric.textContent = `râ‚˜(h) â‰ˆ ${fmt(D.r)}`;
-    el.ratioMetric.textContent = `â‰ˆ ${fmt(D.ratio)}`;
+    el.derMetric.textContent = Number.isFinite(D.d) ? `f′(a) ≈ ${fmt(D.d)}` : 'does not exist';
+    el.modelMetric.textContent = `m ≈ ${fmt(D.m)}`;
+    el.errMetric.textContent = `rₘ(h) ≈ ${fmt(D.r)}`;
+    el.ratioMetric.textContent = `≈ ${fmt(D.ratio)}`;
     const ok = D.diff && (state.mode==='true' || Math.abs(D.m-D.d)<.08);
     el.status.textContent = D.diff ? (ok?'linear approximation working':'wrong slope: error stays linear') : 'no derivative at this point';
     el.status.style.color = ok ? css('--curve') : css('--bad');
@@ -636,7 +654,7 @@
       ${Number.isFinite(D.d) ? `<line x1="${top.x}" y1="${Yq(D.d)}" x2="${top.x+top.w}" y2="${Yq(D.d)}" stroke="${css('--model')}" stroke-width="2.2" stroke-dasharray="8 7"/>` : ''}
       ${qLeft.length ? `<path d="${path(qLeft.map(p=>({x:p.h,y:p.q})),X,Yq)}" fill="none" stroke="${css('--bad')}" stroke-width="2.5" opacity=".8"/>` : ''}
       ${qRight.length ? `<path d="${path(qRight.map(p=>({x:p.h,y:p.q})),X,Yq)}" fill="none" stroke="${css('--curve')}" stroke-width="2.5" opacity=".9"/>` : ''}
-      ${Number.isFinite(D.d) ? text(top.x+10,Yq(D.d)-8,'fâ€²(a)',{size:13,fill:css('--model'),weight:700}) : text(top.x+10,top.y+24,'no common secant limit',{size:13,fill:css('--bad'),weight:700})}
+      ${Number.isFinite(D.d) ? text(top.x+10,Yq(D.d)-8,'f′(a)',{size:13,fill:css('--model'),weight:700}) : text(top.x+10,top.y+24,'no common secant limit',{size:13,fill:css('--bad'),weight:700})}
 
       <rect x="${bottom.x}" y="${bottom.y}" width="${bottom.w}" height="${bottom.h}" rx="18" fill="transparent" stroke="${css('--line')}"/>
       <line x1="${X(0)}" y1="${bottom.y}" x2="${X(0)}" y2="${bottom.y+bottom.h}" stroke="${css('--gold')}" stroke-dasharray="6 6" stroke-width="2"/>
@@ -674,24 +692,24 @@
       <rect x="0" y="0" width="${W}" height="${H}" rx="22" fill="${css('--paper')}"/>
       ${text(70,32,'definition as a decomposition',{size:20,weight:700,family:'Georgia, serif'})}
 
-      ${box(60,84,190,92,'input','h = x âˆ’ a',css('--gold'))}
-      ${box(355,84,190,92,'linear part',`m h â‰ˆ ${fmt(D.m*D.h)}`,css('--model'))}
+      ${box(60,84,190,92,'input','h = x − a',css('--gold'))}
+      ${box(355,84,190,92,'linear part',`m h ≈ ${fmt(D.m*D.h)}`,css('--model'))}
       ${box(650,84,190,92,'output','first-order change',css('--curve'))}
       ${arrow(250,130,355,130,css('--model'))}
       ${arrow(545,130,650,130,css('--curve'))}
 
       <rect x="85" y="245" width="730" height="145" rx="28" fill="${ok?css('--curveSoft'):css('--badSoft')}" stroke="${ok?css('--curve'):css('--bad')}" stroke-width="1.8"/>
-      ${text(450,285,'f(a+h) âˆ’ f(a) = m h + râ‚˜(h)',{size:23,weight:700,anchor:'middle',family:'Georgia, serif',fill:css('--text')})}
+      ${text(450,285,'f(a+h) − f(a) = m h + rₘ(h)',{size:23,weight:700,anchor:'middle',family:'Georgia, serif',fill:css('--text')})}
       ${text(450,322,`current:  ${fmt(D.fx-D.fa)}  =  ${fmt(D.m*D.h)}  +  ${fmt(D.r)}`,{size:17,weight:700,anchor:'middle',fill:ok?css('--curve'):css('--bad')})}
       ${text(450,356,ok?'the remainder is smaller than the input near zero':'the remainder is still linear-sized or worse',{size:15,anchor:'middle',fill:ok?css('--curve'):css('--bad'),weight:700})}
 
       <line x1="170" y1="420" x2="730" y2="420" stroke="${css('--line')}" stroke-width="2"/>
       <circle cx="260" cy="420" r="7" fill="${css('--gold')}"/>
-      ${text(260,450,'continuity: change â†’ 0',{size:14,anchor:'middle',fill:css('--muted')})}
+      ${text(260,450,'continuity: change → 0',{size:14,anchor:'middle',fill:css('--muted')})}
       <circle cx="450" cy="420" r="7" fill="${css('--model')}"/>
       ${text(450,450,'subtract a line',{size:14,anchor:'middle',fill:css('--muted')})}
       <circle cx="650" cy="420" r="7" fill="${ok?css('--curve'):css('--bad')}"/>
-      ${text(650,450,'differentiability: remainder / |h| â†’ 0',{size:14,anchor:'middle',fill:css('--muted')})}
+      ${text(650,450,'differentiability: remainder / |h| → 0',{size:14,anchor:'middle',fill:css('--muted')})}
     `;
   }
 
@@ -717,7 +735,7 @@
       <path d="${smoothPts.join(' ')}" fill="none" stroke="${css('--curve')}" stroke-width="2.8"/>
       <line x1="${X(-.65)}" y1="${Y(0)}" x2="${X(.65)}" y2="${Y(0)}" stroke="${css('--model')}" stroke-dasharray="7 6" stroke-width="2.4"/>
       <circle cx="${X(0)}" cy="${Y(0)}" r="6.6" fill="${css('--curve')}" stroke="${css('--paper')}" stroke-width="2.2"/>
-    `,'parabola: xÂ²');
+    `,'parabola: x²');
   }
 
   function update(){
@@ -729,8 +747,8 @@
     el.mLabel.textContent=fmt(state.m);
     el.modeLabel.textContent=state.mode;
     [el.aSlider,el.rhoSlider,el.hSlider,el.mSlider].forEach(fill);
-    el.formula.innerHTML=fn.formula;
-    el.comment.innerHTML=fn.comment;
+    el.formula.innerHTML=mathDisplay(fn.formula);
+    el.comment.innerHTML=renderMathText(fn.comment);
   }
 
   function render(){
@@ -739,7 +757,7 @@
     renderDiagnostic();
     renderStructure();
     renderMinis();
-    if(window.MathJax) MathJax.typesetPromise().catch(()=>{});
+    typesetMath(document.body);
   }
 
   function sync(){

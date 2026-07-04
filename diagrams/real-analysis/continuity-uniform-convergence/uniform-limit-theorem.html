@@ -18,14 +18,29 @@
 
     gtag('config', 'G-NHXHEJP1G0');
   </script>
-
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
   <script>
-    window.MathJax = {
-      tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
-      svg: { fontCache: 'global' }
-    };
+    function escapeMathAttr(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+    function mathInline(tex){return `<span class="math-slot" data-display="false" data-tex="${escapeMathAttr(tex)}"></span>`;}
+    function mathDisplay(tex){return `<span class="math-slot display" data-display="true" data-tex="${escapeMathAttr(tex)}"></span>`;}
+    function renderMathText(s){
+      return String(s)
+        .replace(/\\[(.*?)\\]/gs, (_,tex)=>mathDisplay(tex))
+        .replace(/\\((.*?)\\)/gs, (_,tex)=>mathInline(tex));
+    }
+    function typesetMath(root=document.body){
+      if(!window.katex){ window.setTimeout(()=>typesetMath(root),60); return; }
+      root.querySelectorAll('.math-slot[data-tex]').forEach(el=>{
+        const tex = el.getAttribute('data-tex') || '';
+        const displayMode = el.getAttribute('data-display') === 'true';
+        try{ katex.render(tex, el, {displayMode, throwOnError:false, strict:'ignore'}); }
+        catch(e){ el.textContent = tex; }
+      });
+    }
+    window.addEventListener("load",()=>typesetMath(document.body));
   </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
 
   <style>
     :root{
@@ -93,7 +108,7 @@
     .theme .label{font-size:.92rem;color:var(--muted);min-width:70px}
     .switch{position:relative;width:70px;height:36px;border-radius:999px;background:var(--switch);border:1px solid var(--line)}
     .switch:before,.switch:after{position:absolute;top:50%;transform:translateY(-50%);font-size:13px;opacity:.75}
-    .switch:before{content:"â˜€";left:10px}.switch:after{content:"â˜¾";right:10px}
+    .switch:before{content:"☀";left:10px}.switch:after{content:"☾";right:10px}
     .knob{position:absolute;left:3px;top:3px;width:28px;height:28px;border-radius:50%;background:var(--thumb);border:1px solid var(--line);box-shadow:0 4px 12px rgba(0,0,0,.16);transition:left .25s ease;display:grid;place-items:center;font-size:13px}
     body.dark .knob{left:37px}
 
@@ -139,6 +154,13 @@
     .footer div{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:12px 13px;font-size:.92rem;line-height:1.42}
     @media(max-width:1180px){.layout{grid-template-columns:1fr}aside{position:static}.split,.lower{grid-template-columns:1fr}}
     @media(max-width:900px){.smallGrid,.footer{grid-template-columns:1fr}.wrap{padding:18px 14px 28px}}
+
+    .math-slot{display:inline-block;max-width:100%;vertical-align:baseline}
+    .math-slot.display{display:block;max-width:100%;overflow-x:auto;overflow-y:hidden}
+    .math-slot.display .katex-display{margin:.18em 0;text-align:left}
+    .eq,.note,.footer div,.metric p,.mini p{overflow-wrap:anywhere}
+    .eq .katex{font-size:1.02em}
+
   </style>
 </head>
 <body>
@@ -146,14 +168,14 @@
     <header>
       <div>
         <h1>Uniform limit theorem</h1>
-        <p class="subtitle">Uniform convergence preserves continuity because the whole graph is close to one continuous \(f_N\). Pointwise convergence can leave a thin escaping layer and produce a discontinuous limit.</p>
+        <p class="subtitle">Uniform convergence preserves continuity because the whole graph is close to one continuous <span class="math-slot" data-display="false" data-tex="f_N"></span>. Pointwise convergence can leave a thin escaping layer and produce a discontinuous limit.</p>
       </div>
       <div class="actions">
         <div class="pill">uniform limit of continuous functions</div>
         <div class="pill">pointwise failure</div>
         <div id="theme" class="theme" role="button" tabindex="0">
           <span id="themeLabel" class="label">light mode</span>
-          <div class="switch"><div id="knob" class="knob">â˜€</div></div>
+          <div class="switch"><div id="knob" class="knob">☀</div></div>
         </div>
       </div>
     </header>
@@ -169,35 +191,33 @@
         </div>
 
         <div class="eq">
-          \[
-          f_n\in C(K),\quad f_n\to f\ \text{uniformly}
+          <span class="math-slot display" data-display="true" data-tex="f_n\in C(K),\quad f_n\to f\ \text{uniformly}
           \quad\Longrightarrow\quad
-          f\in C(K)
-          \]
+          f\in C(K)"></span>
         </div>
 
         <div class="control">
           <label>Sequence <small id="exLabel"></small></label>
           <select id="example">
-            <option value="uniformSine">uniform: \(\sin x+\cos(nx)/n\to\sin x\)</option>
-            <option value="uniformRoot">uniform: \(\sqrt{x+1/n}\to\sqrt{x}\)</option>
-            <option value="pointPower">pointwise: \(x^n\to\mathbf 1_{\{1\}}\)</option>
-            <option value="pointArctan">pointwise: \(\arctan(nx)\to\frac\pi2\operatorname{sgn}x\)</option>
+            <option value="uniformSine">uniform: sin x + cos(nx)/n → sin x</option>
+            <option value="uniformRoot">uniform: sqrt(x+1/n) → sqrt(x)</option>
+            <option value="pointPower">pointwise: x^n → 1_{1}</option>
+            <option value="pointArctan">pointwise: arctan(nx) → (π/2)sgn(x)</option>
           </select>
         </div>
 
         <div class="control">
-          <label>Index \(n\) <small id="nLabel"></small></label>
+          <label>Index <span class="math-slot" data-display="false" data-tex="n"></span> <small id="nLabel"></small></label>
           <input id="nSlider" type="range" min="1" max="80" step="1" value="8">
         </div>
 
         <div class="control">
-          <label>Error band \(\varepsilon\) <small id="epsLabel"></small></label>
+          <label>Error band <span class="math-slot" data-display="false" data-tex="\varepsilon"></span> <small id="epsLabel"></small></label>
           <input id="epsSlider" type="range" min="0.03" max="0.8" step="0.01" value="0.18">
         </div>
 
         <div class="control">
-          <label>Continuity center \(a\) <small id="aLabel"></small></label>
+          <label>Continuity center <span class="math-slot" data-display="false" data-tex="a"></span> <small id="aLabel"></small></label>
           <input id="aSlider" type="range" min="0" max="1" step="0.01" value="0.55">
         </div>
 
@@ -215,7 +235,7 @@
           <div class="heroTop">
             <div>
               <h2>Main diagram</h2>
-              <p>Blue: limit \(f\) and its \(\varepsilon\)-band. Teal: \(f_n\) inside the band. Coral: escaping part.</p>
+              <p>Blue: limit <span class="math-slot" data-display="false" data-tex="f"></span> and its <span class="math-slot" data-display="false" data-tex="\varepsilon"></span>-band. Teal: <span class="math-slot" data-display="false" data-tex="f_n"></span> inside the band. Coral: escaping part.</p>
             </div>
             <div id="status" class="status">uniform case</div>
           </div>
@@ -242,7 +262,7 @@
               </div>
               <div class="metric">
                 <h4>Band test</h4>
-                <p>Whether \(f_n\) is fully inside \(f\pm\varepsilon\).</p>
+                <p>Whether <span class="math-slot" data-display="false" data-tex="f_n"></span> is fully inside <span class="math-slot" data-display="false" data-tex="f\pm\varepsilon"></span>.</p>
                 <strong id="bandMetric"></strong>
               </div>
             </div>
@@ -267,20 +287,20 @@
             <div class="head">
               <div>
                 <h3>Pointwise failure</h3>
-                <p>A thin layer can survive every \(n\).</p>
+                <p>A thin layer can survive every <span class="math-slot" data-display="false" data-tex="n"></span>.</p>
               </div>
               <div class="tag">counterexample</div>
             </div>
             <div class="smallGrid">
               <div class="mini">
-                <h4>\(x^n\)</h4>
+                <h4><span class="math-slot" data-display="false" data-tex="x^n"></span></h4>
                 <svg id="miniPower" class="plotSvg" viewBox="0 0 260 170"></svg>
-                <p>Continuous curves converge pointwise to a jump at \(1\).</p>
+                <p>Continuous curves converge pointwise to a jump at <span class="math-slot" data-display="false" data-tex="1"></span>.</p>
               </div>
               <div class="mini">
-                <h4>\(\arctan(nx)\)</h4>
+                <h4><span class="math-slot" data-display="false" data-tex="\arctan(nx)"></span></h4>
                 <svg id="miniArctan" class="plotSvg" viewBox="0 0 260 170"></svg>
-                <p>Continuous curves converge pointwise to a jump at \(0\).</p>
+                <p>Continuous curves converge pointwise to a jump at <span class="math-slot" data-display="false" data-tex="0"></span>.</p>
               </div>
             </div>
           </section>
@@ -288,7 +308,7 @@
 
         <section class="footer">
           <div><strong>Uniform limit theorem.</strong> Uniform limits of continuous functions are continuous.</div>
-          <div><strong>Key estimate.</strong> \( |f(x)-f(a)|\le |f-f_N|(x)+|f_N(x)-f_N(a)|+|f_N-f|(a) \).</div>
+          <div><strong>Key estimate.</strong> <span class="math-slot" data-display="false" data-tex="|f(x)-f(a)|\le |f-f_N|(x)+|f_N(x)-f_N(a)|+|f_N-f|(a)"></span>.</div>
           <div><strong>Pointwise warning.</strong> Continuity can fail when the bad region moves or shrinks instead of disappearing uniformly.</div>
         </section>
       </main>
@@ -299,23 +319,23 @@
     const examples = {
       uniformSine:{
         label:'uniform',
-        formula:'\\[ f_n(x)=\\sin x+\\frac{\\cos(nx)}{n},\\quad f(x)=\\sin x. \\]',
+        formula:'f_n(x)=\\sin x+\\frac{\\cos(nx)}{n},\\quad f(x)=\\sin x.',
         comment:'All \(f_n\) are continuous and the whole graph stays within \(1/n\) of the continuous limit.',
         domain:[0,2*Math.PI], range:[-1.35,1.35], centerMap:t=>2*Math.PI*t,
-        uniform:true, theorem:'uniform limit â‡’ continuous limit',
+        uniform:true, theorem:'uniform limit ⇒ continuous limit',
         f:(x,n)=>Math.sin(x)+Math.cos(n*x)/n, lim:x=>Math.sin(x), sup:n=>1/n
       },
       uniformRoot:{
         label:'uniform',
-        formula:'\\[ f_n(x)=\\sqrt{x+1/n},\\quad f(x)=\\sqrt{x}\\quad (0\\le x\\le1). \\]',
+        formula:'f_n(x)=\\sqrt{x+1/n},\\quad f(x)=\\sqrt{x}\\quad (0\\le x\\le1).',
         comment:'Continuity survives. The largest error occurs near \(0\), but it still goes to \(0\) uniformly.',
         domain:[0,1], range:[-0.12,1.25], centerMap:t=>t,
-        uniform:true, theorem:'uniform limit â‡’ continuous limit',
+        uniform:true, theorem:'uniform limit ⇒ continuous limit',
         f:(x,n)=>Math.sqrt(x+1/n), lim:x=>Math.sqrt(x), sup:n=>1/Math.sqrt(n)
       },
       pointPower:{
         label:'pointwise only',
-        formula:'\\[ f_n(x)=x^n,\\quad f(x)=0\\ (x<1),\\quad f(1)=1. \\]',
+        formula:'f_n(x)=x^n,\\quad f(x)=0\\ (x<1),\\quad f(1)=1.',
         comment:'Every fixed \(x<1\) converges to \(0\), but a boundary layer near \(1\) keeps escaping.',
         domain:[0,1], range:[-0.12,1.15], centerMap:t=>t,
         uniform:false, theorem:'pointwise limit can be discontinuous',
@@ -323,7 +343,7 @@
       },
       pointArctan:{
         label:'pointwise only',
-        formula:'\\[ f_n(x)=\\arctan(nx),\\quad f(x)=\\frac{\\pi}{2}\\operatorname{sgn}(x),\\ f(0)=0. \\]',
+        formula:'f_n(x)=\\arctan(nx),\\quad f(x)=\\frac{\\pi}{2}\\operatorname{sgn}(x),\\quad f(0)=0.',
         comment:'The transition gets steeper near \(0\). The pointwise limit has a jump.',
         domain:[-1,1], range:[-1.8,1.8], centerMap:t=>-1+2*t,
         uniform:false, theorem:'pointwise limit can be discontinuous',
@@ -370,14 +390,14 @@
 
     const css=v=>getComputedStyle(document.body).getPropertyValue(v).trim();
     const lin=(x,a,b,c,d)=>c+(x-a)*(d-c)/(b-a);
-    const fmt=x=>(x<0?'âˆ’':'')+Math.abs(x).toFixed(2);
+    const fmt=x=>(x<0?'−':'')+Math.abs(x).toFixed(2);
 
     function setTheme(t){
       state.theme=t;
       document.body.classList.toggle('dark', t==='dark');
       localStorage.setItem('uniform-limit-theme', t);
       el.themeLabel.textContent=t==='dark'?'dark mode':'light mode';
-      el.knob.textContent=t==='dark'?'â˜¾':'â˜€';
+      el.knob.textContent=t==='dark'?'☾':'☀';
       render();
     }
 
@@ -482,8 +502,8 @@
       const col=st.inside?css('--accent'):css('--bad');
       el.mainSvg.innerHTML = `
         <rect x="0" y="0" width="${W}" height="${H}" rx="26" fill="${css('--paper')}"/>
-        ${text(top.x,42,'graph and Îµ-band',{size:21,weight:700,family:'Georgia, serif'})}
-        ${text(err.x,565,'error |fâ‚™âˆ’f|',{size:18,weight:700,family:'Georgia, serif'})}
+        ${text(top.x,42,'graph and ε-band',{size:21,weight:700,family:'Georgia, serif'})}
+        ${text(err.x,565,'error |fₙ−f|',{size:18,weight:700,family:'Georgia, serif'})}
         ${text(gauge.x-8,82,'sup error',{size:18,weight:700,family:'Georgia, serif'})}
 
         <rect x="${top.x}" y="${top.y}" width="${top.w}" height="${top.h}" rx="22" fill="transparent" stroke="${css('--line')}"/>
@@ -509,21 +529,21 @@
         <line x1="${err.x}" y1="${YE(state.eps)}" x2="${err.x+err.w}" y2="${YE(state.eps)}" stroke="${css('--limit')}" stroke-dasharray="8 7" stroke-width="2"/>
         <path d="${path(epts,XE,YE)}" fill="none" stroke="${col}" stroke-width="3"/>
         <circle cx="${XE(st.wx)}" cy="${YE(st.sup)}" r="7" fill="${col}" stroke="${css('--paper')}" stroke-width="2.2"/>
-        ${text(err.x+10,YE(state.eps)-9,'Îµ',{size:14,fill:css('--limit'),weight:700})}
+        ${text(err.x+10,YE(state.eps)-9,'ε',{size:14,fill:css('--limit'),weight:700})}
 
         <rect x="${gauge.x}" y="${gauge.y}" width="${gauge.w}" height="${gauge.h}" rx="24" fill="${st.inside?css('--accentSoft'):css('--badSoft')}" stroke="${css('--line')}"/>
         <line x1="${gauge.x+gauge.w/2}" y1="${gauge.y+24}" x2="${gauge.x+gauge.w/2}" y2="${gauge.y+gauge.h-24}" stroke="${css('--muted')}" stroke-width="2"/>
         <rect x="${gauge.x+gauge.w/2-20}" y="${YG(st.sup)}" width="40" height="${YG(0)-YG(st.sup)}" rx="18" fill="${st.inside?css('--accentSoft'):css('--badSoft')}" stroke="${col}" stroke-width="1.6"/>
         <line x1="${gauge.x+18}" y1="${YG(state.eps)}" x2="${gauge.x+gauge.w-18}" y2="${YG(state.eps)}" stroke="${css('--limit')}" stroke-width="2.2" stroke-dasharray="7 6"/>
         <circle cx="${gauge.x+gauge.w/2}" cy="${YG(st.sup)}" r="8" fill="${col}" stroke="${css('--paper')}" stroke-width="2.4"/>
-        ${text(gauge.x+gauge.w/2,YG(state.eps)-12,'Îµ',{size:14,fill:css('--limit'),weight:700,anchor:'middle'})}
-        ${text(gauge.x+gauge.w/2,YG(st.sup)-12,'Eâ‚™',{size:14,fill:col,weight:700,anchor:'middle'})}
-        ${text(gauge.x+gauge.w/2,gauge.y+gauge.h+34, st.inside?'Eâ‚™ < Îµ':'Eâ‚™ â‰¥ Îµ',{size:15,fill:col,weight:700,anchor:'middle'})}
+        ${text(gauge.x+gauge.w/2,YG(state.eps)-12,'ε',{size:14,fill:css('--limit'),weight:700,anchor:'middle'})}
+        ${text(gauge.x+gauge.w/2,YG(st.sup)-12,'Eₙ',{size:14,fill:col,weight:700,anchor:'middle'})}
+        ${text(gauge.x+gauge.w/2,gauge.y+gauge.h+34, st.inside?'Eₙ < ε':'Eₙ ≥ ε',{size:15,fill:col,weight:700,anchor:'middle'})}
       `;
 
       el.typeMetric.textContent = ex.theorem;
-      el.supMetric.textContent = `Eâ‚™ â‰ˆ ${st.sup.toFixed(3)}`;
-      el.worstMetric.textContent = `x â‰ˆ ${fmt(st.wx)}`;
+      el.supMetric.textContent = `Eₙ ≈ ${st.sup.toFixed(3)}`;
+      el.worstMetric.textContent = `x ≈ ${fmt(st.wx)}`;
       el.bandMetric.textContent = st.inside ? 'whole graph inside' : 'some part outside';
       el.status.textContent = ex.uniform ? 'uniform limit: continuity preserved' : 'pointwise limit: continuity may fail';
       el.status.style.color = ex.uniform ? css('--accent') : css('--bad');
@@ -608,8 +628,8 @@
       el.epsLabel.textContent=state.eps.toFixed(2);
       el.aLabel.textContent=fmt(ex.centerMap(state.aT));
       [el.nSlider,el.epsSlider,el.aSlider].forEach(fill);
-      el.formula.innerHTML=ex.formula;
-      el.comment.innerHTML=ex.comment;
+      el.formula.innerHTML=mathDisplay(ex.formula);
+      el.comment.innerHTML=renderMathText(ex.comment);
       el.play.textContent=state.playing?'pause':'play';
     }
 
@@ -618,7 +638,7 @@
       renderMain();
       renderProof();
       renderMinis();
-      if(window.MathJax) MathJax.typesetPromise().catch(()=>{});
+      typesetMath(document.body);
     }
 
     function sync(){
