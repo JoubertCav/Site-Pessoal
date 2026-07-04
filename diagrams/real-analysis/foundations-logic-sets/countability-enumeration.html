@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8" />
@@ -9,6 +9,9 @@
 <meta name="description" content="Interactive real analysis diagram for countability and enumeration.">
   <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
 <title>Countability and Enumeration | Real Analysis Diagrams</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"></script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
 <script>
@@ -35,6 +38,9 @@
   --warn:#c07a45;
   --shadow:0 20px 50px rgba(31,37,39,.08);
   --radius:22px;
+  --serif: ui-serif, Georgia, "Times New Roman", serif;
+  --sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 html[data-theme="dark"]{
   --bg:#0d1117;
@@ -60,7 +66,7 @@ body{
     radial-gradient(circle at top right, color-mix(in srgb, var(--accent-2) 12%, transparent), transparent 30rem),
     var(--bg);
   color:var(--ink);
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--sans);
   line-height:1.45;
 }
 .app{width:min(1180px, calc(100% - 32px)); margin:0 auto; padding:34px 0 50px}
@@ -72,7 +78,7 @@ header{
   margin-bottom:20px;
 }
 .eyebrow{font-size:.78rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); font-weight:700; margin-bottom:8px}
-h1{font-family: ui-serif, Georgia, "Times New Roman", serif; font-size:clamp(2.1rem, 5vw, 4.2rem); line-height:.98; margin:0; letter-spacing:-.045em; font-weight:650}
+h1{font-family:var(--serif); font-size:clamp(2.1rem, 5vw, 4.2rem); line-height:.98; margin:0; letter-spacing:-.045em; font-weight:650}
 .subtitle{max-width:760px; color:var(--muted); margin:14px 0 0; font-size:1.05rem}
 .toolbar{display:flex; gap:10px; align-items:center; justify-content:flex-end; flex-wrap:wrap}
 button,.select,input[type="range"]{font:inherit}
@@ -105,12 +111,26 @@ button,.select,input[type="range"]{font:inherit}
   background:linear-gradient(180deg, color-mix(in srgb, var(--paper2) 72%, transparent), color-mix(in srgb, var(--paper) 95%, transparent));
   border-radius:18px;
   padding:14px 16px;
-  font-family:ui-serif, Georgia, serif;
-  font-size:1.05rem;
-  overflow:auto;
+  font-family:var(--sans);
+  font-size:1.02rem;
+  overflow-x:auto;
+  overflow-y:hidden;
 }
-.eq .line{display:block; padding:4px 0; white-space:nowrap}
-.math{font-family:ui-serif, Georgia, "Times New Roman", serif}
+.eq .line{display:block; padding:5px 0; white-space:normal}
+.eq .formulaRow{
+  display:grid;
+  grid-template-columns:minmax(128px, 0.42fr) minmax(0, 1fr);
+  gap:12px;
+  align-items:center;
+  padding:7px 0;
+  border-bottom:1px solid color-mix(in srgb, var(--line) 65%, transparent);
+}
+.eq .formulaRow:last-child{border-bottom:0}
+.eq .formulaLabel{font-size:.78rem; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; font-weight:800}
+.math{font-family:var(--serif)}
+.katex{font-size:1.03em}
+.katex-display{margin:.35rem 0; overflow-x:auto; overflow-y:hidden; padding:.15rem 0}
+.notice .katex, .small .katex, .badge .katex, .step .katex, .summary .katex{font-size:1em}
 .controls{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px; padding:18px 22px; border-top:1px solid var(--line); background:color-mix(in srgb, var(--paper2) 42%, transparent)}
 .control{display:grid; gap:6px}
 .control label{font-size:.78rem; color:var(--muted); letter-spacing:.05em; text-transform:uppercase; font-weight:700; display:flex; justify-content:space-between; gap:10px}
@@ -190,7 +210,7 @@ td.flip{background:color-mix(in srgb, var(--accent) 22%, var(--paper)); border-c
 .footer{margin-top:18px; color:var(--muted); text-align:center; font-size:.86rem}
 .svgbox{width:100%; height:auto; display:block; border:1px solid var(--line); border-radius:18px; background:linear-gradient(180deg, color-mix(in srgb, var(--paper2) 45%, transparent), color-mix(in srgb, var(--paper) 92%, transparent))}
 .pathline{fill:none; stroke:var(--accent); stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round}.ghost{stroke:var(--line); stroke-width:1}.node{fill:var(--paper); stroke:var(--line); stroke-width:1.3}.node.on{fill:color-mix(in srgb, var(--accent) 25%, var(--paper)); stroke:var(--accent)}.node.current{fill:color-mix(in srgb, var(--accent-2) 30%, var(--paper)); stroke:var(--accent-2); stroke-width:2}.svgtxt{font-family:ui-serif, Georgia, serif; fill:var(--ink); font-size:13px}.svgtiny{fill:var(--muted); font-size:11px; font-family:ui-sans-serif, system-ui}
-@media (max-width:960px){.grid{grid-template-columns:1fr}.controls{grid-template-columns:1fr}.split{grid-template-columns:1fr}header{grid-template-columns:1fr}.toolbar{justify-content:flex-start}}
+@media (max-width:960px){.grid{grid-template-columns:1fr}.controls{grid-template-columns:1fr}.split{grid-template-columns:1fr}header{grid-template-columns:1fr}.toolbar{justify-content:flex-start}.eq .formulaRow{grid-template-columns:1fr;gap:4px}}
 @media (max-width:560px){.app{width:min(100% - 22px,1180px);padding-top:22px}.card.pad,.canvas{padding:16px}.cardhead{padding:16px 16px 0}.controls{padding:14px 16px}.cell{min-width:30px}.subtitle{font-size:.98rem}}
 </style>
 </head>
@@ -198,7 +218,7 @@ td.flip{background:color-mix(in srgb, var(--accent) 22%, var(--paper)); border-c
 <div class="app">
   <header>
     <div>
-      <div class="eyebrow">Real Analysis Â· Set size</div>
+      <div class="eyebrow">Real Analysis · Set size</div>
       <h1>Countability and enumeration</h1>
       <p class="subtitle">A set is countable when its elements can be listed without missing any. The geometry is not size in space, but the existence of an ordering path.</p>
     </div>
@@ -214,14 +234,14 @@ td.flip{background:color-mix(in srgb, var(--accent) 22%, var(--paper)); border-c
         <h2>Symbolic core</h2>
         <p>Enumeration means replacing a set by an ordered list indexed by natural numbers.</p>
         <div class="eq">
-          <span class="line"><b>finite</b>: &nbsp; A â‰… {1,â€¦,m}</span>
-          <span class="line"><b>countably infinite</b>: &nbsp; A â‰… â„•</span>
-          <span class="line"><b>at most countable</b>: &nbsp; âˆƒ surjection e: â„• â†’ A</span>
-          <span class="line"><b>uncountable</b>: &nbsp; no enumeration e: â„• â†’ A exists</span>
+          <div class="formulaRow"><span class="formulaLabel">finite</span><span>\(A \cong \{1,\ldots,m\}\)</span></div>
+          <div class="formulaRow"><span class="formulaLabel">countably infinite</span><span>\(A \cong \mathbb{N}\)</span></div>
+          <div class="formulaRow"><span class="formulaLabel">at most countable</span><span>\(\exists\, e:\mathbb{N}\twoheadrightarrow A\)</span></div>
+          <div class="formulaRow"><span class="formulaLabel">uncountable</span><span>No enumeration \(e:\mathbb{N}\to A\) exists.</span></div>
         </div>
         <div class="badges">
-          <span class="badge"><strong>list</strong> = surjection â„• â†’ A</span>
-          <span class="badge"><strong>perfect list</strong> = bijection â„• â†” A</span>
+          <span class="badge"><strong>list</strong> = surjection \(\mathbb{N}\twoheadrightarrow A\)</span>
+          <span class="badge"><strong>perfect list</strong> = bijection \(\mathbb{N}\leftrightarrow A\)</span>
           <span class="badge"><strong>diagonal</strong> = path through two indices</span>
         </div>
       </article>
@@ -249,7 +269,7 @@ td.flip{background:color-mix(in srgb, var(--accent) 22%, var(--paper)); border-c
 
       <article class="card">
         <div class="cardhead">
-          <h2>Diagonal enumeration of â„• Ã— â„•</h2>
+          <h2>Diagonal enumeration of \(\mathbb{N}\times\mathbb{N}\)</h2>
           <p>A two-dimensional grid can still be listed by sweeping finite diagonals.</p>
         </div>
         <div class="controls">
@@ -291,8 +311,8 @@ td.flip{background:color-mix(in srgb, var(--accent) 22%, var(--paper)); border-c
         <div class="canvas">
           <div class="matrixWrap"><div id="unionGrid"></div></div>
           <div class="eq">
-            <span class="line">Aâ‚, Aâ‚‚, â€¦ countable, &nbsp; Aáµ¢ = {aáµ¢â‚, aáµ¢â‚‚, â€¦}</span>
-            <span class="line">â‹ƒáµ¢ Aáµ¢ is listed by: aâ‚â‚; aâ‚â‚‚,aâ‚‚â‚; aâ‚â‚ƒ,aâ‚‚â‚‚,aâ‚ƒâ‚; â€¦</span>
+            <span class="line">\[A_1,A_2,\ldots\text{ countable},\qquad A_i=\{a_{i1},a_{i2},\ldots\}.\]</span>
+            <span class="line">\[\bigcup_{i=1}^{\infty}A_i:\quad a_{11};\ a_{12},a_{21};\ a_{13},a_{22},a_{31};\ldots\]</span>
           </div>
         </div>
       </article>
@@ -309,20 +329,20 @@ td.flip{background:color-mix(in srgb, var(--accent) 22%, var(--paper)); border-c
             <label>example set</label>
             <select id="exampleSet">
               <option value="finite">{2,4,6,8}</option>
-              <option value="N">â„•</option>
-              <option value="Z">â„¤</option>
-              <option value="NxN">â„• Ã— â„•</option>
-              <option value="Q">â„š</option>
+              <option value="N">ℕ</option>
+              <option value="Z">ℤ</option>
+              <option value="NxN">ℕ × ℕ</option>
+              <option value="Q">ℚ</option>
               <option value="union">countable union of countable sets</option>
-              <option value="R">â„</option>
+              <option value="R">ℝ</option>
               <option value="interval">[0,1]</option>
-              <option value="P">ð’«(â„•)</option>
+              <option value="P">𝒫(ℕ)</option>
             </select>
           </div>
         </div>
         <div class="canvas">
           <div class="resultBox">
-            <h3 id="classTitle">â„•</h3>
+            <h3 id="classTitle">ℕ</h3>
             <div class="verdict" id="classVerdict">countably infinite</div>
             <p id="classReason"></p>
           </div>
@@ -355,16 +375,16 @@ td.flip{background:color-mix(in srgb, var(--accent) 22%, var(--paper)); border-c
         <div class="canvas">
           <div class="matrixWrap" id="cantorWrap"></div>
           <div class="eq" id="cantorEq"></div>
-          <div class="notice" style="margin-top:12px">The displayed table is finite, but the proof is not. For any infinite list xÂ¹,xÂ²,â€¦ define yâ‚™ = 1 âˆ’ xâ¿â‚™. Then y differs from row n at coordinate n.</div>
+          <div class="notice" style="margin-top:12px">The displayed table is finite, but the proof is not. For any infinite list \(x^1,x^2,\ldots\), define \(y_n=1-x^n_n\). Then \(y\) differs from row \(n\) at coordinate \(n\).</div>
         </div>
       </article>
 
       <article class="card pad">
         <h2>What to notice</h2>
         <div class="steps">
-          <div class="step"><b>1</b><span>A countable set is not â€œsmallâ€ geometrically; it is listable.</span></div>
-          <div class="step"><b>2</b><span>â„•Ã—â„• is countable because every diagonal i+j=s is finite.</span></div>
-          <div class="step"><b>3</b><span>Countable unions use the same grid idea: row index + position in row.</span></div>
+          <div class="step"><b>1</b><span>A countable set is not “small” geometrically; it is listable.</span></div>
+          <div class="step"><b>2</b><span>\(\mathbb{N}\times\mathbb{N}\) is countable because every diagonal \(i+j=s\) is finite.</span></div>
+          <div class="step"><b>3</b><span>Countable unions use the same grid idea: row index \(i\) plus position \(k\) in the row.</span></div>
           <div class="step"><b>4</b><span>Cantor diagonal proves failure of every possible list, not just the visible one.</span></div>
         </div>
       </article>
@@ -372,12 +392,12 @@ td.flip{background:color-mix(in srgb, var(--accent) 22%, var(--paper)); border-c
       <article class="card pad">
         <h2>Exam-style summary</h2>
         <div class="summary">
-          <div><b>F</b><span>Finite: A â‰… {1,â€¦,m}.</span></div>
-          <div><b>C</b><span>Countable: A finite or A â‰… â„•; equivalently A is the range of a sequence.</span></div>
-          <div><b>Ã—</b><span>â„•Ã—â„• is countable by diagonal enumeration.</span></div>
-          <div><b>âˆª</b><span>A countable union of countable sets is countable.</span></div>
-          <div><b>D</b><span>{0,1}<sup>â„•</sup> is uncountable by Cantor diagonalization.</span></div>
-          <div><b>R</b><span>[0,1] and â„ are uncountable because binary/decimal sequences cannot be fully enumerated.</span></div>
+          <div><b>F</b><span>Finite: \(A\cong\{1,\ldots,m\}\).</span></div>
+          <div><b>C</b><span>Countable: \(A\) finite or \(A\cong\mathbb{N}\); equivalently, \(A\) is the range of a sequence.</span></div>
+          <div><b>×</b><span>\(\mathbb{N}\times\mathbb{N}\) is countable by diagonal enumeration.</span></div>
+          <div><b>∪</b><span>A countable union of countable sets is countable.</span></div>
+          <div><b>D</b><span>\(\{0,1\}^{\mathbb{N}}\) is uncountable by Cantor diagonalization.</span></div>
+          <div><b>R</b><span>\([0,1]\) and \(\mathbb{R}\) are uncountable because binary/decimal sequences cannot be fully enumerated.</span></div>
         </div>
       </article>
     </aside>
@@ -387,6 +407,23 @@ td.flip{background:color-mix(in srgb, var(--accent) 22%, var(--paper)); border-c
 
 <script>
 const $ = id => document.getElementById(id);
+function renderKatex(scope=document.body){
+  if(!window.renderMathInElement) return;
+  renderMathInElement(scope, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '\\[', right: '\\]', display: true},
+      {left: '\\(', right: '\\)', display: false}
+    ],
+    throwOnError: false,
+    ignoredTags: ['script','noscript','style','textarea','pre','code','option']
+  });
+}
+function queueKatex(scope=document.body){
+  if(window.requestAnimationFrame) requestAnimationFrame(() => renderKatex(scope));
+  else setTimeout(() => renderKatex(scope), 0);
+}
+window.addEventListener('load', () => renderKatex(document.body));
 const html = document.documentElement;
 const themeBtn = $('themeBtn');
 themeBtn.addEventListener('click',()=>{
@@ -432,10 +469,11 @@ function renderFinite(){
     d.textContent=i;
     line.appendChild(d);
     const lab=document.createElement('div');
-    lab.className='dotlabel'; lab.style.left=x+'%'; lab.textContent='a'+i;
+    lab.className='dotlabel'; lab.style.left=x+'%'; lab.innerHTML='\\(a_{'+i+'}\\)';
     line.appendChild(lab);
   }
-  $('finiteNotice').innerHTML = `<span class="math">A = {aâ‚,â€¦,a<sub>${m}</sub>}</span>. After index <span class="math">${m}</span>, there is no new element. This is exactly a bijection <span class="math">{1,â€¦,${m}} â†” A</span>.`;
+  $('finiteNotice').innerHTML = `\\(A=\\{a_1,\\ldots,a_{${m}}\\}\\). After index \\(${m}\\), there is no new element. This is exactly a bijection \\(\\{1,\\ldots,${m}\\}\\leftrightarrow A\\).`;
+  queueKatex($('finiteNotice'));
 }
 
 function renderDiag(){
@@ -478,7 +516,8 @@ function renderDiag(){
     }
   }
   const cur=pairs[step-1];
-  $('diagFormula').innerHTML = `<span class="line">current: <b>e(${step}) = (${cur[0]},${cur[1]})</b></span><span class="line">principle: for each s, enumerate all pairs with i+j=s; each diagonal is finite.</span>`;
+  $('diagFormula').innerHTML = `<span class="line">current: \\(e(${step})=(${cur[0]},${cur[1]})\\)</span><span class="line">principle: for each \\(s\\), enumerate all pairs with \\(i+j=s\\); each diagonal is finite.</span>`;
+  queueKatex($('diagFormula'));
 }
 
 function renderUnion(){
@@ -496,16 +535,17 @@ function renderUnion(){
   for(let c=1;c<=cols;c++) html+=`<th>k=${c}</th>`;
   html+='</tr></thead><tbody>';
   for(let r=1;r<=rows;r++){
-    html+=`<tr><th>A${r}</th>`;
+    html+=`<tr><th>\\(A_{${r}}\\)</th>`;
     for(let c=1;c<=cols;c++){
       const num=rank.get(r+','+c);
       const special = (r+c<=Math.min(rows,cols)+2) ? 'flip' : '';
-      html+=`<td class="entry ${special}"><span class="math">a<sub>${r}${c}</sub></span><br><span class="small">#${num}</span></td>`;
+      html+=`<td class="entry ${special}">\\(a_{${r}${c}}\\)<br><span class="small">#${num}</span></td>`;
     }
     html+='</tr>';
   }
   html+='</tbody></table>';
   $('unionGrid').innerHTML=html;
+  queueKatex($('unionGrid'));
 }
 
 function bitValue(r,c,pattern){
@@ -521,43 +561,47 @@ function renderCantor(){
   html+='<th>sequence</th></tr></thead><tbody>';
   const diag=[], flip=[];
   for(let r=1;r<=rows;r++){
-    let seq=''; html+=`<tr><th>x<sup>${r}</sup></th>`;
+    let seq=''; html+=`<tr><th>\\(x^{${r}}\\)</th>`;
     for(let c=1;c<=cols;c++){
       const b=bitValue(r,c,pattern); seq+=b;
       const d = r===c;
       if(d){diag.push(b); flip.push(1-b)}
       html+=`<td class="bit ${d?'diag':''}">${b}</td>`;
     }
-    html+=`<td class="entry">${seq}${cols<12?'â€¦':''}</td></tr>`;
+    html+=`<td class="entry">${seq}${cols<12?'…':''}</td></tr>`;
   }
-  html+='<tr><th>y</th>';
+  html+='<tr><th>\\(y\\)</th>';
   for(let c=1;c<=cols;c++){
-    const val = c<=flip.length ? flip[c-1] : 'Â·';
+    const val = c<=flip.length ? flip[c-1] : '·';
     html+=`<td class="bit ${c<=flip.length?'flip':''}">${val}</td>`;
   }
-  html+=`<td class="entry">${flip.join('')}${cols>flip.length?'Â·Â·Â·':'â€¦'}</td></tr>`;
+  html+=`<td class="entry">${flip.join('')}${cols>flip.length?'···':'…'}</td></tr>`;
   html+='</tbody></table>';
   $('cantorWrap').innerHTML=html;
-  $('cantorEq').innerHTML = `<span class="line">diagonal: d = ${diag.join('')}</span><span class="line">new sequence: y<sub>n</sub> = 1 âˆ’ x<sup>n</sup><sub>n</sub> = ${flip.join('')}</span><span class="line">therefore y â‰  x<sup>n</sup> for every n, because they differ at coordinate n.</span>`;
+  $('cantorEq').innerHTML = `<span class="line">diagonal: \\(d=${diag.join('')}\\)</span><span class="line">new sequence: \\(y_n=1-x^n_n=${flip.join('')}\\)</span><span class="line">therefore \\(y\\ne x^n\\) for every \\(n\\), because they differ at coordinate \\(n\\).</span>`;
+  queueKatex($('cantorWrap'));
+  queueKatex($('cantorEq'));
 }
 
 const examples={
-  finite:['{2,4,6,8}','finite','A bijection {1,2,3,4} â†’ A is enough: 1â†¦2, 2â†¦4, 3â†¦6, 4â†¦8.'],
-  N:['â„•','countably infinite','The identity map n â†¦ n is a bijection â„• â†” â„•.'],
-  Z:['â„¤','countably infinite','List 0,1,âˆ’1,2,âˆ’2,3,âˆ’3,â€¦ . Every integer appears once.'],
-  NxN:['â„• Ã— â„•','countably infinite','Enumerate pairs by diagonals i+j=s. Each diagonal is finite, and every pair lies on one diagonal.'],
-  Q:['â„š','countably infinite','Write rationals as p/q with integers p and qâ‰ 0, enumerate â„¤Ã—â„•, and skip duplicates.'],
-  union:['â‹ƒâ‚™ Aâ‚™, with every Aâ‚™ countable','at most countable','Choose enumerations Aáµ¢={aáµ¢â‚,aáµ¢â‚‚,â€¦}. Then enumerate the grid (i,k) diagonally and skip repeats.'],
-  R:['â„','uncountable','Since [0,1]âŠ‚â„ is uncountable by diagonalization, â„ cannot be countable.'],
-  interval:['[0,1]','uncountable','Binary sequences embed into [0,1], and Cantor diagonalization prevents a complete list.'],
-  P:['ð’«(â„•)','uncountable','Identify each subset AâŠ‚â„• with its indicator sequence 1_Aâˆˆ{0,1}^â„•. Cantor diagonal applies.']
+  finite:['\\(\\{2,4,6,8\\}\\)','finite','A bijection \\(\\{1,2,3,4\\}\\to A\\) is enough: \\(1\\mapsto2,\\ 2\\mapsto4,\\ 3\\mapsto6,\\ 4\\mapsto8\\).'],
+  N:['\\(\\mathbb{N}\\)','countably infinite','The identity map \\(n\\mapsto n\\) is a bijection \\(\\mathbb{N}\\leftrightarrow\\mathbb{N}\\).'],
+  Z:['\\(\\mathbb{Z}\\)','countably infinite','List \\(0,1,-1,2,-2,3,-3,\\ldots\\). Every integer appears once.'],
+  NxN:['\\(\\mathbb{N}\\times\\mathbb{N}\\)','countably infinite','Enumerate pairs by diagonals \\(i+j=s\\). Each diagonal is finite, and every pair lies on one diagonal.'],
+  Q:['\\(\\mathbb{Q}\\)','countably infinite','Write rationals as \\(p/q\\), with \\(p\\in\\mathbb{Z}\\) and \\(q\\in\\mathbb{N}\\setminus\\{0\\}\\). Enumerate \\(\\mathbb{Z}\\times\\mathbb{N}\\) and skip duplicates.'],
+  union:['\\(\\bigcup_{n=1}^{\\infty} A_n\\), with every \\(A_n\\) countable','at most countable','Choose enumerations \\(A_i=\\{a_{i1},a_{i2},\\ldots\\}\\). Then enumerate the grid \\((i,k)\\) diagonally and skip repeats.'],
+  R:['\\(\\mathbb{R}\\)','uncountable','Since \\([0,1]\\subset\\mathbb{R}\\) is uncountable by diagonalization, \\(\\mathbb{R}\\) cannot be countable.'],
+  interval:['\\([0,1]\\)','uncountable','Binary sequences embed into \\([0,1]\\), and Cantor diagonalization prevents a complete list.'],
+  P:['\\(\\mathcal{P}(\\mathbb{N})\\)','uncountable','Identify each subset \\(A\\subset\\mathbb{N}\\) with its indicator sequence \\(\\mathbf{1}_A\\in\\{0,1\\}^{\\mathbb{N}}\\). Cantor diagonal applies.']
 };
 function renderClassifier(){
   const [title, verdict, reason]=examples[$('exampleSet').value];
-  $('classTitle').innerHTML=title; $('classVerdict').textContent=verdict; $('classReason').textContent=reason;
+  $('classTitle').innerHTML=title; $('classVerdict').textContent=verdict; $('classReason').innerHTML=reason;
+  queueKatex($('classTitle'));
+  queueKatex($('classReason'));
 }
 
-function renderAll(){renderFinite(); renderDiag(); renderUnion(); renderCantor(); renderClassifier();}
+function renderAll(){renderFinite(); renderDiag(); renderUnion(); renderCantor(); renderClassifier(); queueKatex(document.body);}
 ['finiteSize','finiteIndex','gridDepth','diagStep','unionRows','unionCols','cantorRows','cantorCols','cantorPattern','exampleSet'].forEach(id=>$(id).addEventListener('input', renderAll));
 
 let timer=null;

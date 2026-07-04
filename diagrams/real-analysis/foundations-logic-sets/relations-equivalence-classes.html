@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -9,6 +9,8 @@
 <meta name="description" content="Interactive real analysis diagram for relations and equivalence classes.">
   <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
 <title>Relations and Equivalence Classes | Real Analysis Diagrams</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
 <script>
@@ -114,17 +116,23 @@ h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(34px,4.6vw,58px);
 .definition{padding:20px 22px}
 .kicker{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:800;margin-bottom:8px}
 .formula{
-  background:var(--paper2);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--accent) 7%, transparent), transparent 72%),
+    var(--paper2);
   border:1px solid var(--border);
-  border-radius:16px;
-  padding:14px 16px;
+  border-radius:18px;
+  padding:15px 17px;
   margin:10px 0;
   overflow-x:auto;
-  font-family:"Times New Roman",Georgia,serif;
-  font-size:18px;
-  line-height:1.65;
+  font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size:16px;
+  line-height:1.58;
 }
-.formula .small{font-size:16px;color:var(--muted)}
+.formula .katex{font-size:1.04em}
+.formula .katex-display{margin:.25rem 0}
+.formula .small{font-size:13px;color:var(--muted);font-family:Inter,ui-sans-serif,system-ui,sans-serif}
+.math-note{color:var(--muted);font-size:13px;margin-top:8px}
+.katex-wrap{overflow-x:auto;overflow-y:hidden}
 .tightText{font-size:14px;color:var(--muted);margin:10px 0 0;max-width:820px}
 .controls{padding:18px}
 .controlGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
@@ -214,15 +222,15 @@ svg{display:block;width:100%;height:100%}
 .propHead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
 .prop h3{font-size:14px;margin:0}.mark{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:900;background:rgba(189,93,93,.12);color:var(--bad);border:1px solid rgba(189,93,93,.25)}
 .prop.ok .mark{background:var(--accent-soft);color:var(--good);border-color:var(--accent-mid)}
-.propFormula{font-family:"Times New Roman",Georgia,serif;color:var(--muted);font-size:15px;line-height:1.35}.witness{margin-top:8px;font-size:12px;color:var(--muted)}
+.propFormula{font-family:Inter,ui-sans-serif,system-ui,sans-serif;color:var(--muted);font-size:14px;line-height:1.35}.propFormula .katex{font-size:1.05em}.witness{margin-top:8px;font-size:12px;color:var(--muted)}
 .sideStack{display:grid;gap:16px}.classes{display:grid;gap:10px}
 .classCard{border:1px solid var(--border);background:var(--paper2);border-radius:16px;padding:12px;transition:transform .12s ease,border-color .12s ease}
 .classCard.active{border-color:var(--accent-mid);background:var(--accent-soft)}
 .classTop{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px}
-.classTitle{font-family:"Times New Roman",Georgia,serif;font-size:18px}.elements{display:flex;gap:6px;flex-wrap:wrap}
+.classTitle{font-family:Inter,ui-sans-serif,system-ui,sans-serif;font-size:17px}.classTitle .katex{font-size:1.02em}.elements{display:flex;gap:6px;flex-wrap:wrap}
 .el{min-width:28px;height:28px;border-radius:999px;border:1px solid var(--border);display:grid;place-items:center;background:var(--paper);font-weight:750;font-size:13px}.el.active{border-color:var(--accent);background:var(--accent-soft)}
-.partitionNote{font-size:13px;color:var(--muted);margin-top:10px}.miniFormula{font-family:"Times New Roman",Georgia,serif;font-size:17px;color:var(--text);line-height:1.45}
-.tripleGrid{display:grid;grid-template-columns:1fr;gap:10px}.truthRow{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border:1px solid var(--border);background:var(--paper2);border-radius:14px;padding:10px;font-size:13px}.truth{font-family:"Times New Roman",Georgia,serif;font-size:18px}.truthVal{border-radius:999px;padding:4px 8px;font-size:12px;font-weight:800;border:1px solid var(--border)}.truthVal.t{color:var(--good);background:var(--accent-soft);border-color:var(--accent-mid)}.truthVal.f{color:var(--bad);background:rgba(189,93,93,.12);border-color:rgba(189,93,93,.28)}
+.partitionNote{font-size:13px;color:var(--muted);margin-top:10px}.miniFormula{font-family:Inter,ui-sans-serif,system-ui,sans-serif;font-size:15px;color:var(--text);line-height:1.45}.miniFormula .katex{font-size:1.02em}
+.tripleGrid{display:grid;grid-template-columns:1fr;gap:10px}.truthRow{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border:1px solid var(--border);background:var(--paper2);border-radius:14px;padding:10px;font-size:13px}.truth{font-family:Inter,ui-sans-serif,system-ui,sans-serif;font-size:16px}.truth .katex{font-size:1.04em}.truthVal{border-radius:999px;padding:4px 8px;font-size:12px;font-weight:800;border:1px solid var(--border)}.truthVal.t{color:var(--good);background:var(--accent-soft);border-color:var(--accent-mid)}.truthVal.f{color:var(--bad);background:rgba(189,93,93,.12);border-color:rgba(189,93,93,.28)}
 .noticeGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}.notice{padding:18px}.notice ul{margin:10px 0 0;padding-left:18px;color:var(--muted);font-size:14px}.notice li{margin:6px 0}.exam{padding:18px}.examGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.examItem{background:var(--paper2);border:1px solid var(--border);border-radius:15px;padding:12px}.examItem b{display:block;margin-bottom:4px}.examItem span{display:block;color:var(--muted);font-size:13px}.footer{color:var(--muted);font-size:12px;text-align:center;margin-top:20px}
 @media(max-width:960px){.topGrid,.dashboard,.noticeGrid{grid-template-columns:1fr}.propertyGrid{grid-template-columns:repeat(2,1fr)}.sideStack{grid-template-columns:1fr 1fr}.matrix{min-width:500px}}
 @media(max-width:660px){.app{width:min(100% - 18px,1180px);padding-top:16px}.header{grid-template-columns:1fr}.controlGrid,.sideStack,.examGrid{grid-template-columns:1fr}.propertyGrid{grid-template-columns:1fr}.card{border-radius:18px}.matrix{min-width:455px;gap:4px}.mcell,.mlabel,.corner{height:34px;border-radius:8px}.graphBox{height:280px}}
@@ -234,29 +242,22 @@ svg{display:block;width:100%;height:100%}
     <div>
       <div class="eyebrow"><span class="dot"></span> Real Analysis Notebook</div>
       <h1>Relations and equivalence classes</h1>
-      <p class="subtitle">A binary relation is a region inside <strong>U Ã— U</strong>. Equivalence relations are exactly the regions whose rows group points into a genuine partition.</p>
+      <p class="subtitle">A binary relation is a region inside <span class="katex-slot" data-tex="U\times U"></span>. Equivalence relations are exactly the regions whose rows group points into a genuine partition.</p>
     </div>
-    <button class="themeToggle" id="themeBtn" aria-label="Toggle theme"><span id="themeIcon">â˜¾</span><span id="themeText">Dark mode</span></button>
+    <button class="themeToggle" id="themeBtn" aria-label="Toggle theme"><span id="themeIcon">☾</span><span id="themeText">Dark mode</span></button>
   </header>
 
   <section class="topGrid">
     <div class="card definition">
       <div class="kicker">Minimal symbolic model</div>
-      <div class="formula">
-        <span>R âŠ† U Ã— U</span>,&nbsp;&nbsp;
-        <span>xRy â‡” (x,y) âˆˆ R</span>.
+      <div class="formula katex-wrap">
+        <span class="katex-slot display" data-display="true" data-tex="R\subseteq U\times U,\qquad xRy\Longleftrightarrow (x,y)\in R."></span>
       </div>
-      <div class="formula">
-        <div>R is an equivalence relation â‡”</div>
-        <div style="padding-left:1.1rem">
-          âˆ€xâˆˆU: xRx <span class="small">reflexive</span><br>
-          xRy â‡’ yRx <span class="small">symmetric</span><br>
-          xRy âˆ§ yRz â‡’ xRz <span class="small">transitive</span>
-        </div>
+      <div class="formula katex-wrap">
+        <span class="katex-slot display" data-display="true" data-tex="R\text{ is an equivalence relation}\Longleftrightarrow\begin{cases}\forall x\in U,\;xRx & \text{reflexive}\\ xRy\Rightarrow yRx & \text{symmetric}\\ (xRy\land yRz)\Rightarrow xRz & \text{transitive}\end{cases}"></span>
       </div>
-      <div class="formula">
-        [x]<sub>R</sub> = { yâˆˆU : xRy },&nbsp;&nbsp;
-        U/R = { [x]<sub>R</sub> : xâˆˆU }.
+      <div class="formula katex-wrap">
+        <span class="katex-slot display" data-display="true" data-tex="[x]_R=\{\,y\in U:xRy\,\},\qquad U/R=\{\,[x]_R:x\in U\,\}."></span>
       </div>
       <p class="tightText">The matrix below is the geometry of the relation: filled cells are true statements. Diagonal means reflexivity, mirror symmetry means symmetry, and filled two-step paths force a third filled cell when transitivity holds.</p>
     </div>
@@ -269,11 +270,11 @@ svg{display:block;width:100%;height:100%}
         <div class="control full">
           <div class="labelRow"><label for="relationType">Relation family</label><span class="valuePill" id="relationName">mod</span></div>
           <select id="relationType">
-            <option value="mod">Congruence: x â‰¡ y mod m</option>
+            <option value="mod">Congruence: x ≡ y mod m</option>
             <option value="blocks">Same block in a partition</option>
             <option value="equality">Equality: x = y</option>
             <option value="universal">Universal: every pair related</option>
-            <option value="near">Nearness: |x âˆ’ y| â‰¤ d</option>
+            <option value="near">Nearness: |x − y| ≤ d</option>
             <option value="divides">Divisibility: x divides y</option>
             <option value="less">Strict order: x &lt; y</option>
             <option value="custom">Custom clickable matrix</option>
@@ -320,7 +321,7 @@ svg{display:block;width:100%;height:100%}
   <main class="dashboard">
     <section class="card panel">
       <div class="panelTitle">
-        <div><h2>Relation as a truth region in U Ã— U</h2><p>Rows are first coordinate x; columns are second coordinate y.</p></div>
+        <div><h2>Relation as a truth region in <span class="katex-slot" data-tex="U\times U"></span></h2><p>Rows are first coordinate x; columns are second coordinate y.</p></div>
         <span class="badge" id="equivBadge">checking</span>
       </div>
       <div class="matrixWrap"><div class="matrix" id="matrix"></div></div>
@@ -373,12 +374,12 @@ svg{display:block;width:100%;height:100%}
     <div class="card exam">
       <div class="kicker">Compact exam-style summary</div>
       <div class="examGrid">
-        <div class="examItem"><b>Binary relation</b><span>Any subset R of UÃ—U.</span></div>
+        <div class="examItem"><b>Binary relation</b><span>Any subset <span class="katex-slot" data-tex="R\subseteq U\times U"></span>.</span></div>
         <div class="examItem"><b>Equivalence relation</b><span>Reflexive + symmetric + transitive.</span></div>
-        <div class="examItem"><b>Class</b><span>[x] = {yâˆˆU : xRy}.</span></div>
+        <div class="examItem"><b>Class</b><span><span class="katex-slot" data-tex="[x]_R=\{y\in U:xRy\}"></span>.</span></div>
         <div class="examItem"><b>Quotient</b><span>U/R = set of all distinct classes.</span></div>
-        <div class="examItem"><b>Partition theorem</b><span>Equivalence relations on U â†” partitions of U.</span></div>
-        <div class="examItem"><b>Matrix test</b><span>MÂ²_boolean â‰¤ M, plus diagonal and symmetry.</span></div>
+        <div class="examItem"><b>Partition theorem</b><span>Equivalence relations on <span class="katex-slot" data-tex="U"></span> ↔ partitions of <span class="katex-slot" data-tex="U"></span>.</span></div>
+        <div class="examItem"><b>Matrix test</b><span><span class="katex-slot" data-tex="M_{\mathrm{bool}}^2\le M"></span>, plus diagonal and symmetry.</span></div>
       </div>
     </div>
   </section>
@@ -388,6 +389,39 @@ svg{display:block;width:100%;height:100%}
 
 <script>
 const $ = id => document.getElementById(id);
+
+function escapeAttr(s){
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/"/g,'&quot;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;');
+}
+function mathInline(tex){
+  return `<span class="katex-slot katex-pending" data-tex="${escapeAttr(tex)}"></span>`;
+}
+function mathDisplay(tex){
+  return `<span class="katex-slot display katex-pending" data-display="true" data-tex="${escapeAttr(tex)}"></span>`;
+}
+function typesetMath(root=document.body){
+  if(!window.katex){
+    window.setTimeout(()=>typesetMath(root),60);
+    return;
+  }
+  root.querySelectorAll('.katex-slot[data-tex]').forEach(el=>{
+    const tex = el.getAttribute('data-tex') || '';
+    const displayMode = el.getAttribute('data-display') === 'true';
+    try{
+      katex.render(tex, el, {displayMode, throwOnError:false, strict:'ignore'});
+      el.classList.remove('katex-pending');
+    }catch(err){
+      el.textContent = '';
+      el.title = tex;
+    }
+  });
+}
+window.addEventListener('load',()=>typesetMath(document.body));
+
 const state = {
   n:8, type:'mod', param:3, focus:1, a:1, b:2, c:3,
   custom: Array.from({length:10},()=>Array(10).fill(false))
@@ -413,7 +447,7 @@ function R(a,b){
 function matrix(){return U().map(a=>U().map(b=>R(a,b)))}
 function classOf(x){return U().filter(y=>R(x,y))}
 function relationName(){
-  const map={mod:'x â‰¡ y mod m',blocks:'same partition block',equality:'x = y',universal:'U Ã— U',near:'|x âˆ’ y| â‰¤ d',divides:'x divides y',less:'x < y',custom:'custom R'};
+  const map={mod:'x ≡ y mod m',blocks:'same partition block',equality:'x = y',universal:'U × U',near:'|x − y| ≤ d',divides:'x divides y',less:'x < y',custom:'custom R'};
   return map[state.type];
 }
 function updateSliderBounds(){
@@ -473,14 +507,14 @@ function renderMatrix(tests){
       if(x===ta&&y===tb) cell.classList.add('triple1');
       if(x===tb&&y===tc) cell.classList.add('triple2');
       if(x===ta&&y===tc) cell.classList.add('triple3');
-      cell.title=`(${x},${y}) ${val?'âˆˆ':'âˆ‰'} R`;
+      cell.title=`(${x},${y}) ${val?'∈':'∉'} R`;
       if(state.type==='custom') cell.addEventListener('click',()=>{state.custom[x-1][y-1]=!state.custom[x-1][y-1]; render();});
       M.appendChild(cell);
     });
   });
 }
 function propCard(title, ok, formula, witness){
-  return `<div class="prop ${ok?'ok':''}"><div class="propHead"><h3>${title}</h3><div class="mark">${ok?'âœ“':'Ã—'}</div></div><div class="propFormula">${formula}</div><div class="witness">${witness}</div></div>`;
+  return `<div class="prop ${ok?'ok':''}"><div class="propHead"><h3>${title}</h3><div class="mark">${ok?'✓':'×'}</div></div><div class="propFormula">${formula}</div><div class="witness">${witness}</div></div>`;
 }
 function renderProperties(t){
   const refW=t.ref?'every diagonal cell is filled':`fails at x=${t.refW[0]}: ${t.refW[0]}R${t.refW[0]} is false`;
@@ -488,10 +522,10 @@ function renderProperties(t){
   const trW=t.trans?'every two-step path closes':`counterexample: ${t.transW[0]}R${t.transW[1]} and ${t.transW[1]}R${t.transW[2]}, but not ${t.transW[0]}R${t.transW[2]}`;
   const eqW=t.equiv?'classes are genuine partition blocks':'quotient partition is not valid until all three hold';
   $('propertyGrid').innerHTML =
-    propCard('Reflexive',t.ref,'âˆ€xâˆˆU: xRx',refW)+
-    propCard('Symmetric',t.sym,'xRy â‡’ yRx',symW)+
-    propCard('Transitive',t.trans,'xRy âˆ§ yRz â‡’ xRz',trW)+
-    propCard('Equivalence',t.equiv,'refl. âˆ§ sym. âˆ§ trans.',eqW);
+    propCard('Reflexive',t.ref,mathInline('\\forall x\\in U:\\;xRx'),refW)+
+    propCard('Symmetric',t.sym,mathInline('xRy\\Rightarrow yRx'),symW)+
+    propCard('Transitive',t.trans,mathInline('(xRy\\land yRz)\\Rightarrow xRz'),trW)+
+    propCard('Equivalence',t.equiv,mathInline('\\mathrm{refl.}\\land\\mathrm{sym.}\\land\\mathrm{trans.}'),eqW);
   const badge=$('equivBadge');
   badge.className='badge '+(t.equiv?'ok':'no');
   badge.textContent=t.equiv?'equivalence relation':'not an equivalence relation';
@@ -562,11 +596,11 @@ function renderClasses(t){
     $('quotientSubtitle').textContent='Distinct equivalence classes: disjoint and cover U.';
     uniqueClasses().forEach(c=>{
       const div=document.createElement('div'); div.className='classCard '+(arraysEqual(c.items,focusCls)?'active':'');
-      div.innerHTML=`<div class="classTop"><div class="classTitle">[${c.rep}]<sub>R</sub></div><span class="badge ok">block</span></div><div class="elements">${c.items.map(x=>`<span class="el ${x===state.focus?'active':''}">${x}</span>`).join('')}</div>`;
+      div.innerHTML=`<div class="classTop"><div class="classTitle">${mathInline('['+c.rep+']_R')}</div><span class="badge ok">block</span></div><div class="elements">${c.items.map(x=>`<span class="el ${x===state.focus?'active':''}">${x}</span>`).join('')}</div>`;
       box.appendChild(div);
     });
     const note=document.createElement('div'); note.className='partitionNote';
-    note.innerHTML=`<div class="miniFormula">U/R = { ${uniqueClasses().map(c=>'['+c.rep+']').join(', ')} }</div>Same-class rule: xRy iff [x]=[y].`;
+    note.innerHTML=`<div class="miniFormula">${mathInline('U/R=\\{'+uniqueClasses().map(c=>'['+c.rep+']_R').join(', ')+'\\}')}</div>Same-class rule: ${mathInline('xRy\\Longleftrightarrow [x]_R=[y]_R')}.`;
     box.appendChild(note);
   }else{
     $('quotientSubtitle').textContent='Raw relation neighborhoods need not form a quotient.';
@@ -588,19 +622,20 @@ function renderTriple(){
   const implication=!antecedent || ac;
   function row(label,val){return `<div class="truthRow"><div class="truth">${label}</div><div class="truthVal ${val?'t':'f'}">${val?'true':'false'}</div></div>`}
   $('triplePanel').innerHTML =
-    row(`${a}R${b}`,ab)+row(`${b}R${c}`,bc)+row(`${a}R${c}`,ac)+
-    `<div class="truthRow"><div><div class="truth">(${a}R${b} âˆ§ ${b}R${c}) â‡’ ${a}R${c}</div><div class="partitionNote">${implication?'This triple respects transitivity.':'This triple violates transitivity.'}</div></div><div class="truthVal ${implication?'t':'f'}">${implication?'ok':'fail'}</div></div>`;
+    row(mathInline(`${a}R${b}`),ab)+row(mathInline(`${b}R${c}`),bc)+row(mathInline(`${a}R${c}`),ac)+
+    `<div class="truthRow"><div><div class="truth">${mathInline(`(${a}R${b}\\land ${b}R${c})\\Rightarrow ${a}R${c}`)}</div><div class="partitionNote">${implication?'This triple respects transitivity.':'This triple violates transitivity.'}</div></div><div class="truthVal ${implication?'t':'f'}">${implication?'ok':'fail'}</div></div>`;
 }
 function render(){
   updateSliderBounds(); configureParam();
   const t=propertyTests();
   renderMatrix(t); renderProperties(t); renderGraph(); renderClasses(t); renderTriple();
+  typesetMath(document.body);
 }
 
 $('themeBtn').addEventListener('click',()=>{
   const body=document.body; const dark=body.getAttribute('data-theme')==='dark';
   body.setAttribute('data-theme',dark?'light':'dark');
-  $('themeIcon').textContent=dark?'â˜¾':'â˜€'; $('themeText').textContent=dark?'Dark mode':'Light mode';
+  $('themeIcon').textContent=dark?'☾':'☀'; $('themeText').textContent=dark?'Dark mode':'Light mode';
   renderGraph();
 });
 $('relationType').addEventListener('change',e=>{state.type=e.target.value; render();});

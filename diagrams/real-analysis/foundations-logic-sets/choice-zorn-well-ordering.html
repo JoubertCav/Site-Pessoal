@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -9,6 +9,9 @@
 <meta name="description" content="Interactive real analysis diagram for Choice, Zorn's Lemma, and well-ordering.">
   <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
 <title>Choice, Zorn, and Well-ordering | Real Analysis Diagrams</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
 <script>
@@ -174,16 +177,51 @@ select{
   padding:14px;
 }
 .formula{
-  font-family:var(--serif);
-  font-size:clamp(16px,1.45vw,21px);
-  line-height:1.55;
-  background:linear-gradient(135deg,var(--accent-weak),transparent 72%),var(--paper2);
+  font-size:clamp(15px,1.28vw,18px);
+  line-height:1.62;
+  background:
+    linear-gradient(135deg,var(--accent-weak),transparent 68%),
+    linear-gradient(180deg,rgba(255,255,255,.32),transparent 58%),
+    var(--paper2);
   border:1px solid var(--line);
   border-radius:18px;
-  padding:15px 16px;
+  padding:16px 17px;
+  overflow:hidden;
+  max-width:100%;
 }
-.formula .tag{font-family:var(--sans);font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:5px}
-.math{font-family:var(--serif)}
+.formula .tag{
+  font-family:var(--sans);
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.13em;
+  color:var(--muted);
+  margin-bottom:10px;
+}
+.formulaBody{
+  display:block;
+  max-width:100%;
+  color:var(--muted);
+  overflow-wrap:normal;
+  word-break:normal;
+}
+.formulaBody .katex-display{
+  margin:.48rem 0 .42rem;
+  padding:.34rem .55rem;
+  overflow-x:auto;
+  overflow-y:hidden;
+  background:rgba(255,255,255,.26);
+  border:1px solid var(--line2);
+  border-radius:14px;
+}
+[data-theme="dark"] .formulaBody .katex-display{background:rgba(255,255,255,.04)}
+.katex{font-size:1.04em;color:var(--ink)}
+.katex-display>.katex{font-size:1.08em;white-space:nowrap}
+.math .katex,.formulaBody .katex{font-feature-settings:"kern" 1}
+.math{white-space:nowrap}
+.orderSymbol .katex{color:var(--muted);font-size:.95em}
+.el .katex,.badge .katex,.mapOut .katex,.setName .katex{font-size:1em}
+.el.chosen .katex{color:#fff}
+.kbd,.mono,.badge,.el{font-variant-ligatures:none}
 .mono{font-family:var(--mono)}
 .svgWrap{
   position:relative;
@@ -197,7 +235,7 @@ select{
   min-height:330px;
   overflow:hidden;
 }
-svg{display:block;width:100%;height:100%}
+svg{display:block;width:100%;height:100%;overflow:visible}
 #triangleSvg{height:360px}
 #zornSvg{height:410px}
 #wellSvg{height:320px}
@@ -341,7 +379,7 @@ ul.clean li{margin:6px 0}.kbd{font-family:var(--mono);font-size:11px;border:1px 
       <div class="eyebrow">
         <span class="pill">ZF-level theorem</span>
         <span class="pill">finite visual shadows</span>
-        <span class="pill">choice â€¢ chains â€¢ well-orders</span>
+        <span class="pill">choice • chains • well-orders</span>
       </div>
       <h1>Choice, Zorn, and Well-ordering</h1>
       <p class="subtitle">Three faces of the same infinitary principle. The app separates the formal equivalence from finite diagrams: the pictures reveal the mechanism, while the statements remain set-theoretically exact.</p>
@@ -362,9 +400,9 @@ ul.clean li{margin:6px 0}.kbd{font-family:var(--mono);font-size:11px;border:1px 
           <button class="small active" data-focus="AC">AC</button>
           <button class="small" data-focus="Zorn">Zorn</button>
           <button class="small" data-focus="WO">WO</button>
-          <button class="small" data-focus="WOAC">WO â‡’ AC</button>
-          <button class="small" data-focus="ACZorn">AC â‡’ Zorn</button>
-          <button class="small" data-focus="ZornWO">Zorn â‡’ WO</button>
+          <button class="small" data-focus="WOAC">WO ⇒ AC</button>
+          <button class="small" data-focus="ACZorn">AC ⇒ Zorn</button>
+          <button class="small" data-focus="ZornWO">Zorn ⇒ WO</button>
         </div>
       </div>
       <div class="svgWrap">
@@ -404,7 +442,7 @@ ul.clean li{margin:6px 0}.kbd{font-family:var(--mono);font-size:11px;border:1px 
       </div>
       <div id="statementBox" class="formula" style="margin-top:14px"></div>
       <div class="truthStrip">
-        <div class="truthBox"><strong>Maximal â‰  maximum</strong><span>A maximal element has no strictly larger element. A maximum dominates all elements.</span></div>
+        <div class="truthBox"><strong>Maximal ≠ maximum</strong><span>A maximal element has no strictly larger element. A maximum dominates all elements.</span></div>
         <div class="truthBox"><strong>Chain</strong><span>A subset where every two elements are comparable.</span></div>
         <div class="truthBox"><strong>Well-order</strong><span>Every nonempty subset has a least element, not merely a first-looking list.</span></div>
       </div>
@@ -418,12 +456,12 @@ ul.clean li{margin:6px 0}.kbd{font-family:var(--mono);font-size:11px;border:1px 
         </div>
       </div>
       <div class="control">
-        <label for="proofSelect">Implication <span class="val" id="proofTag">WO â‡’ AC</span></label>
+        <label for="proofSelect">Implication <span class="val" id="proofTag">WO ⇒ AC</span></label>
         <select id="proofSelect">
-          <option value="WOAC">WO â‡’ AC</option>
-          <option value="ACZorn">AC â‡’ Zorn</option>
-          <option value="ZornWO">Zorn â‡’ WO</option>
-          <option value="ZornAC">Zorn â‡’ AC</option>
+          <option value="WOAC">WO ⇒ AC</option>
+          <option value="ACZorn">AC ⇒ Zorn</option>
+          <option value="ZornWO">Zorn ⇒ WO</option>
+          <option value="ZornAC">Zorn ⇒ AC</option>
         </select>
       </div>
       <div id="proofFormula" class="formula" style="margin-top:12px"></div>
@@ -451,7 +489,7 @@ ul.clean li{margin:6px 0}.kbd{font-family:var(--mono);font-size:11px;border:1px 
       </div>
       <div id="globalOrder" class="orderLine"></div>
       <div id="familyGrid" class="familyGrid"></div>
-      <div class="note" style="margin-top:12px"><span class="math">WO â‡’ AC:</span> define <span class="math">f(i)=min_{&lt;} A_i</span>. The visual sets are finite, but the formula works for any nonempty members of a well-ordered universe.</div>
+      <div class="note" style="margin-top:12px"><span class="math">\(\mathrm{WO}\Rightarrow\mathrm{AC}:\)</span> define <span class="math">\(f(i)=\min_{\lt} A_i\)</span>. The visual sets are finite, but the formula works for any nonempty members of a well-ordered universe.</div>
     </section>
 
     <section class="card">
@@ -509,7 +547,7 @@ ul.clean li{margin:6px 0}.kbd{font-family:var(--mono);font-size:11px;border:1px 
         </div>
       </div>
       <div class="auditGrid">
-        <div class="audit"><b>Choice</b><span>Turns local nonemptiness <span class="math">A_iâ‰ âˆ…</span> into one global function selecting simultaneously.</span></div>
+        <div class="audit"><b>Choice</b><span>Turns local nonemptiness <span class="math">\(A_i\ne\varnothing\)</span> into one global function selecting simultaneously.</span></div>
         <div class="audit"><b>Zorn</b><span>Turns local chain-boundedness into one global maximal object.</span></div>
         <div class="audit"><b>Well-ordering</b><span>Turns an arbitrary set into a structure where every nonempty part has a first element.</span></div>
       </div>
@@ -529,16 +567,16 @@ ul.clean li{margin:6px 0}.kbd{font-family:var(--mono);font-size:11px;border:1px 
             <li><b>AC:</b> every family of nonempty sets admits a choice function.</li>
             <li><b>Zorn:</b> if every chain in a nonempty poset has an upper bound, then the poset has a maximal element.</li>
             <li><b>WO:</b> every set admits a well-order.</li>
-            <li><b>Equivalence:</b> <span class="math">AC â‡” Zorn â‡” WO</span>.</li>
+            <li><b>Equivalence:</b> <span class="math">\(\mathrm{AC}\Longleftrightarrow\mathrm{Zorn}\Longleftrightarrow\mathrm{WO}\)</span>.</li>
           </ul>
         </div>
         <div class="panel">
           <h3>Proof skeleton</h3>
           <ul class="clean">
-            <li><span class="math">WOâ‡’AC:</span> choose the least element of each nonempty set.</li>
-            <li><span class="math">ACâ‡’Zorn:</span> use AC to get a maximal chain; its upper bound is maximal.</li>
-            <li><span class="math">Zornâ‡’WO:</span> maximize a well-ordering of a subset; append any missing point.</li>
-            <li><span class="math">Zornâ‡’AC:</span> maximize partial choice functions ordered by extension.</li>
+            <li><span class="math">\(\mathrm{WO}\Rightarrow\mathrm{AC}:\)</span> choose the least element of each nonempty set.</li>
+            <li><span class="math">\(\mathrm{AC}\Rightarrow\mathrm{Zorn}:\)</span> use AC to get a maximal chain; its upper bound is maximal.</li>
+            <li><span class="math">\(\mathrm{Zorn}\Rightarrow\mathrm{WO}:\)</span> maximize a well-ordering of a subset; append any missing point.</li>
+            <li><span class="math">\(\mathrm{Zorn}\Rightarrow\mathrm{AC}:\)</span> maximize partial choice functions ordered by extension.</li>
           </ul>
         </div>
       </div>
@@ -566,71 +604,102 @@ ul.clean li{margin:6px 0}.kbd{font-family:var(--mono);font-size:11px;border:1px 
   const statements = {
     AC: {
       tag:'Axiom of Choice',
-      body:'For every indexed family (A_i)_{iâˆˆI} with A_i â‰  âˆ…, there exists f:I â†’ â‹ƒ_{iâˆˆI}A_i such that f(i) âˆˆ A_i for every iâˆˆI.'
+      body:String.raw`For every indexed family \((A_i)_{i\in I}\) with \(A_i\ne\varnothing\), there exists
+\[
+f:I\longrightarrow \bigcup_{i\in I} A_i
+\]
+such that \(f(i)\in A_i\) for every \(i\in I\).`
     },
     Zorn: {
       tag:"Zorn's Lemma",
-      body:'If (P,â‰¤) is nonempty and every chain CâŠ†P has an upper bound in P, then P contains a maximal element m: there is no pâˆˆP with m < p.'
+      body:String.raw`If \((P,\le)\) is nonempty and every chain \(C\subseteq P\) has an upper bound in \(P\), then \(P\) contains a maximal element:
+\[
+\exists m\in P\quad \text{such that there is no }p\in P\text{ with }m<p.
+\]`
     },
     WO: {
       tag:'Well-ordering Theorem',
-      body:'For every set X, there exists an order < on X such that every nonempty YâŠ†X has a <-least element.'
+      body:String.raw`For every set \(X\), there exists an order \(<\) on \(X\) such that every nonempty subset \(Y\subseteq X\) has a \(<\)-least element:
+\[
+\forall\varnothing\ne Y\subseteq X,\quad \exists y_0\in Y\ \forall y\in Y,\ y_0\le y.
+\]`
     },
     WOAC: {
-      tag:'WO â‡’ AC',
-      body:'Given a well-order < on â‹ƒA_i, define f(i)=min_{<} A_i. Each A_i is nonempty, so the minimum exists.'
+      tag:'WO ⇒ AC',
+      body:String.raw`Given a well-order \(<\) on \(U=\bigcup_{i\in I}A_i\), define
+\[
+f(i)=\min_{\lt} A_i.
+\]
+Since each \(A_i\ne\varnothing\), the minimum exists and \(f(i)\in A_i\).`
     },
     ACZorn: {
-      tag:'AC â‡’ Zorn',
-      body:'Using AC one obtains a maximal chain M. If every chain has an upper bound u, then u must be maximal; otherwise Mâˆª{v} would be a larger chain.'
+      tag:'AC ⇒ Zorn',
+      body:String.raw`Using choice, obtain a maximal chain \(M\). If every chain has an upper bound \(u\), then \(u\) is maximal; otherwise
+\[
+M\cup\{v\}
+\]
+would be a strictly larger chain.`
     },
     ZornWO: {
-      tag:'Zorn â‡’ WO',
-      body:'Partially order well-orderings of subsets of X by end-extension. A maximal well-ordered subset cannot omit xâˆˆX, because appending x gives a larger well-order.'
+      tag:'Zorn ⇒ WO',
+      body:String.raw`Partially order well-orderings of subsets of \(X\) by end-extension. A maximal well-ordered subset cannot omit \(x\in X\), because appending \(x\) as a new greatest element gives a larger well-order.`
     }
   };
 
   const proofData = {
     WOAC: {
-      tag:'WO â‡’ AC',
-      formula:'< on U makes every nonempty AâŠ†U have min_< A. Therefore f(i)=min_< A_i is a choice function.',
+      tag:'WO ⇒ AC',
+      formula:String.raw`A well-order \(<\) on \(U\) makes every nonempty \(A\subseteq U\) have \(\min_{\lt}A\). Therefore
+\[
+f(i)=\min_{\lt} A_i
+\]
+is a choice function.`,
       steps:[
-        ['Place all candidates in one well-ordered universe','Let U=â‹ƒ_{iâˆˆI}A_i and well-order U.'],
-        ['Use least elements','For each nonempty A_i, the subset A_iâŠ†U has a <-least element.'],
-        ['Define the choice function','Set f(i)=min_< A_i. Then f(i)âˆˆA_i for all i.'],
+        ['Place all candidates in one well-ordered universe',String.raw`Let \(U=\bigcup_{i\in I}A_i\) and well-order \(U\).`],
+        ['Use least elements',String.raw`For each nonempty \(A_i\), the subset \(A_i\subseteq U\) has a \(<\)-least element.`],
+        ['Define the choice function',String.raw`Set \(f(i)=\min_{\lt}A_i\). Then \(f(i)\in A_i\) for all \(i\).`],
         ['Global selection appears','One rule selects from every set simultaneously.']
       ]
     },
     ACZorn: {
-      tag:'AC â‡’ Zorn',
-      formula:'AC â‡’ Hausdorff maximal principle â‡’ Zorn. A maximal chain plus an upper bound yields a maximal element.',
+      tag:'AC ⇒ Zorn',
+      formula:String.raw`\[
+\mathrm{AC}\Rightarrow \text{Hausdorff maximal principle}\Rightarrow \text{Zorn}.
+\]
+A maximal chain plus its upper bound yields a maximal element.`,
       steps:[
         ['Use AC to get a maximal chain','Hausdorff maximal principle says every poset has a maximal chain. This principle is equivalent to AC.'],
-        ['Apply the chain-bound hypothesis','Let M be a maximal chain. By hypothesis, M has an upper bound uâˆˆP.'],
-        ['Show u is maximal','If u<v for some vâˆˆP, then Mâˆª{v} remains a chain, contradicting maximality of M.'],
-        ['Conclusion','Thus u is a maximal element of P.']
+        ['Apply the chain-bound hypothesis',String.raw`Let \(M\) be a maximal chain. By hypothesis, \(M\) has an upper bound \(u\in P\).`],
+        ['Show u is maximal',String.raw`If \(u<v\) for some \(v\in P\), then \(M\cup\{v\}\) remains a chain, contradicting maximality of \(M\).`],
+        ['Conclusion',String.raw`Thus \(u\) is a maximal element of \(P\).`]
       ]
     },
     ZornWO: {
-      tag:'Zorn â‡’ WO',
-      formula:'Maximize partial well-orderings by end-extension. Maximality forces the domain to be all of X.',
+      tag:'Zorn ⇒ WO',
+      formula:String.raw`Maximize partial well-orderings by end-extension. Maximality forces the domain to be all of \(X\):
+\[
+A\ne X\quad\Longrightarrow\quad \text{append }x\in X\setminus A.
+\]`,
       steps:[
-        ['Build the poset','Elements are well-orderings of subsets AâŠ†X. Order them by end-extension.'],
+        ['Build the poset',String.raw`Elements are well-orderings of subsets \(A\subseteq X\). Order them by end-extension.`],
         ['Chains have upper bounds','The union of a chain of compatible end-extensions is again a well-ordering of the union domain.'],
-        ['Invoke Zorn','There is a maximal well-ordering (A,<).'],
-        ['No point can be missing','If xâˆˆX\\A, append x as a new greatest element. This strictly extends the well-order, contradiction.'],
-        ['Conclusion','A=X, so X is well-orderable.']
+        ['Invoke Zorn',String.raw`There is a maximal well-ordering \((A,<)\).`],
+        ['No point can be missing',String.raw`If \(x\in X\setminus A\), append \(x\) as a new greatest element. This strictly extends the well-order, contradiction.`],
+        ['Conclusion',String.raw`Therefore \(A=X\), so \(X\) is well-orderable.`]
       ]
     },
     ZornAC: {
-      tag:'Zorn â‡’ AC',
-      formula:'Maximize partial choice functions. The union of any chain is an upper bound; maximal means total.',
+      tag:'Zorn ⇒ AC',
+      formula:String.raw`Maximize partial choice functions. The union of any chain is an upper bound; maximality means totality:
+\[
+\operatorname{dom}(g)=I.
+\]`,
       steps:[
-        ['Build the poset','P consists of partial choice functions defined on subfamilies JâŠ†I. Order by extension.'],
+        ['Build the poset',String.raw`\(P\) consists of partial choice functions defined on subfamilies \(J\subseteq I\). Order by extension.`],
         ['Chains have upper bounds','The union of a chain of compatible partial functions is again a partial choice function.'],
-        ['Invoke Zorn','There is a maximal partial choice function g.'],
-        ['Maximal means total','If some A_i is outside dom(g), choose one aâˆˆA_i and extend g by g(i)=a. Contradiction.'],
-        ['Conclusion','dom(g)=I, so g is a full choice function.']
+        ['Invoke Zorn',String.raw`There is a maximal partial choice function \(g\).`],
+        ['Maximal means total',String.raw`If some \(A_i\) is outside \(\operatorname{dom}(g)\), choose \(a\in A_i\) and extend \(g\) by \(g(i)=a\). Contradiction.`],
+        ['Conclusion',String.raw`Hence \(\operatorname{dom}(g)=I\), so \(g\) is a full choice function.`]
       ]
     }
   };
@@ -638,9 +707,30 @@ ul.clean li{margin:6px 0}.kbd{font-family:var(--mono);font-size:11px;border:1px 
   let currentFocus = 'AC';
   const statementBox = document.getElementById('statementBox');
   const focusBtns = document.querySelectorAll('#focusBtns button');
+  function escapeHTML(value){
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+  function renderKatex(target){
+    if(!target || !window.renderMathInElement) return;
+    renderMathInElement(target, {
+      delimiters: [
+        {left:'\\[', right:'\\]', display:true},
+        {left:'\\(', right:'\\)', display:false}
+      ],
+      throwOnError:false,
+      strict:'ignore',
+      trust:false
+    });
+  }
   function setStatement(key){
     const s = statements[key] || statements.AC;
-    statementBox.innerHTML = `<div class="tag">${s.tag}</div><div>${s.body}</div>`;
+    statementBox.innerHTML = `<div class="tag">${escapeHTML(s.tag)}</div><div class="formulaBody">${escapeHTML(s.body)}</div>`;
+    renderKatex(statementBox);
   }
   function renderTriangle(key){
     currentFocus = key;
@@ -670,15 +760,25 @@ ul.clean li{margin:6px 0}.kbd{font-family:var(--mono);font-size:11px;border:1px 
   function renderProof(){
     const data = proofData[proofSelect.value];
     proofTag.textContent = data.tag;
-    proofFormula.innerHTML = `<div class="tag">logical route</div><div>${data.formula}</div>`;
-    proofSteps.innerHTML = data.steps.map((s,i)=>`<div class="step"><div class="num">${i+1}</div><div><b>${s[0]}.</b> ${s[1]}</div></div>`).join('');
+    proofFormula.innerHTML = `<div class="tag">logical route</div><div class="formulaBody">${escapeHTML(data.formula)}</div>`;
+    proofSteps.innerHTML = data.steps.map((s,i)=>`<div class="step"><div class="num">${i+1}</div><div><b>${escapeHTML(s[0])}.</b> ${escapeHTML(s[1])}</div></div>`).join('');
+    renderKatex(proofFormula);
+    renderKatex(proofSteps);
     const focusMap = {WOAC:'WOAC',ACZorn:'ACZorn',ZornWO:'ZornWO',ZornAC:'Zorn'};
     renderTriangle(focusMap[proofSelect.value]);
   }
   proofSelect.addEventListener('change', renderProof);
   renderProof();
 
-  const greek = ['Î±','Î²','Î³','Î´','Îµ','Î¶','Î·','Î¸','Îº','Î»','Î¼','Î½','Î¾','Ï€','Ï','Ïƒ','Ï„','Ï†','Ï‡','Ïˆ'];
+  const greek = ['α','β','γ','δ','ε','ζ','η','θ','κ','λ','μ','ν','ξ','π','ρ','σ','τ','φ','χ','ψ'];
+  const greekLatex = {
+    'α':'\\alpha','β':'\\beta','γ':'\\gamma','δ':'\\delta','ε':'\\varepsilon','ζ':'\\zeta','η':'\\eta','θ':'\\theta','κ':'\\kappa','λ':'\\lambda','μ':'\\mu','ν':'\\nu','ξ':'\\xi','π':'\\pi','ρ':'\\rho','σ':'\\sigma','τ':'\\tau','φ':'\\varphi','χ':'\\chi','ψ':'\\psi'
+  };
+  function labelToTex(label){
+    const m = String(label).match(/^(.+)<sub>(\d+)<\/sub>$/);
+    if(!m) return escapeHTML(label);
+    return `${greekLatex[m[1]] || m[1]}_{${m[2]}}`;
+  }
   let orderSeed = 0;
   function seededShuffle(arr, seed){
     const a = arr.slice();
@@ -713,13 +813,17 @@ ul.clean li{margin:6px 0}.kbd{font-family:var(--mono);font-size:11px;border:1px 
     const all = fams.flat();
     const order = seededShuffle(all, orderSeed + k*17 + size*31);
     const rank = new Map(order.map((x,i)=>[x,i]));
-    document.getElementById('globalOrder').innerHTML = `<span class="label">global well-order:</span>` + order.map(x=>`<span class="badge">${x}</span>`).join('<span style="color:var(--muted)">â‰º</span>');
+    const globalOrderEl = document.getElementById('globalOrder');
+    globalOrderEl.innerHTML = `<span class="label">global well-order:</span>` + order.map(x=>`<span class="badge">\\(${labelToTex(x)}\\)</span>`).join('<span class="orderSymbol">\\(\\prec\\)</span>');
     const html = fams.map((set,i)=>{
       const chosen = set.slice().sort((a,b)=>rank.get(a)-rank.get(b))[0];
-      const els = set.map(x=>`<span class="el ${x===chosen?'chosen':''}">${x}</span>`).join('');
-      return `<div class="setBox"><div class="setName">A<sub>${i+1}</sub></div><div class="elements">${els}</div><div class="mapOut">f(${i+1})=${chosen}</div></div>`;
+      const els = set.map(x=>`<span class="el ${x===chosen?'chosen':''}">\\(${labelToTex(x)}\\)</span>`).join('');
+      return `<div class="setBox"><div class="setName">\\(A_{${i+1}}\\)</div><div class="elements">${els}</div><div class="mapOut">\\(f(${i+1})=${labelToTex(chosen)}\\)</div></div>`;
     }).join('');
-    document.getElementById('familyGrid').innerHTML = html;
+    const familyGridEl = document.getElementById('familyGrid');
+    familyGridEl.innerHTML = html;
+    renderKatex(globalOrderEl);
+    renderKatex(familyGridEl);
   }
   document.getElementById('familyCount').addEventListener('input', renderChoice);
   document.getElementById('setSize').addEventListener('input', renderChoice);
@@ -749,7 +853,7 @@ ul.clean li{margin:6px 0}.kbd{font-family:var(--mono);font-size:11px;border:1px 
   function keyOf(assign,n){
     let parts=[];
     for(let i=0;i<n;i++) if(assign[i]!==undefined) parts.push((i+1)+String(assign[i]));
-    return parts.length?parts.join(''):'âˆ…';
+    return parts.length?parts.join(''):'∅';
   }
   function extendsByOne(a,b,n){
     let diff=0;
@@ -813,7 +917,8 @@ ul.clean li{margin:6px 0}.kbd{font-family:var(--mono);font-size:11px;border:1px 
     const total = depth===n;
     document.getElementById('zornText').innerHTML = total
       ? `<b>Maximal partial choice function.</b> At the top level the domain is all ${n} sets. It is a full choice function.`
-      : `<b>Chain union.</b> The highlighted chain has upper bound <span class="kbd">${upperKey}</span>. Since the domain is not full, it can be extended by choosing from A<sub>${depth+1}</sub>; hence it is not maximal.`;
+      : `<b>Chain union.</b> The highlighted chain has upper bound <span class="kbd">${upperKey}</span>. Since the domain is not full, it can be extended by choosing from <span class="math">\\(A_{${depth+1}}\\)</span>; hence it is not maximal.`;
+    renderKatex(document.getElementById('zornText'));
   }
   document.getElementById('zornN').addEventListener('input', renderZorn);
   document.getElementById('chainDepth').addEventListener('input', renderZorn);
@@ -835,13 +940,13 @@ ul.clean li{margin:6px 0}.kbd{font-family:var(--mono);font-size:11px;border:1px 
     const elems=Array.from({length:n},(_,i)=>'x'+(i+1));
     const ordered=elems.slice(0,k);
     const missing=elems.slice(k);
-    const title=el('text',{x:34,y:35,class:'levelText'}); title.textContent='partial well-ordering of A âŠ† X'; wellSvg.appendChild(title);
+    const title=el('text',{x:34,y:35,class:'levelText'}); title.textContent='partial well-ordering of A ⊆ X'; wellSvg.appendChild(title);
     const y=105, boxW=Math.min(58,(W-80)/Math.max(n,1)-6), gap=8;
     const startX=40;
     ordered.forEach((x,i)=>{
       const rect=el('rect',{x:startX+i*(boxW+gap),y:y,width:boxW,height:46,rx:13,class:'wellBox partial'}); wellSvg.appendChild(rect);
       const tx=el('text',{x:startX+i*(boxW+gap)+boxW/2,y:y+24,class:'wellText'}); tx.textContent=x; wellSvg.appendChild(tx);
-      if(i<ordered.length-1){const ar=el('text',{x:startX+i*(boxW+gap)+boxW+gap/2,y:y+28,class:'wellSmall'}); ar.textContent='â‰º'; wellSvg.appendChild(ar);}
+      if(i<ordered.length-1){const ar=el('text',{x:startX+i*(boxW+gap)+boxW+gap/2,y:y+28,class:'wellSmall'}); ar.textContent='≺'; wellSvg.appendChild(ar);}
     });
     if(ordered.length===0){
       const empty=el('text',{x:W/2,y:y+27,class:'wellText'}); empty.textContent='empty well-ordering'; wellSvg.appendChild(empty);
@@ -859,12 +964,14 @@ ul.clean li{margin:6px 0}.kbd{font-family:var(--mono);font-size:11px;border:1px 
       const tx=el('text',{x:lastX+106,y:183,class:'wellSmall'}); tx.textContent='append as new greatest'; wellSvg.appendChild(tx);
     }
     document.getElementById('wellText').innerHTML = missing.length
-      ? `<b>Not maximal.</b> If <span class="math">Aâ‰ X</span>, choose one missing point, for instance <span class="kbd">${missing[0]}</span>, and append it as a new greatest element. This is a strict end-extension.`
-      : `<b>Maximal covers X.</b> No point is missing. The partial well-ordering is now a well-ordering of the whole finite set; in the theorem, Zorn forces the same conclusion for arbitrary X.`;
+      ? `<b>Not maximal.</b> If <span class="math">\\(A\\ne X\\)</span>, choose one missing point, for instance <span class="kbd">${missing[0]}</span>, and append it as a new greatest element. This is a strict end-extension.`
+      : `<b>Maximal covers X.</b> No point is missing. The partial well-ordering is now a well-ordering of the whole finite set; in the theorem, Zorn forces the same conclusion for arbitrary <span class="math">\\(X\\)</span>.`;
+    renderKatex(document.getElementById('wellText'));
   }
   document.getElementById('wellN').addEventListener('input', renderWell);
   document.getElementById('wellK').addEventListener('input', renderWell);
   renderWell();
+  window.addEventListener('DOMContentLoaded', () => renderKatex(document.body));
 })();
 </script>
 </body>

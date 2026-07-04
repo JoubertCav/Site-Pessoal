@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
@@ -9,6 +9,9 @@
   <meta name="description" content="Interactive real analysis diagram for set operations and Boolean algebra.">
     <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
 <title>Set Operations and Boolean Algebra | Real Analysis Diagrams</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
   <script>
@@ -343,6 +346,20 @@
 
     .footer-note{color:var(--muted); font-size:.82rem; text-align:center; margin-top:18px}
 
+    .katex-inline,.katex-block{display:inline-block}
+    .katex-block{display:block; overflow-x:auto; overflow-y:hidden; padding:.08rem 0}
+    .katex-display{margin:.25em 0}
+    .formula{font-family:var(--sans)}
+    .formula .katex{font-size:1.06em}
+    .formula .katex-display .katex{font-size:1.14em}
+    .math-large .katex{font-size:1.20em; color:var(--accent)}
+    .expr .katex{font-size:1.05em}
+    .summary{font-family:var(--sans)}
+    .summary .katex{font-size:1.02em}
+    .truth-table .katex{font-size:.98em}
+    .atom .name .katex{font-size:1.04em}
+    .law-math{display:block; margin-bottom:.35rem}
+
     @media (max-width: 980px){
       header,.grid{grid-template-columns:1fr}
       .theme-card{min-width:0}
@@ -365,14 +382,14 @@
         <div class="eyebrow">
           <span class="pill">Real Analysis Notebook</span>
           <span class="pill">Sets as predicates</span>
-          <span class="pill">Boolean algebra on ð’«(U)</span>
+          <span class="pill">Boolean algebra on 𝒫(U)</span>
         </div>
         <h1>Set Operations<br/>and Boolean Algebra</h1>
         <p class="subtitle">A set is a truth region inside a fixed universe. Boolean laws are not mysterious identities: they are pointwise logical equivalences, visible atom by atom.</p>
       </section>
       <aside class="theme-card">
         <div class="small">Interface</div>
-        <button id="themeToggle" class="theme-toggle" type="button"><span>Light mode</span><span>â—</span></button>
+        <button id="themeToggle" class="theme-toggle" type="button"><span>Light mode</span><span>◐</span></button>
       </aside>
     </header>
 
@@ -401,15 +418,15 @@
         </div>
         <div class="card-pad controls">
           <label class="control">
-            <div class="control-top"><span>Operation</span><span class="value" id="opSymbol">A âˆª B</span></div>
+            <div class="control-top"><span>Operation</span><span class="value" id="opSymbol">A ∪ B</span></div>
             <select id="operation">
-              <option value="union">Union: A âˆª B</option>
-              <option value="intersection">Intersection: A âˆ© B</option>
-              <option value="Ac">Complement: Aá¶œ</option>
-              <option value="Bc">Complement: Bá¶œ</option>
-              <option value="AdiffB">Difference: A âˆ– B</option>
-              <option value="BdiffA">Difference: B âˆ– A</option>
-              <option value="symdiff">Symmetric difference: A â–³ B</option>
+              <option value="union">Union: A ∪ B</option>
+              <option value="intersection">Intersection: A ∩ B</option>
+              <option value="Ac">Complement: Aᶜ</option>
+              <option value="Bc">Complement: Bᶜ</option>
+              <option value="AdiffB">Difference: A ∖ B</option>
+              <option value="BdiffA">Difference: B ∖ A</option>
+              <option value="symdiff">Symmetric difference: A △ B</option>
             </select>
           </label>
 
@@ -446,14 +463,14 @@
             <p class="card-note">Both sides shade the same subset of U. Equality means no atom differs.</p>
           </div>
           <select id="law" style="max-width:310px">
-            <option value="demorgan_union">De Morgan: (A âˆª B)á¶œ</option>
-            <option value="demorgan_intersection">De Morgan: (A âˆ© B)á¶œ</option>
-            <option value="dist_inter">Distributivity: âˆ© over âˆª</option>
-            <option value="dist_union">Distributivity: âˆª over âˆ©</option>
+            <option value="demorgan_union">De Morgan: (A ∪ B)ᶜ</option>
+            <option value="demorgan_intersection">De Morgan: (A ∩ B)ᶜ</option>
+            <option value="dist_inter">Distributivity: ∩ over ∪</option>
+            <option value="dist_union">Distributivity: ∪ over ∩</option>
             <option value="difference">Difference identity</option>
             <option value="symdiff">Symmetric difference identity</option>
-            <option value="absorption_inter">Absorption: A âˆ© (A âˆª B)</option>
-            <option value="absorption_union">Absorption: A âˆª (A âˆ© B)</option>
+            <option value="absorption_inter">Absorption: A ∩ (A ∪ B)</option>
+            <option value="absorption_union">Absorption: A ∪ (A ∩ B)</option>
           </select>
         </div>
         <div class="law-panel">
@@ -481,7 +498,7 @@
         </div>
         <div class="card-pad">
           <table class="truth-table" id="truthTable">
-            <thead><tr><th>A(x)</th><th>B(x)</th><th id="resHead">A âˆª B</th><th>atom</th></tr></thead>
+            <thead><tr><th><span class="katex-inline" data-tex="A(x)"></span></th><th><span class="katex-inline" data-tex="B(x)"></span></th><th id="resHead"><span class="katex-inline" data-tex="A\cup B"></span></th><th>atom</th></tr></thead>
             <tbody></tbody>
           </table>
         </div>
@@ -505,7 +522,7 @@
         </div>
         <div class="card-pad notice">
           <div class="notice-item"><span class="dot"></span><span><b>The universe is fixed.</b> Complements are always relative to U, not to the whole plane.</span></div>
-          <div class="notice-item"><span class="dot"></span><span><b>Membership is logical.</b> x âˆˆ A âˆª B means A(x) âˆ¨ B(x).</span></div>
+          <div class="notice-item"><span class="dot"></span><span><b>Membership is logical.</b> <span class="katex-inline" data-tex="x\in A\cup B"></span> means <span class="katex-inline" data-tex="A(x)\lor B(x)"></span>.</span></div>
           <div class="notice-item"><span class="dot"></span><span><b>Laws are pointwise.</b> Two sets are equal iff every point has the same truth value on both sides.</span></div>
           <div class="notice-item"><span class="dot"></span><span><b>Atoms explain everything.</b> If each atom is classified identically, the identities hold globally.</span></div>
         </div>
@@ -518,12 +535,12 @@
           </div>
         </div>
         <div class="card-pad summary">
-          <div>A âˆª B = {x âˆˆ U : A(x) âˆ¨ B(x)}, &nbsp; A âˆ© B = {x âˆˆ U : A(x) âˆ§ B(x)}.</div>
-          <div>Aá¶œ = U âˆ– A = {x âˆˆ U : Â¬A(x)}, &nbsp; A âˆ– B = A âˆ© Bá¶œ.</div>
-          <div>A â–³ B = (A âˆ– B) âˆª (B âˆ– A) = {x âˆˆ U : A(x) âŠ• B(x)}.</div>
-          <div>De Morgan: (A âˆª B)á¶œ = Aá¶œ âˆ© Bá¶œ, &nbsp; (A âˆ© B)á¶œ = Aá¶œ âˆª Bá¶œ.</div>
-          <div>Distributivity: A âˆ© (B âˆª C) = (A âˆ© B) âˆª (A âˆ© C), &nbsp; A âˆª (B âˆ© C) = (A âˆª B) âˆ© (A âˆª C).</div>
-          <div>Method of proof: take arbitrary x âˆˆ U, translate membership into logic, simplify the proposition, translate back into sets.</div>
+          <div><span class="katex-block" data-display="true" data-tex="A\cup B=\{x\in U: A(x)\lor B(x)\},\qquad A\cap B=\{x\in U: A(x)\land B(x)\}"></span></div>
+          <div><span class="katex-block" data-display="true" data-tex="A^{c}=U\setminus A=\{x\in U:\neg A(x)\},\qquad A\setminus B=A\cap B^{c}"></span></div>
+          <div><span class="katex-block" data-display="true" data-tex="A\triangle B=(A\setminus B)\cup(B\setminus A)=\{x\in U:A(x)\oplus B(x)\}"></span></div>
+          <div><span class="katex-block" data-display="true" data-tex="(A\cup B)^c=A^c\cap B^c,\qquad (A\cap B)^c=A^c\cup B^c"></span></div>
+          <div><span class="katex-block" data-display="true" data-tex="A\cap(B\cup C)=(A\cap B)\cup(A\cap C),\qquad A\cup(B\cap C)=(A\cup B)\cap(A\cup C)"></span></div>
+          <div>Method of proof: take arbitrary <span class="katex-inline" data-tex="x\in U"></span>, translate membership into logic, simplify the proposition, translate back into sets.</div>
         </div>
       </section>
     </main>
@@ -535,10 +552,34 @@
 const $ = (id)=>document.getElementById(id);
 const root = document.documentElement;
 
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+function math(tex, display=false, extraClass=''){
+  const cls = display ? 'katex-block' : 'katex-inline';
+  return `<span class="${cls}${extraClass ? ' '+extraClass : ''}" data-display="${display ? 'true' : 'false'}" data-tex="${escapeHtml(tex)}"></span>`;
+}
+function renderKatex(scope=document){
+  if(!window.katex) return;
+  scope.querySelectorAll('[data-tex]').forEach(el=>{
+    const tex = el.getAttribute('data-tex') || '';
+    const display = el.getAttribute('data-display') === 'true';
+    try{
+      katex.render(tex, el, {displayMode:display, throwOnError:false, strict:'ignore', trust:false});
+    }catch(err){
+      el.textContent = tex;
+    }
+  });
+}
+
 const controls = {
   operation: $('operation'), law: $('law'), radius: $('radius'), separation: $('separation'),
   pointX: $('pointX'), pointY: $('pointY')
 };
+
+// Preserve LaTeX backslashes inside JavaScript strings before passing them to KaTeX.
+const T = String.raw;
 
 const mainCanvas = $('mainCanvas');
 const leftCanvas = $('leftCanvas');
@@ -577,13 +618,13 @@ function roundRect(ctx,x,y,w,h,r){
 
 function opMeta(op){
   return {
-    union:{symbol:'A âˆª B', formula:'A âˆª B = { x âˆˆ U : A(x) âˆ¨ B(x) }', text:'true when x belongs to A, to B, or to both.'},
-    intersection:{symbol:'A âˆ© B', formula:'A âˆ© B = { x âˆˆ U : A(x) âˆ§ B(x) }', text:'true only on the common region.'},
-    Ac:{symbol:'Aá¶œ', formula:'Aá¶œ = U âˆ– A = { x âˆˆ U : Â¬A(x) }', text:'everything in U outside A.'},
-    Bc:{symbol:'Bá¶œ', formula:'Bá¶œ = U âˆ– B = { x âˆˆ U : Â¬B(x) }', text:'everything in U outside B.'},
-    AdiffB:{symbol:'A âˆ– B', formula:'A âˆ– B = A âˆ© Bá¶œ = { x âˆˆ U : A(x) âˆ§ Â¬B(x) }', text:'points of A after removing the part also in B.'},
-    BdiffA:{symbol:'B âˆ– A', formula:'B âˆ– A = B âˆ© Aá¶œ = { x âˆˆ U : B(x) âˆ§ Â¬A(x) }', text:'points of B after removing the part also in A.'},
-    symdiff:{symbol:'A â–³ B', formula:'A â–³ B = { x âˆˆ U : A(x) âŠ• B(x) }', text:'true when membership differs: in exactly one set.'}
+    union:{symbol:'A ∪ B', tex:T`A\cup B`, formulaTex:T`A\cup B=\{x\in U:A(x)\lor B(x)\}`, text:'true when x belongs to A, to B, or to both.'},
+    intersection:{symbol:'A ∩ B', tex:T`A\cap B`, formulaTex:T`A\cap B=\{x\in U:A(x)\land B(x)\}`, text:'true only on the common region.'},
+    Ac:{symbol:'Aᶜ', tex:T`A^{c}`, formulaTex:T`A^{c}=U\setminus A=\{x\in U:\neg A(x)\}`, text:'everything in U outside A.'},
+    Bc:{symbol:'Bᶜ', tex:T`B^{c}`, formulaTex:T`B^{c}=U\setminus B=\{x\in U:\neg B(x)\}`, text:'everything in U outside B.'},
+    AdiffB:{symbol:'A ∖ B', tex:T`A\setminus B`, formulaTex:T`A\setminus B=A\cap B^{c}=\{x\in U:A(x)\land\neg B(x)\}`, text:'points of A after removing the part also in B.'},
+    BdiffA:{symbol:'B ∖ A', tex:T`B\setminus A`, formulaTex:T`B\setminus A=B\cap A^{c}=\{x\in U:B(x)\land\neg A(x)\}`, text:'points of B after removing the part also in A.'},
+    symdiff:{symbol:'A △ B', tex:T`A\triangle B`, formulaTex:T`A\triangle B=\{x\in U:A(x)\oplus B(x)\}`, text:'true when membership differs: in exactly one set.'}
   }[op];
 }
 
@@ -717,15 +758,18 @@ function updateControlsText(){
   $('yVal').textContent=Number(controls.pointY.value).toFixed(2);
   const meta=opMeta(controls.operation.value);
   $('opSymbol').textContent=meta.symbol;
-  $('definitionBox').innerHTML=`<span class="mathline math-large">${meta.symbol}</span><span class="mathline">${meta.formula}</span><span class="mathline" style="color:var(--muted); font-family:var(--sans); font-size:.92rem">Geometric reading: ${meta.text}</span>`;
-  $('resHead').textContent=meta.symbol;
+  $('definitionBox').innerHTML=`
+    <span class="mathline math-large">${math(meta.tex,true)}</span>
+    <span class="mathline">${math(meta.formulaTex,true)}</span>
+    <span class="mathline" style="color:var(--muted); font-family:var(--sans); font-size:.92rem">Geometric reading: ${meta.text}</span>`;
+  $('resHead').innerHTML=math(meta.tex);
 }
 
 const atomInfo = [
-  {A:true,B:true, name:'A âˆ© B', desc:'inside both sets'},
-  {A:true,B:false, name:'A âˆ© Bá¶œ', desc:'inside A only'},
-  {A:false,B:true, name:'Aá¶œ âˆ© B', desc:'inside B only'},
-  {A:false,B:false, name:'Aá¶œ âˆ© Bá¶œ', desc:'outside both, but still inside U'}
+  {A:true,B:true, tex:T`A\cap B`, desc:'inside both sets'},
+  {A:true,B:false, tex:T`A\cap B^{c}`, desc:'inside A only'},
+  {A:false,B:true, tex:T`A^{c}\cap B`, desc:'inside B only'},
+  {A:false,B:false, tex:T`A^{c}\cap B^{c}`, desc:'outside both, but still inside U'}
 ];
 
 function updateTables(){
@@ -743,56 +787,64 @@ function updateTables(){
       <td class="${row.A?'true':'false'}">${row.A?'1':'0'}</td>
       <td class="${row.B?'true':'false'}">${row.B?'1':'0'}</td>
       <td class="${res?'true':'false'}">${res?'1':'0'}</td>
-      <td>${row.name}</td>
+      <td>${math(row.tex)}</td>
     </tr>`;
   }).join('');
 
   $('atoms').innerHTML=atomInfo.map(row=>{
     const res=evalOp(op,row.A,row.B);
-    return `<div class="atom ${res?'on':''}"><div class="name">${row.name}</div><div class="desc">${row.desc}<br/>${opMeta(op).symbol}: <b style="color:${res?'var(--good)':'var(--muted)'}">${res?'included':'excluded'}</b></div></div>`;
+    return `<div class="atom ${res?'on':''}"><div class="name">${math(row.tex)}</div><div class="desc">${row.desc}<br/>${math(opMeta(op).tex)}: <b style="color:${res?'var(--good)':'var(--muted)'}">${res?'included':'excluded'}</b></div></div>`;
   }).join('');
 }
 
 const laws = {
   demorgan_union:{
-    left:'(A âˆª B)á¶œ', right:'Aá¶œ âˆ© Bá¶œ', useC:false,
+    leftTex:T`(A\cup B)^{c}`, rightTex:T`A^{c}\cap B^{c}`, useC:false,
     L:({A,B})=>!(A||B), R:({A,B})=>(!A)&&(!B),
-    text:'Pointwise: Â¬(A(x) âˆ¨ B(x)) â‡” Â¬A(x) âˆ§ Â¬B(x).'
+    textTex:T`\neg(A(x)\lor B(x))\Longleftrightarrow \neg A(x)\land\neg B(x)`,
+    note:'De Morgan turns the complement of an “or” into an “and” of complements.'
   },
   demorgan_intersection:{
-    left:'(A âˆ© B)á¶œ', right:'Aá¶œ âˆª Bá¶œ', useC:false,
+    leftTex:T`(A\cap B)^{c}`, rightTex:T`A^{c}\cup B^{c}`, useC:false,
     L:({A,B})=>!(A&&B), R:({A,B})=>(!A)||(!B),
-    text:'Pointwise: Â¬(A(x) âˆ§ B(x)) â‡” Â¬A(x) âˆ¨ Â¬B(x).'
+    textTex:T`\neg(A(x)\land B(x))\Longleftrightarrow \neg A(x)\lor\neg B(x)`,
+    note:'De Morgan turns the complement of an “and” into an “or” of complements.'
   },
   dist_inter:{
-    left:'A âˆ© (B âˆª C)', right:'(A âˆ© B) âˆª (A âˆ© C)', useC:true,
+    leftTex:T`A\cap(B\cup C)`, rightTex:T`(A\cap B)\cup(A\cap C)`, useC:true,
     L:({A,B,C})=>A&&(B||C), R:({A,B,C})=>(A&&B)||(A&&C),
-    text:'Pointwise: A(x) âˆ§ (B(x) âˆ¨ C(x)) â‡” (A(x) âˆ§ B(x)) âˆ¨ (A(x) âˆ§ C(x)).'
+    textTex:T`A(x)\land(B(x)\lor C(x))\Longleftrightarrow (A(x)\land B(x))\lor(A(x)\land C(x))`,
+    note:'Intersection distributes over union pointwise.'
   },
   dist_union:{
-    left:'A âˆª (B âˆ© C)', right:'(A âˆª B) âˆ© (A âˆª C)', useC:true,
+    leftTex:T`A\cup(B\cap C)`, rightTex:T`(A\cup B)\cap(A\cup C)`, useC:true,
     L:({A,B,C})=>A||(B&&C), R:({A,B,C})=>(A||B)&&(A||C),
-    text:'Pointwise: A(x) âˆ¨ (B(x) âˆ§ C(x)) â‡” (A(x) âˆ¨ B(x)) âˆ§ (A(x) âˆ¨ C(x)).'
+    textTex:T`A(x)\lor(B(x)\land C(x))\Longleftrightarrow (A(x)\lor B(x))\land(A(x)\lor C(x))`,
+    note:'Union distributes over intersection pointwise.'
   },
   difference:{
-    left:'A âˆ– B', right:'A âˆ© Bá¶œ', useC:false,
+    leftTex:T`A\setminus B`, rightTex:T`A\cap B^{c}`, useC:false,
     L:({A,B})=>A&&!B, R:({A,B})=>A&&(!B),
-    text:'Difference is not a new primitive: it is intersection with the complement.'
+    textTex:T`x\in A\setminus B\Longleftrightarrow x\in A\text{ and }x\notin B`,
+    note:'Difference is intersection with the complement.'
   },
   symdiff:{
-    left:'A â–³ B', right:'(A âˆ– B) âˆª (B âˆ– A)', useC:false,
+    leftTex:T`A\triangle B`, rightTex:T`(A\setminus B)\cup(B\setminus A)`, useC:false,
     L:({A,B})=>A!==B, R:({A,B})=>(A&&!B)||(B&&!A),
-    text:'Symmetric difference is exclusive-or: true exactly when memberships disagree.'
+    textTex:T`A(x)\oplus B(x)\Longleftrightarrow (A(x)\land\neg B(x))\lor(B(x)\land\neg A(x))`,
+    note:'Symmetric difference is exclusive-or.'
   },
   absorption_inter:{
-    left:'A âˆ© (A âˆª B)', right:'A', useC:false,
+    leftTex:T`A\cap(A\cup B)`, rightTex:T`A`, useC:false,
     L:({A,B})=>A&&(A||B), R:({A})=>A,
-    text:'Absorption: once A(x) is required, adding â€œor B(x)â€ changes nothing.'
+    textTex:T`A(x)\land(A(x)\lor B(x))\Longleftrightarrow A(x)`,
+    note:'Once A is required, adding “or B” changes nothing.'
   },
   absorption_union:{
-    left:'A âˆª (A âˆ© B)', right:'A', useC:false,
+    leftTex:T`A\cup(A\cap B)`, rightTex:T`A`, useC:false,
     L:({A,B})=>A||(A&&B), R:({A})=>A,
-    text:'Absorption: A already contains the smaller condition A âˆ§ B.'
+    textTex:T`A(x)\lor(A(x)\land B(x))\Longleftrightarrow A(x)`,
+    note:'A already contains the smaller condition A∩B.'
   }
 };
 
@@ -840,9 +892,9 @@ function countLawDiff(law){
 
 function updateLaw(){
   const law=laws[controls.law.value];
-  $('leftExpr').textContent=law.left;
-  $('rightExpr').textContent=law.right;
-  $('lawText').textContent=law.text;
+  $('leftExpr').innerHTML=math(law.leftTex);
+  $('rightExpr').innerHTML=math(law.rightTex);
+  $('lawText').innerHTML=`<span class="law-math">${math(law.textTex,true)}</span><span>${law.note}</span>`;
   const diff=countLawDiff(law);
   $('lawBadge').textContent = `${diff} differing atom${diff===1?'':'s'}`;
   drawMini(leftCanvas, law.L, law.useC);
@@ -854,6 +906,7 @@ function renderAll(){
   drawMain();
   updateTables();
   updateLaw();
+  renderKatex();
 }
 
 Object.values(controls).forEach(el=>el.addEventListener('input', renderAll));
@@ -867,6 +920,7 @@ $('themeToggle').addEventListener('click',()=>{
 });
 
 renderAll();
+window.addEventListener('load', () => { renderKatex(); renderAll(); });
 </script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -9,6 +9,9 @@
 <meta name="description" content="Interactive real analysis diagram for completeness and the supremum property.">
   <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
 <title>Completeness and the Supremum Property | Real Analysis Diagrams</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
 <script>
@@ -178,6 +181,37 @@ svg{display:block;width:100%;height:auto;border-radius:20px;background:
 code{font-family:"SFMono-Regular",Consolas,monospace;background:var(--surface2);padding:2px 5px;border-radius:6px}
 @media(max-width:1050px){.grid{grid-template-columns:1fr}.diagram-wrap{min-height:auto}.hero{grid-template-columns:1fr}.mode-card{justify-content:flex-start}.footer-summary{grid-template-columns:1fr 1fr}}
 @media(max-width:650px){.app{padding:18px 12px 28px}.title-card{padding:20px;border-radius:22px}.footer-summary{grid-template-columns:1fr}.tabs{padding-bottom:10px}.card{border-radius:20px}}
+
+/* --- KaTeX and layout stability --- */
+.grid > *, .card, .definition, .notice, .summary-card { min-width:0; }
+.grid{grid-template-columns:minmax(0,290px) minmax(0,1fr) minmax(0,300px)}
+.formula{
+  overflow-x:auto;
+  overflow-y:hidden;
+  max-width:100%;
+  line-height:1.55;
+}
+.katex-host{
+  display:block;
+  max-width:100%;
+  overflow-x:auto;
+  overflow-y:hidden;
+  padding:2px 0;
+}
+.katex-inline{
+  display:inline-block;
+  max-width:100%;
+  overflow-x:auto;
+  vertical-align:middle;
+}
+.formula .katex-display{
+  margin:.25em 0;
+  text-align:left;
+}
+.definition .katex-display{ margin:.2em 0; }
+.katex{ font-size:1.02em; }
+.small .katex{ font-size:.98em; }
+
 </style>
 </head>
 <body data-theme="light">
@@ -195,7 +229,7 @@ code{font-family:"SFMono-Regular",Consolas,monospace;background:var(--surface2);
       </div>
     </div>
     <div class="mode-card">
-      <button id="themeBtn" class="toggle" aria-label="toggle theme">â— Theme</button>
+      <button id="themeBtn" class="toggle" aria-label="toggle theme">◐ Theme</button>
     </div>
   </header>
 
@@ -211,15 +245,15 @@ code{font-family:"SFMono-Regular",Consolas,monospace;background:var(--surface2);
       <aside class="card pad">
         <div class="card-title"><h2>Controls</h2><span class="badge">set on a line</span></div>
         <div class="definition">
-          <div class="formula math">s = sup A â‡” s is an upper bound and every smaller number fails.</div>
+          <div class="formula"><span class="katex-host" data-katex="s=\sup A\iff s\text{ is an upper bound and every smaller number fails.}"></span></div>
         </div>
         <div class="control">
           <label for="setModel">Set model</label>
           <select id="setModel" class="select">
             <option value="open">A = (0,a)</option>
             <option value="closed">A = [0,a]</option>
-            <option value="sequence">A = {a âˆ’ 1/n : nâˆˆN}</option>
-            <option value="sqrt">A = {qâˆˆQ : qÂ² &lt; 2}</option>
+            <option value="sequence">A = {a − 1/n : n∈N}</option>
+            <option value="sqrt">A = {q∈Q : q² &lt; 2}</option>
           </select>
         </div>
         <div class="control" id="aControl">
@@ -248,9 +282,9 @@ code{font-family:"SFMono-Regular",Consolas,monospace;background:var(--surface2);
         <div class="notice" id="supNotice"></div>
         <h3>Exam summary</h3>
         <div class="definition small">
-          To prove <span class="math">s = sup A</span>, prove:<br><br>
-          1. <span class="math">âˆ€xâˆˆA, xâ‰¤s</span>.<br>
-          2. <span class="math">âˆ€Îµ&gt;0, âˆƒxâˆˆA : sâˆ’Îµ &lt; x â‰¤ s</span>.<br><br>
+          To prove <span class="katex-inline" data-katex="s=\sup A" data-display="false"></span>, prove:<br><br>
+          <span class="katex-host" data-katex="1.\ \forall x\in A,\ x\le s"></span>
+          <span class="katex-host" data-katex="2.\ \forall \varepsilon>0,\ \exists x\in A:\ s-\varepsilon<x\le s"></span>
           The second line says: no smaller number can still bound the set.
         </div>
       </aside>
@@ -262,13 +296,13 @@ code{font-family:"SFMono-Regular",Consolas,monospace;background:var(--surface2);
       <aside class="card pad">
         <div class="card-title"><h2>Controls</h2><span class="badge">cut = left set</span></div>
         <div class="definition">
-          <div class="formula math">L is a cut: nonempty, proper, downward closed, with no largest element.</div>
+          <div class="formula"><span class="katex-host" data-katex="L\text{ is a cut: nonempty, proper, downward closed, and has no largest element.}"></span></div>
         </div>
         <div class="control">
           <label for="cutModel">Cut model</label>
           <select id="cutModel" class="select">
             <option value="rational">rational cut L = {x : x &lt; c}</option>
-            <option value="sqrt2">irrational cut L = {qâˆˆQ : qÂ² &lt; 2 or q &lt; 0}</option>
+            <option value="sqrt2">irrational cut L = {q∈Q : q² &lt; 2 or q &lt; 0}</option>
           </select>
         </div>
         <div class="control" id="cControl">
@@ -296,7 +330,9 @@ code{font-family:"SFMono-Regular",Consolas,monospace;background:var(--surface2);
         <div class="notice" id="cutNotice"></div>
         <h3>Exam summary</h3>
         <div class="definition small">
-          A Dedekind cut records all numbers to the left of a boundary. Completeness says every such admissible boundary is represented by a real number. In <span class="math">Q</span>, the <span class="math">âˆš2</span> boundary is missing.
+          A Dedekind cut records all numbers to the left of a boundary. Completeness says every such admissible boundary is represented by a real number. In
+          <span class="katex-inline" data-katex="\mathbb Q" data-display="false"></span>, the
+          <span class="katex-inline" data-katex="\sqrt2" data-display="false"></span> boundary is missing.
         </div>
       </aside>
     </div>
@@ -307,14 +343,14 @@ code{font-family:"SFMono-Regular",Consolas,monospace;background:var(--surface2);
       <aside class="card pad">
         <div class="card-title"><h2>Controls</h2><span class="badge">interval stack</span></div>
         <div class="definition">
-          <div class="formula math">Iâ‚ âŠ‡ Iâ‚‚ âŠ‡ Iâ‚ƒ âŠ‡ Â·Â·Â·</div>
+          <div class="formula"><span class="katex-host" data-katex="I_1\supseteq I_2\supseteq I_3\supseteq\cdots"></span></div>
         </div>
         <div class="control">
           <label for="nestedModel">Model</label>
           <select id="nestedModel" class="select">
             <option value="closed">closed shrinking intervals</option>
             <option value="open">open intervals (0,1/n)</option>
-            <option value="sqrt">rational intervals trapping âˆš2</option>
+            <option value="sqrt">rational intervals trapping √2</option>
           </select>
         </div>
         <div class="control" id="centerControl">
@@ -322,7 +358,7 @@ code{font-family:"SFMono-Regular",Consolas,monospace;background:var(--surface2);
           <input id="centerVal" type="range" min="-1.6" max="2.2" step="0.05" value="0.45" />
         </div>
         <div class="control" id="radiusControl">
-          <label for="radiusVal">initial radius râ‚ <span class="value" id="radiusOut"></span></label>
+          <label for="radiusVal">initial radius r₁ <span class="value" id="radiusOut"></span></label>
           <input id="radiusVal" type="range" min="0.5" max="2.4" step="0.05" value="1.7" />
         </div>
         <div class="control">
@@ -330,7 +366,7 @@ code{font-family:"SFMono-Regular",Consolas,monospace;background:var(--surface2);
           <input id="levelsVal" type="range" min="4" max="14" step="1" value="9" />
         </div>
         <div class="control" id="decayControl">
-          <label for="decayVal">shrink factor Ï <span class="value" id="decayOut"></span></label>
+          <label for="decayVal">shrink factor ρ <span class="value" id="decayOut"></span></label>
           <input id="decayVal" type="range" min="0.35" max="0.85" step="0.01" value="0.62" />
         </div>
         <div class="notice" id="nestedFormula"></div>
@@ -347,7 +383,7 @@ code{font-family:"SFMono-Regular",Consolas,monospace;background:var(--surface2);
         <div class="notice" id="nestedNotice"></div>
         <h3>Exam summary</h3>
         <div class="definition small">
-          In <span class="math">R</span>, nested nonempty closed bounded intervals have nonempty intersection. If lengths tend to zero, the intersection consists of exactly one point.
+          In <span class="katex-inline" data-katex="\mathbb R" data-display="false"></span>, nested nonempty closed bounded intervals have nonempty intersection. If lengths tend to zero, the intersection consists of exactly one point.
         </div>
       </aside>
     </div>
@@ -375,7 +411,7 @@ code{font-family:"SFMono-Regular",Consolas,monospace;background:var(--surface2);
     </div>
 
     <div class="footer-summary">
-      <div class="summary-card small"><strong>Supremum property</strong>Nonempty and bounded above â‡’ least upper bound exists.</div>
+      <div class="summary-card small"><strong>Supremum property</strong>Nonempty and bounded above <span class="katex-inline" data-katex="\Rightarrow" data-display="false"></span> least upper bound exists.</div>
       <div class="summary-card small"><strong>Dedekind completeness</strong>No admissible cut leaves a hole in the ordered line.</div>
       <div class="summary-card small"><strong>Nested intervals</strong>Closed bounded nested intervals cannot vanish.</div>
       <div class="summary-card small"><strong>Cauchy completeness</strong>Every internally convergent-looking sequence actually converges.</div>
@@ -394,6 +430,30 @@ function line(x1,y1,x2,y2,attrs={}){return E('line',Object.assign({x1,y1,x2,y2,s
 function rect(x,y,w,h,attrs={}){return E('rect',Object.assign({x,y,width:w,height:h,rx:12,fill:'none',stroke:'var(--line)'},attrs));}
 function circle(cx,cy,r,attrs={}){return E('circle',Object.assign({cx,cy,r,fill:'var(--accent)',stroke:'var(--surface)','stroke-width':2},attrs));}
 function clear(svg){ while(svg.firstChild) svg.removeChild(svg.firstChild); }
+
+function escapeAttr(s){
+  return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function katexSpan(expr, display=true, cls='katex-host'){
+  return `<span class="${cls}" data-katex="${escapeAttr(expr)}" data-display="${display?'true':'false'}"></span>`;
+}
+function renderKatex(){
+  if(!window.katex) return;
+  document.querySelectorAll('[data-katex]').forEach(el=>{
+    const expr = el.getAttribute('data-katex') || '';
+    const display = el.getAttribute('data-display') !== 'false';
+    try{
+      katex.render(expr, el, {displayMode:display, throwOnError:false, strict:'ignore', trust:false});
+    }catch(e){
+      el.textContent = expr;
+    }
+  });
+}
+function setMathLines(id, lines){
+  $(id).innerHTML = lines.map(expr => katexSpan(expr, true)).join('');
+  renderKatex();
+}
+
 function scale(domain, range){ const [a,b]=domain,[c,d]=range; return x => c+(x-a)*(d-c)/(b-a); }
 function axis(svg, y, domain=[-2,4], range=[70,750]){
   const x=scale(domain,range);
@@ -480,13 +540,13 @@ function drawSup(){
       svg.appendChild(circle(x(val),y+18*Math.sin(i*1.77),4,{fill:'var(--accent)','stroke':'var(--surface)','stroke-width':1.2,'fill-opacity':.72}));
     }
     svg.appendChild(line(x(0),y,x(sup),y,{stroke:'var(--accent)','stroke-width':3,'stroke-dasharray':'4 7'}));
-    svg.appendChild(T(x(.2),y+52,'rational points with qÂ² < 2','', 'start',12));
+    svg.appendChild(T(x(.2),y+52,'rational points with q² < 2','', 'start',12));
   }
 
   // Sup marker
   svg.appendChild(line(supX,126,supX,420,{stroke:'var(--accent2)','stroke-width':2.5}));
   svg.appendChild(circle(supX,y-54,7,{fill:'var(--accent2)',stroke:'var(--surface)','stroke-width':2}));
-  labelBox(svg,supX,116, model==='sqrt'?'sup = âˆš2':'sup = '+fmt(sup),'var(--surface2)','var(--accent2)');
+  labelBox(svg,supX,116, model==='sqrt'?'sup = √2':'sup = '+fmt(sup),'var(--surface2)','var(--accent2)');
 
   // M marker
   svg.appendChild(line(MX,160,MX,445,{stroke:isUpper(model,M,sup)?'var(--ok)':'var(--danger)','stroke-width':2,'stroke-dasharray':'7 7'}));
@@ -505,17 +565,24 @@ function drawSup(){
   $('ubBadge').className='badge '+(upper?'ok':'no');
   $('ubBadge').textContent=upper?'upper bound':'not upper';
   const attained = model==='closed' ? 'yes' : 'no';
-  const setFormula = model==='open' ? `A=(0,${fmt(a)})` : model==='closed' ? `A=[0,${fmt(a)}]` : model==='sequence' ? `A={${fmt(a)}âˆ’1/n:nâˆˆN}` : 'A={qâˆˆQ:qÂ²<2}';
-  setHtml('supFormula', `<span class="math">${setFormula}</span><br><span class="math">sup A = ${model==='sqrt'?'âˆš2':fmt(sup)}</span>`);
+  const setFormula = model==='open' ? `A=(0,${fmt(a)})` : model==='closed' ? `A=[0,${fmt(a)}]` : model==='sequence' ? `A={${fmt(a)}−1/n:n∈N}` : 'A={q∈Q:q²<2}';
+  const supSetLatex = model==='open'
+    ? `A=(0,${fmt(a)})`
+    : model==='closed'
+    ? `A=[0,${fmt(a)}]`
+    : model==='sequence'
+    ? `A=\\{${fmt(a)}-1/n:n\\in\\mathbb N\\}`
+    : `A=\\{q\\in\\mathbb Q:q^2<2\\}`;
+  setMathLines('supFormula', [supSetLatex, `\\sup A=${model==='sqrt'?'\\sqrt2':fmt(sup)}`]);
   setHtml('supStatus', `
-    <div class="kv"><span>Candidate status</span><strong>${upper?'M bounds A above':'some xâˆˆA lies above M'}</strong></div>
-    <div class="kv"><span>Least upper bound</span><strong>${model==='sqrt'?'âˆš2':fmt(sup)}</strong></div>
+    <div class="kv"><span>Candidate status</span><strong>${upper?'M bounds A above':'some x∈A lies above M'}</strong></div>
+    <div class="kv"><span>Least upper bound</span><strong>${model==='sqrt'?'√2':fmt(sup)}</strong></div>
     <div class="kv"><span>Maximum attained?</span><strong>${attained}</strong></div>
     <div class="kv"><span>Boundary logic</span><strong>${upper?'M is in the upper-bound ray':'M lies left of the ray'}</strong></div>`);
   const notice = model==='closed'
     ? 'Here the supremum is also a maximum: the boundary point belongs to the set.'
     : model==='sqrt'
-    ? 'In R, âˆš2 is the least upper bound. In Q alone, this boundary is missing.'
+    ? 'In R, √2 is the least upper bound. In Q alone, this boundary is missing.'
     : 'The supremum need not belong to the set. It is the first upper bound, not necessarily an element.';
   $('supNotice').textContent=notice;
 }
@@ -535,7 +602,7 @@ function drawCut(){
   svg.appendChild(line(x(domain[0]),y,cx,y,{stroke:'var(--accent)','stroke-width':4}));
   svg.appendChild(line(cx,y,x(domain[1]),y,{stroke:'var(--accent2)','stroke-width':4}));
   svg.appendChild(line(cx,128,cx,440,{stroke:'var(--accent3)','stroke-width':2.5}));
-  labelBox(svg,cx,118,model==='sqrt2'?'boundary âˆš2':'boundary c','var(--surface2)','var(--accent3)');
+  labelBox(svg,cx,118,model==='sqrt2'?'boundary √2':'boundary c','var(--surface2)','var(--accent3)');
   svg.appendChild(circle(cx,y,8,{fill:'var(--surface)',stroke:'var(--accent3)','stroke-width':3}));
 
   // Rational shadow points
@@ -557,10 +624,12 @@ function drawCut(){
   labelBox(svg,(cx+x(domain[1]))/2,y+82,'R: right set','var(--surface2)','var(--accent2)');
 
   const realized = ambient==='R' || model==='rational';
-  const boundaryName = model==='sqrt2'?'âˆš2':fmt(c);
-  setHtml('cutFormula', model==='sqrt2'
-    ? `<span class="math">L={qâˆˆQ : q&lt;0 or qÂ²&lt;2}</span><br><span class="math">boundary = âˆš2</span>`
-    : `<span class="math">L={x : x&lt;${fmt(c)}}</span><br><span class="math">boundary = ${fmt(c)}</span>`);
+  const boundaryName = model==='sqrt2'?'√2':fmt(c);
+  if(model==='sqrt2'){
+    setMathLines('cutFormula', [`L=\\{q\\in\\mathbb Q:q<0\\text{ or }q^2<2\\}`, `\\text{boundary}=\\sqrt2`]);
+  }else{
+    setMathLines('cutFormula', [`L=\\{x:x<${fmt(c)}\\}`, `\\text{boundary}=${fmt(c)}`]);
+  }
   setHtml('cutStatus', `
     <div class="kv"><span>Ambient</span><strong>${ambient}</strong></div>
     <div class="kv"><span>Boundary</span><strong>${boundaryName}</strong></div>
@@ -608,14 +677,19 @@ function drawNested(){
   if(model==='open') { interA=0; interB=0; }
   const ix=x(interA);
   svg.appendChild(line(ix,108,ix,555,{stroke:model==='open'?'var(--danger)':'var(--accent2)','stroke-width':2.5,'stroke-dasharray':model==='open'?'7 7':'none'}));
-  labelBox(svg,ix,105,model==='sqrt'?'âˆš2':model==='open'?'missing 0':'limit c', 'var(--surface2)', model==='open'?'var(--danger)':'var(--accent2)');
+  labelBox(svg,ix,105,model==='sqrt'?'√2':model==='open'?'missing 0':'limit c', 'var(--surface2)', model==='open'?'var(--danger)':'var(--accent2)');
   if(model==='open'){
-    svg.appendChild(T(70,500,'âˆ©(0,1/n)=âˆ… because 0 is excluded and every x>0 eventually falls outside.','', 'start',13));
+    svg.appendChild(T(70,500,'∩(0,1/n)=∅ because 0 is excluded and every x>0 eventually falls outside.','', 'start',13));
   }
   const status = model==='open' ? 'empty' : 'one point';
   const closed = model==='open' ? 'no' : 'yes';
-  const formula = model==='closed' ? `Iâ‚™=[câˆ’râ‚Ïâ¿â»Â¹,c+râ‚Ïâ¿â»Â¹]` : model==='open' ? `Iâ‚™=(0,1/n)` : `Iâ‚™=[âˆš2âˆ’1/(n+1),âˆš2+1/(n+1)]`;
-  setHtml('nestedFormula', `<span class="math">${formula}</span>`);
+  const formula = model==='closed' ? `Iₙ=[c−r₁ρⁿ⁻¹,c+r₁ρⁿ⁻¹]` : model==='open' ? `Iₙ=(0,1/n)` : `Iₙ=[√2−1/(n+1),√2+1/(n+1)]`;
+  const nestedLatex = model==='closed'
+    ? `I_n=[c-r_1\\rho^{n-1},\\ c+r_1\\rho^{n-1}]`
+    : model==='open'
+    ? `I_n=(0,1/n)`
+    : `I_n=[\\sqrt2-1/(n+1),\\ \\sqrt2+1/(n+1)]`;
+  setMathLines('nestedFormula', [nestedLatex]);
   setHtml('nestedStatus', `
     <div class="kv"><span>Nested?</span><strong>yes</strong></div>
     <div class="kv"><span>Closed intervals?</span><strong>${closed}</strong></div>
@@ -624,16 +698,16 @@ function drawNested(){
   $('nestedNotice').textContent = model==='open'
     ? 'The failure is not completeness. The theorem requires closed intervals; open intervals can shrink toward a point they exclude.'
     : model==='sqrt'
-    ? 'In R the trapped point is âˆš2. In Q the same corridor would aim at a missing point.'
+    ? 'In R the trapped point is √2. In Q the same corridor would aim at a missing point.'
     : 'The nested closed intervals cannot lose their limiting point; shrinking lengths make that point unique.';
 }
 
 const laws = [
-  {id:'lub', title:'Supremum property', short:'nonempty bounded-above sets have suprema', statement:'Every nonempty AâŠ‚R bounded above has s=sup A in R.', steps:['First show the set of upper bounds is nonempty.', 'Completeness selects its least element.', 'The Îµ-characterization says points of A approach s from below.'], notice:'This is the central form: all other standard real-analysis completeness theorems can be recovered from it.'},
-  {id:'ded', title:'Dedekind completeness', short:'cuts have real boundaries', statement:'Every Dedekind cut of Q is realized by exactly one real number.', steps:['A cut is a downward-closed left set with no greatest element.', 'Take the supremum of the left set inside R.', 'That supremum is the missing boundary described by the cut.'], notice:'The cut does not name the boundary directly; it describes the boundary by everything lying to its left.'},
-  {id:'nested', title:'Nested interval property', short:'closed nested intervals intersect', statement:'If Iâ‚âŠ‡Iâ‚‚âŠ‡â‹¯ are nonempty closed bounded intervals in R, then âˆ©â‚™Iâ‚™â‰ âˆ….', steps:['Write Iâ‚™=[aâ‚™,bâ‚™].', 'The left endpoints form an increasing bounded sequence.', 'Let a=sup{aâ‚™}; then aâ‰¤bâ‚™ for every n, hence a lies in every interval.'], notice:'The proof is supremum geometry: left endpoints climb, right endpoints still bound them.'},
-  {id:'mono', title:'Monotone convergence', short:'increasing bounded sequences converge', statement:'Every increasing sequence bounded above converges to its supremum.', steps:['Let s=sup{xâ‚™:nâˆˆN}.', 'For Îµ>0, sâˆ’Îµ is not an upper bound.', 'So some x_N>sâˆ’Îµ; monotonicity keeps all later terms inside Îµ of s.'], notice:'A monotone sequence converges because its range has a least upper boundary.'},
-  {id:'cauchy', title:'Cauchy completeness', short:'Cauchy sequences converge', statement:'Every Cauchy sequence in R converges to a real number.', steps:['Cauchy sequences are eventually bounded.', 'Use nested closed intervals or limsup/liminf to trap the tail.', 'Completeness forces the trapped limiting point to exist.'], notice:'Cauchy means the sequence internally closes up; completeness says the point it closes around belongs to the space.'}
+  {id:'lub', title:'Supremum property', short:'nonempty bounded-above sets have suprema', statement:'Every nonempty A⊂R bounded above has s=sup A in R.', latex:'\\forall A\\subset\\mathbb R,\\ A\\ne\\varnothing,\\ A\\text{ bounded above}\\Rightarrow \\exists s\\in\\mathbb R:\\ s=\\sup A.', steps:['First show the set of upper bounds is nonempty.', 'Completeness selects its least element.', 'The ε-characterization says points of A approach s from below.'], notice:'This is the central form: all other standard real-analysis completeness theorems can be recovered from it.'},
+  {id:'ded', title:'Dedekind completeness', short:'cuts have real boundaries', statement:'Every Dedekind cut of Q is realized by exactly one real number.', latex:'\\text{Every Dedekind cut of }\\mathbb Q\\text{ is realized by exactly one }x\\in\\mathbb R.', steps:['A cut is a downward-closed left set with no greatest element.', 'Take the supremum of the left set inside R.', 'That supremum is the missing boundary described by the cut.'], notice:'The cut does not name the boundary directly; it describes the boundary by everything lying to its left.'},
+  {id:'nested', title:'Nested interval property', short:'closed nested intervals intersect', statement:'If I₁⊇I₂⊇⋯ are nonempty closed bounded intervals in R, then ∩ₙIₙ≠∅.', latex:'I_1\\supseteq I_2\\supseteq\\cdots,\\ I_n\\text{ closed bounded nonempty}\\Rightarrow \\bigcap_{n=1}^{\\infty} I_n\\ne\\varnothing.', steps:['Write Iₙ=[aₙ,bₙ].', 'The left endpoints form an increasing bounded sequence.', 'Let a=sup{aₙ}; then a≤bₙ for every n, hence a lies in every interval.'], notice:'The proof is supremum geometry: left endpoints climb, right endpoints still bound them.'},
+  {id:'mono', title:'Monotone convergence', short:'increasing bounded sequences converge', statement:'Every increasing sequence bounded above converges to its supremum.', latex:'x_n\\nearrow,\\ (x_n)\\text{ bounded above}\\Rightarrow x_n\\to\\sup\\{x_n:n\\in\\mathbb N\\}.', steps:['Let s=sup{xₙ:n∈N}.', 'For ε>0, s−ε is not an upper bound.', 'So some x_N>s−ε; monotonicity keeps all later terms inside ε of s.'], notice:'A monotone sequence converges because its range has a least upper boundary.'},
+  {id:'cauchy', title:'Cauchy completeness', short:'Cauchy sequences converge', statement:'Every Cauchy sequence in R converges to a real number.', latex:'(x_n)\\text{ Cauchy in }\\mathbb R\\Rightarrow \\exists x\\in\\mathbb R:\\ x_n\\to x.', steps:['Cauchy sequences are eventually bounded.', 'Use nested closed intervals or limsup/liminf to trap the tail.', 'Completeness forces the trapped limiting point to exist.'], notice:'Cauchy means the sequence internally closes up; completeness says the point it closes around belongs to the space.'}
 ];
 let activeLaw='lub';
 function drawEquiv(){
@@ -641,7 +715,7 @@ function drawEquiv(){
   laws.forEach(l=>{ const d=document.createElement('div'); d.className='law '+(l.id===activeLaw?'active':''); d.innerHTML=`<strong>${l.title}</strong><br><span class="small">${l.short}</span>`; d.onclick=()=>{activeLaw=l.id;drawEquiv();}; list.appendChild(d); });
   const law=laws.find(z=>z.id===activeLaw);
   $('lawTitle').textContent=law.title;
-  $('lawStatement').innerHTML=`<div class="formula math">${law.statement}</div>`;
+  $('lawStatement').innerHTML=`<div class="formula">${katexSpan(law.latex || law.statement, true)}</div>`; renderKatex();
   $('proofSteps').innerHTML=law.steps.map((s,i)=>`<div class="proof-step small"><strong>${i+1}.</strong> ${s}</div>`).join('');
   $('equivNotice').textContent=law.notice;
 
@@ -665,7 +739,7 @@ function drawEquiv(){
   svg.appendChild(circle(n[0],n[1],64,{fill:'none',stroke:'var(--accent2)','stroke-width':2,'stroke-dasharray':'6 7'}));
 }
 
-function drawAll(){ drawSup(); drawCut(); drawNested(); drawEquiv(); }
+function drawAll(){ drawSup(); drawCut(); drawNested(); drawEquiv(); renderKatex(); }
 drawAll();
 </script>
 </body>

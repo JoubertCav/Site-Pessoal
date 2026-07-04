@@ -1,5 +1,5 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,17 +7,21 @@
 <meta name="google-site-verification" content="fSWAEb_oSSHr_eJXL9gHYxIn879tRaBwJ42f_aD9o2s">
 <meta name="google-site-verification" content="ftZ4QVMrlub9jbolsIeo4Ix4UBw0-BJrFeorzqKLXng">
 <meta name="description" content="Interactive real analysis diagram for the monotone convergence theorem for sequences.">
-  <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
+<link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
 <title>Monotone Convergence for Sequences | Real Analysis Diagrams</title>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-NHXHEJP1G0');
 </script>
+
 <style>
 :root{
   --bg:#f7f3ea;
@@ -40,8 +44,9 @@
   --point-soft:rgba(184,121,72,.35);
   --font: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --serif: Georgia, "Times New Roman", serif;
 }
-[data-theme="dark"]{
+html[data-theme="dark"]{
   --bg:#0d1117;
   --surface:#131922;
   --surface2:#18202a;
@@ -60,13 +65,13 @@
   --point-soft:rgba(209,154,108,.36);
 }
 *{box-sizing:border-box}
-html,body{height:100%}
+html,body{min-height:100%}
 body{
   margin:0;
   font-family:var(--font);
   background:
-    radial-gradient(circle at 18% 0%, rgba(47,157,143,.09), transparent 30%),
-    radial-gradient(circle at 88% 8%, rgba(184,121,72,.09), transparent 28%),
+    radial-gradient(circle at 18% 0%, color-mix(in srgb,var(--accent) 9%, transparent), transparent 30%),
+    radial-gradient(circle at 88% 8%, color-mix(in srgb,var(--accent-2) 9%, transparent), transparent 28%),
     var(--bg);
   color:var(--ink);
   transition:background .25s ease,color .25s ease;
@@ -74,7 +79,7 @@ body{
 .app{max-width:1240px;margin:0 auto;padding:26px 18px 42px}
 header{
   display:grid;
-  grid-template-columns:1fr auto;
+  grid-template-columns:minmax(0,1fr) auto;
   gap:16px;
   align-items:start;
   margin-bottom:18px;
@@ -84,7 +89,7 @@ header{
   gap:8px;
   align-items:center;
   border:1px solid var(--line);
-  background:rgba(255,255,255,.26);
+  background:color-mix(in srgb,var(--surface) 70%, transparent);
   color:var(--muted);
   padding:7px 11px;
   border-radius:999px;
@@ -96,7 +101,7 @@ header{
 h1{font-size:clamp(30px,5vw,54px);line-height:1.02;margin:13px 0 10px;font-weight:760;letter-spacing:-.045em}
 .subtitle{max-width:820px;color:var(--muted);font-size:clamp(15px,2.1vw,18px);line-height:1.55;margin:0}
 .top-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-button,.select-wrap select{
+button{
   border:1px solid var(--line);
   background:var(--surface);
   color:var(--ink);
@@ -106,18 +111,18 @@ button,.select-wrap select{
   cursor:pointer;
   font:600 13px var(--font);
 }
-button:hover{border-color:rgba(47,157,143,.45)}
-.grid{display:grid;grid-template-columns:360px 1fr;gap:16px;align-items:start}
+button:hover{border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
+.grid{display:grid;grid-template-columns:360px minmax(0,1fr);gap:16px;align-items:start}
 .card{
-  background:linear-gradient(180deg, rgba(255,255,255,.42), rgba(255,255,255,.08)), var(--surface);
+  min-width:0;
+  background:linear-gradient(180deg, color-mix(in srgb,var(--surface) 92%, transparent), var(--surface));
   border:1px solid var(--line);
   border-radius:var(--radius);
   box-shadow:var(--shadow);
   padding:var(--cardpad);
 }
-[data-theme="dark"] .card{background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)), var(--surface)}
 .controls{position:sticky;top:14px}
-.card-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.card-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;min-width:0}
 .card h2,.card h3{margin:0;font-size:15px;letter-spacing:-.01em}
 .card h2{font-size:17px}
 .small{font-size:12px;color:var(--muted);line-height:1.45}
@@ -129,20 +134,39 @@ input[type="range"]{width:100%;accent-color:var(--accent)}
 select{width:100%;border:1px solid var(--line);background:var(--surface2);color:var(--ink);padding:10px 12px;border-radius:14px;font:600 13px var(--font);outline:none}
 .pillrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .pill{font-size:12px;color:var(--muted);border:1px solid var(--line);background:var(--surface2);border-radius:999px;padding:6px 9px}
-.pill.good{color:var(--accent);border-color:rgba(47,157,143,.35)}
-.pill.bad{color:var(--danger);border-color:rgba(189,91,91,.35)}
-.main{display:grid;gap:16px}
-.hero{display:grid;grid-template-columns:1.08fr .92fr;gap:16px}
+.pill.good{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
+.pill.bad{color:var(--danger);border-color:color-mix(in srgb,var(--danger) 45%,var(--line))}
+.main{display:grid;gap:16px;min-width:0}
+.hero{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:16px}
 .eq{
   background:var(--surface2);
   border:1px solid var(--line);
   border-radius:18px;
   padding:14px;
   overflow:auto;
+  max-width:100%;
 }
-.formula{font-family:Georgia, "Times New Roman", serif;font-size:18px;line-height:1.55;letter-spacing:.005em}
-.formula .sym{color:var(--accent);font-weight:700}
-.formula .warn{color:var(--danger);font-weight:700}
+.math-scroll{
+  overflow:auto;
+  max-width:100%;
+}
+.math-block .katex-display{
+  margin:.25em 0;
+  overflow-x:auto;
+  overflow-y:hidden;
+  padding:.15rem 0;
+}
+.math-inline{
+  display:inline-block;
+  max-width:100%;
+  vertical-align:middle;
+}
+.explain{
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.5;
+  margin-top:10px;
+}
 .diagram-card{padding:14px}
 svg{width:100%;height:auto;display:block;overflow:visible}
 svg text{font-family:var(--font);fill:var(--muted);font-size:12px}
@@ -157,26 +181,32 @@ svg text{font-family:var(--font);fill:var(--muted);font-size:12px}
 .point-tail{fill:var(--tail);stroke:var(--surface);stroke-width:1.5}
 .dot-limit{fill:var(--accent);stroke:var(--surface);stroke-width:2}
 .tube{fill:var(--tube);stroke:var(--accent);stroke-width:1;stroke-dasharray:5 5}
-.highlight{fill:rgba(47,157,143,.07);stroke:rgba(47,157,143,.3);stroke-width:1}
-[data-theme="dark"] .highlight{fill:rgba(92,201,188,.08);stroke:rgba(92,201,188,.35)}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
-.stat{border:1px solid var(--line);background:var(--surface2);border-radius:16px;padding:10px}
+.highlight{fill:color-mix(in srgb,var(--accent) 8%, transparent);stroke:color-mix(in srgb,var(--accent) 30%, transparent);stroke-width:1}
+.two-col{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.statgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
+.stat{border:1px solid var(--line);background:var(--surface2);border-radius:16px;padding:10px;min-width:0}
 .stat .name{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px}
-.stat .num{font-family:var(--mono);font-size:15px;color:var(--ink)}
+.stat .num{font-family:var(--mono);font-size:15px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .proof-steps{display:grid;gap:10px;margin-top:10px}
-.step{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start;border:1px solid var(--line);border-radius:16px;padding:10px;background:rgba(255,255,255,.16)}
-[data-theme="dark"] .step{background:rgba(255,255,255,.025)}
+.step{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:start;border:1px solid var(--line);border-radius:16px;padding:10px;background:color-mix(in srgb,var(--surface2) 70%, transparent)}
 .badge{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--surface2);border:1px solid var(--line);font-family:var(--mono);font-size:12px;color:var(--accent)}
 .step strong{display:block;margin-bottom:2px;font-size:13px}
-.step div:last-child{font-size:13px;color:var(--muted);line-height:1.42}
+.step div:last-child{font-size:13px;color:var(--muted);line-height:1.42;min-width:0}
 .laws{display:grid;gap:8px}
 .law{display:flex;align-items:flex-start;gap:9px;border-top:1px solid var(--line);padding-top:9px;color:var(--muted);font-size:13px;line-height:1.42}
 .law:first-child{border-top:0;padding-top:0}
 .check{color:var(--accent);font-weight:800}
-.warning{color:var(--danger)}
-.footer-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
-.code{font-family:var(--mono);font-size:12px;line-height:1.45;color:var(--muted);white-space:pre-wrap}
+.footer-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.summary-box{
+  font-size:13px;
+  line-height:1.45;
+  color:var(--muted);
+}
+.summary-line{
+  padding:8px 0;
+  border-top:1px solid var(--line);
+}
+.summary-line:first-child{border-top:0;padding-top:0}
 @media (max-width:980px){
   .grid,.hero,.two-col,.footer-grid{grid-template-columns:1fr}
   .controls{position:relative;top:0}
@@ -190,13 +220,17 @@ svg text{font-family:var(--font);fill:var(--muted);font-size:12px}
 }
 </style>
 </head>
-<body data-theme="light">
+
+<body>
 <div class="app">
   <header>
     <div>
-      <div class="kicker">Real Analysis Â· Sequences</div>
+      <div class="kicker">Real Analysis · Sequences</div>
       <h1>Monotone Convergence Theorem</h1>
-      <p class="subtitle">A monotone bounded sequence has only one possible direction and only one place left to go: the least upper bound or the greatest lower bound.</p>
+      <p class="subtitle">
+        A monotone bounded sequence has only one possible direction and only one place left to go:
+        the least upper bound or the greatest lower bound.
+      </p>
     </div>
     <div class="top-actions">
       <button id="themeBtn" type="button">Dark mode</button>
@@ -214,10 +248,10 @@ svg text{font-family:var(--font);fill:var(--muted);font-size:12px}
       <div class="control">
         <label for="mode">Sequence model</label>
         <select id="mode">
-          <option value="inc">Increasing Â· bounded above</option>
-          <option value="dec">Decreasing Â· bounded below</option>
-          <option value="unbounded">Increasing Â· unbounded</option>
-          <option value="osc">Bounded Â· not monotone</option>
+          <option value="inc">Increasing · bounded above</option>
+          <option value="dec">Decreasing · bounded below</option>
+          <option value="unbounded">Increasing · unbounded</option>
+          <option value="osc">Bounded · not monotone</option>
         </select>
       </div>
 
@@ -247,7 +281,10 @@ svg text{font-family:var(--font);fill:var(--muted);font-size:12px}
       </div>
 
       <div class="control">
-        <div class="small">The highlighted tail is the set of indices after the first term that enters the selected epsilon-neighborhood of the candidate limit.</div>
+        <div class="small">
+          The highlighted tail is the set of indices after the first term that enters the selected
+          epsilon-neighborhood of the candidate limit.
+        </div>
         <div class="pillrow" id="propertyPills"></div>
       </div>
     </aside>
@@ -259,7 +296,7 @@ svg text{font-family:var(--font);fill:var(--muted);font-size:12px}
             <h2>Minimal theorem</h2>
             <span class="small" id="theoremLabel">increasing case</span>
           </div>
-          <div class="eq formula" id="theoremBox"></div>
+          <div class="eq math-block" id="theoremBox"></div>
           <div class="statgrid">
             <div class="stat"><div class="name">candidate limit</div><div class="num" id="statLimit"></div></div>
             <div class="stat"><div class="name">first tail index</div><div class="num" id="statN"></div></div>
@@ -278,7 +315,7 @@ svg text{font-family:var(--font);fill:var(--muted);font-size:12px}
 
       <section class="card diagram-card">
         <div class="card-title">
-          <h2>Main diagram Â· sequence on the real line</h2>
+          <h2>Main diagram · sequence on the real line</h2>
           <span class="small" id="lineCaption">terms approach the supremum from below</span>
         </div>
         <svg id="lineSvg" viewBox="0 0 820 270" role="img" aria-label="Interactive real line visualization of a monotone sequence"></svg>
@@ -288,7 +325,7 @@ svg text{font-family:var(--font);fill:var(--muted);font-size:12px}
         <div class="card diagram-card">
           <div class="card-title">
             <h2>Tail diagram</h2>
-            <span class="small">epsilon-N view</span>
+            <span class="small">epsilon–N view</span>
           </div>
           <svg id="tailSvg" viewBox="0 0 560 340" role="img" aria-label="Sequence terms as a function of n with epsilon band"></svg>
         </div>
@@ -313,7 +350,7 @@ svg text{font-family:var(--font);fill:var(--muted);font-size:12px}
         </div>
         <div class="card">
           <div class="card-title"><h3>Exam summary</h3></div>
-          <div class="code" id="examSummary"></div>
+          <div class="summary-box" id="examSummary"></div>
         </div>
       </section>
     </main>
@@ -321,397 +358,415 @@ svg text{font-family:var(--font);fill:var(--muted);font-size:12px}
 </div>
 
 <script>
-const $ = id => document.getElementById(id);
-const state = {
-  mode:'inc', limit:1.8, start:-1.2, rate:.72, eps:.35, nmax:34,
-  animate:false, frame:0
-};
-const els = ['mode','limit','start','rate','eps','nmax'].reduce((a,id)=>(a[id]=$(id),a),{});
+(function(){
+  'use strict';
 
-function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
-function fmt(x){
-  if(!Number.isFinite(x)) return 'âˆž';
-  const y = Math.abs(x) < 1e-9 ? 0 : x;
-  return y.toFixed(2).replace(/\.00$/,'');
-}
-function esc(s){return String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+  const $ = id => document.getElementById(id);
+  const root = document.documentElement;
+  const state = {
+    mode:'inc', limit:1.8, start:-1.2, rate:.72, eps:.35, nmax:34
+  };
 
-function seqTerms(){
-  let {mode, limit:L, start:a, rate:r, nmax:N} = state;
-  const xs=[];
-  if(mode==='inc'){
-    if(a>=L) a = L - Math.max(.25, Math.abs(a-L)+.4);
-    for(let n=1;n<=N;n++) xs.push(L - (L-a)*Math.pow(r,n-1));
-  }
-  if(mode==='dec'){
-    if(a<=L) a = L + Math.max(.25, Math.abs(a-L)+.4);
-    for(let n=1;n<=N;n++) xs.push(L + (a-L)*Math.pow(r,n-1));
-  }
-  if(mode==='unbounded'){
-    const g = .12 + (1-r)*.42;
-    for(let n=1;n<=N;n++) xs.push(a + g*(n-1) + .08*Math.log(n));
-  }
-  if(mode==='osc'){
-    const amp = Math.max(.25, Math.abs(a-L)*.45 + .35);
-    for(let n=1;n<=N;n++) xs.push(L + amp*(n%2===0 ? 1 : -1) + .12*Math.sin(n*.9));
-  }
-  return xs;
-}
+  const els = ['mode','limit','start','rate','eps','nmax'].reduce((a,id)=>(a[id]=$(id),a),{});
 
-function properties(xs){
-  const m = state.mode, L = state.limit, eps=state.eps;
-  let monotone = true, bounded = true, convergent = true, label = '';
-  if(m==='inc') label='Increasing and bounded above';
-  if(m==='dec') label='Decreasing and bounded below';
-  if(m==='unbounded'){ bounded=false; convergent=false; label='Monotone but not bounded';}
-  if(m==='osc'){ monotone=false; convergent=false; label='Bounded but not monotone';}
-  let N = null;
-  if(m==='inc' || m==='dec'){
-    for(let i=0;i<xs.length;i++) if(Math.abs(xs[i]-L)<eps){N=i+1;break;}
-  }
-  return {monotone,bounded,convergent,label,N};
-}
-
-function xScale(domainMin,domainMax,padL,padR,width){
-  const span = domainMax-domainMin || 1;
-  return x => padL + (x-domainMin)/span*(width-padL-padR);
-}
-function yScale(domainMin,domainMax,padT,padB,height){
-  const span = domainMax-domainMin || 1;
-  return y => height-padB - (y-domainMin)/span*(height-padT-padB);
-}
-function svgEl(name,attrs={},children=''){
-  const attr = Object.entries(attrs).map(([k,v])=>`${k}="${String(v).replace(/"/g,'&quot;')}"`).join(' ');
-  return `<${name} ${attr}>${children}</${name}>`;
-}
-function text(x,y,t,cls='',extra=''){
-  return `<text x="${x}" y="${y}" class="${cls}" ${extra}>${esc(t)}</text>`;
-}
-
-function renderLine(xs,p){
-  const svg=$('lineSvg'), W=820,H=270;
-  const L=state.limit, eps=state.eps, m=state.mode;
-  const vals = xs.concat([L,L-eps,L+eps,state.start]);
-  let min=Math.min(...vals), max=Math.max(...vals);
-  const margin=(max-min)*.14+.25; min-=margin; max+=margin;
-  const X=xScale(min,max,56,42,W);
-  const y0=152;
-  let html='';
-  html += `<rect x="0" y="0" width="${W}" height="${H}" rx="20" fill="transparent"/>`;
-  for(let i=0;i<7;i++){
-    const x=56+i*(W-98)/6;
-    html += `<line x1="${x}" y1="46" x2="${x}" y2="225" class="gridline"/>`;
-  }
-  html += `<line x1="56" y1="${y0}" x2="${W-42}" y2="${y0}" class="axis"/>`;
-  html += `<path d="M ${W-42} ${y0} l -8 -5 m 8 5 l -8 5" class="axis" fill="none"/>`;
-
-  if(m==='inc' || m==='dec'){
-    const left = X(L-eps), right=X(L+eps);
-    html += `<rect x="${Math.min(left,right)}" y="70" width="${Math.abs(right-left)}" height="112" rx="14" class="tube"/>`;
-    html += `<line x1="${X(L)}" y1="48" x2="${X(L)}" y2="214" class="limit-line"/>`;
-    html += text(X(L)+7,64, m==='inc'?'s = sup A':'i = inf A','',`font-weight="700" fill="var(--accent)"`);
-    html += `<line x1="${X(L-eps)}" y1="78" x2="${X(L-eps)}" y2="187" class="eps-line"/>`;
-    html += `<line x1="${X(L+eps)}" y1="78" x2="${X(L+eps)}" y2="187" class="eps-line"/>`;
-    html += text(X(L-eps)-36,203,fmt(L-eps));
-    html += text(X(L+eps)+8,203,fmt(L+eps));
-  }
-
-  if(m==='unbounded'){
-    const lastX = X(xs[xs.length-1]);
-    html += `<line x1="${X(xs[0])}" y1="92" x2="${lastX}" y2="92" class="bound-line"/>`;
-    html += text(X(xs[0]),77,'no upper bound appears on the right');
-  }
-  if(m==='osc'){
-    html += `<rect x="${X(Math.min(...xs))}" y="75" width="${X(Math.max(...xs))-X(Math.min(...xs))}" height="110" rx="16" class="highlight"/>`;
-    html += text(X(Math.min(...xs))+6,66,'bounded cloud, but no one-way tail');
-  }
-
-  const maxDots = Math.min(xs.length, 48);
-  const step = Math.max(1, Math.floor(xs.length/maxDots));
-  const drawIdx=[];
-  for(let i=0;i<xs.length;i+=step) drawIdx.push(i);
-  if(!drawIdx.includes(xs.length-1)) drawIdx.push(xs.length-1);
-  drawIdx.forEach((i,j)=>{
-    const n=i+1, x=X(xs[i]);
-    const inTail = p.N && n>=p.N;
-    const yy = y0 + ((j%5)-2)*12;
-    html += `<line x1="${x}" y1="${y0-8}" x2="${x}" y2="${yy}" stroke="var(--line)" stroke-width="1"/>`;
-    html += `<circle cx="${x}" cy="${yy}" r="${inTail?5.6:4.6}" class="${inTail?'point-tail':'point'}"/>`;
-    if(n===1 || n===p.N || n===xs.length){
-      html += text(x-10, yy-12, n===p.N?'x_N':`x_${n}`,'',`font-weight="700"`);
+  function tex(code, display=false){
+    try {
+      return katex.renderToString(code, {
+        throwOnError:false,
+        displayMode:display,
+        strict:'ignore',
+        trust:false
+      });
+    } catch (err) {
+      return '<span class="math-error"></span>';
     }
+  }
+  function mi(code){ return '<span class="math-inline">'+tex(code,false)+'</span>'; }
+  function md(code){ return '<div class="math-scroll">'+tex(code,true)+'</div>'; }
+
+  function fmt(x){
+    if(!Number.isFinite(x)) return '∞';
+    const y = Math.abs(x) < 1e-9 ? 0 : x;
+    return y.toFixed(2).replace(/\.00$/,'');
+  }
+  function esc(s){return String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+
+  function seqTerms(){
+    let {mode, limit:L, start:a, rate:r, nmax:N} = state;
+    const xs=[];
+    if(mode==='inc'){
+      if(a>=L) a = L - Math.max(.25, Math.abs(a-L)+.4);
+      for(let n=1;n<=N;n++) xs.push(L - (L-a)*Math.pow(r,n-1));
+    }
+    if(mode==='dec'){
+      if(a<=L) a = L + Math.max(.25, Math.abs(a-L)+.4);
+      for(let n=1;n<=N;n++) xs.push(L + (a-L)*Math.pow(r,n-1));
+    }
+    if(mode==='unbounded'){
+      const g = .12 + (1-r)*.42;
+      for(let n=1;n<=N;n++) xs.push(a + g*(n-1) + .08*Math.log(n));
+    }
+    if(mode==='osc'){
+      const amp = Math.max(.25, Math.abs(a-L)*.45 + .35);
+      for(let n=1;n<=N;n++) xs.push(L + amp*(n%2===0 ? 1 : -1) + .12*Math.sin(n*.9));
+    }
+    return xs;
+  }
+
+  function properties(xs){
+    const m = state.mode, L = state.limit, eps=state.eps;
+    let monotone = true, bounded = true, convergent = true;
+    if(m==='unbounded'){ bounded=false; convergent=false; }
+    if(m==='osc'){ monotone=false; convergent=false; }
+    let N = null;
+    if(m==='inc' || m==='dec'){
+      for(let i=0;i<xs.length;i++) if(Math.abs(xs[i]-L)<eps){N=i+1;break;}
+    }
+    return {monotone,bounded,convergent,N};
+  }
+
+  function xScale(domainMin,domainMax,padL,padR,width){
+    const span = domainMax-domainMin || 1;
+    return x => padL + (x-domainMin)/span*(width-padL-padR);
+  }
+  function yScale(domainMin,domainMax,padT,padB,height){
+    const span = domainMax-domainMin || 1;
+    return y => height-padB - (y-domainMin)/span*(height-padT-padB);
+  }
+  function text(x,y,t,cls='',extra=''){
+    return `<text x="${x}" y="${y}" class="${cls}" ${extra}>${esc(t)}</text>`;
+  }
+
+  function renderLine(xs,p){
+    const svg=$('lineSvg'), W=820,H=270;
+    const L=state.limit, eps=state.eps, m=state.mode;
+    const vals = xs.concat([L,L-eps,L+eps,state.start]);
+    let min=Math.min(...vals), max=Math.max(...vals);
+    const margin=(max-min)*.14+.25; min-=margin; max+=margin;
+    const X=xScale(min,max,56,42,W);
+    const y0=152;
+    let html='';
+    html += `<rect x="0" y="0" width="${W}" height="${H}" rx="20" fill="transparent"/>`;
+    for(let i=0;i<7;i++){
+      const x=56+i*(W-98)/6;
+      html += `<line x1="${x}" y1="46" x2="${x}" y2="225" class="gridline"/>`;
+    }
+    html += `<line x1="56" y1="${y0}" x2="${W-42}" y2="${y0}" class="axis"/>`;
+    html += `<path d="M ${W-42} ${y0} l -8 -5 m 8 5 l -8 5" class="axis" fill="none"/>`;
+
+    if(m==='inc' || m==='dec'){
+      const left = X(L-eps), right=X(L+eps);
+      html += `<rect x="${Math.min(left,right)}" y="70" width="${Math.abs(right-left)}" height="112" rx="14" class="tube"/>`;
+      html += `<line x1="${X(L)}" y1="48" x2="${X(L)}" y2="214" class="limit-line"/>`;
+      html += text(X(L)+7,64, m==='inc'?'s = sup A':'i = inf A','',`font-weight="700" fill="var(--accent)"`);
+      html += `<line x1="${X(L-eps)}" y1="78" x2="${X(L-eps)}" y2="187" class="eps-line"/>`;
+      html += `<line x1="${X(L+eps)}" y1="78" x2="${X(L+eps)}" y2="187" class="eps-line"/>`;
+      html += text(X(L-eps)-36,203,fmt(L-eps));
+      html += text(X(L+eps)+8,203,fmt(L+eps));
+    }
+
+    if(m==='unbounded'){
+      const lastX = X(xs[xs.length-1]);
+      html += `<line x1="${X(xs[0])}" y1="92" x2="${lastX}" y2="92" class="bound-line"/>`;
+      html += text(X(xs[0]),77,'no upper bound appears on the right');
+    }
+    if(m==='osc'){
+      html += `<rect x="${X(Math.min(...xs))}" y="75" width="${X(Math.max(...xs))-X(Math.min(...xs))}" height="110" rx="16" class="highlight"/>`;
+      html += text(X(Math.min(...xs))+6,66,'bounded cloud, but no one-way tail');
+    }
+
+    const maxDots = Math.min(xs.length, 48);
+    const step = Math.max(1, Math.floor(xs.length/maxDots));
+    const drawIdx=[];
+    for(let i=0;i<xs.length;i+=step) drawIdx.push(i);
+    if(!drawIdx.includes(xs.length-1)) drawIdx.push(xs.length-1);
+    drawIdx.forEach((i,j)=>{
+      const n=i+1, x=X(xs[i]);
+      const inTail = p.N && n>=p.N;
+      const yy = y0 + ((j%5)-2)*12;
+      html += `<line x1="${x}" y1="${y0-8}" x2="${x}" y2="${yy}" stroke="var(--line)" stroke-width="1"/>`;
+      html += `<circle cx="${x}" cy="${yy}" r="${inTail?5.6:4.6}" class="${inTail?'point-tail':'point'}"/>`;
+      if(n===1 || n===p.N || n===xs.length){
+        html += text(x-10, yy-12, n===p.N?'x_N':`x_${n}`,'',`font-weight="700"`);
+      }
+    });
+
+    if(p.N){
+      const xN=X(xs[p.N-1]);
+      html += `<path d="M ${xN} 226 C ${xN} 243, ${X(L)} 243, ${X(L)} 226" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-dasharray="4 4"/>`;
+      html += text((xN+X(L))/2-38,260,'after N: trapped near the limit','',`fill="var(--accent)"`);
+    }
+    html += text(58,239,fmt(min+margin*.55));
+    html += text(W-88,239,fmt(max-margin*.55));
+    svg.innerHTML=html;
+  }
+
+  function renderTail(xs,p){
+    const svg=$('tailSvg'), W=560,H=340;
+    const L=state.limit, eps=state.eps, m=state.mode;
+    const vals = xs.concat([L,L-eps,L+eps]);
+    let ymin=Math.min(...vals), ymax=Math.max(...vals);
+    const marg=(ymax-ymin)*.18+.18; ymin-=marg; ymax+=marg;
+    const X=n => 54+(n-1)/(xs.length-1)*(W-86);
+    const Y=yScale(ymin,ymax,34,48,H);
+    let html='';
+    for(let i=0;i<6;i++){
+      const y=42+i*(H-90)/5;
+      html += `<line x1="52" y1="${y}" x2="${W-34}" y2="${y}" class="gridline"/>`;
+    }
+    for(let i=0;i<6;i++){
+      const x=54+i*(W-88)/5;
+      html += `<line x1="${x}" y1="34" x2="${x}" y2="${H-48}" class="gridline"/>`;
+    }
+    html += `<line x1="52" y1="${H-48}" x2="${W-32}" y2="${H-48}" class="axis"/>`;
+    html += `<line x1="52" y1="34" x2="52" y2="${H-48}" class="axis"/>`;
+    if(m==='inc'||m==='dec'){
+      html += `<rect x="54" y="${Y(L+eps)}" width="${W-88}" height="${Math.abs(Y(L-eps)-Y(L+eps))}" rx="12" class="tube"/>`;
+      html += `<line x1="54" y1="${Y(L)}" x2="${W-34}" y2="${Y(L)}" class="limit-line"/>`;
+      html += `<line x1="54" y1="${Y(L-eps)}" x2="${W-34}" y2="${Y(L-eps)}" class="eps-line"/>`;
+      html += `<line x1="54" y1="${Y(L+eps)}" x2="${W-34}" y2="${Y(L+eps)}" class="eps-line"/>`;
+      html += text(W-90,Y(L)-8,'limit');
+    }
+    let path='';
+    xs.forEach((v,i)=>{path += `${i?'L':'M'} ${X(i+1)} ${Y(v)} `;});
+    html += `<path d="${path}" class="seq-line"/>`;
+    const step=Math.max(1,Math.ceil(xs.length/38));
+    for(let i=0;i<xs.length;i+=step){
+      const n=i+1, inTail=p.N&&n>=p.N;
+      html += `<circle cx="${X(n)}" cy="${Y(xs[i])}" r="${inTail?4.8:3.8}" class="${inTail?'point-tail':'point'}"/>`;
+    }
+    if(p.N){
+      html += `<line x1="${X(p.N)}" y1="34" x2="${X(p.N)}" y2="${H-48}" stroke="var(--accent)" stroke-width="1.7" stroke-dasharray="5 5"/>`;
+      html += text(X(p.N)+6,48,'N','',`font-weight="700" fill="var(--accent)"`);
+    }
+    html += text(24,Y(ymax-marg*.45),fmt(ymax-marg*.45));
+    html += text(22,Y(ymin+marg*.45),fmt(ymin+marg*.45));
+    html += text(W-48,H-21,'n');
+    html += text(16,34,'x_n');
+    svg.innerHTML=html;
+  }
+
+  function renderSup(xs,p){
+    const svg=$('supSvg'), W=560,H=340;
+    const L=state.limit, eps=state.eps, m=state.mode;
+    let html='';
+    const min = m==='dec' ? L-eps*1.8 : Math.min(xs[0],L-eps*1.8)-.25;
+    const max = m==='inc' ? L+eps*1.8 : Math.max(xs[0],L+eps*1.8)+.25;
+    const X=xScale(min,max,54,38,W);
+    const y=166;
+    html += `<line x1="54" y1="${y}" x2="${W-38}" y2="${y}" class="axis"/>`;
+    html += `<path d="M ${W-38} ${y} l -8 -5 m 8 5 l -8 5" class="axis" fill="none"/>`;
+    if(m==='inc'){
+      html += `<rect x="${X(L-eps)}" y="95" width="${X(L)-X(L-eps)}" height="96" rx="15" class="tube"/>`;
+      html += `<line x1="${X(L)}" y1="64" x2="${X(L)}" y2="222" class="limit-line"/>`;
+      html += `<line x1="${X(L-eps)}" y1="88" x2="${X(L-eps)}" y2="212" class="eps-line"/>`;
+      html += text(X(L)-18,54,'s = sup A','',`font-weight="700" fill="var(--accent)"`);
+      html += text(X(L-eps)-38,80,'s − ε');
+      html += `<path d="M ${X(L-eps)} 244 C ${X(L-eps)+35} 286, ${X(L)-35} 286, ${X(L)} 244" fill="none" stroke="var(--accent)" stroke-width="1.5"/>`;
+      html += text((X(L-eps)+X(L))/2-55,312,'s−ε cannot be an upper bound','',`fill="var(--accent)"`);
+      const candidates = xs.map((v,i)=>({v,i})).filter(o=>o.v>L-eps).slice(0,7);
+      candidates.forEach((o,k)=>{
+        html += `<circle cx="${X(o.v)}" cy="${y-22-k*10}" r="4.6" class="point-tail"/>`;
+      });
+      if(p.N) html += text(X(xs[p.N-1])+6,y-45,`x_N > s−ε`,'',`font-weight="700" fill="var(--accent)"`);
+    } else if(m==='dec'){
+      html += `<rect x="${X(L)}" y="95" width="${X(L+eps)-X(L)}" height="96" rx="15" class="tube"/>`;
+      html += `<line x1="${X(L)}" y1="64" x2="${X(L)}" y2="222" class="limit-line"/>`;
+      html += `<line x1="${X(L+eps)}" y1="88" x2="${X(L+eps)}" y2="212" class="eps-line"/>`;
+      html += text(X(L)-18,54,'i = inf A','',`font-weight="700" fill="var(--accent)"`);
+      html += text(X(L+eps)+8,80,'i + ε');
+      html += `<path d="M ${X(L)} 244 C ${X(L)+35} 286, ${X(L+eps)-35} 286, ${X(L+eps)} 244" fill="none" stroke="var(--accent)" stroke-width="1.5"/>`;
+      html += text((X(L)+X(L+eps))/2-55,312,'i+ε cannot be a lower bound','',`fill="var(--accent)"`);
+      const candidates = xs.map((v,i)=>({v,i})).filter(o=>o.v<L+eps).slice(0,7);
+      candidates.forEach((o,k)=>{html += `<circle cx="${X(o.v)}" cy="${y-22-k*10}" r="4.6" class="point-tail"/>`;});
+      if(p.N) html += text(X(xs[p.N-1])+6,y-45,`x_N < i+ε`,'',`font-weight="700" fill="var(--accent)"`);
+    } else if(m==='unbounded'){
+      const minU=Math.min(...xs), maxU=Math.max(...xs), XU=xScale(minU-.3,maxU+.7,54,38,W);
+      html='';
+      html += `<line x1="54" y1="${y}" x2="${W-38}" y2="${y}" class="axis"/>`;
+      xs.filter((_,i)=>i%Math.ceil(xs.length/22)===0).forEach((v,i)=>{
+        html += `<circle cx="${XU(v)}" cy="${y-18-(i%4)*9}" r="4.5" class="point"/>`;
+      });
+      html += `<path d="M ${W-80} ${y-40} l 42 0 l -10 -7 m 10 7 l -10 7" fill="none" stroke="var(--danger)" stroke-width="2"/>`;
+      html += text(82,72,'No finite supremum: boundedness is missing.','',`fill="var(--danger)" font-weight="700"`);
+      html += text(82,98,'The sequence is monotone, but it does not converge in R.');
+    } else {
+      const minO=Math.min(...xs)-.3, maxO=Math.max(...xs)+.3, XO=xScale(minO,maxO,54,38,W);
+      html='';
+      html += `<line x1="54" y1="${y}" x2="${W-38}" y2="${y}" class="axis"/>`;
+      html += `<rect x="${XO(Math.min(...xs))}" y="96" width="${XO(Math.max(...xs))-XO(Math.min(...xs))}" height="94" rx="15" class="highlight"/>`;
+      xs.slice(0,30).forEach((v,i)=>{
+        html += `<circle cx="${XO(v)}" cy="${y-27+(i%6)*10}" r="4.2" class="${i%2?'point':'point-soft'}"/>`;
+      });
+      html += text(82,72,'Boundedness alone is not direction.','',`fill="var(--danger)" font-weight="700"`);
+      html += text(82,98,'Two separated tails prevent convergence.');
+    }
+    svg.innerHTML=html;
+  }
+
+  function stepMarkup(arr){
+    return arr.map((s,i)=>`<div class="step"><div class="badge">${i+1}</div><div><strong>${esc(s[0])}</strong>${s[1]}</div></div>`).join('');
+  }
+  function laws(arr){return arr.map(a=>`<div class="law"><span class="check">•</span><span>${a}</span></div>`).join('');}
+  function summary(lines){
+    return lines.map(line=>`<div class="summary-line">${line}</div>`).join('');
+  }
+
+  function renderText(xs,p){
+    const m=state.mode,L=state.limit,eps=state.eps;
+    $('limitVal').textContent=fmt(state.limit);
+    $('startVal').textContent=fmt(state.start);
+    $('rateVal').textContent=fmt(state.rate);
+    $('epsVal').textContent=fmt(state.eps);
+    $('nmaxVal').textContent=state.nmax;
+    $('theoremLabel').textContent = m==='inc'?'increasing case':m==='dec'?'decreasing case':'hypothesis failure';
+    $('statLimit').textContent = (m==='unbounded')?'no finite sup':fmt(L);
+    $('statN').textContent = p.N?`N = ${p.N}`:'none visible';
+    $('statConclusion').textContent = p.convergent?'converges':'no theorem';
+
+    $('propertyPills').innerHTML = [
+      ['monotone',p.monotone],['bounded',p.bounded],['convergent',p.convergent]
+    ].map(([t,ok])=>`<span class="pill ${ok?'good':'bad'}">${ok?'✓':'×'} ${t}</span>`).join('');
+
+    if(m==='inc'){
+      $('theoremBox').innerHTML =
+        md(String.raw`\text{If } x_1\le x_2\le\cdots \text{ and } A=\{x_n:n\in\mathbb N\}\text{ is bounded above, then } x_n\to s=\sup A.`) +
+        md(String.raw`\forall\varepsilon>0,\ \exists N:\ n\ge N\Rightarrow s-\varepsilon<x_n\le s.`);
+      $('proofSteps').innerHTML = stepMarkup([
+        ['Bounded above',`The set ${mi(String.raw`A=\{x_n:n\in\mathbb N\}`)} has at least one upper bound.`],
+        ['Completeness',`The real line supplies ${mi(String.raw`s=\sup A`)}.`],
+        ['Crossing',`For every ${mi(String.raw`\varepsilon>0`)}, ${mi(String.raw`s-\varepsilon`)} is not an upper bound.`],
+        ['Monotonicity',`Once ${mi(String.raw`x_N>s-\varepsilon`)}, every later term satisfies ${mi(String.raw`s-\varepsilon<x_N\le x_n\le s`)}.`]
+      ]);
+      $('lineCaption').textContent='terms approach the supremum from below';
+      $('interpretation').innerHTML=`The theorem is the geometry of a one-way sequence trapped below a ceiling. Completeness turns the ceiling into a real number ${mi('s')}, and monotonicity turns one crossing into an entire tail.`;
+      $('noticeBox').innerHTML=laws([
+        `Find one term ${mi('x_N')} inside ${mi('(s-\\varepsilon,s]')}.`,
+        `The supremum need not be a term of the sequence.`,
+        `Boundedness prevents escape; monotonicity prevents oscillation.`
+      ]);
+      $('examSummary').innerHTML=summary([
+        `${mi('A=\\{x_n:n\\in\\mathbb N\\}')} is bounded above, so ${mi('s=\\sup A')} exists.`,
+        `Given ${mi('\\varepsilon>0')}, ${mi('s-\\varepsilon')} is not an upper bound.`,
+        `Thus ${mi('\\exists N:x_N>s-\\varepsilon')}.`,
+        `If ${mi('n\\ge N')}, then ${mi('s-\\varepsilon<x_N\\le x_n\\le s')}, hence ${mi('|x_n-s|<\\varepsilon')}.`
+      ]);
+    } else if(m==='dec'){
+      $('theoremBox').innerHTML =
+        md(String.raw`\text{If } x_1\ge x_2\ge\cdots \text{ and } A=\{x_n:n\in\mathbb N\}\text{ is bounded below, then } x_n\to i=\inf A.`) +
+        md(String.raw`\forall\varepsilon>0,\ \exists N:\ n\ge N\Rightarrow i\le x_n<i+\varepsilon.`);
+      $('proofSteps').innerHTML = stepMarkup([
+        ['Bounded below',`The set ${mi(String.raw`A=\{x_n:n\in\mathbb N\}`)} has at least one lower bound.`],
+        ['Completeness',`The real line supplies ${mi(String.raw`i=\inf A`)}.`],
+        ['Crossing',`For every ${mi(String.raw`\varepsilon>0`)}, ${mi(String.raw`i+\varepsilon`)} is not a lower bound.`],
+        ['Monotonicity',`Once ${mi(String.raw`x_N<i+\varepsilon`)}, every later term satisfies ${mi(String.raw`i\le x_n\le x_N<i+\varepsilon`)}.`]
+      ]);
+      $('lineCaption').textContent='terms approach the infimum from above';
+      $('interpretation').innerHTML=`The decreasing version is the same theorem reflected in a mirror. A lower floor ${mi('i')} replaces the upper ceiling ${mi('s')}.`;
+      $('noticeBox').innerHTML=laws([
+        `The proof uses ${mi('\\inf A')} instead of ${mi('\\sup A')}.`,
+        `One crossing below ${mi('i+\\varepsilon')} controls the entire later tail.`,
+        `A decreasing sequence may never touch its infimum.`
+      ]);
+      $('examSummary').innerHTML=summary([
+        `${mi('A=\\{x_n:n\\in\\mathbb N\\}')} is bounded below, so ${mi('i=\\inf A')} exists.`,
+        `Given ${mi('\\varepsilon>0')}, ${mi('i+\\varepsilon')} is not a lower bound.`,
+        `Thus ${mi('\\exists N:x_N<i+\\varepsilon')}.`,
+        `If ${mi('n\\ge N')}, then ${mi('i\\le x_n\\le x_N<i+\\varepsilon')}, hence ${mi('|x_n-i|<\\varepsilon')}.`
+      ]);
+    } else if(m==='unbounded'){
+      $('theoremBox').innerHTML =
+        md(String.raw`\text{Monotone alone is not enough.}`) +
+        md(String.raw`x_n=x_1+c(n-1)\text{ is increasing, but }\sup\{x_n:n\in\mathbb N\}\notin\mathbb R.`);
+      $('proofSteps').innerHTML = stepMarkup([
+        ['Direction',`The sequence moves one way.`],
+        ['Missing ceiling',`There is no finite upper bound.`],
+        ['No supremum in ℝ',`The step ${mi(String.raw`s=\sup\{x_n\}`)} cannot start.`],
+        ['Conclusion',`It diverges to ${mi(String.raw`+\infty`)} rather than converging to a real number.`]
+      ]);
+      $('lineCaption').textContent='monotone motion without a ceiling escapes';
+      $('interpretation').innerHTML=`The theorem needs boundedness because monotonicity only gives direction. Without a ceiling or floor, direction becomes escape.`;
+      $('noticeBox').innerHTML=laws([
+        `Monotone does not mean convergent.`,
+        `The missing object is a finite supremum.`,
+        `In the extended real line one may write ${mi('x_n\\to +\\infty')}, but this is not convergence in ${mi('\\mathbb R')}.`
+      ]);
+      $('examSummary').innerHTML=summary([
+        `${mi('x_n=n')} is increasing.`,
+        `${mi('\\{x_n:n\\in\\mathbb N\\}')} has no upper bound in ${mi('\\mathbb R')}.`,
+        `There is no finite ${mi('\\sup\\{x_n\\}')}.`,
+        `Therefore monotonicity alone does not imply convergence in ${mi('\\mathbb R')}.`
+      ]);
+    } else {
+      $('theoremBox').innerHTML =
+        md(String.raw`\text{Bounded alone is not enough.}`) +
+        md(String.raw`x_n=L+a(-1)^n\text{ is bounded, but two separated tails remain.}`);
+      $('proofSteps').innerHTML = stepMarkup([
+        ['Trap',`All terms remain in a finite interval.`],
+        ['Missing direction',`The sequence keeps jumping between sides.`],
+        ['No tail capture',`For small ${mi(String.raw`\varepsilon`)}, infinitely many late terms remain outside any one candidate tube.`],
+        ['Conclusion',`Boundedness alone does not imply convergence.`]
+      ]);
+      $('lineCaption').textContent='bounded cloud without monotonicity can oscillate';
+      $('interpretation').innerHTML=`Boundedness gives a cage, not a destination. Monotonicity is what turns the cage into a narrowing one-way approach.`;
+      $('noticeBox').innerHTML=laws([
+        `A bounded sequence can have several subsequential behaviors.`,
+        `The theorem needs both hypotheses together.`,
+        `Bolzano–Weierstrass gives a convergent subsequence, not convergence of the whole sequence.`
+      ]);
+      $('examSummary').innerHTML=summary([
+        `${mi('x_n=(-1)^n')} is bounded.`,
+        `It has two subsequential limits: ${mi('1')} and ${mi('-1')}.`,
+        `Hence it does not converge.`,
+        `Boundedness alone is weaker than monotone boundedness.`
+      ]);
+    }
+  }
+
+  function render(){
+    const xs=seqTerms();
+    const p=properties(xs);
+    renderText(xs,p);
+    renderLine(xs,p);
+    renderTail(xs,p);
+    renderSup(xs,p);
+  }
+
+  Object.values(els).forEach(el=>{
+    el.addEventListener('input',()=>{
+      state.mode=els.mode.value;
+      state.limit=parseFloat(els.limit.value);
+      state.start=parseFloat(els.start.value);
+      state.rate=parseFloat(els.rate.value);
+      state.eps=parseFloat(els.eps.value);
+      state.nmax=parseInt(els.nmax.value,10);
+      render();
+    });
   });
 
-  if(p.N){
-    const xN=X(xs[p.N-1]);
-    html += `<path d="M ${xN} 226 C ${xN} 243, ${X(L)} 243, ${X(L)} 226" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-dasharray="4 4"/>`;
-    html += text((xN+X(L))/2-38,260,'after N: trapped near the limit','',`fill="var(--accent)"`);
-  }
-  html += text(58,239,fmt(min+margin*.55));
-  html += text(W-88,239,fmt(max-margin*.55));
-  svg.innerHTML=html;
-}
-
-function renderTail(xs,p){
-  const svg=$('tailSvg'), W=560,H=340;
-  const L=state.limit, eps=state.eps, m=state.mode;
-  const vals = xs.concat([L,L-eps,L+eps]);
-  let ymin=Math.min(...vals), ymax=Math.max(...vals);
-  const marg=(ymax-ymin)*.18+.18; ymin-=marg; ymax+=marg;
-  const X=n => 54+(n-1)/(xs.length-1)*(W-86);
-  const Y=yScale(ymin,ymax,34,48,H);
-  let html='';
-  for(let i=0;i<6;i++){
-    const y=42+i*(H-90)/5;
-    html += `<line x1="52" y1="${y}" x2="${W-34}" y2="${y}" class="gridline"/>`;
-  }
-  for(let i=0;i<6;i++){
-    const x=54+i*(W-88)/5;
-    html += `<line x1="${x}" y1="34" x2="${x}" y2="${H-48}" class="gridline"/>`;
-  }
-  html += `<line x1="52" y1="${H-48}" x2="${W-32}" y2="${H-48}" class="axis"/>`;
-  html += `<line x1="52" y1="34" x2="52" y2="${H-48}" class="axis"/>`;
-  if(m==='inc'||m==='dec'){
-    html += `<rect x="54" y="${Y(L+eps)}" width="${W-88}" height="${Math.abs(Y(L-eps)-Y(L+eps))}" rx="12" class="tube"/>`;
-    html += `<line x1="54" y1="${Y(L)}" x2="${W-34}" y2="${Y(L)}" class="limit-line"/>`;
-    html += `<line x1="54" y1="${Y(L-eps)}" x2="${W-34}" y2="${Y(L-eps)}" class="eps-line"/>`;
-    html += `<line x1="54" y1="${Y(L+eps)}" x2="${W-34}" y2="${Y(L+eps)}" class="eps-line"/>`;
-    html += text(W-90,Y(L)-8,'limit');
-  }
-  let path='';
-  xs.forEach((v,i)=>{path += `${i?'L':'M'} ${X(i+1)} ${Y(v)} `;});
-  html += `<path d="${path}" class="seq-line"/>`;
-  const step=Math.max(1,Math.ceil(xs.length/38));
-  for(let i=0;i<xs.length;i+=step){
-    const n=i+1, inTail=p.N&&n>=p.N;
-    html += `<circle cx="${X(n)}" cy="${Y(xs[i])}" r="${inTail?4.8:3.8}" class="${inTail?'point-tail':'point'}"/>`;
-  }
-  if(p.N){
-    html += `<line x1="${X(p.N)}" y1="34" x2="${X(p.N)}" y2="${H-48}" stroke="var(--accent)" stroke-width="1.7" stroke-dasharray="5 5"/>`;
-    html += text(X(p.N)+6,48,'N','',`font-weight="700" fill="var(--accent)"`);
-  }
-  html += text(24,Y(ymax-marg*.45),fmt(ymax-marg*.45));
-  html += text(22,Y(ymin+marg*.45),fmt(ymin+marg*.45));
-  html += text(W-48,H-21,'n');
-  html += text(16,34,'x_n');
-  svg.innerHTML=html;
-}
-
-function renderSup(xs,p){
-  const svg=$('supSvg'), W=560,H=340;
-  const L=state.limit, eps=state.eps, m=state.mode;
-  let html='';
-  const min = m==='dec' ? L-eps*1.8 : Math.min(xs[0],L-eps*1.8)-.25;
-  const max = m==='inc' ? L+eps*1.8 : Math.max(xs[0],L+eps*1.8)+.25;
-  const X=xScale(min,max,54,38,W);
-  const y=166;
-  html += `<line x1="54" y1="${y}" x2="${W-38}" y2="${y}" class="axis"/>`;
-  html += `<path d="M ${W-38} ${y} l -8 -5 m 8 5 l -8 5" class="axis" fill="none"/>`;
-  if(m==='inc'){
-    html += `<rect x="${X(L-eps)}" y="95" width="${X(L)-X(L-eps)}" height="96" rx="15" class="tube"/>`;
-    html += `<line x1="${X(L)}" y1="64" x2="${X(L)}" y2="222" class="limit-line"/>`;
-    html += `<line x1="${X(L-eps)}" y1="88" x2="${X(L-eps)}" y2="212" class="eps-line"/>`;
-    html += text(X(L)-18,54,'s = sup A','',`font-weight="700" fill="var(--accent)"`);
-    html += text(X(L-eps)-38,80,'s âˆ’ Îµ');
-    html += `<path d="M ${X(L-eps)} 244 C ${X(L-eps)+35} 286, ${X(L)-35} 286, ${X(L)} 244" fill="none" stroke="var(--accent)" stroke-width="1.5"/>`;
-    html += text((X(L-eps)+X(L))/2-55,312,'sâˆ’Îµ cannot be an upper bound','',`fill="var(--accent)"`);
-    const candidates = xs.map((v,i)=>({v,i})).filter(o=>o.v>L-eps).slice(0,7);
-    candidates.forEach((o,k)=>{
-      html += `<circle cx="${X(o.v)}" cy="${y-22-k*10}" r="4.6" class="point-tail"/>`;
-    });
-    if(p.N) html += text(X(xs[p.N-1])+6,y-45,`x_N > sâˆ’Îµ`,'',`font-weight="700" fill="var(--accent)"`);
-  } else if(m==='dec'){
-    html += `<rect x="${X(L)}" y="95" width="${X(L+eps)-X(L)}" height="96" rx="15" class="tube"/>`;
-    html += `<line x1="${X(L)}" y1="64" x2="${X(L)}" y2="222" class="limit-line"/>`;
-    html += `<line x1="${X(L+eps)}" y1="88" x2="${X(L+eps)}" y2="212" class="eps-line"/>`;
-    html += text(X(L)-18,54,'i = inf A','',`font-weight="700" fill="var(--accent)"`);
-    html += text(X(L+eps)+8,80,'i + Îµ');
-    html += `<path d="M ${X(L)} 244 C ${X(L)+35} 286, ${X(L+eps)-35} 286, ${X(L+eps)} 244" fill="none" stroke="var(--accent)" stroke-width="1.5"/>`;
-    html += text((X(L)+X(L+eps))/2-55,312,'i+Îµ cannot be a lower bound','',`fill="var(--accent)"`);
-    const candidates = xs.map((v,i)=>({v,i})).filter(o=>o.v<L+eps).slice(0,7);
-    candidates.forEach((o,k)=>{html += `<circle cx="${X(o.v)}" cy="${y-22-k*10}" r="4.6" class="point-tail"/>`;});
-    if(p.N) html += text(X(xs[p.N-1])+6,y-45,`x_N < i+Îµ`,'',`font-weight="700" fill="var(--accent)"`);
-  } else if(m==='unbounded'){
-    const minU=Math.min(...xs), maxU=Math.max(...xs), XU=xScale(minU-.3,maxU+.7,54,38,W);
-    html='';
-    html += `<line x1="54" y1="${y}" x2="${W-38}" y2="${y}" class="axis"/>`;
-    xs.filter((_,i)=>i%Math.ceil(xs.length/22)===0).forEach((v,i)=>{
-      html += `<circle cx="${XU(v)}" cy="${y-18-(i%4)*9}" r="4.5" class="point"/>`;
-    });
-    html += `<path d="M ${W-80} ${y-40} l 42 0 l -10 -7 m 10 7 l -10 7" fill="none" stroke="var(--danger)" stroke-width="2"/>`;
-    html += text(82,72,'No finite supremum: boundedness is missing.','',`fill="var(--danger)" font-weight="700"`);
-    html += text(82,98,'The sequence is monotone, but it does not converge in R.');
-  } else {
-    const minO=Math.min(...xs)-.3, maxO=Math.max(...xs)+.3, XO=xScale(minO,maxO,54,38,W);
-    html='';
-    html += `<line x1="54" y1="${y}" x2="${W-38}" y2="${y}" class="axis"/>`;
-    html += `<rect x="${XO(Math.min(...xs))}" y="96" width="${XO(Math.max(...xs))-XO(Math.min(...xs))}" height="94" rx="15" class="highlight"/>`;
-    xs.slice(0,30).forEach((v,i)=>{
-      html += `<circle cx="${XO(v)}" cy="${y-27+(i%6)*10}" r="4.2" class="${i%2?'point':'point-soft'}"/>`;
-    });
-    html += text(82,72,'Boundedness alone is not direction.','',`fill="var(--danger)" font-weight="700"`);
-    html += text(82,98,'Two separated tails prevent convergence.');
-  }
-  svg.innerHTML=html;
-}
-
-function renderText(xs,p){
-  const m=state.mode,L=state.limit,eps=state.eps;
-  $('limitVal').textContent=fmt(state.limit);
-  $('startVal').textContent=fmt(state.start);
-  $('rateVal').textContent=fmt(state.rate);
-  $('epsVal').textContent=fmt(state.eps);
-  $('nmaxVal').textContent=state.nmax;
-  $('theoremLabel').textContent = m==='inc'?'increasing case':m==='dec'?'decreasing case':'hypothesis failure';
-  $('statLimit').textContent = (m==='unbounded')?'no finite sup':fmt(L);
-  $('statN').textContent = p.N?`N = ${p.N}`:'none visible';
-  $('statConclusion').textContent = p.convergent?'converges':'no theorem';
-
-  const pills = [
-    ['monotone',p.monotone],['bounded',p.bounded],['convergent',p.convergent]
-  ].map(([t,ok])=>`<span class="pill ${ok?'good':'bad'}">${ok?'âœ“':'Ã—'} ${t}</span>`).join('');
-  $('propertyPills').innerHTML=pills;
-
-  if(m==='inc'){
-    $('theoremBox').innerHTML = `
-      If <span class="sym">x_1 \le x_2 \le \cdots</span> and A={x_n:n\in\u2115} is bounded above, then<br>
-      <span class="sym">x_n \to s = \sup A.</span><br>
-      Given \u03b5&gt;0: since sâˆ’\u03b5 is not an upper bound, \u2203N with x_N&gt;sâˆ’\u03b5. Hence n\u2265N \u21d2 sâˆ’\u03b5&lt;x_N\u2264x_n\u2264s.`;
-    $('proofSteps').innerHTML = steps([
-      ['Bounded above','The set A={x_n:n\u2208\u2115} has at least one upper bound.'],
-      ['Completeness','The real line supplies s=sup A.'],
-      ['Crossing','For every \u03b5&gt;0, sâˆ’\u03b5 is not an upper bound.'],
-      ['Monotonicity','Once x_N crosses sâˆ’\u03b5, every later x_n stays between sâˆ’\u03b5 and s.']
-    ]);
-    $('lineCaption').textContent='terms approach the supremum from below';
-    $('interpretation').innerHTML=`The theorem is not magic convergence. It is the geometry of a one-way sequence trapped below a ceiling. Completeness turns the ceiling into a real number s, and monotonicity turns one crossing into an entire tail.`;
-    $('noticeBox').innerHTML=laws([
-      ['The tail is constructive: find one x_N inside (sâˆ’Îµ,s].'],
-      ['The supremum need not be a term of the sequence.'],
-      ['Boundedness prevents escape; monotonicity prevents oscillation.']
-    ]);
-    $('examSummary').textContent=`Increasing case:
-A={x_n}. Since A is bounded above, s=sup A exists.
-Let Îµ>0. Then sâˆ’Îµ is not an upper bound.
-So âˆƒN: x_N > sâˆ’Îµ.
-If nâ‰¥N, monotonicity gives x_Nâ‰¤x_nâ‰¤s.
-Thus |x_nâˆ’s|<Îµ. Hence x_nâ†’s.`;
-  } else if(m==='dec'){
-    $('theoremBox').innerHTML = `
-      If <span class="sym">x_1 \ge x_2 \ge \cdots</span> and A={x_n:n\in\u2115} is bounded below, then<br>
-      <span class="sym">x_n \to i = \inf A.</span><br>
-      Given \u03b5&gt;0: since i+\u03b5 is not a lower bound, \u2203N with x_N&lt;i+\u03b5. Hence n\u2265N \u21d2 i\u2264x_n\u2264x_N&lt;i+\u03b5.`;
-    $('proofSteps').innerHTML = steps([
-      ['Bounded below','The set A={x_n:n\u2208\u2115} has at least one lower bound.'],
-      ['Completeness','The real line supplies i=inf A.'],
-      ['Crossing','For every \u03b5&gt;0, i+\u03b5 is not a lower bound.'],
-      ['Monotonicity','Once x_N crosses below i+\u03b5, every later x_n stays between i and i+\u03b5.']
-    ]);
-    $('lineCaption').textContent='terms approach the infimum from above';
-    $('interpretation').innerHTML=`The decreasing version is the same theorem reflected in a mirror. A lower floor i replaces the upper ceiling s.`;
-    $('noticeBox').innerHTML=laws([
-      ['The proof uses infimum instead of supremum.'],
-      ['One crossing below i+Îµ controls the entire later tail.'],
-      ['A decreasing sequence may never touch its infimum.']
-    ]);
-    $('examSummary').textContent=`Decreasing case:
-A={x_n}. Since A is bounded below, i=inf A exists.
-Let Îµ>0. Then i+Îµ is not a lower bound.
-So âˆƒN: x_N < i+Îµ.
-If nâ‰¥N, monotonicity gives iâ‰¤x_nâ‰¤x_N.
-Thus |x_nâˆ’i|<Îµ. Hence x_nâ†’i.`;
-  } else if(m==='unbounded'){
-    $('theoremBox').innerHTML = `
-      <span class="warn">Monotone alone is not enough.</span><br>
-      Example: x_n = x_1 + c(nâˆ’1) is increasing, but has no finite upper bound.<br>
-      Therefore no s=\sup\{x_n\} in \mathbb R, and no finite limit in \mathbb R.`;
-    $('proofSteps').innerHTML = steps([
-      ['Direction','The sequence moves one way.'],
-      ['Missing ceiling','There is no finite upper bound.'],
-      ['No supremum in R','The supremum-property step cannot even start.'],
-      ['Conclusion','It diverges to +âˆž rather than converging to a real number.']
-    ]);
-    $('lineCaption').textContent='monotone motion without a ceiling escapes';
-    $('interpretation').innerHTML=`The theorem needs boundedness because monotonicity only gives direction. Without a ceiling or floor, direction becomes escape.`;
-    $('noticeBox').innerHTML=laws([
-      ['Monotone does not mean convergent.'],
-      ['The missing object is a finite supremum.'],
-      ['In the extended real line one may write x_nâ†’+âˆž, but not convergence in R.']
-    ]);
-    $('examSummary').textContent=`Failure without boundedness:
-x_n=n is increasing.
-But {x_n} has no upper bound in R.
-So there is no finite s=sup{x_n}.
-Therefore monotonicity alone does not imply convergence in R.`;
-  } else {
-    $('theoremBox').innerHTML = `
-      <span class="warn">Bounded alone is not enough.</span><br>
-      Example: x_n = L + a(-1)^n stays in a bounded interval, but two separated tails remain.<br>
-      No single \u03b5-neighborhood captures all sufficiently late terms.`;
-    $('proofSteps').innerHTML = steps([
-      ['Trap','All terms remain in a finite interval.'],
-      ['Missing direction','The sequence keeps jumping between sides.'],
-      ['No tail capture','For small Îµ, infinitely many late terms remain outside any one candidate tube.'],
-      ['Conclusion','Boundedness alone does not imply convergence.']
-    ]);
-    $('lineCaption').textContent='bounded cloud without monotonicity can oscillate';
-    $('interpretation').innerHTML=`Boundedness gives a cage, not a destination. Monotonicity is what turns the cage into a narrowing one-way approach.`;
-    $('noticeBox').innerHTML=laws([
-      ['A bounded sequence can have several subsequential behaviors.'],
-      ['The theorem needs both hypotheses together.'],
-      ['Bolzano-Weierstrass gives a convergent subsequence, not convergence of the whole sequence.']
-    ]);
-    $('examSummary').textContent=`Failure without monotonicity:
-x_n=(-1)^n is bounded.
-But it has two subsequential limits: 1 and âˆ’1.
-Hence it does not converge.
-Boundedness alone is weaker than monotone boundedness.`;
-  }
-}
-function steps(arr){return arr.map((s,i)=>`<div class="step"><div class="badge">${i+1}</div><div><strong>${esc(s[0])}</strong>${esc(s[1])}</div></div>`).join('');}
-function laws(arr){return arr.map(a=>`<div class="law"><span class="check">â€¢</span><span>${esc(a[0])}</span></div>`).join('');}
-
-function render(){
-  const xs=seqTerms();
-  const p=properties(xs);
-  renderText(xs,p);
-  renderLine(xs,p);
-  renderTail(xs,p);
-  renderSup(xs,p);
-}
-
-Object.values(els).forEach(el=>{
-  el.addEventListener('input',()=>{
-    state.mode=els.mode.value;
-    state.limit=parseFloat(els.limit.value);
-    state.start=parseFloat(els.start.value);
-    state.rate=parseFloat(els.rate.value);
-    state.eps=parseFloat(els.eps.value);
-    state.nmax=parseInt(els.nmax.value,10);
+  $('themeBtn').addEventListener('click',()=>{
+    const dark=root.getAttribute('data-theme')==='dark';
+    root.setAttribute('data-theme',dark?'light':'dark');
+    $('themeBtn').textContent=dark?'Dark mode':'Light mode';
     render();
   });
-});
-$('themeBtn').addEventListener('click',()=>{
-  const dark=document.body.dataset.theme==='dark';
-  document.body.dataset.theme=dark?'light':'dark';
-  $('themeBtn').textContent=dark?'Dark mode':'Light mode';
+
+  let timer=null;
+  $('playBtn').addEventListener('click',()=>{
+    if(timer){clearInterval(timer);timer=null;$('playBtn').textContent='Animate tail';return;}
+    $('playBtn').textContent='Stop animation';
+    let k=0;
+    timer=setInterval(()=>{
+      const vals=[.9,.72,.55,.38,.24,.14,.24,.38,.55,.72];
+      state.rate=vals[k%vals.length];
+      els.rate.value=state.rate;
+      k++;
+      render();
+    },560);
+  });
+
   render();
-});
-let timer=null;
-$('playBtn').addEventListener('click',()=>{
-  if(timer){clearInterval(timer);timer=null;$('playBtn').textContent='Animate tail';return;}
-  $('playBtn').textContent='Stop animation';
-  let k=0;
-  timer=setInterval(()=>{
-    const vals=[.9,.72,.55,.38,.24,.14,.24,.38,.55,.72];
-    state.rate=vals[k%vals.length];
-    els.rate.value=state.rate;
-    k++;
-    render();
-  },560);
-});
-render();
+})();
 </script>
 </body>
 </html>
-
