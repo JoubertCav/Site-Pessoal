@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -9,6 +9,8 @@
   <meta name="description" content="Interactive real analysis diagram for the Arzela-Ascoli theorem.">
     <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
 <title>Arzela-Ascoli Theorem | Real Analysis Diagrams</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
   <script>
@@ -18,16 +20,7 @@
 
     gtag('config', 'G-NHXHEJP1G0');
   </script>
-
-  <script>
-    window.MathJax = {
-      tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
-      svg: { fontCache: 'global' }
-    };
-  </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
-
-  <style>
+<style>
     :root{
       --bg:#f7f3ea;
       --paper:#fffdf8;
@@ -93,7 +86,7 @@
     .theme .label{font-size:.92rem;color:var(--muted);min-width:70px}
     .switch{position:relative;width:70px;height:36px;border-radius:999px;background:var(--switch);border:1px solid var(--line)}
     .switch:before,.switch:after{position:absolute;top:50%;transform:translateY(-50%);font-size:13px;opacity:.75}
-    .switch:before{content:"â˜€";left:10px}.switch:after{content:"â˜¾";right:10px}
+    .switch:before{content:"☀";left:10px}.switch:after{content:"☾";right:10px}
     .knob{position:absolute;left:3px;top:3px;width:28px;height:28px;border-radius:50%;background:var(--thumb);border:1px solid var(--line);box-shadow:0 4px 12px rgba(0,0,0,.16);transition:left .25s ease;display:grid;place-items:center;font-size:13px}
     body.dark .knob{left:37px}
 
@@ -135,6 +128,15 @@
     .mini p{margin:8px 0 0;color:var(--muted);font-size:.89rem;line-height:1.38}
     .footer{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
     .footer div{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:12px 13px;font-size:.92rem;line-height:1.42}
+
+    .grid > *, .split > *, .lower > *, .footer > *, .card, .eq, .note, .line, .metric, .mini { min-width:0; }
+    .math-slot{display:inline-block;max-width:100%;vertical-align:baseline;}
+    .math-slot.display{display:block;overflow-x:auto;overflow-y:hidden;padding:2px 0;}
+    .math-slot.display .katex-display{margin:.15em 0;text-align:left;}
+    .eq,.note,.line{overflow-x:auto;overflow-y:hidden;}
+    .eq::-webkit-scrollbar,.note::-webkit-scrollbar,.line::-webkit-scrollbar{height:7px;}
+    .eq::-webkit-scrollbar-thumb,.note::-webkit-scrollbar-thumb,.line::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--accent) 35%,var(--line));border-radius:999px;}
+
     @media(max-width:1180px){.layout{grid-template-columns:1fr}aside{position:static}.split,.lower{grid-template-columns:1fr}}
     @media(max-width:900px){.smallGrid,.footer{grid-template-columns:1fr}.wrap{padding:18px 14px 28px}}
   </style>
@@ -144,8 +146,8 @@
   <div class="wrap">
     <header>
       <div>
-        <h1>ArzelÃ â€“Ascoli theorem</h1>
-        <p class="subtitle">A bounded and equicontinuous family cannot oscillate wildly or escape vertically. In \(C(K)\), this is the geometric reason subsequences converge uniformly.</p>
+        <h1>Arzelà–Ascoli theorem</h1>
+        <p class="subtitle">A bounded and equicontinuous family cannot oscillate wildly or escape vertically. In <span class="math-slot" data-display="false" data-tex="C(K)"></span>, this is the geometric reason subsequences converge uniformly.</p>
       </div>
       <div class="actions">
         <div class="pill">boundedness</div>
@@ -153,7 +155,7 @@
         <div class="pill">uniformly convergent subsequences</div>
         <div id="theme" class="theme" role="button" tabindex="0">
           <span id="themeLabel" class="label">light mode</span>
-          <div class="switch"><div id="knob" class="knob">â˜€</div></div>
+          <div class="switch"><div id="knob" class="knob">☀</div></div>
         </div>
       </div>
     </header>
@@ -163,28 +165,24 @@
         <div class="head">
           <div>
             <h2>Controls</h2>
-            <p>Choose a sequence in \(C(K)\) and watch compactness appear or fail.</p>
+            <p>Choose a sequence in <span class="math-slot" data-display="false" data-tex="C(K)"></span> and watch compactness appear or fail.</p>
           </div>
           <div class="tag">sup norm</div>
         </div>
 
         <div class="eq">
-          \[
-          K\text{ compact},\quad \mathcal F\subset C(K)
-          \]
-          \[
-          \mathcal F\text{ bounded + equicontinuous}
+          <span class="math-slot display" data-display="true" data-tex="K\text{ compact},\quad \mathcal F\subset C(K)"></span>
+          <span class="math-slot display" data-display="true" data-tex="\mathcal F\text{ bounded + equicontinuous}
           \Longrightarrow
-          \mathcal F\text{ relatively compact in }(C(K),\|\cdot\|_\infty).
-          \]
+          \mathcal F\text{ relatively compact in }(C(K),\|\cdot\|_\infty)."></span>
         </div>
 
         <div class="control">
           <label>Sequence <small id="exLabel"></small></label>
           <select id="example">
-            <option value="aa">good: \( \sin(x+(-1)^n+1/n) \)</option>
-            <option value="oscillatory">fails equicontinuity: \( \sin(nx) \)</option>
-            <option value="unbounded">fails boundedness: \( \sin x+n/8 \)</option>
+            <option value="aa">good: sin(x+(-1)^n+1/n)</option>
+            <option value="oscillatory">fails equicontinuity: sin(nx)</option>
+            <option value="unbounded">fails boundedness: sin(x)+n/8</option>
             <option value="spike">fails equicontinuity: moving spikes</option>
           </select>
         </div>
@@ -203,12 +201,12 @@
         </div>
 
         <div class="control">
-          <label>Error band \(\varepsilon\) <small id="epsLabel"></small></label>
+          <label>Error band <span class="math-slot" data-display="false" data-tex="\varepsilon"></span> <small id="epsLabel"></small></label>
           <input id="epsSlider" type="range" min="0.04" max="0.8" step="0.01" value="0.18">
         </div>
 
         <div class="control">
-          <label>Equicontinuity window \(\delta\) <small id="deltaLabel"></small></label>
+          <label>Equicontinuity window <span class="math-slot" data-display="false" data-tex="\delta"></span> <small id="deltaLabel"></small></label>
           <input id="deltaSlider" type="range" min="0.03" max="1.0" step="0.01" value="0.22">
         </div>
 
@@ -221,9 +219,9 @@
           <div class="heroTop">
             <div>
               <h2>Main diagram</h2>
-              <p>Left: graphs in \(C(K)\). Right: the same sequence as points in function space. Teal means compact behavior; coral means failure.</p>
+              <p>Left: graphs in <span class="math-slot" data-display="false" data-tex="C(K)"></span>. Right: the same sequence as points in function space. Teal means compact behavior; coral means failure.</p>
             </div>
-            <div id="status" class="status">ArzelÃ â€“Ascoli applies</div>
+            <div id="status" class="status">Arzelà–Ascoli applies</div>
           </div>
 
           <div class="split">
@@ -248,7 +246,7 @@
               </div>
               <div class="metric">
                 <h4>Compactness</h4>
-                <p>Relative compactness in \(C(K)\).</p>
+                <p>Relative compactness in <span class="math-slot" data-display="false" data-tex="C(K)"></span>.</p>
                 <strong id="compactMetric"></strong>
               </div>
             </div>
@@ -293,19 +291,35 @@
         </div>
 
         <section class="footer">
-          <div><strong>Boundedness.</strong> All graphs stay inside one vertical strip: \(\sup_{f\in\mathcal F}\|f\|_\infty<\infty\).</div>
-          <div><strong>Equicontinuity.</strong> One \(\delta\) controls all functions at once.</div>
-          <div><strong>Conclusion.</strong> Every sequence in \(\mathcal F\) has a uniformly convergent subsequence.</div>
+          <div><strong>Boundedness.</strong> All graphs stay inside one vertical strip: <span class="math-slot" data-display="false" data-tex="\sup_{f\in\mathcal F}\|f\|_\infty&lt;\infty"></span>.</div>
+          <div><strong>Equicontinuity.</strong> One <span class="math-slot" data-display="false" data-tex="\delta"></span> controls all functions at once.</div>
+          <div><strong>Conclusion.</strong> Every sequence in <span class="math-slot" data-display="false" data-tex="\mathcal F"></span> has a uniformly convergent subsequence.</div>
         </section>
       </main>
     </div>
   </div>
 
+
+<script>
+function escapeMathAttr(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function mathInline(tex){return `<span class="math-slot" data-display="false" data-tex="${escapeMathAttr(tex)}"></span>`;}
+function mathDisplay(tex){return `<span class="math-slot display" data-display="true" data-tex="${escapeMathAttr(tex)}"></span>`;}
+function typesetMath(root=document.body){
+  if(!window.katex){window.setTimeout(()=>typesetMath(root),60);return;}
+  root.querySelectorAll('.math-slot[data-tex]').forEach(el=>{
+    const tex=el.getAttribute('data-tex')||'';
+    const displayMode=el.getAttribute('data-display')==='true';
+    try{katex.render(tex,el,{displayMode,throwOnError:false,strict:'ignore'});}catch(err){el.textContent='';el.title=tex;}
+  });
+}
+window.addEventListener('load',()=>typesetMath(document.body));
+</script>
+
 <script>
   const examples = {
     aa:{
       label:'good',
-      formula:'\\[ f_n(x)=\\sin(x+(-1)^n+1/n),\\quad K=[0,2\\pi]. \\]',
+      formulaTex:String.raw`f_n(x)=\sin(x+(-1)^n+1/n),\quad K=[0,2\pi]`,
       comment:'The whole family is bounded and equicontinuous. Even and odd subsequences converge uniformly to different continuous limits.',
       domain:[0,2*Math.PI], range:[-1.28,1.28],
       bounded:true, equicont:true, compact:true,
@@ -315,7 +329,7 @@
     },
     oscillatory:{
       label:'not equicontinuous',
-      formula:'\\[ f_n(x)=\\sin(nx),\\quad K=[0,2\\pi]. \\]',
+      formulaTex:String.raw`f_n(x)=\sin(nx),\quad K=[0,2\pi]`,
       comment:'The curves stay bounded, but oscillate faster and faster. No common modulus of continuity controls the full family.',
       domain:[0,2*Math.PI], range:[-1.28,1.28],
       bounded:true, equicont:false, compact:false,
@@ -325,7 +339,7 @@
     },
     unbounded:{
       label:'not bounded',
-      formula:'\\[ f_n(x)=\\sin x+n/8,\quad K=[0,2\\pi]. \\]',
+      formulaTex:String.raw`f_n(x)=\sin x+n/8,\quad K=[0,2\pi]`,
       comment:'The slopes are controlled, but the graphs escape vertically. Boundedness is missing.',
       domain:[0,2*Math.PI], range:[-1.0,6.0],
       bounded:false, equicont:true, compact:false,
@@ -335,7 +349,7 @@
     },
     spike:{
       label:'not equicontinuous',
-      formula:'\\[ f_n(x)=\\max(0,1-n|x-1/n|),\quad K=[0,1]. \\]',
+      formulaTex:String.raw`f_n(x)=\max\{0,1-n|x-1/n|\},\quad K=[0,1]`,
       comment:'The family is bounded, but the peaks become arbitrarily steep. Pointwise convergence is not enough for compactness.',
       domain:[0,1], range:[-0.12,1.15],
       bounded:true, equicont:false, compact:false,
@@ -383,14 +397,14 @@
 
   const css=v=>getComputedStyle(document.body).getPropertyValue(v).trim();
   const lin=(x,a,b,c,d)=>c+(x-a)*(d-c)/(b-a);
-  const fmt=x=>(x<0?'âˆ’':'')+Math.abs(x).toFixed(2);
+  const fmt=x=>(x<0?'−':'')+Math.abs(x).toFixed(2);
 
   function setTheme(t){
     state.theme=t;
     document.body.classList.toggle('dark', t==='dark');
     localStorage.setItem('aa-theme',t);
     el.themeLabel.textContent=t==='dark'?'dark mode':'light mode';
-    el.knob.textContent=t==='dark'?'â˜¾':'â˜€';
+    el.knob.textContent=t==='dark'?'☾':'☀';
     render();
   }
 
@@ -550,9 +564,9 @@
 
     el.boundMetric.textContent=ex.bounded?'bounded':'not bounded';
     el.equicontMetric.textContent=ex.equicont?'equicontinuous':'not equicontinuous';
-    el.subMetric.textContent=ex.compact?`error â‰ˆ ${err.toFixed(3)}`:'not guaranteed';
+    el.subMetric.textContent=ex.compact?`error ≈ ${err.toFixed(3)}`:'not guaranteed';
     el.compactMetric.textContent=ex.compact?'relatively compact':'fails';
-    el.status.textContent=ex.compact?'ArzelÃ â€“Ascoli applies':'hypothesis fails';
+    el.status.textContent=ex.compact?'Arzelà–Ascoli applies':'hypothesis fails';
     el.status.style.color=compactCol;
     el.status.style.background=ex.compact?css('--accentSoft'):css('--badSoft');
   }
@@ -591,9 +605,9 @@
       <path d="${path(vals,X,Y)}" fill="none" stroke="${col}" stroke-width="3" stroke-linecap="round"/>
       <line x1="${X(state.delta)}" y1="${plot.y}" x2="${X(state.delta)}" y2="${plot.y+plot.h}" stroke="${css('--gold')}" stroke-dasharray="6 6" stroke-width="2"/>
       <circle cx="${X(state.delta)}" cy="${Y(curr)}" r="7.5" fill="${col}" stroke="${css('--paper')}" stroke-width="2.4"/>
-      ${text(plot.x+10,Y(state.eps)-9,'Îµ',{size:14,fill:css('--limit'),weight:700})}
-      ${text(X(state.delta)+10,Y(curr)-10,`Ï‰(Î´)â‰ˆ${curr.toFixed(2)}`,{size:14,fill:col,weight:700})}
-      ${text(plot.x+plot.w-8,plot.y+plot.h+24,'Î´',{size:13,fill:css('--muted'),anchor:'end'})}
+      ${text(plot.x+10,Y(state.eps)-9,'ε',{size:14,fill:css('--limit'),weight:700})}
+      ${text(X(state.delta)+10,Y(curr)-10,`ω(δ)≈${curr.toFixed(2)}`,{size:14,fill:col,weight:700})}
+      ${text(plot.x+plot.w-8,plot.y+plot.h+24,'δ',{size:13,fill:css('--muted'),anchor:'end'})}
 
       <rect x="${bars.x}" y="${bars.y}" width="${bars.w}" height="${bars.h}" rx="20" fill="${ex.bounded?css('--accentSoft'):css('--badSoft')}" stroke="${css('--line')}"/>
       <line x1="${bars.x+15}" y1="${bars.y+70}" x2="${bars.x+bars.w-15}" y2="${bars.y+70}" stroke="${css('--limit')}" stroke-dasharray="7 6" stroke-width="2"/>
@@ -648,7 +662,7 @@
     el.epsLabel.textContent=state.eps.toFixed(2);
     el.deltaLabel.textContent=state.delta.toFixed(2);
     [el.mSlider,el.epsSlider,el.deltaSlider].forEach(fill);
-    el.formula.innerHTML=ex.formula;
+    el.formula.innerHTML=mathDisplay(ex.formulaTex);
     el.comment.innerHTML=ex.comment;
     el.branch.style.opacity = state.ex==='aa' ? '1' : '.45';
   }
@@ -658,7 +672,7 @@
     renderMain();
     renderCriteria();
     renderMinis();
-    if(window.MathJax) MathJax.typesetPromise().catch(()=>{});
+    typesetMath(document.body);
   }
 
   function sync(){

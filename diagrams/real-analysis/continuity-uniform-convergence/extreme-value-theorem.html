@@ -18,16 +18,9 @@
 
     gtag('config', 'G-NHXHEJP1G0');
   </script>
-  <script>
-    window.MathJax = {
-      tex: {
-        inlineMath: [['\\(','\\)'], ['$', '$']],
-        displayMath: [['\\[','\\]']]
-      },
-      svg: { fontCache: 'global' }
-    };
-  </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+
   <style>
     :root{
       --bg:#f5f1e8;
@@ -274,6 +267,13 @@
       .failure-grid,.footer-strip{grid-template-columns:1fr}
       .wrap{padding:18px 14px 28px}
     }
+
+    .math-slot{display:inline-block;max-width:100%;vertical-align:baseline}
+    .math-slot.display{display:block;overflow-x:auto;overflow-y:hidden;padding:2px 0}
+    .math-slot.display .katex-display{margin:.2em 0;text-align:left}
+    .eqbox,.summary-box,.strip-box,.note-box{overflow-wrap:anywhere}
+    .eqbox .katex,.summary-box .katex,.strip-box .katex,.note-box .katex{font-size:1.02em}
+
   </style>
 </head>
 <body>
@@ -288,9 +288,9 @@
         <div id="themeToggle" class="theme-toggle" role="button" aria-label="Toggle dark and light mode" tabindex="0">
           <span class="label" id="themeLabel">light mode</span>
           <div class="switch">
-            <span class="icon sun">â˜€</span>
-            <span class="icon moon">â˜¾</span>
-            <div class="thumb" id="themeThumb">â˜€</div>
+            <span class="icon sun">☀</span>
+            <span class="icon moon">☾</span>
+            <div class="thumb" id="themeThumb">☀</div>
           </div>
         </div>
       </div>
@@ -303,18 +303,10 @@
             <h2>Controls</h2>
             <p>Move the compact interval and reshape the function.</p>
           </div>
-          <div class="mini-chip">\(K\subset\mathbb R\)</div>
+          <div class="mini-chip"><span class="math-slot" data-display="false" data-tex="K\subset\mathbb R"></span></div>
         </div>
 
-        <div class="eqbox">
-          \[
-          K\text{ compact},\ f:K\to\mathbb R\text{ continuous}
-          \]
-          \[
-          \Longrightarrow\ \exists x_{\min},x_{\max}\in K:
-          f(x_{\min})=\min_K f,\quad f(x_{\max})=\max_K f
-          \]
-        </div>
+        <div class="eqbox"><span class="math-slot display" data-display="true" data-tex="K\text{ compact},\quad f:K\to\mathbb R\text{ continuous}"></span><span class="math-slot display" data-display="true" data-tex="\Longrightarrow\ \exists x_{\min},x_{\max}\in K:\ f(x_{\min})=\min_K f,\quad f(x_{\max})=\max_K f"></span></div>
 
         <div class="control-group">
           <label for="funcSelect">Function family <small id="funcLabel"></small></label>
@@ -326,11 +318,11 @@
           </select>
         </div>
         <div class="control-group">
-          <label for="leftSlider">Left endpoint \(a\) <small id="leftVal"></small></label>
+          <label for="leftSlider">Left endpoint <span class="math-slot" data-display="false" data-tex="a"></span> <small id="leftVal"></small></label>
           <input id="leftSlider" type="range" min="-4.5" max="2.0" step="0.1" value="-2.2" />
         </div>
         <div class="control-group">
-          <label for="rightSlider">Right endpoint \(b\) <small id="rightVal"></small></label>
+          <label for="rightSlider">Right endpoint <span class="math-slot" data-display="false" data-tex="b"></span> <small id="rightVal"></small></label>
           <input id="rightSlider" type="range" min="-1.0" max="4.8" step="0.1" value="2.8" />
         </div>
         <div class="control-group">
@@ -349,7 +341,7 @@
         <div id="compactMessage" class="note-box"></div>
         <div class="summary-box">
           <strong>Visual proof.</strong>
-          Compact \(K\) â‡’ compact image \(f(K)\). In \(\mathbb R\), compact means the image interval contains its endpoints, so the extrema are attained.
+          Compact <span class="math-slot" data-display="false" data-tex="K"></span> ⇒ compact image <span class="math-slot" data-display="false" data-tex="f(K)"></span>. In <span class="math-slot" data-display="false" data-tex="\\mathbb R"></span>, compact means the image interval contains its endpoints, so the extrema are attained.
         </div>
       </aside>
 
@@ -358,7 +350,7 @@
           <div class="hero-top">
             <div>
               <h2 style="margin:0; font-family:Georgia, 'Times New Roman', serif; letter-spacing:-.02em">One theorem, one diagram</h2>
-              <p>Read the picture from left to right: <strong>compact domain</strong> â†’ <strong>continuous graph</strong> â†’ <strong>image interval with attained endpoints</strong>.</p>
+              <p>Read the picture from left to right: <strong>compact domain</strong> → <strong>continuous graph</strong> → <strong>image interval with attained endpoints</strong>.</p>
             </div>
             <div id="heroStatus" class="status">extrema attained</div>
           </div>
@@ -399,24 +391,24 @@
             <div class="failure-card">
               <h4>Open interval</h4>
               <svg id="miniOpen" class="mini-svg" viewBox="0 0 260 180"></svg>
-              <p>Endpoints missing â‡’ bounds exist but are not reached.</p>
+              <p>Endpoints missing ⇒ bounds exist but are not reached.</p>
             </div>
             <div class="failure-card">
               <h4>Unbounded domain</h4>
               <svg id="miniUnbounded" class="mini-svg" viewBox="0 0 260 180"></svg>
-              <p>One side escapes to infinity â‡’ no global maximum.</p>
+              <p>One side escapes to infinity ⇒ no global maximum.</p>
             </div>
             <div class="failure-card">
               <h4>Discontinuous map</h4>
               <svg id="miniDiscontinuous" class="mini-svg" viewBox="0 0 260 180"></svg>
-              <p>Jump at the endpoint â‡’ supremum may fail to be attained.</p>
+              <p>Jump at the endpoint ⇒ supremum may fail to be attained.</p>
             </div>
           </div>
         </section>
 
         <section class="footer-strip">
-          <div class="strip-box"><strong>Statement.</strong> Continuous \(f:K\to\mathbb R\) with compact \(K\subset\mathbb R^n\) attains both \(\min_K f\) and \(\max_K f\).</div>
-          <div class="strip-box"><strong>Heineâ€“Borel.</strong> In \(\mathbb R^n\), compact = closed + bounded. That is why those are the practical hypotheses.</div>
+          <div class="strip-box"><strong>Statement.</strong> Continuous <span class="math-slot" data-display="false" data-tex="f:K\to\mathbb R"></span> with compact <span class="math-slot" data-display="false" data-tex="K\subset\mathbb R^n"></span> attains both <span class="math-slot" data-display="false" data-tex="\min_K f"></span> and <span class="math-slot" data-display="false" data-tex="\max_K f"></span>.</div>
+          <div class="strip-box"><strong>Heine–Borel.</strong> In <span class="math-slot" data-display="false" data-tex="\\mathbb R^n"></span>, compact = closed + bounded. That is why those are the practical hypotheses.</div>
           <div class="strip-box"><strong>Optimization.</strong> A continuous objective on a compact feasible set always has a global minimizer and maximizer.</div>
         </section>
       </main>
@@ -424,6 +416,20 @@
   </div>
 
   <script>
+
+    function escapeMathAttr(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+    function mathDisplay(tex){return `<span class="math-slot display" data-display="true" data-tex="${escapeMathAttr(tex)}"></span>`;}
+    function mathInline(tex){return `<span class="math-slot" data-display="false" data-tex="${escapeMathAttr(tex)}"></span>`;}
+    function typesetMath(root=document.body){
+      if(!window.katex){ window.setTimeout(()=>typesetMath(root),60); return; }
+      root.querySelectorAll('.math-slot[data-tex]').forEach(el=>{
+        const tex=el.getAttribute('data-tex')||'';
+        const displayMode=el.getAttribute('data-display')==='true';
+        try{ katex.render(tex, el, {displayMode, throwOnError:false, strict:'ignore'}); }
+        catch(err){ el.textContent=''; el.title=tex; }
+      });
+    }
+
     const state = {
       func:'quad',
       a:-2.2,
@@ -462,7 +468,7 @@
     };
 
     const css = name => getComputedStyle(document.body).getPropertyValue(name).trim();
-    const fmt = x => (x < 0 ? 'âˆ’' : '') + Math.abs(x).toFixed(2);
+    const fmt = x => (x < 0 ? '−' : '') + Math.abs(x).toFixed(2);
     const mapLinear = (x,a,b,c,d) => c + (x-a)*(d-c)/(b-a);
 
     function updateSliderFill(input){
@@ -476,7 +482,7 @@
       document.body.classList.toggle('dark', theme === 'dark');
       localStorage.setItem('evt-diagram-theme', theme);
       els.themeLabel.textContent = theme === 'dark' ? 'dark mode' : 'light mode';
-      els.themeThumb.textContent = theme === 'dark' ? 'â˜¾' : 'â˜€';
+      els.themeThumb.textContent = theme === 'dark' ? '☾' : '☀';
       renderAll();
     }
 
@@ -609,19 +615,14 @@
         ${svgText(img.x+img.w/2, imgBottom+25, 'min f(K)', {anchor:'middle', size:15, fill:minColor, weight:700})}
         ${svgText(img.x+img.w/2, img.y+img.h-8, 'attained endpoints', {anchor:'middle', size:14, fill:css('--accent'), weight:700})}
 
-        <path d="M ${XD(ext.minX)} ${dom.y+dom.h+34} C ${XD(ext.minX)} ${dom.y+dom.h+70}, ${X(ext.minX)-28} ${Y(ext.minY)-58}, ${X(ext.minX)} ${Y(ext.minY)-12}" fill="none" stroke="${minColor}" stroke-width="2.5" opacity=".94"/>
-        <path d="M ${X(ext.minX)+12} ${Y(ext.minY)} C ${X(ext.minX)+72} ${Y(ext.minY)}, ${img.x-36} ${imgBottom}, ${imgMidX-12} ${imgBottom}" fill="none" stroke="${minColor}" stroke-width="2.5" opacity=".94"/>
-        <path d="M ${XD(ext.maxX)} ${dom.y+dom.h+34} C ${XD(ext.maxX)} ${dom.y+dom.h+70}, ${X(ext.maxX)-28} ${Y(ext.maxY)-58}, ${X(ext.maxX)} ${Y(ext.maxY)-12}" fill="none" stroke="${maxColor}" stroke-width="2.5" opacity=".94"/>
-        <path d="M ${X(ext.maxX)+12} ${Y(ext.maxY)} C ${X(ext.maxX)+72} ${Y(ext.maxY)}, ${img.x-36} ${imgTop}, ${imgMidX-12} ${imgTop}" fill="none" stroke="${maxColor}" stroke-width="2.5" opacity=".94"/>
-
         ${svgText(805, 334, 'continuous image', {size:16, fill:css('--accent'), weight:700, anchor:'middle'})}
         ${svgText(805, 357, 'cannot miss its ends', {size:15, fill:css('--muted'), anchor:'middle'})}
       `;
 
       els.intervalBadge.textContent = `K = [${fmt(a)}, ${fmt(b)}]`;
       els.rangeBadge.textContent = `f(K) = [${fmt(ext.minY)}, ${fmt(ext.maxY)}]`;
-      els.witnessBadge.textContent = `x_min â‰ˆ ${fmt(ext.minX)},  x_max â‰ˆ ${fmt(ext.maxX)}`;
-      els.compactMessage.innerHTML = `The colored domain points <strong>\(x_{\min}\)</strong> and <strong>\(x_{\max}\)</strong> are carried by the graph to the colored endpoints of the image interval. The theorem guarantees these endpoint values are <strong>attained</strong>.`;
+      els.witnessBadge.textContent = `x_min ≈ ${fmt(ext.minX)},  x_max ≈ ${fmt(ext.maxX)}`;
+      els.compactMessage.innerHTML = `The colored domain points <strong>${mathInline('x_{\\min}')}</strong> and <strong>${mathInline('x_{\\max}')}</strong> are carried by the graph to the colored endpoints of the image interval. The theorem guarantees these endpoint values are <strong>attained</strong>.`;
       els.heroStatus.textContent = 'extrema attained';
     }
 
@@ -680,7 +681,7 @@
       renderMiniOpen();
       renderMiniUnbounded();
       renderMiniDiscontinuous();
-      if(window.MathJax) MathJax.typesetPromise().catch(()=>{});
+      typesetMath(document.body);
     }
 
     function syncState(){

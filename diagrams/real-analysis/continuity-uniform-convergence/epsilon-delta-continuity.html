@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -9,6 +9,8 @@
 <meta name="description" content="Interactive real analysis diagram for epsilon-delta continuity.">
   <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
 <title>Epsilon-Delta Continuity | Real Analysis Diagrams</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
 <script>
@@ -331,6 +333,13 @@
   .band-edge{stroke:var(--accent);stroke-width:1.15;stroke-dasharray:4 5}
   .delta-edge{stroke:var(--accent2);stroke-width:1.15;stroke-dasharray:4 5}
 
+
+  .math-slot{display:inline-block;max-width:100%;vertical-align:baseline}
+  .math-slot.display{display:block;overflow-x:auto;overflow-y:hidden;padding:2px 0}
+  .math-slot.display .katex-display{margin:.25em 0;text-align:left}
+  .formula .math-slot.display .katex{font-size:1.04em}
+  .line .math-slot.display .katex{font-size:.98em}
+
   @media (max-width: 980px){
     .app{padding:22px 14px 38px}
     .grid{grid-template-columns:1fr}
@@ -347,8 +356,8 @@
 <div class="app">
   <header>
     <div>
-      <div class="eyebrow">Real Analysis â€¢ local control</div>
-      <h1>Îµâ€“Î´ continuity</h1>
+      <div class="eyebrow">Real Analysis • local control</div>
+      <h1>ε–δ continuity</h1>
       <p class="subtitle">A point is continuous when every sufficiently small input-neighborhood around <em>a</em> is carried entirely inside a prescribed output-neighborhood around <em>f(a)</em>.</p>
     </div>
     <button class="toggle" id="themeToggle" type="button" aria-label="Toggle dark mode"><span class="dot"></span><span id="themeText">Dark mode</span></button>
@@ -359,19 +368,17 @@
       <div class="card-head">
         <div>
           <h2 class="card-title">The neighborhood picture</h2>
-          <p class="card-note">Move Îµ and Î´. The Î´-window in the domain is tested against the Îµ-band in the range.</p>
+          <p class="card-note">Move ε and δ. The δ-window in the domain is tested against the ε-band in the range.</p>
         </div>
         <div class="legend" aria-label="Legend">
-          <span class="key"><span class="sw delta"></span>Î´-neighborhood</span>
-          <span class="key"><span class="sw eps"></span>Îµ-band</span>
+          <span class="key"><span class="sw delta"></span>δ-neighborhood</span>
+          <span class="key"><span class="sw eps"></span>ε-band</span>
           <span class="key"><span class="sw"></span>allowed image</span>
           <span class="key"><span class="sw fail"></span>escape</span>
         </div>
       </div>
       <div class="mathbox">
-        <div class="formula" id="definitionFormula">
-          f continuous at a â‡” âˆ€Îµ&gt;0, âˆƒÎ´&gt;0 : |xâˆ’a|&lt;Î´ â‡’ |f(x)âˆ’f(a)|&lt;Îµ.
-        </div>
+        <div class="formula" id="definitionFormula"><span class="math-slot display" data-display="true" data-tex="f\text{ continuous at }a \Longleftrightarrow \forall\varepsilon&gt;0,\ \exists\delta&gt;0:\ |x-a|&lt;\delta \Rightarrow |f(x)-f(a)|&lt;\varepsilon"></span></div>
       </div>
       <div class="diagram-wrap">
         <svg id="mainSvg" viewBox="0 0 780 500" role="img" aria-label="Interactive epsilon delta continuity diagram"></svg>
@@ -380,17 +387,17 @@
         <div>
           <h3>What to notice</h3>
           <ul id="noticeList">
-            <li>Îµ is chosen first: it is the required vertical accuracy.</li>
-            <li>Î´ is the response: it controls how close x must be to a.</li>
-            <li>Continuity means some Î´ works for every Îµ&gt;0.</li>
+            <li>ε is chosen first: it is the required vertical accuracy.</li>
+            <li>δ is the response: it controls how close x must be to a.</li>
+            <li>Continuity means some δ works for every ε&gt;0.</li>
           </ul>
         </div>
         <div>
           <h3>Exam summary</h3>
           <div class="summary-grid">
-            <div class="line">Start: let Îµ&gt;0.</div>
-            <div class="line">Find Î´=Î´(Îµ,a)&gt;0.</div>
-            <div class="line">Assume |xâˆ’a|&lt;Î´; prove |f(x)âˆ’f(a)|&lt;Îµ.</div>
+            <div class="line">Start: let ε&gt;0.</div>
+            <div class="line">Find δ=δ(ε,a)&gt;0.</div>
+            <div class="line">Assume |x−a|&lt;δ; prove |f(x)−f(a)|&lt;ε.</div>
           </div>
         </div>
       </div>
@@ -402,7 +409,7 @@
           <div class="control">
             <label for="model">Model <span class="value" id="modelLabel">smooth</span></label>
             <select id="model">
-              <option value="smooth">smooth continuous: f(x)=0.18xÂ²+s x</option>
+              <option value="smooth">smooth continuous: f(x)=0.18x²+s x</option>
               <option value="absolute">corner continuous: f(x)=|x|+s x/3</option>
               <option value="jump">jump discontinuity at a</option>
               <option value="removable">removable discontinuity at a</option>
@@ -420,11 +427,11 @@
           </div>
           <div class="row">
             <div class="control">
-              <label for="epsSlider">Îµ <span class="value" id="epsVal">0.60</span></label>
+              <label for="epsSlider">ε <span class="value" id="epsVal">0.60</span></label>
               <input type="range" id="epsSlider" min="0.08" max="1.8" value="0.60" step="0.02" />
             </div>
             <div class="control">
-              <label for="deltaSlider">Î´ <span class="value" id="deltaVal">0.90</span></label>
+              <label for="deltaSlider">δ <span class="value" id="deltaVal">0.90</span></label>
               <input type="range" id="deltaSlider" min="0.03" max="2.5" value="0.90" step="0.02" />
             </div>
           </div>
@@ -441,14 +448,14 @@
           <div class="control">
             <label for="seqMode">sequence approaching a <span class="value" id="seqLabel">alternating</span></label>
             <select id="seqMode">
-              <option value="alt">alternating: a+(-1)â¿Ï/n</option>
-              <option value="left">from the left: aâˆ’Ï/n</option>
-              <option value="right">from the right: a+Ï/n</option>
+              <option value="alt">alternating: a+(-1)ⁿρ/n</option>
+              <option value="left">from the left: a−ρ/n</option>
+              <option value="right">from the right: a+ρ/n</option>
             </select>
           </div>
           <div class="btnrow">
-            <button type="button" class="btn" id="autoBtn">choose a good Î´</button>
-            <button type="button" class="btn secondary" id="tightBtn">make Î´ smaller</button>
+            <button type="button" class="btn" id="autoBtn">choose a good δ</button>
+            <button type="button" class="btn secondary" id="tightBtn">make δ smaller</button>
             <button type="button" class="btn secondary" id="resetBtn">reset</button>
           </div>
         </div>
@@ -456,14 +463,14 @@
 
       <section class="card pad">
         <div id="status" class="status">
-          <div class="badge" id="statusIcon">âœ“</div>
-          <div><strong id="statusTitle">Î´ works for this Îµ</strong><span id="statusText">The whole sampled image of (aâˆ’Î´,a+Î´) stays inside the Îµ-band.</span></div>
+          <div class="badge" id="statusIcon">✓</div>
+          <div><strong id="statusTitle">δ works for this ε</strong><span id="statusText">The whole sampled image of (a−δ,a+δ) stays inside the ε-band.</span></div>
         </div>
         <div class="kpi" style="margin-top:12px">
           <div class="pill"><small>f(a)</small><b id="faVal">0.000</b></div>
           <div class="pill"><small>max escape</small><b id="escapeVal">0.000</b></div>
-          <div class="pill"><small>current xâ‚™</small><b id="xnVal">0.000</b></div>
-          <div class="pill"><small>f(xâ‚™)</small><b id="fxnVal">0.000</b></div>
+          <div class="pill"><small>current xₙ</small><b id="xnVal">0.000</b></div>
+          <div class="pill"><small>f(xₙ)</small><b id="fxnVal">0.000</b></div>
         </div>
       </section>
 
@@ -471,7 +478,7 @@
         <div class="card-head">
           <div>
             <h2 class="card-title">Sequential lens</h2>
-            <p class="card-note">Continuity also means every sequence xâ‚™â†’a is carried to f(xâ‚™)â†’f(a).</p>
+            <p class="card-note">Continuity also means every sequence xₙ→a is carried to f(xₙ)→f(a).</p>
           </div>
         </div>
         <div class="diagram-wrap">
@@ -479,12 +486,28 @@
         </div>
         <div class="summary">
           <h3>Symbolic equivalence</h3>
-          <div class="line" id="seqFormula">f continuous at a â‡” xâ‚™â†’a â‡’ f(xâ‚™)â†’f(a).</div>
+          <div class="line" id="seqFormula"><span class="math-slot display" data-display="true" data-tex="f\text{ continuous at }a \Longleftrightarrow x_n\to a \Rightarrow f(x_n)\to f(a)"></span></div>
         </div>
       </section>
     </aside>
   </main>
 </div>
+
+
+<script>
+function escapeMathAttr(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function mathInline(tex){return `<span class="math-slot" data-display="false" data-tex="${escapeMathAttr(tex)}"></span>`;}
+function mathDisplay(tex){return `<span class="math-slot display" data-display="true" data-tex="${escapeMathAttr(tex)}"></span>`;}
+function typesetMath(root=document.body){
+  if(!window.katex){window.setTimeout(()=>typesetMath(root),60);return;}
+  root.querySelectorAll('.math-slot[data-tex]').forEach(el=>{
+    const tex=el.getAttribute('data-tex')||'';
+    const displayMode=el.getAttribute('data-display')==='true';
+    try{katex.render(tex,el,{displayMode,throwOnError:false,strict:'ignore'});}catch(err){el.textContent='';el.title=tex;}
+  });
+}
+window.addEventListener('load',()=>typesetMath(document.body));
+</script>
 
 <script>
 (function(){
@@ -505,7 +528,7 @@
 
   function cssVar(name){ return getComputedStyle(document.body).getPropertyValue(name).trim(); }
   function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
-  function fmt(x,d=3){ if(!Number.isFinite(x)) return 'â€”'; return (Math.abs(x)<.0005?0:x).toFixed(d); }
+  function fmt(x,d=3){ if(!Number.isFinite(x)) return '—'; return (Math.abs(x)<.0005?0:x).toFixed(d); }
   function modelName(){return els.model.options[els.model.selectedIndex].textContent.split(':')[0];}
 
   function base(x){return 0.18*x*x + state.s*x;}
@@ -528,10 +551,11 @@
     return f(state.a);
   }
   function formulaText(){
-    if(state.model==='smooth') return 'f(x)=0.18xÂ²+s x.  Continuity at a:  âˆ€Îµ>0, âˆƒÎ´>0 : |xâˆ’a|<Î´ â‡’ |f(x)âˆ’f(a)|<Îµ.';
-    if(state.model==='absolute') return 'f(x)=|x|+s x/3.  A corner may destroy differentiability, but not continuity.';
-    if(state.model==='jump') return 'Jump at a.  The left and right traces cannot be trapped in one small Îµ-band around f(a).';
-    return 'Removable discontinuity.  The punctured limit exists, but the filled value f(a) is placed elsewhere.';
+    const main = mathDisplay('f\\text{ continuous at }a \\Longleftrightarrow \\forall\\varepsilon>0,\\ \\exists\\delta>0:\\ |x-a|<\\delta \\Rightarrow |f(x)-f(a)|<\\varepsilon');
+    if(state.model==='smooth') return mathDisplay('f(x)=0.18x^2+s x') + '<div class="small">Smooth functions are continuous; the diagram shows one local δ-response for the chosen ε.</div>' + main;
+    if(state.model==='absolute') return mathDisplay('f(x)=|x|+\\frac{s}{3}x') + '<div class="small">A corner may destroy differentiability, but not continuity.</div>' + main;
+    if(state.model==='jump') return mathDisplay('f(x)=0.18x^2+s x+J\\mathbf 1_{\\{x\\ge a\\}}') + '<div class="small">A jump prevents one δ-neighborhood from fitting inside every small ε-band.</div>';
+    return mathDisplay('f(a)=0.18a^2+s a+J,\\qquad f(x)=0.18x^2+s x\\ (x\\ne a)') + '<div class="small">The punctured limit exists, but continuity requires that limit to equal the assigned value f(a).</div>';
   }
 
   function sampleTest(){
@@ -656,10 +680,10 @@
 
     // labels
     html += `<text class="svg-label" x="${sx(state.a)+7}" y="${H-m.b+25}">a</text>`;
-    html += `<text class="svg-label" x="${sx(xL)-18}" y="${H-m.b+25}">aâˆ’Î´</text>`;
-    html += `<text class="svg-label" x="${sx(xR)-18}" y="${H-m.b+25}">a+Î´</text>`;
-    html += `<text class="svg-label" x="${W-m.r-126}" y="${sy(yHi)-8}">f(a)+Îµ</text>`;
-    html += `<text class="svg-label" x="${W-m.r-126}" y="${sy(yLo)+16}">f(a)âˆ’Îµ</text>`;
+    html += `<text class="svg-label" x="${sx(xL)-18}" y="${H-m.b+25}">a−δ</text>`;
+    html += `<text class="svg-label" x="${sx(xR)-18}" y="${H-m.b+25}">a+δ</text>`;
+    html += `<text class="svg-label" x="${W-m.r-126}" y="${sy(yHi)-8}">f(a)+ε</text>`;
+    html += `<text class="svg-label" x="${W-m.r-126}" y="${sy(yLo)+16}">f(a)−ε</text>`;
     html += `<text class="svg-label" x="${W-m.r-92}" y="${sy(target)-8}">f(a)</text>`;
     const verdict = test.works ? 'image trapped' : 'image escapes';
     const vColor = test.works ? cssVar('--accent') : cssVar('--danger');
@@ -696,7 +720,7 @@
     html += `<line class="axis" x1="${m.l}" y1="${topY}" x2="${W-m.r}" y2="${topY}"/>`;
     html += `<circle class="point" cx="${sx(state.a)}" cy="${topY}" r="5"/>`;
     html += `<rect class="delta-fill" x="${sx(state.a-state.delta)}" y="${topY-15}" width="${sx(state.a+state.delta)-sx(state.a-state.delta)}" height="30" rx="15"/>`;
-    html += `<text class="svg-label" x="${m.l}" y="25">xâ‚™ â†’ a</text>`;
+    html += `<text class="svg-label" x="${m.l}" y="25">xₙ → a</text>`;
     html += `<text class="svg-small" x="${sx(state.a)+8}" y="${topY-10}">a</text>`;
 
     // bottom y track / image
@@ -706,7 +730,7 @@
     html += `<line class="band-edge" x1="${m.l}" y1="${sy(target+state.eps)}" x2="${W-m.r}" y2="${sy(target+state.eps)}"/>`;
     html += `<line class="band-edge" x1="${m.l}" y1="${sy(target-state.eps)}" x2="${W-m.r}" y2="${sy(target-state.eps)}"/>`;
     html += `<line class="target-line" x1="${m.l}" y1="${sy(target)}" x2="${W-m.r}" y2="${sy(target)}"/>`;
-    html += `<text class="svg-label" x="${m.l}" y="112">f(xâ‚™) â†’ f(a)?</text>`;
+    html += `<text class="svg-label" x="${m.l}" y="112">f(xₙ) → f(a)?</text>`;
     html += `<text class="svg-small" x="${W-m.r-58}" y="${sy(target)-7}">f(a)</text>`;
 
     const start=Math.max(0,seq.length-34);
@@ -728,7 +752,7 @@
       html += `<text class="svg-small" x="${m.l}" y="${H-10}">Jump: left and right sequences can approach different image limits.</text>`;
     } else if(state.model==='removable'){
       html += `<line class="fail-line" x1="${m.l}" y1="${sy(base(state.a))}" x2="${W-m.r}" y2="${sy(base(state.a))}"/>`;
-      html += `<text class="svg-small" x="${m.l}" y="${H-10}">Removable: f(xâ‚™) approaches the punctured limit, not the assigned value f(a).</text>`;
+      html += `<text class="svg-small" x="${m.l}" y="${H-10}">Removable: f(xₙ) approaches the punctured limit, not the assigned value f(a).</text>`;
     } else {
       html += `<text class="svg-small" x="${m.l}" y="${H-10}">Continuous: tails near a have image tails near f(a).</text>`;
     }
@@ -739,46 +763,47 @@
     els.aVal.textContent=fmt(state.a,2); els.sVal.textContent=fmt(state.s,2); els.epsVal.textContent=fmt(state.eps,2); els.deltaVal.textContent=fmt(state.delta,2); els.jumpVal.textContent=fmt(state.jump,2); els.nVal.textContent=state.n;
     els.modelLabel.textContent=modelName();
     els.seqLabel.textContent = state.seq==='alt'?'alternating':state.seq==='left'?'left':'right';
-    els.definitionFormula.textContent = formulaText();
+    els.definitionFormula.innerHTML = formulaText();
+    typesetMath(els.definitionFormula);
     const test=sampleTest();
     const faval=fa();
     const seq=sequencePoints(state.n), cur=seq[seq.length-1];
     els.faVal.textContent=fmt(faval,3); els.escapeVal.textContent=fmt(Math.max(0,test.maxDist-state.eps),3); els.xnVal.textContent=fmt(cur.x,3); els.fxnVal.textContent=fmt(cur.y,3);
     els.status.classList.remove('fail','warn');
     if(test.works){
-      els.statusIcon.textContent='âœ“';
-      els.statusTitle.textContent='This Î´ works for this Îµ';
-      els.statusText.textContent='Every sampled point with |xâˆ’a|<Î´ lands inside |f(x)âˆ’f(a)|<Îµ.';
+      els.statusIcon.textContent='✓';
+      els.statusTitle.textContent='This δ works for this ε';
+      els.statusText.textContent='Every sampled point with |x−a|<δ lands inside |f(x)−f(a)|<ε.';
     } else {
       els.status.classList.add('fail');
-      els.statusIcon.textContent='Ã—';
-      els.statusTitle.textContent='This Î´ does not work';
-      let reason='Some points in the Î´-neighborhood escape the Îµ-band.';
-      if(state.model==='jump') reason='A one-sided trace near a remains separated from f(a); shrinking Î´ cannot remove the jump.';
+      els.statusIcon.textContent='×';
+      els.statusTitle.textContent='This δ does not work';
+      let reason='Some points in the δ-neighborhood escape the ε-band.';
+      if(state.model==='jump') reason='A one-sided trace near a remains separated from f(a); shrinking δ cannot remove the jump.';
       if(state.model==='removable') reason='Nearby punctured values approach a different height than the assigned value f(a).';
       els.statusText.textContent=reason;
     }
 
     if(state.model==='jump'){
-      els.noticeList.innerHTML='<li>A jump gives two incompatible local images.</li><li>For Îµ smaller than the jump gap, no Î´ can trap both sides.</li><li>One-sided limits reveal the failure geometrically.</li>';
-      els.seqFormula.textContent='xâ‚™â†’a from different sides may force different limits for f(xâ‚™).';
+      els.noticeList.innerHTML='<li>A jump gives two incompatible local images.</li><li>For ε smaller than the jump gap, no δ can trap both sides.</li><li>One-sided limits reveal the failure geometrically.</li>';
+      els.seqFormula.innerHTML = mathDisplay('x_n\\to a\\text{ from different sides may force different limits for }f(x_n)'); typesetMath(els.seqFormula);
     } else if(state.model==='removable'){
       els.noticeList.innerHTML='<li>The punctured graph can have a clean limit.</li><li>Continuity compares nearby values with the actual filled value f(a).</li><li>Changing one point can destroy continuity at that point only.</li>';
-      els.seqFormula.textContent='For xâ‚™â‰ a with xâ‚™â†’a, f(xâ‚™)â†’L, but continuity requires L=f(a).';
+      els.seqFormula.innerHTML = mathDisplay('x_n\\ne a,\\ x_n\\to a \\Rightarrow f(x_n)\\to L,\\quad \\text{but continuity requires }L=f(a)'); typesetMath(els.seqFormula);
     } else if(state.model==='absolute'){
-      els.noticeList.innerHTML='<li>A sharp corner can still be continuous.</li><li>Continuity controls height, not slope.</li><li>The same Îµ-band can be satisfied by making Î´ small enough.</li>';
-      els.seqFormula.textContent='A corner may fail differentiability, while xâ‚™â†’a still implies f(xâ‚™)â†’f(a).';
+      els.noticeList.innerHTML='<li>A sharp corner can still be continuous.</li><li>Continuity controls height, not slope.</li><li>The same ε-band can be satisfied by making δ small enough.</li>';
+      els.seqFormula.innerHTML = mathDisplay('x_n\\to a \\Rightarrow f(x_n)\\to f(a)\\quad\\text{even at a corner}'); typesetMath(els.seqFormula);
     } else {
-      els.noticeList.innerHTML='<li>Îµ is chosen first: it is the required vertical accuracy.</li><li>Î´ is the response: it controls how close x must be to a.</li><li>Continuity means some Î´ works for every Îµ&gt;0.</li>';
-      els.seqFormula.textContent='f continuous at a â‡” xâ‚™â†’a â‡’ f(xâ‚™)â†’f(a).';
+      els.noticeList.innerHTML='<li>ε is chosen first: it is the required vertical accuracy.</li><li>δ is the response: it controls how close x must be to a.</li><li>Continuity means some δ works for every ε&gt;0.</li>';
+      els.seqFormula.innerHTML = mathDisplay('f\\text{ continuous at }a \\Longleftrightarrow x_n\\to a \\Rightarrow f(x_n)\\to f(a)'); typesetMath(els.seqFormula);
     }
   }
 
-  function render(){ updateText(); drawMain(); drawSeq(); }
+  function render(){ updateText(); drawMain(); drawSeq(); typesetMath(document.body); }
 
   function goodDelta(){
     if(state.model==='smooth'){
-      // A safe local Lipschitz estimate for 0.18xÂ²+s x on the displayed range.
+      // A safe local Lipschitz estimate for 0.18x²+s x on the displayed range.
       const L=Math.abs(state.s)+0.36*(Math.abs(state.a)+2.6)+0.05;
       return clamp(0.82*state.eps/L, .03, 2.5);
     }

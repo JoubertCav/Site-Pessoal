@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -40,20 +40,20 @@
     --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
   [data-theme="dark"]{
-    --bg:#0d1117;
-    --paper:#131922;
-    --paper2:#18212b;
-    --ink:#edf4f2;
-    --muted:#9aa8a4;
-    --line:rgba(237,244,242,.13);
-    --grid:rgba(237,244,242,.075);
-    --accent:#58cbbb;
-    --accent-weak:rgba(88,203,187,.14);
-    --accent-mid:rgba(88,203,187,.30);
-    --gold:#d1aa67;
-    --red:#dd8585;
-    --blue:#8ab2dc;
-    --shadow:0 22px 64px rgba(0,0,0,.32);
+    --bg:#070b11;
+    --paper:#101821;
+    --paper2:#162331;
+    --ink:#eef8f5;
+    --muted:#a8b8b3;
+    --line:rgba(238,248,245,.15);
+    --grid:rgba(238,248,245,.065);
+    --accent:#6be0cf;
+    --accent-weak:rgba(107,224,207,.135);
+    --accent-mid:rgba(107,224,207,.32);
+    --gold:#e1b56f;
+    --red:#ef8d8d;
+    --blue:#9ac7ef;
+    --shadow:0 26px 70px rgba(0,0,0,.46);
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
@@ -151,24 +151,171 @@
   @media (max-width:680px){
     .wrap{padding:16px 10px 32px}.hero{padding:24px 18px}.status,.three{grid-template-columns:1fr}.card{padding:15px}.cardHead{display:block}.badge{display:inline-block;margin-top:8px}
   }
+
+  .grid > *, .main > *, .two > *, .three > *, .status > *, .summary > *, .lawGrid > *, .card, .mini, .law { min-width:0; }
+  .formulaBox, .mini .v, .law code, .law .katex-slot, .summary .katex-slot { overflow-x:auto; overflow-y:hidden; }
+  .katex-slot{display:inline-block;max-width:100%;vertical-align:baseline}
+  .katex-slot.display{display:block;text-align:center;overflow-x:auto;overflow-y:hidden;padding:2px 0}
+  .katex-slot.display .katex-display{margin:0}
+  .formulaBox .katex-display{margin:0}
+  .math-scroll{overflow-x:auto;overflow-y:hidden;max-width:100%}
+
+
+  /* Polished visual layer */
+  :root{color-scheme:light;}
+  [data-theme="dark"]{color-scheme:dark;}
+  body{transition:background .25s ease,color .25s ease;}
+  body[data-theme="dark"]{
+    background:
+      radial-gradient(circle at 8% -4%, rgba(107,224,207,.17), transparent 30rem),
+      radial-gradient(circle at 92% 4%, rgba(225,181,111,.12), transparent 26rem),
+      linear-gradient(180deg,#070b11 0%,#0b1119 52%,#080c12 100%);
+  }
+  body[data-theme="light"]{
+    background:
+      radial-gradient(circle at 12% 5%, var(--accent-weak), transparent 28rem),
+      radial-gradient(circle at 85% 12%, rgba(184,137,69,.12), transparent 24rem),
+      linear-gradient(180deg,#fbf6ec 0%,var(--bg) 46%,#f4ecdf 100%);
+  }
+  .hero,.card{
+    backdrop-filter:blur(10px);
+    transition:background .25s ease,border-color .25s ease,box-shadow .25s ease,transform .18s ease;
+  }
+  body[data-theme="dark"] .hero,
+  body[data-theme="dark"] .card{
+    background:
+      linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.018)),
+      radial-gradient(circle at 18% 0%,rgba(107,224,207,.055),transparent 42%),
+      var(--paper);
+    border-color:rgba(238,248,245,.13);
+  }
+  body[data-theme="dark"] .topcard{
+    background:
+      linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.015)),
+      var(--paper);
+  }
+  body[data-theme="dark"] .hero:after{
+    background:radial-gradient(circle,rgba(107,224,207,.18),transparent 70%);
+    opacity:.9;
+  }
+  .subtitle{line-height:1.62;}
+  .pill,.badge,.value{
+    backdrop-filter:blur(8px);
+  }
+  body[data-theme="dark"] .pill,
+  body[data-theme="dark"] .value,
+  body[data-theme="dark"] button,
+  body[data-theme="dark"] select{
+    background:rgba(255,255,255,.045);
+    border-color:rgba(238,248,245,.14);
+  }
+  body[data-theme="dark"] button:hover{
+    background:rgba(107,224,207,.10);
+    color:var(--accent);
+  }
+  .formulaBox{
+    background:
+      linear-gradient(135deg,var(--accent-weak),transparent 78%),
+      var(--paper2);
+    border-color:color-mix(in srgb,var(--accent) 24%,var(--line));
+  }
+  body[data-theme="dark"] .formulaBox{
+    background:
+      linear-gradient(135deg,rgba(107,224,207,.11),rgba(225,181,111,.035) 70%,transparent),
+      #121d28;
+    border-color:rgba(107,224,207,.20);
+  }
+  .group,.mini,.law{
+    background:
+      linear-gradient(180deg,rgba(255,255,255,.10),transparent),
+      color-mix(in srgb,var(--paper2) 88%,transparent);
+  }
+  body[data-theme="dark"] .group,
+  body[data-theme="dark"] .mini,
+  body[data-theme="dark"] .law{
+    background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012)),#121d28;
+  }
+  .svgBox{
+    background:
+      radial-gradient(circle at 50% 0%,var(--accent-weak),transparent 58%),
+      linear-gradient(180deg,rgba(127,127,127,.04),transparent);
+  }
+  body[data-theme="dark"] .svgBox{
+    background:
+      radial-gradient(circle at 50% 0%,rgba(107,224,207,.07),transparent 58%),
+      linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.008));
+  }
+  .notice{
+    box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 12%,transparent);
+  }
+  body[data-theme="dark"] .notice{
+    background:rgba(107,224,207,.105);
+    color:var(--ink);
+  }
+  button:focus-visible,select:focus-visible,input[type="range"]:focus-visible{
+    outline:3px solid var(--accent-mid);
+    outline-offset:2px;
+  }
+  .toggleSet button.active{
+    box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 26%,transparent);
+  }
+  .katex{color:var(--ink);}
+  ::selection{background:var(--accent-mid);color:var(--ink);}
+  ::-webkit-scrollbar{height:10px;width:10px}
+  ::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--accent) 42%,var(--line));border-radius:999px}
+  ::-webkit-scrollbar-track{background:transparent}
+
 </style>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+
+<script>
+function escapeAttr(s){
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/"/g,'&quot;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;');
+}
+function mathInline(tex){
+  return `<span class="katex-slot" data-tex="${escapeAttr(tex)}"></span>`;
+}
+function mathDisplay(tex){
+  return `<span class="katex-slot display" data-display="true" data-tex="${escapeAttr(tex)}"></span>`;
+}
+function typesetMath(root=document.body){
+  if(!window.katex){ window.setTimeout(()=>typesetMath(root), 60); return; }
+  root.querySelectorAll('.katex-slot[data-tex]').forEach(el=>{
+    const tex = el.getAttribute('data-tex') || '';
+    const displayMode = el.getAttribute('data-display') === 'true';
+    try{
+      katex.render(tex, el, {displayMode, throwOnError:false, strict:'ignore'});
+    }catch(err){
+      el.textContent = '';
+      el.title = tex;
+    }
+  });
+}
+window.addEventListener('load',()=>typesetMath(document.body));
+</script>
 </head>
 <body data-theme="light">
 <div class="wrap">
   <header>
     <section class="hero">
-      <div class="eyebrow">Real Analysis Â· Power Series</div>
+      <div class="eyebrow">Real Analysis · Power Series</div>
       <h1>Power series and radius of convergence</h1>
-      <p class="subtitle">Coefficient growth determines a symmetric open interval of absolute convergence. Endpoint behavior is a separate one-dimensional series problem.</p>
+      <p class="subtitle">Watch coefficient growth carve out the open interval of absolute convergence. The boundary points remain delicate: each endpoint becomes its own ordinary series test.</p>
     </section>
     <aside class="topcard card">
       <div class="themeRow">
-        <span class="pill">single HTML Â· no libraries</span>
+        <span class="pill">interactive visual note</span>
         <button id="themeBtn" type="button">Dark mode</button>
       </div>
       <div class="formulaBox">
         <div class="small">central object</div>
-        <div>âˆ‘<sub>nâ‰¥0</sub> a<sub>n</sub>(xâˆ’c)<sup>n</sup>, &nbsp; R = 1 / limsup<sub>nâ†’âˆž</sub> |a<sub>n</sub>|<sup>1/n</sup></div>
+        <div class="math-scroll"><span class="katex-slot display" data-display="true" data-tex="\sum_{n\ge 0} a_n(x-c)^n,\qquad R=\frac{1}{\limsup_{n\to\infty}|a_n|^{1/n}}"></span></div>
       </div>
     </aside>
   </header>
@@ -183,16 +330,16 @@
       <div class="group">
         <label for="model"><span>Coefficient family</span></label>
         <select id="model">
-          <option value="pBoundary">aâ‚™ = 1/(náµ– Râ‚€â¿), nâ‰¥1</option>
-          <option value="alternatingP">aâ‚™ = (âˆ’1)â¿/(náµ– Râ‚€â¿), nâ‰¥1</option>
-          <option value="geometric">aâ‚™ = 1/Râ‚€â¿</option>
-          <option value="exp">aâ‚™ = 1/n!  Â· entire</option>
-          <option value="factorial">aâ‚™ = n!  Â· zero radius</option>
+          <option value="pBoundary">aₙ = 1/(nᵖ R₀ⁿ), n≥1</option>
+          <option value="alternatingP">aₙ = (−1)ⁿ/(nᵖ R₀ⁿ), n≥1</option>
+          <option value="geometric">aₙ = 1/R₀ⁿ</option>
+          <option value="exp">aₙ = 1/n!  · entire</option>
+          <option value="factorial">aₙ = n!  · zero radius</option>
         </select>
       </div>
 
       <div class="group">
-        <label><span>Base radius Râ‚€</span><span class="value" id="R0Val">2.00</span></label>
+        <label><span>Base radius R₀</span><span class="value" id="R0Val">2.00</span></label>
         <input id="R0" type="range" min="0.5" max="5" step="0.05" value="2" />
         <label><span>Endpoint exponent p</span><span class="value" id="pVal">1.50</span></label>
         <input id="p" type="range" min="0.1" max="3" step="0.05" value="1.5" />
@@ -213,8 +360,8 @@
         <label><span>Displayed series</span><span class="value" id="opVal">original</span></label>
         <div class="toggleSet">
           <button data-op="original" class="active" type="button">f</button>
-          <button data-op="derivative" type="button">fâ€²</button>
-          <button data-op="integral" type="button">âˆ«f</button>
+          <button data-op="derivative" type="button">f′</button>
+          <button data-op="integral" type="button">∫f</button>
         </div>
       </div>
     </aside>
@@ -230,9 +377,9 @@
         </div>
         <div class="svgBox"><svg id="lineSvg" viewBox="0 0 920 250" role="img" aria-label="Convergence interval diagram"></svg></div>
         <div class="status">
-          <div class="mini"><div class="k">inside</div><div class="v">|xâˆ’c| &lt; R</div><p>Root test gives absolute convergence.</p></div>
-          <div class="mini"><div class="k">outside</div><div class="v">|xâˆ’c| &gt; R</div><p>Terms cannot approach 0 fast enough.</p></div>
-          <div class="mini"><div class="k">boundary</div><div class="v">|xâˆ’c| = R</div><p>Ratio/root tests are usually inconclusive.</p></div>
+          <div class="mini"><div class="k">inside</div><div class="v"><span class="katex-slot" data-tex="|x-c|&lt;R"></span></div><p>Root test gives absolute convergence.</p></div>
+          <div class="mini"><div class="k">outside</div><div class="v"><span class="katex-slot" data-tex="|x-c|&gt;R"></span></div><p>Terms cannot approach 0 fast enough.</p></div>
+          <div class="mini"><div class="k">boundary</div><div class="v"><span class="katex-slot" data-tex="|x-c|=R"></span></div><p>Ratio/root tests are usually inconclusive.</p></div>
         </div>
       </section>
 
@@ -241,7 +388,7 @@
           <div class="cardHead">
             <div>
               <h2>2. Coefficient growth</h2>
-              <p class="hint">Cauchyâ€“Hadamard: the upper envelope of |aâ‚™|<sup>1/n</sup> fixes the radius.</p>
+              <p class="hint">Cauchy–Hadamard: the upper envelope of <span class="katex-slot" data-tex="|a_n|^{1/n}"></span> fixes the radius.</p>
             </div>
             <span class="badge" id="rootBadge">limsup</span>
           </div>
@@ -251,7 +398,7 @@
           <div class="cardHead">
             <div>
               <h2>3. Partial sums</h2>
-              <p class="hint">The polynomial S<sub>N</sub>(x)=âˆ‘<sub>nâ‰¤N</sub>aâ‚™(xâˆ’c)<sup>n</sup> behaves well inside the radius and becomes unstable beyond it.</p>
+              <p class="hint">The polynomial <span class="katex-slot" data-tex="S_N(x)=\sum_{n\le N}a_n(x-c)^n"></span> behaves well inside the radius and becomes unstable beyond it.</p>
             </div>
             <span class="badge" id="sumBadge">S_N</span>
           </div>
@@ -263,20 +410,20 @@
         <div class="cardHead">
           <div>
             <h2>4. Endpoint behavior</h2>
-            <p class="hint">After the radius is known, plug in x=câˆ’R and x=c+R. Each endpoint becomes an ordinary numerical series.</p>
+            <p class="hint">After the radius is known, plug in x=c−R and x=c+R. Each endpoint becomes an ordinary numerical series.</p>
           </div>
           <span class="badge">endpoint tests</span>
         </div>
         <div class="two">
-          <div class="mini" id="leftEndpoint"><div class="k">left endpoint</div><div class="v">â€”</div><p>â€”</p></div>
-          <div class="mini" id="rightEndpoint"><div class="k">right endpoint</div><div class="v">â€”</div><p>â€”</p></div>
+          <div class="mini" id="leftEndpoint"><div class="k">left endpoint</div><div class="v">—</div><p>—</p></div>
+          <div class="mini" id="rightEndpoint"><div class="k">right endpoint</div><div class="v">—</div><p>—</p></div>
         </div>
         <div class="sep"></div>
         <div class="lawGrid">
-          <div class="law"><strong>Root test lens</strong><code id="rootTestText">â€”</code></div>
-          <div class="law"><strong>Ratio test lens</strong><code id="ratioTestText">â€”</code></div>
-          <div class="law"><strong>Comparison lens</strong><code id="comparisonText">â€”</code></div>
-          <div class="law"><strong>Alternating / condensation lens</strong><code id="altText">â€”</code></div>
+          <div class="law"><strong>Root test lens</strong><code id="rootTestText">—</code></div>
+          <div class="law"><strong>Ratio test lens</strong><code id="ratioTestText">—</code></div>
+          <div class="law"><strong>Comparison lens</strong><code id="comparisonText">—</code></div>
+          <div class="law"><strong>Alternating / condensation lens</strong><code id="altText">—</code></div>
         </div>
       </section>
 
@@ -289,9 +436,9 @@
           <span class="badge">same radius</span>
         </div>
         <div class="three">
-          <div class="mini"><div class="k">original</div><div class="v">âˆ‘ aâ‚™(xâˆ’c)â¿</div><p>Radius R from coefficient growth.</p></div>
-          <div class="mini"><div class="k">derivative</div><div class="v">âˆ‘ (n+1)aâ‚™â‚Šâ‚(xâˆ’c)â¿</div><p>Same R, because polynomial factors do not change nth-root growth.</p></div>
-          <div class="mini"><div class="k">integral</div><div class="v">C + âˆ‘ aâ‚™(xâˆ’c)â¿âºÂ¹/(n+1)</div><p>Same R; endpoints may improve.</p></div>
+          <div class="mini"><div class="k">original</div><div class="v"><span class="katex-slot" data-tex="\sum a_n(x-c)^n"></span></div><p>Radius R from coefficient growth.</p></div>
+          <div class="mini"><div class="k">derivative</div><div class="v"><span class="katex-slot" data-tex="\sum (n+1)a_{n+1}(x-c)^n"></span></div><p>Same R, because polynomial factors do not change nth-root growth.</p></div>
+          <div class="mini"><div class="k">integral</div><div class="v"><span class="katex-slot" data-tex="C+\sum \frac{a_n(x-c)^{n+1}}{n+1}"></span></div><p>Same R; endpoints may improve.</p></div>
         </div>
       </section>
 
@@ -301,7 +448,7 @@
           <div class="notice">
             <strong>The radius is not an endpoint theorem.</strong>
             <ul>
-              <li>The open interval (câˆ’R,c+R) is decided by coefficient growth.</li>
+              <li>The open interval (c−R,c+R) is decided by coefficient growth.</li>
               <li>The boundary points are decided by separate series tests.</li>
               <li>Absolute convergence inside the interval implies ordinary convergence there.</li>
               <li>Termwise operations keep the same open interval but can alter endpoint behavior.</li>
@@ -311,10 +458,10 @@
         <div class="card">
           <h2>Exam-style summary</h2>
           <div class="summary">
-            <div class="law"><strong>1. Radius</strong><code>R = 1 / limsup |a_n|^{1/n}</code></div>
-            <div class="law"><strong>2. Interior</strong><code>|x-c| &lt; R â‡’ absolute convergence</code></div>
-            <div class="law"><strong>3. Exterior</strong><code>|x-c| &gt; R â‡’ divergence</code></div>
-            <div class="law"><strong>4. Endpoints</strong><code>x=cÂ±R â‡’ test separately</code></div>
+            <div class="law"><strong>1. Radius</strong><code><span class="katex-slot" data-tex="R=1/\limsup |a_n|^{1/n}"></span></code></div>
+            <div class="law"><strong>2. Interior</strong><code><span class="katex-slot" data-tex="|x-c|&lt;R\Rightarrow \text{absolute convergence}"></span></code></div>
+            <div class="law"><strong>3. Exterior</strong><code><span class="katex-slot" data-tex="|x-c|&gt;R\Rightarrow \text{divergence}"></span></code></div>
+            <div class="law"><strong>4. Endpoints</strong><code><span class="katex-slot" data-tex="x=c\pm R\Rightarrow \text{test separately}"></span></code></div>
           </div>
         </div>
       </section>
@@ -332,10 +479,10 @@
 
   function css(name){return getComputedStyle(document.body).getPropertyValue(name).trim();}
   function fmt(x,d=3){
-    if(x===Infinity) return 'âˆž';
-    if(x===-Infinity) return 'âˆ’âˆž';
-    if(Number.isNaN(x)) return 'â€”';
-    if(Math.abs(x)>=1000 || (Math.abs(x)>0 && Math.abs(x)<.001)) return x.toExponential(2).replace('e','Ã—10^');
+    if(x===Infinity) return '∞';
+    if(x===-Infinity) return '−∞';
+    if(Number.isNaN(x)) return '—';
+    if(Math.abs(x)>=1000 || (Math.abs(x)>0 && Math.abs(x)<.001)) return x.toExponential(2).replace('e','×10^');
     return Number(x).toFixed(d).replace(/\.0+$/,'').replace(/(\.\d*?)0+$/,'$1');
   }
   function params(){
@@ -414,16 +561,16 @@
   function yMap(y,min,max,h=240,t=40){return t+(max-y)/(max-min)*h;}
 
   function endpointClass(s,side){
-    if(s.R===Infinity) return {title:'no finite endpoint', body:'R=âˆž: the interval is all real numbers.'};
-    if(s.R===0) return {title: side<0?'left collapses':'right collapses', body:'R=0: only x=c is guaranteed; any xâ‰ c diverges.'};
+    if(s.R===Infinity) return {title:'no finite endpoint', body:'R=∞: the interval is all real numbers.'};
+    if(s.R===0) return {title: side<0?'left collapses':'right collapses', body:'R=0: only x=c is guaranteed; any x≠c diverges.'};
     const p=s.p;
     if(s.model==='geometric') return {title:'diverges', body:'Endpoint terms do not tend to 0.'};
     if(s.model==='pBoundary'){
       if(side>0){
-        if(p>1) return {title:'converges absolutely', body:'Right endpoint gives âˆ‘1/náµ– with p>1.'};
-        return {title:'diverges', body:p>0?'Right endpoint gives the divergent p-series âˆ‘1/náµ– with pâ‰¤1.':'Terms fail to go to 0.'};
+        if(p>1) return {title:'converges absolutely', body:'Right endpoint gives ∑1/nᵖ with p>1.'};
+        return {title:'diverges', body:p>0?'Right endpoint gives the divergent p-series ∑1/nᵖ with p≤1.':'Terms fail to go to 0.'};
       }else{
-        if(p>1) return {title:'converges absolutely', body:'Left endpoint gives âˆ‘(âˆ’1)â¿/náµ– and also âˆ‘1/náµ– converges.'};
+        if(p>1) return {title:'converges absolutely', body:'Left endpoint gives ∑(−1)ⁿ/nᵖ and also ∑1/nᵖ converges.'};
         if(p>0) return {title:'converges conditionally', body:'Alternating test applies, but absolute p-series diverges.'};
         return {title:'diverges', body:'Terms fail to go to 0.'};
       }
@@ -434,8 +581,8 @@
         if(p>0) return {title:'converges conditionally', body:'Alternating test applies; absolute p-series diverges.'};
         return {title:'diverges', body:'Terms fail to go to 0.'};
       }else{
-        if(p>1) return {title:'converges absolutely', body:'Signs cancel into positive âˆ‘1/náµ– with p>1.'};
-        return {title:'diverges', body:p>0?'Signs cancel into divergent âˆ‘1/náµ– with pâ‰¤1.':'Terms fail to go to 0.'};
+        if(p>1) return {title:'converges absolutely', body:'Signs cancel into positive ∑1/nᵖ with p>1.'};
+        return {title:'diverges', body:p>0?'Signs cancel into divergent ∑1/nᵖ with p≤1.':'Terms fail to go to 0.'};
       }
     }
     return {title:'retest needed', body:'Plug in the endpoint and use an ordinary series test.'};
@@ -462,7 +609,7 @@
     }
     if(s.R===Infinity){
       add(svg,'line',{x1:75,y1:y,x2:855,y2:y,stroke:accent,'stroke-width':15,'stroke-linecap':'round',opacity:.28});
-      add(svg,'text',{x:465,y:66,'text-anchor':'middle',class:'labelText'},'R = âˆž: absolute convergence on the whole real line');
+      add(svg,'text',{x:465,y:66,'text-anchor':'middle',class:'labelText'},'R = ∞: absolute convergence on the whole real line');
     }else if(s.R===0){
       const C=xMap(s.c,min,max);
       add(svg,'circle',{cx:C,cy:y,r:16,fill:accent,opacity:.25});
@@ -478,7 +625,7 @@
       add(svg,'circle',{cx:L,cy:y,r:9,fill:'var(--paper)',stroke:leftColor,'stroke-width':3});
       add(svg,'circle',{cx:R,cy:y,r:9,fill:'var(--paper)',stroke:rightColor,'stroke-width':3});
       add(svg,'line',{x1:C,y1:y-38,x2:C,y2:y+38,stroke:accent,'stroke-width':2,'stroke-dasharray':'4 5'});
-      add(svg,'text',{x:L,y:y-22,'text-anchor':'middle',class:'labelText'},'câˆ’R');
+      add(svg,'text',{x:L,y:y-22,'text-anchor':'middle',class:'labelText'},'c−R');
       add(svg,'text',{x:C,y:y-48,'text-anchor':'middle',class:'labelText'},'c');
       add(svg,'text',{x:R,y:y-22,'text-anchor':'middle',class:'labelText'},'c+R');
     }
@@ -523,7 +670,7 @@
       add(svg,'line',{x1:x0,y1:Y,x2:x0+w,y2:Y,stroke:blue,'stroke-width':2,'stroke-dasharray':'7 6'});
       add(svg,'text',{x:x0+w-5,y:Y-8,'text-anchor':'end',class:'labelText'},'limsup = 1/R = '+fmt(L,2));
     }else if(s.R===Infinity){
-      add(svg,'text',{x:x0+w-4,y:y0-h+20,'text-anchor':'end',class:'labelText'},'limsup = 0, so R=âˆž');
+      add(svg,'text',{x:x0+w-4,y:y0-h+20,'text-anchor':'end',class:'labelText'},'limsup = 0, so R=∞');
     }else{
       add(svg,'text',{x:x0+w-4,y:y0-h+20,'text-anchor':'end',class:'labelText'},'root profile unbounded, so R=0');
     }
@@ -532,7 +679,7 @@
       if(T<=yMax){
         const Y=y0-(T/yMax)*h;
         add(svg,'line',{x1:x0,y1:Y,x2:x0+w,y2:Y,stroke:gold,'stroke-width':2,'stroke-dasharray':'3 6'});
-        add(svg,'text',{x:x0+6,y:Y-8,class:'labelText'},'threshold 1/|xâˆ’c| = '+fmt(T,2));
+        add(svg,'text',{x:x0+6,y:Y-8,class:'labelText'},'threshold 1/|x−c| = '+fmt(T,2));
       }
     }
     add(svg,'text',{x:x0+w/2,y:294,'text-anchor':'middle',class:'labelText'},'n');
@@ -589,7 +736,7 @@
     }
     add(svg,'text',{x:x0+w/2,y:330,'text-anchor':'middle',class:'labelText'},'x');
     add(svg,'text',{x:18,y:45,class:'labelText'},s.op==='original'?'S_N(x)':s.op==='derivative'?"S_N'(x)":'integrated partial sum');
-    add(svg,'text',{x:x0+w-5,y:38,'text-anchor':'end',class:'labelText'},'probe value â‰ˆ '+fmt(py,3));
+    add(svg,'text',{x:x0+w-5,y:38,'text-anchor':'end',class:'labelText'},'probe value ≈ '+fmt(py,3));
   }
 
   function updateTexts(s){
@@ -601,37 +748,37 @@
     $('zoomVal').textContent=fmt(s.zoom,2)+(s.R===Infinity?' units':'R');
     $('opVal').textContent=s.op;
     $('radiusBadge').textContent='R = '+fmt(s.R,2);
-    $('probeBadge').textContent='x = '+fmt(s.x,3)+' Â· '+statusAtProbe(s);
+    $('probeBadge').textContent='x = '+fmt(s.x,3)+' · '+statusAtProbe(s);
     const lim = s.R===Infinity ? 0 : (s.R===0 ? Infinity : 1/s.R);
-    $('rootBadge').textContent='limsup â‰ˆ '+fmt(lim,3);
+    $('rootBadge').textContent='limsup ≈ '+fmt(lim,3);
     $('sumBadge').textContent='N = '+s.N;
     const left=endpointClass(s,-1), right=endpointClass(s,1);
-    $('leftEndpoint').innerHTML='<div class="k">left endpoint x=câˆ’R</div><div class="v">'+left.title+'</div><p>'+left.body+'</p>';
+    $('leftEndpoint').innerHTML='<div class="k">left endpoint x=c−R</div><div class="v">'+left.title+'</div><p>'+left.body+'</p>';
     $('rightEndpoint').innerHTML='<div class="k">right endpoint x=c+R</div><div class="v">'+right.title+'</div><p>'+right.body+'</p>';
     if(s.R===Infinity){
-      $('rootTestText').textContent='limsup |a_n|^{1/n}=0, hence R=âˆž.';
-      $('ratioTestText').textContent='Typical ratio tends to 0 for fixed xâˆ’c.';
+      $('rootTestText').textContent='limsup |a_n|^{1/n}=0, hence R=∞.';
+      $('ratioTestText').textContent='Typical ratio tends to 0 for fixed x−c.';
       $('comparisonText').textContent='Factorial denominator dominates every geometric power.';
       $('altText').textContent='No endpoint tests: the interval is all R.';
     }else if(s.R===0){
-      $('rootTestText').textContent='limsup |a_n|^{1/n}=âˆž, hence R=0.';
+      $('rootTestText').textContent='limsup |a_n|^{1/n}=∞, hence R=0.';
       $('ratioTestText').textContent='Terms grow too fast unless x=c.';
       $('comparisonText').textContent='Factorial growth beats every geometric decay.';
       $('altText').textContent='There are no nontrivial endpoints around c.';
     }else{
-      $('rootTestText').textContent='For t=xâˆ’c: limsup |a_n t^n|^{1/n}=|t|/R. Converges if <1; diverges if >1.';
+      $('rootTestText').textContent='For t=x−c: limsup |a_n t^n|^{1/n}=|t|/R. Converges if <1; diverges if >1.';
       $('ratioTestText').textContent='For these families the ratio behaves like |t|/R. At |t|=R it equals 1, so the test is inconclusive.';
       if(s.model==='geometric') $('comparisonText').textContent='At the boundary the terms do not tend to zero.';
-      else $('comparisonText').textContent='At the boundary the absolute series is comparable to âˆ‘1/n^p.';
-      if(s.model==='pBoundary') $('altText').textContent='Left endpoint is alternating; right endpoint is positive p-series. Condensation: âˆ‘1/n^p converges exactly when p>1.';
-      else if(s.model==='alternatingP') $('altText').textContent='Right endpoint is alternating; left endpoint is positive p-series. Conditional convergence occurs for 0<pâ‰¤1 on the alternating side.';
+      else $('comparisonText').textContent='At the boundary the absolute series is comparable to ∑1/n^p.';
+      if(s.model==='pBoundary') $('altText').textContent='Left endpoint is alternating; right endpoint is positive p-series. Condensation: ∑1/n^p converges exactly when p>1.';
+      else if(s.model==='alternatingP') $('altText').textContent='Right endpoint is alternating; left endpoint is positive p-series. Conditional convergence occurs for 0<p≤1 on the alternating side.';
       else $('altText').textContent='No alternating decay at the boundary; the nth-term test detects divergence.';
     }
   }
 
   function update(){
     const s=params();
-    updateTexts(s); drawLine(s); drawRoot(s); drawSums(s);
+    updateTexts(s); drawLine(s); drawRoot(s); drawSums(s); if(window.typesetMath) window.typesetMath(document.body);
   }
   ['model','R0','p','center','q','N','zoom'].forEach(id=>$(id).addEventListener('input',update));
   document.querySelectorAll('[data-op]').forEach(btn=>btn.addEventListener('click',()=>{

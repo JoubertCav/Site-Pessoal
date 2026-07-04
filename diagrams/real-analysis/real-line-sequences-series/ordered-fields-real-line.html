@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -168,7 +168,34 @@ svg{display:block;width:100%;height:auto}
   .hero,.grid{grid-template-columns:1fr}.controls{position:relative;top:auto}.summaryGrid{grid-template-columns:1fr 1fr}.infoGrid{grid-template-columns:1fr}
 }
 @media(max-width:560px){.app{padding:16px 10px 34px}.heroMain{padding:22px}.summaryGrid{grid-template-columns:1fr}.tab{font-size:13px;padding:9px 11px}}
+
+/* KaTeX/layout corrections */
+.grid > *, .hero > *, .infoGrid > *, .summaryGrid > *{min-width:0}
+.formula,.symbolBox,.statement,.mathTarget{min-width:0;max-width:100%;overflow-x:auto}
+.mathTarget{padding:2px 0}
+.symbolBox .katex-display,.formula .katex-display,.statement .katex-display{margin:.25rem 0}
+.symbolBox .katex{font-size:1.02em}
+.statement .katex{font-size:1em}
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script>
+function texHTML(tex, displayMode=false){
+  if(!window.katex){
+    return String(tex).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  }
+  return katex.renderToString(tex, {displayMode, throwOnError:false, strict:'ignore'});
+}
+function renderKatexTargets(root=document){
+  root.querySelectorAll('[data-tex]').forEach(el => {
+    katex.render(el.dataset.tex, el, {
+      displayMode: el.dataset.display === 'true',
+      throwOnError:false,
+      strict:'ignore'
+    });
+  });
+}
+</script>
 </head>
 <body>
 <div class="app" id="app">
@@ -182,8 +209,8 @@ svg{display:block;width:100%;height:auto}
       <button class="themeBtn" id="themeBtn">Toggle dark mode</button>
       <div class="symbolBox">
         <div><b>Ordered field:</b></div>
-        <div>\(x&lt;y \Rightarrow x+z&lt;y+z\)</div>
-        <div>\(0&lt;z,\ x&lt;y \Rightarrow xz&lt;yz\)</div>
+        <div class="mathTarget" data-tex="x<y \Rightarrow x+z<y+z"></div>
+        <div class="mathTarget" data-tex="0<z,\ x<y \Rightarrow xz<yz"></div>
       </div>
       <div class="symbolBox">
         <div><b>Real line:</b></div>
@@ -206,8 +233,8 @@ svg{display:block;width:100%;height:auto}
         <div class="control">
           <div class="labelRow"><strong>Mode</strong><span id="ordModeLabel">translation</span></div>
           <select id="ordMode">
-            <option value="translate">translation: x â†¦ x + c</option>
-            <option value="multiply">multiplication: x â†¦ c x</option>
+            <option value="translate">translation: x ↦ x + c</option>
+            <option value="multiply">multiplication: x ↦ c x</option>
           </select>
         </div>
         <div class="control"><div class="labelRow"><strong>a</strong><span id="aLabel"></span></div><input id="a" type="range" min="-5" max="5" step="0.1" value="-2"></div>
@@ -236,16 +263,16 @@ svg{display:block;width:100%;height:auto}
         <div class="control">
           <div class="labelRow"><strong>Interval type</strong><span id="intTypeLabel"></span></div>
           <select id="intType">
-            <option value="open">(Î±, Î²)</option>
-            <option value="closed">[Î±, Î²]</option>
-            <option value="leftClosed">[Î±, Î²)</option>
-            <option value="rightClosed">(Î±, Î²]</option>
-            <option value="leftRay">(-âˆž, Î²]</option>
-            <option value="rightRay">[Î±, âˆž)</option>
+            <option value="open">(α, β)</option>
+            <option value="closed">[α, β]</option>
+            <option value="leftClosed">[α, β)</option>
+            <option value="rightClosed">(α, β]</option>
+            <option value="leftRay">(-∞, β]</option>
+            <option value="rightRay">[α, ∞)</option>
           </select>
         </div>
-        <div class="control"><div class="labelRow"><strong>Î±</strong><span id="alphaLabel"></span></div><input id="alpha" type="range" min="-7" max="5" step="0.1" value="-2.5"></div>
-        <div class="control"><div class="labelRow"><strong>Î²</strong><span id="betaLabel"></span></div><input id="beta" type="range" min="-5" max="7" step="0.1" value="3"></div>
+        <div class="control"><div class="labelRow"><strong>α</strong><span id="alphaLabel"></span></div><input id="alpha" type="range" min="-7" max="5" step="0.1" value="-2.5"></div>
+        <div class="control"><div class="labelRow"><strong>β</strong><span id="betaLabel"></span></div><input id="beta" type="range" min="-5" max="7" step="0.1" value="3"></div>
         <div class="control"><div class="labelRow"><strong>x</strong><span id="xIntLabel"></span></div><input id="xInt" type="range" min="-8" max="8" step="0.1" value="1"></div>
         <div class="notice"><h3>Minimal definition</h3><p class="formula" id="intFormula"></p></div>
       </aside>
@@ -268,15 +295,15 @@ svg{display:block;width:100%;height:auto}
           <div class="labelRow"><strong>Inequality</strong><span id="absTypeLabel"></span></div>
           <select id="absType">
             <option value="lt">|x-a| &lt; r</option>
-            <option value="le">|x-a| â‰¤ r</option>
+            <option value="le">|x-a| ≤ r</option>
             <option value="gt">|x-a| &gt; r</option>
-            <option value="ge">|x-a| â‰¥ r</option>
+            <option value="ge">|x-a| ≥ r</option>
           </select>
         </div>
         <div class="control"><div class="labelRow"><strong>center a</strong><span id="centerLabel"></span></div><input id="center" type="range" min="-5" max="5" step="0.1" value="0"></div>
         <div class="control"><div class="labelRow"><strong>radius r</strong><span id="radiusLabel"></span></div><input id="radius" type="range" min="0.2" max="5" step="0.1" value="2"></div>
         <div class="control"><div class="labelRow"><strong>test point x</strong><span id="xAbsLabel"></span></div><input id="xAbs" type="range" min="-8" max="8" step="0.1" value="1.2"></div>
-        <div class="notice"><h3>Core identity</h3><p class="formula">|x-a| = d(x,a)</p></div>
+        <div class="notice"><h3>Core identity</h3><p class="formula mathTarget" data-tex="|x-a|=d(x,a)"></p></div>
       </aside>
       <main class="card viz">
         <h2>Main diagram</h2>
@@ -296,7 +323,7 @@ svg{display:block;width:100%;height:auto}
         <div class="control"><div class="labelRow"><strong>step x &gt; 0</strong><span id="stepLabel"></span></div><input id="step" type="range" min="0.2" max="3" step="0.1" value="0.8"></div>
         <div class="control"><div class="labelRow"><strong>target y</strong><span id="targetLabel"></span></div><input id="target" type="range" min="0" max="12" step="0.1" value="6"></div>
         <div class="control"><div class="labelRow"><strong>n</strong><span id="nLabel"></span></div><input id="n" type="range" min="1" max="35" step="1" value="6"></div>
-        <div class="control"><div class="labelRow"><strong>Îµ</strong><span id="epsLabel"></span></div><input id="eps" type="range" min="0.02" max="1" step="0.01" value="0.18"></div>
+        <div class="control"><div class="labelRow"><strong>ε</strong><span id="epsLabel"></span></div><input id="eps" type="range" min="0.02" max="1" step="0.01" value="0.18"></div>
         <div class="notice"><h3>Important distinction</h3><p>Ordered-field axioms alone do not imply Archimedeanness. The real line is Archimedean; some ordered fields with infinitesimals are not.</p></div>
       </aside>
       <main class="card viz">
@@ -314,13 +341,13 @@ svg{display:block;width:100%;height:auto}
     <h2>Compact exam-style summary</h2>
     <div class="summaryGrid">
       <div class="law"><div class="name">ordered field</div><div class="statement">field + total order + compatibility</div></div>
-      <div class="law"><div class="name">translation</div><div class="statement">x&lt;y â‡” x+z&lt;y+z</div></div>
-      <div class="law"><div class="name">positive scaling</div><div class="statement">0&lt;z â‡’ x&lt;y â‡” xz&lt;yz</div></div>
-      <div class="law"><div class="name">negative scaling</div><div class="statement">z&lt;0 â‡’ x&lt;y â‡” xz&gt;yz</div></div>
-      <div class="law"><div class="name">interval</div><div class="statement">x,yâˆˆI and x&lt;t&lt;y â‡’ tâˆˆI</div></div>
-      <div class="law"><div class="name">absolute value</div><div class="statement">|x-a|&lt;r â‡” a-r&lt;x&lt;a+r</div></div>
-      <div class="law"><div class="name">triangle</div><div class="statement">|x+y| â‰¤ |x|+|y|</div></div>
-      <div class="law"><div class="name">Archimedean</div><div class="statement">âˆ€x&gt;0,âˆ€yâˆˆâ„,âˆƒnâˆˆâ„•: nx&gt;y</div></div>
+      <div class="law"><div class="name">translation</div><div class="statement mathTarget" data-tex="x<y \Longleftrightarrow x+z<y+z"></div></div>
+      <div class="law"><div class="name">positive scaling</div><div class="statement mathTarget" data-tex="0<z \Rightarrow (x<y \Longleftrightarrow xz<yz)"></div></div>
+      <div class="law"><div class="name">negative scaling</div><div class="statement mathTarget" data-tex="z<0 \Rightarrow (x<y \Longleftrightarrow xz>yz)"></div></div>
+      <div class="law"><div class="name">interval</div><div class="statement mathTarget" data-tex="x,y\in I,\ x<t<y \Rightarrow t\in I"></div></div>
+      <div class="law"><div class="name">absolute value</div><div class="statement mathTarget" data-tex="|x-a|<r \Longleftrightarrow a-r<x<a+r"></div></div>
+      <div class="law"><div class="name">triangle</div><div class="statement mathTarget" data-tex="|x+y|\le |x|+|y|"></div></div>
+      <div class="law"><div class="name">Archimedean</div><div class="statement mathTarget" data-tex="\forall x>0,\ \forall y\in\mathbb{R},\ \exists n\in\mathbb{N}:\ nx>y"></div></div>
     </div>
     <div class="footerNote">Read the diagrams as finite visual models of exact statements on the real line. The theorem-level content is the symbolic statement; the picture shows what the statement is doing.</div>
   </section>
@@ -371,14 +398,16 @@ svg{display:block;width:100%;height:auto}
     svg.appendChild(el('line',{x1,y1,x2,y2,stroke:color,'stroke-width':2.2,'stroke-linecap':'round','marker-end':`url(#${id})`}));
   }
   function relationSymbol(x,y){ return Math.abs(x-y)<1e-9 ? '=' : (x<y ? '<' : '>'); }
+  function texRel(s){ return s==='≤' ? '\\le' : s==='≥' ? '\\ge' : s; }
+  function texNumber(x){ return fmt(x).replace('−','-'); }
   function truthPill(ok){ return `<span class="truth ${ok?'yes':'no'}">${ok?'true':'false'}</span>`; }
 
   const app = $('app');
   const themeBtn=$('themeBtn');
   themeBtn.addEventListener('click',()=>{
-    const dark = app.getAttribute('data-theme') === 'dark';
-    if(dark){ app.removeAttribute('data-theme'); themeBtn.textContent='Toggle dark mode'; }
-    else { app.setAttribute('data-theme','dark'); themeBtn.textContent='Toggle light mode'; }
+    const dark = document.body.getAttribute('data-theme') === 'dark';
+    if(dark){ document.body.removeAttribute('data-theme'); themeBtn.textContent='Toggle dark mode'; }
+    else { document.body.setAttribute('data-theme','dark'); themeBtn.textContent='Toggle light mode'; }
     updateAll();
   });
   document.querySelectorAll('.tab').forEach(btn=>{
@@ -402,7 +431,7 @@ svg{display:block;width:100%;height:auto}
     const min = Math.min(-8, ...vals)-.5, max=Math.max(8, ...vals)+.5;
     const s=addAxis(svg,145,min,max); const s2=addAxis(svg,285,min,max);
     svg.appendChild(el('text',{x:70,y:72,class:'mathText'},'original line'));
-    svg.appendChild(el('text',{x:70,y:220,class:'mathText'},mode==='translate' ? 'after x â†¦ x + c' : 'after x â†¦ c x'));
+    svg.appendChild(el('text',{x:70,y:220,class:'mathText'},mode==='translate' ? 'after x ↦ x + c' : 'after x ↦ c x'));
     const xa=s(a), xb=s(b);
     svg.appendChild(el('line',{x1:Math.min(xa,xb),y1:145,x2:Math.max(xa,xb),y2:145,stroke:'var(--accent)','stroke-width':8,'stroke-linecap':'round',opacity:.22}));
     addPoint(svg,xa,145,'accentFill','a='+fmt(a),true); addPoint(svg,xb,145,'orangeFill','b='+fmt(b),true);
@@ -415,11 +444,11 @@ svg{display:block;width:100%;height:auto}
     const rel0=relationSymbol(a,b), rel1=relationSymbol(A,B);
     let headline, notice;
     if(mode==='translate'){
-      headline = `<span class="formula">a ${rel0} b &nbsp; â‡” &nbsp; a+c ${rel1} b+c</span><br>${truthPill(rel0===rel1)}`;
+      headline = `<div class="formula">${texHTML(`a ${texRel(rel0)} b \\Longleftrightarrow a+c ${texRel(rel1)} b+c`)}</div>${truthPill(rel0===rel1)}`;
       notice = 'Addition by c is a rigid translation of the line. It moves every point by the same amount, so left/right order is unchanged.';
     } else {
       const expected = c>0 ? rel0 : c<0 ? (rel0==='<'?'>':rel0==='>'?'<':'=') : '=';
-      headline = `<span class="formula">a ${rel0} b, c=${fmt(c)} &nbsp; â‡’ &nbsp; ca ${rel1} cb</span><br>${truthPill(rel1===expected)}`;
+      headline = `<div class="formula">${texHTML(`a ${texRel(rel0)} b,\\ c=${texNumber(c)} \\Longrightarrow ca ${texRel(rel1)} cb`)}</div>${truthPill(rel1===expected)}`;
       if(c>0) notice='Multiplication by a positive c stretches or shrinks the line without reversing left and right.';
       else if(c<0) notice='Multiplication by a negative c reflects the line through 0 and therefore reverses strict inequalities.';
       else notice='Multiplication by 0 collapses every point to 0. Strict inequalities disappear; this is why the axiom requires c>0.';
@@ -447,26 +476,30 @@ svg{display:block;width:100%;height:auto}
     $('alphaLabel').textContent=fmt(parseFloat($('alpha').value)); $('betaLabel').textContent=fmt(parseFloat($('beta').value)); $('xIntLabel').textContent=fmt(x);
     const s=addAxis(svg,215,-8,8);
     const left=s(L), right=s(R), y=215;
-    let label='', formula='';
+    let label='', labelTex='', formula='', formulaTex='';
     const bigLeft=s(-8), bigRight=s(8);
     if(type==='open' || type==='closed' || type==='leftClosed' || type==='rightClosed'){
       svg.appendChild(el('line',{x1:left,y1:y,x2:right,y2:y,class:'accentStroke'}));
       const leftClosed = type==='closed'||type==='leftClosed';
       const rightClosed = type==='closed'||type==='rightClosed';
-      if(leftClosed) addPoint(svg,left,y,'accentFill','Î±',true); else addOpenPoint(svg,left,y,'accentFill','Î±',true);
-      if(rightClosed) addPoint(svg,right,y,'accentFill','Î²',true); else addOpenPoint(svg,right,y,'accentFill','Î²',true);
+      if(leftClosed) addPoint(svg,left,y,'accentFill','α',true); else addOpenPoint(svg,left,y,'accentFill','α',true);
+      if(rightClosed) addPoint(svg,right,y,'accentFill','β',true); else addOpenPoint(svg,right,y,'accentFill','β',true);
       const leftBracket=leftClosed?'[':'('; const rightBracket=rightClosed?']':')';
       label=`${leftBracket}${fmt(L)}, ${fmt(R)}${rightBracket}`;
-      const leftI=leftClosed?'â‰¤':'<'; const rightI=rightClosed?'â‰¤':'<';
+      labelTex=`${leftClosed?'[':'('}${texNumber(L)},${texNumber(R)}${rightClosed?']':')'}`;
+      const leftI=leftClosed?'≤':'<'; const rightI=rightClosed?'≤':'<';
       formula=`${fmt(L)} ${leftI} x ${rightI} ${fmt(R)}`;
+      formulaTex=`${texNumber(L)} ${leftClosed?'\\le':'<'} x ${rightClosed?'\\le':'<'} ${texNumber(R)}`;
     } else if(type==='leftRay'){
       svg.appendChild(el('line',{x1:bigLeft,y1:y,x2:right,y2:y,class:'accentStroke'}));
-      arrow(svg,right,y,bigLeft+4,y,'var(--accent)'); addPoint(svg,right,y,'accentFill','Î²',true);
-      label=`(-âˆž, ${fmt(R)}]`; formula=`x â‰¤ ${fmt(R)}`;
+      arrow(svg,right,y,bigLeft+4,y,'var(--accent)'); addPoint(svg,right,y,'accentFill','β',true);
+      label=`(-∞, ${fmt(R)}]`; labelTex=`(-\\infty,${texNumber(R)}]`;
+      formula=`x ≤ ${fmt(R)}`; formulaTex=`x\\le ${texNumber(R)}`;
     } else {
       svg.appendChild(el('line',{x1:left,y1:y,x2:bigRight,y2:y,class:'accentStroke'}));
-      arrow(svg,left,y,bigRight-4,y,'var(--accent)'); addPoint(svg,left,y,'accentFill','Î±',true);
-      label=`[${fmt(L)}, âˆž)`; formula=`${fmt(L)} â‰¤ x`;
+      arrow(svg,left,y,bigRight-4,y,'var(--accent)'); addPoint(svg,left,y,'accentFill','α',true);
+      label=`[${fmt(L)}, ∞)`; labelTex=`[${texNumber(L)},\\infty)`;
+      formula=`${fmt(L)} ≤ x`; formulaTex=`${texNumber(L)}\\le x`;
     }
     const inside=intervalMembership(type,L,R,x);
     addPoint(svg,s(x),y,inside?'orangeFill':'redFill','x='+fmt(x),false);
@@ -474,8 +507,8 @@ svg{display:block;width:100%;height:auto}
     svg.appendChild(el('text',{x:380,y:335,'text-anchor':'middle',class:'mathText'},label));
     svg.appendChild(el('text',{x:380,y:365,'text-anchor':'middle',class:'mutedText'},formula));
     $('intTypeLabel').textContent=label;
-    $('intFormula').textContent='{ x âˆˆ â„ : ' + formula + ' }';
-    $('intervalInterp').innerHTML = `<span class="formula">x = ${fmt(x)} âˆˆ ${label}</span><br>${truthPill(inside)}`;
+    $('intFormula').innerHTML=texHTML(`\\{x\\in\\mathbb{R}: ${formulaTex}\\}`);
+    $('intervalInterp').innerHTML = `<div class="formula">${texHTML(`x=${texNumber(x)}\\in ${labelTex}`)}</div>${truthPill(inside)}`;
   }
 
   function absTruth(type,d,r){
@@ -509,11 +542,13 @@ svg{display:block;width:100%;height:auto}
     svg.appendChild(el('line',{x1:Math.min(sa,sx),y1:150,x2:Math.max(sa,sx),y2:150,stroke:'var(--orange)','stroke-width':3,'stroke-linecap':'round'}));
     svg.appendChild(el('text',{x:(sa+sx)/2,y:140,'text-anchor':'middle',class:'mutedText'},'|x-a| = '+fmt(d)));
     svg.appendChild(el('text',{x:380,y:62,'text-anchor':'middle',class:'mathText'},'Absolute value turns inequalities into neighborhoods'));
-    const sym = {lt:'<',le:'â‰¤',gt:'>',ge:'â‰¥'}[type];
+    const sym = {lt:'<',le:'≤',gt:'>',ge:'≥'}[type];
+    const symTex = {lt:'<',le:'\\le',gt:'>',ge:'\\ge'}[type];
     $('absTypeLabel').textContent='|x-a| '+sym+' r';
-    $('absInterp').innerHTML=`<span class="formula">|${fmt(x)} âˆ’ ${fmt(a)}| = ${fmt(d)} ${sym} ${fmt(r)}</span><br>${truthPill(ok)}`;
-    const setText = isInside ? `${closed?'[':'('}${fmt(left)}, ${fmt(right)}${closed?']':')'}` : `(-âˆž, ${fmt(left)}${closed?']':')'} âˆª ${closed?'[':'('}${fmt(right)}, âˆž)`;
-    $('absNotice').textContent = `The solution set is ${setText}. Strict inequalities give open endpoints; non-strict inequalities give closed endpoints.`;
+    $('absInterp').innerHTML=`<div class="formula">${texHTML(`|${texNumber(x)}-${texNumber(a)}|=${texNumber(d)} ${symTex} ${texNumber(r)}`)}</div>${truthPill(ok)}`;
+    const setText = isInside ? `${closed?'[':'('}${fmt(left)}, ${fmt(right)}${closed?']':')'}` : `(-∞, ${fmt(left)}${closed?']':')'} ∪ ${closed?'[':'('}${fmt(right)}, ∞)`;
+    const setTex = isInside ? `${closed?'[':'('}${texNumber(left)},${texNumber(right)}${closed?']':')'}` : `(-\\infty,${texNumber(left)}${closed?']':')'}\\cup ${closed?'[':'('}${texNumber(right)},\\infty)`;
+    $('absNotice').innerHTML = `The solution set is <span class="formula">${texHTML(setTex)}</span>. Strict inequalities give open endpoints; non-strict inequalities give closed endpoints.`;
     svg.appendChild(el('text',{x:380,y:345,'text-anchor':'middle',class:'mathText'},'solution set: '+setText));
   }
 
@@ -538,16 +573,16 @@ svg{display:block;width:100%;height:auto}
     addPoint(svg,nx,y,'orangeFill','nx='+fmt(reach),false);
     svg.appendChild(el('line',{x1:s(0),y1:300,x2:s(Math.min(max,1/eps)),y2:300,stroke:'var(--accent)','stroke-width':4,'stroke-linecap':'round',opacity:.25}));
     const inv=1/n;
-    const epsX=s(Math.min(eps*10, max));
-    svg.appendChild(el('text',{x:70,y:288,class:'mathText'},'dual form: choose n with 1/n < Îµ'));
-    svg.appendChild(el('text',{x:70,y:326,class:'mutedText'},`here 1/n = ${fmt(inv)} and Îµ = ${fmt(eps)}`));
+    svg.appendChild(el('text',{x:70,y:288,class:'mathText'},'dual form: choose n with 1/n < ε'));
+    svg.appendChild(el('text',{x:70,y:326,class:'mutedText'},`here 1/n = ${fmt(inv)} and ε = ${fmt(eps)}`));
     const ok=reach>target;
     const epsOk=inv<eps;
-    $('archInterp').innerHTML=`<span class="formula">n x = ${n}Â·${fmt(step)} = ${fmt(reach)} &gt; ${fmt(target)}</span> ${truthPill(ok)}<br><span class="formula">minimal n* = ${nstar}</span><br><span class="formula">1/n &lt; Îµ</span> ${truthPill(epsOk)}`;
+    $('archInterp').innerHTML=`<div class="formula">${texHTML(`nx=${n}\\cdot ${texNumber(step)}=${texNumber(reach)}>${texNumber(target)}`)}</div>${truthPill(ok)}<br><div class="formula">${texHTML(`n^*=${nstar}`)}</div><div class="formula">${texHTML(`1/n<\\varepsilon`)}</div>${truthPill(epsOk)}`;
   }
 
   function updateAll(){ updateOrder(); updateIntervals(); updateAbs(); updateArch(); }
   updateAll();
+  renderKatexTargets();
 })();
 </script>
 </body>
