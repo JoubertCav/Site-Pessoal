@@ -1,0 +1,560 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="google-site-verification" content="google2c37f7a4206c9d3a.html">
+<meta name="google-site-verification" content="fSWAEb_oSSHr_eJXL9gHYxIn879tRaBwJ42f_aD9o2s">
+<meta name="google-site-verification" content="ftZ4QVMrlub9jbolsIeo4Ix4UBw0-BJrFeorzqKLXng">
+<meta name="description" content="Interactive diagram for Lebesgue integration from simple functions.">
+  <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
+<title>Lebesgue Integration from Simple Functions</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NHXHEJP1G0');
+</script>
+<style>
+:root{
+  --bg:#f6f1e8; --panel:#fffaf2; --panel2:#fcf5ea; --text:#17212b; --muted:#65717d;
+  --border:rgba(23,33,43,.12); --grid:rgba(23,33,43,.075); --accent:#2d8e84;
+  --accent2:rgba(45,142,132,.14); --accent3:rgba(45,142,132,.30); --blue:#456fb4;
+  --warn:#b66b52; --red:#bd5d6b; --shadow:0 16px 45px rgba(25,35,45,.08);
+  --radius:22px;
+}
+[data-theme="dark"]{
+  --bg:#0f151a; --panel:#151d24; --panel2:#11181f; --text:#ecf2f6; --muted:#9cadb8;
+  --border:rgba(236,242,246,.12); --grid:rgba(236,242,246,.08); --accent:#67cdbf;
+  --accent2:rgba(103,205,191,.13); --accent3:rgba(103,205,191,.28); --blue:#82b7ff;
+  --warn:#e1a184; --red:#e18693; --shadow:0 18px 55px rgba(0,0,0,.30);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; color:var(--text);
+  font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background:radial-gradient(circle at 10% 0%, var(--accent2), transparent 28rem),
+             radial-gradient(circle at 96% 18%, rgba(69,111,180,.10), transparent 24rem),
+             var(--bg);
+  transition:background .25s ease,color .25s ease;
+}
+.wrap{width:min(1260px, calc(100% - 28px)); margin:0 auto; padding:26px 0 42px}
+header{display:flex; justify-content:space-between; align-items:flex-start; gap:18px; margin-bottom:16px}
+h1{margin:0; font-size:clamp(1.7rem,3vw,2.45rem); line-height:1.03; letter-spacing:-.045em; font-weight:820}
+.subtitle{margin:10px 0 0; color:var(--muted); max-width:810px; font-size:.98rem; line-height:1.58}
+.themeBtn{
+  border:1px solid var(--border); background:var(--panel); color:var(--text); border-radius:999px;
+  padding:10px 15px; box-shadow:var(--shadow); cursor:pointer; font-weight:760; white-space:nowrap;
+}
+.defs{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:16px}
+.def,.card{background:color-mix(in srgb, var(--panel) 96%, transparent); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow)}
+.def{padding:14px 15px; min-height:112px}
+.tag{color:var(--muted); font-size:.74rem; font-weight:850; letter-spacing:.12em; text-transform:uppercase; margin-bottom:8px}
+.math{font-family:Cambria, Georgia, "Times New Roman", serif; line-height:1.45; font-size:1.01rem; color:var(--text)}
+.layout{display:grid; grid-template-columns:342px 1fr; gap:16px; align-items:start}
+.side{padding:16px}
+.panelTitle{margin:0 0 12px; color:var(--muted); font-size:.82rem; font-weight:900; text-transform:uppercase; letter-spacing:.13em}
+.control{padding:12px 0; border-top:1px solid var(--border)}
+.control:first-of-type{border-top:0; padding-top:0}
+label{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:9px; font-weight:730; font-size:.91rem}
+.value{color:var(--accent); font-weight:850; font-variant-numeric:tabular-nums}
+input[type="range"]{width:100%; accent-color:var(--accent)}
+select,.btn{width:100%; border:1px solid var(--border); background:var(--panel2); color:var(--text); border-radius:14px; padding:10px 11px; font-weight:720; outline:none}
+.btn{cursor:pointer; transition:transform .15s ease,border-color .2s ease,background .2s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn.active{background:var(--accent2); border-color:var(--accent)}
+.seg{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+.eqBox{margin-top:10px; border:1px solid var(--accent3); background:var(--accent2); border-radius:17px; padding:12px; font-family:Cambria, Georgia, "Times New Roman", serif; line-height:1.46; color:var(--text)}
+.main{display:grid; gap:16px}
+.plotCard{padding:10px 10px 6px}
+.plotHead{display:flex; justify-content:space-between; align-items:flex-start; gap:12px; padding:8px 9px 2px}
+.plotTitle{font-weight:850; letter-spacing:-.02em}
+.plotSub{color:var(--muted); font-size:.84rem; line-height:1.4; text-align:right}
+svg{display:block; width:100%}
+#mainSvg{height:430px}
+#contribSvg,#expectSvg{height:265px}
+.two{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+.cardPad{padding:16px}
+.interpretation{display:grid; grid-template-columns:1.1fr .9fr; gap:16px}
+.smallText{color:var(--muted); font-size:.92rem; line-height:1.58}
+.notice{border-left:3px solid var(--accent); padding-left:13px; color:var(--muted); font-size:.92rem; line-height:1.55}
+.summary{display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:12px}
+.summary>div{border:1px solid var(--border); background:var(--panel2); border-radius:16px; padding:12px; font-size:.90rem; line-height:1.50}
+.pillRow{display:flex; flex-wrap:wrap; gap:8px; margin-top:9px}
+.pill{border:1px solid var(--border); background:var(--panel2); border-radius:999px; padding:7px 10px; color:var(--muted); font-size:.80rem; font-weight:760; display:inline-flex; gap:7px; align-items:center}
+.dot{width:9px; height:9px; border-radius:50%; background:var(--accent); display:inline-block}
+footer{margin-top:14px; text-align:center; color:var(--muted); font-size:.78rem}
+@media(max-width:1080px){
+  .defs,.layout,.two,.interpretation{grid-template-columns:1fr}
+  header{flex-direction:column}.themeBtn{align-self:flex-start}
+  #mainSvg{height:390px}
+}
+@media(max-width:560px){
+  .wrap{width:min(100% - 18px,1260px); padding-top:18px}
+  .summary{grid-template-columns:1fr}.seg{grid-template-columns:1fr}
+  #mainSvg{height:365px}
+}
+</style>
+</head>
+<body data-theme="light">
+<div class="wrap">
+<header>
+  <div>
+    <h1>Lebesgue integration from simple functions</h1>
+    <div class="subtitle">
+      Build the integral from measurable blocks. A simple function assigns one height to each measurable piece;
+      the integral is the sum of height Ã— measure. General integrals arise by approximation and decomposition.
+    </div>
+  </div>
+  <button class="themeBtn" id="themeBtn">Dark mode</button>
+</header>
+
+<section class="defs">
+  <div class="def">
+    <div class="tag">Simple function</div>
+    <div class="math">s = âˆ‘<sub>i=1</sub><sup>m</sup> a<sub>i</sub> 1<sub>Aáµ¢</sub><br>A<sub>i</sub> âˆˆ â„±</div>
+  </div>
+  <div class="def">
+    <div class="tag">Simple integral</div>
+    <div class="math">âˆ« s dÎ¼ = âˆ‘<sub>i=1</sub><sup>m</sup> a<sub>i</sub> Î¼(A<sub>i</sub>)</div>
+  </div>
+  <div class="def">
+    <div class="tag">Nonnegative integral</div>
+    <div class="math">âˆ« f dÎ¼ = sup{âˆ«s dÎ¼ : 0â‰¤sâ‰¤f}</div>
+  </div>
+  <div class="def">
+    <div class="tag">Signed / expectation</div>
+    <div class="math">âˆ« f dÎ¼ = âˆ«fâºdÎ¼ âˆ’ âˆ«fâ»dÎ¼<br>E[X]=âˆ«Î© X dP</div>
+  </div>
+</section>
+
+<main class="layout">
+  <aside class="card side">
+    <div class="panelTitle">Controls</div>
+
+    <div class="control">
+      <label for="functionSelect">Measurable function f</label>
+      <select id="functionSelect">
+        <option value="positive">nonnegative smooth</option>
+        <option value="signed">signed wave</option>
+        <option value="payoff">economic payoff</option>
+        <option value="singular">integrable spike</option>
+      </select>
+    </div>
+
+    <div class="control">
+      <label for="measureSelect">Measure Î¼</label>
+      <select id="measureSelect">
+        <option value="uniform">uniform probability</option>
+        <option value="tilted">tilted probability dÎ¼ = 2Ï‰ dÏ‰</option>
+        <option value="atom">atom + continuous part</option>
+      </select>
+    </div>
+
+    <div class="control" id="atomBlock" style="display:none">
+      <label for="atomMass">Atom mass <span class="value" id="atomMassVal">0.25</span></label>
+      <input id="atomMass" type="range" min="0.00" max="0.70" step="0.01" value="0.25" />
+    </div>
+
+    <div class="control">
+      <label for="bins">Measurable pieces <span class="value" id="binsVal">12</span></label>
+      <input id="bins" type="range" min="2" max="40" step="1" value="12" />
+    </div>
+
+    <div class="control">
+      <label>Simple approximation</label>
+      <div class="seg">
+        <button class="btn active" id="lowerBtn">lower</button>
+        <button class="btn" id="midBtn">midpoint</button>
+      </div>
+    </div>
+
+    <div class="control">
+      <label for="sampleSize">Expectation simulation <span class="value" id="sampleVal">800</span></label>
+      <input id="sampleSize" type="range" min="50" max="5000" step="50" value="800" />
+    </div>
+
+    <div class="control">
+      <button class="btn" id="resampleBtn">Resimulate</button>
+    </div>
+
+    <div class="eqBox" id="eqBox">
+      âˆ«s dÎ¼ = âˆ‘ aáµ¢ Î¼(Aáµ¢).<br>
+      Each rectangle is not â€œwidth Ã— heightâ€ unless Î¼ is uniform.
+    </div>
+
+    <div class="control">
+      <div class="panelTitle" style="margin-bottom:8px">What to notice</div>
+      <div class="notice" id="noticeText">
+        Lebesgue integration begins with measurable pieces in Î©, not with intervals on the vertical axis. The measure of each piece decides its weight.
+      </div>
+    </div>
+  </aside>
+
+  <section class="main">
+    <div class="card plotCard">
+      <div class="plotHead">
+        <div>
+          <div class="plotTitle">Function, simple approximation, and measure on Î©</div>
+          <div class="pillRow">
+            <span class="pill"><span class="dot"></span> target f</span>
+            <span class="pill"><span class="dot" style="background:var(--blue)"></span> simple function s</span>
+            <span class="pill"><span class="dot" style="background:var(--warn)"></span> measure weight Î¼</span>
+          </div>
+        </div>
+        <div class="plotSub" id="mainSub">s is constant on measurable cells Aáµ¢</div>
+      </div>
+      <svg id="mainSvg" viewBox="0 0 980 430" preserveAspectRatio="xMidYMid meet"></svg>
+    </div>
+
+    <div class="two">
+      <div class="card plotCard">
+        <div class="plotHead">
+          <div class="plotTitle">Contribution decomposition</div>
+          <div class="plotSub">aáµ¢ Î¼(Aáµ¢)</div>
+        </div>
+        <svg id="contribSvg" viewBox="0 0 520 265" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+      <div class="card plotCard">
+        <div class="plotHead">
+          <div class="plotTitle">Expectation as an integral</div>
+          <div class="plotSub">sample average approaches âˆ«f dP</div>
+        </div>
+        <svg id="expectSvg" viewBox="0 0 520 265" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+    </div>
+
+    <div class="interpretation">
+      <div class="card cardPad">
+        <div class="panelTitle">Interpretation</div>
+        <div class="smallText" id="interpretText">
+          A simple function compresses f into finitely many heights. The integral adds these heights with weights Î¼(Aáµ¢).
+        </div>
+        <div class="summary">
+          <div><strong>Simple functions.</strong><br>s = âˆ‘aáµ¢1<sub>Aáµ¢</sub>. Geometry: finitely many horizontal slabs over measurable pieces.</div>
+          <div><strong>Nonnegative integral.</strong><br>Approximate from below and take the supremum of simple integrals.</div>
+          <div><strong>Signed integral.</strong><br>Write f=fâºâˆ’fâ». The integral exists when âˆ«fâºdÎ¼ and âˆ«fâ»dÎ¼ are not both infinite.</div>
+          <div><strong>Expectation.</strong><br>A random variable is a measurable function; its mean is its Lebesgue integral under P.</div>
+        </div>
+      </div>
+      <div class="card cardPad">
+        <div class="panelTitle">Exam-style summary</div>
+        <div class="smallText">
+          For s=âˆ‘aáµ¢1<sub>Aáµ¢</sub>, define âˆ«s dÎ¼=âˆ‘aáµ¢Î¼(Aáµ¢). For fâ‰¥0, define âˆ«f dÎ¼ as the supremum over simple 0â‰¤sâ‰¤f.
+          For signed f, set fâº=max(f,0), fâ»=max(âˆ’f,0), and âˆ«f=âˆ«fâºâˆ’âˆ«fâ» when âˆ«|f|dÎ¼&lt;âˆž.
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer>Minimal interactive notebook â€” Lebesgue integral as weighted geometry over Î©.</footer>
+</div>
+
+<script>
+const body = document.body;
+const themeBtn = document.getElementById("themeBtn");
+const functionSelect = document.getElementById("functionSelect");
+const measureSelect = document.getElementById("measureSelect");
+const atomBlock = document.getElementById("atomBlock");
+const atomMass = document.getElementById("atomMass");
+const atomMassVal = document.getElementById("atomMassVal");
+const bins = document.getElementById("bins");
+const binsVal = document.getElementById("binsVal");
+const sampleSize = document.getElementById("sampleSize");
+const sampleVal = document.getElementById("sampleVal");
+const lowerBtn = document.getElementById("lowerBtn");
+const midBtn = document.getElementById("midBtn");
+const resampleBtn = document.getElementById("resampleBtn");
+
+let approxMode = "lower";
+let seed = 123456;
+let samples = [];
+
+function css(name){ return getComputedStyle(body).getPropertyValue(name).trim(); }
+function fmt(x){ return (Math.abs(x)<0.0005 ? 0 : x).toFixed(3); }
+function clamp(x,a,b){ return Math.max(a, Math.min(b,x)); }
+
+function f(x){
+  const t=functionSelect.value;
+  if(t==="positive") return 0.35 + 0.85*Math.pow(Math.sin(Math.PI*(x+.08)),2) + 0.35*x;
+  if(t==="signed") return 1.05*Math.sin(2*Math.PI*x) - 0.38*Math.cos(4*Math.PI*x);
+  if(t==="payoff") return (x<0.22 ? -0.45 : (x<0.62 ? 0.25 : 1.55*(x-0.62)+0.25));
+  if(t==="singular") return Math.min(4.0, 0.52/Math.sqrt(x+0.012));
+  return x;
+}
+
+function density(x){
+  const m=measureSelect.value;
+  if(m==="uniform" || m==="atom") return 1;
+  if(m==="tilted") return 2*x;
+  return 1;
+}
+
+function contWeight(){
+  if(measureSelect.value==="atom") return 1 - (+atomMass.value);
+  return 1;
+}
+function atomX(){ return 0.72; }
+
+function muInterval(a,b){
+  const m=measureSelect.value;
+  let val=0;
+  if(m==="uniform") val = Math.max(0,b-a);
+  else if(m==="tilted") val = Math.max(0,b*b-a*a);
+  else{
+    val = (1-(+atomMass.value))*Math.max(0,b-a);
+    const ax=atomX();
+    if(a <= ax && ax < b) val += +atomMass.value;
+  }
+  return val;
+}
+
+function integralOf(g){
+  const N=2200; let sum=0;
+  for(let i=0;i<N;i++){
+    const x=(i+.5)/N;
+    sum += g(x)*density(x);
+  }
+  let val = contWeight()*sum/N;
+  if(measureSelect.value==="atom") val += (+atomMass.value)*g(atomX());
+  return val;
+}
+
+function makeCells(){
+  const n=+bins.value;
+  const cells=[];
+  for(let i=0;i<n;i++){
+    const a=i/n, b=(i+1)/n;
+    let h;
+    if(approxMode==="mid"){
+      h=f((a+b)/2);
+    }else{
+      let min=Infinity;
+      const K=24;
+      for(let j=0;j<=K;j++) min=Math.min(min, f(a+(b-a)*j/K));
+      h=min;
+    }
+    cells.push({a,b,h,mu:muInterval(a,b), contrib:h*muInterval(a,b)});
+  }
+  return cells;
+}
+
+function rng(){
+  seed=(1664525*seed+1013904223)>>>0;
+  return seed/4294967296;
+}
+function drawSample(){
+  const n=+sampleSize.value;
+  samples=[];
+  for(let i=0;i<n;i++){
+    let u=rng();
+    let x;
+    if(measureSelect.value==="uniform") x=u;
+    else if(measureSelect.value==="tilted") x=Math.sqrt(u);
+    else{
+      const m=+atomMass.value;
+      if(u<m) x=atomX();
+      else x=(u-m)/(1-m);
+    }
+    samples.push(f(x));
+  }
+}
+
+function yExtent(){
+  let min=Infinity, max=-Infinity;
+  for(let i=0;i<=800;i++){
+    const y=f(i/800);
+    min=Math.min(min,y); max=Math.max(max,y);
+  }
+  if(min>0) min=0;
+  if(max<0) max=0;
+  const pad=(max-min)*.14 || 1;
+  return [min-pad, max+pad];
+}
+
+function pathFunction(x0,y0,w,h,yMin,yMax){
+  let d="";
+  for(let i=0;i<=520;i++){
+    const x=i/520;
+    const px=x0+x*w;
+    const py=y0+h-(f(x)-yMin)/(yMax-yMin)*h;
+    d += (i===0 ? "M" : "L")+px.toFixed(2)+","+py.toFixed(2);
+  }
+  return d;
+}
+
+function drawMain(){
+  const svg=document.getElementById("mainSvg");
+  const text=css("--text"), muted=css("--muted"), border=css("--border"), grid=css("--grid");
+  const panel=css("--panel"), accent=css("--accent"), blue=css("--blue"), warn=css("--warn"), red=css("--red");
+  const [yMin,yMax]=yExtent();
+  const x0=62,y0=38,w=820,h=270;
+  const yMap=y=>y0+h-(y-yMin)/(yMax-yMin)*h;
+  const xMap=x=>x0+x*w;
+  const zero=yMap(0);
+  const cells=makeCells();
+  let html=`<rect x="8" y="10" width="964" height="406" rx="20" fill="${panel}" stroke="${border}"/>`;
+  for(let k=0;k<=4;k++){
+    const y=y0+k*h/4;
+    html+=`<line x1="${x0}" y1="${y}" x2="${x0+w}" y2="${y}" stroke="${grid}"/>`;
+  }
+  for(let k=0;k<=5;k++){
+    const x=x0+k*w/5;
+    html+=`<line x1="${x}" y1="${y0}" x2="${x}" y2="${y0+h}" stroke="${grid}"/>`;
+    html+=`<text x="${x}" y="${y0+h+20}" text-anchor="middle" fill="${muted}" font-size="11">${(k/5).toFixed(1)}</text>`;
+  }
+  html+=`<line x1="${x0}" y1="${zero}" x2="${x0+w}" y2="${zero}" stroke="${muted}" stroke-width="1.2"/>`;
+  html+=`<text x="${x0-10}" y="${zero+4}" text-anchor="end" fill="${muted}" font-size="11">0</text>`;
+  html+=`<text x="${x0}" y="${y0-13}" fill="${muted}" font-size="13" font-weight="700">Î©=[0,1]</text>`;
+
+  cells.forEach(c=>{
+    const px=xMap(c.a), pw=xMap(c.b)-xMap(c.a);
+    const py=yMap(c.h);
+    const top=Math.min(py,zero), rh=Math.abs(zero-py);
+    const col=c.h>=0?blue:red;
+    html+=`<rect x="${px}" y="${top}" width="${pw}" height="${rh}" fill="${col}" fill-opacity=".19" stroke="${col}" stroke-opacity=".55"/>`;
+    html+=`<line x1="${px}" y1="${py}" x2="${px+pw}" y2="${py}" stroke="${col}" stroke-width="2"/>`;
+  });
+
+  html+=`<path d="${pathFunction(x0,y0,w,h,yMin,yMax)}" fill="none" stroke="${accent}" stroke-width="3" stroke-linecap="round"/>`;
+
+  // measure strip
+  const sy=344, sh=34;
+  html+=`<text x="${x0}" y="${sy-16}" fill="${muted}" font-size="12" font-weight="700">measure weight on Î©</text>`;
+  html+=`<rect x="${x0}" y="${sy}" width="${w}" height="${sh}" rx="12" fill="none" stroke="${border}"/>`;
+  const M=160;
+  for(let i=0;i<M;i++){
+    const a=i/M,b=(i+1)/M, mid=(a+b)/2;
+    const dens = measureSelect.value==="tilted" ? density(mid)/2 : 0.55;
+    const alpha = measureSelect.value==="tilted" ? (.16 + .50*dens) : .22;
+    html+=`<rect x="${xMap(a)}" y="${sy}" width="${w/M+1}" height="${sh}" fill="${warn}" fill-opacity="${alpha}"/>`;
+  }
+  cells.forEach(c=> html+=`<line x1="${xMap(c.a)}" y1="${sy}" x2="${xMap(c.a)}" y2="${sy+sh}" stroke="${panel}" stroke-width="1"/>`);
+  if(measureSelect.value==="atom"){
+    const ax=xMap(atomX());
+    html+=`<line x1="${ax}" y1="${sy-18}" x2="${ax}" y2="${sy+sh+6}" stroke="${red}" stroke-width="3"/>`;
+    html+=`<circle cx="${ax}" cy="${sy-20}" r="${6+16*(+atomMass.value)}" fill="${red}" fill-opacity=".75"/>`;
+    html+=`<text x="${ax}" y="${sy+sh+24}" text-anchor="middle" fill="${red}" font-size="11" font-weight="800">atom</text>`;
+  }
+  html+=`<text x="${x0+w+8}" y="${sy+22}" fill="${muted}" font-size="12">Î¼</text>`;
+
+  const exact=integralOf(f);
+  const simp=cells.reduce((s,c)=>s+c.contrib,0);
+  html+=`<text x="${x0+w-4}" y="${y0-14}" text-anchor="end" fill="${text}" font-size="13" font-weight="800">âˆ«f dÎ¼ â‰ˆ ${fmt(exact)}  Â·  âˆ«s dÎ¼ â‰ˆ ${fmt(simp)}</text>`;
+  svg.innerHTML=html;
+}
+
+function drawContrib(){
+  const svg=document.getElementById("contribSvg");
+  const text=css("--text"), muted=css("--muted"), border=css("--border"), grid=css("--grid");
+  const panel=css("--panel"), blue=css("--blue"), red=css("--red"), accent=css("--accent");
+  const cells=makeCells();
+  const vals=cells.map(c=>c.contrib);
+  const maxAbs=Math.max(.01,...vals.map(v=>Math.abs(v)));
+  const x0=46,y0=34,w=430,h=175,zero=y0+h/2;
+  let html=`<rect x="8" y="10" width="504" height="240" rx="18" fill="${panel}" stroke="${border}"/>`;
+  for(let k=-2;k<=2;k++){
+    const y=zero - k*(h/2)/2;
+    html+=`<line x1="${x0}" y1="${y}" x2="${x0+w}" y2="${y}" stroke="${k===0?muted:grid}" stroke-width="${k===0?1.2:1}"/>`;
+  }
+  const bw=w/cells.length;
+  cells.forEach((c,i)=>{
+    const bh=Math.abs(c.contrib)/maxAbs*(h/2-10);
+    const x=x0+i*bw+1;
+    const y=c.contrib>=0?zero-bh:zero;
+    html+=`<rect x="${x}" y="${y}" width="${Math.max(1,bw-2)}" height="${bh}" rx="3" fill="${c.contrib>=0?blue:red}" fill-opacity=".72"/>`;
+  });
+  html+=`<text x="${x0}" y="226" fill="${muted}" font-size="12">signed pieces: positive bars add, negative bars subtract</text>`;
+  const plus=integralOf(x=>Math.max(f(x),0));
+  const minus=integralOf(x=>Math.max(-f(x),0));
+  html+=`<text x="${x0+w}" y="226" text-anchor="end" fill="${text}" font-size="13" font-weight="800">âˆ«fâº=${fmt(plus)} Â· âˆ«fâ»=${fmt(minus)}</text>`;
+  svg.innerHTML=html;
+}
+
+function drawExpect(){
+  const svg=document.getElementById("expectSvg");
+  const text=css("--text"), muted=css("--muted"), border=css("--border"), grid=css("--grid");
+  const panel=css("--panel"), accent=css("--accent"), blue=css("--blue");
+  if(samples.length !== +sampleSize.value) drawSample();
+  const exact=integralOf(f);
+  const mean=samples.reduce((a,b)=>a+b,0)/samples.length;
+  let min=Math.min(exact,mean,...samples.slice(0,200)), max=Math.max(exact,mean,...samples.slice(0,200));
+  if(min>0) min=0; if(max<0) max=0;
+  const pad=(max-min)*.16 || 1; min-=pad; max+=pad;
+  const x0=48,y0=34,w=430,h=175;
+  const yMap=y=>y0+h-(y-min)/(max-min)*h;
+  let html=`<rect x="8" y="10" width="504" height="240" rx="18" fill="${panel}" stroke="${border}"/>`;
+  for(let k=0;k<=4;k++){
+    const y=y0+k*h/4;
+    html+=`<line x1="${x0}" y1="${y}" x2="${x0+w}" y2="${y}" stroke="${grid}"/>`;
+  }
+  html+=`<line x1="${x0}" y1="${yMap(0)}" x2="${x0+w}" y2="${yMap(0)}" stroke="${muted}" stroke-width="1"/>`;
+  const pts=70;
+  let running=0, d="";
+  for(let i=0;i<pts;i++){
+    const n=Math.max(1, Math.floor((i+1)*samples.length/pts));
+    running=samples.slice(0,n).reduce((a,b)=>a+b,0)/n;
+    const x=x0+i*w/(pts-1), y=yMap(running);
+    d+=(i===0?"M":"L")+x.toFixed(2)+","+y.toFixed(2);
+  }
+  html+=`<path d="${d}" fill="none" stroke="${blue}" stroke-width="2.6" stroke-linecap="round"/>`;
+  html+=`<line x1="${x0}" y1="${yMap(exact)}" x2="${x0+w}" y2="${yMap(exact)}" stroke="${accent}" stroke-width="2" stroke-dasharray="6 5"/>`;
+  html+=`<text x="${x0}" y="226" fill="${muted}" font-size="12">blue: empirical average Â· dashed: Lebesgue integral</text>`;
+  html+=`<text x="${x0+w}" y="226" text-anchor="end" fill="${text}" font-size="13" font-weight="800">mean=${fmt(mean)} Â· âˆ«f dP=${fmt(exact)}</text>`;
+  svg.innerHTML=html;
+}
+
+function refreshText(){
+  binsVal.textContent=bins.value;
+  sampleVal.textContent=sampleSize.value;
+  atomMassVal.textContent=(+atomMass.value).toFixed(2);
+  atomBlock.style.display=measureSelect.value==="atom" ? "block":"none";
+
+  const exact=integralOf(f);
+  const cells=makeCells();
+  const simp=cells.reduce((s,c)=>s+c.contrib,0);
+  const abs=integralOf(x=>Math.abs(f(x)));
+  document.getElementById("eqBox").innerHTML =
+    `âˆ«s dÎ¼ = âˆ‘ aáµ¢ Î¼(Aáµ¢) = <strong>${fmt(simp)}</strong><br>`+
+    `âˆ«f dÎ¼ â‰ˆ <strong>${fmt(exact)}</strong>, &nbsp; âˆ«|f|dÎ¼ â‰ˆ <strong>${fmt(abs)}</strong>`;
+  let note="Lebesgue integration starts from measurable pieces Aáµ¢. The horizontal width of a piece is not its weight unless Î¼ is uniform.";
+  if(functionSelect.value==="signed") note="For signed functions, the geometry splits into positive and negative mass. Integrability means the total absolute area âˆ«|f|dÎ¼ is finite.";
+  if(functionSelect.value==="singular") note="A spike can be tall near a point and still be integrable: finite measure-weighted mass matters, not pointwise height alone.";
+  if(measureSelect.value==="atom") note="An atom gives positive weight to a single point. The value f(Ï‰â‚€) contributes directly through mÂ·f(Ï‰â‚€).";
+  document.getElementById("noticeText").textContent=note;
+
+  document.getElementById("interpretText").innerHTML =
+    `The current simple function has <strong>${bins.value}</strong> measurable pieces. `+
+    `Each piece Aáµ¢ has one height aáµ¢ and one measure Î¼(Aáµ¢). `+
+    `The simple integral is the finite weighted sum <strong>${fmt(simp)}</strong>. `+
+    `The target integral is approximately <strong>${fmt(exact)}</strong>.`;
+}
+
+function drawAll(){
+  refreshText();
+  drawMain();
+  drawContrib();
+  drawExpect();
+}
+
+themeBtn.addEventListener("click",()=>{
+  const dark=body.getAttribute("data-theme")==="dark";
+  body.setAttribute("data-theme", dark?"light":"dark");
+  themeBtn.textContent=dark?"Dark mode":"Light mode";
+  drawAll();
+});
+[functionSelect, measureSelect, atomMass, bins].forEach(el=>el.addEventListener("input",()=>{samples=[]; drawAll();}));
+sampleSize.addEventListener("input",()=>{samples=[]; drawAll();});
+resampleBtn.addEventListener("click",()=>{seed=(seed+987654321)>>>0; samples=[]; drawAll();});
+lowerBtn.addEventListener("click",()=>{approxMode="lower"; lowerBtn.classList.add("active"); midBtn.classList.remove("active"); drawAll();});
+midBtn.addEventListener("click",()=>{approxMode="mid"; midBtn.classList.add("active"); lowerBtn.classList.remove("active"); drawAll();});
+
+drawSample();
+drawAll();
+</script>
+</body>
+</html>
+

@@ -1,0 +1,616 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="google-site-verification" content="google2c37f7a4206c9d3a.html">
+<meta name="google-site-verification" content="fSWAEb_oSSHr_eJXL9gHYxIn879tRaBwJ42f_aD9o2s">
+<meta name="google-site-verification" content="ftZ4QVMrlub9jbolsIeo4Ix4UBw0-BJrFeorzqKLXng">
+<meta name="description" content="Interactive diagram for modes of convergence.">
+  <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
+<title>Modes of Convergence - Visual Paths</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NHXHEJP1G0');
+</script>
+<style>
+  :root{
+    --bg:#f6f1e8; --panel:#fffaf2; --panel2:#fcf5ea; --text:#17212b; --muted:#65717d;
+    --border:rgba(23,33,43,.12); --grid:rgba(23,33,43,.075); --accent:#2d8e84;
+    --accentSoft:rgba(45,142,132,.14); --accentLine:rgba(45,142,132,.32);
+    --blue:#456fb4; --warn:#ba7356; --violet:#7f63b8; --rose:#ad5575;
+    --shadow:0 16px 45px rgba(25,35,45,.08); --radius:22px;
+  }
+  [data-theme="dark"]{
+    --bg:#0f151a; --panel:#151d24; --panel2:#11181f; --text:#ecf2f6; --muted:#9cadb8;
+    --border:rgba(236,242,246,.12); --grid:rgba(236,242,246,.08); --accent:#67cdbf;
+    --accentSoft:rgba(103,205,191,.13); --accentLine:rgba(103,205,191,.34);
+    --blue:#82b7ff; --warn:#e1a184; --violet:#bba6ff; --rose:#f09fbe;
+    --shadow:0 18px 55px rgba(0,0,0,.30);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; color:var(--text);
+    font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background:
+      radial-gradient(circle at 10% 0%, var(--accentSoft), transparent 28rem),
+      radial-gradient(circle at 96% 18%, rgba(69,111,180,.10), transparent 24rem),
+      var(--bg);
+  }
+  .wrap{width:min(1280px,calc(100% - 28px));margin:0 auto;padding:26px 0 42px}
+  header{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:16px}
+  h1{margin:0;font-size:clamp(1.7rem,3vw,2.45rem);line-height:1.03;letter-spacing:-.045em;font-weight:820}
+  .subtitle{margin:10px 0 0;color:var(--muted);max-width:930px;font-size:.98rem;line-height:1.58}
+  .themeBtn{border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:999px;padding:10px 15px;box-shadow:var(--shadow);cursor:pointer;font-weight:760;white-space:nowrap}
+  .defs{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+  .def,.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .def{padding:14px 15px;min-height:128px}
+  .tag{color:var(--muted);font-size:.74rem;font-weight:850;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
+  .math{font-family:Cambria, Georgia, "Times New Roman", serif;line-height:1.45;font-size:1.01rem;color:var(--text)}
+  .formula{display:block;margin:.1rem 0 .28rem;font-family:"STIX Two Text", Cambria, Georgia, "Times New Roman", serif;font-size:1.06rem;line-height:1.35}
+  .mathNote{display:block;color:var(--muted);font-family:Inter, ui-sans-serif, system-ui, sans-serif;font-size:.82rem;line-height:1.35;margin-top:.2rem}
+  .layout{display:grid;grid-template-columns:350px 1fr;gap:16px;align-items:start}
+  .side{padding:16px}
+  .panelTitle{margin:0 0 12px;color:var(--muted);font-size:.82rem;font-weight:900;text-transform:uppercase;letter-spacing:.13em}
+  .control{padding:12px 0;border-top:1px solid var(--border)}
+  .control:first-of-type{border-top:0;padding-top:0}
+  label{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px;font-weight:730;font-size:.91rem}
+  .value{color:var(--accent);font-weight:850;font-variant-numeric:tabular-nums}
+  input[type="range"]{width:100%;accent-color:var(--accent)}
+  select{width:100%;border:1px solid var(--border);background:var(--panel2);color:var(--text);border-radius:14px;padding:10px 11px;font-weight:720;outline:none}
+  .eqBox{margin-top:10px;border:1px solid var(--accentLine);background:var(--accentSoft);border-radius:17px;padding:12px;font-family:Cambria, Georgia, "Times New Roman", serif;line-height:1.48;color:var(--text)}
+  .main{display:grid;gap:16px}
+  .plotCard{padding:10px 10px 6px}
+  .plotHead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:8px 9px 2px}
+  .plotTitle{font-weight:850;letter-spacing:-.02em}
+  .plotSub{color:var(--muted);font-size:.84rem;line-height:1.4;text-align:right}
+  svg{display:block;width:100%}
+  #mainSvg{height:510px}
+  #cdfSvg,#chainSvg{height:325px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .interpretation{display:grid;grid-template-columns:1.08fr .92fr;gap:16px}
+  .cardPad{padding:16px}
+  .smallText{color:var(--muted);font-size:.92rem;line-height:1.58}
+  .notice{border-left:3px solid var(--accent);padding-left:13px;color:var(--muted);font-size:.92rem;line-height:1.55}
+  .summary{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+  .summary>div{border:1px solid var(--border);background:var(--panel2);border-radius:16px;padding:12px;font-size:.90rem;line-height:1.50}
+  .pillRow{display:flex;flex-wrap:wrap;gap:8px;margin-top:9px}
+  .pill{border:1px solid var(--border);background:var(--panel2);border-radius:999px;padding:7px 10px;color:var(--muted);font-size:.80rem;font-weight:760;display:inline-flex;gap:7px;align-items:center}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);display:inline-block}
+  .logicList{display:grid;gap:8px;margin-top:10px}
+  .logicItem{border:1px solid var(--border);background:var(--panel2);border-radius:14px;padding:10px 11px;font-size:.88rem;color:var(--muted);display:flex;gap:9px;align-items:flex-start}
+  .mark{font-weight:900;color:var(--accent);min-width:17px}
+  .miniGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+  .miniStat{border:1px solid var(--border);background:var(--panel2);border-radius:14px;padding:10px 11px}
+  .miniStat .k{font-size:.76rem;color:var(--muted);font-weight:860;text-transform:uppercase;letter-spacing:.09em}
+  .miniStat .v{font-size:1rem;font-weight:850;margin-top:6px}
+  footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
+  @media(max-width:1080px){
+    .defs,.layout,.two,.interpretation{grid-template-columns:1fr}
+    header{flex-direction:column}
+    .themeBtn{align-self:flex-start}
+    #mainSvg{height:485px}
+  }
+  @media(max-width:560px){
+    .wrap{width:min(100% - 18px,1280px);padding-top:18px}
+    .summary{grid-template-columns:1fr}
+    .miniGrid{grid-template-columns:1fr}
+    #mainSvg{height:455px}
+  }
+</style>
+</head>
+<body data-theme="light">
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Modes of convergence</h1>
+      <div class="subtitle">
+        Four convergence notions, four geometries: paths stabilize, escaping mass disappears, \(L^p\)-distance shrinks, or only the law approaches.
+      </div>
+    </div>
+    <button class="themeBtn" id="themeBtn">Dark mode</button>
+  </header>
+
+  <section class="defs">
+    <div class="def">
+      <div class="tag">Almost sure</div>
+      <div class="math">
+        <span class="formula">P( X<sub>n</sub>(Ï‰) â†’ X(Ï‰) ) = 1</span>
+        <span class="mathNote">watch each sample path</span>
+      </div>
+    </div>
+    <div class="def">
+      <div class="tag">Probability</div>
+      <div class="math">
+        <span class="formula">P(|X<sub>n</sub>âˆ’X| &gt; Îµ) â†’ 0</span>
+        <span class="mathNote">watch mass outside the tube</span>
+      </div>
+    </div>
+    <div class="def">
+      <div class="tag">Lp</div>
+      <div class="math">
+        <span class="formula">E|X<sub>n</sub>âˆ’X|<sup>p</sup> â†’ 0</span>
+        <span class="mathNote">watch weighted error magnitude</span>
+      </div>
+    </div>
+    <div class="def">
+      <div class="tag">Distribution</div>
+      <div class="math">
+        <span class="formula">F<sub>n</sub>(x) â†’ F(x)</span>
+        <span class="mathNote">watch laws, not paths</span>
+      </div>
+    </div>
+  </section>
+
+  <main class="layout">
+    <aside class="card side">
+      <div class="panelTitle">Controls</div>
+
+      <div class="control">
+        <label for="exampleSelect">Canonical sequence</label>
+        <select id="exampleSelect">
+          <option value="shrink">same Z shrinking: Xâ‚™=Z/n</option>
+          <option value="rare">rare spikes: náµƒ1(Aâ‚™)</option>
+          <option value="typewriter">typewriter sequence</option>
+          <option value="distribution">same law, no closeness</option>
+          <option value="oscillating">oscillating deterministic Â±1</option>
+        </select>
+      </div>
+
+      <div class="control">
+        <label for="nRange">Index n <span class="value" id="nVal">80</span></label>
+        <input id="nRange" type="range" min="2" max="500" step="1" value="80"/>
+      </div>
+
+      <div class="control">
+        <label for="epsRange">Tube radius Îµ <span class="value" id="epsVal">0.50</span></label>
+        <input id="epsRange" type="range" min="0.05" max="2.00" step="0.05" value="0.50"/>
+      </div>
+
+      <div class="control">
+        <label for="pRange">Lp order p <span class="value" id="pVal">2.00</span></label>
+        <input id="pRange" type="range" min="0.50" max="6.00" step="0.10" value="2.00"/>
+      </div>
+
+      <div class="control">
+        <label for="aRange">Spike height exponent a <span class="value" id="aVal">0.60</span></label>
+        <input id="aRange" type="range" min="0.00" max="2.00" step="0.05" value="0.60"/>
+      </div>
+
+      <div class="control">
+        <label for="bRange">Spike probability exponent b <span class="value" id="bVal">1.30</span></label>
+        <input id="bRange" type="range" min="0.10" max="3.00" step="0.05" value="1.30"/>
+      </div>
+
+      <div class="control">
+        <label for="pathsRange">Displayed paths <span class="value" id="pathsVal">14</span></label>
+        <input id="pathsRange" type="range" min="6" max="30" step="1" value="14"/>
+      </div>
+
+      <div class="eqBox" id="eqBox"></div>
+      <div class="miniGrid" id="miniGrid"></div>
+
+      <div class="control">
+        <div class="panelTitle" style="margin-bottom:8px">Theoretical criteria</div>
+        <div class="logicList" id="logicList"></div>
+      </div>
+    </aside>
+
+    <section class="main">
+      <div class="card plotCard">
+        <div class="plotHead">
+          <div>
+            <div class="plotTitle">Path geometry and mass outside the Îµ-tube</div>
+            <div class="pillRow">
+              <span class="pill"><span class="dot"></span> sample paths</span>
+              <span class="pill"><span class="dot" style="background:var(--blue)"></span> target/limit</span>
+              <span class="pill"><span class="dot" style="background:var(--warn)"></span> escaping mass</span>
+              <span class="pill"><span class="dot" style="background:var(--violet)"></span> current n</span>
+            </div>
+          </div>
+          <div class="plotSub" id="mainSub">Almost sure is pathwise; probability is mass outside the tube.</div>
+        </div>
+        <svg id="mainSvg" viewBox="0 0 980 510" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+
+      <div class="two">
+        <div class="card plotCard">
+          <div class="plotHead">
+            <div class="plotTitle">Distributional geometry</div>
+            <div class="plotSub">CDF \(F_n\) against limiting \(F\)</div>
+          </div>
+          <svg id="cdfSvg" viewBox="0 0 520 325" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+
+        <div class="card plotCard">
+          <div class="plotHead">
+            <div class="plotTitle">Implication chain</div>
+            <div class="plotSub">current example versus valid implications</div>
+          </div>
+          <svg id="chainSvg" viewBox="0 0 520 325" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+      </div>
+
+      <div class="interpretation">
+        <div class="card cardPad">
+          <div class="panelTitle">Interpretation</div>
+          <div class="smallText" id="interpretText"></div>
+          <div class="summary">
+            <div><strong>Almost sure.</strong><br>Fix \(\omega\). The entire tail of the path must settle.</div>
+            <div><strong>Probability.</strong><br>Fix \(n\). The probability outside every tube must vanish.</div>
+            <div><strong>\(L^p\).</strong><br>Height matters: rare but huge errors may destroy \(L^p\) convergence.</div>
+            <div><strong>Distribution.</strong><br>Only the law matters; coupling on one probability space is irrelevant.</div>
+          </div>
+        </div>
+
+        <div class="card cardPad">
+          <div class="panelTitle">What to notice</div>
+          <div class="notice" id="noticeText"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>Minimal interactive notebook â€” paths, mass, norms, CDFs, and implication chains.</footer>
+</div>
+
+<script>
+const body=document.body;
+const themeBtn=document.getElementById("themeBtn");
+const exampleSelect=document.getElementById("exampleSelect");
+const nRange=document.getElementById("nRange");
+const epsRange=document.getElementById("epsRange");
+const pRange=document.getElementById("pRange");
+const aRange=document.getElementById("aRange");
+const bRange=document.getElementById("bRange");
+const pathsRange=document.getElementById("pathsRange");
+
+function css(v){return getComputedStyle(body).getPropertyValue(v).trim();}
+function fmt(x){
+  if(!isFinite(x)) return "âˆž";
+  if(Math.abs(x)<0.0001 && x!==0) return x.toExponential(2);
+  if(Math.abs(x)<10) return x.toFixed(4);
+  return x.toFixed(2);
+}
+function line(x1,y1,x2,y2,stroke,w=1,op=1,dash=""){
+  return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+stroke+'" stroke-width="'+w+'" stroke-opacity="'+op+'" '+(dash?'stroke-dasharray="'+dash+'"':'')+'/>';
+}
+function text(x,y,s,fill,size=13,weight=600,anchor="start"){
+  return '<text x="'+x+'" y="'+y+'" fill="'+fill+'" font-size="'+size+'" font-weight="'+weight+'" text-anchor="'+anchor+'" font-family="Inter,system-ui,sans-serif">'+s+'</text>';
+}
+function px(v,a,b,x0,x1){return x0+(v-a)/(b-a)*(x1-x0);}
+function py(v,a,b,y0,y1){return y1-(v-a)/(b-a)*(y1-y0);}
+function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
+function fract(x){return x-Math.floor(x);}
+function rand(i,j=0){return fract(Math.sin(i*127.1+j*311.7+17.13)*43758.5453);}
+function normalRand(i,j=0){
+  const u=Math.max(1e-9,rand(i,j)), v=rand(i,j+99);
+  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);
+}
+function normalPdf(x,mu=0,s=1){return Math.exp(-0.5*Math.pow((x-mu)/s,2))/(s*Math.sqrt(2*Math.PI));}
+function erf(x){
+  const sign=x<0?-1:1; x=Math.abs(x);
+  const a1=0.254829592,a2=-0.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=.3275911;
+  const t=1/(1+p*x);
+  const y=1-(((((a5*t+a4)*t)+a3)*t+a2)*t+a1)*t*Math.exp(-x*x);
+  return sign*y;
+}
+function normalCdf(x,mu=0,s=1){return .5*(1+erf((x-mu)/(s*Math.sqrt(2))));}
+function absMomentNormal(p){
+  let s=0, lo=0, hi=8, N=1200, dx=(hi-lo)/N;
+  for(let i=0;i<=N;i++){
+    const x=lo+i*dx, w=(i===0||i===N)?0.5:1;
+    s+=w*Math.pow(x,p)*normalPdf(x)*dx;
+  }
+  return 2*s;
+}
+function dyadic(n){
+  const k=Math.floor(Math.log2(n));
+  const start=Math.pow(2,k);
+  return {k:k,j:n-start,start:start,len:1/start};
+}
+function getCurrent(){
+  const ex=exampleSelect.value,n=Number(nRange.value),eps=Number(epsRange.value),p=Number(pRange.value),a=Number(aRange.value),b=Number(bRange.value);
+  let prob=0,lp=0,cdfGap=0,as=false,pr=false,lpConv=false,dist=false,formula="",criteria="";
+  if(ex==="shrink"){
+    prob=2*(1-normalCdf(eps*n));
+    lp=Math.pow(absMomentNormal(p),1/p)/n;
+    cdfGap=Math.min(1,1/n);
+    as=true; pr=true; lpConv=true; dist=true;
+    formula="Xâ‚™(Ï‰)=Z(Ï‰)/n â†’ 0";
+    criteria="all four modes hold";
+  }else if(ex==="rare"){
+    const pn=Math.pow(n,-b), hn=Math.pow(n,a);
+    prob=hn>eps?pn:0;
+    lp=hn*Math.pow(pn,1/p);
+    cdfGap=pn;
+    as=b>1; pr=true; lpConv=(a*p<b); dist=true;
+    formula="Xâ‚™=náµƒ1(Aâ‚™),  P(Aâ‚™)=nâ»áµ‡";
+    criteria="probability if b>0; a.s. if b>1; Láµ– if ap<b";
+  }else if(ex==="typewriter"){
+    const tw=dyadic(n);
+    prob=tw.len;
+    lp=Math.pow(tw.len,1/p);
+    cdfGap=tw.len;
+    as=false; pr=true; lpConv=true; dist=true;
+    formula="Xâ‚™=1_{Iâ‚™}(U), dyadic intervals";
+    criteria="probability and Láµ– hold; a.s. fails";
+  }else if(ex==="distribution"){
+    prob=2*(1-normalCdf(eps,0,Math.sqrt(2)));
+    lp=Math.sqrt(2)*Math.pow(absMomentNormal(p),1/p);
+    cdfGap=0;
+    as=false; pr=false; lpConv=false; dist=true;
+    formula="Xâ‚™âˆ¼X in law, but not close on the same space";
+    criteria="distributional convergence does not require |Xâ‚™âˆ’X|â†’0";
+  }else if(ex==="oscillating"){
+    prob=1; lp=1; cdfGap=1;
+    as=false; pr=false; lpConv=false; dist=false;
+    formula="Xâ‚™=(-1)â¿";
+    criteria="even and odd subsequences disagree";
+  }
+  return {ex,n,eps,p,a,b,prob,lp,cdfGap,as,pr,lpConv,dist,formula,criteria};
+}
+function XVal(ex,n,pathIndex,omega){
+  const a=Number(aRange.value), b=Number(bRange.value);
+  if(ex==="shrink") return normalRand(pathIndex,1)/n;
+  if(ex==="rare"){
+    const prob=Math.pow(n,-b);
+    return rand(pathIndex,n)<prob ? Math.pow(n,a) : 0;
+  }
+  if(ex==="typewriter"){
+    const tw=dyadic(n);
+    return (omega>=tw.j*tw.len && omega<(tw.j+1)*tw.len) ? 1 : 0;
+  }
+  if(ex==="distribution") return normalRand(pathIndex,n);
+  if(ex==="oscillating") return n%2===0 ? 1 : -1;
+  return 0;
+}
+function XTarget(ex,pathIndex){
+  if(ex==="distribution") return normalRand(pathIndex,777);
+  return 0;
+}
+function drawMain(){
+  const m=getCurrent(), svg=document.getElementById("mainSvg");
+  const panel=css("--panel"), panel2=css("--panel2"), border=css("--border"), muted=css("--muted"), grid=css("--grid"), textc=css("--text");
+  const acc=css("--accent"), blue=css("--blue"), warn=css("--warn"), violet=css("--violet");
+  const X0=58,X1=690,Y0=58,Y1=352, paths=Number(pathsRange.value), nDrawMax=220;
+  let vals=[];
+  for(let r=0;r<paths;r++){
+    const omega=(r+.5)/paths;
+    for(let nn=2;nn<=nDrawMax;nn+=2){
+      vals.push(XVal(m.ex,nn,r,omega));
+      vals.push(XTarget(m.ex,r));
+    }
+  }
+  let lo=Math.min(...vals,-m.eps), hi=Math.max(...vals,m.eps);
+  if(m.ex==="rare") hi=Math.min(Math.max(hi,1),12);
+  if(lo===hi){lo-=1;hi+=1;}
+  const pad=(hi-lo)*.12 || 1; lo-=pad; hi+=pad;
+
+  let h='<rect x="8" y="10" width="964" height="485" rx="20" fill="'+panel+'" stroke="'+border+'"/>';
+  h+=text(64,38,"path view: Xâ‚™(Ï‰) against n",muted,13,850);
+
+  for(let i=0;i<=5;i++){
+    const yy=Y1-(Y1-Y0)*i/5;
+    h+=line(X0,yy,X1,yy,grid,1,.85);
+  }
+  for(let i=0;i<=5;i++){
+    const xx=X0+(X1-X0)*i/5;
+    h+=line(xx,Y0,xx,Y1,grid,1,.55);
+  }
+  h+=line(X0,Y1,X1,Y1,muted,1.2,.8);
+  h+=line(X0,Y0,X0,Y1,muted,1.2,.8);
+
+  if(m.ex!=="distribution"){
+    const targetY=py(0,lo,hi,Y0,Y1);
+    const upY=py(m.eps,lo,hi,Y0,Y1), downY=py(-m.eps,lo,hi,Y0,Y1);
+    h+='<rect x="'+X0+'" y="'+Math.min(upY,downY)+'" width="'+(X1-X0)+'" height="'+Math.abs(upY-downY)+'" fill="'+css("--accentSoft")+'" stroke="none"/>';
+    h+=line(X0,targetY,X1,targetY,blue,2,.65,"7 5");
+    h+=line(X0,upY,X1,upY,blue,1,.35,"4 5");
+    h+=line(X0,downY,X1,downY,blue,1,.35,"4 5");
+    h+=text(X1+7,targetY+4,"X=0",blue,12,850);
+  }
+
+  for(let r=0;r<paths;r++){
+    const omega=(r+.5)/paths;
+    let path="";
+    for(let nn=2;nn<=nDrawMax;nn++){
+      const x=px(nn,2,nDrawMax,X0,X1);
+      const y=py(clamp(XVal(m.ex,nn,r,omega),lo,hi),lo,hi,Y0,Y1);
+      path+=(nn===2?"M":"L")+" "+x+" "+y;
+    }
+    h+='<path d="'+path+'" fill="none" stroke="'+acc+'" stroke-width="1.4" stroke-opacity="'+(.22+.48*r/paths)+'"/>';
+    if(m.ex==="distribution"){
+      const ty=py(XTarget(m.ex,r),lo,hi,Y0,Y1);
+      h+=line(X0,ty,X1,ty,blue,1,.14,"4 6");
+    }
+  }
+
+  const curX=px(Math.min(m.n,nDrawMax),2,nDrawMax,X0,X1);
+  h+=line(curX,Y0,curX,Y1,violet,2,.85,"6 5");
+  h+=text(curX,Y0-10,"n="+m.n,violet,12,900,"middle");
+  h+=text(X0,Y1+24,"2",muted,11,800);
+  h+=text(X1,Y1+24,String(nDrawMax),muted,11,800,"end");
+
+  // current column mass as simple dot strip
+  const stripY0=390, stripY1=456, sx0=62, sx1=690;
+  h+=text(64,378,"current column: each dot is one displayed Ï‰",muted,12,850);
+  h+=line(sx0,stripY1,sx1,stripY1,grid,1,.85);
+  for(let r=0;r<paths;r++){
+    const omega=(r+.5)/paths;
+    const diff=XVal(m.ex,m.n,r,omega)-XTarget(m.ex,r);
+    const out=Math.abs(diff)>m.eps;
+    const cx=px(r,0,paths-1,sx0,sx1);
+    const cy=stripY1-10-42*clamp(Math.abs(diff)/(Math.max(m.eps,1e-6)*3),0,1);
+    h+='<circle cx="'+cx+'" cy="'+cy+'" r="5.5" fill="'+(out?warn:acc)+'" fill-opacity=".82"/>';
+  }
+  h+=line(sx0,stripY1-10-42/3,sx1,stripY1-10-42/3,blue,1,.35,"4 5");
+  h+=text(sx1+8,stripY1-10-42/3+4,"Îµ",blue,11,850);
+
+  // side metrics
+  h+='<rect x="730" y="70" width="216" height="270" rx="20" fill="'+panel2+'" stroke="'+border+'"/>';
+  h+=text(754,104,"Exact metrics",textc,16,900);
+  const bars=[
+    {name:"P outside tube",v:Math.min(m.prob,1),raw:m.prob,c:warn},
+    {name:"Lp distance",v:Math.min(m.lp/Math.max(m.lp,1),1),raw:m.lp,c:acc},
+    {name:"CDF gap",v:Math.min(m.cdfGap,1),raw:m.cdfGap,c:violet}
+  ];
+  bars.forEach((b,i)=>{
+    const y=140+i*58;
+    h+=text(754,y,b.name,b.c,12,900);
+    h+='<rect x="754" y="'+(y+12)+'" width="154" height="16" rx="8" fill="'+grid+'"/>';
+    h+='<rect x="754" y="'+(y+12)+'" width="'+(154*b.v)+'" height="16" rx="8" fill="'+b.c+'" fill-opacity=".72"/>';
+    h+=text(916,y+25,fmt(b.raw),textc,12,850,"end");
+  });
+  h+='<rect x="730" y="365" width="216" height="74" rx="16" fill="'+css("--accentSoft")+'" stroke="'+css("--accentLine")+'"/>';
+  h+=text(754,394,"Consistent reading",textc,13,900);
+  h+=text(754,417,m.ex==="distribution"?"target varies by path":"tube around the true limit",muted,12,780);
+
+  svg.innerHTML=h;
+}
+function cdfData(ex,n){
+  const a=Number(aRange.value), b=Number(bRange.value);
+  let xlo=-3,xhi=3, fn=[], f=[];
+  if(ex==="shrink"){
+    xlo=-2; xhi=2;
+    for(let i=0;i<=500;i++){const x=xlo+(xhi-xlo)*i/500; fn.push({x,y:normalCdf(x,0,1/n)}); f.push({x,y:x<0?0:1});}
+  }else if(ex==="rare"){
+    const pn=Math.pow(n,-b), hn=Math.pow(n,a);
+    xlo=-.5; xhi=Math.min(Math.max(3,hn*1.15),12);
+    fn=[{x:xlo,y:0},{x:0,y:0},{x:0,y:1-pn},{x:hn,y:1-pn},{x:hn,y:1},{x:xhi,y:1}];
+    f=[{x:xlo,y:0},{x:0,y:0},{x:0,y:1},{x:xhi,y:1}];
+  }else if(ex==="typewriter"){
+    const pn=dyadic(n).len;
+    xlo=-.5; xhi=1.5;
+    fn=[{x:xlo,y:0},{x:0,y:0},{x:0,y:1-pn},{x:1,y:1-pn},{x:1,y:1},{x:xhi,y:1}];
+    f=[{x:xlo,y:0},{x:0,y:0},{x:0,y:1},{x:xhi,y:1}];
+  }else if(ex==="distribution"){
+    xlo=-3; xhi=3;
+    for(let i=0;i<=500;i++){const x=xlo+(xhi-xlo)*i/500; const y=normalCdf(x); fn.push({x,y}); f.push({x,y});}
+  }else if(ex==="oscillating"){
+    xlo=-1.5; xhi=1.5;
+    const val=n%2===0?1:-1;
+    fn=[{x:xlo,y:0},{x:val,y:0},{x:val,y:1},{x:xhi,y:1}];
+    const other=-val;
+    f=[{x:xlo,y:0},{x:other,y:0},{x:other,y:.5},{x:val,y:.5},{x:val,y:1},{x:xhi,y:1}];
+  }
+  return {xlo,xhi,fn,f};
+}
+function pathFrom(points,xlo,xhi,X0,X1,Y0,Y1){
+  let p="";
+  for(let i=0;i<points.length;i++){
+    p+=(i===0?"M":"L")+" "+px(points[i].x,xlo,xhi,X0,X1)+" "+py(points[i].y,0,1,Y0,Y1);
+  }
+  return p;
+}
+function drawCdf(){
+  const m=getCurrent(), data=cdfData(m.ex,m.n), svg=document.getElementById("cdfSvg");
+  const panel=css("--panel"), border=css("--border"), muted=css("--muted"), grid=css("--grid"), blue=css("--blue"), violet=css("--violet"), warn=css("--warn");
+  const X0=58,X1=488,Y0=50,Y1=250;
+  let h='<rect x="8" y="10" width="504" height="300" rx="18" fill="'+panel+'" stroke="'+border+'"/>';
+  for(let i=0;i<=4;i++) h+=line(X0,Y1-(Y1-Y0)*i/4,X1,Y1-(Y1-Y0)*i/4,grid,1,.85);
+  for(let i=0;i<=4;i++) h+=line(X0+(X1-X0)*i/4,Y0,X0+(X1-X0)*i/4,Y1,grid,1,.55);
+  h+=line(X0,Y1,X1,Y1,muted,1.2,.8)+line(X0,Y0,X0,Y1,muted,1.2,.8);
+  h+='<path d="'+pathFrom(data.f,data.xlo,data.xhi,X0,X1,Y0,Y1)+'" fill="none" stroke="'+blue+'" stroke-width="2.4" stroke-dasharray="7 5"/>';
+  h+='<path d="'+pathFrom(data.fn,data.xlo,data.xhi,X0,X1,Y0,Y1)+'" fill="none" stroke="'+violet+'" stroke-width="2.7"/>';
+  h+=text(68,34,"CDF comparison",muted,12,850);
+  h+=text(72,282,"limit F",blue,12,900);
+  h+=text(136,282,"current Fâ‚™",violet,12,900);
+  if(m.ex==="oscillating") h+=text(300,34,"reference shown only to expose oscillation",warn,11,850);
+  svg.innerHTML=h;
+}
+function drawChain(){
+  const m=getCurrent(), svg=document.getElementById("chainSvg");
+  const panel=css("--panel"), border=css("--border"), muted=css("--muted"), textc=css("--text");
+  const acc=css("--accent"), blue=css("--blue"), warn=css("--warn");
+  let h='<rect x="8" y="10" width="504" height="300" rx="18" fill="'+panel+'" stroke="'+border+'"/>';
+  h+=text(66,34,"valid implication chain",muted,12,850);
+  const nodes=[
+    {label:"a.s.",x:122,y:96,ok:m.as},
+    {label:"Láµ–",x:122,y:220,ok:m.lpConv},
+    {label:"prob.",x:285,y:158,ok:m.pr},
+    {label:"dist.",x:430,y:158,ok:m.dist}
+  ];
+  function arrow(x1,y1,x2,y2){
+    h+=line(x1,y1,x2,y2,blue,2,.7);
+    const a=Math.atan2(y2-y1,x2-x1), L=10;
+    const ax=x2-L*Math.cos(a-Math.PI/7), ay=y2-L*Math.sin(a-Math.PI/7);
+    const bx=x2-L*Math.cos(a+Math.PI/7), by=y2-L*Math.sin(a+Math.PI/7);
+    h+='<path d="M '+x2+' '+y2+' L '+ax+' '+ay+' L '+bx+' '+by+' Z" fill="'+blue+'" fill-opacity=".78"/>';
+  }
+  arrow(155,108,250,145);
+  arrow(155,208,250,171);
+  arrow(322,158,392,158);
+  nodes.forEach(n=>{
+    const col=n.ok?acc:muted;
+    h+='<circle cx="'+n.x+'" cy="'+n.y+'" r="38" fill="'+(n.ok?css("--accentSoft"):css("--panel2"))+'" stroke="'+col+'" stroke-width="2"/>';
+    h+=text(n.x,n.y+5,n.label,col,14,900,"middle");
+    h+=text(n.x,n.y+58,n.ok?"holds":"fails",n.ok?acc:warn,10,850,"middle");
+  });
+  h+='<rect x="54" y="260" width="410" height="30" rx="14" fill="'+css("--accentSoft")+'" stroke="'+css("--accentLine")+'"/>';
+  h+=text(74,280,"a.s. â‡’ probability â‡’ distribution, and Láµ– â‡’ probability",textc,12,850);
+  svg.innerHTML=h;
+}
+function updateText(){
+  const m=getCurrent();
+  document.getElementById("nVal").textContent=String(m.n);
+  document.getElementById("epsVal").textContent=fmt(m.eps);
+  document.getElementById("pVal").textContent=fmt(m.p);
+  document.getElementById("aVal").textContent=fmt(m.a);
+  document.getElementById("bVal").textContent=fmt(m.b);
+  document.getElementById("pathsVal").textContent=String(Number(pathsRange.value));
+  document.getElementById("eqBox").innerHTML='<span class="formula">'+m.formula+'</span><span class="mathNote">'+m.criteria+'</span>';
+
+  const mini=[
+    ["a.s.",m.as?"yes":"no"],
+    ["prob.",m.pr?"yes":"no"],
+    ["Láµ–",m.lpConv?"yes":"no"],
+    ["dist.",m.dist?"yes":"no"],
+    ["P outside",fmt(m.prob)],
+    ["Lp distance",fmt(m.lp)]
+  ];
+  document.getElementById("miniGrid").innerHTML=mini.map(d=>'<div class="miniStat"><div class="k">'+d[0]+'</div><div class="v">'+d[1]+'</div></div>').join("");
+
+  const logic=[
+    ["âœ“","paths show common-space behavior"],
+    ["âœ“","bars show exact probabilities/norms"],
+    ["âœ“","CDF panel isolates distributional convergence"],
+    ["â†’","chain panel shows only valid implications"]
+  ];
+  document.getElementById("logicList").innerHTML=logic.map(it=>'<div class="logicItem"><span class="mark">'+it[0]+'</span><span>'+it[1]+'</span></div>').join("");
+
+  let interp="";
+  if(m.ex==="shrink") interp="The same random variable is repeatedly scaled down. The path plot, escaping mass, \(L^p\)-distance, and CDF all collapse toward zero.";
+  if(m.ex==="rare") interp="Rare spikes separate convergence in probability from \(L^p\): probability only cares that \(P(A_n)\to0\), while \(L^p\) also sees spike height through \(n^a n^{-b/p}\).";
+  if(m.ex==="typewriter") interp="The moving interval has shrinking measure, so columns have vanishing outside mass. But every fixed \(\omega\) is hit infinitely often, so almost sure convergence fails.";
+  if(m.ex==="distribution") interp="The CDF panel is identical for all \(n\), so distributional convergence holds. The path panel shows why this does not imply closeness to \(X\) on a common space.";
+  if(m.ex==="oscillating") interp="No object stabilizes: paths alternate, probability mass does not approach a target, and the CDF alternates between two point masses.";
+  document.getElementById("interpretText").innerHTML=interp;
+
+  let notice="The graphs are separated by mathematical object: path, mass, norm, and law.";
+  if(m.ex==="typewriter") notice="The typewriter example is visually similar to convergence in probability, but row-wise it never settles.";
+  if(m.ex==="rare") notice="Increase \(a\) or \(p\): the same rare events become more expensive in \(L^p\).";
+  if(m.ex==="distribution") notice="Distributional convergence is about laws only; it ignores the distance between coupled random variables.";
+  if(m.ex==="shrink") notice="This is the clean case where all four lenses agree.";
+  document.getElementById("noticeText").innerHTML=notice;
+  document.getElementById("mainSub").textContent=m.ex==="distribution" ? "For this example, each path has its own target X(Ï‰); blue lines show those targets." : "The shaded band is the Îµ-tube around the limiting random variable X=0.";
+}
+function drawAll(){updateText();drawMain();drawCdf();drawChain();}
+themeBtn.addEventListener("click",()=>{
+  const dark=body.getAttribute("data-theme")==="dark";
+  body.setAttribute("data-theme",dark?"light":"dark");
+  themeBtn.textContent=dark?"Dark mode":"Light mode";
+  drawAll();
+});
+[exampleSelect,nRange,epsRange,pRange,aRange,bRange,pathsRange].forEach(el=>el.addEventListener("input",drawAll));
+drawAll();
+</script>
+</body>
+</html>
+
+

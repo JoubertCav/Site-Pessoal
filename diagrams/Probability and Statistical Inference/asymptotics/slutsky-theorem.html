@@ -1,0 +1,570 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="google-site-verification" content="google2c37f7a4206c9d3a.html">
+<meta name="google-site-verification" content="fSWAEb_oSSHr_eJXL9gHYxIn879tRaBwJ42f_aD9o2s">
+<meta name="google-site-verification" content="ftZ4QVMrlub9jbolsIeo4Ix4UBw0-BJrFeorzqKLXng">
+<meta name="description" content="Interactive diagram for Slutsky's theorem.">
+  <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
+<title>Slutsky's Theorem</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NHXHEJP1G0');
+</script>
+<style>
+  :root{
+    --bg:#f6f1e8; --panel:#fffaf2; --panel2:#fcf5ea; --text:#17212b; --muted:#65717d;
+    --border:rgba(23,33,43,.12); --grid:rgba(23,33,43,.075); --accent:#2d8e84;
+    --accentSoft:rgba(45,142,132,.14); --accentLine:rgba(45,142,132,.32);
+    --blue:#456fb4; --warn:#ba7356; --violet:#7f63b8; --rose:#ad5575;
+    --shadow:0 16px 45px rgba(25,35,45,.08); --radius:22px;
+  }
+  [data-theme="dark"]{
+    --bg:#0f151a; --panel:#151d24; --panel2:#11181f; --text:#ecf2f6; --muted:#9cadb8;
+    --border:rgba(236,242,246,.12); --grid:rgba(236,242,246,.08); --accent:#67cdbf;
+    --accentSoft:rgba(103,205,191,.13); --accentLine:rgba(103,205,191,.34);
+    --blue:#82b7ff; --warn:#e1a184; --violet:#bba6ff; --rose:#f09fbe;
+    --shadow:0 18px 55px rgba(0,0,0,.30);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; color:var(--text);
+    font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background:
+      radial-gradient(circle at 10% 0%, var(--accentSoft), transparent 28rem),
+      radial-gradient(circle at 96% 18%, rgba(69,111,180,.10), transparent 24rem),
+      var(--bg);
+  }
+  .wrap{width:min(1280px,calc(100% - 28px));margin:0 auto;padding:26px 0 42px}
+  header{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:16px}
+  h1{margin:0;font-size:clamp(1.7rem,3vw,2.45rem);line-height:1.03;letter-spacing:-.045em;font-weight:820}
+  .subtitle{margin:10px 0 0;color:var(--muted);max-width:940px;font-size:.98rem;line-height:1.58}
+  .themeBtn{border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:999px;padding:10px 15px;box-shadow:var(--shadow);cursor:pointer;font-weight:760;white-space:nowrap}
+  .defs{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+  .def,.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .def{padding:14px 15px;min-height:130px}
+  .tag{color:var(--muted);font-size:.74rem;font-weight:850;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
+  .math{font-family:Cambria, Georgia, "Times New Roman", serif;line-height:1.45;font-size:1.01rem;color:var(--text)}
+  .formula{display:block;margin:.1rem 0 .28rem;font-family:"STIX Two Text", Cambria, Georgia, "Times New Roman", serif;font-size:1.06rem;line-height:1.35}
+  .mathNote{display:block;color:var(--muted);font-family:Inter, ui-sans-serif, system-ui, sans-serif;font-size:.82rem;line-height:1.35;margin-top:.2rem}
+  .layout{display:grid;grid-template-columns:350px 1fr;gap:16px;align-items:start}
+  .side{padding:16px}
+  .panelTitle{margin:0 0 12px;color:var(--muted);font-size:.82rem;font-weight:900;text-transform:uppercase;letter-spacing:.13em}
+  .control{padding:12px 0;border-top:1px solid var(--border)}
+  .control:first-of-type{border-top:0;padding-top:0}
+  label{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px;font-weight:730;font-size:.91rem}
+  .value{color:var(--accent);font-weight:850;font-variant-numeric:tabular-nums}
+  input[type="range"]{width:100%;accent-color:var(--accent)}
+  select{width:100%;border:1px solid var(--border);background:var(--panel2);color:var(--text);border-radius:14px;padding:10px 11px;font-weight:720;outline:none}
+  .eqBox{margin-top:10px;border:1px solid var(--accentLine);background:var(--accentSoft);border-radius:17px;padding:12px;font-family:Cambria, Georgia, "Times New Roman", serif;line-height:1.48;color:var(--text)}
+  .main{display:grid;gap:16px}
+  .plotCard{padding:10px 10px 6px}
+  .plotHead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:8px 9px 2px}
+  .plotTitle{font-weight:850;letter-spacing:-.02em}
+  .plotSub{color:var(--muted);font-size:.84rem;line-height:1.4;text-align:right}
+  svg{display:block;width:100%}
+  #mainSvg{height:500px}
+  #ratioSvg,#ciSvg{height:320px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .interpretation{display:grid;grid-template-columns:1.08fr .92fr;gap:16px}
+  .cardPad{padding:16px}
+  .smallText{color:var(--muted);font-size:.92rem;line-height:1.58}
+  .notice{border-left:3px solid var(--accent);padding-left:13px;color:var(--muted);font-size:.92rem;line-height:1.55}
+  .summary{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+  .summary>div{border:1px solid var(--border);background:var(--panel2);border-radius:16px;padding:12px;font-size:.90rem;line-height:1.50}
+  .pillRow{display:flex;flex-wrap:wrap;gap:8px;margin-top:9px}
+  .pill{border:1px solid var(--border);background:var(--panel2);border-radius:999px;padding:7px 10px;color:var(--muted);font-size:.80rem;font-weight:760;display:inline-flex;gap:7px;align-items:center}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);display:inline-block}
+  .logicList{display:grid;gap:8px;margin-top:10px}
+  .logicItem{border:1px solid var(--border);background:var(--panel2);border-radius:14px;padding:10px 11px;font-size:.88rem;color:var(--muted);display:flex;gap:9px;align-items:flex-start}
+  .mark{font-weight:900;color:var(--accent);min-width:17px}
+  .miniGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+  .miniStat{border:1px solid var(--border);background:var(--panel2);border-radius:14px;padding:10px 11px}
+  .miniStat .k{font-size:.76rem;color:var(--muted);font-weight:860;text-transform:uppercase;letter-spacing:.09em}
+  .miniStat .v{font-size:1rem;font-weight:850;margin-top:6px}
+  footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
+  @media(max-width:1080px){
+    .defs,.layout,.two,.interpretation{grid-template-columns:1fr}
+    header{flex-direction:column}
+    .themeBtn{align-self:flex-start}
+    #mainSvg{height:475px}
+  }
+  @media(max-width:560px){
+    .wrap{width:min(100% - 18px,1280px);padding-top:18px}
+    .summary{grid-template-columns:1fr}
+    .miniGrid{grid-template-columns:1fr}
+    #mainSvg{height:445px}
+  }
+</style>
+</head>
+<body data-theme="light">
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Slutsky's theorem</h1>
+      <div class="subtitle">
+        Slutsky makes inference feasible: replace unknown constants in an asymptotic distribution by consistent estimates, and the limiting law stays the same.
+      </div>
+    </div>
+    <button class="themeBtn" id="themeBtn">Dark mode</button>
+  </header>
+
+  <section class="defs">
+    <div class="def">
+      <div class="tag">Core theorem</div>
+      <div class="math">
+        <span class="formula">X<sub>n</sub> â‡’ X, &nbsp; Y<sub>n</sub> â†’ c</span>
+        <span class="mathNote">then sums, products, and quotients inherit limits</span>
+      </div>
+    </div>
+    <div class="def">
+      <div class="tag">Feasible statistic</div>
+      <div class="math">
+        <span class="formula">T<sub>n</sub> = X<sub>n</sub> / R<sub>n</sub></span>
+        <span class="mathNote">where \(R_n=\widehat\sigma_n/\sigma \to_p 1\)</span>
+      </div>
+    </div>
+    <div class="def">
+      <div class="tag">Mean inference</div>
+      <div class="math">
+        <span class="formula">âˆšn( XÌ„<sub>n</sub>âˆ’Î¼ ) / S<sub>n</sub> â‡’ N(0,1)</span>
+        <span class="mathNote">unknown Ïƒ replaced by sample standard deviation</span>
+      </div>
+    </div>
+    <div class="def">
+      <div class="tag">Confidence interval</div>
+      <div class="math">
+        <span class="formula">XÌ„<sub>n</sub> Â± z<sub>1âˆ’Î±/2</sub>S<sub>n</sub>/âˆšn</span>
+        <span class="mathNote">feasible asymptotic inference</span>
+      </div>
+    </div>
+  </section>
+
+  <main class="layout">
+    <aside class="card side">
+      <div class="panelTitle">Controls</div>
+
+      <div class="control">
+        <label for="modelSelect">Data model</label>
+        <select id="modelSelect">
+          <option value="normal">Normal mean</option>
+          <option value="exponential">Exponential mean</option>
+          <option value="bernoulli">Bernoulli proportion</option>
+          <option value="student">Student-t finite variance</option>
+        </select>
+      </div>
+
+      <div class="control">
+        <label for="scaleSelect">Scale estimate</label>
+        <select id="scaleSelect">
+          <option value="sample" selected>consistent: sample sd</option>
+          <option value="slow">consistent but noisy</option>
+          <option value="biased">inconsistent: 1.25 Ã— sample sd</option>
+          <option value="oracle">oracle: true Ïƒ</option>
+        </select>
+      </div>
+
+      <div class="control">
+        <label for="nRange">Sample size n <span class="value" id="nVal">80</span></label>
+        <input id="nRange" type="range" min="5" max="500" step="1" value="80"/>
+      </div>
+
+      <div class="control">
+        <label for="repsRange">Simulations <span class="value" id="repsVal">800</span></label>
+        <input id="repsRange" type="range" min="200" max="1600" step="50" value="800"/>
+      </div>
+
+      <div class="control">
+        <label for="pRange">Bernoulli p <span class="value" id="pVal">0.40</span></label>
+        <input id="pRange" type="range" min="0.08" max="0.92" step="0.01" value="0.40"/>
+      </div>
+
+      <div class="control">
+        <label for="dfRange">t degrees of freedom <span class="value" id="dfVal">5.00</span></label>
+        <input id="dfRange" type="range" min="2.20" max="12.00" step="0.10" value="5.00"/>
+      </div>
+
+      <div class="control">
+        <label for="levelRange">Confidence level <span class="value" id="levelVal">0.95</span></label>
+        <input id="levelRange" type="range" min="0.80" max="0.99" step="0.01" value="0.95"/>
+      </div>
+
+      <div class="eqBox" id="eqBox"></div>
+      <div class="miniGrid" id="miniGrid"></div>
+
+      <div class="control">
+        <div class="panelTitle" style="margin-bottom:8px">Slutsky logic</div>
+        <div class="logicList" id="logicList"></div>
+      </div>
+    </aside>
+
+    <section class="main">
+      <div class="card plotCard">
+        <div class="plotHead">
+          <div>
+            <div class="plotTitle">Infeasible versus feasible statistic</div>
+            <div class="pillRow">
+              <span class="pill"><span class="dot"></span> feasible \(T_n\)</span>
+              <span class="pill"><span class="dot" style="background:var(--blue)"></span> infeasible \(Z_n\)</span>
+              <span class="pill"><span class="dot" style="background:var(--violet)"></span> \(N(0,1)\)</span>
+              <span class="pill"><span class="dot" style="background:var(--warn)"></span> replacement error</span>
+            </div>
+          </div>
+          <div class="plotSub">If \( \widehat\sigma_n/\sigma \to_p 1 \), replacing Ïƒ does not change the limit.</div>
+        </div>
+        <svg id="mainSvg" viewBox="0 0 980 500" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+
+      <div class="two">
+        <div class="card plotCard">
+          <div class="plotHead">
+            <div class="plotTitle">Replacement geometry</div>
+            <div class="plotSub">scale ratio \(R_n=\widehat\sigma_n/\sigma\) collapsing to 1</div>
+          </div>
+          <svg id="ratioSvg" viewBox="0 0 520 320" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+
+        <div class="card plotCard">
+          <div class="plotHead">
+            <div class="plotTitle">Feasible confidence intervals</div>
+            <div class="plotSub">coverage from \( \bar X_n \pm zS_n/\sqrt n \)</div>
+          </div>
+          <svg id="ciSvg" viewBox="0 0 520 320" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+      </div>
+
+      <div class="interpretation">
+        <div class="card cardPad">
+          <div class="panelTitle">Interpretation</div>
+          <div class="smallText" id="interpretText"></div>
+          <div class="summary">
+            <div><strong>Infeasible limit.</strong><br>If \(Z_n=\sqrt n(\hat\theta_n-\theta)/\sigma\Rightarrow Z\), the limit often contains unknown \(\sigma\).</div>
+            <div><strong>Consistent replacement.</strong><br>If \(R_n=\widehat\sigma_n/\sigma\to_p1\), then \(Z_n/R_n\Rightarrow Z\).</div>
+            <div><strong>Feasible inference.</strong><br>The limiting distribution becomes usable because all unknown pieces are estimated.</div>
+            <div><strong>Failure mode.</strong><br>If the replacement converges to the wrong constant, the feasible statistic has the wrong scale.</div>
+          </div>
+        </div>
+
+        <div class="card cardPad">
+          <div class="panelTitle">What to notice</div>
+          <div class="notice" id="noticeText"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>Minimal interactive notebook â€” Slutsky, consistent replacement, feasible statistics, and inference.</footer>
+</div>
+
+<script>
+const body=document.body;
+const themeBtn=document.getElementById("themeBtn");
+const modelSelect=document.getElementById("modelSelect");
+const scaleSelect=document.getElementById("scaleSelect");
+const nRange=document.getElementById("nRange");
+const repsRange=document.getElementById("repsRange");
+const pRange=document.getElementById("pRange");
+const dfRange=document.getElementById("dfRange");
+const levelRange=document.getElementById("levelRange");
+
+function css(v){return getComputedStyle(body).getPropertyValue(v).trim();}
+function fmt(x){
+  if(!isFinite(x)) return "âˆž";
+  if(Math.abs(x)<0.0001 && x!==0) return x.toExponential(2);
+  if(Math.abs(x)<10) return x.toFixed(4);
+  return x.toFixed(2);
+}
+function line(x1,y1,x2,y2,stroke,w=1,op=1,dash=""){
+  return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+stroke+'" stroke-width="'+w+'" stroke-opacity="'+op+'" '+(dash?'stroke-dasharray="'+dash+'"':'')+'/>';
+}
+function text(x,y,s,fill,size=13,weight=600,anchor="start"){
+  return '<text x="'+x+'" y="'+y+'" fill="'+fill+'" font-size="'+size+'" font-weight="'+weight+'" text-anchor="'+anchor+'" font-family="Inter,system-ui,sans-serif">'+s+'</text>';
+}
+function px(v,a,b,x0,x1){return x0+(v-a)/(b-a)*(x1-x0);}
+function py(v,a,b,y0,y1){return y1-(v-a)/(b-a)*(y1-y0);}
+function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
+function fract(x){return x-Math.floor(x);}
+function rand(i,j=0,k=0){return fract(Math.sin(i*127.1+j*311.7+k*19.13+17.13)*43758.5453);}
+function normalRand(i,j=0,k=0){
+  const u=Math.max(1e-9,rand(i,j,k)), v=rand(i,j,k+99);
+  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);
+}
+function normalPdf(x){return Math.exp(-.5*x*x)/Math.sqrt(2*Math.PI);}
+function erf(x){
+  const sign=x<0?-1:1; x=Math.abs(x);
+  const a1=0.254829592,a2=-0.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=.3275911;
+  const t=1/(1+p*x);
+  const y=1-(((((a5*t+a4)*t)+a3)*t+a2)*t+a1)*t*Math.exp(-x*x);
+  return sign*y;
+}
+function normalCdf(x){return .5*(1+erf(x/Math.sqrt(2)));}
+function invNormal(p){
+  // Acklam approximation
+  const a=[-39.69683028665376,220.9460984245205,-275.9285104469687,138.357751867269,-30.66479806614716,2.506628277459239];
+  const b=[-54.47609879822406,161.5858368580409,-155.6989798598866,66.80131188771972,-13.28068155288572];
+  const c=[-0.007784894002430293,-0.3223964580411365,-2.400758277161838,-2.549732539343734,4.374664141464968,2.938163982698783];
+  const d=[0.007784695709041462,0.3224671290700398,2.445134137142996,3.754408661907416];
+  const plow=0.02425, phigh=1-plow;
+  let q,r;
+  if(p<plow){
+    q=Math.sqrt(-2*Math.log(p));
+    return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+  }
+  if(p>phigh){
+    q=Math.sqrt(-2*Math.log(1-p));
+    return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+  }
+  q=p-0.5; r=q*q;
+  return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q/(((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);
+}
+function expRand(i,j,k){return -Math.log(Math.max(1e-10,1-rand(i,j,k)));}
+function studentLike(i,j,k,df){
+  const z=normalRand(i,j,k);
+  let v=0, m=Math.max(3,Math.round(df));
+  for(let r=0;r<m;r++) v+=Math.pow(normalRand(i,j,k+10+r),2);
+  return z/Math.sqrt(v/m);
+}
+function modelInfo(){
+  const m=modelSelect.value, p=Number(pRange.value), df=Number(dfRange.value);
+  if(m==="normal") return {theta:0,sigma:1,label:"Normal mean"};
+  if(m==="exponential") return {theta:1,sigma:1,label:"Exponential mean"};
+  if(m==="bernoulli") return {theta:p,sigma:Math.sqrt(p*(1-p)),label:"Bernoulli proportion"};
+  if(m==="student") return {theta:0,sigma:Math.sqrt(df/(df-2)),label:"Student-t mean"};
+  return {theta:0,sigma:1,label:""};
+}
+function sampleX(rep,i){
+  const m=modelSelect.value, p=Number(pRange.value), df=Number(dfRange.value);
+  if(m==="normal") return normalRand(rep,i,1);
+  if(m==="exponential") return expRand(rep,i,1);
+  if(m==="bernoulli") return rand(rep,i,1)<p?1:0;
+  if(m==="student") return studentLike(rep,i,1,df);
+  return normalRand(rep,i,1);
+}
+function oneReplication(rep,n){
+  const info=modelInfo();
+  let s=0, ss=0;
+  for(let i=1;i<=n;i++){
+    const x=sampleX(rep,i);
+    s+=x; ss+=x*x;
+  }
+  const mean=s/n;
+  const sampleVar=Math.max(1e-12,(ss-n*mean*mean)/(n-1));
+  let sigmaHat=Math.sqrt(sampleVar);
+  const kind=scaleSelect.value;
+  if(kind==="oracle") sigmaHat=info.sigma;
+  if(kind==="biased") sigmaHat=1.25*Math.sqrt(sampleVar);
+  if(kind==="slow"){
+    const noise=0.65*normalRand(rep,999,3)/Math.pow(n,0.20);
+    sigmaHat=Math.max(1e-6,Math.sqrt(sampleVar)*(1+noise));
+  }
+  const Z=Math.sqrt(n)*(mean-info.theta)/info.sigma;
+  const T=Math.sqrt(n)*(mean-info.theta)/sigmaHat;
+  const R=sigmaHat/info.sigma;
+  return {mean,sigmaHat,Z,T,R};
+}
+function simulations(){
+  const n=Number(nRange.value), reps=Number(repsRange.value);
+  const arr=[];
+  for(let r=0;r<reps;r++) arr.push(oneReplication(2000+r,n));
+  return arr;
+}
+function stats(vals){
+  const m=vals.reduce((a,b)=>a+b,0)/vals.length;
+  const v=vals.reduce((a,b)=>a+(b-m)*(b-m),0)/vals.length;
+  return {mean:m,var:v,sd:Math.sqrt(v)};
+}
+function coverage(arr){
+  const info=modelInfo(), n=Number(nRange.value), level=Number(levelRange.value);
+  const z=invNormal(0.5+level/2);
+  let ok=0;
+  const intervals=arr.slice(0,44).map((d,i)=>{
+    const half=z*d.sigmaHat/Math.sqrt(n);
+    const lo=d.mean-half, hi=d.mean+half;
+    const cover=lo<=info.theta && info.theta<=hi;
+    if(cover) ok++;
+    return {lo,hi,cover,mean:d.mean};
+  });
+  let total=0;
+  arr.forEach(d=>{
+    const half=z*d.sigmaHat/Math.sqrt(n);
+    if(d.mean-half<=info.theta && info.theta<=d.mean+half) total++;
+  });
+  return {rate:total/arr.length,intervals,z};
+}
+function kolmogorov(vals){
+  const s=vals.slice().sort((a,b)=>a-b);
+  let gap=0;
+  for(let i=0;i<s.length;i++){
+    const F=normalCdf(s[i]);
+    gap=Math.max(gap,Math.abs((i+1)/s.length-F),Math.abs(i/s.length-F));
+  }
+  return gap;
+}
+function drawMain(){
+  const arr=simulations(), Zs=arr.map(d=>d.Z), Ts=arr.map(d=>d.T);
+  const zst=stats(Zs), tst=stats(Ts);
+  const svg=document.getElementById("mainSvg");
+  const panel=css("--panel"), panel2=css("--panel2"), border=css("--border"), muted=css("--muted"), grid=css("--grid"), textc=css("--text");
+  const acc=css("--accent"), blue=css("--blue"), warn=css("--warn"), violet=css("--violet");
+  const X0=62,X1=690,Y0=58,Y1=398,xlo=-4.2,xhi=4.2,bins=38,bw=(xhi-xlo)/bins;
+  const countsT=Array(bins).fill(0), countsZ=Array(bins).fill(0);
+  Ts.forEach(v=>countsT[clamp(Math.floor((v-xlo)/(xhi-xlo)*bins),0,bins-1)]++);
+  Zs.forEach(v=>countsZ[clamp(Math.floor((v-xlo)/(xhi-xlo)*bins),0,bins-1)]++);
+  const densT=countsT.map(c=>c/(Ts.length*bw)), densZ=countsZ.map(c=>c/(Zs.length*bw));
+  const maxY=Math.max(.42,...densT,...densZ)*1.15;
+  let h='<rect x="8" y="10" width="964" height="470" rx="20" fill="'+panel+'" stroke="'+border+'"/>';
+  h+=text(68,38,"histograms of infeasible Zâ‚™ and feasible Tâ‚™",muted,13,850);
+  for(let k=0;k<=5;k++) h+=line(X0,Y1-(Y1-Y0)*k/5,X1,Y1-(Y1-Y0)*k/5,grid,1,.85);
+  for(let k=-4;k<=4;k++){
+    const xx=px(k,xlo,xhi,X0,X1);
+    h+=line(xx,Y0,xx,Y1,grid,1,.55);
+    h+=text(xx,Y1+21,String(k),muted,10,800,"middle");
+  }
+  h+=line(X0,Y1,X1,Y1,muted,1.2,.8)+line(X0,Y0,X0,Y1,muted,1.2,.8);
+  for(let k=0;k<bins;k++){
+    const x=px(xlo+k*bw,xlo,xhi,X0,X1), w=(X1-X0)/bins-2;
+    const yZ=py(densZ[k],0,maxY,Y0,Y1), yT=py(densT[k],0,maxY,Y0,Y1);
+    h+='<rect x="'+(x+1)+'" y="'+yZ+'" width="'+w+'" height="'+(Y1-yZ)+'" rx="4" fill="'+blue+'" fill-opacity=".28"/>';
+    h+='<rect x="'+(x+1+w*.18)+'" y="'+yT+'" width="'+(w*.64)+'" height="'+(Y1-yT)+'" rx="4" fill="'+acc+'" fill-opacity=".68"/>';
+  }
+  let norm="";
+  for(let i=0;i<=700;i++){
+    const x=xlo+(xhi-xlo)*i/700, y=normalPdf(x);
+    norm+=(i===0?"M":"L")+" "+px(x,xlo,xhi,X0,X1)+" "+py(y,0,maxY,Y0,Y1);
+  }
+  h+='<path d="'+norm+'" fill="none" stroke="'+violet+'" stroke-width="2.8"/>';
+  h+=line(px(0,xlo,xhi,X0,X1),Y0,px(0,xlo,xhi,X0,X1),Y1,violet,1.5,.35,"5 5");
+
+  const replErr=stats(arr.map(d=>Math.abs(d.T-d.Z))).mean;
+  h+='<rect x="730" y="72" width="205" height="272" rx="20" fill="'+panel2+'" stroke="'+border+'"/>';
+  h+=text(752,104,"Current laws",textc,16,900);
+  const rows=[
+    ["sd(Zâ‚™)",fmt(zst.sd),blue],
+    ["sd(Tâ‚™)",fmt(tst.sd),acc],
+    ["mean |Tâˆ’Z|",fmt(replErr),warn],
+    ["CDF gap T",fmt(kolmogorov(Ts)),violet],
+    ["mean Râ‚™",fmt(stats(arr.map(d=>d.R)).mean),acc],
+    ["sd Râ‚™",fmt(stats(arr.map(d=>d.R)).sd),acc]
+  ];
+  rows.forEach((r,i)=>{
+    const y=138+i*31;
+    h+=text(752,y,r[0],r[2],12,900);
+    h+=text(915,y,r[1],textc,12,850,"end");
+  });
+  h+='<rect x="730" y="370" width="205" height="62" rx="16" fill="'+css("--accentSoft")+'" stroke="'+css("--accentLine")+'"/>';
+  h+=text(752,398,"Slutsky reading",textc,13,900);
+  h+=text(752,420,scaleSelect.value==="biased"?"wrong constant: scale distorted":"Râ‚™ close to 1: laws match",muted,12,780);
+  svg.innerHTML=h;
+}
+function drawRatio(){
+  const arr=simulations();
+  const svg=document.getElementById("ratioSvg");
+  const panel=css("--panel"), border=css("--border"), muted=css("--muted"), grid=css("--grid");
+  const acc=css("--accent"), warn=css("--warn"), blue=css("--blue"), violet=css("--violet"), textc=css("--text");
+  const X0=58,X1=488,Y0=52,Y1=245,xlo=-3.2,xhi=3.2,ylo=.35,yhi=1.75;
+  let h='<rect x="8" y="10" width="504" height="290" rx="18" fill="'+panel+'" stroke="'+border+'"/>';
+  for(let k=0;k<=4;k++) h+=line(X0,Y1-(Y1-Y0)*k/4,X1,Y1-(Y1-Y0)*k/4,grid,1,.85);
+  for(let k=-3;k<=3;k++) h+=line(px(k,xlo,xhi,X0,X1),Y0,px(k,xlo,xhi,X0,X1),Y1,grid,1,.45);
+  h+=line(X0,Y1,X1,Y1,muted,1.2,.8)+line(X0,Y0,X0,Y1,muted,1.2,.8);
+  const yOne=py(1,ylo,yhi,Y0,Y1);
+  h+=line(X0,yOne,X1,yOne,blue,2,.6,"7 5");
+  h+=text(X1+5,yOne+4,"R=1",blue,11,850);
+  const m=Math.min(arr.length,260);
+  for(let i=0;i<m;i++){
+    const d=arr[i], x=px(clamp(d.Z,xlo,xhi),xlo,xhi,X0,X1), y=py(clamp(d.R,ylo,yhi),ylo,yhi,Y0,Y1);
+    const bad=Math.abs(d.R-1)>.18;
+    h+='<circle cx="'+x+'" cy="'+y+'" r="3.1" fill="'+(bad?warn:acc)+'" fill-opacity=".58"/>';
+  }
+  h+=text(68,34,"points: (infeasible Zâ‚™, scale ratio Râ‚™)",muted,12,850);
+  h+=text(X1,Y1+24,"Zâ‚™",muted,10,850,"end");
+  h+=text(X0-10,Y0+10,"Râ‚™",muted,10,850,"end");
+  svg.innerHTML=h;
+}
+function drawCI(){
+  const arr=simulations(), cov=coverage(arr), info=modelInfo();
+  const svg=document.getElementById("ciSvg");
+  const panel=css("--panel"), border=css("--border"), muted=css("--muted"), grid=css("--grid");
+  const acc=css("--accent"), warn=css("--warn"), blue=css("--blue"), violet=css("--violet"), textc=css("--text");
+  const X0=80,X1=480,Y0=48,Y1=248;
+  const intervals=cov.intervals;
+  let lo=Math.min(...intervals.map(d=>d.lo),info.theta), hi=Math.max(...intervals.map(d=>d.hi),info.theta);
+  const pad=(hi-lo)*.12 || 1; lo-=pad; hi+=pad;
+  let h='<rect x="8" y="10" width="504" height="290" rx="18" fill="'+panel+'" stroke="'+border+'"/>';
+  h+=text(68,34,"repeated feasible intervals",muted,12,850);
+  for(let k=0;k<=4;k++) h+=line(X0,Y1-(Y1-Y0)*k/4,X1,Y1-(Y1-Y0)*k/4,grid,1,.85);
+  h+=line(X0,Y1,X1,Y1,muted,1.2,.8);
+  const thetaX=px(info.theta,lo,hi,X0,X1);
+  h+=line(thetaX,Y0,thetaX,Y1,blue,2,.65,"7 5");
+  h+=text(thetaX,Y0-8,"Î¸",blue,11,900,"middle");
+  intervals.forEach((d,i)=>{
+    const y=Y0+10+i*(Y1-Y0-20)/(intervals.length-1);
+    h+=line(px(d.lo,lo,hi,X0,X1),y,px(d.hi,lo,hi,X0,X1),y,d.cover?acc:warn,2.2,.82);
+    h+='<circle cx="'+px(d.mean,lo,hi,X0,X1)+'" cy="'+y+'" r="2.6" fill="'+(d.cover?acc:warn)+'"/>';
+  });
+  h+='<rect x="64" y="262" width="385" height="18" rx="9" fill="'+css("--accentSoft")+'" stroke="'+css("--accentLine")+'"/>';
+  h+=text(78,275,"coverage â‰ˆ "+fmt(cov.rate)+"   target level = "+fmt(Number(levelRange.value))+"   z = "+fmt(cov.z),textc,11,850);
+  svg.innerHTML=h;
+}
+function updateText(){
+  const n=Number(nRange.value), reps=Number(repsRange.value), p=Number(pRange.value), df=Number(dfRange.value), level=Number(levelRange.value);
+  const info=modelInfo(), arr=simulations(), Rst=stats(arr.map(d=>d.R)), replErr=stats(arr.map(d=>Math.abs(d.T-d.Z))).mean;
+  document.getElementById("nVal").textContent=String(n);
+  document.getElementById("repsVal").textContent=String(reps);
+  document.getElementById("pVal").textContent=fmt(p);
+  document.getElementById("dfVal").textContent=fmt(df);
+  document.getElementById("levelVal").textContent=fmt(level);
+
+  document.getElementById("eqBox").innerHTML =
+    '<span class="formula">Tâ‚™ = Zâ‚™ / Râ‚™, &nbsp; Râ‚™ = ÏƒÌ‚â‚™/Ïƒ</span>'+
+    '<span class="mathNote">'+info.label+' Â· '+scaleSelect.options[scaleSelect.selectedIndex].text+'</span>';
+
+  const cov=coverage(arr);
+  const mini=[
+    ["mean Râ‚™",fmt(Rst.mean)],
+    ["sd Râ‚™",fmt(Rst.sd)],
+    ["mean |Tâˆ’Z|",fmt(replErr)],
+    ["coverage",fmt(cov.rate)],
+    ["Î¸",fmt(info.theta)],
+    ["Ïƒ",fmt(info.sigma)]
+  ];
+  document.getElementById("miniGrid").innerHTML=mini.map(d=>'<div class="miniStat"><div class="k">'+d[0]+'</div><div class="v">'+d[1]+'</div></div>').join("");
+
+  const logic=[
+    ["1","infeasible statistic: Zâ‚™ â‡’ Z"],
+    ["2","replacement ratio: Râ‚™ â†’p 1"],
+    ["3","feasible statistic: Tâ‚™ = Zâ‚™/Râ‚™"],
+    ["â†’","Slutsky: Tâ‚™ â‡’ Z"]
+  ];
+  document.getElementById("logicList").innerHTML=logic.map(it=>'<div class="logicItem"><span class="mark">'+it[0]+'</span><span>'+it[1]+'</span></div>').join("");
+
+  let interp="The infeasible statistic uses the true standard error. Slutsky says we may replace it by a consistent estimate: the scale ratio \(R_n=\widehat\sigma_n/\sigma\) collapses to 1, so \(T_n=Z_n/R_n\) has the same limiting law.";
+  if(scaleSelect.value==="biased") interp="This intentionally violates Slutsky's replacement condition. The ratio \(R_n\) converges near 1.25 instead of 1, so the feasible statistic has the wrong scale and coverage changes.";
+  if(scaleSelect.value==="slow") interp="The replacement is still consistent, but noisy at finite n. The feasible law is close asymptotically, yet finite-sample replacement error remains visible.";
+  if(scaleSelect.value==="oracle") interp="With the oracle scale, \(R_n=1\) exactly. Feasible and infeasible statistics coincide, so there is no replacement error.";
+  document.getElementById("interpretText").innerHTML=interp;
+
+  let notice="The important geometry is the horizontal collapse of the cloud toward \(R_n=1\). Once that happens, dividing by \(R_n\) barely moves the distribution.";
+  if(scaleSelect.value==="biased") notice="Here the cloud collapses to the wrong horizontal line. The statistic remains asymptotically normal but with the wrong variance scale.";
+  if(n<30) notice="At small n, asymptotic replacement is visible but imperfect. Increase n to see Slutsky stabilize.";
+  document.getElementById("noticeText").innerHTML=notice;
+}
+function drawAll(){updateText();drawMain();drawRatio();drawCI();}
+themeBtn.addEventListener("click",()=>{
+  const dark=body.getAttribute("data-theme")==="dark";
+  body.setAttribute("data-theme",dark?"light":"dark");
+  themeBtn.textContent=dark?"Dark mode":"Light mode";
+  drawAll();
+});
+[modelSelect,scaleSelect,nRange,repsRange,pRange,dfRange,levelRange].forEach(el=>el.addEventListener("input",drawAll));
+drawAll();
+</script>
+</body>
+</html>
+

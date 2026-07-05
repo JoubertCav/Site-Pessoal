@@ -1,0 +1,1022 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="google-site-verification" content="google2c37f7a4206c9d3a.html">
+<meta name="google-site-verification" content="fSWAEb_oSSHr_eJXL9gHYxIn879tRaBwJ42f_aD9o2s">
+<meta name="google-site-verification" content="ftZ4QVMrlub9jbolsIeo4Ix4UBw0-BJrFeorzqKLXng">
+<meta name="description" content="Interactive probability diagram for the anatomy of a distribution family: parametric families, identifiability, location, scale, shape, support, and single laws.">
+  <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
+<title>Anatomy of a Distribution Family | Distributions and Dependence Diagrams</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NHXHEJP1G0');
+</script>
+<style>
+:root{
+  --bg:#f7f2e9;
+  --paper:#fffdf8;
+  --paper-2:#f1ece2;
+  --ink:#252525;
+  --muted:#6e6a61;
+  --soft:#8c877d;
+  --line:rgba(37,37,37,.12);
+  --grid:rgba(37,37,37,.075);
+  --accent:#2f8f83;
+  --accent-2:rgba(47,143,131,.14);
+  --accent-3:rgba(47,143,131,.28);
+  --warn:#b96060;
+  --gold:#b58d41;
+  --shadow:0 20px 55px rgba(44,37,27,.10);
+  --radius:22px;
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+  --sans:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  --serif:Georgia,"Times New Roman",serif;
+}
+[data-theme="dark"]{
+  --bg:#101419;
+  --paper:#151b22;
+  --paper-2:#11171e;
+  --ink:#eef0ec;
+  --muted:#b8b9b2;
+  --soft:#929891;
+  --line:rgba(238,240,236,.12);
+  --grid:rgba(238,240,236,.08);
+  --accent:#69c7b8;
+  --accent-2:rgba(105,199,184,.13);
+  --accent-3:rgba(105,199,184,.28);
+  --warn:#e18c8c;
+  --gold:#d3b56f;
+  --shadow:0 20px 60px rgba(0,0,0,.32);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  min-height:100vh;
+  background:
+    radial-gradient(circle at top left,var(--accent-2),transparent 34rem),
+    radial-gradient(circle at 85% 15%,rgba(181,141,65,.11),transparent 30rem),
+    var(--bg);
+  color:var(--ink);
+  font-family:var(--sans);
+  line-height:1.45;
+}
+button,input,select{font:inherit;color:inherit}
+.app{
+  width:min(1440px,calc(100% - 32px));
+  margin:0 auto;
+  padding:24px 0 42px;
+}
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+  margin-bottom:18px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:0;
+}
+.mark{
+  width:42px;height:42px;border-radius:16px;
+  background:linear-gradient(135deg,var(--accent),transparent 140%);
+  box-shadow:0 12px 30px var(--accent-2);
+  display:grid;place-items:center;
+  color:#fff;
+  font-family:var(--serif);
+  font-weight:700;
+  letter-spacing:-.04em;
+}
+[data-theme="dark"] .mark{color:#08110f}
+.brand small{
+  color:var(--muted);
+  display:block;
+  margin-top:1px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.theme-toggle{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:10px 12px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:var(--paper);
+  box-shadow:var(--shadow);
+  cursor:pointer;
+}
+.toggle-dot{
+  width:14px;height:14px;border-radius:50%;background:var(--accent);
+  box-shadow:0 0 0 5px var(--accent-2);
+}
+.hero{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 390px;
+  gap:18px;
+  align-items:stretch;
+  margin-bottom:18px;
+}
+.card{
+  background:color-mix(in srgb,var(--paper) 96%,transparent);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.hero-main{
+  padding:28px;
+  position:relative;
+}
+.kicker{
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  font-size:.72rem;
+  color:var(--accent);
+  font-weight:750;
+}
+h1{
+  margin:8px 0 8px;
+  font-size:clamp(2rem,4.2vw,4.55rem);
+  line-height:.95;
+  letter-spacing:-.07em;
+  max-width:980px;
+}
+.subtitle{
+  max-width:880px;
+  color:var(--muted);
+  font-size:clamp(1rem,1.4vw,1.2rem);
+}
+.definition-strip{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin-top:22px;
+}
+.eq-chip{
+  border:1px solid var(--line);
+  background:var(--paper-2);
+  border-radius:18px;
+  padding:14px 14px;
+  min-height:82px;
+}
+.eq-chip strong{
+  display:block;
+  color:var(--soft);
+  font-size:.75rem;
+  text-transform:uppercase;
+  letter-spacing:.10em;
+  margin-bottom:8px;
+}
+.math{
+  font-family:var(--serif);
+  font-size:1.05rem;
+  letter-spacing:.01em;
+}
+.hero-side{
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:16px;
+}
+.mini-title{
+  font-weight:800;
+  letter-spacing:-.03em;
+  margin:0 0 8px;
+}
+.mini-text{color:var(--muted);font-size:.95rem;margin:0}
+.family-map{
+  width:100%;height:172px;border-radius:18px;border:1px solid var(--line);background:var(--paper-2);
+}
+.main-grid{
+  display:grid;
+  grid-template-columns:330px minmax(0,1fr);
+  gap:18px;
+  align-items:start;
+}
+.controls{
+  padding:18px;
+  position:sticky;
+  top:16px;
+}
+.control-section + .control-section{margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
+.label-row{
+  display:flex;justify-content:space-between;gap:10px;align-items:baseline;margin-bottom:8px;
+}
+.label-row label{font-size:.86rem;font-weight:760;color:var(--ink)}
+.value{font-family:var(--mono);font-size:.82rem;color:var(--accent);font-weight:800}
+select,
+input[type="range"]{width:100%}
+select{
+  appearance:none;
+  border:1px solid var(--line);
+  background:var(--paper-2);
+  border-radius:14px;
+  padding:12px 13px;
+  outline:none;
+}
+input[type="range"]{
+  accent-color:var(--accent);
+  cursor:pointer;
+}
+.slider-block{margin:14px 0}
+.segment{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+.segment button{
+  border:1px solid var(--line);
+  background:var(--paper-2);
+  padding:10px 10px;
+  border-radius:14px;
+  cursor:pointer;
+  color:var(--muted);
+}
+.segment button.active{
+  background:var(--accent-2);
+  color:var(--accent);
+  border-color:var(--accent-3);
+  font-weight:800;
+}
+.checkbox-line{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:10px 0;
+  font-size:.9rem;color:var(--muted);
+}
+.checkbox-line input{accent-color:var(--accent)}
+.content{
+  display:grid;
+  grid-template-columns:minmax(0,1.45fr) minmax(320px,.9fr);
+  gap:18px;
+}
+.panel{padding:18px}
+.panel-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:16px;
+  margin-bottom:12px;
+}
+.panel-head h2,.panel-head h3{margin:0;font-size:1.05rem;letter-spacing:-.035em}
+.panel-head p{margin:4px 0 0;color:var(--muted);font-size:.9rem}
+.badge{
+  border:1px solid var(--line);
+  background:var(--paper-2);
+  color:var(--muted);
+  border-radius:999px;
+  padding:6px 10px;
+  font-size:.78rem;
+  white-space:nowrap;
+}
+.plot-wrap{
+  position:relative;
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,var(--paper-2),var(--paper));
+  border-radius:20px;
+  overflow:hidden;
+}
+svg{display:block;width:100%;height:auto}
+.axis text{fill:var(--muted);font-size:11px;font-family:var(--mono)}
+.axis line,.axis path{stroke:var(--line)}
+.grid line{stroke:var(--grid);shape-rendering:crispEdges}
+.curve-main{fill:none;stroke:var(--accent);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.curve-alt{fill:none;stroke:var(--gold);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;opacity:.90}
+.curve-soft{fill:none;stroke:var(--muted);stroke-width:1.4;stroke-dasharray:4 5;opacity:.72}
+.area{fill:var(--accent-2)}
+.support{fill:var(--accent-2);opacity:.5}
+.marker{fill:var(--paper);stroke:var(--accent);stroke-width:2}
+.path-line{stroke:var(--accent);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.point{fill:var(--accent)}
+.alt-point{fill:var(--gold)}
+.warn-point{fill:var(--warn)}
+.note-row{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin-top:12px;
+}
+.stat-card{
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:var(--paper-2);
+  padding:13px;
+  min-height:90px;
+}
+.stat-card span{
+  color:var(--soft);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;font-weight:800;
+}
+.stat-card b{
+  display:block;margin-top:8px;font-family:var(--serif);font-size:1.15rem;font-weight:600;
+}
+.right-stack{display:grid;gap:18px}
+.interpretation{
+  padding:18px;
+}
+.eq-box{
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:var(--paper-2);
+  padding:14px 15px;
+  margin:12px 0;
+}
+.eq-box .math{font-size:1.18rem}
+.small-muted{color:var(--muted);font-size:.92rem;margin:0}
+.notice{
+  border-left:4px solid var(--accent);
+  background:var(--accent-2);
+  padding:13px 14px;
+  border-radius:14px;
+  color:var(--ink);
+}
+.notice ul{margin:8px 0 0 18px;padding:0;color:var(--muted)}
+.notice li{margin:5px 0}
+.exam{
+  padding:18px;
+}
+.exam-grid{display:grid;gap:9px;margin-top:12px}
+.exam-item{
+  display:grid;
+  grid-template-columns:32px 1fr;
+  gap:10px;
+  align-items:start;
+  border:1px solid var(--line);
+  background:var(--paper-2);
+  border-radius:16px;
+  padding:11px;
+}
+.exam-num{
+  width:28px;height:28px;border-radius:10px;
+  display:grid;place-items:center;
+  background:var(--accent-2);
+  color:var(--accent);
+  font-weight:850;
+  font-size:.84rem;
+}
+.exam-item p{margin:0;color:var(--muted);font-size:.92rem}
+.footer-space{height:18px}
+.hidden{display:none!important}
+.pill-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
+.pill{
+  border:1px solid var(--line);background:var(--paper-2);border-radius:999px;padding:6px 9px;
+  font-size:.78rem;color:var(--muted)
+}
+.pill.accent{color:var(--accent);border-color:var(--accent-3);background:var(--accent-2);font-weight:800}
+.table-like{display:grid;gap:8px;margin-top:12px}
+.table-row{display:grid;grid-template-columns:120px 1fr;gap:8px;border-bottom:1px solid var(--line);padding-bottom:8px}
+.table-row:last-child{border-bottom:0;padding-bottom:0}
+.table-row strong{font-size:.83rem;color:var(--soft);text-transform:uppercase;letter-spacing:.08em}
+.table-row span{font-family:var(--serif)}
+@media (max-width:1100px){
+  .hero{grid-template-columns:1fr}
+  .main-grid{grid-template-columns:1fr}
+  .controls{position:relative;top:auto}
+  .content{grid-template-columns:1fr}
+}
+@media (max-width:720px){
+  .app{width:min(100% - 20px,1440px);padding-top:14px}
+  .hero-main{padding:22px}
+  .definition-strip,.note-row{grid-template-columns:1fr}
+  .topbar{align-items:flex-start}
+  .theme-toggle span:last-child{display:none}
+  .panel-head{display:block}
+  .badge{display:inline-block;margin-top:8px}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="mark">P</div>
+      <div>
+        <strong>Probability & Statistical Inference</strong>
+        <small>interactive mathematical notebook</small>
+      </div>
+    </div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <span class="toggle-dot"></span><span>Dark mode</span>
+    </button>
+  </header>
+
+  <section class="hero">
+    <div class="card hero-main">
+      <div class="kicker">Distribution families</div>
+      <h1>Anatomy of a distribution family</h1>
+      <p class="subtitle">
+        A parametric family is a geometric surface of probability laws. A single parameter value selects one law; changing location, scale, shape, or support moves through the family.
+      </p>
+      <div class="definition-strip">
+        <div class="eq-chip">
+          <strong>Family</strong>
+          <div class="math">ð“Ÿ = { P<sub>Î¸</sub> : Î¸ âˆˆ Î˜ }</div>
+        </div>
+        <div class="eq-chip">
+          <strong>Density view</strong>
+          <div class="math">P<sub>Î¸</sub>(A) = âˆ«<sub>A</sub> f(x;Î¸) dx</div>
+        </div>
+        <div class="eq-chip">
+          <strong>Identifiability</strong>
+          <div class="math">P<sub>Î¸â‚</sub> = P<sub>Î¸â‚‚</sub> â‡’ Î¸â‚ = Î¸â‚‚</div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="card hero-side">
+      <div>
+        <h3 class="mini-title">Parameter map</h3>
+        <p class="mini-text">Think of Î¸ as a coordinate. The map Î¸ â†¦ P<sub>Î¸</sub> sends coordinates to probability laws.</p>
+      </div>
+      <svg class="family-map" id="familyMap" viewBox="0 0 360 172" role="img" aria-label="parameter map diagram"></svg>
+    </aside>
+  </section>
+
+  <main class="main-grid">
+    <aside class="card controls">
+      <div class="control-section">
+        <div class="label-row"><label for="family">Family</label><span class="value" id="familyValue">Normal</span></div>
+        <select id="family">
+          <option value="normal">Normal location-scale</option>
+          <option value="exponential">Exponential rate</option>
+          <option value="beta">Beta shape family</option>
+          <option value="uniform">Uniform support family</option>
+          <option value="gamma">Gamma shape-scale</option>
+        </select>
+      </div>
+
+      <div class="control-section">
+        <div id="controlHolder"></div>
+      </div>
+
+      <div class="control-section">
+        <div class="label-row"><label>View</label><span class="value" id="viewValue">Density</span></div>
+        <div class="segment" id="viewSegment">
+          <button type="button" class="active" data-view="density">Density</button>
+          <button type="button" data-view="cdf">CDF</button>
+        </div>
+        <label class="checkbox-line"><span>Compare with nearby law</span><input type="checkbox" id="compare" checked></label>
+        <label class="checkbox-line"><span>Show support geometry</span><input type="checkbox" id="showSupport" checked></label>
+      </div>
+
+      <div class="control-section">
+        <div class="label-row"><label for="xProbe">Probe point xâ‚€</label><span class="value" id="xProbeValue">0.00</span></div>
+        <input type="range" id="xProbe" min="-5" max="5" step="0.01" value="0">
+        <p class="small-muted">The shaded region shows P<sub>Î¸</sub>(X â‰¤ xâ‚€). Move xâ‚€ to see probability as area.</p>
+      </div>
+    </aside>
+
+    <section class="content">
+      <div>
+        <section class="card panel">
+          <div class="panel-head">
+            <div>
+              <h2 id="mainTitle">Density: one law inside a family</h2>
+              <p id="mainSub">The curve is f(x;Î¸). The filled area is cumulative probability up to xâ‚€.</p>
+            </div>
+            <span class="badge" id="lawBadge">Î¸ = (Î¼, Ïƒ)</span>
+          </div>
+          <div class="plot-wrap">
+            <svg id="mainPlot" viewBox="0 0 880 520" role="img" aria-label="main distribution diagram"></svg>
+          </div>
+          <div class="note-row">
+            <div class="stat-card"><span>Mean</span><b id="meanStat">0</b></div>
+            <div class="stat-card"><span>Variance</span><b id="varStat">1</b></div>
+            <div class="stat-card"><span>Support</span><b id="supportStat">â„</b></div>
+          </div>
+        </section>
+
+        <div class="footer-space"></div>
+
+        <section class="card panel">
+          <div class="panel-head">
+            <div>
+              <h3>Parameter geometry</h3>
+              <p>The same family is a region Î˜. A point in Î˜ is not a random variable; it labels one law.</p>
+            </div>
+            <span class="badge">Î¸-space</span>
+          </div>
+          <div class="plot-wrap">
+            <svg id="paramPlot" viewBox="0 0 880 360" role="img" aria-label="parameter space diagram"></svg>
+          </div>
+        </section>
+      </div>
+
+      <aside class="right-stack">
+        <section class="card interpretation">
+          <div class="panel-head">
+            <div>
+              <h3>Symbolic definition</h3>
+              <p id="formulaCaption">The selected family and its parameter space.</p>
+            </div>
+          </div>
+          <div class="eq-box"><div class="math" id="formulaBox">X âˆ¼ N(Î¼, ÏƒÂ²), Î¼ âˆˆ â„, Ïƒ &gt; 0</div></div>
+          <div class="table-like">
+            <div class="table-row"><strong>Location</strong><span id="locText">Î¼ shifts the curve without changing its shape.</span></div>
+            <div class="table-row"><strong>Scale</strong><span id="scaleText">Ïƒ stretches the horizontal axis and lowers the peak.</span></div>
+            <div class="table-row"><strong>Shape</strong><span id="shapeText">No extra shape parameter: symmetry is fixed.</span></div>
+            <div class="table-row"><strong>Support</strong><span id="supportText">The set of possible x-values is all real numbers.</span></div>
+          </div>
+          <div class="pill-row" id="propertyPills"></div>
+        </section>
+
+        <section class="card interpretation">
+          <div class="panel-head">
+            <div>
+              <h3>What to notice</h3>
+              <p>Read the diagram as geometry, not only as formulas.</p>
+            </div>
+          </div>
+          <div class="notice">
+            <strong id="noticeLead">A family is many laws.</strong>
+            <ul id="noticeList"></ul>
+          </div>
+        </section>
+
+        <section class="card exam">
+          <div class="panel-head">
+            <div>
+              <h3>Compact exam summary</h3>
+              <p>Minimal facts to identify a distribution family.</p>
+            </div>
+          </div>
+          <div class="exam-grid">
+            <div class="exam-item"><div class="exam-num">1</div><p><strong>State Î˜.</strong> A parameter value is meaningful only after its admissible set is specified.</p></div>
+            <div class="exam-item"><div class="exam-num">2</div><p><strong>State support.</strong> Check whether the support depends on Î¸; this changes likelihood geometry.</p></div>
+            <div class="exam-item"><div class="exam-num">3</div><p><strong>Check identifiability.</strong> Different coordinates must not represent the same law.</p></div>
+            <div class="exam-item"><div class="exam-num">4</div><p><strong>Separate roles.</strong> Location shifts, scale stretches, shape bends, support restricts.</p></div>
+          </div>
+        </section>
+      </aside>
+    </section>
+  </main>
+</div>
+
+<script>
+const root = document.documentElement;
+const $ = (id)=>document.getElementById(id);
+let state = {
+  family:'normal', view:'density', compare:true, showSupport:true,
+  normal:{mu:0, sigma:1}, exponential:{lambda:1.25}, beta:{alpha:2.2,beta:4.0}, uniform:{a:-1,b:2.5}, gamma:{k:2.0, theta:1.0},
+  xProbe:0
+};
+
+const defs = {
+  normal:{
+    label:'Normal', params:'Î¸ = (Î¼, Ïƒ)',
+    controls:[
+      {key:'mu', label:'Location Î¼', min:-3, max:3, step:.01},
+      {key:'sigma', label:'Scale Ïƒ', min:.35, max:3.2, step:.01}
+    ],
+    formula:()=>`X âˆ¼ N(Î¼, ÏƒÂ²),  Î¼ âˆˆ â„,  Ïƒ > 0`,
+    theta:()=>`(${fmt(state.normal.mu)}, ${fmt(state.normal.sigma)})`,
+    loc:'Î¼ shifts the curve left or right without changing the bell shape.',
+    scale:'Ïƒ stretches the horizontal axis; the peak falls so total area remains one.',
+    shape:'The standardized shape is fixed: symmetric, unimodal, thin-tailed.',
+    support:'Support is â„ and does not depend on Î¸.',
+    pills:['continuous','identifiable','fixed support','location-scale'],
+    notice:[
+      'Changing Î¼ translates the whole law: the area under the curve does not change.',
+      'Changing Ïƒ changes dispersion, not total probability: density height adjusts mechanically.',
+      'A single bell curve is one law; the family is the whole collection indexed by (Î¼, Ïƒ).'
+    ]
+  },
+  exponential:{
+    label:'Exponential', params:'Î¸ = Î»',
+    controls:[{key:'lambda', label:'Rate Î»', min:.25, max:4, step:.01}],
+    formula:()=>`X âˆ¼ Exp(Î»),  f(x;Î»)=Î»e^(âˆ’Î»x),  x â‰¥ 0,  Î» > 0`,
+    theta:()=>`${fmt(state.exponential.lambda)}`,
+    loc:'No location parameter here: the law begins at zero.',
+    scale:'The mean scale is 1/Î». Larger Î» compresses mass toward zero.',
+    shape:'The hazard is constant; the density is always decreasing.',
+    support:'Support is [0,âˆž), fixed across Î».',
+    pills:['continuous','identifiable','one-parameter','fixed support'],
+    notice:[
+      'Increasing Î» concentrates probability near the origin.',
+      'The support boundary at zero is part of the geometry of the model.',
+      'Different Î» values create genuinely different laws, so Î» is identifiable.'
+    ]
+  },
+  beta:{
+    label:'Beta', params:'Î¸ = (Î±, Î²)',
+    controls:[
+      {key:'alpha', label:'Shape Î±', min:.35, max:8, step:.01},
+      {key:'beta', label:'Shape Î²', min:.35, max:8, step:.01}
+    ],
+    formula:()=>`X âˆ¼ Beta(Î±, Î²),  f(x;Î±,Î²)=x^(Î±âˆ’1)(1âˆ’x)^(Î²âˆ’1)/B(Î±,Î²),  0<x<1`,
+    theta:()=>`(${fmt(state.beta.alpha)}, ${fmt(state.beta.beta)})`,
+    loc:'No pure location parameter: the interval [0,1] is fixed.',
+    scale:'No free scale parameter: mass is redistributed inside [0,1].',
+    shape:'Î± pulls mass toward one; Î² pulls mass toward zero; both control curvature near boundaries.',
+    support:'Support is [0,1], fixed across Î± and Î².',
+    pills:['continuous','shape family','bounded support','identifiable'],
+    notice:[
+      'Shape parameters bend the density rather than simply shifting or stretching it.',
+      'Values below one create boundary singularities; values above one flatten the boundary.',
+      'The same support can contain very different geometries of probability mass.'
+    ]
+  },
+  uniform:{
+    label:'Uniform', params:'Î¸ = (a, b)',
+    controls:[
+      {key:'a', label:'Left endpoint a', min:-4, max:2, step:.01},
+      {key:'b', label:'Right endpoint b', min:-1, max:5, step:.01}
+    ],
+    formula:()=>`X âˆ¼ U(a,b),  f(x;a,b)=1/(bâˆ’a) on [a,b],  a<b`,
+    theta:()=>`(${fmt(getUniform().a)}, ${fmt(getUniform().b)})`,
+    loc:'The midpoint (a+b)/2 is the location of the support.',
+    scale:'The length bâˆ’a is the scale; larger intervals lower the density height.',
+    shape:'The shape is flat; only the support moves and stretches.',
+    support:'Support is [a,b] and depends on Î¸.',
+    pills:['continuous','support depends on Î¸','flat density','identifiable'],
+    notice:[
+      'Here the parameter changes the possible values themselves, not only the height of a curve.',
+      'The density height is determined by interval length: height Ã— width = one.',
+      'Support-dependent parameters are crucial in likelihood and estimation problems.'
+    ]
+  },
+  gamma:{
+    label:'Gamma', params:'Î¸ = (k, Ï‘)',
+    controls:[
+      {key:'k', label:'Shape k', min:.35, max:8, step:.01},
+      {key:'theta', label:'Scale Ï‘', min:.25, max:3.2, step:.01}
+    ],
+    formula:()=>`X âˆ¼ Gamma(k, Ï‘),  f(x;k,Ï‘)=x^(kâˆ’1)e^(âˆ’x/Ï‘)/(Î“(k)Ï‘^k),  x>0`,
+    theta:()=>`(${fmt(state.gamma.k)}, ${fmt(state.gamma.theta)})`,
+    loc:'No location parameter in this version: support begins at zero.',
+    scale:'Ï‘ stretches the positive axis; mean and variance increase with Ï‘.',
+    shape:'k changes skewness and the boundary behavior near zero.',
+    support:'Support is [0,âˆž), fixed across k and Ï‘.',
+    pills:['continuous','positive support','shape-scale','identifiable'],
+    notice:[
+      'Small k puts more mass near zero; large k creates a more bell-like positive distribution.',
+      'Scale Ï‘ stretches the same positive-support geometry.',
+      'Shape and scale move the curve in different directions inside the same family.'
+    ]
+  }
+};
+
+function fmt(x){
+  if(!Number.isFinite(x)) return 'âˆž';
+  const ax=Math.abs(x);
+  if(ax>=100) return x.toFixed(0);
+  if(ax>=10) return x.toFixed(1);
+  return x.toFixed(2).replace(/\.00$/,'');
+}
+function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
+function linspace(a,b,n){return Array.from({length:n},(_,i)=>a+(b-a)*i/(n-1));}
+function erf(x){
+  const sign = x>=0?1:-1; x=Math.abs(x);
+  const a1=0.254829592,a2=-0.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=0.3275911;
+  const t=1/(1+p*x);
+  const y=1-(((((a5*t+a4)*t)+a3)*t+a2)*t+a1)*t*Math.exp(-x*x);
+  return sign*y;
+}
+function normalPdf(x,mu,s){return Math.exp(-.5*((x-mu)/s)**2)/(s*Math.sqrt(2*Math.PI));}
+function normalCdf(x,mu,s){return .5*(1+erf((x-mu)/(s*Math.sqrt(2))));}
+function logGamma(z){
+  const p=[676.5203681218851,-1259.1392167224028,771.32342877765313,-176.61502916214059,12.507343278686905,-0.13857109526572012,9.9843695780195716e-6,1.5056327351493116e-7];
+  if(z<.5) return Math.log(Math.PI)-Math.log(Math.sin(Math.PI*z))-logGamma(1-z);
+  z-=1; let x=0.99999999999980993;
+  for(let i=0;i<p.length;i++) x+=p[i]/(z+i+1);
+  const t=z+p.length-.5;
+  return .5*Math.log(2*Math.PI)+(z+.5)*Math.log(t)-t+Math.log(x);
+}
+function betaPdf(x,a,b){
+  if(x<=0 || x>=1){
+    if(x===0 && a<1) return 10;
+    if(x===1 && b<1) return 10;
+    return 0;
+  }
+  return Math.exp((a-1)*Math.log(x)+(b-1)*Math.log(1-x)-logGamma(a)-logGamma(b)+logGamma(a+b));
+}
+function gammaPdf(x,k,t){
+  if(x<=0){return k<1 && x===0 ? 10 : 0;}
+  return Math.exp((k-1)*Math.log(x)-x/t-logGamma(k)-k*Math.log(t));
+}
+function integrateCdf(pdf, x, lo, hi, steps=700){
+  if(x<=lo) return 0;
+  if(x>=hi) return 1;
+  const n=steps + (steps%2);
+  const h=(x-lo)/n;
+  let sum=pdf(lo)+pdf(x);
+  for(let i=1;i<n;i++) sum += pdf(lo+i*h)*(i%2?4:2);
+  return clamp(sum*h/3,0,1);
+}
+function getUniform(){
+  let a=state.uniform.a, b=state.uniform.b;
+  if(b<=a+.15) b=a+.15;
+  return {a,b};
+}
+function distInfo(fam, alt=false){
+  const s=state[fam];
+  if(fam==='normal'){
+    const mu=s.mu+(alt?.dmu??0), sigma=Math.max(.25,s.sigma*(alt?.scale??1));
+    return {
+      xMin:mu-4.2*sigma, xMax:mu+4.2*sigma, support:[-Infinity,Infinity],
+      pdf:x=>normalPdf(x,mu,sigma), cdf:x=>normalCdf(x,mu,sigma),
+      mean:mu, variance:sigma*sigma, params:{mu,sigma},
+      finiteSupport:false
+    };
+  }
+  if(fam==='exponential'){
+    const lambda=Math.max(.05,s.lambda*(alt?.scale??1));
+    return {
+      xMin:0, xMax:Math.max(6/lambda,4), support:[0,Infinity],
+      pdf:x=>x<0?0:lambda*Math.exp(-lambda*x), cdf:x=>x<0?0:1-Math.exp(-lambda*x),
+      mean:1/lambda, variance:1/(lambda*lambda), params:{lambda}, finiteSupport:false
+    };
+  }
+  if(fam==='beta'){
+    const alpha=Math.max(.2,s.alpha+(alt?.da??0)), beta=Math.max(.2,s.beta+(alt?.db??0));
+    const pdf=x=>Math.min(betaPdf(x,alpha,beta),18);
+    return {
+      xMin:0, xMax:1, support:[0,1], pdf,
+      cdf:x=>integrateCdf(pdf,x,0,1,600),
+      mean:alpha/(alpha+beta), variance:alpha*beta/(((alpha+beta)**2)*(alpha+beta+1)), params:{alpha,beta}, finiteSupport:true
+    };
+  }
+  if(fam==='uniform'){
+    let {a,b}=getUniform();
+    if(alt){ a+=alt.da??0; b+=alt.db??0; if(b<=a+.15)b=a+.15; }
+    const w=b-a;
+    return {
+      xMin:a-0.7*w, xMax:b+0.7*w, support:[a,b],
+      pdf:x=>(x>=a&&x<=b)?1/w:0, cdf:x=>x<a?0:(x>b?1:(x-a)/w),
+      mean:(a+b)/2, variance:w*w/12, params:{a,b}, finiteSupport:true
+    };
+  }
+  if(fam==='gamma'){
+    const k=Math.max(.2,s.k+(alt?.dk??0)), theta=Math.max(.15,s.theta*(alt?.scale??1));
+    const pdf=x=>Math.min(gammaPdf(x,k,theta),18);
+    const xmax=Math.max(k*theta+5*Math.sqrt(k)*theta,6);
+    return {
+      xMin:0, xMax:xmax, support:[0,Infinity], pdf,
+      cdf:x=>integrateCdf(pdf,x,0,xmax,700),
+      mean:k*theta, variance:k*theta*theta, params:{k,theta}, finiteSupport:false
+    };
+  }
+}
+function altFor(fam){
+  if(fam==='normal') return {dmu:.65, scale:.82};
+  if(fam==='exponential') return {scale:1.35};
+  if(fam==='beta') return {da:.7, db:-.45};
+  if(fam==='uniform') return {da:.35, db:.75};
+  if(fam==='gamma') return {dk:.9, scale:.78};
+}
+
+function make(tag,attrs={},children=[]){
+  const el=document.createElementNS('http://www.w3.org/2000/svg',tag);
+  for(const [k,v] of Object.entries(attrs)){
+    if(k==='text') el.textContent=v; else el.setAttribute(k,v);
+  }
+  for(const c of children) el.appendChild(c);
+  return el;
+}
+function clear(el){while(el.firstChild)el.removeChild(el.firstChild)}
+function pathFrom(points){return points.map((p,i)=>(i?'L':'M')+p[0].toFixed(2)+','+p[1].toFixed(2)).join(' ')}
+function drawGrid(svg, W,H,m,xTicks=8,yTicks=5){
+  const g=make('g',{class:'grid'});
+  for(let i=0;i<=xTicks;i++){
+    const x=m.l+(W-m.l-m.r)*i/xTicks;
+    g.appendChild(make('line',{x1:x,y1:m.t,x2:x,y2:H-m.b}));
+  }
+  for(let j=0;j<=yTicks;j++){
+    const y=m.t+(H-m.t-m.b)*j/yTicks;
+    g.appendChild(make('line',{x1:m.l,y1:y,x2:W-m.r,y2:y}));
+  }
+  svg.appendChild(g);
+}
+function drawAxes(svg,W,H,m,xScale,yScale,xMin,xMax,yMax,xLabel='x',yLabel='density'){
+  const g=make('g',{class:'axis'});
+  g.appendChild(make('line',{x1:m.l,y1:H-m.b,x2:W-m.r,y2:H-m.b}));
+  g.appendChild(make('line',{x1:m.l,y1:m.t,x2:m.l,y2:H-m.b}));
+  for(let i=0;i<=6;i++){
+    const val=xMin+(xMax-xMin)*i/6, x=xScale(val);
+    g.appendChild(make('line',{x1:x,y1:H-m.b,x2:x,y2:H-m.b+5}));
+    g.appendChild(make('text',{x:x,y:H-m.b+22,'text-anchor':'middle',text:fmt(val)}));
+  }
+  for(let j=0;j<=4;j++){
+    const val=yMax*j/4, y=yScale(val);
+    g.appendChild(make('line',{x1:m.l-5,y1:y,x2:m.l,y2:y}));
+    g.appendChild(make('text',{x:m.l-10,y:y+4,'text-anchor':'end',text:fmt(val)}));
+  }
+  g.appendChild(make('text',{x:W-m.r,y:H-15,'text-anchor':'end',text:xLabel}));
+  g.appendChild(make('text',{x:18,y:m.t+5,'text-anchor':'start',text:yLabel}));
+  svg.appendChild(g);
+}
+function drawMain(){
+  const svg=$('mainPlot'); clear(svg);
+  const W=880,H=520,m={l:62,r:26,t:26,b:58};
+  const fam=state.family;
+  const info=distInfo(fam);
+  const alt=distInfo(fam,altFor(fam));
+  let xMin=Math.min(info.xMin, alt.xMin), xMax=Math.max(info.xMax, alt.xMax);
+  if(fam==='uniform'){
+    const {a,b}=getUniform(); const w=b-a; xMin=a-.75*w; xMax=b+.75*w;
+  }
+  const xProbe=clamp(state.xProbe,xMin,xMax);
+  state.xProbe=xProbe;
+  $('xProbe').min=xMin; $('xProbe').max=xMax; $('xProbe').value=xProbe; $('xProbeValue').textContent=fmt(xProbe);
+  const xs=linspace(xMin,xMax,520);
+  const view=state.view;
+  const yVals=xs.map(x=> view==='density'?info.pdf(x):info.cdf(x));
+  const yAlt=xs.map(x=> view==='density'?alt.pdf(x):alt.cdf(x));
+  let yMax=view==='density'?Math.max(...yVals,...yAlt,1e-8)*1.16:1.05;
+  if(fam==='uniform' && view==='density') yMax=Math.max(...yVals,...yAlt)*1.55;
+  const xScale=x=>m.l+(x-xMin)/(xMax-xMin)*(W-m.l-m.r);
+  const yScale=y=>H-m.b-y/yMax*(H-m.t-m.b);
+  drawGrid(svg,W,H,m,8,5);
+  if(state.showSupport){
+    const [a,b]=info.support;
+    const sx1=Number.isFinite(a)?xScale(Math.max(a,xMin)):m.l;
+    const sx2=Number.isFinite(b)?xScale(Math.min(b,xMax)):W-m.r;
+    svg.appendChild(make('rect',{class:'support',x:sx1,y:m.t,width:Math.max(0,sx2-sx1),height:H-m.t-m.b,rx:0}));
+  }
+  if(view==='density'){
+    const shadeXs=xs.filter(x=>x<=xProbe);
+    const areaPts=[[xScale(xMin),yScale(0)],...shadeXs.map(x=>[xScale(x),yScale(info.pdf(x))]),[xScale(Math.min(xProbe,xMax)),yScale(0)]];
+    svg.appendChild(make('path',{class:'area',d:pathFrom(areaPts)+' Z'}));
+  }else{
+    const y=info.cdf(xProbe);
+    svg.appendChild(make('line',{x1:m.l,y1:yScale(y),x2:xScale(xProbe),y2:yScale(y),stroke:'var(--accent)', 'stroke-width':1.8, 'stroke-dasharray':'5 5'}));
+    svg.appendChild(make('line',{x1:xScale(xProbe),y1:yScale(0),x2:xScale(xProbe),y2:yScale(y),stroke:'var(--accent)', 'stroke-width':1.8, 'stroke-dasharray':'5 5'}));
+  }
+  if(state.compare){
+    svg.appendChild(make('path',{class:'curve-alt',d:pathFrom(xs.map((x,i)=>[xScale(x),yScale(yAlt[i])]))}));
+  }
+  svg.appendChild(make('path',{class:'curve-main',d:pathFrom(xs.map((x,i)=>[xScale(x),yScale(yVals[i])]))}));
+  drawAxes(svg,W,H,m,xScale,yScale,xMin,xMax,yMax,'x',view==='density'?'f(x;Î¸)':'F(x;Î¸)');
+  const yp=view==='density'?info.pdf(xProbe):info.cdf(xProbe);
+  svg.appendChild(make('line',{x1:xScale(xProbe),y1:yScale(0),x2:xScale(xProbe),y2:yScale(yp),stroke:'var(--accent)', 'stroke-width':1.8, 'stroke-dasharray':'5 5'}));
+  svg.appendChild(make('circle',{class:'marker',cx:xScale(xProbe),cy:yScale(yp),r:6}));
+  svg.appendChild(make('text',{x:xScale(xProbe)+10,y:yScale(yp)-10,fill:'var(--muted)','font-family':'var(--mono)','font-size':12,text:`xâ‚€=${fmt(xProbe)}`}));
+  const p=info.cdf(xProbe);
+  svg.appendChild(make('text',{x:W-m.r-8,y:m.t+22,'text-anchor':'end',fill:'var(--accent)','font-family':'var(--mono)','font-size':13,text:`P(Xâ‰¤xâ‚€) = ${fmt(p)}`}));
+}
+function drawParamPlot(){
+  const svg=$('paramPlot'); clear(svg);
+  const W=880,H=360,m={l:62,r:28,t:28,b:54};
+  drawGrid(svg,W,H,m,7,4);
+  const fam=state.family;
+  const g=make('g',{class:'axis'});
+  g.appendChild(make('line',{x1:m.l,y1:H-m.b,x2:W-m.r,y2:H-m.b}));
+  g.appendChild(make('line',{x1:m.l,y1:m.t,x2:m.l,y2:H-m.b}));
+  svg.appendChild(g);
+  const plotW=W-m.l-m.r, plotH=H-m.t-m.b;
+  function sx(v,a,b){return m.l+(v-a)/(b-a)*plotW}
+  function sy(v,a,b){return H-m.b-(v-a)/(b-a)*plotH}
+  if(fam==='normal'){
+    const mu=state.normal.mu, sig=state.normal.sigma;
+    const x=sx(mu,-3,3), y=sy(sig,.35,3.2);
+    svg.appendChild(make('rect',{x:m.l,y:m.t,width:plotW,height:plotH,fill:'var(--accent-2)',opacity:.45,rx:12}));
+    for(let i=-3;i<=3;i++) svg.appendChild(make('text',{x:sx(i,-3,3),y:H-m.b+23,'text-anchor':'middle',fill:'var(--muted)','font-family':'var(--mono)','font-size':11,text:i}));
+    for(let j of [.5,1,2,3]) svg.appendChild(make('text',{x:m.l-10,y:sy(j,.35,3.2)+4,'text-anchor':'end',fill:'var(--muted)','font-family':'var(--mono)','font-size':11,text:j}));
+    svg.appendChild(make('text',{x:W-m.r,y:H-14,'text-anchor':'end',fill:'var(--muted)',text:'Î¼'}));
+    svg.appendChild(make('text',{x:18,y:m.t+6,fill:'var(--muted)',text:'Ïƒ'}));
+    svg.appendChild(make('circle',{class:'point',cx:x,cy:y,r:9}));
+    svg.appendChild(make('text',{x:x+14,y:y-12,fill:'var(--accent)','font-family':'var(--mono)','font-size':13,text:`Î¸=${defs[fam].theta()}`}));
+  } else if(fam==='beta'){
+    const a=state.beta.alpha,b=state.beta.beta;
+    svg.appendChild(make('rect',{x:m.l,y:m.t,width:plotW,height:plotH,fill:'var(--accent-2)',opacity:.45,rx:12}));
+    svg.appendChild(make('path',{class:'curve-soft',d:`M${sx(.35,.35,8)},${sy(.35,.35,8)} L${sx(8,.35,8)},${sy(8,.35,8)}`}));
+    const x=sx(a,.35,8), y=sy(b,.35,8);
+    svg.appendChild(make('circle',{class:'point',cx:x,cy:y,r:9}));
+    svg.appendChild(make('text',{x:W-m.r,y:H-14,'text-anchor':'end',fill:'var(--muted)',text:'Î±'}));
+    svg.appendChild(make('text',{x:18,y:m.t+6,fill:'var(--muted)',text:'Î²'}));
+    svg.appendChild(make('text',{x:x+14,y:y-12,fill:'var(--accent)','font-family':'var(--mono)','font-size':13,text:`Î¸=${defs[fam].theta()}`}));
+  } else if(fam==='uniform'){
+    const {a,b}=getUniform();
+    const min=-4,max=5;
+    const polygon=`M${sx(min,min,max)},${sy(min,min,max)} L${sx(max,min,max)},${sy(min,min,max)} L${sx(max,min,max)},${sy(max,min,max)} Z`;
+    svg.appendChild(make('path',{d:polygon,fill:'var(--accent-2)',opacity:.5}));
+    svg.appendChild(make('path',{class:'curve-soft',d:`M${sx(min,min,max)},${sy(min,min,max)} L${sx(max,min,max)},${sy(max,min,max)}`}));
+    const x=sx(a,min,max), y=sy(b,min,max);
+    svg.appendChild(make('circle',{class:'point',cx:x,cy:y,r:9}));
+    svg.appendChild(make('text',{x:W-m.r,y:H-14,'text-anchor':'end',fill:'var(--muted)',text:'a'}));
+    svg.appendChild(make('text',{x:18,y:m.t+6,fill:'var(--muted)',text:'b'}));
+    svg.appendChild(make('text',{x:m.l+15,y:m.t+28,fill:'var(--muted)','font-size':13,text:'admissible region: a < b'}));
+    svg.appendChild(make('text',{x:x+14,y:y-12,fill:'var(--accent)','font-family':'var(--mono)','font-size':13,text:`Î¸=${defs[fam].theta()}`}));
+  } else if(fam==='gamma'){
+    const k=state.gamma.k,t=state.gamma.theta;
+    svg.appendChild(make('rect',{x:m.l,y:m.t,width:plotW,height:plotH,fill:'var(--accent-2)',opacity:.45,rx:12}));
+    const x=sx(k,.35,8), y=sy(t,.25,3.2);
+    svg.appendChild(make('circle',{class:'point',cx:x,cy:y,r:9}));
+    svg.appendChild(make('text',{x:W-m.r,y:H-14,'text-anchor':'end',fill:'var(--muted)',text:'k'}));
+    svg.appendChild(make('text',{x:18,y:m.t+6,fill:'var(--muted)',text:'Ï‘'}));
+    svg.appendChild(make('text',{x:x+14,y:y-12,fill:'var(--accent)','font-family':'var(--mono)','font-size':13,text:`Î¸=${defs[fam].theta()}`}));
+  } else {
+    const lam=state.exponential.lambda;
+    const x=sx(lam,.25,4), y=H/2;
+    svg.appendChild(make('line',{x1:m.l,y1:y,x2:W-m.r,y2:y,stroke:'var(--accent-3)','stroke-width':13,'stroke-linecap':'round'}));
+    svg.appendChild(make('line',{x1:m.l,y1:y,x2:W-m.r,y2:y,stroke:'var(--accent)','stroke-width':2,'stroke-linecap':'round'}));
+    svg.appendChild(make('circle',{class:'point',cx:x,cy:y,r:9}));
+    svg.appendChild(make('text',{x:W-m.r,y:y+35,'text-anchor':'end',fill:'var(--muted)',text:'Î» > 0'}));
+    svg.appendChild(make('text',{x:x+14,y:y-12,fill:'var(--accent)','font-family':'var(--mono)','font-size':13,text:`Î¸=${defs[fam].theta()}`}));
+  }
+}
+function drawFamilyMap(){
+  const svg=$('familyMap'); clear(svg);
+  const W=360,H=172;
+  const fam=defs[state.family];
+  svg.appendChild(make('rect',{x:0,y:0,width:W,height:H,fill:'transparent'}));
+  const left=make('g',{}), right=make('g',{});
+  left.appendChild(make('rect',{x:24,y:50,width:86,height:72,rx:18,fill:'var(--accent-2)',stroke:'var(--accent-3)'}));
+  left.appendChild(make('text',{x:67,y:81,'text-anchor':'middle',fill:'var(--accent)','font-weight':'800',text:'Î˜'}));
+  left.appendChild(make('text',{x:67,y:102,'text-anchor':'middle',fill:'var(--muted)','font-size':12,text:'parameters'}));
+  right.appendChild(make('rect',{x:244,y:37,width:92,height:98,rx:22,fill:'var(--paper)',stroke:'var(--line)'}));
+  right.appendChild(make('path',{class:'path-line',d:'M258,108 C274,60 303,58 322,102'}));
+  right.appendChild(make('text',{x:290,y:26,'text-anchor':'middle',fill:'var(--muted)','font-size':12,text:'law PÎ¸'}));
+  svg.appendChild(left); svg.appendChild(right);
+  svg.appendChild(make('path',{d:'M118,86 C153,54 194,54 232,84',fill:'none',stroke:'var(--accent)','stroke-width':2.5,'marker-end':'url(#arrow)'}));
+  const defsEl=make('defs');
+  const marker=make('marker',{id:'arrow',viewBox:'0 0 10 10',refX:'8',refY:'5',markerWidth:'6',markerHeight:'6',orient:'auto-start-reverse'});
+  marker.appendChild(make('path',{d:'M 0 0 L 10 5 L 0 10 z',fill:'var(--accent)'}));
+  defsEl.appendChild(marker); svg.appendChild(defsEl);
+  svg.appendChild(make('circle',{class:'point',cx:76,cy:70,r:5}));
+  svg.appendChild(make('text',{x:180,y:62,'text-anchor':'middle',fill:'var(--accent)','font-family':'var(--serif)','font-size':17,text:'Î¸ â†¦ PÎ¸'}));
+  svg.appendChild(make('text',{x:180,y:133,'text-anchor':'middle',fill:'var(--muted)','font-size':12,text:`selected: ${fam.label} ${fam.params}`}));
+}
+function updateControls(){
+  const holder=$('controlHolder'); holder.innerHTML='';
+  const fam=state.family, def=defs[fam];
+  def.controls.forEach(c=>{
+    const val=state[fam][c.key];
+    const block=document.createElement('div'); block.className='slider-block';
+    const row=document.createElement('div'); row.className='label-row';
+    const lab=document.createElement('label'); lab.textContent=c.label;
+    const span=document.createElement('span'); span.className='value'; span.textContent=fmt(val);
+    row.append(lab,span);
+    const input=document.createElement('input'); input.type='range'; input.min=c.min; input.max=c.max; input.step=c.step; input.value=val;
+    input.addEventListener('input',()=>{
+      state[fam][c.key]=parseFloat(input.value);
+      if(fam==='uniform' && c.key==='a' && state.uniform.b<=state.uniform.a+.15) state.uniform.b=state.uniform.a+.15;
+      if(fam==='uniform' && c.key==='b' && state.uniform.b<=state.uniform.a+.15) state.uniform.a=state.uniform.b-.15;
+      span.textContent=fmt(state[fam][c.key]);
+      updateAll(false);
+      if(fam==='uniform') updateControls();
+    });
+    block.append(row,input); holder.appendChild(block);
+  });
+}
+function updateText(){
+  const fam=state.family, def=defs[fam], info=distInfo(fam);
+  $('familyValue').textContent=def.label;
+  $('viewValue').textContent=state.view==='density'?'Density':'CDF';
+  $('mainTitle').textContent=state.view==='density'?'Density: one law inside a family':'Distribution function: probability as accumulated mass';
+  $('mainSub').textContent=state.view==='density'?'The curve is f(x;Î¸). The filled area is cumulative probability up to xâ‚€.':'The curve is F(x;Î¸)=PÎ¸(Xâ‰¤x). The marker reads cumulative probability at xâ‚€.';
+  $('lawBadge').textContent=`${def.params}; Î¸ = ${def.theta()}`;
+  $('formulaBox').innerHTML=def.formula();
+  $('locText').textContent=def.loc;
+  $('scaleText').textContent=def.scale;
+  $('shapeText').textContent=def.shape;
+  $('supportText').textContent=def.support;
+  $('meanStat').textContent=fmt(info.mean);
+  $('varStat').textContent=fmt(info.variance);
+  const sup=info.support;
+  $('supportStat').textContent=Number.isFinite(sup[0]) && Number.isFinite(sup[1]) ? `[${fmt(sup[0])}, ${fmt(sup[1])}]` : (Number.isFinite(sup[0]) ? `[${fmt(sup[0])}, âˆž)` : 'â„');
+  $('noticeLead').textContent = `${def.label}: read parameters as geometric operations.`;
+  const list=$('noticeList'); list.innerHTML='';
+  def.notice.forEach(t=>{const li=document.createElement('li'); li.textContent=t; list.appendChild(li);});
+  const pills=$('propertyPills'); pills.innerHTML='';
+  def.pills.forEach((p,i)=>{const span=document.createElement('span'); span.className='pill '+(i===0?'accent':''); span.textContent=p; pills.appendChild(span);});
+}
+function updateAll(rebuild=true){
+  if(rebuild) updateControls();
+  updateText();
+  drawMain();
+  drawParamPlot();
+  drawFamilyMap();
+}
+
+$('family').addEventListener('change',e=>{state.family=e.target.value; updateAll(true);});
+$('compare').addEventListener('change',e=>{state.compare=e.target.checked; updateAll(false);});
+$('showSupport').addEventListener('change',e=>{state.showSupport=e.target.checked; updateAll(false);});
+$('xProbe').addEventListener('input',e=>{state.xProbe=parseFloat(e.target.value); updateAll(false);});
+$('viewSegment').querySelectorAll('button').forEach(btn=>btn.addEventListener('click',()=>{
+  $('viewSegment').querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); state.view=btn.dataset.view; updateAll(false);
+}));
+$('themeToggle').addEventListener('click',()=>{
+  const dark=root.getAttribute('data-theme')==='dark';
+  if(dark){root.removeAttribute('data-theme'); localStorage.setItem('dist-theme','light');}
+  else{root.setAttribute('data-theme','dark'); localStorage.setItem('dist-theme','dark');}
+  updateAll(false);
+});
+if(localStorage.getItem('dist-theme')==='dark') root.setAttribute('data-theme','dark');
+updateAll(true);
+</script>
+</body>
+</html>
+

@@ -1,0 +1,591 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="google-site-verification" content="google2c37f7a4206c9d3a.html">
+  <meta name="google-site-verification" content="fSWAEb_oSSHr_eJXL9gHYxIn879tRaBwJ42f_aD9o2s">
+  <meta name="google-site-verification" content="ftZ4QVMrlub9jbolsIeo4Ix4UBw0-BJrFeorzqKLXng">
+  <meta name="description" content="Interactive diagram for expectation as a linear operator.">
+    <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
+<title>Expectation as a Linear Operator - Geometric Version</title>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-NHXHEJP1G0');
+  </script>
+  <style>
+    :root{
+      --bg:#f6f1e8;
+      --panel:#fffaf2;
+      --panel2:#fcf5ea;
+      --text:#17212b;
+      --muted:#65717d;
+      --border:rgba(23,33,43,.12);
+      --grid:rgba(23,33,43,.075);
+      --accent:#2d8e84;
+      --accent2:rgba(45,142,132,.14);
+      --accent3:rgba(45,142,132,.30);
+      --blue:#456fb4;
+      --warn:#ba7356;
+      --violet:#7f63b8;
+      --shadow:0 16px 45px rgba(25,35,45,.08);
+      --radius:22px;
+    }
+    [data-theme="dark"]{
+      --bg:#0f151a;
+      --panel:#151d24;
+      --panel2:#11181f;
+      --text:#ecf2f6;
+      --muted:#9cadb8;
+      --border:rgba(236,242,246,.12);
+      --grid:rgba(236,242,246,.08);
+      --accent:#67cdbf;
+      --accent2:rgba(103,205,191,.13);
+      --accent3:rgba(103,205,191,.28);
+      --blue:#82b7ff;
+      --warn:#e1a184;
+      --violet:#bba6ff;
+      --shadow:0 18px 55px rgba(0,0,0,.30);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--text);
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 10% 0%, var(--accent2), transparent 28rem),
+        radial-gradient(circle at 96% 18%, rgba(69,111,180,.10), transparent 24rem),
+        var(--bg);
+      transition:background .25s ease,color .25s ease;
+    }
+    .wrap{width:min(1260px,calc(100% - 28px));margin:0 auto;padding:26px 0 42px}
+    header{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:16px}
+    h1{margin:0;font-size:clamp(1.7rem,3vw,2.45rem);line-height:1.03;letter-spacing:-.045em;font-weight:820}
+    .subtitle{margin:10px 0 0;color:var(--muted);max-width:850px;font-size:.98rem;line-height:1.58}
+    .themeBtn{border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:999px;padding:10px 15px;box-shadow:var(--shadow);cursor:pointer;font-weight:760;white-space:nowrap}
+    .defs{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+    .def,.card{background:color-mix(in srgb,var(--panel) 96%,transparent);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .def{padding:14px 15px;min-height:118px}
+    .tag{color:var(--muted);font-size:.74rem;font-weight:850;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
+    .math{font-family:Cambria, Georgia, "Times New Roman", serif;line-height:1.45;font-size:1.01rem;color:var(--text)}
+    .layout{display:grid;grid-template-columns:340px 1fr;gap:16px;align-items:start}
+    .side{padding:16px}
+    .panelTitle{margin:0 0 12px;color:var(--muted);font-size:.82rem;font-weight:900;text-transform:uppercase;letter-spacing:.13em}
+    .control{padding:12px 0;border-top:1px solid var(--border)}
+    .control:first-of-type{border-top:0;padding-top:0}
+    label{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px;font-weight:730;font-size:.91rem}
+    .value{color:var(--accent);font-weight:850;font-variant-numeric:tabular-nums}
+    input[type="range"]{width:100%;accent-color:var(--accent)}
+    select,.btn{width:100%;border:1px solid var(--border);background:var(--panel2);color:var(--text);border-radius:14px;padding:10px 11px;font-weight:720;outline:none}
+    .btn{cursor:pointer;transition:transform .15s ease,border-color .2s ease,background .2s ease}
+    .btn:hover{transform:translateY(-1px)}
+    .btn.active{background:var(--accent2);border-color:var(--accent)}
+    .seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .eqBox{margin-top:10px;border:1px solid var(--accent3);background:var(--accent2);border-radius:17px;padding:12px;font-family:Cambria, Georgia, "Times New Roman", serif;line-height:1.46;color:var(--text)}
+    .main{display:grid;gap:16px}
+    .plotCard{padding:10px 10px 6px}
+    .plotHead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:8px 9px 2px}
+    .plotTitle{font-weight:850;letter-spacing:-.02em}
+    .plotSub{color:var(--muted);font-size:.84rem;line-height:1.4;text-align:right}
+    svg{display:block;width:100%}
+    #mainSvg{height:455px}
+    #stateSvg,#jensenSvg{height:295px}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .interpretation{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
+    .cardPad{padding:16px}
+    .smallText{color:var(--muted);font-size:.92rem;line-height:1.58}
+    .notice{border-left:3px solid var(--accent);padding-left:13px;color:var(--muted);font-size:.92rem;line-height:1.55}
+    .summary{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+    .summary>div{border:1px solid var(--border);background:var(--panel2);border-radius:16px;padding:12px;font-size:.90rem;line-height:1.50}
+    .pillRow{display:flex;flex-wrap:wrap;gap:8px;margin-top:9px}
+    .pill{border:1px solid var(--border);background:var(--panel2);border-radius:999px;padding:7px 10px;color:var(--muted);font-size:.80rem;font-weight:760;display:inline-flex;gap:7px;align-items:center}
+    .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);display:inline-block}
+    .logicList{display:grid;gap:8px;margin-top:10px}
+    .logicItem{border:1px solid var(--border);background:var(--panel2);border-radius:14px;padding:10px 11px;font-size:.88rem;color:var(--muted);display:flex;gap:9px;align-items:flex-start}
+    .mark{font-weight:900;color:var(--accent);min-width:17px}
+    footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
+    @media(max-width:1080px){
+      .defs,.layout,.two,.interpretation{grid-template-columns:1fr}
+      header{flex-direction:column}
+      .themeBtn{align-self:flex-start}
+      #mainSvg{height:425px}
+    }
+    @media(max-width:560px){
+      .wrap{width:min(100% - 18px,1260px);padding-top:18px}
+      .summary{grid-template-columns:1fr}
+      .seg{grid-template-columns:1fr}
+      #mainSvg{height:390px}
+    }
+  </style>
+</head>
+<body data-theme="light">
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Expectation as a linear operator</h1>
+        <div class="subtitle">
+          A random variable is a function-vector on Î©. Expectation extracts its constant component:
+          \(X = E[X]\mathbf 1 + (X-E[X])\), where the residual has mean zero.
+        </div>
+      </div>
+      <button class="themeBtn" id="themeBtn">Dark mode</button>
+    </header>
+
+    <section class="defs">
+      <div class="def">
+        <div class="tag">Functional</div>
+        <div class="math">E : LÂ¹(Î©) â†’ â„<br>X â†¦ âˆ«Î© X dP</div>
+      </div>
+      <div class="def">
+        <div class="tag">Geometric split</div>
+        <div class="math">X = E[X]Â·1 + (Xâˆ’E[X])<br>E[Xâˆ’E[X]]=0</div>
+      </div>
+      <div class="def">
+        <div class="tag">Linearity</div>
+        <div class="math">E[aX+bY]=aE[X]+bE[Y]</div>
+      </div>
+      <div class="def">
+        <div class="tag">Curvature</div>
+        <div class="math">Ï† convex â‡’ Ï†(E[X])â‰¤E[Ï†(X)]</div>
+      </div>
+    </section>
+
+    <main class="layout">
+      <aside class="card side">
+        <div class="panelTitle">Controls</div>
+
+        <div class="control">
+          <label for="probMode">Probability geometry</label>
+          <select id="probMode">
+            <option value="uniform">uniform weights</option>
+            <option value="left">mass on low states</option>
+            <option value="right">mass on high states</option>
+            <option value="middle">mass around middle</option>
+            <option value="atom">large atom</option>
+          </select>
+        </div>
+
+        <div class="control">
+          <label for="xPattern">Random variable X</label>
+          <select id="xPattern">
+            <option value="increasing">increasing payoff</option>
+            <option value="wave">oscillating payoff</option>
+            <option value="risk">risky payoff</option>
+            <option value="income">skewed income</option>
+          </select>
+        </div>
+
+        <div class="control">
+          <label for="yPattern">Random variable Y</label>
+          <select id="yPattern">
+            <option value="decreasing">decreasing payoff</option>
+            <option value="hedge">hedge / insurance</option>
+            <option value="noise">mean-zero noise</option>
+            <option value="cycle">cyclical payoff</option>
+          </select>
+        </div>
+
+        <div class="control">
+          <label for="aCoeff">Coefficient a <span class="value" id="aVal">1.00</span></label>
+          <input id="aCoeff" type="range" min="-2" max="2" step="0.05" value="1"/>
+        </div>
+
+        <div class="control">
+          <label for="bCoeff">Coefficient b <span class="value" id="bVal">1.00</span></label>
+          <input id="bCoeff" type="range" min="-2" max="2" step="0.05" value="1"/>
+        </div>
+
+        <div class="control">
+          <label for="phiSelect">Transformation Ï†</label>
+          <select id="phiSelect">
+            <option value="square">convex: Ï†(x)=xÂ²</option>
+            <option value="exp">convex: Ï†(x)=exp(x/2)</option>
+            <option value="abs">convex: Ï†(x)=|x|</option>
+            <option value="sqrt">concave: Ï†(x)=âˆš(xâˆ’min+0.25)</option>
+            <option value="log">concave: Ï†(x)=log(xâˆ’min+1)</option>
+          </select>
+        </div>
+
+        <div class="control">
+          <div class="seg">
+            <button class="btn active" id="showProjection">Projection</button>
+            <button class="btn" id="showJensen">Jensen</button>
+          </div>
+        </div>
+
+        <div class="eqBox" id="eqBox">
+          X = E[X]Â·1 + (Xâˆ’E[X]).
+        </div>
+
+        <div class="control">
+          <div class="panelTitle" style="margin-bottom:8px">Geometric logic</div>
+          <div class="logicList" id="logicList"></div>
+        </div>
+      </aside>
+
+      <section class="main">
+        <div class="card plotCard">
+          <div class="plotHead">
+            <div>
+              <div class="plotTitle">Expectation as projection onto the constant direction</div>
+              <div class="pillRow">
+                <span class="pill"><span class="dot"></span> horizontal axis = constant part</span>
+                <span class="pill"><span class="dot" style="background:var(--blue)"></span> vertical axis = zero-mean fluctuation</span>
+                <span class="pill"><span class="dot" style="background:var(--warn)"></span> expectation = shadow</span>
+              </div>
+            </div>
+            <div class="plotSub" id="mainSub">Random variables are shown by mean and dispersion.</div>
+          </div>
+          <svg id="mainSvg" viewBox="0 0 980 455" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+
+        <div class="two">
+          <div class="card plotCard">
+            <div class="plotHead">
+              <div class="plotTitle">State-space weighted average</div>
+              <div class="plotSub">bars are values; dot sizes are probabilities</div>
+            </div>
+            <svg id="stateSvg" viewBox="0 0 520 295" preserveAspectRatio="xMidYMid meet"></svg>
+          </div>
+
+          <div class="card plotCard">
+            <div class="plotHead">
+              <div class="plotTitle">Jensen geometry</div>
+              <div class="plotSub">curvature creates a Jensen gap</div>
+            </div>
+            <svg id="jensenSvg" viewBox="0 0 520 295" preserveAspectRatio="xMidYMid meet"></svg>
+          </div>
+        </div>
+
+        <div class="interpretation">
+          <div class="card cardPad">
+            <div class="panelTitle">Interpretation</div>
+            <div class="smallText" id="interpretText">
+              Expectation takes a random function and keeps only its constant component. The remaining part is risk/noise with mean zero.
+            </div>
+            <div class="summary">
+              <div><strong>Operator.</strong><br>\(E\) maps a whole function \(X(Ï‰)\) into one scalar.</div>
+              <div><strong>Projection intuition.</strong><br>\(E[X]\mathbf 1\) is the constant shadow of \(X\).</div>
+              <div><strong>Linearity.</strong><br>The shadow of \(aX+bY\) equals \(a\) times the shadow of \(X\) plus \(b\) times the shadow of \(Y\).</div>
+              <div><strong>Jensen.</strong><br>Nonlinear curvature does not commute with averaging.</div>
+            </div>
+          </div>
+
+          <div class="card cardPad">
+            <div class="panelTitle">What to notice</div>
+            <div class="notice" id="noticeText">
+              Linearity concerns the projection itself. Jensen concerns what happens when you bend the variable before projecting.
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>Minimal interactive notebook â€” expectation as projection, average, and central operator.</footer>
+  </div>
+
+<script>
+const body=document.body;
+const themeBtn=document.getElementById("themeBtn");
+const probMode=document.getElementById("probMode");
+const xPattern=document.getElementById("xPattern");
+const yPattern=document.getElementById("yPattern");
+const aCoeff=document.getElementById("aCoeff");
+const bCoeff=document.getElementById("bCoeff");
+const phiSelect=document.getElementById("phiSelect");
+const showProjection=document.getElementById("showProjection");
+const showJensen=document.getElementById("showJensen");
+let mode="projection";
+const m=9;
+
+function css(v){return getComputedStyle(body).getPropertyValue(v).trim();}
+function fmt(x){return Math.abs(x)<10?x.toFixed(4):x.toFixed(2);}
+function states(){return Array.from({length:m},(_,i)=>i);}
+function probs(){
+  const type=probMode.value;
+  let raw=states().map(i=>{
+    const t=i/(m-1);
+    if(type==="uniform") return 1;
+    if(type==="left") return Math.exp(-3.0*t);
+    if(type==="right") return Math.exp(3.0*t);
+    if(type==="middle") return Math.exp(-18*(t-.5)**2);
+    if(type==="atom") return i===2?7:1;
+    return 1;
+  });
+  const s=raw.reduce((a,b)=>a+b,0);
+  return raw.map(v=>v/s);
+}
+function Xvals(){
+  const p=xPattern.value;
+  return states().map(i=>{
+    const t=i/(m-1);
+    if(p==="increasing") return -1.6+3.2*t;
+    if(p==="wave") return 1.25*Math.sin(2*Math.PI*t)+.45*Math.sin(4*Math.PI*t);
+    if(p==="risk") return i<6 ? -0.75+.10*i : 1.5+.55*(i-6);
+    if(p==="income") return -0.55+3.25*Math.pow(t,2.7);
+    return 0;
+  });
+}
+function Yvals(){
+  const p=yPattern.value;
+  return states().map(i=>{
+    const t=i/(m-1);
+    if(p==="decreasing") return 1.55-3.1*t;
+    if(p==="hedge") return i<6 ? .70-.08*i : -1.45-.15*(i-6);
+    if(p==="noise") return [-.8,.25,.55,-.35,.15,-.45,.72,-.12,.05][i];
+    if(p==="cycle") return 1.1*Math.cos(2*Math.PI*t+.35);
+    return 0;
+  });
+}
+function dot(p,x){return p.reduce((s,pi,i)=>s+pi*x[i],0);}
+function center(x){
+  const p=probs(), mu=dot(p,x);
+  return x.map(v=>v-mu);
+}
+function sd(x){
+  const p=probs(), mu=dot(p,x);
+  return Math.sqrt(dot(p,x.map(v=>(v-mu)**2)));
+}
+function Zvals(){
+  const a=+aCoeff.value,b=+bCoeff.value,x=Xvals(),y=Yvals();
+  return x.map((v,i)=>a*v+b*y[i]);
+}
+function phi(x){
+  const type=phiSelect.value;
+  const mn=Math.min(...Xvals());
+  if(type==="square") return x*x;
+  if(type==="exp") return Math.exp(x/2);
+  if(type==="abs") return Math.abs(x);
+  if(type==="sqrt") return Math.sqrt(Math.max(0,x-mn+.25));
+  if(type==="log") return Math.log(Math.max(.0001,x-mn+1));
+  return x;
+}
+function phiName(){
+  const type=phiSelect.value;
+  if(type==="square") return "Ï†(x)=xÂ²";
+  if(type==="exp") return "Ï†(x)=exp(x/2)";
+  if(type==="abs") return "Ï†(x)=|x|";
+  if(type==="sqrt") return "Ï†(x)=âˆš(xâˆ’min+0.25)";
+  if(type==="log") return "Ï†(x)=log(xâˆ’min+1)";
+}
+function convexity(){return ["square","exp","abs"].includes(phiSelect.value)?"convex":"concave";}
+function line(x1,y1,x2,y2,stroke,w=1,op=1,dash=""){
+  return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${stroke}" stroke-width="${w}" stroke-opacity="${op}" ${dash?`stroke-dasharray="${dash}"`:""}/>`;
+}
+function text(x,y,s,fill,size=13,weight=600,anchor="start"){
+  return `<text x="${x}" y="${y}" fill="${fill}" font-size="${size}" font-weight="${weight}" text-anchor="${anchor}" font-family="Inter,system-ui,sans-serif">${s}</text>`;
+}
+function px(v,a,b,x0,x1){return x0+(v-a)/(b-a)*(x1-x0);}
+function py(v,a,b,y0,y1){return y1-(v-a)/(b-a)*(y1-y0);}
+function arrow(x1,y1,x2,y2,color,w=2.4,op=1){
+  const ang=Math.atan2(y2-y1,x2-x1), len=10;
+  const a1=ang-Math.PI/7, a2=ang+Math.PI/7;
+  const p1=[x2-len*Math.cos(a1),y2-len*Math.sin(a1)];
+  const p2=[x2-len*Math.cos(a2),y2-len*Math.sin(a2)];
+  return line(x1,y1,x2,y2,color,w,op)+`<path d="M ${x2} ${y2} L ${p1[0]} ${p1[1]} L ${p2[0]} ${p2[1]} Z" fill="${color}" fill-opacity="${op}"/>`;
+}
+function drawMain(){
+  const svg=document.getElementById("mainSvg");
+  const p=probs(), x=Xvals(), y=Yvals(), z=Zvals();
+  const a=+aCoeff.value,b=+bCoeff.value;
+  const EX=dot(p,x), EY=dot(p,y), EZ=dot(p,z);
+  const sx=sd(x), sy=sd(y), sz=sd(z);
+  const panel=css("--panel"),border=css("--border"),muted=css("--muted"),textc=css("--text"),grid=css("--grid"),acc=css("--accent"),blue=css("--blue"),warn=css("--warn"),violet=css("--violet");
+  const panel2=css("--panel2");
+  const x0=68,x1=620,y0=58,y1=362;
+  const allMeans=[EX,EY,EZ,0], allSD=[sx,sy,sz,0];
+  let xmin=Math.min(...allMeans)-.6, xmax=Math.max(...allMeans)+.6;
+  let ymax=Math.max(...allSD)*1.28+.2;
+  if(xmin===xmax){xmin=-1;xmax=1}
+  const xAxis=py(0,0,ymax,y0,y1);
+  const yAxis=px(0,xmin,xmax,x0,x1);
+  let h=`<rect x="8" y="10" width="964" height="425" rx="20" fill="${panel}" stroke="${border}"/>`;
+  h+=text(70,36,"reduced function-space picture: X â†¦ (mean, fluctuation)",muted,13,850);
+  for(let i=0;i<=5;i++){
+    const yy=y1-(y1-y0)*i/5;
+    h+=line(x0,yy,x1,yy,grid,1,.85);
+  }
+  for(let i=0;i<=6;i++){
+    const xx=x0+(x1-x0)*i/6;
+    h+=line(xx,y0,xx,y1,grid,1,.65);
+  }
+  h+=line(x0,xAxis,x1,xAxis,muted,1.2,.85);
+  h+=line(yAxis,y0,yAxis,y1,muted,1.2,.85);
+  h+=text(x1,xAxis+24,"constant axis  E[X]Â·1",muted,12,850,"end");
+  h+=text(yAxis+8,y0+12,"zero-mean fluctuation",muted,12,850);
+  const pts=[
+    {name:"X",mu:EX,s:sx,c:acc},
+    {name:"Y",mu:EY,s:sy,c:blue},
+    {name:"Z=aX+bY",mu:EZ,s:sz,c:warn}
+  ];
+  pts.forEach(pt=>{
+    const X=px(pt.mu,xmin,xmax,x0,x1), Y=py(pt.s,0,ymax,y0,y1);
+    const baseY=xAxis;
+    h+=line(X,baseY,X,Y,pt.c,2,.28,"6 5");
+    h+=line(yAxis,baseY,X,baseY,pt.c,2,.35);
+    h+=arrow(yAxis,baseY,X,Y,pt.c,3,.92);
+    h+=`<circle cx="${X}" cy="${Y}" r="7" fill="${pt.c}" stroke="${panel}" stroke-width="2"/>`;
+    h+=text(X+9,Y-8,pt.name,pt.c,13,900);
+    h+=text(X,baseY+18,fmt(pt.mu),pt.c,11,850,"middle");
+  });
+  h+=`<rect x="660" y="62" width="275" height="205" rx="20" fill="${panel2}" stroke="${border}"/>`;
+  h+=text(684,94,"Projection identity",textc,16,900);
+  h+=text(684,126,"X = E[X]Â·1 + XÂ°",acc,15,900);
+  h+=text(684,151,"where XÂ° = Xâˆ’E[X]",muted,13,850);
+  h+=text(684,183,`E[X] = ${fmt(EX)}`,acc,14,900);
+  h+=text(684,210,`sd(X) = ${fmt(sx)}`,blue,14,900);
+  h+=text(684,238,`E[XÂ°] = ${fmt(dot(p,center(x)))}`,warn,14,900);
+  h+=`<rect x="660" y="292" width="275" height="82" rx="18" fill="${panel2}" stroke="${border}"/>`;
+  h+=text(684,324,"Linearity",textc,15,900);
+  h+=text(684,350,`E[aX+bY] = ${fmt(EZ)}`,warn,13,900);
+  h+=text(684,371,`aE[X]+bE[Y] = ${fmt(a*EX+b*EY)}`,muted,13,850);
+  svg.innerHTML=h;
+}
+function drawState(){
+  const svg=document.getElementById("stateSvg");
+  const p=probs(), x=Xvals(), y=Yvals(), z=Zvals();
+  const EX=dot(p,x), EZ=dot(p,z);
+  const panel=css("--panel"),border=css("--border"),muted=css("--muted"),textc=css("--text"),grid=css("--grid"),acc=css("--accent"),blue=css("--blue"),warn=css("--warn");
+  const x0=52,x1=488,y0=42,y1=232;
+  const vals=mode==="projection"?x:z;
+  let ymin=Math.min(...vals,0), ymax=Math.max(...vals,0);
+  const pad=(ymax-ymin)*.18||1;ymin-=pad;ymax+=pad;
+  const zero=py(0,ymin,ymax,y0,y1);
+  let h=`<rect x="8" y="10" width="504" height="270" rx="18" fill="${panel}" stroke="${border}"/>`;
+  for(let i=0;i<=5;i++){const yy=y1-(y1-y0)*i/5;h+=line(x0,yy,x1,yy,grid,1,.85)}
+  h+=line(x0,zero,x1,zero,muted,1.2,.8);
+  h+=line(x0,y0,x0,y1,muted,1.2,.8);
+  h+=line(x0,y1,x1,y1,muted,1.2,.8);
+  const slot=(x1-x0)/m, bw=slot*.42;
+  vals.forEach((v,i)=>{
+    const cx=x0+slot*(i+.5);
+    const yy=py(v,ymin,ymax,y0,y1);
+    const yt=Math.min(yy,zero), ht=Math.abs(yy-zero);
+    h+=`<rect x="${cx-bw/2}" y="${yt}" width="${bw}" height="${ht}" rx="5" fill="${mode==="projection"?acc:warn}" fill-opacity=".76"/>`;
+    h+=`<circle cx="${cx}" cy="${y1+31}" r="${4+p[i]*48}" fill="${blue}" fill-opacity=".32" stroke="${blue}" stroke-opacity=".55"/>`;
+    h+=text(cx,y1+57,`Ï‰${i+1}`,muted,10,750,"middle");
+  });
+  const mean=mode==="projection"?EX:EZ;
+  const meanY=py(mean,ymin,ymax,y0,y1);
+  h+=line(x0,meanY,x1,meanY,warn,2.2,.9,"7 5");
+  h+=text(x1-4,meanY-8,`E = ${fmt(mean)}`,warn,12,900,"end");
+  h+=text(66,32,mode==="projection"?"values X(Ï‰áµ¢)":"values Z(Ï‰áµ¢)=aX(Ï‰áµ¢)+bY(Ï‰áµ¢)",mode==="projection"?acc:warn,12,900);
+  svg.innerHTML=h;
+}
+function drawJensen(){
+  const svg=document.getElementById("jensenSvg");
+  const p=probs(), x=Xvals();
+  const EX=dot(p,x), Ephi=dot(p,x.map(phi)), phiEX=phi(EX);
+  const panel=css("--panel"),border=css("--border"),muted=css("--muted"),textc=css("--text"),grid=css("--grid"),acc=css("--accent"),blue=css("--blue"),warn=css("--warn");
+  const xlo=Math.min(...x)-.35, xhi=Math.max(...x)+.35;
+  const curve=[];
+  for(let i=0;i<=220;i++){
+    const xx=xlo+(xhi-xlo)*i/220;
+    curve.push({x:xx,y:phi(xx)});
+  }
+  let ylo=Math.min(...curve.map(d=>d.y),Ephi,phiEX), yhi=Math.max(...curve.map(d=>d.y),Ephi,phiEX);
+  const pad=(yhi-ylo)*.18||1;ylo-=pad;yhi+=pad;
+  const x0=55,x1=486,y0=42,y1=235;
+  let h=`<rect x="8" y="10" width="504" height="270" rx="18" fill="${panel}" stroke="${border}"/>`;
+  for(let i=0;i<=5;i++){const yy=y1-(y1-y0)*i/5;h+=line(x0,yy,x1,yy,grid,1,.85)}
+  h+=line(x0,y1,x1,y1,muted,1.2,.8);
+  h+=line(x0,y0,x0,y1,muted,1.2,.8);
+  let path="";
+  curve.forEach((d,i)=>{
+    const xx=px(d.x,xlo,xhi,x0,x1), yy=py(d.y,ylo,yhi,y0,y1);
+    path+=(i===0?"M":"L")+` ${xx} ${yy}`;
+  });
+  h+=`<path d="${path}" fill="none" stroke="${acc}" stroke-width="2.8"/>`;
+  x.forEach((xi,i)=>{
+    const xx=px(xi,xlo,xhi,x0,x1), yy=py(phi(xi),ylo,yhi,y0,y1);
+    h+=`<circle cx="${xx}" cy="${yy}" r="${4+p[i]*42}" fill="${blue}" fill-opacity=".40" stroke="${blue}" stroke-opacity=".70"/>`;
+  });
+  const mx=px(EX,xlo,xhi,x0,x1);
+  const yPhiMean=py(phiEX,ylo,yhi,y0,y1);
+  const yMeanPhi=py(Ephi,ylo,yhi,y0,y1);
+  h+=line(mx,y0,mx,y1,warn,1.4,.40,"6 5");
+  h+=line(x0,yPhiMean,x1,yPhiMean,warn,2,.85,"7 5");
+  h+=line(x0,yMeanPhi,x1,yMeanPhi,blue,2,.85,"7 5");
+  h+=`<circle cx="${mx}" cy="${yPhiMean}" r="6" fill="${warn}" stroke="${panel}" stroke-width="2"/>`;
+  h+=`<circle cx="${mx}" cy="${yMeanPhi}" r="6" fill="${blue}" stroke="${panel}" stroke-width="2"/>`;
+  h+=text(70,33,phiName(),acc,12,900);
+  h+=text(486,33,convexity(),convexity()==="convex"?warn:blue,12,900,"end");
+  h+=text(65,260,`Ï†(E[X])=${fmt(phiEX)}`,warn,12,900);
+  h+=text(486,260,`E[Ï†(X)]=${fmt(Ephi)}`,blue,12,900,"end");
+  svg.innerHTML=h;
+}
+function updateText(){
+  document.getElementById("aVal").textContent=(+aCoeff.value).toFixed(2);
+  document.getElementById("bVal").textContent=(+bCoeff.value).toFixed(2);
+  const p=probs(), x=Xvals(), y=Yvals(), z=Zvals();
+  const EX=dot(p,x), EY=dot(p,y), EZ=dot(p,z);
+  const a=+aCoeff.value,b=+bCoeff.value;
+  const Ephi=dot(p,x.map(phi)), phiEX=phi(EX);
+  const eq=document.getElementById("eqBox");
+  const interp=document.getElementById("interpretText");
+  const notice=document.getElementById("noticeText");
+  const list=document.getElementById("logicList");
+  if(mode==="projection"){
+    eq.innerHTML=`X = E[X]Â·1 + XÂ°<br>E[X] = <strong>${fmt(EX)}</strong>, E[XÂ°]=<strong>${fmt(dot(p,center(x)))}</strong>.`;
+    interp.innerHTML=`The main diagram reduces the function space to two coordinates: the <strong>constant component</strong> E[X] and the <strong>zero-mean fluctuation</strong> Xâˆ’E[X]. Expectation is the shadow of X on the constant axis.`;
+    notice.innerHTML="The vertical component can be large, but expectation ignores it because it has weighted mean zero.";
+    list.innerHTML=[
+      ["âœ“","random variables are functions on Î©"],
+      ["âœ“","expectation extracts the constant part"],
+      ["âœ“","Xâˆ’E[X] has mean zero"],
+      ["âœ“",`linearity: E[aX+bY] = ${fmt(EZ)} = ${fmt(a*EX+b*EY)}`]
+    ].map(([m,t])=>`<div class="logicItem"><span class="mark">${m}</span><span>${t}</span></div>`).join("");
+  }else{
+    const cvx=convexity()==="convex";
+    eq.innerHTML=cvx
+      ? `Ï† convex â‡’ Ï†(E[X]) â‰¤ E[Ï†(X)]<br>gap = <strong>${fmt(Ephi-phiEX)}</strong>.`
+      : `Ï† concave â‡’ Ï†(E[X]) â‰¥ E[Ï†(X)]<br>gap = <strong>${fmt(phiEX-Ephi)}</strong>.`;
+    interp.innerHTML=`Jensen compares two paths: first average then bend, or first bend then average. Because Ï† is <strong>${convexity()}</strong>, curvature creates a systematic gap.`;
+    notice.innerHTML=cvx
+      ? "Convexity makes dispersion expensive: the average after bending lies above the bend at the average."
+      : "Concavity rewards smoothing: the bend at the average lies above the average after bending.";
+    list.innerHTML=[
+      ["âœ“",`${convexity()} transformation selected`],
+      ["âœ“",`Ï†(E[X]) = ${fmt(phiEX)}`],
+      ["âœ“",`E[Ï†(X)] = ${fmt(Ephi)}`],
+      ["â†’",cvx?"Jensen: Ï†(E[X])â‰¤E[Ï†(X)]":"Jensen: Ï†(E[X])â‰¥E[Ï†(X)]"]
+    ].map(([m,t])=>`<div class="logicItem"><span class="mark">${m}</span><span>${t}</span></div>`).join("");
+  }
+}
+function drawAll(){
+  updateText();
+  drawMain();
+  drawState();
+  drawJensen();
+}
+themeBtn.addEventListener("click",()=>{
+  const dark=body.getAttribute("data-theme")==="dark";
+  body.setAttribute("data-theme",dark?"light":"dark");
+  themeBtn.textContent=dark?"Dark mode":"Light mode";
+  drawAll();
+});
+[probMode,xPattern,yPattern,aCoeff,bCoeff,phiSelect].forEach(el=>el.addEventListener("input",drawAll));
+showProjection.addEventListener("click",()=>{
+  mode="projection";
+  showProjection.classList.add("active");
+  showJensen.classList.remove("active");
+  drawAll();
+});
+showJensen.addEventListener("click",()=>{
+  mode="jensen";
+  showJensen.classList.add("active");
+  showProjection.classList.remove("active");
+  drawAll();
+});
+drawAll();
+</script>
+</body>
+</html>
+
+

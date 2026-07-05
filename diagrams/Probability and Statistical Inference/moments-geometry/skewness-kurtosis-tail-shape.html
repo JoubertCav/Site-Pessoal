@@ -1,0 +1,633 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="google-site-verification" content="google2c37f7a4206c9d3a.html">
+<meta name="google-site-verification" content="fSWAEb_oSSHr_eJXL9gHYxIn879tRaBwJ42f_aD9o2s">
+<meta name="google-site-verification" content="ftZ4QVMrlub9jbolsIeo4Ix4UBw0-BJrFeorzqKLXng">
+<meta name="description" content="Interactive diagram for skewness, kurtosis, and tail shape.">
+  <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
+<title>Theoretically Consistent Skewness and Kurtosis Geometry</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NHXHEJP1G0');
+</script>
+<style>
+  :root{
+    --bg:#f6f1e8; --panel:#fffaf2; --panel2:#fcf5ea; --text:#17212b; --muted:#65717d;
+    --border:rgba(23,33,43,.12); --grid:rgba(23,33,43,.075); --accent:#2d8e84;
+    --accentSoft:rgba(45,142,132,.14); --accentLine:rgba(45,142,132,.32);
+    --blue:#456fb4; --warn:#ba7356; --violet:#7f63b8; --rose:#ad5575;
+    --shadow:0 16px 45px rgba(25,35,45,.08); --radius:22px;
+  }
+  [data-theme="dark"]{
+    --bg:#0f151a; --panel:#151d24; --panel2:#11181f; --text:#ecf2f6; --muted:#9cadb8;
+    --border:rgba(236,242,246,.12); --grid:rgba(236,242,246,.08); --accent:#67cdbf;
+    --accentSoft:rgba(103,205,191,.13); --accentLine:rgba(103,205,191,.34);
+    --blue:#82b7ff; --warn:#e1a184; --violet:#bba6ff; --rose:#f09fbe;
+    --shadow:0 18px 55px rgba(0,0,0,.30);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; color:var(--text);
+    font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background:
+      radial-gradient(circle at 10% 0%, var(--accentSoft), transparent 28rem),
+      radial-gradient(circle at 96% 18%, rgba(69,111,180,.10), transparent 24rem),
+      var(--bg);
+  }
+  .wrap{width:min(1280px,calc(100% - 28px));margin:0 auto;padding:26px 0 42px}
+  header{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:16px}
+  h1{margin:0;font-size:clamp(1.7rem,3vw,2.45rem);line-height:1.03;letter-spacing:-.045em;font-weight:820}
+  .subtitle{margin:10px 0 0;color:var(--muted);max-width:940px;font-size:.98rem;line-height:1.58}
+  .themeBtn{border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:999px;padding:10px 15px;box-shadow:var(--shadow);cursor:pointer;font-weight:760;white-space:nowrap}
+  .defs{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+  .def,.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .def{padding:14px 15px;min-height:126px}
+  .tag{color:var(--muted);font-size:.74rem;font-weight:850;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
+  .math{font-family:Cambria, Georgia, "Times New Roman", serif;line-height:1.45;font-size:1.01rem;color:var(--text)}
+  .layout{display:grid;grid-template-columns:350px 1fr;gap:16px;align-items:start}
+  .side{padding:16px}
+  .panelTitle{margin:0 0 12px;color:var(--muted);font-size:.82rem;font-weight:900;text-transform:uppercase;letter-spacing:.13em}
+  .control{padding:12px 0;border-top:1px solid var(--border)}
+  .control:first-of-type{border-top:0;padding-top:0}
+  label{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px;font-weight:730;font-size:.91rem}
+  .value{color:var(--accent);font-weight:850;font-variant-numeric:tabular-nums}
+  input[type="range"]{width:100%;accent-color:var(--accent)}
+  select{width:100%;border:1px solid var(--border);background:var(--panel2);color:var(--text);border-radius:14px;padding:10px 11px;font-weight:720;outline:none}
+  .eqBox{margin-top:10px;border:1px solid var(--accentLine);background:var(--accentSoft);border-radius:17px;padding:12px;font-family:Cambria, Georgia, "Times New Roman", serif;line-height:1.48;color:var(--text)}
+  .main{display:grid;gap:16px}
+  .plotCard{padding:10px 10px 6px}
+  .plotHead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:8px 9px 2px}
+  .plotTitle{font-weight:850;letter-spacing:-.02em}
+  .plotSub{color:var(--muted);font-size:.84rem;line-height:1.4;text-align:right}
+  svg{display:block;width:100%}
+  #mainSvg{height:500px}
+  #skewSvg,#kurtSvg{height:330px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .interpretation{display:grid;grid-template-columns:1.05fr .95fr;gap:16px}
+  .cardPad{padding:16px}
+  .smallText{color:var(--muted);font-size:.92rem;line-height:1.58}
+  .notice{border-left:3px solid var(--accent);padding-left:13px;color:var(--muted);font-size:.92rem;line-height:1.55}
+  .summary{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+  .summary>div{border:1px solid var(--border);background:var(--panel2);border-radius:16px;padding:12px;font-size:.90rem;line-height:1.50}
+  .pillRow{display:flex;flex-wrap:wrap;gap:8px;margin-top:9px}
+  .pill{border:1px solid var(--border);background:var(--panel2);border-radius:999px;padding:7px 10px;color:var(--muted);font-size:.80rem;font-weight:760;display:inline-flex;gap:7px;align-items:center}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);display:inline-block}
+  .logicList{display:grid;gap:8px;margin-top:10px}
+  .logicItem{border:1px solid var(--border);background:var(--panel2);border-radius:14px;padding:10px 11px;font-size:.88rem;color:var(--muted);display:flex;gap:9px;align-items:flex-start}
+  .mark{font-weight:900;color:var(--accent);min-width:17px}
+  .miniGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+  .miniStat{border:1px solid var(--border);background:var(--panel2);border-radius:14px;padding:10px 11px}
+  .miniStat .k{font-size:.76rem;color:var(--muted);font-weight:860;text-transform:uppercase;letter-spacing:.09em}
+  .miniStat .v{font-size:1rem;font-weight:850;margin-top:6px}
+  footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
+  @media(max-width:1080px){
+    .defs,.layout,.two,.interpretation{grid-template-columns:1fr}
+    header{flex-direction:column}
+    .themeBtn{align-self:flex-start}
+    #mainSvg{height:470px}
+  }
+  @media(max-width:560px){
+    .wrap{width:min(100% - 18px,1280px);padding-top:18px}
+    .summary{grid-template-columns:1fr}
+    .miniGrid{grid-template-columns:1fr}
+    #mainSvg{height:440px}
+  }
+</style>
+</head>
+<body data-theme="light">
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Skewness and kurtosis, correctly visualized</h1>
+      <div class="subtitle">
+        Everything is first standardized: \(Z=(X-\mu)/\sigma\). Then skewness is the signed area under \(z^3 f_Z(z)\). Kurtosis is the nonnegative area under \(z^4 f_Z(z)\). The diagrams now separate definitions from optional visual partitions.
+      </div>
+    </div>
+    <button class="themeBtn" id="themeBtn">Dark mode</button>
+  </header>
+
+  <section class="defs">
+    <div class="def"><div class="tag">Standard variable</div><div class="math">\(Z=(X-\mu)/\sigma\)<br>\(E[Z]=0,\ E[Z^2]=1\)</div></div>
+    <div class="def"><div class="tag">Skewness</div><div class="math">\(\gamma_1=E[Z^3]\)<br>\(\int_{z<0}z^3f_Z+\int_{z>0}z^3f_Z\)</div></div>
+    <div class="def"><div class="tag">Kurtosis</div><div class="math">\(\kappa=E[Z^4]\)<br>\(\int_{\mathbb R}z^4f_Z(z)\,dz\ge0\)</div></div>
+    <div class="def"><div class="tag">Excess kurtosis</div><div class="math">\(\kappa-3\)<br>compares to Gaussian, not just â€œpeakednessâ€</div></div>
+  </section>
+
+  <main class="layout">
+    <aside class="card side">
+      <div class="panelTitle">Controls</div>
+
+      <div class="control">
+        <label for="distSelect">Distribution family</label>
+        <select id="distSelect">
+          <option value="normal">Gaussian baseline</option>
+          <option value="right">right-skewed lognormal</option>
+          <option value="left">left-skewed lognormal</option>
+          <option value="student">Student-t fat tails</option>
+          <option value="laplace">Laplace sharp center</option>
+          <option value="contaminated">rare outlier contamination</option>
+          <option value="mixture">two-regime mixture</option>
+        </select>
+      </div>
+
+      <div class="control">
+        <label for="momentOrder">General standardized moment r <span class="value" id="rVal">3</span></label>
+        <input id="momentOrder" type="range" min="1" max="8" step="1" value="3"/>
+      </div>
+
+      <div class="control">
+        <label for="skewRange">Skew / separation <span class="value" id="skewVal">0.80</span></label>
+        <input id="skewRange" type="range" min="0.20" max="1.60" step="0.02" value="0.80"/>
+      </div>
+
+      <div class="control">
+        <label for="dfRange">Tail parameter Î½ <span class="value" id="dfVal">5.00</span></label>
+        <input id="dfRange" type="range" min="2.20" max="30.00" step="0.10" value="5.00"/>
+      </div>
+
+      <div class="control">
+        <label for="epsRange">Outlier mass Îµ <span class="value" id="epsVal">0.04</span></label>
+        <input id="epsRange" type="range" min="0.00" max="0.20" step="0.005" value="0.04"/>
+      </div>
+
+      <div class="control">
+        <label for="outRange">Outlier location <span class="value" id="outVal">5.00</span></label>
+        <input id="outRange" type="range" min="2.00" max="9.00" step="0.10" value="5.00"/>
+      </div>
+
+      <div class="control">
+        <label for="cRange">Tail partition c <span class="value" id="cVal">2.00</span></label>
+        <input id="cRange" type="range" min="0.80" max="4.00" step="0.05" value="2.00"/>
+      </div>
+
+      <div class="eqBox" id="eqBox"></div>
+      <div class="miniGrid" id="miniGrid"></div>
+
+      <div class="control">
+        <div class="panelTitle" style="margin-bottom:8px">Correct reading</div>
+        <div class="logicList" id="logicList"></div>
+      </div>
+    </aside>
+
+    <section class="main">
+      <div class="card plotCard">
+        <div class="plotHead">
+          <div>
+            <div class="plotTitle">Standardized density and arbitrary standardized moment</div>
+            <div class="pillRow">
+              <span class="pill"><span class="dot"></span> current \(f_Z\)</span>
+              <span class="pill"><span class="dot" style="background:var(--blue)"></span> Gaussian \(\phi\)</span>
+              <span class="pill"><span class="dot" style="background:var(--warn)"></span> positive contribution</span>
+              <span class="pill"><span class="dot" style="background:var(--violet)"></span> negative contribution</span>
+            </div>
+          </div>
+          <div class="plotSub">All shape moments are computed after standardization.</div>
+        </div>
+        <svg id="mainSvg" viewBox="0 0 980 500" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+
+      <div class="two">
+        <div class="card plotCard">
+          <div class="plotHead">
+            <div class="plotTitle">Skewness: exact signed decomposition</div>
+            <div class="plotSub">\(\gamma_1 = L + R\), where \(L=\int_{z<0}z^3f_Z\), \(R=\int_{z>0}z^3f_Z\)</div>
+          </div>
+          <svg id="skewSvg" viewBox="0 0 520 330" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+
+        <div class="card plotCard">
+          <div class="plotHead">
+            <div class="plotTitle">Kurtosis: exact integral plus auxiliary tail partition</div>
+            <div class="plotSub">\(\kappa=\int z^4f_Z\); center/tail split is only a visual diagnostic</div>
+          </div>
+          <svg id="kurtSvg" viewBox="0 0 520 330" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+      </div>
+
+      <div class="interpretation">
+        <div class="card cardPad">
+          <div class="panelTitle">Interpretation</div>
+          <div class="smallText" id="interpretText"></div>
+          <div class="summary">
+            <div><strong>Skewness.</strong><br>The left half contributes negatively because \(z^3<0\), and the right half contributes positively because \(z^3>0\).</div>
+            <div><strong>Symmetry.</strong><br>If \(f_Z(z)=f_Z(-z)\), the signed cubic areas cancel exactly, so \(\gamma_1=0\).</div>
+            <div><strong>Kurtosis.</strong><br>Since \(z^4\ge0\), left and right tails do not cancel. Extremes reinforce each other.</div>
+            <div><strong>Excess kurtosis.</strong><br>\(\kappa-3\) compares fourth-moment geometry with the standard normal benchmark.</div>
+          </div>
+        </div>
+
+        <div class="card cardPad">
+          <div class="panelTitle">What to notice</div>
+          <div class="notice" id="noticeText"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>Minimal interactive notebook â€” theoretically consistent skewness and kurtosis geometry.</footer>
+</div>
+
+<script>
+const body=document.body;
+const themeBtn=document.getElementById("themeBtn");
+const distSelect=document.getElementById("distSelect");
+const momentOrder=document.getElementById("momentOrder");
+const skewRange=document.getElementById("skewRange");
+const dfRange=document.getElementById("dfRange");
+const epsRange=document.getElementById("epsRange");
+const outRange=document.getElementById("outRange");
+const cRange=document.getElementById("cRange");
+
+function css(v){return getComputedStyle(body).getPropertyValue(v).trim();}
+function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
+function fmt(x){
+  if(!isFinite(x)) return "âˆž";
+  if(Math.abs(x)<0.001 && x!==0) return x.toExponential(2);
+  if(Math.abs(x)<10) return x.toFixed(3);
+  return x.toFixed(2);
+}
+function normalPdf(x){return Math.exp(-0.5*x*x)/Math.sqrt(2*Math.PI);}
+function erf(x){
+  const sign=x<0?-1:1; x=Math.abs(x);
+  const a1=0.254829592, a2=-0.284496736, a3=1.421413741, a4=-1.453152027, a5=1.061405429, p=0.3275911;
+  const t=1/(1+p*x);
+  const y=1-(((((a5*t+a4)*t)+a3)*t+a2)*t+a1)*t*Math.exp(-x*x);
+  return sign*y;
+}
+function normalCdf(x){return 0.5*(1+erf(x/Math.sqrt(2)));}
+function logGamma(z){
+  const g=7;
+  const p=[0.99999999999980993,676.5203681218851,-1259.1392167224028,771.32342877765313,-176.61502916214059,12.507343278686905,-0.13857109526572012,9.9843695780195716e-6,1.5056327351493116e-7];
+  if(z<0.5) return Math.log(Math.PI)-Math.log(Math.sin(Math.PI*z))-logGamma(1-z);
+  z-=1;
+  let x=p[0];
+  for(let i=1;i<p.length;i++) x+=p[i]/(z+i);
+  const t=z+g+0.5;
+  return 0.5*Math.log(2*Math.PI)+(z+0.5)*Math.log(t)-t+Math.log(x);
+}
+function studentPdf(x,nu){
+  const a=logGamma((nu+1)/2)-logGamma(nu/2)-0.5*Math.log(nu*Math.PI);
+  return Math.exp(a-(nu+1)/2*Math.log(1+x*x/nu));
+}
+function laplacePdf(x){
+  const b=1/Math.sqrt(2);
+  return Math.exp(-Math.abs(x)/b)/(2*b);
+}
+function line(x1,y1,x2,y2,stroke,w=1,op=1,dash=""){
+  return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+stroke+'" stroke-width="'+w+'" stroke-opacity="'+op+'" '+(dash?'stroke-dasharray="'+dash+'"':'')+'/>';
+}
+function text(x,y,s,fill,size=13,weight=600,anchor="start"){
+  return '<text x="'+x+'" y="'+y+'" fill="'+fill+'" font-size="'+size+'" font-weight="'+weight+'" text-anchor="'+anchor+'" font-family="Inter,system-ui,sans-serif">'+s+'</text>';
+}
+function px(v,a,b,x0,x1){return x0+(v-a)/(b-a)*(x1-x0);}
+function py(v,a,b,y0,y1){return y1-(v-a)/(b-a)*(y1-y0);}
+
+function domain(){
+  const d=distSelect.value;
+  if(d==="right") return [0.0005,120];
+  if(d==="left") return [-120,-0.0005];
+  if(d==="student") return [-80,80];
+  if(d==="contaminated") return [-10,16];
+  if(d==="mixture") return [-12,12];
+  if(d==="laplace") return [-16,16];
+  return [-10,10];
+}
+function rawDensity(x){
+  const d=distSelect.value, s=Number(skewRange.value), nu=Number(dfRange.value), eps=Number(epsRange.value), out=Number(outRange.value);
+  if(d==="normal") return normalPdf(x);
+  if(d==="right"){
+    if(x<=0) return 0;
+    return Math.exp(-Math.pow(Math.log(x),2)/(2*s*s))/(x*s*Math.sqrt(2*Math.PI));
+  }
+  if(d==="left"){
+    if(x>=0) return 0;
+    const y=-x;
+    return Math.exp(-Math.pow(Math.log(y),2)/(2*s*s))/(y*s*Math.sqrt(2*Math.PI));
+  }
+  if(d==="student") return studentPdf(x,nu);
+  if(d==="laplace") return laplacePdf(x);
+  if(d==="contaminated") return (1-eps)*normalPdf(x)+eps*normalPdf((x-out)/0.38)/0.38;
+  if(d==="mixture"){
+    const sep=1.5+s*1.3;
+    return 0.76*normalPdf((x+0.55*sep)/0.85)/0.85 + 0.24*normalPdf((x-sep)/0.55)/0.55;
+  }
+  return normalPdf(x);
+}
+function computeBase(){
+  const [lo,hi]=domain(), N=2600, dx=(hi-lo)/N;
+  const data=[]; let mass=0;
+  for(let i=0;i<=N;i++){
+    const x=lo+i*dx, f=rawDensity(x);
+    data.push({x,f});
+    mass+=f*dx;
+  }
+  let mean=0;
+  for(const d of data){ d.f/=mass; mean+=d.x*d.f*dx; }
+  let varx=0;
+  for(const d of data){ const u=d.x-mean; varx+=u*u*d.f*dx; }
+  const sd=Math.sqrt(varx);
+  for(const d of data) d.z=(d.x-mean)/sd;
+  return {data,lo,hi,dx,mean,sd,var:varx};
+}
+function zDensityGrid(base){
+  const zlo=-6, zhi=6, M=1000, dz=(zhi-zlo)/M;
+  const arr=[];
+  let maxF=0;
+  for(let i=0;i<=M;i++){
+    const z=zlo+i*dz;
+    const x=base.mean+base.sd*z;
+    const fz=base.sd*rawDensity(x);
+    arr.push({z,f:fz});
+    maxF=Math.max(maxF,fz);
+  }
+  return {arr,zlo,zhi,dz,maxF};
+}
+function moments(base){
+  const nu=Number(dfRange.value);
+  let skew=0,kurt=0,tail2=0,tail3=0,leftSkew=0,rightSkew=0;
+  const c=Number(cRange.value);
+  for(const d of base.data){
+    const p=d.f*base.dx, z=d.z;
+    skew+=Math.pow(z,3)*p;
+    kurt+=Math.pow(z,4)*p;
+    if(z<0) leftSkew+=Math.pow(z,3)*p;
+    if(z>0) rightSkew+=Math.pow(z,3)*p;
+    if(Math.abs(z)>c) tail2+=p;
+  }
+  let theoreticalKurt=null, theoreticalSkew=null, note="";
+  if(distSelect.value==="student"){
+    theoreticalSkew = nu>3 ? 0 : Infinity;
+    theoreticalKurt = nu>4 ? 3*(nu-2)/(nu-4) : Infinity;
+    if(nu<=3) note="For Student-t with Î½â‰¤3, skewness is not a finite third moment.";
+    else if(nu<=4) note="For Student-t with Î½â‰¤4, kurtosis is infinite.";
+  }
+  return {skew,kurt,excess:kurt-3,leftSkew,rightSkew,theoreticalKurt,theoreticalSkew,note};
+}
+function stdMoment(base,r){
+  let v=0;
+  for(const d of base.data) v+=Math.pow(d.z,r)*d.f*base.dx;
+  if(distSelect.value==="student"){
+    const nu=Number(dfRange.value);
+    if(nu<=r) return Infinity;
+  }
+  return v;
+}
+function kurtParts(base,c){
+  let center=0, tails=0, left=0, right=0, gCenter=0, gTails=0;
+  for(const d of base.data){
+    const v=Math.pow(d.z,4)*d.f*base.dx;
+    if(Math.abs(d.z)<=c) center+=v; else tails+=v;
+    if(d.z<0) left+=v; else right+=v;
+  }
+  const dz=0.002;
+  for(let z=-8; z<=8; z+=dz){
+    const v=Math.pow(z,4)*normalPdf(z)*dz;
+    if(Math.abs(z)<=c) gCenter+=v; else gTails+=v;
+  }
+  return {center,tails,left,right,gCenter,gTails};
+}
+function drawPath(arr,xKey,yKey,x0,x1,y0,y1,xlo,xhi,ylo,yhi){
+  let p="";
+  for(let i=0;i<arr.length;i++){
+    p+=(i===0?"M":"L")+" "+px(arr[i][xKey],xlo,xhi,x0,x1)+" "+py(arr[i][yKey],ylo,yhi,y0,y1);
+  }
+  return p;
+}
+function drawMain(){
+  const base=computeBase(), zg=zDensityGrid(base), mom=moments(base);
+  const r=Number(momentOrder.value);
+  const panel=css("--panel"), panel2=css("--panel2"), border=css("--border"), muted=css("--muted"), grid=css("--grid"), textc=css("--text");
+  const acc=css("--accent"), blue=css("--blue"), warn=css("--warn"), violet=css("--violet");
+  const X0=62,X1=690,topY0=62,topY1=222,botY0=282,botY1=432,zlo=-6,zhi=6;
+  const svg=document.getElementById("mainSvg");
+  const ymax=Math.max(zg.maxF,0.42)*1.12;
+  let maxG=0;
+  const integrand=zg.arr.map(d=>({z:d.z,g:Math.pow(d.z,r)*d.f}));
+  for(const d of integrand) maxG=Math.max(maxG,Math.abs(d.g));
+  if(maxG===0) maxG=1;
+
+  let h='<rect x="8" y="10" width="964" height="470" rx="20" fill="'+panel+'" stroke="'+border+'"/>';
+  h+=text(66,42,"standardized density fZ(z)",muted,12,850);
+  for(let i=0;i<=4;i++) h+=line(X0,topY1-(topY1-topY0)*i/4,X1,topY1-(topY1-topY0)*i/4,grid,1,.85);
+  for(let z=-4;z<=4;z+=2){
+    const xx=px(z,zlo,zhi,X0,X1);
+    h+=line(xx,topY0,xx,topY1,grid,1,.55);
+    h+=text(xx,topY1+21,String(z),muted,11,800,"middle");
+  }
+  h+=line(X0,topY1,X1,topY1,muted,1.2,.8)+line(X0,topY0,X0,topY1,muted,1.2,.8);
+
+  let normalPath="";
+  for(let i=0;i<=600;i++){
+    const z=zlo+(zhi-zlo)*i/600;
+    normalPath+=(i===0?"M":"L")+" "+px(z,zlo,zhi,X0,X1)+" "+py(normalPdf(z),0,ymax,topY0,topY1);
+  }
+  h+='<path d="'+normalPath+'" fill="none" stroke="'+blue+'" stroke-width="2.0" stroke-dasharray="7 5"/>';
+  h+='<path d="'+drawPath(zg.arr,"z","f",X0,X1,topY0,topY1,zlo,zhi,0,ymax)+'" fill="none" stroke="'+acc+'" stroke-width="2.8"/>';
+  h+=line(px(0,zlo,zhi,X0,X1),topY0,px(0,zlo,zhi,X0,X1),topY1,muted,1.5,.45,"5 5");
+
+  h+=text(66,262,"standardized moment integrand: z^"+r+" fZ(z)",muted,12,850);
+  for(let i=0;i<=4;i++) h+=line(X0,botY1-(botY1-botY0)*i/4,X1,botY1-(botY1-botY0)*i/4,grid,1,.85);
+  const zero=py(0,-maxG,maxG,botY0,botY1);
+  h+=line(X0,zero,X1,zero,muted,1.2,.75)+line(X0,botY0,X0,botY1,muted,1.2,.8);
+
+  let pos='M '+X0+' '+zero, neg='M '+X0+' '+zero, curve="";
+  for(const d of integrand){
+    const xx=px(d.z,zlo,zhi,X0,X1), yy=py(d.g,-maxG,maxG,botY0,botY1);
+    curve+=(curve===""?"M":"L")+" "+xx+" "+yy;
+    if(d.g>=0) pos+=" L "+xx+" "+yy;
+    if(d.g<=0) neg+=" L "+xx+" "+yy;
+  }
+  pos+=" L "+X1+" "+zero+" Z";
+  neg+=" L "+X1+" "+zero+" Z";
+  h+='<path d="'+pos+'" fill="'+warn+'" fill-opacity=".20"/>';
+  h+='<path d="'+neg+'" fill="'+violet+'" fill-opacity=".18"/>';
+  h+='<path d="'+curve+'" fill="none" stroke="'+(r%2===0?warn:violet)+'" stroke-width="2.5"/>';
+  h+=line(px(0,zlo,zhi,X0,X1),botY0,px(0,zlo,zhi,X0,X1),botY1,muted,1.5,.45,"5 5");
+
+  h+='<rect x="730" y="70" width="206" height="286" rx="20" fill="'+panel2+'" stroke="'+border+'"/>';
+  h+=text(752,102,"Shape moments",textc,16,900);
+  h+=text(752,134,"E[Z^"+r+"]",warn,13,900)+text(915,134,fmt(stdMoment(base,r)),textc,13,850,"end");
+  h+=text(752,164,"skewness E[ZÂ³]",violet,13,900)+text(915,164,fmt(mom.theoreticalSkew===Infinity?Infinity:mom.skew),textc,13,850,"end");
+  h+=text(752,194,"kurtosis E[Zâ´]",violet,13,900)+text(915,194,fmt(mom.theoreticalKurt===Infinity?Infinity:mom.kurt),textc,13,850,"end");
+  h+=text(752,224,"excess",muted,12,850)+text(915,224,fmt(mom.theoreticalKurt===Infinity?Infinity:(mom.theoreticalKurt||mom.kurt)-3),textc,12,850,"end");
+  h+=text(752,254,"mean of Z",muted,12,850)+text(915,254,"0",textc,12,850,"end");
+  h+=text(752,282,"var of Z",muted,12,850)+text(915,282,"1",textc,12,850,"end");
+
+  h+='<rect x="730" y="376" width="206" height="64" rx="16" fill="'+css("--accentSoft")+'" stroke="'+css("--accentLine")+'"/>';
+  h+=text(752,404,"Correct object",textc,13,900);
+  h+=text(752,428,"always integrate over standardized z",muted,12,780);
+
+  svg.innerHTML=h;
+}
+function drawSkew(){
+  const base=computeBase(), zg=zDensityGrid(base), mom=moments(base);
+  const panel=css("--panel"), border=css("--border"), muted=css("--muted"), grid=css("--grid"), textc=css("--text");
+  const acc=css("--accent"), blue=css("--blue"), warn=css("--warn"), violet=css("--violet");
+  const svg=document.getElementById("skewSvg");
+  const X0=54,X1=488,Y0=52,Y1=210,zlo=-6,zhi=6;
+  const arr=zg.arr.map(d=>({z:d.z,g:Math.pow(d.z,3)*d.f}));
+  let maxG=Math.max(...arr.map(d=>Math.abs(d.g)),0.001);
+  const zero=py(0,-maxG,maxG,Y0,Y1);
+
+  let h='<rect x="8" y="10" width="504" height="300" rx="18" fill="'+panel+'" stroke="'+border+'"/>';
+  for(let i=0;i<=4;i++) h+=line(X0,Y1-(Y1-Y0)*i/4,X1,Y1-(Y1-Y0)*i/4,grid,1,.85);
+  h+=line(X0,zero,X1,zero,muted,1.2,.75)+line(X0,Y0,X0,Y1,muted,1.2,.8);
+  let neg='M '+X0+' '+zero, pos='M '+X0+' '+zero, curve="";
+  for(const d of arr){
+    const xx=px(d.z,zlo,zhi,X0,X1), yy=py(d.g,-maxG,maxG,Y0,Y1);
+    curve+=(curve===""?"M":"L")+" "+xx+" "+yy;
+    if(d.z<0) neg+=" L "+xx+" "+yy;
+    else pos+=" L "+xx+" "+yy;
+  }
+  neg+=" L "+px(0,zlo,zhi,X0,X1)+" "+zero+" Z";
+  pos+=" L "+X1+" "+zero+" Z";
+  h+='<path d="'+neg+'" fill="'+violet+'" fill-opacity=".24"/>';
+  h+='<path d="'+pos+'" fill="'+warn+'" fill-opacity=".22"/>';
+  h+='<path d="'+curve+'" fill="none" stroke="'+acc+'" stroke-width="2.5"/>';
+  h+=line(px(0,zlo,zhi,X0,X1),Y0,px(0,zlo,zhi,X0,X1),Y1,blue,1.6,.5,"5 5");
+
+  const bars=[{label:"L = âˆ« z<0",v:mom.leftSkew,c:violet},{label:"R = âˆ« z>0",v:mom.rightSkew,c:warn},{label:"Î³â‚=L+R",v:(mom.theoreticalSkew===Infinity?Infinity:mom.skew),c:acc}];
+  let maxAbs=Math.max(...bars.map(b=>isFinite(b.v)?Math.abs(b.v):1),0.001)*1.25;
+  const baseY=280, zeroB=250, xs=[120,260,400];
+  h+=line(68,zeroB,452,zeroB,muted,1,.55);
+  bars.forEach((b,i)=>{
+    const finite=isFinite(b.v);
+    const ht=finite?44*Math.abs(b.v)/maxAbs:44;
+    const y=finite?(b.v>=0?zeroB-ht:zeroB):zeroB-ht;
+    h+='<rect x="'+(xs[i]-34)+'" y="'+y+'" width="68" height="'+ht+'" rx="9" fill="'+b.c+'" fill-opacity=".74"/>';
+    h+=text(xs[i],baseY,b.label,muted,10,850,"middle");
+    h+=text(xs[i],y-7,fmt(b.v),textc,11,900,"middle");
+  });
+  h+=text(68,34,"signed cubic integrand zÂ³ fZ(z)",muted,12,850);
+  svg.innerHTML=h;
+}
+function drawKurt(){
+  const base=computeBase(), zg=zDensityGrid(base), mom=moments(base), c=Number(cRange.value);
+  const parts=kurtParts(base,c);
+  const panel=css("--panel"), border=css("--border"), muted=css("--muted"), grid=css("--grid"), textc=css("--text");
+  const acc=css("--accent"), blue=css("--blue"), warn=css("--warn"), violet=css("--violet");
+  const svg=document.getElementById("kurtSvg");
+  const X0=54,X1=488,Y0=52,Y1=210,zlo=-6,zhi=6;
+  const arr=zg.arr.map(d=>({z:d.z,g:Math.pow(d.z,4)*d.f,gn:Math.pow(d.z,4)*normalPdf(d.z)}));
+  const maxG=Math.max(...arr.map(d=>Math.max(d.g,d.gn)),0.001);
+
+  let h='<rect x="8" y="10" width="504" height="300" rx="18" fill="'+panel+'" stroke="'+border+'"/>';
+  for(let i=0;i<=4;i++) h+=line(X0,Y1-(Y1-Y0)*i/4,X1,Y1-(Y1-Y0)*i/4,grid,1,.85);
+  h+=line(X0,Y1,X1,Y1,muted,1.2,.65)+line(X0,Y0,X0,Y1,muted,1.2,.8);
+
+  let area='M '+X0+' '+Y1, curve="", normal="";
+  for(const d of arr){
+    const xx=px(d.z,zlo,zhi,X0,X1), yy=py(d.g,0,maxG,Y0,Y1), yn=py(d.gn,0,maxG,Y0,Y1);
+    area+=" L "+xx+" "+yy;
+    curve+=(curve===""?"M":"L")+" "+xx+" "+yy;
+    normal+=(normal===""?"M":"L")+" "+xx+" "+yn;
+  }
+  area+=" L "+X1+" "+Y1+" Z";
+  h+='<path d="'+area+'" fill="'+warn+'" fill-opacity=".16"/>';
+  h+='<path d="'+normal+'" fill="none" stroke="'+blue+'" stroke-width="2.0" stroke-dasharray="7 5"/>';
+  h+='<path d="'+curve+'" fill="none" stroke="'+acc+'" stroke-width="2.5"/>';
+  h+=line(px(-c,zlo,zhi,X0,X1),Y0,px(-c,zlo,zhi,X0,X1),Y1,muted,1.2,.45,"5 5");
+  h+=line(px(c,zlo,zhi,X0,X1),Y0,px(c,zlo,zhi,X0,X1),Y1,muted,1.2,.45,"5 5");
+
+  const actualK=(mom.theoreticalKurt===Infinity?Infinity:mom.kurt);
+  const bars=[
+    {label:"center",v:parts.center,c:blue},
+    {label:"tails",v:parts.tails,c:warn},
+    {label:"Îº",v:actualK,c:acc},
+    {label:"Gaussian 3",v:3,c:violet}
+  ];
+  let maxV=Math.max(...bars.map(b=>isFinite(b.v)?b.v:3),0.001)*1.18;
+  const xs=[95,190,310,420], baseY=280;
+  bars.forEach((b,i)=>{
+    const finite=isFinite(b.v);
+    const ht=finite?50*b.v/maxV:50;
+    const y=250-ht;
+    h+='<rect x="'+(xs[i]-28)+'" y="'+y+'" width="56" height="'+ht+'" rx="9" fill="'+b.c+'" fill-opacity=".74"/>';
+    h+=text(xs[i],baseY,b.label,muted,10,850,"middle");
+    h+=text(xs[i],y-7,fmt(b.v),textc,11,900,"middle");
+  });
+
+  h+=text(68,34,"nonnegative fourth-power integrand zâ´ fZ(z)",muted,12,850);
+  svg.innerHTML=h;
+}
+function kurtParts(base,c){
+  let center=0,tails=0,gCenter=0,gTails=0;
+  for(const d of base.data){
+    const v=Math.pow(d.z,4)*d.f*base.dx;
+    if(Math.abs(d.z)<=c) center+=v; else tails+=v;
+  }
+  const dz=0.002;
+  for(let z=-8;z<=8;z+=dz){
+    const v=Math.pow(z,4)*normalPdf(z)*dz;
+    if(Math.abs(z)<=c) gCenter+=v; else gTails+=v;
+  }
+  return {center,tails,gCenter,gTails};
+}
+function updateText(){
+  const base=computeBase(), mom=moments(base), r=Number(momentOrder.value);
+  document.getElementById("rVal").textContent=String(r);
+  document.getElementById("skewVal").textContent=fmt(Number(skewRange.value));
+  document.getElementById("dfVal").textContent=fmt(Number(dfRange.value));
+  document.getElementById("epsVal").textContent=fmt(Number(epsRange.value));
+  document.getElementById("outVal").textContent=fmt(Number(outRange.value));
+  document.getElementById("cVal").textContent=fmt(Number(cRange.value));
+
+  const kShown=mom.theoreticalKurt===Infinity?Infinity:mom.kurt;
+  const sShown=mom.theoreticalSkew===Infinity?Infinity:mom.skew;
+  document.getElementById("eqBox").innerHTML=
+    "Skewness: <strong>Î³â‚ = âˆ«zÂ³fZ(z)dz = "+fmt(sShown)+"</strong><br>"+
+    "Kurtosis: <strong>Îº = âˆ«zâ´fZ(z)dz = "+fmt(kShown)+"</strong>.";
+
+  const mini=[
+    ["E[Z^"+r+"]", fmt(stdMoment(base,r))],
+    ["left cubic", fmt(mom.leftSkew)],
+    ["right cubic", fmt(mom.rightSkew)],
+    ["excess", fmt(isFinite(kShown)?kShown-3:Infinity)],
+    ["Î¼ of X", fmt(base.mean)],
+    ["Ïƒ of X", fmt(base.sd)]
+  ];
+  document.getElementById("miniGrid").innerHTML=mini.map(d=>'<div class="miniStat"><div class="k">'+d[0]+'</div><div class="v">'+d[1]+'</div></div>').join("");
+
+  const items=[
+    ["âœ“","skewness split is exactly z<0 versus z>0"],
+    ["âœ“","kurtosis is one nonnegative integral over all z"],
+    ["âœ“","center/tail kurtosis split is auxiliary, not the definition"],
+    ["â†’","excess kurtosis compares Îº with Gaussian Îº=3"]
+  ];
+  document.getElementById("logicList").innerHTML=items.map(it=>'<div class="logicItem"><span class="mark">'+it[0]+'</span><span>'+it[1]+'</span></div>').join("");
+
+  let interp = "The corrected skewness panel uses the exact decomposition \\(\\gamma_1=\\int_{z<0}z^3 f_Z(z)dz+\\int_{z>0}z^3 f_Z(z)dz\\). The corrected kurtosis panel uses the exact integral \\(\\kappa=\\int z^4 f_Z(z)dz\\), while the center/tail split is only a diagnostic partition controlled by \\(c\\).";
+  document.getElementById("interpretText").innerHTML=interp;
+
+  let notice="A negative left cubic area and positive right cubic area are allowed to cancel. That is why symmetry implies zero skewness.";
+  if(isFinite(kShown) && kShown>5) notice="Here kurtosis is large because the fourth-power integrand gives large standardized observations enormous weight.";
+  if(distSelect.value==="student" && Number(dfRange.value)<=4) notice="For this Student-t setting, theoretical kurtosis is infinite. Any finite drawing is only a truncated visual approximation.";
+  document.getElementById("noticeText").innerHTML=notice;
+}
+function stdMoment(base,r){
+  if(distSelect.value==="student" && Number(dfRange.value)<=r) return Infinity;
+  let v=0;
+  for(const d of base.data) v+=Math.pow(d.z,r)*d.f*base.dx;
+  return v;
+}
+function drawAll(){updateText();drawMain();drawSkew();drawKurt();}
+themeBtn.addEventListener("click",()=>{
+  const dark=body.getAttribute("data-theme")==="dark";
+  body.setAttribute("data-theme",dark?"light":"dark");
+  themeBtn.textContent=dark?"Dark mode":"Light mode";
+  drawAll();
+});
+[distSelect,momentOrder,skewRange,dfRange,epsRange,outRange,cRange].forEach(el=>el.addEventListener("input",drawAll));
+drawAll();
+</script>
+</body>
+</html>
+

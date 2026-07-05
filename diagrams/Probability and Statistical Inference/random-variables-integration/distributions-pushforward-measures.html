@@ -1,0 +1,476 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google-site-verification" content="google2c37f7a4206c9d3a.html">
+  <meta name="google-site-verification" content="fSWAEb_oSSHr_eJXL9gHYxIn879tRaBwJ42f_aD9o2s">
+  <meta name="google-site-verification" content="ftZ4QVMrlub9jbolsIeo4Ix4UBw0-BJrFeorzqKLXng">
+  <meta name="description" content="Interactive diagram for distributions as pushforward measures.">
+    <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
+<title>Distributions as Pushforward Measures</title>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-NHXHEJP1G0');
+  </script>
+  <style>
+    :root{
+      --bg:#f6f1e8;
+      --panel:#fffaf2;
+      --panel2:#fcf5ea;
+      --text:#17212b;
+      --muted:#66737f;
+      --border:rgba(23,33,43,.12);
+      --grid:rgba(23,33,43,.075);
+      --accent:#2d8e84;
+      --accent2:rgba(45,142,132,.13);
+      --accent3:rgba(45,142,132,.28);
+      --blue:#496fb5;
+      --blue2:rgba(73,111,181,.18);
+      --warn:#b97050;
+      --shadow:0 16px 45px rgba(25,35,45,.08);
+      --radius:22px;
+    }
+    [data-theme="dark"]{
+      --bg:#0f151a;
+      --panel:#151d24;
+      --panel2:#11181f;
+      --text:#ecf2f6;
+      --muted:#9cadb8;
+      --border:rgba(236,242,246,.12);
+      --grid:rgba(236,242,246,.08);
+      --accent:#67cdbf;
+      --accent2:rgba(103,205,191,.13);
+      --accent3:rgba(103,205,191,.28);
+      --blue:#82b7ff;
+      --blue2:rgba(130,183,255,.18);
+      --warn:#e1a184;
+      --shadow:0 18px 55px rgba(0,0,0,.30);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--text);
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:radial-gradient(circle at 10% 0%, var(--accent2), transparent 28rem),radial-gradient(circle at 96% 18%, var(--blue2), transparent 24rem),var(--bg);
+      transition:background .25s ease,color .25s ease;
+    }
+    .wrap{width:min(1260px,calc(100% - 28px)); margin:0 auto; padding:26px 0 42px}
+    header{display:flex; justify-content:space-between; align-items:flex-start; gap:18px; margin-bottom:16px}
+    h1{margin:0; font-size:clamp(1.7rem,3vw,2.45rem); line-height:1.03; letter-spacing:-.045em; font-weight:820}
+    .subtitle{margin:10px 0 0; color:var(--muted); max-width:790px; font-size:.98rem; line-height:1.58}
+    .themeBtn{border:1px solid var(--border); background:var(--panel); color:var(--text); border-radius:999px; padding:10px 15px; box-shadow:var(--shadow); cursor:pointer; font-weight:760; white-space:nowrap}
+    .defs{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:16px}
+    .def,.card{background:color-mix(in srgb,var(--panel) 96%,transparent); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow)}
+    .def{padding:14px 15px; min-height:112px}
+    .tag{color:var(--muted); font-size:.74rem; font-weight:850; letter-spacing:.12em; text-transform:uppercase; margin-bottom:8px}
+    .math{font-family:Cambria, Georgia, "Times New Roman", serif; line-height:1.45; font-size:1.01rem; color:var(--text)}
+    .layout{display:grid; grid-template-columns:340px 1fr; gap:16px; align-items:start}
+    .side{padding:16px}
+    .panelTitle{margin:0 0 12px; color:var(--muted); font-size:.82rem; font-weight:900; text-transform:uppercase; letter-spacing:.13em}
+    .control{padding:12px 0; border-top:1px solid var(--border)}
+    .control:first-of-type{border-top:0; padding-top:0}
+    label{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:9px; font-weight:730; font-size:.91rem}
+    .value{color:var(--accent); font-weight:850; font-variant-numeric:tabular-nums}
+    input[type="range"]{width:100%; accent-color:var(--accent)}
+    select,.btn{width:100%; border:1px solid var(--border); background:var(--panel2); color:var(--text); border-radius:14px; padding:10px 11px; font-weight:720; outline:none}
+    .btn{cursor:pointer; transition:transform .15s ease,border-color .2s ease,background .2s ease}
+    .btn:hover{transform:translateY(-1px)}
+    .btn.active{background:var(--accent2); border-color:var(--accent)}
+    .seg{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+    .eqBox{margin-top:10px; border:1px solid var(--accent3); background:var(--accent2); border-radius:17px; padding:12px; font-family:Cambria, Georgia, "Times New Roman", serif; line-height:1.46; color:var(--text)}
+    .main{display:grid; gap:16px}
+    .plotCard{padding:10px 10px 6px}
+    .plotHead{display:flex; justify-content:space-between; align-items:flex-start; gap:12px; padding:8px 9px 2px}
+    .plotTitle{font-weight:850; letter-spacing:-.02em}
+    .plotSub{color:var(--muted); font-size:.84rem; line-height:1.4; text-align:right}
+    svg{display:block; width:100%}
+    #mainSvg{height:420px}
+    #cdfSvg,#workSvg{height:265px}
+    .two{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+    .cardPad{padding:16px}
+    .interpretation{display:grid; grid-template-columns:1.1fr .9fr; gap:16px}
+    .smallText{color:var(--muted); font-size:.92rem; line-height:1.58}
+    .notice{border-left:3px solid var(--accent); padding-left:13px; color:var(--muted); font-size:.92rem; line-height:1.55}
+    .summary{display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:12px}
+    .summary>div{border:1px solid var(--border); background:var(--panel2); border-radius:16px; padding:12px; font-size:.90rem; line-height:1.50}
+    .pillRow{display:flex; flex-wrap:wrap; gap:8px; margin-top:9px}
+    .pill{border:1px solid var(--border); background:var(--panel2); border-radius:999px; padding:7px 10px; color:var(--muted); font-size:.80rem; font-weight:760; display:inline-flex; gap:7px; align-items:center}
+    .dot{width:9px; height:9px; border-radius:50%; background:var(--accent); display:inline-block}
+    footer{margin-top:14px; text-align:center; color:var(--muted); font-size:.78rem}
+    @media (max-width:1080px){.defs,.layout,.two,.interpretation{grid-template-columns:1fr} header{flex-direction:column}.themeBtn{align-self:flex-start}#mainSvg{height:390px}}
+    @media (max-width:560px){.wrap{width:min(100% - 18px,1260px); padding-top:18px}.summary{grid-template-columns:1fr}.seg{grid-template-columns:1fr}#mainSvg{height:365px}}
+  </style>
+</head>
+<body data-theme="light">
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Distributions as pushforward measures</h1>
+        <div class="subtitle">A random variable transports probability mass from the hidden sample space \(\Omega\) onto the real line. The distribution of \(X\) is the measure induced by the map \(X\), not a separate primitive object.</div>
+      </div>
+      <button class="themeBtn" id="themeBtn">Dark mode</button>
+    </header>
+
+    <section class="defs">
+      <div class="def"><div class="tag">Random variable</div><div class="math">X : (Î©, â„±, P) â†’ (â„, ð”…(â„))</div></div>
+      <div class="def"><div class="tag">Pushforward law</div><div class="math">Î¼<sub>X</sub> = P âˆ˜ X<sup>âˆ’1</sup><br>Î¼<sub>X</sub>(B)=P(XâˆˆB)</div></div>
+      <div class="def"><div class="tag">Distribution function</div><div class="math">F<sub>X</sub>(x)=P(Xâ‰¤x)<br>=Î¼<sub>X</sub>((âˆ’âˆž,x])</div></div>
+      <div class="def"><div class="tag">Expectation transfer</div><div class="math">E[g(X)] = âˆ«<sub>â„</sub> g(x) dÎ¼<sub>X</sub>(x)</div></div>
+    </section>
+
+    <main class="layout">
+      <aside class="card side">
+        <div class="panelTitle">Controls</div>
+        <div class="control">
+          <label for="mapSelect">Map X(Ï‰)</label>
+          <select id="mapSelect">
+            <option value="linear">linear: X = 4Ï‰ âˆ’ 2</option>
+            <option value="square">folding: X = (2Ï‰ âˆ’ 1)Â²</option>
+            <option value="sine">wave: X = sin(2Ï€ Ï‰)</option>
+            <option value="discrete">discrete: threshold bins</option>
+            <option value="mixed">mixed: atom + continuous tail</option>
+          </select>
+        </div>
+        <div class="control"><label for="sampleRange">Simulation size <span class="value" id="sampleVal">900</span></label><input id="sampleRange" type="range" min="100" max="5000" step="100" value="900" /></div>
+        <div class="control"><label for="bLeft">B left endpoint <span class="value" id="bLeftVal">âˆ’0.50</span></label><input id="bLeft" type="range" min="-2" max="2" step="0.02" value="-0.50" /></div>
+        <div class="control"><label for="bRight">B right endpoint <span class="value" id="bRightVal">0.80</span></label><input id="bRight" type="range" min="-2" max="2" step="0.02" value="0.80" /></div>
+        <div class="control"><label for="xCut">CDF cutoff x <span class="value" id="xCutVal">0.40</span></label><input id="xCut" type="range" min="-2" max="2" step="0.02" value="0.40" /></div>
+        <div class="control"><div class="seg"><button class="btn active" id="showPreimage">Preimage view</button><button class="btn" id="showCDF">CDF view</button></div></div>
+        <div class="control"><button class="btn" id="resampleBtn">Resimulate</button></div>
+        <div class="eqBox" id="eqBox">Î¼<sub>X</sub>(B)=P(X<sup>âˆ’1</sup>(B))<br>The real-line mass of B equals the Î©-mass of its preimage.</div>
+      </aside>
+
+      <section class="main">
+        <div class="card plotCard">
+          <div class="plotHead">
+            <div>
+              <div class="plotTitle">Pushforward geometry</div>
+              <div class="pillRow"><span class="pill"><span class="dot"></span> probability starts on Î©</span><span class="pill"><span class="dot" style="background:var(--blue)"></span> X transports mass to â„</span></div>
+            </div>
+            <div class="plotSub" id="mainSub">Right interval B pulls back to X<sup>âˆ’1</sup>(B)</div>
+          </div>
+          <svg id="mainSvg" viewBox="0 0 980 420" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+
+        <div class="two">
+          <div class="card plotCard"><div class="plotHead"><div class="plotTitle">Distribution function</div><div class="plotSub">F<sub>X</sub>(x)=Î¼<sub>X</sub>((âˆ’âˆž,x])</div></div><svg id="cdfSvg" viewBox="0 0 520 265" preserveAspectRatio="xMidYMid meet"></svg></div>
+          <div class="card plotCard"><div class="plotHead"><div class="plotTitle">Why work on the real line?</div><div class="plotSub">Events about X become ordinary Borel sets</div></div><svg id="workSvg" viewBox="0 0 520 265" preserveAspectRatio="xMidYMid meet"></svg></div>
+        </div>
+
+        <div class="interpretation">
+          <div class="card cardPad">
+            <div class="panelTitle">Interpretation</div>
+            <div class="smallText" id="interpretText">X sends each hidden state Ï‰ to a real number. The law Î¼<sub>X</sub> records how much original probability lands in each region of the real line.</div>
+            <div class="summary">
+              <div><strong>Law.</strong><br>Î¼<sub>X</sub> is the probability measure on â„ induced by X.</div>
+              <div><strong>Preimage logic.</strong><br>To measure BâŠ‚â„, pull it back to Î© and use P.</div>
+              <div><strong>CDF.</strong><br>F<sub>X</sub>(x) measures the accumulated pushed mass up to x.</div>
+              <div><strong>Compression.</strong><br>Different Î© spaces can induce the same Î¼<sub>X</sub>; the distribution forgets irrelevant hidden structure.</div>
+            </div>
+          </div>
+          <div class="card cardPad"><div class="panelTitle">What to notice</div><div class="notice" id="noticeText">The distribution is not a picture drawn on top of X. It is transported measure: probability mass moves from Î© to â„ through the map X.</div></div>
+        </div>
+      </section>
+    </main>
+    <footer>Minimal interactive notebook â€” probability distributions as induced measures.</footer>
+  </div>
+
+  <script>
+    const body=document.body;
+    const themeBtn=document.getElementById('themeBtn');
+    const mapSelect=document.getElementById('mapSelect');
+    const sampleRange=document.getElementById('sampleRange');
+    const bLeft=document.getElementById('bLeft');
+    const bRight=document.getElementById('bRight');
+    const xCut=document.getElementById('xCut');
+    const sampleVal=document.getElementById('sampleVal');
+    const bLeftVal=document.getElementById('bLeftVal');
+    const bRightVal=document.getElementById('bRightVal');
+    const xCutVal=document.getElementById('xCutVal');
+    const resampleBtn=document.getElementById('resampleBtn');
+    const showPreimageBtn=document.getElementById('showPreimage');
+    const showCDFBtn=document.getElementById('showCDF');
+    let mode='preimage';
+    let samples=[];
+
+    function css(name){return getComputedStyle(body).getPropertyValue(name).trim();}
+    function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
+    function fmt(x){return (x<0?'âˆ’':'')+Math.abs(x).toFixed(2);}
+
+    function xMap(w){
+      const type=mapSelect.value;
+      if(type==='linear') return 4*w-2;
+      if(type==='square'){const z=2*w-1; return z*z;}
+      if(type==='sine') return Math.sin(2*Math.PI*w);
+      if(type==='discrete'){
+        if(w<.18) return -1.4;
+        if(w<.50) return -.35;
+        if(w<.78) return .75;
+        return 1.55;
+      }
+      if(type==='mixed'){
+        if(w<.30) return -.8;
+        return -.8+2.6*(w-.30)/.70;
+      }
+      return w;
+    }
+
+    function xRange(){
+      const type=mapSelect.value;
+      if(type==='linear') return [-2,2];
+      if(type==='square') return [-.1,1.15];
+      if(type==='sine') return [-1.15,1.15];
+      if(type==='discrete') return [-1.8,1.9];
+      if(type==='mixed') return [-1.05,1.95];
+      return [-2,2];
+    }
+
+    function mapName(){
+      const type=mapSelect.value;
+      if(type==='linear') return 'X(Ï‰)=4Ï‰âˆ’2';
+      if(type==='square') return 'X(Ï‰)=(2Ï‰âˆ’1)Â²';
+      if(type==='sine') return 'X(Ï‰)=sin(2Ï€Ï‰)';
+      if(type==='discrete') return 'X is a finite-valued partition map';
+      return 'X has one atom and one continuous tail';
+    }
+
+    function densityKnown(x){
+      const type=mapSelect.value;
+      if(type==='linear') return (x>=-2&&x<=2)?0.25:0;
+      if(type==='square') return (x>0&&x<=1)?1/(2*Math.sqrt(x)):0;
+      if(type==='sine') return (x>-1&&x<1)?1/(Math.PI*Math.sqrt(1-x*x)):0;
+      if(type==='mixed') return (x>-0.8&&x<1.8)?0.70/2.6:0;
+      return 0;
+    }
+
+    function cdfKnown(x){
+      const type=mapSelect.value;
+      if(type==='linear') return clamp((x+2)/4,0,1);
+      if(type==='square'){
+        if(x<0) return 0; if(x>=1) return 1; return Math.sqrt(x);
+      }
+      if(type==='sine'){
+        if(x<=-1) return 0; if(x>=1) return 1; return 0.5 + Math.asin(x)/Math.PI;
+      }
+      if(type==='discrete'){
+        let val=0;
+        if(x>=-1.4) val+=.18;
+        if(x>=-.35) val+=.32;
+        if(x>=.75) val+=.28;
+        if(x>=1.55) val+=.22;
+        return clamp(val,0,1);
+      }
+      if(type==='mixed'){
+        if(x<-.8) return 0;
+        if(x>=1.8) return 1;
+        return .30 + .70*(x+.8)/2.6;
+      }
+      return 0;
+    }
+
+    function regenerate(){
+      const n=+sampleRange.value;
+      samples=[];
+      for(let i=0;i<n;i++){
+        const w=(i+Math.random())/n;
+        samples.push({w,x:xMap(w),jitter:(Math.random()-.5)});
+      }
+    }
+
+    function sxOmega(w){return 64 + w*380;}
+    function sxReal(x){const [a,b]=xRange(); return 560 + (x-a)/(b-a)*350;}
+    function syCurve(x){const [a,b]=xRange(); return 250 - (x-a)/(b-a)*160;}
+
+    function axisTicks(a,b,n=5){
+      const arr=[];
+      for(let i=0;i<n;i++) arr.push(a+(b-a)*i/(n-1));
+      return arr;
+    }
+
+    function drawMain(){
+      const svg=document.getElementById('mainSvg');
+      const panel=css('--panel'), border=css('--border'), text=css('--text'), muted=css('--muted'), grid=css('--grid'), accent=css('--accent'), blue=css('--blue'), warn=css('--warn');
+      let l=+bLeft.value, r=+bRight.value; if(l>r){const t=l;l=r;r=t;}
+      const cut=+xCut.value;
+      const [xr0,xr1]=xRange();
+      const eventL=mode==='cdf'?xr0:l;
+      const eventR=mode==='cdf'?cut:r;
+      const selected=s=>s.x>=eventL && s.x<=eventR;
+      const mass=samples.filter(selected).length/samples.length;
+      let html='';
+      html += `<defs><marker id="arrow" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto"><polygon points="0,0 10,4 0,8" fill="${accent}"/></marker></defs>`;
+      html += `<rect x="10" y="12" width="960" height="386" rx="20" fill="${panel}" stroke="${border}"/>`;
+      html += `<text x="58" y="42" fill="${muted}" font-size="14" font-weight="800">Hidden sample space Î©=[0,1]</text>`;
+      html += `<text x="558" y="42" fill="${muted}" font-size="14" font-weight="800">Real line carrying Î¼X</text>`;
+
+      // omega line
+      html += `<line x1="64" y1="316" x2="444" y2="316" stroke="${text}" stroke-opacity=".65" stroke-width="1.3"/>`;
+      html += `<text x="64" y="340" fill="${muted}" font-size="12">0</text><text x="438" y="340" fill="${muted}" font-size="12">1</text>`;
+      html += `<text x="248" y="350" fill="${muted}" font-size="13" text-anchor="middle">Ï‰</text>`;
+      // real line
+      html += `<line x1="560" y1="316" x2="910" y2="316" stroke="${text}" stroke-opacity=".65" stroke-width="1.3"/>`;
+      axisTicks(xr0,xr1,5).forEach(t=>{const x=sxReal(t); html += `<line x1="${x}" y1="312" x2="${x}" y2="322" stroke="${muted}"/><text x="${x}" y="340" fill="${muted}" font-size="11" text-anchor="middle">${fmt(t)}</text>`;});
+      html += `<text x="735" y="360" fill="${muted}" font-size="13" text-anchor="middle">x âˆˆ â„</text>`;
+
+      // X curve panel
+      html += `<rect x="64" y="72" width="380" height="180" rx="16" fill="none" stroke="${border}"/>`;
+      for(let k=0;k<5;k++){const y=92+k*35; html += `<line x1="74" y1="${y}" x2="434" y2="${y}" stroke="${grid}"/>`;}
+      html += `<text x="80" y="94" fill="${muted}" font-size="12">${mapName()}</text>`;
+      let path='';
+      for(let i=0;i<=240;i++){
+        const w=i/240; const X=xMap(w); const px=sxOmega(w); const py=syCurve(X);
+        path += (i===0?'M':'L')+px.toFixed(2)+','+py.toFixed(2)+' ';
+      }
+      html += `<path d="${path}" fill="none" stroke="${accent}" stroke-width="2.5"/>`;
+
+      // highlight interval on real line
+      const el=sxReal(clamp(eventL,xr0,xr1)), er=sxReal(clamp(eventR,xr0,xr1));
+      html += `<rect x="${Math.min(el,er)}" y="288" width="${Math.abs(er-el)}" height="58" rx="12" fill="${accent}" fill-opacity=".14" stroke="${accent}" stroke-opacity=".55"/>`;
+      html += `<text x="${(el+er)/2}" y="281" fill="${accent}" font-size="13" font-weight="800" text-anchor="middle">${mode==='cdf'?'(âˆ’âˆž, x]':'B'}</text>`;
+
+      // preimage intervals approximate under omega line
+      const segments=[]; let inSeg=false, start=0;
+      const m=700;
+      for(let i=0;i<=m;i++){
+        const w=i/m; const inside=(xMap(w)>=eventL && xMap(w)<=eventR);
+        if(inside && !inSeg){start=w; inSeg=true;}
+        if((!inside || i===m) && inSeg){segments.push([start,(i===m&&inside)?w:(i-1)/m]); inSeg=false;}
+      }
+      segments.forEach(seg=>{
+        const x1=sxOmega(seg[0]), x2=sxOmega(seg[1]);
+        html += `<rect x="${x1}" y="288" width="${Math.max(2,x2-x1)}" height="58" rx="12" fill="${accent}" fill-opacity=".14" stroke="${accent}" stroke-opacity=".55"/>`;
+      });
+      html += `<text x="254" y="281" fill="${accent}" font-size="13" font-weight="800" text-anchor="middle">Xâ»Â¹(${mode==='cdf'?'(âˆ’âˆž,x]':'B'})</text>`;
+
+      // sample points and transport lines
+      const thin=samples.length>900?3:1;
+      samples.forEach((s,i)=>{
+        if(i%thin!==0) return;
+        const active=selected(s);
+        const ox=sxOmega(s.w), oy=316 + s.jitter*18;
+        const rx=sxReal(s.x), ry=316 + s.jitter*18;
+        html += `<line x1="${ox}" y1="${oy-4}" x2="${rx}" y2="${ry-4}" stroke="${active?accent:grid}" stroke-opacity="${active?.16:.06}"/>`;
+        html += `<circle cx="${ox}" cy="${oy}" r="2.1" fill="${active?accent:muted}" fill-opacity="${active?.85:.18}"/>`;
+        html += `<circle cx="${rx}" cy="${ry}" r="2.1" fill="${active?blue:muted}" fill-opacity="${active?.85:.18}"/>`;
+      });
+      html += `<path d="M465,316 C500,316 518,316 545,316" stroke="${accent}" stroke-width="2.2" fill="none" marker-end="url(#arrow)"/>`;
+      html += `<text x="505" y="302" fill="${accent}" font-size="13" font-weight="800" text-anchor="middle">push</text>`;
+
+      // histogram/density above real line
+      const bins=36; const counts=Array(bins).fill(0);
+      samples.forEach(s=>{const k=Math.floor((s.x-xr0)/(xr1-xr0)*bins); if(k>=0 && k<bins) counts[k]++;});
+      const maxC=Math.max(...counts,1);
+      counts.forEach((c,k)=>{
+        const x0=xr0+(xr1-xr0)*k/bins; const x1=xr0+(xr1-xr0)*(k+1)/bins;
+        const px=sxReal(x0), w=sxReal(x1)-sxReal(x0)-1; const h=75*c/maxC;
+        const mid=(x0+x1)/2; const active=mid>=eventL && mid<=eventR;
+        html += `<rect x="${px}" y="${245-h}" width="${Math.max(.5,w)}" height="${h}" fill="${active?blue:muted}" fill-opacity="${active?.60:.20}"/>`;
+      });
+      // theoretical curve for continuous maps
+      if(mapSelect.value!=='discrete'){
+        let dmax=0; for(let i=0;i<=260;i++){const x=xr0+(xr1-xr0)*i/260; dmax=Math.max(dmax, Math.min(3.2,densityKnown(x)));}
+        let dpath='';
+        for(let i=0;i<=260;i++){
+          const x=xr0+(xr1-xr0)*i/260; const d=Math.min(3.2,densityKnown(x)); const px=sxReal(x); const py=245 - (d/(dmax||1))*72;
+          dpath += (i===0?'M':'L')+px.toFixed(2)+','+py.toFixed(2)+' ';
+        }
+        html += `<path d="${dpath}" fill="none" stroke="${warn}" stroke-width="2" stroke-opacity=".85"/>`;
+      }
+
+      html += `<text x="64" y="382" fill="${text}" font-size="14" font-weight="800">P(Xâ»Â¹(event)) â‰ˆ ${mass.toFixed(3)}</text>`;
+      html += `<text x="560" y="382" fill="${text}" font-size="14" font-weight="800">Î¼X(event) â‰ˆ ${mass.toFixed(3)}</text>`;
+      svg.innerHTML=html;
+      document.getElementById('mainSub').innerHTML=mode==='cdf'?'The event (âˆ’âˆž,x] pulls back to {Ï‰:X(Ï‰)â‰¤x}':'Right interval B pulls back to X<sup>âˆ’1</sup>(B)';
+    }
+
+    function drawCDF(){
+      const svg=document.getElementById('cdfSvg');
+      const panel=css('--panel'), border=css('--border'), text=css('--text'), muted=css('--muted'), grid=css('--grid'), accent=css('--accent'), blue=css('--blue');
+      const [a,b]=xRange(); const cut=+xCut.value; const F=cdfKnown(cut);
+      const X0=58,Y0=210,W=410,H=155;
+      const sx=x=>X0+(x-a)/(b-a)*W; const sy=y=>Y0-y*H;
+      let html=`<rect x="8" y="10" width="504" height="240" rx="18" fill="${panel}" stroke="${border}"/>`;
+      for(let k=0;k<=4;k++){const y=Y0-k*H/4; html+=`<line x1="${X0}" y1="${y}" x2="${X0+W}" y2="${y}" stroke="${grid}"/><text x="${X0-10}" y="${y+4}" fill="${muted}" font-size="11" text-anchor="end">${(k/4).toFixed(2)}</text>`;}
+      axisTicks(a,b,5).forEach(t=>{const x=sx(t); html+=`<line x1="${x}" y1="${Y0}" x2="${x}" y2="${Y0+5}" stroke="${muted}"/><text x="${x}" y="${Y0+20}" fill="${muted}" font-size="11" text-anchor="middle">${fmt(t)}</text>`;});
+      html+=`<line x1="${X0}" y1="${Y0}" x2="${X0+W}" y2="${Y0}" stroke="${text}" stroke-opacity=".7"/><line x1="${X0}" y1="${Y0}" x2="${X0}" y2="${Y0-H}" stroke="${text}" stroke-opacity=".7"/>`;
+      let path='';
+      for(let i=0;i<=400;i++){const x=a+(b-a)*i/400; const y=cdfKnown(x); path+=(i===0?'M':'L')+sx(x).toFixed(2)+','+sy(y).toFixed(2)+' ';}
+      html+=`<path d="${path}" fill="none" stroke="${accent}" stroke-width="2.6"/>`;
+      html+=`<line x1="${sx(cut)}" y1="${Y0}" x2="${sx(cut)}" y2="${sy(F)}" stroke="${blue}" stroke-width="1.8" stroke-dasharray="5 5"/><line x1="${X0}" y1="${sy(F)}" x2="${sx(cut)}" y2="${sy(F)}" stroke="${blue}" stroke-width="1.8" stroke-dasharray="5 5"/>`;
+      html+=`<circle cx="${sx(cut)}" cy="${sy(F)}" r="5" fill="${blue}"/><text x="${sx(cut)+8}" y="${sy(F)-8}" fill="${blue}" font-size="12" font-weight="800">F(${fmt(cut)})=${F.toFixed(3)}</text>`;
+      html+=`<text x="${X0+W/2}" y="245" fill="${muted}" font-size="12" text-anchor="middle">real threshold x</text>`;
+      svg.innerHTML=html;
+    }
+
+    function drawWork(){
+      const svg=document.getElementById('workSvg');
+      const panel=css('--panel'), border=css('--border'), text=css('--text'), muted=css('--muted'), grid=css('--grid'), accent=css('--accent'), blue=css('--blue');
+      const [a,b]=xRange(); let l=+bLeft.value, r=+bRight.value; if(l>r){const t=l;l=r;r=t;}
+      const X0=56,Y0=194,W=408,H=130;
+      const sx=x=>X0+(x-a)/(b-a)*W;
+      let html=`<rect x="8" y="10" width="504" height="240" rx="18" fill="${panel}" stroke="${border}"/>`;
+      html+=`<text x="34" y="42" fill="${text}" font-size="15" font-weight="850">Instead of studying Î© directly:</text>`;
+      html+=`<text x="34" y="68" fill="${muted}" font-size="13">Use ordinary intervals and functions on â„.</text>`;
+      // axis
+      html+=`<line x1="${X0}" y1="${Y0}" x2="${X0+W}" y2="${Y0}" stroke="${text}" stroke-opacity=".7"/>`;
+      axisTicks(a,b,5).forEach(t=>{const x=sx(t); html+=`<line x1="${x}" y1="${Y0-5}" x2="${x}" y2="${Y0+5}" stroke="${muted}"/><text x="${x}" y="${Y0+20}" fill="${muted}" font-size="11" text-anchor="middle">${fmt(t)}</text>`;});
+      const bl=sx(clamp(l,a,b)), br=sx(clamp(r,a,b));
+      html+=`<rect x="${Math.min(bl,br)}" y="${Y0-42}" width="${Math.abs(br-bl)}" height="42" rx="12" fill="${accent}" fill-opacity=".15" stroke="${accent}" stroke-opacity=".65"/>`;
+      html+=`<text x="${(bl+br)/2}" y="${Y0-50}" fill="${accent}" font-size="13" font-weight="850" text-anchor="middle">B=[${fmt(l)}, ${fmt(r)}]</text>`;
+      // density/atoms
+      if(mapSelect.value==='discrete'){
+        const atoms=[[-1.4,.18],[-.35,.32],[.75,.28],[1.55,.22]];
+        atoms.forEach(([x,p])=>{const px=sx(x); html+=`<line x1="${px}" y1="${Y0}" x2="${px}" y2="${Y0-85*p/.32}" stroke="${blue}" stroke-width="5" stroke-linecap="round"/><circle cx="${px}" cy="${Y0-85*p/.32}" r="5" fill="${blue}"/>`;});
+      } else {
+        let dmax=0; for(let i=0;i<=240;i++){const x=a+(b-a)*i/240; dmax=Math.max(dmax, Math.min(3.2,densityKnown(x)));}
+        let path=`M${X0},${Y0} `;
+        for(let i=0;i<=240;i++){const x=a+(b-a)*i/240; const d=Math.min(3.2,densityKnown(x)); path+=`L${sx(x).toFixed(2)},${(Y0-(d/(dmax||1))*85).toFixed(2)} `;}
+        path+=`L${X0+W},${Y0} Z`;
+        html+=`<path d="${path}" fill="${blue}" fill-opacity=".20" stroke="${blue}" stroke-width="2"/>`;
+      }
+      const mass=samples.filter(s=>s.x>=l&&s.x<=r).length/samples.length;
+      html+=`<text x="34" y="232" fill="${text}" font-size="14" font-weight="850">Î¼X(B) â‰ˆ ${mass.toFixed(3)}</text>`;
+      html+=`<text x="188" y="232" fill="${muted}" font-size="13">computed on â„, justified by preimages in Î©</text>`;
+      svg.innerHTML=html;
+    }
+
+    function updateText(){
+      sampleVal.textContent=sampleRange.value;
+      bLeftVal.textContent=fmt(+bLeft.value);
+      bRightVal.textContent=fmt(+bRight.value);
+      xCutVal.textContent=fmt(+xCut.value);
+      let l=+bLeft.value, r=+bRight.value; if(l>r){const t=l;l=r;r=t;}
+      const massB=samples.filter(s=>s.x>=l&&s.x<=r).length/samples.length;
+      const cut=+xCut.value; const F=cdfKnown(cut);
+      document.getElementById('eqBox').innerHTML = mode==='cdf'
+        ? `F<sub>X</sub>(${fmt(cut)}) = P(Xâ‰¤${fmt(cut)}) = Î¼<sub>X</sub>((âˆ’âˆž,${fmt(cut)}]) â‰ˆ ${F.toFixed(3)}`
+        : `Î¼<sub>X</sub>(B)=P(X<sup>âˆ’1</sup>(B)) â‰ˆ ${massB.toFixed(3)}<br>B=[${fmt(l)}, ${fmt(r)}]`;
+      const type=mapSelect.value;
+      let note='';
+      if(type==='linear') note='Linear maps preserve the uniform geometry: equal lengths in Î© become equal lengths on â„.';
+      if(type==='square') note='The folding map sends two regions of Î© to the same x-values. Mass piles up near zero.';
+      if(type==='sine') note='The wave map slows near Â±1, so pushed mass becomes denser near the extremes.';
+      if(type==='discrete') note='A finite-valued random variable pushes continuous Î©-mass into atoms on the real line.';
+      if(type==='mixed') note='Part of Î© collapses into an atom, while the rest spreads continuously along an interval.';
+      document.getElementById('noticeText').textContent=note;
+      document.getElementById('interpretText').innerHTML=`For the current map <strong>${mapName()}</strong>, the hidden probability P on Î© induces a law Î¼<sub>X</sub> on â„. Events about X are measured by pulling real-line sets back to Î©.`;
+    }
+
+    function drawAll(){updateText(); drawMain(); drawCDF(); drawWork();}
+    themeBtn.addEventListener('click',()=>{const dark=body.getAttribute('data-theme')==='dark'; body.setAttribute('data-theme',dark?'light':'dark'); themeBtn.textContent=dark?'Dark mode':'Light mode'; drawAll();});
+    [mapSelect,sampleRange,bLeft,bRight,xCut].forEach(el=>el.addEventListener('input',()=>{if(el===mapSelect||el===sampleRange)regenerate(); drawAll();}));
+    resampleBtn.addEventListener('click',()=>{regenerate(); drawAll();});
+    showPreimageBtn.addEventListener('click',()=>{mode='preimage'; showPreimageBtn.classList.add('active'); showCDFBtn.classList.remove('active'); drawAll();});
+    showCDFBtn.addEventListener('click',()=>{mode='cdf'; showCDFBtn.classList.add('active'); showPreimageBtn.classList.remove('active'); drawAll();});
+    regenerate(); drawAll();
+  </script>
+</body>
+</html>
+

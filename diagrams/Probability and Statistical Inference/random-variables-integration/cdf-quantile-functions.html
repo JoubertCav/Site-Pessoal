@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google-site-verification" content="google2c37f7a4206c9d3a.html">
+  <meta name="google-site-verification" content="fSWAEb_oSSHr_eJXL9gHYxIn879tRaBwJ42f_aD9o2s">
+  <meta name="google-site-verification" content="ftZ4QVMrlub9jbolsIeo4Ix4UBw0-BJrFeorzqKLXng">
+  <meta name="description" content="Interactive diagram for CDFs and quantile functions.">
+    <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
+<title>CDFs and Quantile Functions</title>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-NHXHEJP1G0');
+  </script>
+  <style>
+    :root{
+      --bg:#f6f1e8; --panel:#fffaf2; --panel2:#fcf5ea; --text:#17212b; --muted:#65717d;
+      --border:rgba(23,33,43,.12); --grid:rgba(23,33,43,.075); --accent:#2d8e84;
+      --accent2:rgba(45,142,132,.14); --accent3:rgba(45,142,132,.28); --blue:#456fb4;
+      --orange:#b87451; --shadow:0 16px 45px rgba(25,35,45,.08); --radius:22px;
+    }
+    [data-theme="dark"]{
+      --bg:#0f151a; --panel:#151d24; --panel2:#11181f; --text:#ecf2f6; --muted:#9cadb8;
+      --border:rgba(236,242,246,.12); --grid:rgba(236,242,246,.08); --accent:#67cdbf;
+      --accent2:rgba(103,205,191,.13); --accent3:rgba(103,205,191,.28); --blue:#82b7ff;
+      --orange:#e2a081; --shadow:0 18px 55px rgba(0,0,0,.30);
+    }
+    *{box-sizing:border-box}
+    body{margin:0; min-height:100vh; color:var(--text); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:radial-gradient(circle at 10% 0%,var(--accent2),transparent 28rem),radial-gradient(circle at 96% 18%,rgba(69,111,180,.10),transparent 24rem),var(--bg); transition:background .25s ease,color .25s ease}
+    .wrap{width:min(1260px,calc(100% - 28px)); margin:0 auto; padding:26px 0 42px}
+    header{display:flex; justify-content:space-between; align-items:flex-start; gap:18px; margin-bottom:16px}
+    h1{margin:0; font-size:clamp(1.7rem,3vw,2.45rem); line-height:1.03; letter-spacing:-.045em; font-weight:820}
+    .subtitle{margin:10px 0 0; color:var(--muted); max-width:790px; font-size:.98rem; line-height:1.58}
+    .themeBtn{border:1px solid var(--border); background:var(--panel); color:var(--text); border-radius:999px; padding:10px 15px; box-shadow:var(--shadow); cursor:pointer; font-weight:760; white-space:nowrap}
+    .defs{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:16px}
+    .def,.card{background:color-mix(in srgb,var(--panel) 96%,transparent); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow)}
+    .def{padding:14px 15px; min-height:112px}
+    .tag{color:var(--muted); font-size:.74rem; font-weight:850; letter-spacing:.12em; text-transform:uppercase; margin-bottom:8px}
+    .math{font-family:Cambria,Georgia,"Times New Roman",serif; line-height:1.45; font-size:1.01rem; color:var(--text)}
+    .layout{display:grid; grid-template-columns:340px 1fr; gap:16px; align-items:start}
+    .side{padding:16px}.panelTitle{margin:0 0 12px; color:var(--muted); font-size:.82rem; font-weight:900; text-transform:uppercase; letter-spacing:.13em}
+    .control{padding:12px 0; border-top:1px solid var(--border)}.control:first-of-type{border-top:0; padding-top:0}
+    label{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:9px; font-weight:730; font-size:.91rem}.value{color:var(--accent); font-weight:850; font-variant-numeric:tabular-nums}
+    input[type="range"]{width:100%; accent-color:var(--accent)} select,.btn{width:100%; border:1px solid var(--border); background:var(--panel2); color:var(--text); border-radius:14px; padding:10px 11px; font-weight:720; outline:none}.btn{cursor:pointer; transition:transform .15s ease,border-color .2s ease,background .2s ease}.btn:hover{transform:translateY(-1px)}.btn.active{background:var(--accent2); border-color:var(--accent)}
+    .seg{display:grid; grid-template-columns:1fr 1fr; gap:8px}.eqBox{margin-top:10px; border:1px solid var(--accent3); background:var(--accent2); border-radius:17px; padding:12px; font-family:Cambria,Georgia,"Times New Roman",serif; line-height:1.46; color:var(--text)}
+    .main{display:grid; gap:16px}.plotCard{padding:10px 10px 6px}.plotHead{display:flex; justify-content:space-between; align-items:flex-start; gap:12px; padding:8px 9px 2px}.plotTitle{font-weight:850; letter-spacing:-.02em}.plotSub{color:var(--muted); font-size:.84rem; line-height:1.4; text-align:right}svg{display:block; width:100%}#mainSvg{height:430px}#quantileSvg,#orderSvg{height:275px}.two{display:grid; grid-template-columns:1fr 1fr; gap:16px}.cardPad{padding:16px}.interpretation{display:grid; grid-template-columns:1.1fr .9fr; gap:16px}.smallText{color:var(--muted); font-size:.92rem; line-height:1.58}.notice{border-left:3px solid var(--accent); padding-left:13px; color:var(--muted); font-size:.92rem; line-height:1.55}.summary{display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:12px}.summary>div{border:1px solid var(--border); background:var(--panel2); border-radius:16px; padding:12px; font-size:.90rem; line-height:1.50}.pillRow{display:flex; flex-wrap:wrap; gap:8px; margin-top:9px}.pill{border:1px solid var(--border); background:var(--panel2); border-radius:999px; padding:7px 10px; color:var(--muted); font-size:.80rem; font-weight:760; display:inline-flex; gap:7px; align-items:center}.dot{width:9px; height:9px; border-radius:50%; background:var(--accent); display:inline-block}footer{margin-top:14px; text-align:center; color:var(--muted); font-size:.78rem}
+    @media(max-width:1080px){.defs,.layout,.two,.interpretation{grid-template-columns:1fr}header{flex-direction:column}.themeBtn{align-self:flex-start}#mainSvg{height:390px}}
+    @media(max-width:560px){.wrap{width:min(100% - 18px,1260px); padding-top:18px}.summary{grid-template-columns:1fr}.seg{grid-template-columns:1fr}#mainSvg{height:370px}}
+  </style>
+</head>
+<body data-theme="light">
+<div class="wrap">
+  <header>
+    <div>
+      <h1>CDFs and quantile functions</h1>
+      <div class="subtitle">A distribution function accumulates mass from left to right. A quantile function reverses that geometry: start with a probability level u and find the first point where accumulated mass reaches u.</div>
+    </div>
+    <button class="themeBtn" id="themeBtn">Dark mode</button>
+  </header>
+
+  <section class="defs">
+    <div class="def"><div class="tag">Distribution function</div><div class="math">F(x)=P(Xâ‰¤x)</div></div>
+    <div class="def"><div class="tag">Right-continuity</div><div class="math">F(x)=F(x+)<br>jumps include their mass</div></div>
+    <div class="def"><div class="tag">Generalized inverse</div><div class="math">Q(u)=inf{x:F(x)â‰¥u}</div></div>
+    <div class="def"><div class="tag">Quantile representation</div><div class="math">Uâˆ¼Unif(0,1) â‡’ Q(U)âˆ¼F</div></div>
+  </section>
+
+  <main class="layout">
+    <aside class="card side">
+      <div class="panelTitle">Controls</div>
+      <div class="control"><label for="model">Distribution</label><select id="model"><option value="smooth">smooth: F(x)=x^Î± on [0,1]</option><option value="discrete">discrete: four atoms</option><option value="mixed">mixed: atom + continuous mass</option></select></div>
+      <div class="control" id="shapeBlock"><label for="shape">Shape Î± <span class="value" id="shapeVal">1.60</span></label><input id="shape" type="range" min="0.30" max="4.00" step="0.05" value="1.60"/></div>
+      <div class="control" id="massBlock"><label for="mass">Atom / tilt <span class="value" id="massVal">0.30</span></label><input id="mass" type="range" min="0.05" max="0.70" step="0.01" value="0.30"/></div>
+      <div class="control"><label for="uRange">Probability level u <span class="value" id="uVal">0.62</span></label><input id="uRange" type="range" min="0.01" max="0.99" step="0.01" value="0.62"/></div>
+      <div class="control"><label for="nRange">Sample size n <span class="value" id="nVal">24</span></label><input id="nRange" type="range" min="5" max="120" step="1" value="24"/></div>
+      <div class="control"><label for="kRange">Order statistic k <span class="value" id="kVal">12</span></label><input id="kRange" type="range" min="1" max="24" step="1" value="12"/></div>
+      <div class="control"><div class="seg"><button class="btn active" id="cdfBtn">CDF</button><button class="btn" id="qBtn">Quantile</button></div></div>
+      <div class="control"><button class="btn" id="resampleBtn">Resimulate order statistics</button></div>
+      <div class="eqBox" id="eqBox">Q(u)=inf{x:F(x)â‰¥u}<br>The quantile is the leftmost crossing of the horizontal level u.</div>
+    </aside>
+
+    <section class="main">
+      <div class="card plotCard"><div class="plotHead"><div><div class="plotTitle">CDF geometry: accumulated mass and first crossing</div><div class="pillRow"><span class="pill"><span class="dot"></span> F moves vertically</span><span class="pill"><span class="dot" style="background:var(--blue)"></span> Q moves horizontally</span></div></div><div class="plotSub" id="mainSub">horizontal u meets the graph at the leftmost admissible x</div></div><svg id="mainSvg" viewBox="0 0 980 430" preserveAspectRatio="xMidYMid meet"></svg></div>
+      <div class="two">
+        <div class="card plotCard"><div class="plotHead"><div class="plotTitle">Quantile representation</div><div class="plotSub">uniform levels become draws from F</div></div><svg id="quantileSvg" viewBox="0 0 520 275" preserveAspectRatio="xMidYMid meet"></svg></div>
+        <div class="card plotCard"><div class="plotHead"><div class="plotTitle">Order statistics intuition</div><div class="plotSub">sort U's, then push them through Q</div></div><svg id="orderSvg" viewBox="0 0 520 275" preserveAspectRatio="xMidYMid meet"></svg></div>
+      </div>
+      <div class="interpretation">
+        <div class="card cardPad"><div class="panelTitle">Interpretation</div><div class="smallText" id="interpretText">F(x) is accumulated probability. Q(u) is the smallest x whose accumulated mass reaches u.</div><div class="summary"><div><strong>CDF.</strong><br>Nondecreasing, right-continuous, with limits 0 and 1.</div><div><strong>Jump.</strong><br>A vertical jump is an atom: P(X=x)=F(x)-F(xâˆ’).</div><div><strong>Quantile.</strong><br>Use infimum, not ordinary inverse, because F may jump or be flat.</div><div><strong>Order stats.</strong><br>X<sub>(k)</sub>â‰ˆQ(k/(n+1)): sample ranks are probability levels.</div></div></div>
+        <div class="card cardPad"><div class="panelTitle">What to notice</div><div class="notice" id="noticeText">For continuous strictly increasing F, the quantile is the usual inverse. For jumps and flats, the generalized inverse keeps the construction well-defined.</div></div>
+      </div>
+    </section>
+  </main>
+  <footer>Minimal interactive notebook â€” CDFs, generalized inverses, and order statistics.</footer>
+</div>
+<script>
+const body=document.body,themeBtn=document.getElementById('themeBtn');
+themeBtn.onclick=()=>{const d=body.getAttribute('data-theme')==='dark';body.setAttribute('data-theme',d?'light':'dark');themeBtn.textContent=d?'Dark mode':'Light mode';drawAll();};
+const model=document.getElementById('model'),shape=document.getElementById('shape'),mass=document.getElementById('mass'),uRange=document.getElementById('uRange'),nRange=document.getElementById('nRange'),kRange=document.getElementById('kRange');
+let view='cdf', uniforms=[];
+function css(v){return getComputedStyle(body).getPropertyValue(v).trim()} function clamp(x,a,b){return Math.max(a,Math.min(b,x))} function fmt(x){return Number(x).toFixed(2)}
+function weights(){const t=+mass.value; let raw=[.18+t*.20,.30-t*.08,.25-t*.04,.27-t*.08]; const s=raw.reduce((a,b)=>a+b,0); return raw.map(x=>x/s)}
+const atoms=[.16,.42,.68,.88];
+function F(x){x=+x; if(x<=0)return 0; if(x>=1)return 1; const m=model.value,a=+shape.value,p=+mass.value; if(m==='smooth')return Math.pow(x,a); if(m==='mixed'){const atom=.55; return (1-p)*x+(x>=atom?p:0)} const w=weights(); let s=0; for(let i=0;i<atoms.length;i++) if(x>=atoms[i]) s+=w[i]; return s;}
+function Fleft(x){const eps=1e-7; return F(x-eps)}
+function Q(u){u=clamp(u,0,1); const m=model.value,a=+shape.value,p=+mass.value; if(m==='smooth')return Math.pow(u,1/a); if(m==='mixed'){const atom=.55, low=(1-p)*atom, high=low+p; if(u<=low)return u/(1-p); if(u<=high)return atom; return (u-p)/(1-p)} const w=weights(); let s=0; for(let i=0;i<atoms.length;i++){s+=w[i]; if(u<=s+1e-10)return atoms[i];} return atoms[atoms.length-1];}
+function pdfHeight(x){const m=model.value,a=+shape.value,p=+mass.value;if(m==='smooth')return a*Math.pow(Math.max(x,.001),a-1);if(m==='mixed')return 1-p;return 0}
+function makeSamples(){const n=+nRange.value; uniforms=Array.from({length:n},()=>Math.random()).sort((a,b)=>a-b)}
+function refreshControls(){document.getElementById('shapeVal').textContent=fmt(+shape.value);document.getElementById('massVal').textContent=fmt(+mass.value);document.getElementById('uVal').textContent=fmt(+uRange.value);document.getElementById('nVal').textContent=nRange.value; kRange.max=nRange.value; if(+kRange.value>+nRange.value)kRange.value=nRange.value; document.getElementById('kVal').textContent=kRange.value; document.getElementById('shapeBlock').style.display=model.value==='smooth'?'block':'none'; document.getElementById('massBlock').style.display=model.value==='smooth'?'none':'block';}
+[model,shape,mass,uRange,nRange,kRange].forEach(el=>el.addEventListener('input',()=>{if(el===nRange)makeSamples();refreshControls();drawAll();}));
+document.getElementById('resampleBtn').onclick=()=>{makeSamples();drawAll()}; document.getElementById('cdfBtn').onclick=()=>{view='cdf';document.getElementById('cdfBtn').classList.add('active');document.getElementById('qBtn').classList.remove('active');drawAll()}; document.getElementById('qBtn').onclick=()=>{view='q';document.getElementById('qBtn').classList.add('active');document.getElementById('cdfBtn').classList.remove('active');drawAll()};
+function axis(svg,x0,y0,w,h){const grid=css('--grid'),muted=css('--muted');let s='';for(let i=0;i<=5;i++){const x=x0+i*w/5,y=y0-i*h/5;s+=`<line x1="${x}" x2="${x}" y1="${y0}" y2="${y0-h}" stroke="${grid}"/><line x1="${x0}" x2="${x0+w}" y1="${y}" y2="${y}" stroke="${grid}"/>`;s+=`<text x="${x}" y="${y0+20}" text-anchor="middle" fill="${muted}" font-size="11">${(i/5).toFixed(1)}</text>`; if(i>0)s+=`<text x="${x0-10}" y="${y+4}" text-anchor="end" fill="${muted}" font-size="11">${(i/5).toFixed(1)}</text>`;} s+=`<line x1="${x0}" x2="${x0+w}" y1="${y0}" y2="${y0}" stroke="${muted}"/><line x1="${x0}" x2="${x0}" y1="${y0}" y2="${y0-h}" stroke="${muted}"/>`;return s;}
+function drawMain(){const svg=document.getElementById('mainSvg'),panel=css('--panel'),border=css('--border'),text=css('--text'),muted=css('--muted'),accent=css('--accent'),blue=css('--blue'),orange=css('--orange');const x0=70,y0=342,w=520,h=260;let s=`<rect x="8" y="10" width="964" height="400" rx="22" fill="${panel}" stroke="${border}"/>`;s+=axis(svg,x0,y0,w,h);s+=`<text x="${x0+w-4}" y="${y0+42}" fill="${muted}" font-size="13">x</text><text x="${x0-38}" y="${y0-h+5}" fill="${muted}" font-size="13">F(x)</text>`;const u=+uRange.value,q=Q(u),px=x0+q*w,py=y0-u*h;
+if(model.value==='discrete'){const wts=weights();let acc=0;let prevX=0;let prevY=y0;for(let i=0;i<atoms.length;i++){const ax=atoms[i],left=x0+prevX*w,rx=x0+ax*w; s+=`<line x1="${left}" y1="${prevY}" x2="${rx}" y2="${prevY}" stroke="${accent}" stroke-width="3"/>`; const before=acc; acc+=wts[i]; const yBefore=y0-before*h,yAfter=y0-acc*h,xx=x0+ax*w; s+=`<line x1="${xx}" y1="${yBefore}" x2="${xx}" y2="${yAfter}" stroke="${accent}" stroke-width="3"/>`; s+=`<circle cx="${xx}" cy="${yBefore}" r="4.4" fill="${panel}" stroke="${accent}" stroke-width="2"/><circle cx="${xx}" cy="${yAfter}" r="5" fill="${accent}"/>`; prevX=ax;prevY=yAfter;} s+=`<line x1="${x0+atoms.at(-1)*w}" y1="${y0-h}" x2="${x0+w}" y2="${y0-h}" stroke="${accent}" stroke-width="3"/>`;}
+else{let d='';for(let i=0;i<=240;i++){const x=i/240,xx=x0+x*w,yy=y0-F(x)*h;d+=(i?'L':'M')+xx+' '+yy;}s+=`<path d="${d}" fill="none" stroke="${accent}" stroke-width="3"/>`; if(model.value==='mixed'){const ax=.55,xb=x0+ax*w,yb=y0-Fleft(ax)*h,ya=y0-F(ax)*h;s+=`<line x1="${xb}" y1="${yb}" x2="${xb}" y2="${ya}" stroke="${orange}" stroke-width="4"/><circle cx="${xb}" cy="${yb}" r="4.4" fill="${panel}" stroke="${orange}" stroke-width="2"/><circle cx="${xb}" cy="${ya}" r="5" fill="${orange}"/>`;}}
+s+=`<line x1="${x0}" y1="${py}" x2="${px}" y2="${py}" stroke="${blue}" stroke-width="2" stroke-dasharray="6 5"/><line x1="${px}" y1="${py}" x2="${px}" y2="${y0}" stroke="${blue}" stroke-width="2" stroke-dasharray="6 5"/><circle cx="${px}" cy="${py}" r="6" fill="${blue}"/>`;s+=`<text x="${x0-12}" y="${py+4}" text-anchor="end" fill="${blue}" font-size="13" font-weight="800">u=${fmt(u)}</text><text x="${px}" y="${y0+42}" text-anchor="middle" fill="${blue}" font-size="13" font-weight="800">Q(u)=${fmt(q)}</text>`;
+// probability mass strip
+const sx=690,sy=82,sw=220,sh=255;s+=`<text x="${sx}" y="${sy-24}" fill="${muted}" font-size="14" font-weight="800">mass on the line</text><line x1="${sx}" y1="${sy+sh}" x2="${sx+sw}" y2="${sy+sh}" stroke="${muted}"/>`;const b1=Math.max(0,q-.10),b2=Math.min(1,q+.10);s+=`<rect x="${sx+b1*sw}" y="${sy+sh-18}" width="${(b2-b1)*sw}" height="18" fill="${accent}" fill-opacity=".20" stroke="${accent}"/>`;
+if(model.value==='discrete'){weights().forEach((wt,i)=>{const x=sx+atoms[i]*sw,hh=wt*190;s+=`<line x1="${x}" y1="${sy+sh}" x2="${x}" y2="${sy+sh-hh}" stroke="${accent}" stroke-width="10" stroke-linecap="round"/><text x="${x}" y="${sy+sh+20}" text-anchor="middle" fill="${muted}" font-size="11">${atoms[i].toFixed(2)}</text>`})}
+else{let d=`M ${sx} ${sy+sh}`;for(let i=0;i<=120;i++){const x=i/120,xx=sx+x*sw,hh=Math.min(190,pdfHeight(x)*70);d+=` L ${xx} ${sy+sh-hh}`;}d+=` L ${sx+sw} ${sy+sh} Z`;s+=`<path d="${d}" fill="${accent}" fill-opacity=".22" stroke="${accent}" stroke-width="2"/>`; if(model.value==='mixed'){const ax=sx+.55*sw,hh=(+mass.value)*180;s+=`<line x1="${ax}" y1="${sy+sh}" x2="${ax}" y2="${sy+sh-hh}" stroke="${orange}" stroke-width="9" stroke-linecap="round"/>`;}}
+s+=`<text x="${sx}" y="${sy+sh+38}" fill="${muted}" font-size="12">The same object: mass distribution, CDF, quantile.</text>`;svg.innerHTML=s;}
+function drawQuantile(){const svg=document.getElementById('quantileSvg'),panel=css('--panel'),border=css('--border'),muted=css('--muted'),text=css('--text'),accent=css('--accent'),blue=css('--blue');let s=`<rect x="8" y="10" width="504" height="245" rx="20" fill="${panel}" stroke="${border}"/>`;const ux=90,uy=50,uh=170,rx=300,rw=155; s+=`<line x1="${ux}" y1="${uy+uh}" x2="${ux}" y2="${uy}" stroke="${muted}"/><text x="${ux}" y="${uy-12}" text-anchor="middle" fill="${muted}" font-size="13">Uâˆˆ[0,1]</text><line x1="${rx}" y1="${uy+uh}" x2="${rx+rw}" y2="${uy+uh}" stroke="${muted}"/><text x="${rx+rw/2}" y="${uy-12}" text-anchor="middle" fill="${muted}" font-size="13">X=Q(U)</text>`;const picks=[.12,.28,.47,.66,.84];picks.forEach((u,i)=>{const y=uy+uh-u*uh,x=rx+Q(u)*rw;s+=`<circle cx="${ux}" cy="${y}" r="5" fill="${blue}"/><path d="M ${ux+8} ${y} C 155 ${y}, 205 ${uy+uh-Q(u)*uh*.25}, ${x} ${uy+uh}" fill="none" stroke="${accent}" stroke-opacity=".42"/><circle cx="${x}" cy="${uy+uh}" r="5" fill="${accent}"/>`;});s+=`<text x="${50}" y="${242}" fill="${muted}" font-size="12">A uniform vertical coordinate is bent into the distribution by Q.</text>`;svg.innerHTML=s;}
+function drawOrder(){const svg=document.getElementById('orderSvg'),panel=css('--panel'),border=css('--border'),muted=css('--muted'),accent=css('--accent'),blue=css('--blue'),orange=css('--orange');let s=`<rect x="8" y="10" width="504" height="245" rx="20" fill="${panel}" stroke="${border}"/>`;const n=+nRange.value,k=+kRange.value; if(uniforms.length!==n)makeSamples();const x0=62,w=390,yU=86,yX=178;s+=`<line x1="${x0}" y1="${yU}" x2="${x0+w}" y2="${yU}" stroke="${muted}"/><line x1="${x0}" y1="${yX}" x2="${x0+w}" y2="${yX}" stroke="${muted}"/><text x="${x0-10}" y="${yU+4}" text-anchor="end" fill="${muted}" font-size="13">U sorted</text><text x="${x0-10}" y="${yX+4}" text-anchor="end" fill="${muted}" font-size="13">Q(U)</text>`;uniforms.forEach((u,i)=>{const x=x0+u*w, qx=x0+Q(u)*w, active=i===k-1; s+=`<line x1="${x}" y1="${yU+9}" x2="${qx}" y2="${yX-9}" stroke="${active?orange:accent}" stroke-opacity="${active?.75:.17}"/><circle cx="${x}" cy="${yU}" r="${active?5:3.2}" fill="${active?orange:blue}"/><circle cx="${qx}" cy="${yX}" r="${active?5:3.2}" fill="${active?orange:accent}"/>`;});const uApprox=k/(n+1),qApprox=Q(uApprox);s+=`<text x="${x0}" y="${230}" fill="${muted}" font-size="12">Rank rule: X(${k}) is near Q(${k}/(${n}+1)) = Q(${uApprox.toFixed(2)}) â‰ˆ ${qApprox.toFixed(2)}.</text>`;svg.innerHTML=s;}
+function refreshText(){const u=+uRange.value,q=Q(u);document.getElementById('eqBox').innerHTML=`Q(u)=inf{x:F(x)â‰¥u}<br>u=${fmt(u)}, &nbsp; Q(u)=${fmt(q)}`;let t='';if(model.value==='smooth')t='Here F is continuous and strictly increasing, so Q behaves like an ordinary inverse.';if(model.value==='discrete')t='Here F is a step function. Many probability levels map to the same atom, so Q has flat pieces.';if(model.value==='mixed')t='Here F has both a continuous slope and a jump. The jump creates an interval of u-levels with the same quantile.';document.getElementById('interpretText').innerHTML=t+' The generalized inverse chooses the first point where accumulated mass reaches the chosen level.';document.getElementById('noticeText').textContent=model.value==='discrete'||model.value==='mixed'?'Right-continuity means the value at a jump is the top of the jump. That is why atoms are included by events of the form {Xâ‰¤x}.':'For a smooth distribution, horizontal probability levels and vertical CDF values correspond one-to-one.';document.getElementById('mainSub').innerHTML=view==='cdf'?'horizontal u meets the graph at the leftmost admissible x':'the inverse picture reads the graph from probability level back to x';}
+function drawAll(){refreshControls();refreshText();drawMain();drawQuantile();drawOrder()}
+makeSamples();drawAll();
+</script>
+</body>
+</html>
+

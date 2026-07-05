@@ -1,0 +1,167 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="google-site-verification" content="google2c37f7a4206c9d3a.html">
+<meta name="google-site-verification" content="fSWAEb_oSSHr_eJXL9gHYxIn879tRaBwJ42f_aD9o2s">
+<meta name="google-site-verification" content="ftZ4QVMrlub9jbolsIeo4Ix4UBw0-BJrFeorzqKLXng">
+<meta name="description" content="Interactive diagram for random variables as measurable functions.">
+  <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
+<title>Random Variables as Measurable Functions</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NHXHEJP1G0');
+</script>
+<style>
+:root{
+  --bg:#f6f1e8; --card:#fffaf0; --card2:#fbf3e6; --text:#1e2930; --muted:#6b7480;
+  --border:rgba(30,41,48,.14); --accent:#2f8f83; --accent2:rgba(47,143,131,.14);
+  --accent3:rgba(47,143,131,.30); --red:#b96a62; --blue:#547aa5; --shadow:0 18px 48px rgba(26,34,40,.09);
+  --grid:rgba(30,41,48,.08); --svgText:#263238; --line:rgba(30,41,48,.22);
+}
+[data-theme="dark"]{
+  --bg:#0f1418; --card:#171d22; --card2:#12181d; --text:#e8eef1; --muted:#9aa6ad;
+  --border:rgba(232,238,241,.12); --accent:#67c9bd; --accent2:rgba(103,201,189,.12);
+  --accent3:rgba(103,201,189,.28); --red:#df928b; --blue:#91b3d6; --shadow:0 22px 58px rgba(0,0,0,.30);
+  --grid:rgba(232,238,241,.08); --svgText:#e8eef1; --line:rgba(232,238,241,.22);
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 10% 0%,var(--accent2),transparent 30rem),radial-gradient(circle at 100% 18%,rgba(84,122,165,.10),transparent 26rem),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;transition:.25s background,.25s color}
+.wrap{width:min(1240px,calc(100% - 32px));margin:0 auto;padding:28px 0 46px}
+header{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:18px}
+h1{margin:0;font-size:clamp(1.55rem,3vw,2.35rem);line-height:1.04;letter-spacing:-.045em;font-weight:780}
+.subtitle{margin:9px 0 0;color:var(--muted);line-height:1.55;max-width:760px;font-size:.98rem}.themeBtn{border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:999px;padding:10px 14px;box-shadow:var(--shadow);cursor:pointer;font-weight:750;white-space:nowrap}.themeBtn:hover{transform:translateY(-1px)}
+.defs{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.def{background:color-mix(in srgb,var(--card2) 94%,transparent);border:1px solid var(--border);border-radius:19px;padding:15px;min-height:110px;box-shadow:0 10px 28px rgba(0,0,0,.03)}.tag{font-size:.73rem;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);font-weight:850;margin-bottom:8px}.math{font-family:Cambria,"Times New Roman",serif;color:var(--text);line-height:1.42;font-size:1.02rem}.grid{display:grid;grid-template-columns:330px 1fr;gap:16px;align-items:start}.card{background:color-mix(in srgb,var(--card) 94%,transparent);border:1px solid var(--border);border-radius:23px;box-shadow:var(--shadow);overflow:hidden}.pad{padding:18px}.controls h2,.panelTitle{margin:0 0 12px;font-size:.82rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:880}.control{padding:13px 0;border-top:1px solid var(--border)}.control:first-of-type{border-top:0;padding-top:0}label{display:flex;justify-content:space-between;align-items:center;gap:12px;font-weight:700;font-size:.91rem;margin-bottom:9px}.value{font-variant-numeric:tabular-nums;color:var(--accent);font-weight:850}input[type="range"]{width:100%;accent-color:var(--accent)}select,button.small{width:100%;border:1px solid var(--border);background:var(--card2);color:var(--text);border-radius:13px;padding:10px 11px;outline:none;font-weight:700;cursor:pointer}.small:hover{transform:translateY(-1px)}.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}.seg button.active{border-color:var(--accent);background:var(--accent2)}.main{display:grid;gap:16px}.plotHead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:16px 18px 0}.plotTitle{font-size:1rem;font-weight:850;letter-spacing:-.02em}.plotSub{font-size:.83rem;color:var(--muted);text-align:right;line-height:1.45}.stage{padding:8px 10px 12px}.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}.interpret{display:grid;grid-template-columns:1.06fr .94fr;gap:16px}.statement{line-height:1.58;font-size:.95rem}.statement strong{color:var(--accent)}.notice{border-left:3px solid var(--accent);padding-left:13px;color:var(--muted);font-size:.92rem;line-height:1.55}.formulaBox{margin-top:10px;background:var(--accent2);border:1px solid var(--accent3);border-radius:16px;padding:12px;color:var(--text);overflow:auto}.summary{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;font-size:.9rem;line-height:1.48}.summary div{background:var(--card2);border:1px solid var(--border);border-radius:16px;padding:12px}.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--border);background:var(--card2);border-radius:999px;padding:7px 10px;color:var(--muted);font-size:.79rem;font-weight:750}.dot{width:8px;height:8px;border-radius:99px;background:var(--accent);display:inline-block}svg{width:100%;height:auto;display:block}.svgText{fill:var(--svgText);font-family:Inter,ui-sans-serif,system-ui,sans-serif}.svgMuted{fill:var(--muted)}.axis{stroke:var(--line);stroke-width:1.5}.gridLine{stroke:var(--grid);stroke-width:1}.softFill{fill:var(--accent2)}.preFill{fill:var(--accent);opacity:.18}.preStroke{stroke:var(--accent);stroke-width:2}.targetFill{fill:var(--blue);opacity:.18;stroke:var(--blue);stroke-width:2}.arrow{stroke:var(--accent);stroke-width:2.4;fill:none;marker-end:url(#arrowHead)}.backArrow{stroke:var(--red);stroke-width:2.2;stroke-dasharray:7 6;fill:none;marker-end:url(#redHead)}.fiber{stroke:var(--line);stroke-width:1;opacity:.62}.selected{fill:var(--red);stroke:var(--card);stroke-width:2}.inDot{fill:var(--accent);opacity:.9}.outDot{fill:var(--muted);opacity:.25}.legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;padding:0 8px 8px}.legend .pill{font-size:.76rem}footer{text-align:center;color:var(--muted);font-size:.78rem;margin-top:16px}@media(max-width:1020px){.grid,.two,.interpret,.defs{grid-template-columns:1fr}header{flex-direction:column}.themeBtn{align-self:flex-start}}@media(max-width:540px){.wrap{width:min(100% - 20px,1240px);padding-top:18px}.pad{padding:14px}.summary{grid-template-columns:1fr}.plotHead{flex-direction:column}.plotSub{text-align:left}}
+</style>
+</head>
+<body data-theme="light">
+<div class="wrap">
+<header>
+  <div><h1>Random Variables as Measurable Functions</h1><p class="subtitle">A random variable is not first a distribution. It is a measurable map. Geometry: outcomes live in Î©, values live in a target space, and observable events are pulled back by inverse images.</p></div>
+  <button class="themeBtn" id="themeBtn">Dark mode</button>
+</header>
+<section class="defs">
+  <div class="def"><div class="tag">Map</div><div class="math">X : (Î©, ð“•) â†’ (â„, ð“‘(â„))<br>Ï‰ â†¦ X(Ï‰)</div></div>
+  <div class="def"><div class="tag">Measurable</div><div class="math">B âˆˆ ð“‘(â„) â‡’ Xâ»Â¹(B) âˆˆ ð“•</div></div>
+  <div class="def"><div class="tag">Information</div><div class="math">Ïƒ(X) = { Xâ»Â¹(B) : B âˆˆ ð“‘(â„) }</div></div>
+  <div class="def"><div class="tag">Transform</div><div class="math">Y = g(X)<br>Yâ»Â¹(C)=Xâ»Â¹(gâ»Â¹(C))</div></div>
+</section>
+<main class="grid">
+<aside class="card pad controls">
+  <h2>Controls</h2>
+  <div class="control"><label for="mode">Random object</label><select id="mode"><option value="projection">Real variable: X(u,v)=u</option><option value="diagonal">Real variable: X(u,v)=(u+v)/2</option><option value="step">Discrete observation: coarse X</option><option value="vector">Random vector: X(u,v)=(u,v)</option></select></div>
+  <div class="control"><label for="a">Left endpoint / xâ‚€ <span class="value" id="aVal">0.30</span></label><input id="a" type="range" min="0.00" max="0.95" step="0.01" value="0.30"></div>
+  <div class="control"><label for="b">Right endpoint / xâ‚ <span class="value" id="bVal">0.68</span></label><input id="b" type="range" min="0.05" max="1.00" step="0.01" value="0.68"></div>
+  <div class="control" id="yControls"><label for="c">Lower yâ‚€ <span class="value" id="cVal">0.25</span></label><input id="c" type="range" min="0.00" max="0.95" step="0.01" value="0.25"><label for="d" style="margin-top:12px">Upper yâ‚ <span class="value" id="dVal">0.70</span></label><input id="d" type="range" min="0.05" max="1.00" step="0.01" value="0.70"></div>
+  <div class="control"><label for="u">Outcome coordinate u <span class="value" id="uVal">0.42</span></label><input id="u" type="range" min="0.02" max="0.98" step="0.01" value="0.42"></div>
+  <div class="control"><label for="v">Outcome coordinate v <span class="value" id="vVal">0.58</span></label><input id="v" type="range" min="0.02" max="0.98" step="0.01" value="0.58"></div>
+  <div class="control"><label for="transform">Transformation g</label><select id="transform"><option value="identity">g(x)=x</option><option value="threshold">g(x)=1{x â‰¥ 0.5}</option><option value="coarse">g(x)=floor(3x)/3</option><option value="square">g(x)=xÂ²</option></select></div>
+  <div class="formulaBox" id="formulaBox">Xâ»Â¹(B) is the region of Î© whose arrows land inside B.</div>
+</aside>
+<section class="main">
+  <div class="card">
+    <div class="plotHead"><div><div class="plotTitle">Forward map and inverse image</div><div class="pill"><span class="dot"></span> choose B in the target, then pull it back to Î©</div></div><div class="plotSub" id="mainSub">A direct image sends points forward; an inverse image sends observable sets backward.</div></div>
+    <div class="stage"><svg id="mainSvg" viewBox="0 0 960 430" role="img" aria-label="Random variable as a measurable map"></svg></div>
+    <div class="legend"><span class="pill">green = Xâ»Â¹(B)</span><span class="pill">red point = selected outcome Ï‰</span><span class="pill">dashed arrow = inverse image</span></div>
+  </div>
+  <div class="two">
+    <div class="card"><div class="plotHead"><div class="plotTitle">Observable information Ïƒ(X)</div><div class="plotSub" id="infoSub">events distinguish only what X can see</div></div><div class="stage"><svg id="infoSvg" viewBox="0 0 470 260"></svg></div></div>
+    <div class="card"><div class="plotHead"><div class="plotTitle">Transformation g(X)</div><div class="plotSub" id="transSub">transforming values changes information</div></div><div class="stage"><svg id="transSvg" viewBox="0 0 470 260"></svg></div></div>
+  </div>
+  <div class="interpret">
+    <div class="card pad"><div class="panelTitle">Interpretation</div><div class="statement" id="interp"><strong>Map:</strong> X sends each outcome Ï‰ to a numerical value. <strong>Inverse map:</strong> an observable claim about values, B, becomes an event about outcomes, Xâ»Â¹(B).</div></div>
+    <div class="card pad"><div class="panelTitle">What to notice</div><div class="notice" id="notice">The inverse image is the central object: probability statements about X are always probabilities of events back in Î©.</div></div>
+  </div>
+  <div class="card pad"><div class="panelTitle">Compact exam-style summary</div><div class="summary"><div><b>Random variable.</b><br>A map X:Î©â†’â„ such that Borel sets pull back to measurable events.</div><div><b>Probability law.</b><br>P(XâˆˆB)=P(Xâ»Â¹(B)). The distribution is the pushforward of P by X.</div><div><b>Random vector.</b><br>X:Î©â†’â„áµˆ is measurable when inverse images of Borel sets in â„áµˆ are in ð“•.</div><div><b>Information.</b><br>Ïƒ(X) is the smallest Ïƒ-algebra making X observable.</div></div></div>
+</section>
+</main>
+<footer>Minimal interactive notebook Â· pure HTML/SVG/JavaScript Â· no backend</footer>
+</div>
+<script>
+const S = {
+  mode: document.getElementById('mode'), a: document.getElementById('a'), b: document.getElementById('b'), c: document.getElementById('c'), d: document.getElementById('d'),
+  u: document.getElementById('u'), v: document.getElementById('v'), transform: document.getElementById('transform')
+};
+const ids=['a','b','c','d','u','v'];
+const mainSvg=document.getElementById('mainSvg'), infoSvg=document.getElementById('infoSvg'), transSvg=document.getElementById('transSvg');
+const yControls=document.getElementById('yControls');
+const formulaBox=document.getElementById('formulaBox'), interp=document.getElementById('interp'), notice=document.getElementById('notice'), mainSub=document.getElementById('mainSub'), infoSub=document.getElementById('infoSub'), transSub=document.getElementById('transSub');
+const themeBtn=document.getElementById('themeBtn');
+function css(name){return getComputedStyle(document.body).getPropertyValue(name).trim();}
+function el(name, attrs={}, parent){const e=document.createElementNS('http://www.w3.org/2000/svg',name); for(const k in attrs){e.setAttribute(k,attrs[k]);} if(parent)parent.appendChild(e); return e;}
+function txt(parent,x,y,s,cls='svgText',size=14,anchor='start',weight='500'){const t=el('text',{x,y,class:cls,'font-size':size,'text-anchor':anchor,'font-weight':weight},parent); t.textContent=s; return t;}
+function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
+function getState(){let a=+S.a.value,b=+S.b.value,c=+S.c.value,d=+S.d.value;if(a>b){[a,b]=[b,a]}if(c>d){[c,d]=[d,c]}return{mode:S.mode.value,a,b,c,d,u:+S.u.value,v:+S.v.value,g:S.transform.value};}
+function Xval(mode,u,v){if(mode==='projection')return u;if(mode==='diagonal')return (u+v)/2;if(mode==='step')return (Math.floor(u*5)+.5)/5;if(mode==='vector')return [u,v];return u;}
+function gval(g,x){if(g==='identity')return x;if(g==='threshold')return x>=.5?1:0;if(g==='coarse')return Math.floor(x*3)/3;if(g==='square')return x*x;return x;}
+function setVals(){for(const id of ids){document.getElementById(id+'Val').textContent=(+document.getElementById(id).value).toFixed(2)} yControls.style.display=S.mode.value==='vector'?'block':'none';}
+function markerDefs(svg){const defs=el('defs',{},svg);const m=el('marker',{id:'arrowHead',viewBox:'0 0 10 10',refX:'8.8',refY:'5',markerWidth:'7',markerHeight:'7',orient:'auto-start-reverse'},defs); el('path',{d:'M 0 0 L 10 5 L 0 10 z',fill:css('--accent')},m);const r=el('marker',{id:'redHead',viewBox:'0 0 10 10',refX:'8.8',refY:'5',markerWidth:'7',markerHeight:'7',orient:'auto-start-reverse'},defs); el('path',{d:'M 0 0 L 10 5 L 0 10 z',fill:css('--red')},r);}
+function drawOmega(svg,x0,y0,L,st){
+  el('rect',{x:x0,y:y0,width:L,height:L,rx:18,fill:'none',stroke:css('--line'),'stroke-width':1.6},svg);
+  for(let i=1;i<5;i++){el('line',{x1:x0+i*L/5,y1:y0,x2:x0+i*L/5,y2:y0+L,class:'gridLine'},svg);el('line',{x1:x0,y1:y0+i*L/5,x2:x0+L,y2:y0+i*L/5,class:'gridLine'},svg)}
+  txt(svg,x0,y0-18,'Î©: outcomes', 'svgText',15,'start','780'); txt(svg,x0+L,y0+L+28,'Ï‰=(u,v)', 'svgMuted',12,'end','600');
+  if(st.mode==='projection'){
+    const xa=x0+st.a*L, xb=x0+st.b*L; el('rect',{x:xa,y:y0,width:xb-xa,height:L,rx:0,class:'preFill'},svg); el('rect',{x:xa,y:y0,width:xb-xa,height:L,fill:'none',class:'preStroke'},svg);
+    for(let z=.1;z<1;z+=.2)el('line',{x1:x0+z*L,y1:y0,x2:x0+z*L,y2:y0+L,class:'fiber'},svg);
+  } else if(st.mode==='diagonal'){
+    const poly=bandPolygon(st.a*2,st.b*2); if(poly.length){el('polygon',{points:poly.map(p=>`${x0+p[0]*L},${y0+(1-p[1])*L}`).join(' '),class:'preFill'},svg); el('polygon',{points:poly.map(p=>`${x0+p[0]*L},${y0+(1-p[1])*L}`).join(' '),fill:'none',class:'preStroke'},svg)}
+    for(let s=.25;s<1.9;s+=.25){const pts=lineSquareSum(s); if(pts.length===2) el('line',{x1:x0+pts[0][0]*L,y1:y0+(1-pts[0][1])*L,x2:x0+pts[1][0]*L,y2:y0+(1-pts[1][1])*L,class:'fiber'},svg)}
+  } else if(st.mode==='step'){
+    for(let k=0;k<5;k++){const val=(k+.5)/5; const inside=val>=st.a&&val<=st.b; el('rect',{x:x0+k*L/5,y:y0,width:L/5,height:L,fill:inside?css('--accent'):'transparent',opacity:inside?.18:0,stroke:css('--line'),'stroke-width':1},svg); if(inside) el('rect',{x:x0+k*L/5,y:y0,width:L/5,height:L,fill:'none',class:'preStroke'},svg); txt(svg,x0+(k+.5)*L/5,y0+L+18,String(k+1),'svgMuted',10,'middle','600')}
+  } else if(st.mode==='vector'){
+    const xa=x0+st.a*L, xb=x0+st.b*L, yc=y0+(1-st.d)*L, yd=y0+(1-st.c)*L; el('rect',{x:xa,y:yc,width:xb-xa,height:yd-yc,rx:6,class:'preFill'},svg); el('rect',{x:xa,y:yc,width:xb-xa,height:yd-yc,rx:6,class:'preStroke',fill:'none'},svg);
+  }
+  for(let i=0;i<17;i++)for(let j=0;j<12;j++){const u=(i+.5)/17, v=(j+.5)/12; let inside=false; if(st.mode==='vector')inside=u>=st.a&&u<=st.b&&v>=st.c&&v<=st.d; else {const x=Xval(st.mode,u,v); inside=x>=st.a&&x<=st.b} el('circle',{cx:x0+u*L,cy:y0+(1-v)*L,r:2.3,class:inside?'inDot':'outDot'},svg)}
+  const sx=x0+st.u*L, sy=y0+(1-st.v)*L; el('circle',{cx:sx,cy:sy,r:7,class:'selected'},svg); txt(svg,sx+10,sy-8,'Ï‰','svgText',13,'start','800'); return [sx,sy];
+}
+function lineSquareSum(s){let pts=[]; if(s>=0&&s<=1){pts.push([0,s]);pts.push([s,0])} else if(s>1&&s<=2){pts.push([s-1,1]);pts.push([1,s-1])} return pts;}
+function clip(poly,fn){let out=[];for(let i=0;i<poly.length;i++){const A=poly[i],B=poly[(i+1)%poly.length], Ain=fn(A), Bin=fn(B); if(Ain&&Bin) out.push(B); else if(Ain&&!Bin) out.push(intersect(A,B,fn)); else if(!Ain&&Bin){out.push(intersect(A,B,fn));out.push(B)}} return out.filter(Boolean);}
+function intersect(A,B,fn){let lo=0,hi=1;for(let k=0;k<30;k++){const m=(lo+hi)/2,P=[A[0]+(B[0]-A[0])*m,A[1]+(B[1]-A[1])*m]; if(fn(A)===fn(P))lo=m;else hi=m}return[A[0]+(B[0]-A[0])*hi,A[1]+(B[1]-A[1])*hi];}
+function bandPolygon(low,high){let p=[[0,0],[1,0],[1,1],[0,1]];p=clip(p,q=>q[0]+q[1]>=low);p=clip(p,q=>q[0]+q[1]<=high);return p;}
+function drawScalarTarget(svg,x0,y0,W,st,selected){
+  txt(svg,x0,y0-86,'Target space â„','svgText',15,'start','780'); el('line',{x1:x0,y1:y0,x2:x0+W,y2:y0,class:'axis'},svg); for(let i=0;i<=10;i++){const x=x0+i*W/10;el('line',{x1:x,y1:y0-5,x2:x,y2:y0+5,stroke:css('--line'),'stroke-width':1},svg); if(i%2===0)txt(svg,x,y0+23,(i/10).toFixed(1),'svgMuted',11,'middle','600')}
+  const xa=x0+st.a*W, xb=x0+st.b*W; el('rect',{x:xa,y:y0-35,width:xb-xa,height:70,rx:12,class:'targetFill'},svg); txt(svg,(xa+xb)/2,y0-48,'B âŠ‚ â„','svgText',13,'middle','800');
+  const sx=x0+selected*W; el('circle',{cx:sx,cy:y0,r:7,class:'selected'},svg); txt(svg,sx,y0-15,'X(Ï‰)','svgText',12,'middle','800'); return [sx,y0];
+}
+function drawVectorTarget(svg,x0,y0,L,st){
+  txt(svg,x0,y0-18,'Target space â„Â²','svgText',15,'start','780'); el('rect',{x:x0,y:y0,width:L,height:L,rx:18,fill:'none',stroke:css('--line'),'stroke-width':1.6},svg); for(let i=1;i<5;i++){el('line',{x1:x0+i*L/5,y1:y0,x2:x0+i*L/5,y2:y0+L,class:'gridLine'},svg);el('line',{x1:x0,y1:y0+i*L/5,x2:x0+L,y2:y0+i*L/5,class:'gridLine'},svg)}
+  const xa=x0+st.a*L, xb=x0+st.b*L, yc=y0+(1-st.d)*L, yd=y0+(1-st.c)*L; el('rect',{x:xa,y:yc,width:xb-xa,height:yd-yc,rx:8,class:'targetFill'},svg); txt(svg,(xa+xb)/2,yc-10,'C âŠ‚ â„Â²','svgText',13,'middle','800'); const sx=x0+st.u*L, sy=y0+(1-st.v)*L; el('circle',{cx:sx,cy:sy,r:7,class:'selected'},svg); txt(svg,sx+10,sy-8,'X(Ï‰)','svgText',12,'start','800'); return [sx,sy];
+}
+function drawMain(){const st=getState(); mainSvg.innerHTML=''; markerDefs(mainSvg); const sx=drawOmega(mainSvg,62,92,250,st); let tx;if(st.mode==='vector'){tx=drawVectorTarget(mainSvg,590,92,250,st)}else{tx=drawScalarTarget(mainSvg,545,252,330,st,Xval(st.mode,st.u,st.v))}
+  el('path',{d:`M ${sx[0]+12} ${sx[1]-8} C 420 ${sx[1]-90}, 465 ${tx[1]-80}, ${tx[0]-12} ${tx[1]-8}`,class:'arrow'},mainSvg);
+  const backStart=st.mode==='vector'?[655,116]:[710,212]; const backEnd=[210,92]; el('path',{d:`M ${backStart[0]} ${backStart[1]} C 450 52, 370 54, ${backEnd[0]} ${backEnd[1]}`,class:'backArrow'},mainSvg); txt(mainSvg,402,70,'inverse image: pull the set back','svgText',13,'middle','780');
+  txt(mainSvg,62,392,preimageText(st),'svgText',15,'start','780'); txt(mainSvg,545,392,targetText(st),'svgText',15,'start','780');
+}
+function preimageText(st){if(st.mode==='vector')return `Xâ»Â¹(C) = {Ï‰ : X(Ï‰) âˆˆ C}`;return `Xâ»Â¹(B) = {Ï‰ âˆˆ Î© : ${st.a.toFixed(2)} â‰¤ X(Ï‰) â‰¤ ${st.b.toFixed(2)}}`;}
+function targetText(st){if(st.mode==='vector')return `C = [${st.a.toFixed(2)},${st.b.toFixed(2)}] Ã— [${st.c.toFixed(2)},${st.d.toFixed(2)}]`;return `B = [${st.a.toFixed(2)}, ${st.b.toFixed(2)}]`;}
+function drawInfo(){const st=getState(); infoSvg.innerHTML=''; const x0=38,y0=55,L=165; txt(infoSvg,24,28,'What can observation X distinguish?', 'svgText',15,'start','820'); el('rect',{x:x0,y:y0,width:L,height:L,rx:16,fill:'none',stroke:css('--line'),'stroke-width':1.4},infoSvg);
+  if(st.mode==='projection'){for(let k=1;k<7;k++)el('line',{x1:x0+k*L/7,y1:y0,x2:x0+k*L/7,y2:y0+L,class:'fiber'},infoSvg); txt(infoSvg,232,92,'fibers: same u', 'svgText',13); txt(infoSvg,232,118,'Ïƒ(X) sees vertical slabs', 'svgMuted',12); txt(infoSvg,232,146,'v is invisible after observing X', 'svgMuted',12)}
+  if(st.mode==='diagonal'){for(let s=.25;s<1.9;s+=.25){const pts=lineSquareSum(s); if(pts.length===2)el('line',{x1:x0+pts[0][0]*L,y1:y0+(1-pts[0][1])*L,x2:x0+pts[1][0]*L,y2:y0+(1-pts[1][1])*L,class:'fiber'},infoSvg)} txt(infoSvg,232,92,'fibers: same u+v', 'svgText',13); txt(infoSvg,232,118,'Ïƒ(X) sees diagonal bands', 'svgMuted',12); txt(infoSvg,232,146,'points on one fiber have same X', 'svgMuted',12)}
+  if(st.mode==='step'){for(let k=0;k<5;k++){el('rect',{x:x0+k*L/5,y:y0,width:L/5,height:L,fill:k%2?css('--accent2'):'transparent',stroke:css('--line'),'stroke-width':1},infoSvg); txt(infoSvg,x0+(k+.5)*L/5,y0+L/2,String(k+1),'svgText',14,'middle','800')} txt(infoSvg,232,92,'finite observation', 'svgText',13); txt(infoSvg,232,118,'Ïƒ(X) is generated by 5 atoms', 'svgMuted',12); txt(infoSvg,232,146,'inside an atom, X cannot separate points', 'svgMuted',12)}
+  if(st.mode==='vector'){for(let i=1;i<5;i++){el('line',{x1:x0+i*L/5,y1:y0,x2:x0+i*L/5,y2:y0+L,class:'gridLine'},infoSvg);el('line',{x1:x0,y1:y0+i*L/5,x2:x0+L,y2:y0+i*L/5,class:'gridLine'},infoSvg)} txt(infoSvg,232,92,'vector observation', 'svgText',13); txt(infoSvg,232,118,'X=(u,v) sees both coordinates', 'svgMuted',12); txt(infoSvg,232,146,'rectangles pull back to rectangles', 'svgMuted',12)}
+}
+function drawTrans(){const st=getState(); transSvg.innerHTML=''; txt(transSvg,24,28,'Transformation of information', 'svgText',15,'start','820'); const x0=52,W=355,y1=88,y2=178; el('line',{x1:x0,y1:y1,x2:x0+W,y2:y1,class:'axis'},transSvg); el('line',{x1:x0,y1:y2,x2:x0+W,y2:y2,class:'axis'},transSvg); txt(transSvg,26,y1+5,'X','svgText',13,'end','800'); txt(transSvg,26,y2+5,'g(X)','svgText',13,'end','800');
+  for(let i=0;i<=10;i++){const x=i/10, px=x0+x*W; el('circle',{cx:px,cy:y1,r:3,fill:css('--muted'),opacity:.45},transSvg); const gx=st.mode==='vector'?x:gval(st.g,x); const gyX=st.g==='threshold'?(gx?x0+W:x0):x0+clamp(gx,0,1)*W; el('path',{d:`M ${px} ${y1+8} C ${px} ${y1+42}, ${gyX} ${y2-42}, ${gyX} ${y2-8}`,stroke:css('--accent'),'stroke-width':1.2,opacity:.42,fill:'none'},transSvg); el('circle',{cx:gyX,cy:y2,r:3,fill:css('--accent'),opacity:.75},transSvg)}
+  txt(transSvg,x0,y1-18,'0','svgMuted',11,'middle','600'); txt(transSvg,x0+W,y1-18,'1','svgMuted',11,'middle','600');
+  let msg='identity preserves information'; if(st.g==='threshold')msg='threshold collapses many values into 0 or 1'; if(st.g==='coarse')msg='coarsening creates fewer observable classes'; if(st.g==='square')msg='on [0,1], square is still one-to-one'; if(st.mode==='vector')msg='a function of a vector may forget coordinates'; txt(transSvg,52,228,msg,'svgMuted',12,'start','650'); transSub.textContent=msg;
+}
+function updateText(){const st=getState(); let x=Xval(st.mode,st.u,st.v); let inside=st.mode==='vector'?(st.u>=st.a&&st.u<=st.b&&st.v>=st.c&&st.v<=st.d):(x>=st.a&&x<=st.b); let xText=Array.isArray(x)?`(${x[0].toFixed(2)}, ${x[1].toFixed(2)})`:x.toFixed(2); formulaBox.innerHTML = st.mode==='vector' ? `C = [${st.a.toFixed(2)},${st.b.toFixed(2)}] Ã— [${st.c.toFixed(2)},${st.d.toFixed(2)}]<br>X(Ï‰)=(${st.u.toFixed(2)},${st.v.toFixed(2)}) ${inside?'âˆˆ':'âˆ‰'} C<br>Xâ»Â¹(C) is the green rectangle in Î©.` : `B = [${st.a.toFixed(2)}, ${st.b.toFixed(2)}]<br>X(Ï‰) = ${xText} ${inside?'âˆˆ':'âˆ‰'} B<br>Xâ»Â¹(B) is the green region in Î©.`;
+  if(st.mode==='projection'){mainSub.textContent='The map X(u,v)=u collapses vertical fibers onto one real line.'; infoSub.textContent='vertical fibers are indistinguishable after observing X'; interp.innerHTML='<strong>Forward map:</strong> each outcome (u,v) is sent to its first coordinate u. <strong>Inverse image:</strong> an interval B on the real line becomes a vertical slab in Î©.'; notice.textContent='The inverse image is not the inverse function. Many outcomes can share the same value, but every target event still pulls back to a well-defined event in Î©.';}
+  if(st.mode==='diagonal'){mainSub.textContent='The map X(u,v)=(u+v)/2 collapses diagonal fibers.'; infoSub.textContent='diagonal bands represent observable numerical claims'; interp.innerHTML='<strong>Forward map:</strong> outcomes on the same diagonal have the same value. <strong>Inverse image:</strong> an interval B becomes a diagonal band.'; notice.textContent='A probability statement such as P(aâ‰¤Xâ‰¤b) is literally the measure of the corresponding diagonal band in Î©.';}
+  if(st.mode==='step'){mainSub.textContent='A discrete random variable converts Î© into finitely many observable atoms.'; infoSub.textContent='finite atoms show coarse observable information'; interp.innerHTML='<strong>Forward map:</strong> whole regions of Î© are sent to the same number. <strong>Inverse image:</strong> an interval B selects a union of atoms.'; notice.textContent='Discrete variables are measurable because every claim about values corresponds to a union of observable atoms.';}
+  if(st.mode==='vector'){mainSub.textContent='A random vector maps outcomes into a geometric target space â„Â².'; infoSub.textContent='rectangles in â„Â² pull back to events in Î©'; interp.innerHTML='<strong>Forward map:</strong> X sends Ï‰ to an ordered pair. <strong>Inverse image:</strong> a target rectangle C becomes the event of outcomes whose vector falls inside C.'; notice.textContent='For random vectors, measurability is still the same logic: Borel sets in the target must pull back to events in the original Ïƒ-algebra.';}
+}
+function render(){setVals();drawMain();drawInfo();drawTrans();updateText();}
+for(const k in S) S[k].addEventListener('input',render);
+themeBtn.addEventListener('click',()=>{const dark=document.body.getAttribute('data-theme')==='dark'; document.body.setAttribute('data-theme',dark?'light':'dark'); themeBtn.textContent=dark?'Dark mode':'Light mode'; render();});
+render();
+</script>
+</body>
+</html>
+

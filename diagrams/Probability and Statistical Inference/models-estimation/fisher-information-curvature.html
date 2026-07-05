@@ -1,0 +1,962 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="google-site-verification" content="google2c37f7a4206c9d3a.html">
+<meta name="google-site-verification" content="fSWAEb_oSSHr_eJXL9gHYxIn879tRaBwJ42f_aD9o2s">
+<meta name="google-site-verification" content="ftZ4QVMrlub9jbolsIeo4Ix4UBw0-BJrFeorzqKLXng">
+<meta name="description" content="Interactive diagram for Fisher information and curvature.">
+  <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
+<title>Score, Fisher Information, and Cramer-Rao</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NHXHEJP1G0');
+</script>
+<style>
+  :root{
+    --bg:#f5f1e8;
+    --panel:#fffaf3;
+    --panel2:#fbf6ed;
+    --text:#19222b;
+    --muted:#67727e;
+    --border:rgba(25,34,43,.12);
+    --grid:rgba(25,34,43,.075);
+    --accent:#2d8e84;
+    --accentSoft:rgba(45,142,132,.13);
+    --accentLine:rgba(45,142,132,.34);
+    --blue:#466fb4;
+    --violet:#7b63b4;
+    --rose:#b35b77;
+    --warn:#b97158;
+    --gold:#b8892d;
+    --shadow:0 16px 45px rgba(21,31,41,.08);
+    --radius:22px;
+  }
+  [data-theme="dark"]{
+    --bg:#0f151a;
+    --panel:#151d24;
+    --panel2:#11181f;
+    --text:#ebf1f5;
+    --muted:#9dadb8;
+    --border:rgba(235,241,245,.12);
+    --grid:rgba(235,241,245,.08);
+    --accent:#66d0c0;
+    --accentSoft:rgba(102,208,192,.12);
+    --accentLine:rgba(102,208,192,.34);
+    --blue:#8ab7ff;
+    --violet:#c0abff;
+    --rose:#f2a5c0;
+    --warn:#e0a184;
+    --gold:#e0b766;
+    --shadow:0 18px 55px rgba(0,0,0,.30);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    min-height:100vh;
+    color:var(--text);
+    font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background:
+      radial-gradient(circle at 12% 0%, var(--accentSoft), transparent 29rem),
+      radial-gradient(circle at 100% 20%, rgba(70,111,180,.10), transparent 24rem),
+      var(--bg);
+  }
+  .wrap{width:min(1320px,calc(100% - 28px));margin:0 auto;padding:26px 0 44px}
+  header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:16px}
+  h1{margin:0;font-size:clamp(1.8rem,3vw,2.55rem);line-height:1.03;letter-spacing:-.045em;font-weight:820}
+  .subtitle{margin:10px 0 0;color:var(--muted);max-width:980px;font-size:.98rem;line-height:1.58}
+  .themeBtn{
+    border:1px solid var(--border);background:var(--panel);color:var(--text);
+    border-radius:999px;padding:10px 15px;box-shadow:var(--shadow);cursor:pointer;
+    font-weight:760;white-space:nowrap
+  }
+  .defs{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+  .card,.def{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .def{padding:14px 15px;min-height:132px}
+  .tag{color:var(--muted);font-size:.74rem;font-weight:850;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
+  .math{
+    font-family:Cambria, Georgia, "Times New Roman", serif;
+    font-size:1.01rem;line-height:1.45;color:var(--text)
+  }
+  .formula{display:block;margin:.1rem 0 .28rem;font-size:1.06rem;line-height:1.35}
+  .mathNote{
+    display:block;color:var(--muted);font-family:Inter, ui-sans-serif, sans-serif;
+    font-size:.82rem;line-height:1.35;margin-top:.22rem
+  }
+  .layout{display:grid;grid-template-columns:360px 1fr;gap:16px;align-items:start}
+  .side{padding:16px}
+  .panelTitle{margin:0 0 12px;color:var(--muted);font-size:.82rem;font-weight:900;text-transform:uppercase;letter-spacing:.13em}
+  .control{padding:12px 0;border-top:1px solid var(--border)}
+  .control:first-of-type{border-top:0;padding-top:0}
+  label{display:flex;justify-content:space-between;gap:10px;margin-bottom:9px;font-weight:730;font-size:.91rem}
+  .value{color:var(--accent);font-weight:850;font-variant-numeric:tabular-nums}
+  input[type="range"]{width:100%;accent-color:var(--accent)}
+  select{
+    width:100%;border:1px solid var(--border);background:var(--panel2);color:var(--text);
+    border-radius:14px;padding:10px 11px;font-weight:720;outline:none
+  }
+  .eqBox{
+    margin-top:10px;border:1px solid var(--accentLine);background:var(--accentSoft);
+    border-radius:17px;padding:12px;font-family:Cambria, Georgia, "Times New Roman", serif;
+    line-height:1.5;color:var(--text)
+  }
+  .miniGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+  .miniStat{border:1px solid var(--border);background:var(--panel2);border-radius:14px;padding:10px 11px}
+  .miniStat .k{font-size:.76rem;color:var(--muted);font-weight:860;text-transform:uppercase;letter-spacing:.09em}
+  .miniStat .v{font-size:1rem;font-weight:850;margin-top:6px}
+  .logicList{display:grid;gap:8px;margin-top:10px}
+  .logicItem{
+    border:1px solid var(--border);background:var(--panel2);border-radius:14px;
+    padding:10px 11px;font-size:.88rem;color:var(--muted);display:flex;gap:9px;align-items:flex-start
+  }
+  .mark{font-weight:900;color:var(--accent);min-width:18px}
+  .main{display:grid;gap:16px}
+  .plotCard{padding:10px 10px 6px}
+  .plotHead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:8px 9px 2px}
+  .plotTitle{font-weight:850;letter-spacing:-.02em}
+  .plotSub{color:var(--muted);font-size:.84rem;line-height:1.42;text-align:right}
+  .pillRow{display:flex;flex-wrap:wrap;gap:8px;margin-top:9px}
+  .pill{
+    border:1px solid var(--border);background:var(--panel2);border-radius:999px;padding:7px 10px;
+    color:var(--muted);font-size:.80rem;font-weight:760;display:inline-flex;gap:7px;align-items:center
+  }
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block;background:var(--accent)}
+  svg{display:block;width:100%}
+  #mainSvg{height:560px}
+  #midLeftSvg,#midRightSvg{height:330px}
+  #crlbSvg{height:460px}
+  .twoMid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .wideRow{display:grid;grid-template-columns:1fr;gap:16px}
+  .interpretation{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
+  .cardPad{padding:16px}
+  .smallText{color:var(--muted);font-size:.92rem;line-height:1.58}
+  .notice{border-left:3px solid var(--accent);padding-left:13px;color:var(--muted);font-size:.92rem;line-height:1.55}
+  .summary{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+  .summary > div{
+    border:1px solid var(--border);background:var(--panel2);border-radius:16px;padding:12px;
+    font-size:.90rem;line-height:1.50
+  }
+  footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
+  @media(max-width:1150px){
+    .defs,.layout,.twoMid,.wideRow,.interpretation{grid-template-columns:1fr}
+    header{flex-direction:column}
+    .themeBtn{align-self:flex-start}
+    #mainSvg{height:600px}
+  }
+  @media(max-width:560px){
+    .wrap{width:min(100% - 18px,1320px);padding-top:18px}
+    .summary{grid-template-columns:1fr}
+    .miniGrid{grid-template-columns:1fr}
+    #mainSvg{height:700px}
+  }
+</style>
+</head>
+<body data-theme="light">
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Score, Fisher information, and the CramÃ©râ€“Rao bound</h1>
+      <div class="subtitle">
+        A single geometric chain: the law changes with the parameter, the score records the relative parameter derivative, Fisher information averages the squared score under the law, the expected log-likelihood inherits the same curvature, and the CramÃ©râ€“Rao lower bound converts that curvature into a minimum variance scale.
+      </div>
+    </div>
+    <button class="themeBtn" id="themeBtn">Dark mode</button>
+  </header>
+
+  <section class="defs">
+    <div class="def">
+      <div class="tag">Law derivative</div>
+      <div class="math">
+        <span class="formula">âˆ‚<sub>Î¸</sub> f<sub>Î¸</sub>(x)</span>
+        <span class="mathNote">how the probability law changes when Î¸ moves</span>
+      </div>
+    </div>
+    <div class="def">
+      <div class="tag">Score</div>
+      <div class="math">
+        <span class="formula">U<sub>Î¸</sub>(x)=âˆ‚<sub>Î¸</sub>\log f<sub>Î¸</sub>(x)=\frac{âˆ‚<sub>Î¸</sub>f<sub>Î¸</sub>(x)}{f<sub>Î¸</sub>(x)}</span>
+        <span class="mathNote">relative parameter sensitivity of the law</span>
+      </div>
+    </div>
+    <div class="def">
+      <div class="tag">Information</div>
+      <div class="math">
+        <span class="formula">Iâ‚(Î¸)=E<sub>Î¸</sub>[U<sub>Î¸</sub>(X)^2]</span>
+        <span class="formula">= -E<sub>Î¸</sub}[H<sub>Î¸</sub>(X)]</span>
+        <span class="mathNote">variance of the score = expected negative curvature</span>
+      </div>
+    </div>
+    <div class="def">
+      <div class="tag">CramÃ©râ€“Rao</div>
+      <div class="math">
+        <span class="formula">Var(T)\ge \frac{1}{nIâ‚(Î¸)}</span>
+        <span class="mathNote">for unbiased regular estimators <em>T</em></span>
+      </div>
+    </div>
+  </section>
+
+  <main class="layout">
+    <aside class="card side">
+      <div class="panelTitle">Controls</div>
+
+      <div class="control">
+        <label for="modelSelect">Model</label>
+        <select id="modelSelect">
+          <option value="normalMean">Normal mean, Ïƒ known</option>
+          <option value="bernoulli">Bernoulli probability</option>
+          <option value="poisson">Poisson rate</option>
+          <option value="exponential">Exponential rate</option>
+          <option value="normalVar">Normal variance, Î¼ = 0</option>
+        </select>
+      </div>
+
+      <div class="control">
+        <label for="estimatorSelect">Estimator</label>
+        <select id="estimatorSelect"></select>
+      </div>
+
+      <div class="control">
+        <label for="thetaRange">Parameter Î¸ <span class="value" id="thetaVal">1.20</span></label>
+        <input id="thetaRange" type="range" min="0.1" max="4.0" step="0.02" value="1.20" />
+      </div>
+
+      <div class="control">
+        <label for="xRange">Observed value x <span class="value" id="xVal">1.00</span></label>
+        <input id="xRange" type="range" min="-4" max="8" step="0.05" value="1.00" />
+      </div>
+
+      <div class="control">
+        <label for="deltaRange">Parameter movement Î”Î¸ <span class="value" id="deltaVal">0.20</span></label>
+        <input id="deltaRange" type="range" min="-0.80" max="0.80" step="0.02" value="0.20" />
+      </div>
+
+      <div class="control">
+        <label for="nRange">Sample size n <span class="value" id="nVal">80</span></label>
+        <input id="nRange" type="range" min="5" max="500" step="5" value="80" />
+      </div>
+
+      <div class="control">
+        <label for="repsRange">Monte Carlo reps <span class="value" id="repsVal">1000</span></label>
+        <input id="repsRange" type="range" min="200" max="2200" step="100" value="1000" />
+      </div>
+
+      <div class="control">
+        <label for="seedRange">Simulation seed <span class="value" id="seedVal">7</span></label>
+        <input id="seedRange" type="range" min="1" max="40" step="1" value="7" />
+      </div>
+
+      <div class="eqBox" id="eqBox"></div>
+      <div class="miniGrid" id="miniGrid"></div>
+
+      <div class="control">
+        <div class="panelTitle" style="margin-bottom:8px">Theoretical chain</div>
+        <div class="logicList" id="logicList"></div>
+      </div>
+    </aside>
+
+    <section class="main">
+      <div class="card plotCard">
+        <div class="plotHead">
+          <div>
+            <div class="plotTitle">One-object geometry: law derivative â†’ score â†’ information integrand</div>
+            <div class="pillRow">
+              <span class="pill"><span class="dot"></span> law <em>f</em><sub>Î¸</sub>(x)</span>
+              <span class="pill"><span class="dot" style="background:var(--warn)"></span> âˆ‚<sub>Î¸</sub><em>f</em><sub>Î¸</sub>(x)</span>
+              <span class="pill"><span class="dot" style="background:var(--violet)"></span> score <em>U</em><sub>Î¸</sub>(x)</span>
+              <span class="pill"><span class="dot" style="background:var(--rose)"></span> <em>U</em><sub>Î¸</sub>(x)<sup>2</sup><em>f</em><sub>Î¸</sub>(x)</span>
+              <span class="pill"><span class="dot" style="background:var(--blue)"></span> selected <em>x</em></span>
+            </div>
+          </div>
+          <div class="plotSub">The last panel makes <em>I</em><sub>1</sub>(Î¸) = âˆ« <em>U</em><sub>Î¸</sub>(x)<sup>2</sup><em>f</em><sub>Î¸</sub>(x) dx literally visible as total weighted area / sum.</div>
+        </div>
+        <svg id="mainSvg" viewBox="0 0 980 560" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+
+      <div class="twoMid">
+        <div class="card plotCard">
+          <div class="plotHead">
+            <div class="plotTitle">Curvature of expected log-likelihood</div>
+            <div class="plotSub"><em>m</em>(t) = E<sub>Î¸</sub>[log <em>f</em><sub>t</sub>(X)], with <em>m</em>â€³(Î¸) = âˆ’<em>I</em><sub>1</sub>(Î¸)</div>
+          </div>
+          <svg id="midLeftSvg" viewBox="0 0 520 330" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+
+        <div class="card plotCard">
+          <div class="plotHead">
+            <div class="plotTitle">Score law and information equality</div>
+            <div class="plotSub">distribution of <em>U</em><sub>Î¸</sub>(X), with E[UÂ²] and âˆ’E[H]</div>
+          </div>
+          <svg id="midRightSvg" viewBox="0 0 520 330" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+      </div>
+
+      <div class="wideRow">
+        <div class="card plotCard">
+          <div class="plotHead">
+            <div>
+              <div class="plotTitle">CramÃ©râ€“Rao lower bound</div>
+              <div class="pillRow">
+                <span class="pill"><span class="dot" style="background:var(--blue)"></span> efficient</span>
+                <span class="pill"><span class="dot" style="background:var(--gold)"></span> inefficient</span>
+                <span class="pill"><span class="dot" style="background:var(--warn)"></span> biased</span>
+                <span class="pill"><span class="dot"></span> selected</span>
+              </div>
+            </div>
+            <div class="plotSub">three simple pictures: efficient, inefficient, biased</div>
+          </div>
+          <svg id="crlbSvg" viewBox="0 0 980 430" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+      </div>
+
+      <div class="interpretation">
+        <div class="card cardPad">
+          <div class="panelTitle">Interpretation</div>
+          <div class="smallText" id="interpretText"></div>
+          <div class="summary">
+            <div><strong>Score.</strong><br>For fixed Î¸, the map <em>x</em> â†¦ <em>U</em><sub>Î¸</sub>(x) tells how one observation pushes the parameter locally in log units.</div>
+            <div><strong>Fisher information.</strong><br><em>I</em><sub>1</sub>(Î¸) is not a new object: it is the law-weighted squared score, hence the average local sensitivity of the law to Î¸.</div>
+            <div><strong>Curvature.</strong><br>Under regularity, the same <em>I</em><sub>1</sub>(Î¸) is the downward curvature of the expected log-likelihood at the truth.</div>
+            <div><strong>CRLB.</strong><br>Unbiased regular estimators obey Var(T) â‰¥ 1/(n<em>I</em><sub>1</sub>(Î¸)). For biased regular estimators, the derivative of the bias changes the variance bound, and MSE adds biasÂ².</div>
+          </div>
+        </div>
+
+        <div class="card cardPad">
+          <div class="panelTitle">What to notice</div>
+          <div class="notice" id="noticeText"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>Minimal interactive notebook â€” score, Fisher information, information equality, curvature, and the CramÃ©râ€“Rao lower bound.</footer>
+</div>
+
+<script>
+const body=document.body;
+const themeBtn=document.getElementById("themeBtn");
+const modelSelect=document.getElementById("modelSelect");
+const estimatorSelect=document.getElementById("estimatorSelect");
+const thetaRange=document.getElementById("thetaRange");
+const xRange=document.getElementById("xRange");
+const deltaRange=document.getElementById("deltaRange");
+const nRange=document.getElementById("nRange");
+const repsRange=document.getElementById("repsRange");
+const seedRange=document.getElementById("seedRange");
+
+function css(v){return getComputedStyle(body).getPropertyValue(v).trim();}
+function fmt(x){
+  if(!isFinite(x)) return "âˆž";
+  if(Math.abs(x)<1e-4 && x!==0) return x.toExponential(2);
+  if(Math.abs(x)<10) return x.toFixed(4);
+  return x.toFixed(2);
+}
+function line(x1,y1,x2,y2,stroke,w=1,op=1,dash=""){
+  return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+stroke+'" stroke-width="'+w+'" stroke-opacity="'+op+'" '+(dash?'stroke-dasharray="'+dash+'"':'')+'/>';
+}
+function text(x,y,s,fill,size=13,weight=600,anchor="start"){
+  return '<text x="'+x+'" y="'+y+'" fill="'+fill+'" font-size="'+size+'" font-weight="'+weight+'" text-anchor="'+anchor+'" font-family="Inter,system-ui,sans-serif">'+s+'</text>';
+}
+function px(v,a,b,x0,x1){return x0+(v-a)/(b-a)*(x1-x0);}
+function py(v,a,b,y0,y1){return y1-(v-a)/(b-a)*(y1-y0);}
+function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
+function fract(x){return x-Math.floor(x);}
+function rand(i,j=0,k=0){return fract(Math.sin(i*127.1+j*311.7+k*19.13+17.13)*43758.5453);}
+function normalRand(i,j=0,k=0){
+  const u=Math.max(1e-9,rand(i,j,k));
+  const v=rand(i,j,k+99);
+  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);
+}
+function expRand(i,j=0,k=0){return -Math.log(Math.max(1e-10,1-rand(i,j,k)));}
+function poissonRand(lambda,i,j){
+  const L=Math.exp(-lambda); let k=0,p=1;
+  while(p>L && k<100){k++;p*=rand(i,j+k);}
+  return k-1;
+}
+function factorialLog(k){let s=0;for(let i=2;i<=k;i++) s+=Math.log(i);return s;}
+
+const estimatorOptions = {
+  normalMean: [
+    {value:"mean", label:"Sample mean xÌ„", unbiased:true, regular:true, efficient:true}
+  ],
+  bernoulli: [
+    {value:"mean", label:"Sample proportion xÌ„", unbiased:true, regular:true, efficient:true}
+  ],
+  poisson: [
+    {value:"mean", label:"Sample mean xÌ„", unbiased:true, regular:true, efficient:true}
+  ],
+  exponential: [
+    {value:"mle", label:"MLE n/Î£Xáµ¢", unbiased:false, regular:true, efficient:false},
+    {value:"unbiasedRate", label:"Unbiased rate estimator (nâˆ’1)/Î£Xáµ¢", unbiased:true, regular:true, efficient:false}
+  ],
+  normalVar: [
+    {value:"secondMoment", label:"Second moment nâ»Â¹Î£Xáµ¢Â²", unbiased:true, regular:true, efficient:true}
+  ]
+};
+
+function populateEstimatorOptions(){
+  const m=modelSelect.value;
+  const opts=estimatorOptions[m];
+  estimatorSelect.innerHTML = opts.map(o=>'<option value="'+o.value+'">'+o.label+'</option>').join("");
+}
+
+function estimatorMeta(){
+  const m=modelSelect.value;
+  const opts=estimatorOptions[m];
+  const val=estimatorSelect.value || opts[0].value;
+  return opts.find(o=>o.value===val) || opts[0];
+}
+
+function adjustControls(){
+  const m=modelSelect.value;
+  if(m==="normalMean"){
+    thetaRange.min="-2"; thetaRange.max="3"; thetaRange.step="0.02";
+    xRange.min="-5"; xRange.max="6"; xRange.step="0.05";
+  }else if(m==="bernoulli"){
+    thetaRange.min="0.05"; thetaRange.max="0.95"; thetaRange.step="0.01";
+    xRange.min="0"; xRange.max="1"; xRange.step="1";
+  }else if(m==="poisson"){
+    thetaRange.min="0.15"; thetaRange.max="5"; thetaRange.step="0.02";
+    xRange.min="0"; xRange.max="12"; xRange.step="1";
+  }else if(m==="exponential"){
+    thetaRange.min="0.15"; thetaRange.max="4"; thetaRange.step="0.02";
+    xRange.min="0"; xRange.max="12"; xRange.step="0.05";
+  }else if(m==="normalVar"){
+    thetaRange.min="0.15"; thetaRange.max="5"; thetaRange.step="0.02";
+    xRange.min="-7"; xRange.max="7"; xRange.step="0.05";
+  }
+  thetaRange.value = String(clamp(Number(thetaRange.value), Number(thetaRange.min), Number(thetaRange.max)));
+  xRange.value = String(clamp(Number(xRange.value), Number(xRange.min), Number(xRange.max)));
+}
+function info1(theta){
+  const m=modelSelect.value;
+  if(m==="normalMean") return 1;
+  if(m==="bernoulli") return 1/(theta*(1-theta));
+  if(m==="poisson") return 1/theta;
+  if(m==="exponential") return 1/(theta*theta);
+  if(m==="normalVar") return 1/(2*theta*theta);
+  return 1;
+}
+function law(theta,x){
+  const m=modelSelect.value;
+  if(m==="normalMean"){
+    return Math.exp(-0.5*(x-theta)*(x-theta))/Math.sqrt(2*Math.PI);
+  }
+  if(m==="bernoulli"){
+    return x===1 ? theta : (1-theta);
+  }
+  if(m==="poisson"){
+    const k=Math.round(x);
+    return Math.exp(-theta+k*Math.log(theta)-factorialLog(k));
+  }
+  if(m==="exponential"){
+    return x>=0 ? theta*Math.exp(-theta*x) : 0;
+  }
+  if(m==="normalVar"){
+    return Math.exp(-0.5*x*x/theta)/Math.sqrt(2*Math.PI*theta);
+  }
+  return 0;
+}
+function loglaw(theta,x){
+  const m=modelSelect.value;
+  if(m==="normalMean") return -0.5*(x-theta)*(x-theta)-0.5*Math.log(2*Math.PI);
+  if(m==="bernoulli") return x===1 ? Math.log(theta) : Math.log(1-theta);
+  if(m==="poisson"){
+    const k=Math.round(x);
+    return -theta + k*Math.log(theta) - factorialLog(k);
+  }
+  if(m==="exponential") return x>=0 ? Math.log(theta) - theta*x : -Infinity;
+  if(m==="normalVar") return -0.5*Math.log(2*Math.PI*theta)-0.5*x*x/theta;
+  return -Infinity;
+}
+function score1(theta,x){
+  const m=modelSelect.value;
+  if(m==="normalMean") return x-theta;
+  if(m==="bernoulli") return x/theta - (1-x)/(1-theta);
+  if(m==="poisson") return x/theta - 1;
+  if(m==="exponential") return 1/theta - x;
+  if(m==="normalVar") return -1/(2*theta) + x*x/(2*theta*theta);
+  return 0;
+}
+function hess1(theta,x){
+  const m=modelSelect.value;
+  if(m==="normalMean") return -1;
+  if(m==="bernoulli") return -x/(theta*theta) - (1-x)/((1-theta)*(1-theta));
+  if(m==="poisson") return -x/(theta*theta);
+  if(m==="exponential") return -1/(theta*theta);
+  if(m==="normalVar") return 1/(2*theta*theta) - x*x/(theta*theta*theta);
+  return -1;
+}
+function lawDerivative(theta,x){ return law(theta,x)*score1(theta,x); }
+
+function sampleOne(theta,i,j){
+  const m=modelSelect.value;
+  if(m==="normalMean") return theta + normalRand(i,j);
+  if(m==="bernoulli") return rand(i,j)<theta ? 1 : 0;
+  if(m==="poisson") return poissonRand(theta,i,j);
+  if(m==="exponential") return expRand(i,j)/theta;
+  if(m==="normalVar") return Math.sqrt(theta)*normalRand(i,j);
+  return 0;
+}
+function mean(a){return a.reduce((s,x)=>s+x,0)/a.length;}
+function variance(a){const m=mean(a); return mean(a.map(x=>(x-m)*(x-m)));}
+function sampleEstimator(xs){
+  const m=modelSelect.value, est=estimatorSelect.value;
+  const n=xs.length, s=xs.reduce((a,b)=>a+b,0), ss=xs.reduce((a,b)=>a+b*b,0);
+  if(est==="mean") return s/n;
+  if(est==="mle") return Math.max(0.0001, n/s);
+  if(est==="unbiasedRate") return n>1 ? Math.max(0.0001, (n-1)/s) : Math.max(0.0001, n/s);
+  if(est==="secondMoment") return ss/n;
+  return s/n;
+}
+function estimatorSim(){
+  const theta=Number(thetaRange.value), reps=Number(repsRange.value), n=Number(nRange.value), seed=Number(seedRange.value);
+  const vals=[];
+  for(let r=0;r<reps;r++){
+    const xs=[];
+    for(let i=1;i<=n;i++) xs.push(sampleOne(theta, seed+r*11, i));
+    vals.push(sampleEstimator(xs));
+  }
+  return vals;
+}
+function scoreSamples(){
+  const theta=Number(thetaRange.value), reps=Number(repsRange.value), seed=Number(seedRange.value);
+  const u=[], h=[];
+  for(let i=0;i<reps;i++){
+    const x=sampleOne(theta,seed+i,3);
+    u.push(score1(theta,x));
+    h.push(hess1(theta,x));
+  }
+  return {u,h};
+}
+function expectedLogDrop(t,theta){
+  const m=modelSelect.value;
+  if(m==="normalMean") return -0.5*(t-theta)*(t-theta);
+  if(m==="bernoulli") return theta*Math.log(t/theta)+(1-theta)*Math.log((1-t)/(1-theta));
+  if(m==="poisson") return theta*Math.log(t/theta)-(t-theta);
+  if(m==="exponential") return Math.log(t/theta)-t/theta+1;
+  if(m==="normalVar") return -0.5*Math.log(t/theta)-0.5*theta/t+0.5;
+  return 0;
+}
+function xDomain(){
+  const m=modelSelect.value, th=Number(thetaRange.value);
+  if(m==="normalMean") return [th-4, th+4];
+  if(m==="bernoulli") return [-0.4,1.4];
+  if(m==="poisson") return [-0.5, Math.max(8, Math.ceil(th+5*Math.sqrt(th+1)))];
+  if(m==="exponential") return [0, Math.max(8, 6/th)];
+  if(m==="normalVar") return [-4*Math.sqrt(th), 4*Math.sqrt(th)];
+  return [-4,4];
+}
+function tDomain(){
+  const th=Number(thetaRange.value), d=Math.abs(Number(deltaRange.value))+0.35, m=modelSelect.value;
+  if(m==="bernoulli") return [Math.max(.01, th-d/3), Math.min(.99, th+d/3)];
+  if(m==="normalMean") return [th-2*d, th+2*d];
+  return [Math.max(.02, th-2*d), th+2*d];
+}
+function normpdf(x,m,s){
+  s=Math.max(s,1e-8);
+  return Math.exp(-0.5*((x-m)/s)*((x-m)/s))/(s*Math.sqrt(2*Math.PI));
+}
+
+function drawMain(){
+  const theta=Number(thetaRange.value), xObs=Number(xRange.value), delta=Number(deltaRange.value);
+  const xChosen=Number(xRange.value);
+  const [xlo,xhi]=xDomain();
+  const svg=document.getElementById("mainSvg");
+  const panel=css("--panel"), panel2=css("--panel2"), border=css("--border"), grid=css("--grid"), muted=css("--muted"), textc=css("--text");
+  const acc=css("--accent"), warn=css("--warn"), violet=css("--violet"), rose=css("--rose"), blue=css("--blue");
+  const cols = [
+    {x0:48,x1:265,y0:68,y1:250,label:"law fÎ¸(x)", color:acc},
+    {x0:287,x1:504,y0:68,y1:250,label:"law derivative âˆ‚Î¸fÎ¸(x)", color:warn},
+    {x0:526,x1:743,y0:68,y1:250,label:"score UÎ¸(x)", color:violet},
+    {x0:765,x1:932,y0:68,y1:250,label:"information integrand UÎ¸(x)Â²fÎ¸(x)", color:rose}
+  ];
+  let h='<rect x="8" y="10" width="964" height="530" rx="20" fill="'+panel+'" stroke="'+border+'"/>';
+  h+=text(58,38,"The same object seen at four levels",muted,13,850);
+
+  let xs=[];
+  const m=modelSelect.value;
+  if(m==="bernoulli"){ xs=[0,1]; }
+  else if(m==="poisson"){ for(let k=0;k<=Math.floor(xhi);k++) xs.push(k); }
+  else { for(let i=0;i<=600;i++) xs.push(xlo+(xhi-xlo)*i/600); }
+
+  const fVals = xs.map(x=>law(theta,x));
+  const dVals = xs.map(x=>lawDerivative(theta,x));
+  const uVals = xs.map(x=>score1(theta,x));
+  const qVals = xs.map(x=>score1(theta,x)*score1(theta,x)*law(theta,x));
+  const maxF = Math.max(...fVals,1e-6);
+  const maxD = Math.max(...dVals.map(v=>Math.abs(v)),1e-6);
+  const maxU = Math.max(...uVals.map(v=>Math.abs(v)),1e-6);
+  const maxQ = Math.max(...qVals,1e-6);
+  const yRanges = [
+    [0, maxF*1.18],
+    [-maxD*1.18, maxD*1.18],
+    [-maxU*1.18, maxU*1.18],
+    [0, maxQ*1.18]
+  ];
+
+  function drawSeries(P, vals, range, color){
+    const [ya,yb]=range;
+    for(let k=0;k<=3;k++) h+=line(P.x0,P.y1-(P.y1-P.y0)*k/3,P.x1,P.y1-(P.y1-P.y0)*k/3,grid,1,.7);
+    h+=line(P.x0,P.y1,P.x1,P.y1,muted,1,.75)+line(P.x0,P.y0,P.x0,P.y1,muted,1,.5);
+    if(ya<0 && yb>0){
+      const zy=py(0,ya,yb,P.y0,P.y1);
+      h+=line(P.x0,zy,P.x1,zy,blue,1.1,.35,"5 5");
+    }
+    if(m==="bernoulli" || m==="poisson"){
+      xs.forEach((x,i)=>{
+        const xp=px(x,xlo,xhi,P.x0,P.x1);
+        const y0=py(0,ya,yb,P.y0,P.y1);
+        const y=py(vals[i],ya,yb,P.y0,P.y1);
+        h+=line(xp,y0,xp,y,color,3,.78);
+        h+='<circle cx="'+xp+'" cy="'+y+'" r="4.6" fill="'+color+'"/>';
+      });
+    }else{
+      let p="";
+      xs.forEach((x,i)=>{
+        p+=(i===0?"M":"L")+" "+px(x,xlo,xhi,P.x0,P.x1)+" "+py(vals[i],ya,yb,P.y0,P.y1);
+      });
+      h+='<path d="'+p+'" fill="none" stroke="'+color+'" stroke-width="2.5"/>';
+    }
+  }
+
+  drawSeries(cols[0], fVals, yRanges[0], acc);
+  drawSeries(cols[1], dVals, yRanges[1], warn);
+  drawSeries(cols[2], uVals, yRanges[2], violet);
+  drawSeries(cols[3], qVals, yRanges[3], rose);
+
+  // selected x marker
+  cols.forEach((P,idx)=>{
+    const vals=[fVals,dVals,uVals,qVals][idx];
+    const range=yRanges[idx];
+    const xp=px(clamp(xChosen,xlo,xhi),xlo,xhi,P.x0,P.x1);
+    const yp=py(vals[xs.findIndex(v=>Math.abs(v-xChosen)<1e-9)] ?? (()=>{
+      // interpolate nearest for continuous case
+      let best=0, dist=1e99;
+      xs.forEach((v,i)=>{const d=Math.abs(v-xChosen); if(d<dist){dist=d; best=i;}});
+      return vals[best];
+    })(), range[0], range[1], P.y0, P.y1);
+    h+=line(xp,P.y0,xp,P.y1,blue,1.3,.50,"5 5");
+    h+='<circle cx="'+xp+'" cy="'+yp+'" r="5.4" fill="'+blue+'"/>';
+  });
+
+  cols.forEach((P,i)=>{
+    h+=text(P.x0+5,273,P.label,P.color,11,900);
+  });
+
+  // bottom local approximation box
+  h+='<rect x="46" y="306" width="888" height="196" rx="20" fill="'+panel2+'" stroke="'+border+'"/>';
+  h+=text(66,334,"Local parameter movement at the selected observation",textc,14,900);
+  const t2 = clamp(theta+delta, Number(thetaRange.min), Number(thetaRange.max));
+  const actual = loglaw(t2,xObs)-loglaw(theta,xObs);
+  const linear = score1(theta,xObs)*(t2-theta);
+  const df = lawDerivative(theta,xObs);
+  const f = law(theta,xObs);
+  const U = score1(theta,xObs);
+  const I = info1(theta);
+
+  const rowY = 390, x0 = 78, boxW=145, gap=24;
+  const nodes = [
+    ["1","change in law", "âˆ‚Î¸fÎ¸(x)", fmt(df), warn],
+    ["2","relative change", "UÎ¸(x)=âˆ‚Î¸f/f", fmt(U), violet],
+    ["3","square-weight", "UÎ¸(x)^2 fÎ¸(x)", fmt(U*U*f), rose],
+    ["4","average over X", "Iâ‚(Î¸)", fmt(I), acc],
+    ["5","variance floor", "1/(nIâ‚)", fmt(1/(Number(nRange.value)*I)), blue]
+  ];
+  nodes.forEach((node,i)=>{
+    const x=x0+i*(boxW+gap);
+    h+='<rect x="'+x+'" y="'+rowY+'" width="'+boxW+'" height="66" rx="16" fill="'+panel+'" stroke="'+border+'"/>';
+    h+=text(x+16,rowY+20,node[0],node[4],11,900);
+    h+=text(x+72,rowY+20,node[1],muted,9,850,"middle");
+    h+=text(x+72,rowY+39,node[2],node[4],10,900,"middle");
+    h+=text(x+72,rowY+57,node[3],textc,10,850,"middle");
+    if(i<nodes.length-1) h+=text(x+boxW+gap/2,rowY+36,"â†’",muted,18,900,"middle");
+  });
+  h+=text(66,480,"At this x:  Î” log f(x;Î¸) â‰ˆ UÎ¸(x)Î”Î¸,  actual = "+fmt(actual)+",  linear = "+fmt(linear), muted,11,850);
+
+  svg.innerHTML=h;
+}
+
+function drawCurvature(){
+  const theta=Number(thetaRange.value), I=info1(theta);
+  const [lo,hi]=tDomain();
+  const svg=document.getElementById("midLeftSvg");
+  const panel=css("--panel"), border=css("--border"), grid=css("--grid"), muted=css("--muted"), textc=css("--text");
+  const acc=css("--accent"), warn=css("--warn"), blue=css("--blue");
+  const X0=58,X1=488,Y0=52,Y1=250;
+  const vals=[];
+  for(let i=0;i<=500;i++){ const t=lo+(hi-lo)*i/500; vals.push(expectedLogDrop(t,theta)); }
+  const ylo=Math.min(...vals)*1.12, yhi=.04;
+  let h='<rect x="8" y="10" width="504" height="310" rx="18" fill="'+panel+'" stroke="'+border+'"/>';
+  for(let k=0;k<=4;k++) h+=line(X0,Y1-(Y1-Y0)*k/4,X1,Y1-(Y1-Y0)*k/4,grid,1,.8);
+  h+=line(X0,py(0,ylo,yhi,Y0,Y1),X1,py(0,ylo,yhi,Y0,Y1),blue,1.3,.40,"5 5");
+  h+=line(X0,Y1,X1,Y1,muted,1,.75)+line(X0,Y0,X0,Y1,muted,1,.5);
+  let p="",q="";
+  for(let i=0;i<=600;i++){
+    const t=lo+(hi-lo)*i/600;
+    const y=expectedLogDrop(t,theta);
+    const qq=-0.5*I*(t-theta)*(t-theta);
+    p+=(i===0?"M":"L")+" "+px(t,lo,hi,X0,X1)+" "+py(y,ylo,yhi,Y0,Y1);
+    q+=(i===0?"M":"L")+" "+px(t,lo,hi,X0,X1)+" "+py(qq,ylo,yhi,Y0,Y1);
+  }
+  h+='<path d="'+p+'" fill="none" stroke="'+acc+'" stroke-width="2.8"/>';
+  h+='<path d="'+q+'" fill="none" stroke="'+warn+'" stroke-width="2.3" stroke-opacity=".80" stroke-dasharray="7 5"/>';
+  const tx=px(theta,lo,hi,X0,X1), ty=py(0,ylo,yhi,Y0,Y1);
+  h+=line(tx,Y0,tx,Y1,blue,1.3,.48,"5 5");
+  h+='<circle cx="'+tx+'" cy="'+ty+'" r="5.8" fill="'+blue+'"/>';
+  h+=text(70,34,"expected log-likelihood profile",muted,12,850);
+  h+='<rect x="300" y="66" width="170" height="84" rx="14" fill="'+css("--panel2")+'" stroke="'+border+'"/>';
+  h+=text(316,88,"Curvature reading",textc,12,900);
+  h+=text(316,108,"Iâ‚(Î¸) = "+fmt(I),warn,10,900);
+  h+=text(316,126,"mâ€³(Î¸) = âˆ’"+fmt(I),acc,10,900);
+  h+=text(X1,Y1+22,"parameter t",muted,10,850,"end");
+  svg.innerHTML=h;
+}
+
+function drawScoreLaw(){
+  const theta=Number(thetaRange.value);
+  const {u,h:hess}=scoreSamples();
+  const empVar=variance(u), empNegH=-mean(hess), I=info1(theta);
+  const svg=document.getElementById("midRightSvg");
+  const panel=css("--panel"), border=css("--border"), grid=css("--grid"), muted=css("--muted"), textc=css("--text");
+  const acc=css("--accent"), warn=css("--warn"), violet=css("--violet"), blue=css("--blue");
+  const X0=58,X1=300,Y0=52,Y1=250;
+  let lo=Math.min(...u), hi=Math.max(...u);
+  if(!isFinite(lo)||!isFinite(hi)||lo===hi){lo=-1;hi=1;}
+  const pad=(hi-lo)*0.15 || 1;
+  lo-=pad; hi+=pad;
+  const bins=22, bw=(hi-lo)/bins, counts=Array(bins).fill(0);
+  u.forEach(v=>{
+    const k=Math.max(0, Math.min(bins-1, Math.floor((v-lo)/(hi-lo)*bins)));
+    counts[k]++;
+  });
+  const dens=counts.map(c=>c/(u.length*bw));
+  const maxY=Math.max(...dens,.1)*1.18;
+  let h='<rect x="8" y="10" width="504" height="310" rx="18" fill="'+panel+'" stroke="'+border+'"/>';
+  for(let k=0;k<=4;k++) h+=line(X0,Y1-(Y1-Y0)*k/4,X1,Y1-(Y1-Y0)*k/4,grid,1,.8);
+  h+=line(X0,Y1,X1,Y1,muted,1,.75)+line(X0,Y0,X0,Y1,muted,1,.5);
+  const z0=px(0,lo,hi,X0,X1);
+  h+=line(z0,Y0,z0,Y1,blue,1.2,.38,"5 5");
+  for(let k=0;k<bins;k++){
+    const x=px(lo+k*bw,lo,hi,X0,X1), y=py(dens[k],0,maxY,Y0,Y1);
+    const w=(X1-X0)/bins - 2;
+    h+='<rect x="'+(x+1)+'" y="'+y+'" width="'+w+'" height="'+(Y1-y)+'" rx="4" fill="'+violet+'" fill-opacity=".68"/>';
+  }
+  h+=text(68,34,"score distribution under PÎ¸",muted,12,850);
+
+  // equality bars
+  const BX=340, BY=84, BH=140, BW=36;
+  const vals=[["E(UÂ²)",empVar,violet],["âˆ’E(H)",empNegH,warn],["Iâ‚",I,acc]];
+  const maxB=Math.max(empVar,empNegH,I,1e-6);
+  vals.forEach((d,i)=>{
+    const ht=BH*d[1]/maxB;
+    const x=BX+i*44;
+    h+='<rect x="'+x+'" y="'+(BY+BH-ht)+'" width="'+BW+'" height="'+ht+'" rx="6" fill="'+d[2]+'" fill-opacity=".75"/>';
+    h+=text(x+BW/2,BY+BH+18,d[0],muted,9,850,"middle");
+    h+=text(x+BW/2,BY+BH-ht-7,fmt(d[1]),textc,9,900,"middle");
+  });
+  h+=text(344,34,"information equality",muted,12,850);
+  h+=text(340,252,"regularity:  E[U]=0,  E[UÂ²]=âˆ’E[H]",muted,10,850);
+  svg.innerHTML=h;
+}
+
+function drawCRLB(){
+  const theta=Number(thetaRange.value), n=Number(nRange.value), I=info1(theta), est=estimatorSim();
+  const meta=estimatorMeta();
+  const v=variance(est), estMean=mean(est), bias=estMean-theta, crlb=1/(n*I);
+  const crlbSe=Math.sqrt(crlb), estSe=Math.sqrt(Math.max(v,1e-10));
+  const svg=document.getElementById("crlbSvg");
+  const panel=css("--panel"), panel2=css("--panel2"), border=css("--border"), grid=css("--grid"), muted=css("--muted"), textc=css("--text");
+  const acc=css("--accent"), blue=css("--blue"), warn=css("--warn"), gold=css("--gold");
+
+  const efficient = {title:"Efficient", sub:"unbiased and minimal", center:theta, sd:crlbSe, bias:0, color:blue};
+  const inefficient = {title:"Inefficient", sub:"unbiased but wider", center:theta, sd:1.9*crlbSe, bias:0, color:gold};
+  const biased = {title:"Biased", sub:"shifted center", center:theta+1.25*crlbSe, sd:0.75*crlbSe, bias:1.25*crlbSe, color:warn};
+  const cases=[efficient,inefficient,biased];
+
+  const maxR=Math.max(...cases.map(c=>Math.sqrt(c.sd*c.sd+c.bias*c.bias)), estSe, crlbSe);
+  let lo=Math.min(theta-3.2*maxR, estMean-2.8*estSe, biased.center-2.8*biased.sd);
+  let hi=Math.max(theta+3.2*maxR, estMean+2.8*estSe, biased.center+2.8*biased.sd);
+  if(!isFinite(lo)||!isFinite(hi)||lo===hi){lo=theta-1;hi=theta+1;}
+  const pad=(hi-lo)*0.08; lo-=pad; hi+=pad;
+
+  let h='<rect x="8" y="10" width="964" height="405" rx="20" fill="'+panel+'" stroke="'+border+'"/>';
+  h+=text(76,40,"CramÃ©râ€“Rao: compare center and spread",muted,13,850);
+
+  // One very compact theorem strip
+  h+='<rect x="72" y="62" width="820" height="44" rx="15" fill="'+panel2+'" stroke="'+border+'"/>';
+  h+=text(96,90,"unbiased + regular",muted,12,850);
+  h+=text(230,90,"â‡’",muted,14,900);
+  h+=text(266,90,"Var(T) â‰¥ 1/(nIâ‚)",blue,13,900);
+  h+=text(456,90,"efficient means equality",blue,12,850);
+  h+=text(666,90,"biased: compare MSE",warn,12,900);
+
+  const cardY=128, cardW=270, cardH=158, gap=27, startX=74;
+
+  function drawCard(c, i){
+    const x=startX+i*(cardW+gap), y=cardY;
+    const axisX0=x+32, axisX1=x+cardW-32, axisY=y+85;
+    const thetaX=px(theta,lo,hi,axisX0,axisX1);
+    const centerX=px(c.center,lo,hi,axisX0,axisX1);
+    const sdA=px(c.center-c.sd,lo,hi,axisX0,axisX1);
+    const sdB=px(c.center+c.sd,lo,hi,axisX0,axisX1);
+    const crlbA=px(theta-crlbSe,lo,hi,axisX0,axisX1);
+    const crlbB=px(theta+crlbSe,lo,hi,axisX0,axisX1);
+
+    h+='<rect x="'+x+'" y="'+y+'" width="'+cardW+'" height="'+cardH+'" rx="20" fill="'+panel2+'" stroke="'+border+'"/>';
+    h+=text(x+22,y+30,c.title,textc,16,900);
+    h+=text(x+22,y+52,c.sub,muted,11,850);
+
+    // Axis and theta
+    h+=line(axisX0,axisY,axisX1,axisY,muted,1.2,.75);
+    h+=line(thetaX,axisY-35,thetaX,axisY+38,blue,1.3,.42,"5 5");
+    h+=text(thetaX,axisY-40,"Î¸",blue,10,900,"middle");
+
+    // CRLB reference is faint in all cards
+    h+=line(crlbA,axisY-18,crlbB,axisY-18,blue,2,.25);
+    h+=text((crlbA+crlbB)/2,axisY-26,"CRLB",blue,9,850,"middle");
+
+    // estimator interval
+    h+=line(sdA,axisY,sdB,axisY,c.color,6,.82);
+    h+=line(sdA,axisY-9,sdA,axisY+9,c.color,2,.82);
+    h+=line(sdB,axisY-9,sdB,axisY+9,c.color,2,.82);
+    h+='<circle cx="'+centerX+'" cy="'+axisY+'" r="7" fill="'+c.color+'"/>';
+    h+=text(centerX,axisY+26,"E[T]",c.color,10,900,"middle");
+
+    if(Math.abs(c.bias)>1e-10){
+      // bias arrow and MSE radius, but clean
+      const mseR=Math.sqrt(c.sd*c.sd+c.bias*c.bias);
+      const mseA=px(c.center-mseR,lo,hi,axisX0,axisX1);
+      const mseB=px(c.center+mseR,lo,hi,axisX0,axisX1);
+      h+=line(thetaX,axisY+42,centerX,axisY+42,warn,2,.8);
+      h+=text((thetaX+centerX)/2,axisY+58,"bias",warn,10,900,"middle");
+      h+=line(mseA,axisY+63,mseB,axisY+63,warn,2,.35,"5 5");
+      h+=text((mseA+mseB)/2,axisY+79,"MSE radius",warn,9,850,"middle");
+    }else{
+      h+=text((sdA+sdB)/2,axisY+48,"standard deviation",c.color,10,850,"middle");
+    }
+  }
+  cases.forEach(drawCard);
+
+  // Selected estimator row: clean, without labels inside axis
+  const stripX=74, stripY=322, stripW=820, stripH=58;
+  const axisX0=stripX+260, axisX1=stripX+stripW-36, axisY=stripY+35;
+  h+='<rect x="'+stripX+'" y="'+stripY+'" width="'+stripW+'" height="'+stripH+'" rx="18" fill="'+panel2+'" stroke="'+border+'"/>';
+  h+=text(stripX+22,stripY+25,"Selected estimator",textc,14,900);
+  h+=text(stripX+22,stripY+46,(meta.unbiased?"unbiased":"biased")+" Â· "+(meta.efficient?"efficient":"not efficient"),meta.efficient?blue:(meta.unbiased?gold:warn),11,900);
+
+  const thetaX=px(theta,lo,hi,axisX0,axisX1);
+  const centerX=px(estMean,lo,hi,axisX0,axisX1);
+  const sdA=px(estMean-estSe,lo,hi,axisX0,axisX1);
+  const sdB=px(estMean+estSe,lo,hi,axisX0,axisX1);
+  const crlbA=px(theta-crlbSe,lo,hi,axisX0,axisX1);
+  const crlbB=px(theta+crlbSe,lo,hi,axisX0,axisX1);
+
+  h+=line(axisX0,axisY,axisX1,axisY,muted,1.2,.75);
+  h+=line(thetaX,stripY+12,thetaX,stripY+50,blue,1.3,.45,"5 5");
+  h+=line(crlbA,axisY-12,crlbB,axisY-12,blue,2,.28);
+  h+=line(sdA,axisY,sdB,axisY,acc,5,.82);
+  h+='<circle cx="'+centerX+'" cy="'+axisY+'" r="6.5" fill="'+acc+'"/>';
+  h+=text(axisX1-6,stripY+20,"Var â‰ˆ "+fmt(v),acc,10,900,"end");
+  h+=text(axisX1-6,stripY+42,"CRLB = "+fmt(crlb)+" Â· bias â‰ˆ "+fmt(bias),muted,9,850,"end");
+
+  svg.innerHTML=h;
+}
+
+function updateText(){
+  adjustControls();
+  document.getElementById("thetaVal").textContent=fmt(Number(thetaRange.value));
+  document.getElementById("xVal").textContent=fmt(Number(xRange.value));
+  document.getElementById("deltaVal").textContent=fmt(Number(deltaRange.value));
+  document.getElementById("nVal").textContent=String(Number(nRange.value));
+  document.getElementById("repsVal").textContent=String(Number(repsRange.value));
+  document.getElementById("seedVal").textContent=String(Number(seedRange.value));
+
+  const theta=Number(thetaRange.value), x=Number(xRange.value), n=Number(nRange.value), meta=estimatorMeta();
+  const I=info1(theta), {u,h}=scoreSamples(), empVar=variance(u), empNegH=-mean(h), est=estimatorSim(), ev=variance(est), eb=mean(est)-theta;
+
+  let modelFormula="";
+  if(modelSelect.value==="normalMean") modelFormula="X\\sim N(\\theta,1),\\quad U_\\theta(x)=x-\\theta,\\quad I_1(\\theta)=1";
+  if(modelSelect.value==="bernoulli") modelFormula="X\\sim Bernoulli(\\theta),\\quad U_\\theta(x)=\\frac{x}{\\theta}-\\frac{1-x}{1-\\theta}";
+  if(modelSelect.value==="poisson") modelFormula="X\\sim Poisson(\\theta),\\quad U_\\theta(x)=\\frac{x}{\\theta}-1";
+  if(modelSelect.value==="exponential") modelFormula="X\\sim Exp(rate\\ \\theta),\\quad U_\\theta(x)=\\frac{1}{\\theta}-x";
+  if(modelSelect.value==="normalVar") modelFormula="X\\sim N(0,\\theta),\\quad U_\\theta(x)= -\\frac{1}{2\\theta}+\\frac{x^2}{2\\theta^2}";
+  document.getElementById("eqBox").innerHTML =
+    '<span class="formula">'+modelFormula+'</span>' +
+    '<span class="mathNote">Regular chain: âˆ‚Î¸fÎ¸ â†’ UÎ¸ = âˆ‚Î¸fÎ¸ / fÎ¸ â†’ Iâ‚(Î¸) = E[UÂ²] = âˆ’E[H] â†’ Var(T) â‰¥ 1/(nIâ‚).</span>';
+
+  const mini = [
+    ["Iâ‚(Î¸)", fmt(I)],
+    ["nIâ‚(Î¸)", fmt(n*I)],
+    ["E(UÂ²) sim", fmt(empVar)],
+    ["âˆ’E(H) sim", fmt(empNegH)],
+    ["Var(est)", fmt(ev)],
+    ["CRLB", fmt(1/(n*I))]
+  ];
+  document.getElementById("miniGrid").innerHTML = mini.map(d =>
+    '<div class="miniStat"><div class="k">'+d[0]+'</div><div class="v">'+d[1]+'</div></div>'
+  ).join("");
+
+  const logic = [
+    ["1", "Differentiate the law with respect to Î¸: âˆ‚Î¸fÎ¸."],
+    ["2", "Normalize by the law itself: UÎ¸ = âˆ‚Î¸fÎ¸ / fÎ¸."],
+    ["3", "Square and average under PÎ¸: Iâ‚(Î¸) = EÎ¸[UÎ¸(X)Â²]."],
+    ["4", "Under regularity: Iâ‚(Î¸) = âˆ’EÎ¸[HÎ¸(X)]."],
+    ["â†’", "For unbiased regular T: Var(T) â‰¥ 1/(nIâ‚(Î¸))."]
+  ];
+  document.getElementById("logicList").innerHTML = logic.map(d =>
+    '<div class="logicItem"><span class="mark">'+d[0]+'</span><span>'+d[1]+'</span></div>'
+  ).join("");
+
+  let interp = "The app is organized around a single mathematical object. First, the distribution changes with the parameter. The score turns this into a relative log change. Fisher information is the average squared size of that score, so it measures how much the law reveals about Î¸. The same number then controls expected log-likelihood curvature and the best possible variance scale.";
+  if(modelSelect.value==="normalMean") interp = "For the normal mean with known variance, each observation contributes exactly one unit of information. The sample mean is efficient, so the CRLB frontier is attained.";
+  if(modelSelect.value==="bernoulli") interp = "For Bernoulli, there are only two score values, one for failure and one for success. The sample proportion is efficient and reaches the CRLB.";
+  if(modelSelect.value==="poisson") interp = "For Poisson, the sample mean is unbiased and efficient. The score law is discrete, but the chain score â†’ information â†’ curvature â†’ CRLB stays identical.";
+  if(modelSelect.value==="exponential") interp = meta.unbiased
+      ? "For the exponential rate, the unbiased estimator (nâˆ’1)/Î£Xáµ¢ satisfies the unbiasedness requirement, but it does not attain the CRLB. This makes the gap between admissible and efficient behavior visible."
+      : "For the exponential rate, the MLE n/Î£Xáµ¢ is biased in finite samples. The CRLB is formally an unbiased bound, so the comparison is heuristic unless the estimator is bias-corrected.";
+  if(modelSelect.value==="normalVar") interp = "For the normal variance with mean fixed at zero, the second moment nâ»Â¹Î£Xáµ¢Â² is unbiased and efficient. The CRLB is attained exactly.";
+  document.getElementById("interpretText").innerHTML = interp;
+
+  let notice = "The most important panel is the first: it makes score and information literal geometric transforms of the same probability law.";
+  if(meta.unbiased && meta.efficient) notice = "This estimator is efficient: its spread sits right on the CramÃ©râ€“Rao frontier, so the lower bound is attained.";
+  if(meta.unbiased && !meta.efficient) notice = "This estimator is unbiased, so the CRLB applies exactly. The visible gap above the frontier is inefficiency, not bias.";
+  if(!meta.unbiased) notice = "The chosen estimator is biased. The CRLB panel remains useful geometrically, but the classical inequality applies only after unbiasedness and regularity are imposed.";
+  document.getElementById("noticeText").innerHTML = notice;
+}
+
+function drawAll(){
+  updateText();
+  drawMain();
+  drawCurvature();
+  drawScoreLaw();
+  drawCRLB();
+}
+
+themeBtn.addEventListener("click",()=>{
+  const dark = body.getAttribute("data-theme")==="dark";
+  body.setAttribute("data-theme", dark ? "light" : "dark");
+  themeBtn.textContent = dark ? "Dark mode" : "Light mode";
+  drawAll();
+});
+modelSelect.addEventListener("input",()=>{
+  populateEstimatorOptions();
+  adjustControls();
+  drawAll();
+});
+estimatorSelect.addEventListener("input", drawAll);
+[thetaRange,xRange,deltaRange,nRange,repsRange,seedRange].forEach(el=>el.addEventListener("input", drawAll));
+
+populateEstimatorOptions();
+adjustControls();
+drawAll();
+</script>
+</body>
+</html>
+
+

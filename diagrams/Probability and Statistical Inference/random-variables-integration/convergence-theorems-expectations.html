@@ -1,0 +1,593 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="google-site-verification" content="google2c37f7a4206c9d3a.html">
+  <meta name="google-site-verification" content="fSWAEb_oSSHr_eJXL9gHYxIn879tRaBwJ42f_aD9o2s">
+  <meta name="google-site-verification" content="ftZ4QVMrlub9jbolsIeo4Ix4UBw0-BJrFeorzqKLXng">
+  <meta name="description" content="Interactive diagram for convergence theorems for expectations.">
+    <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
+<title>Convergence Theorems for Expectations</title>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-NHXHEJP1G0');
+  </script>
+  <style>
+    :root{
+      --bg:#f6f1e8;
+      --panel:#fffaf2;
+      --panel2:#fcf5ea;
+      --text:#17212b;
+      --muted:#65717d;
+      --border:rgba(23,33,43,.12);
+      --grid:rgba(23,33,43,.075);
+      --accent:#2d8e84;
+      --accent2:rgba(45,142,132,.14);
+      --accent3:rgba(45,142,132,.30);
+      --blue:#456fb4;
+      --warn:#ba7356;
+      --violet:#7f63b8;
+      --shadow:0 16px 45px rgba(25,35,45,.08);
+      --radius:22px;
+    }
+    [data-theme="dark"]{
+      --bg:#0f151a;
+      --panel:#151d24;
+      --panel2:#11181f;
+      --text:#ecf2f6;
+      --muted:#9cadb8;
+      --border:rgba(236,242,246,.12);
+      --grid:rgba(236,242,246,.08);
+      --accent:#67cdbf;
+      --accent2:rgba(103,205,191,.13);
+      --accent3:rgba(103,205,191,.28);
+      --blue:#82b7ff;
+      --warn:#e1a184;
+      --violet:#bba6ff;
+      --shadow:0 18px 55px rgba(0,0,0,.30);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--text);
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 10% 0%, var(--accent2), transparent 28rem),
+        radial-gradient(circle at 96% 18%, rgba(69,111,180,.10), transparent 24rem),
+        var(--bg);
+      transition:background .25s ease,color .25s ease;
+    }
+    .wrap{width:min(1260px,calc(100% - 28px));margin:0 auto;padding:26px 0 42px}
+    header{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:16px}
+    h1{margin:0;font-size:clamp(1.7rem,3vw,2.45rem);line-height:1.03;letter-spacing:-.045em;font-weight:820}
+    .subtitle{margin:10px 0 0;color:var(--muted);max-width:820px;font-size:.98rem;line-height:1.58}
+    .themeBtn{border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:999px;padding:10px 15px;box-shadow:var(--shadow);cursor:pointer;font-weight:760;white-space:nowrap}
+    .defs{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+    .def,.card{background:color-mix(in srgb,var(--panel) 96%,transparent);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .def{padding:14px 15px;min-height:118px}
+    .tag{color:var(--muted);font-size:.74rem;font-weight:850;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
+    .math{font-family:Cambria, Georgia, "Times New Roman", serif;line-height:1.45;font-size:1.01rem;color:var(--text)}
+    .layout{display:grid;grid-template-columns:340px 1fr;gap:16px;align-items:start}
+    .side{padding:16px}
+    .panelTitle{margin:0 0 12px;color:var(--muted);font-size:.82rem;font-weight:900;text-transform:uppercase;letter-spacing:.13em}
+    .control{padding:12px 0;border-top:1px solid var(--border)}
+    .control:first-of-type{border-top:0;padding-top:0}
+    label{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px;font-weight:730;font-size:.91rem}
+    .value{color:var(--accent);font-weight:850;font-variant-numeric:tabular-nums}
+    input[type="range"]{width:100%;accent-color:var(--accent)}
+    select,.btn{width:100%;border:1px solid var(--border);background:var(--panel2);color:var(--text);border-radius:14px;padding:10px 11px;font-weight:720;outline:none}
+    .btn{cursor:pointer;transition:transform .15s ease,border-color .2s ease,background .2s ease}
+    .btn:hover{transform:translateY(-1px)}
+    .btn.active{background:var(--accent2);border-color:var(--accent)}
+    .seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .eqBox{margin-top:10px;border:1px solid var(--accent3);background:var(--accent2);border-radius:17px;padding:12px;font-family:Cambria, Georgia, "Times New Roman", serif;line-height:1.46;color:var(--text)}
+    .main{display:grid;gap:16px}
+    .plotCard{padding:10px 10px 6px}
+    .plotHead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:8px 9px 2px}
+    .plotTitle{font-weight:850;letter-spacing:-.02em}
+    .plotSub{color:var(--muted);font-size:.84rem;line-height:1.4;text-align:right}
+    svg{display:block;width:100%}
+    #mainSvg{height:430px}
+    #integralSvg,#logicSvg{height:280px}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .interpretation{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
+    .cardPad{padding:16px}
+    .smallText{color:var(--muted);font-size:.92rem;line-height:1.58}
+    .notice{border-left:3px solid var(--accent);padding-left:13px;color:var(--muted);font-size:.92rem;line-height:1.55}
+    .summary{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+    .summary>div{border:1px solid var(--border);background:var(--panel2);border-radius:16px;padding:12px;font-size:.90rem;line-height:1.50}
+    .pillRow{display:flex;flex-wrap:wrap;gap:8px;margin-top:9px}
+    .pill{border:1px solid var(--border);background:var(--panel2);border-radius:999px;padding:7px 10px;color:var(--muted);font-size:.80rem;font-weight:760;display:inline-flex;gap:7px;align-items:center}
+    .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);display:inline-block}
+    .checklist{display:grid;gap:8px;margin-top:10px}
+    .check{border:1px solid var(--border);background:var(--panel2);border-radius:14px;padding:10px 11px;font-size:.88rem;color:var(--muted);display:flex;gap:9px;align-items:flex-start}
+    .mark{font-weight:900;color:var(--accent);min-width:17px}
+    footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
+    @media(max-width:1080px){
+      .defs,.layout,.two,.interpretation{grid-template-columns:1fr}
+      header{flex-direction:column}
+      .themeBtn{align-self:flex-start}
+      #mainSvg{height:410px}
+    }
+    @media(max-width:560px){
+      .wrap{width:min(100% - 18px,1260px);padding-top:18px}
+      .summary{grid-template-columns:1fr}
+      .seg{grid-template-columns:1fr}
+      #mainSvg{height:390px}
+    }
+  </style>
+</head>
+<body data-theme="light">
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Convergence theorems for expectations</h1>
+        <div class="subtitle">
+          Limit-interchange is a geometric question about mass: does mass rise monotonically, stay trapped under an integrable roof,
+          or escape into thinner and taller spikes? These theorems tell when expectation commutes safely with limits.
+        </div>
+      </div>
+      <button class="themeBtn" id="themeBtn">Dark mode</button>
+    </header>
+
+    <section class="defs">
+      <div class="def">
+        <div class="tag">Monotone convergence</div>
+        <div class="math">0â‰¤fâ‚™â†‘f<br>âˆ«fâ‚™ dP â†‘ âˆ«f dP</div>
+      </div>
+      <div class="def">
+        <div class="tag">Dominated convergence</div>
+        <div class="math">fâ‚™â†’f, |fâ‚™|â‰¤g, âˆ«g dP&lt;âˆž<br>âˆ«fâ‚™ dPâ†’âˆ«f dP</div>
+      </div>
+      <div class="def">
+        <div class="tag">Fatou</div>
+        <div class="math">fâ‚™â‰¥0<br>âˆ«liminf fâ‚™ dP â‰¤ liminf âˆ«fâ‚™ dP</div>
+      </div>
+      <div class="def">
+        <div class="tag">Unsafe interchange</div>
+        <div class="math">fâ‚™â†’0 pointwise<br>but âˆ«fâ‚™ dPâ†›0</div>
+      </div>
+    </section>
+
+    <main class="layout">
+      <aside class="card side">
+        <div class="panelTitle">Controls</div>
+
+        <div class="control">
+          <label for="caseSelect">Theorem / case</label>
+          <select id="caseSelect">
+            <option value="mct">Monotone convergence</option>
+            <option value="dct">Dominated convergence</option>
+            <option value="fatou">Fatou's lemma</option>
+            <option value="unsafe">Unsafe limit interchange</option>
+          </select>
+        </div>
+
+        <div class="control">
+          <label for="nRange">Index n <span class="value" id="nVal">8</span></label>
+          <input id="nRange" type="range" min="1" max="80" step="1" value="8"/>
+        </div>
+
+        <div class="control">
+          <label for="shapeRange">Shape parameter <span class="value" id="shapeVal">1.50</span></label>
+          <input id="shapeRange" type="range" min="0.50" max="4.00" step="0.05" value="1.50"/>
+        </div>
+
+        <div class="control">
+          <label for="speedRange">Convergence speed <span class="value" id="speedVal">2.00</span></label>
+          <input id="speedRange" type="range" min="0.70" max="5.00" step="0.05" value="2.00"/>
+        </div>
+
+        <div class="control">
+          <div class="seg">
+            <button class="btn active" id="showCurrent">Current fâ‚™</button>
+            <button class="btn" id="showMany">Sequence view</button>
+          </div>
+        </div>
+
+        <div class="control">
+          <button class="btn" id="playBtn">Animate n</button>
+        </div>
+
+        <div class="eqBox" id="eqBox">
+          0â‰¤fâ‚™â†‘f â‡’ E[fâ‚™]â†‘E[f].
+        </div>
+
+        <div class="control">
+          <div class="panelTitle" style="margin-bottom:8px">Safe logic</div>
+          <div class="checklist" id="checks"></div>
+        </div>
+      </aside>
+
+      <section class="main">
+        <div class="card plotCard">
+          <div class="plotHead">
+            <div>
+              <div class="plotTitle">Function geometry on Î©=[0,1]</div>
+              <div class="pillRow">
+                <span class="pill"><span class="dot"></span> area = expectation</span>
+                <span class="pill"><span class="dot" style="background:var(--blue)"></span> limit f</span>
+                <span class="pill"><span class="dot" style="background:var(--warn)"></span> domination / warning</span>
+              </div>
+            </div>
+            <div class="plotSub" id="mainSub">The integral is the visible area under fâ‚™.</div>
+          </div>
+          <svg id="mainSvg" viewBox="0 0 980 430" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+
+        <div class="two">
+          <div class="card plotCard">
+            <div class="plotHead">
+              <div class="plotTitle">Expectation sequence</div>
+              <div class="plotSub">E[fâ‚™] versus E[f]</div>
+            </div>
+            <svg id="integralSvg" viewBox="0 0 520 280" preserveAspectRatio="xMidYMid meet"></svg>
+          </div>
+
+          <div class="card plotCard">
+            <div class="plotHead">
+              <div class="plotTitle">Limit-interchange logic</div>
+              <div class="plotSub">which theorem licenses the move?</div>
+            </div>
+            <svg id="logicSvg" viewBox="0 0 520 280" preserveAspectRatio="xMidYMid meet"></svg>
+          </div>
+        </div>
+
+        <div class="interpretation">
+          <div class="card cardPad">
+            <div class="panelTitle">Interpretation</div>
+            <div class="smallText" id="interpretText">
+              A convergence theorem is a permission rule for moving the limit through the expectation sign.
+            </div>
+            <div class="summary">
+              <div><strong>MCT.</strong><br>Nonnegative functions grow upward; the areas grow to the limiting area.</div>
+              <div><strong>DCT.</strong><br>Functions may oscillate, but an integrable envelope prevents area from escaping.</div>
+              <div><strong>Fatou.</strong><br>For nonnegative functions, the limit inferior cannot have more area than the limit inferior of areas.</div>
+              <div><strong>Danger.</strong><br>Pointwise convergence alone does not control expectation; thin spikes can keep area.</div>
+            </div>
+          </div>
+
+          <div class="card cardPad">
+            <div class="panelTitle">What to notice</div>
+            <div class="notice" id="noticeText">
+              The key question is not only whether fâ‚™(Ï‰) converges for each Ï‰. The key question is whether the mass is controlled while it converges.
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>Minimal interactive notebook â€” expectation limits as controlled area.</footer>
+  </div>
+
+<script>
+const body=document.body;
+const themeBtn=document.getElementById("themeBtn");
+const caseSelect=document.getElementById("caseSelect");
+const nRange=document.getElementById("nRange");
+const shapeRange=document.getElementById("shapeRange");
+const speedRange=document.getElementById("speedRange");
+const nVal=document.getElementById("nVal");
+const shapeVal=document.getElementById("shapeVal");
+const speedVal=document.getElementById("speedVal");
+const showCurrent=document.getElementById("showCurrent");
+const showMany=document.getElementById("showMany");
+const playBtn=document.getElementById("playBtn");
+let view="current";
+let timer=null;
+
+function css(v){return getComputedStyle(body).getPropertyValue(v).trim();}
+function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
+function fmt(x){
+  if(!isFinite(x)) return "âˆž";
+  if(Math.abs(x)<10) return x.toFixed(4);
+  return x.toFixed(2);
+}
+function val(name){return +document.getElementById(name).value;}
+function f(caseName,n,x){
+  const a=val("shapeRange"), s=val("speedRange");
+  if(caseName==="mct"){
+    const limit=Math.pow(x,a);
+    return limit*(1-Math.exp(-n/s));
+  }
+  if(caseName==="dct"){
+    const base=.45+.35*Math.sin(2*Math.PI*x);
+    const osc=(.42/(Math.sqrt(n)))*Math.sin(2*Math.PI*n*x);
+    return base+osc;
+  }
+  if(caseName==="fatou" || caseName==="unsafe"){
+    const width=1/(Math.max(1,n)*s);
+    const height=s;
+    return x<=width ? height*Math.max(1,n) : 0;
+  }
+  return 0;
+}
+function flimit(caseName,x){
+  const a=val("shapeRange");
+  if(caseName==="mct") return Math.pow(x,a);
+  if(caseName==="dct") return .45+.35*Math.sin(2*Math.PI*x);
+  return 0;
+}
+function envelope(caseName,x){
+  if(caseName==="dct") return .95;
+  if(caseName==="unsafe" || caseName==="fatou") return null;
+  return null;
+}
+function exactIntegral(caseName,n){
+  const a=val("shapeRange"), s=val("speedRange");
+  if(caseName==="mct") return (1-Math.exp(-n/s))/(a+1);
+  if(caseName==="dct") return .45;
+  if(caseName==="fatou" || caseName==="unsafe") return 1;
+  return 0;
+}
+function limitIntegral(caseName){
+  const a=val("shapeRange");
+  if(caseName==="mct") return 1/(a+1);
+  if(caseName==="dct") return .45;
+  if(caseName==="fatou" || caseName==="unsafe") return 0;
+  return 0;
+}
+function titleCase(){
+  const c=caseSelect.value;
+  if(c==="mct") return "Monotone convergence";
+  if(c==="dct") return "Dominated convergence";
+  if(c==="fatou") return "Fatou's lemma";
+  return "Unsafe limit interchange";
+}
+function line(x1,y1,x2,y2,stroke,w=1,op=1,dash=""){
+  return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${stroke}" stroke-width="${w}" stroke-opacity="${op}" ${dash?`stroke-dasharray="${dash}"`:""}/>`;
+}
+function text(x,y,s,fill,size=13,weight=600,anchor="start"){
+  return `<text x="${x}" y="${y}" fill="${fill}" font-size="${size}" font-weight="${weight}" text-anchor="${anchor}" font-family="Inter,system-ui,sans-serif">${s}</text>`;
+}
+function px(x,x0,x1,w0,w1){return w0+(x-x0)/(x1-x0)*(w1-w0);}
+function py(y,y0,y1,h0,h1){return h1-(y-y0)/(y1-y0)*(h1-h0);}
+function areaPath(vals,x0,x1,yBase,yScaleX,yScaleY){
+  let p=`M ${x0} ${yBase}`;
+  vals.forEach((d,i)=>{
+    const x=x0+i/(vals.length-1)*(x1-x0);
+    p+=` L ${x} ${yScaleY(d)}`;
+  });
+  p+=` L ${x1} ${yBase} Z`;
+  return p;
+}
+function curvePath(vals,x0,x1,yScaleY){
+  let p="";
+  vals.forEach((d,i)=>{
+    const x=x0+i/(vals.length-1)*(x1-x0);
+    p+=(i===0?"M":"L")+` ${x} ${yScaleY(d)}`;
+  });
+  return p;
+}
+function drawMain(){
+  const svg=document.getElementById("mainSvg");
+  const c=caseSelect.value,n=val("nRange");
+  const panel=css("--panel"),border=css("--border"),muted=css("--muted"),textc=css("--text"),grid=css("--grid"),acc=css("--accent"),blue=css("--blue"),warn=css("--warn"),violet=css("--violet");
+  const x0=62,x1=918,y0=46,y1=360;
+  const xs=[], yn=[], yl=[], env=[];
+  for(let i=0;i<=520;i++){
+    const x=i/520;
+    xs.push(x); yn.push(f(c,n,x)); yl.push(flimit(c,x));
+    const e=envelope(c,x); env.push(e===null?null:e);
+  }
+  let ymax=Math.max(...yn,...yl, .1);
+  if(c==="dct") ymax=1.1;
+  if(c==="fatou"||c==="unsafe") ymax=Math.max(3.2, val("speedRange")*Math.max(1,n)*1.05);
+  const yScale=(y)=>py(y,0,ymax,y0,y1);
+  let h=`<rect x="8" y="10" width="964" height="400" rx="20" fill="${panel}" stroke="${border}"/>`;
+  for(let i=0;i<=5;i++){
+    const y=y1-(y1-y0)*i/5;
+    h+=line(x0,y,x1,y,grid,1,.85);
+    h+=text(42,y+4,fmt(ymax*i/5),muted,11,700,"end");
+  }
+  h+=line(x0,y1,x1,y1,muted,1.2,.8);
+  h+=line(x0,y0,x0,y1,muted,1.2,.8);
+  h+=text(x0,y1+25,"Ï‰",muted,12,800);
+  h+=text(x1,y1+25,"1",muted,12,800,"end");
+  h+=text(x0,32,`${titleCase()} Â· n=${n}`,textc,14,900);
+
+  if(view==="many"){
+    [1,2,4,8,16,32,64].filter(k=>k<=80).forEach((k,idx)=>{
+      const arr=xs.map(x=>f(c,k,x));
+      h+=`<path d="${curvePath(arr,x0,x1,yScale)}" fill="none" stroke="${idx<3?violet:acc}" stroke-width="1.4" stroke-opacity="${k===n?1:.25}"/>`;
+    });
+  }
+
+  if(c==="dct"){
+    const envY=yScale(.95);
+    h+=`<rect x="${x0}" y="${envY}" width="${x1-x0}" height="${y1-envY}" fill="${warn}" fill-opacity=".08" stroke="${warn}" stroke-opacity=".28" stroke-dasharray="6 5"/>`;
+    h+=text(x1-10,envY-8,"integrable roof g",warn,12,850,"end");
+  }
+
+  if(c==="fatou"||c==="unsafe"){
+    const width=1/(n*val("speedRange"));
+    const spikeX=px(width,0,1,x0,x1);
+    h+=`<rect x="${x0}" y="${yScale(f(c,n,0))}" width="${spikeX-x0}" height="${y1-yScale(f(c,n,0))}" fill="${warn}" fill-opacity=".16" stroke="${warn}" stroke-opacity=".55"/>`;
+    h+=text(spikeX+8,yScale(f(c,n,0))+18,"thin spike: height â†‘, width â†“",warn,12,850);
+  } else {
+    h+=`<path d="${areaPath(yn,x0,x1,y1,null,yScale)}" fill="${acc}" fill-opacity=".18" stroke="none"/>`;
+  }
+  h+=`<path d="${curvePath(yn,x0,x1,yScale)}" fill="none" stroke="${acc}" stroke-width="3"/>`;
+  h+=`<path d="${curvePath(yl,x0,x1,yScale)}" fill="none" stroke="${blue}" stroke-width="2.4" stroke-dasharray="7 5"/>`;
+  h+=text(740,68,"fâ‚™",acc,13,900);
+  h+=text(785,68,"limit f",blue,13,900);
+  h+=line(730,64,758,64,acc,3);
+  h+=line(778,64,806,64,blue,2.4,1,"7 5");
+
+  const intn=exactIntegral(c,n), intlim=limitIntegral(c);
+  h+=`<rect x="650" y="308" width="250" height="58" rx="15" fill="${css("--panel2")}" stroke="${border}"/>`;
+  h+=text(670,331,`E[fâ‚™] = ${fmt(intn)}`,textc,14,900);
+  h+=text(670,353,`E[f] = ${fmt(intlim)}`,muted,13,800);
+
+  svg.innerHTML=h;
+}
+function drawIntegral(){
+  const svg=document.getElementById("integralSvg");
+  const c=caseSelect.value,n=val("nRange");
+  const panel=css("--panel"),border=css("--border"),muted=css("--muted"),textc=css("--text"),grid=css("--grid"),acc=css("--accent"),blue=css("--blue"),warn=css("--warn");
+  const x0=52,x1=488,y0=40,y1=230;
+  const vals=[];
+  for(let k=1;k<=80;k++) vals.push(exactIntegral(c,k));
+  const lim=limitIntegral(c);
+  const ymax=Math.max(...vals,lim,.1)*1.12;
+  const yScale=y=>py(y,0,ymax,y0,y1);
+  let h=`<rect x="8" y="10" width="504" height="250" rx="18" fill="${panel}" stroke="${border}"/>`;
+  for(let i=0;i<=5;i++){
+    const y=y1-(y1-y0)*i/5;
+    h+=line(x0,y,x1,y,grid,1,.85);
+  }
+  h+=line(x0,y1,x1,y1,muted,1.2,.8);
+  h+=line(x0,y0,x0,y1,muted,1.2,.8);
+  let p="";
+  vals.forEach((v,i)=>{
+    const x=x0+i/(vals.length-1)*(x1-x0);
+    const y=yScale(v);
+    p+=(i===0?"M":"L")+` ${x} ${y}`;
+  });
+  h+=`<path d="${p}" fill="none" stroke="${acc}" stroke-width="2.8"/>`;
+  const ly=yScale(lim);
+  h+=line(x0,ly,x1,ly,blue,2,.85,"7 5");
+  h+=text(x1-4,ly-8,"E[f]",blue,12,900,"end");
+  const xn=x0+(n-1)/(80-1)*(x1-x0);
+  const yn=yScale(exactIntegral(c,n));
+  h+=line(xn,y1,xn,y0,muted,1,.22);
+  h+=`<circle cx="${xn}" cy="${yn}" r="6" fill="${acc}" stroke="${panel}" stroke-width="2"/>`;
+  h+=text(64,32,"n â†¦ E[fâ‚™]",acc,12,900);
+  h+=text(64,253,"1",muted,11,700);
+  h+=text(488,253,"80",muted,11,700,"end");
+  h+=text(250,253,"index n",muted,12,800,"middle");
+  svg.innerHTML=h;
+}
+function drawLogic(){
+  const svg=document.getElementById("logicSvg");
+  const c=caseSelect.value;
+  const panel=css("--panel"),border=css("--border"),muted=css("--muted"),textc=css("--text"),grid=css("--grid"),acc=css("--accent"),blue=css("--blue"),warn=css("--warn");
+  let h=`<rect x="8" y="10" width="504" height="250" rx="18" fill="${panel}" stroke="${border}"/>`;
+  const nodes=[
+    {x:88,y:70,t:"pointwise<br>limit",ok:true},
+    {x:250,y:70,t:"mass<br>control",ok:c==="mct"||c==="dct"||c==="fatou"},
+    {x:412,y:70,t:"limit<br>interchange",ok:c==="mct"||c==="dct"},
+    {x:168,y:178,t:"inequality<br>only",ok:c==="fatou"},
+    {x:334,y:178,t:"failure<br>possible",ok:c==="unsafe"}
+  ];
+  h+=line(128,70,210,70,muted,1.5,.5);
+  h+=line(290,70,372,70,muted,1.5,.5);
+  h+=line(250,110,168,145,muted,1.3,.35);
+  h+=line(250,110,334,145,muted,1.3,.35);
+  nodes.forEach(nd=>{
+    const fill=nd.ok?css("--accent2"):css("--panel2");
+    const stroke=nd.ok?acc:border;
+    h+=`<rect x="${nd.x-55}" y="${nd.y-33}" width="110" height="66" rx="17" fill="${fill}" stroke="${stroke}"/>`;
+    h+=text(nd.x,nd.y-4,nd.t.split("<br>")[0],nd.ok?textc:muted,12,850,"middle");
+    h+=text(nd.x,nd.y+14,nd.t.split("<br>")[1],nd.ok?textc:muted,12,850,"middle");
+  });
+  let msg="";
+  if(c==="mct") msg="monotonicity replaces domination";
+  if(c==="dct") msg="domination prevents escaping mass";
+  if(c==="fatou") msg="safe conclusion is â‰¤, not equality";
+  if(c==="unsafe") msg="pointwise convergence is not enough";
+  h+=text(260,232,msg,c==="unsafe"?warn:acc,13,900,"middle");
+  svg.innerHTML=h;
+}
+function setChecks(){
+  const c=caseSelect.value;
+  const checks=document.getElementById("checks");
+  let items=[];
+  if(c==="mct"){
+    items=[
+      ["âœ“","nonnegative functions"],
+      ["âœ“","monotone increase: fâ‚™â‰¤fâ‚™â‚Šâ‚"],
+      ["âœ“","conclusion: E[fâ‚™]â†‘E[f]"]
+    ];
+  }else if(c==="dct"){
+    items=[
+      ["âœ“","pointwise convergence fâ‚™â†’f"],
+      ["âœ“","one integrable roof: |fâ‚™|â‰¤g"],
+      ["âœ“","conclusion: E[fâ‚™]â†’E[f]"]
+    ];
+  }else if(c==="fatou"){
+    items=[
+      ["âœ“","nonnegative sequence"],
+      ["âœ“","no domination required"],
+      ["â†’","only inequality: E[liminf fâ‚™]â‰¤liminf E[fâ‚™]"]
+    ];
+  }else{
+    items=[
+      ["âœ•","pointwise convergence alone"],
+      ["âœ•","no integrable dominating roof"],
+      ["!","thin spikes keep area while disappearing pointwise"]
+    ];
+  }
+  checks.innerHTML=items.map(([m,t])=>`<div class="check"><span class="mark">${m}</span><span>${t}</span></div>`).join("");
+}
+function updateText(){
+  const c=caseSelect.value,n=val("nRange");
+  nVal.textContent=n;
+  shapeVal.textContent=val("shapeRange").toFixed(2);
+  speedVal.textContent=val("speedRange").toFixed(2);
+  const eq=document.getElementById("eqBox");
+  const interp=document.getElementById("interpretText");
+  const notice=document.getElementById("noticeText");
+  const sub=document.getElementById("mainSub");
+  if(c==="mct"){
+    eq.innerHTML="0â‰¤fâ‚™â†‘f &nbsp;â‡’&nbsp; E[fâ‚™]â†‘E[f].";
+    interp.innerHTML="In MCT, the functions climb upward everywhere. The visible area cannot oscillate or escape; it increases to the area under the pointwise limit.";
+    notice.innerHTML="No domination is needed because monotonicity gives one-directional control of mass.";
+    sub.innerHTML="The area grows from below toward the limiting area.";
+  }else if(c==="dct"){
+    eq.innerHTML="fâ‚™â†’f, |fâ‚™|â‰¤g, E[g]&lt;âˆž &nbsp;â‡’&nbsp; E[fâ‚™]â†’E[f].";
+    interp.innerHTML="In DCT, functions may wiggle and change sign, but all graphs remain trapped under one integrable envelope. The roof prevents mass from escaping.";
+    notice.innerHTML="Domination is a geometric roof. It is what licenses moving the limit inside the expectation.";
+    sub.innerHTML="The envelope keeps the whole sequence uniformly integrable.";
+  }else if(c==="fatou"){
+    eq.innerHTML="fâ‚™â‰¥0 &nbsp;â‡’&nbsp; E[liminf fâ‚™]â‰¤liminf E[fâ‚™].";
+    interp.innerHTML="Fatou is a one-sided safety theorem. Even when mass disappears pointwise into a spike, the limit inferior cannot have more expectation than the limiting lower bound of expectations.";
+    notice.innerHTML="Fatou gives inequality, not equality. It is the weak safe statement when nonnegativity is all you know.";
+    sub.innerHTML="The spike vanishes pointwise, but Fatou still gives a valid inequality.";
+  }else{
+    eq.innerHTML="fâ‚™â†’0 pointwise, but E[fâ‚™]=1. Therefore E[fâ‚™]â†›E[0].";
+    interp.innerHTML="This is the canonical failure: a spike becomes narrower and taller. Each fixed point eventually misses it, but the total area stays equal to one.";
+    notice.innerHTML="Pointwise convergence watches each Ï‰ separately. Expectation watches total mass. A moving or shrinking spike can fool pointwise convergence.";
+    sub.innerHTML="Mass escapes through a thinner and taller spike.";
+  }
+  setChecks();
+}
+function drawAll(){
+  updateText();
+  drawMain();
+  drawIntegral();
+  drawLogic();
+}
+themeBtn.addEventListener("click",()=>{
+  const dark=body.getAttribute("data-theme")==="dark";
+  body.setAttribute("data-theme",dark?"light":"dark");
+  themeBtn.textContent=dark?"Dark mode":"Light mode";
+  drawAll();
+});
+[caseSelect,nRange,shapeRange,speedRange].forEach(el=>el.addEventListener("input",drawAll));
+showCurrent.addEventListener("click",()=>{view="current";showCurrent.classList.add("active");showMany.classList.remove("active");drawAll();});
+showMany.addEventListener("click",()=>{view="many";showMany.classList.add("active");showCurrent.classList.remove("active");drawAll();});
+playBtn.addEventListener("click",()=>{
+  if(timer){
+    clearInterval(timer); timer=null; playBtn.textContent="Animate n"; return;
+  }
+  playBtn.textContent="Stop animation";
+  timer=setInterval(()=>{
+    let n=+nRange.value;
+    n=n>=80?1:n+1;
+    nRange.value=n;
+    drawAll();
+  },120);
+});
+drawAll();
+</script>
+</body>
+</html>
+
