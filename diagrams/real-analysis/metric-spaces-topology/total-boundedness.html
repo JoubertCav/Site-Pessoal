@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -8,6 +8,10 @@
 <meta name="google-site-verification" content="ftZ4QVMrlub9jbolsIeo4Ix4UBw0-BJrFeorzqKLXng">
 <meta name="description" content="Interactive real analysis diagram for total boundedness in metric spaces.">
   <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 <title>Total Boundedness | Real Analysis Diagrams</title>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
@@ -186,37 +190,48 @@ input[type="range"]{accent-color:var(--accent)}
   #netSvg{min-height:470px}
   #criterionSvg{min-height:380px}
 }
+
+.katex{font-size:1.02em}
+.katex-display{margin:.25em 0; overflow-x:auto; overflow-y:hidden; padding:.12em .02em}
+.formula .math .katex{font-size:1.03em}
+.formula .math{white-space:normal; line-height:1.55; font-family:var(--sans)}
+.proofbox .equation{font-family:var(--sans); font-size:20px; line-height:1.55; overflow-x:auto}
+.proofbox .equation .katex-display{margin:0}
+.node b .katex{font-size:1.04em}
+.summary .katex{font-size:1em}
+.mathbreak{display:block; margin-top:.32rem}
+
 </style>
 </head>
 <body>
 <div class="app">
   <header class="topbar">
     <div class="brand">
-      <div class="eyebrow">Metric spaces Â· compactness criterion</div>
+      <div class="eyebrow">Metric spaces · compactness criterion</div>
       <h1>Total Boundedness</h1>
-      <p class="subtitle">Total boundedness means that every scale Îµ admits a finite Îµ-net. In metric spaces, compactness is exactly the conjunction of total boundedness and completeness.</p>
+      <p class="subtitle">Total boundedness means that every scale \(\varepsilon\) admits a finite \(\varepsilon\)-net. In metric spaces, compactness is exactly the conjunction of total boundedness and completeness.</p>
     </div>
     <button class="theme" id="themeBtn">Dark mode</button>
   </header>
 
   <section class="card pad">
     <div class="theory">
-      <div class="node"><div><b>Îµ-net</b><br><span>finite set of centers F âŠ‚ X</span></div></div>
-      <div class="arrow">â†’</div>
-      <div class="node"><div><b>X âŠ‚ â‹ƒ BÎµ(p)</b><br><span>small balls cover the whole space</span></div></div>
-      <div class="arrow">â†’</div>
-      <div class="node"><div><b>compact â‡” complete + totally bounded</b><br><span>metric-space theorem</span></div></div>
+      <div class="node"><div><b>\(\varepsilon\)-net</b><br><span>finite set of centers \(F\subset X\)</span></div></div>
+      <div class="arrow">→</div>
+      <div class="node"><div><b>\(X\subset \bigcup_{p\in F} B_{\varepsilon}(p)\)</b><br><span>small balls cover the whole space</span></div></div>
+      <div class="arrow">→</div>
+      <div class="node"><div><b>\(\text{compact}\iff\text{complete}+\text{totally bounded}\)</b><br><span>metric-space theorem</span></div></div>
     </div>
     <div class="formulas">
-      <div class="formula"><b>Îµ-net</b><span class="math">F is an Îµ-net for X iff âˆ€xâˆˆX âˆƒpâˆˆF : d(x,p)&lt;Îµ</span></div>
-      <div class="formula"><b>Total boundedness</b><span class="math">âˆ€Îµ&gt;0 âˆƒ finite FâŠ‚X : XâŠ‚â‹ƒ<sub>pâˆˆF</sub>BÎµ(p)</span></div>
-      <div class="formula"><b>Metric compactness</b><span class="math">K compact â‡” K complete and totally bounded</span></div>
+      <div class="formula"><b>ε-net</b><span class="math">\[F\text{ is an }\varepsilon\text{-net for }X\iff \forall x\in X\;\exists p\in F:\ d(x,p)<\varepsilon.\]</span></div>
+      <div class="formula"><b>Total boundedness</b><span class="math">\[\forall\varepsilon>0\;\exists F\subset X\text{ finite such that }X\subset\bigcup_{p\in F}B_{\varepsilon}(p).\]</span></div>
+      <div class="formula"><b>Metric compactness</b><span class="math">\[K\text{ compact}\iff K\text{ complete and totally bounded}.\]</span></div>
     </div>
   </section>
 
   <main class="card" style="margin-top:18px">
     <div class="tabs">
-      <button class="tab active" data-panel="nets">Îµ-net geometry</button>
+      <button class="tab active" data-panel="nets">ε-net geometry</button>
       <button class="tab" data-panel="criterion">complete + totally bounded</button>
     </div>
 
@@ -226,11 +241,11 @@ input[type="range"]{accent-color:var(--accent)}
           <div class="control">
             <label for="spaceSelect">Space</label>
             <select id="spaceSelect">
-              <option value="closedDisk">closed disk in â„Â²</option>
-              <option value="openDisk">open disk in â„Â²</option>
-              <option value="square">closed square in â„Â²</option>
-              <option value="annulus">closed annulus in â„Â²</option>
-              <option value="line">unbounded line in â„Â²</option>
+              <option value="closedDisk">closed disk in ℝ²</option>
+              <option value="openDisk">open disk in ℝ²</option>
+              <option value="square">closed square in ℝ²</option>
+              <option value="annulus">closed annulus in ℝ²</option>
+              <option value="line">unbounded line in ℝ²</option>
             </select>
           </div>
           <div class="control">
@@ -242,7 +257,7 @@ input[type="range"]{accent-color:var(--accent)}
             </select>
           </div>
           <div class="control">
-            <label for="epsRange">Îµ <span id="epsVal"></span></label>
+            <label for="epsRange">ε <span id="epsVal"></span></label>
             <input id="epsRange" type="range" min="0.16" max="0.82" step="0.02" value="0.38" />
           </div>
           <div class="control">
@@ -255,14 +270,14 @@ input[type="range"]{accent-color:var(--accent)}
 
         <div class="legend">
           <span><i class="dot"></i> space X</span>
-          <span><i class="dot net"></i> selected Îµ-net centers</span>
-          <span><i class="dot ball"></i> Îµ-balls</span>
+          <span><i class="dot net"></i> selected ε-net centers</span>
+          <span><i class="dot ball"></i> ε-balls</span>
           <span><i class="dot bad"></i> obstruction / escaped region</span>
         </div>
 
         <div class="status-row">
           <div class="stat"><small>Visual centers</small><strong id="centersStatus"></strong></div>
-          <div class="stat"><small>Finite Îµ-net?</small><strong id="netStatus"></strong></div>
+          <div class="stat"><small>Finite ε-net?</small><strong id="netStatus"></strong></div>
           <div class="stat"><small>Total bounded?</small><strong id="tbStatus"></strong></div>
           <div class="stat"><small>Compact?</small><strong id="compactStatus"></strong></div>
         </div>
@@ -276,13 +291,13 @@ input[type="range"]{accent-color:var(--accent)}
             <select id="exampleSelect">
               <option value="closedInterval">[0,1] with usual metric</option>
               <option value="openInterval">(0,1) with usual metric</option>
-              <option value="realLine">â„ with usual metric</option>
-              <option value="rationalsInterval">â„šâˆ©[0,1] with usual metric</option>
-              <option value="naturalDiscrete">â„• with discrete metric</option>
+              <option value="realLine">ℝ with usual metric</option>
+              <option value="rationalsInterval">ℚ∩[0,1] with usual metric</option>
+              <option value="naturalDiscrete">ℕ with discrete metric</option>
             </select>
           </div>
           <div class="control">
-            <label for="critEpsRange">Îµ <span id="critEpsVal"></span></label>
+            <label for="critEpsRange">ε <span id="critEpsVal"></span></label>
             <input id="critEpsRange" type="range" min="0.04" max="0.34" step="0.01" value="0.12" />
           </div>
           <div class="control">
@@ -306,11 +321,11 @@ input[type="range"]{accent-color:var(--accent)}
 
   <section class="card pad proof-grid">
     <div class="steps" id="proofSteps">
-      <button class="step active" data-step="0">1 Â· What Îµ-nets say</button>
-      <button class="step" data-step="1">2 Â· Compact â‡’ totally bounded</button>
-      <button class="step" data-step="2">3 Â· Compact â‡’ complete</button>
-      <button class="step" data-step="3">4 Â· Complete + TB â‡’ compact</button>
-      <button class="step" data-step="4">5 Â· In â„â¿</button>
+      <button class="step active" data-step="0">1 · What ε-nets say</button>
+      <button class="step" data-step="1">2 · Compact ⇒ totally bounded</button>
+      <button class="step" data-step="2">3 · Compact ⇒ complete</button>
+      <button class="step" data-step="3">4 · Complete + TB ⇒ compact</button>
+      <button class="step" data-step="4">5 · In ℝⁿ</button>
     </div>
     <div class="proofbox" id="proofBox"></div>
   </section>
@@ -319,27 +334,44 @@ input[type="range"]{accent-color:var(--accent)}
     <div class="card pad">
       <h2>What to notice</h2>
       <ul>
-        <li><b>Bounded is one large ball.</b> Totally bounded is finitely many arbitrarily small balls.</li>
+        <li><b>Bounded</b> means one large ball contains the space. <b>Totally bounded</b> means finitely many arbitrarily small balls cover it.</li>
         <li><b>Total boundedness is stronger than boundedness</b> in general metric spaces.</li>
-        <li><b>Total boundedness does not imply compactness:</b> missing limits can still occur.</li>
+        <li><b>Total boundedness does not imply compactness:</b> missing limits can still occur, for example in \((0,1)\).</li>
         <li><b>Completeness does not imply compactness:</b> the space can be too large to cover by finitely many small balls.</li>
       </ul>
     </div>
     <div class="card pad">
       <h2>Exam summary</h2>
       <ul>
-        <li><b>Îµ-net:</b> finite FâŠ‚X such that every xâˆˆX is within Îµ of some pâˆˆF.</li>
-        <li><b>Total bounded:</b> such a finite Îµ-net exists for every Îµ&gt;0.</li>
-        <li><b>Metric theorem:</b> compact â‡” complete + totally bounded.</li>
-        <li><b>In â„â¿:</b> Heineâ€“Borel says compact â‡” closed and bounded, and bounded sets are totally bounded.</li>
+        <li><b>\(arepsilon\)-net:</b> finite \(F\subset X\) such that every \(x\in X\) is within \(arepsilon\) of some \(p\in F\).</li>
+        <li><b>Total bounded:</b> such a finite \(arepsilon\)-net exists for every \(arepsilon>0\).</li>
+        <li><b>Metric theorem:</b> \[K	ext{ compact}\iff K	ext{ complete and totally bounded}.\]</li>
+        <li><b>In \(\mathbb{R}^n\):</b> Heine–Borel says \(K\) compact \(\iff\) \(K\) is closed and bounded; bounded sets are totally bounded.</li>
       </ul>
     </div>
   </section>
 
-  <div class="footer">The Îµ-net picture is finite and visual. The theorem quantifies over every Îµ&gt;0.</div>
+  <div class="footer">The \(\varepsilon\)-net picture is finite and visual. The theorem quantifies over every \(\varepsilon>0\).</div>
 </div>
 
 <script>
+
+function renderKatex(scope=document){
+  if(typeof renderMathInElement !== "function") return;
+  const options={
+    delimiters:[
+      {left:"$$",right:"$$",display:true},
+      {left:"\\[",right:"\\]",display:true},
+      {left:"\\(",right:"\\)",display:false}
+    ],
+    throwOnError:false,
+    ignoredTags:["script","noscript","style","textarea","pre","code","svg"]
+  };
+  const targets = scope === document
+    ? document.querySelectorAll('.subtitle,.theory,.formulas,.summary,.footer,.proofbox')
+    : [scope];
+  targets.forEach(el=>renderMathInElement(el,options));
+}
 const root=document.documentElement;
 const themeBtn=document.getElementById('themeBtn');
 themeBtn.addEventListener('click',()=>{
@@ -397,7 +429,7 @@ function mathText(parent,x,y,str,anchor='middle',size=17,fill=null){
   return text(parent,x,y,str,anchor,size,fill||css('--ink'),'Georgia, Cambria, serif');
 }
 function badge(kind,txt){return '<span class="badge '+kind+'">'+txt+'</span>';}
-function fmt(x){return Number.isFinite(x)?x.toFixed(2).replace(/0+$/,'').replace(/\.$/,''):'â€”';}
+function fmt(x){return Number.isFinite(x)?x.toFixed(2).replace(/0+$/,'').replace(/\.$/,''):'—';}
 function dist(a,b,metric){
   const dx=Math.abs(a.x-b.x), dy=Math.abs(a.y-b.y);
   if(metric==='sup') return Math.max(dx,dy);
@@ -414,11 +446,11 @@ function inSpace(p,type){
   return false;
 }
 function trueFacts(type){
-  if(type==='closedDisk') return {tb:true, complete:true, compact:true, note:'A closed bounded subset of â„Â² is compact by Heineâ€“Borel. Therefore it is complete and totally bounded.'};
-  if(type==='openDisk') return {tb:true, complete:false, compact:false, note:'The open disk is bounded, hence totally bounded in â„Â², but it is not complete as a metric subspace: Cauchy sequences can converge to the missing boundary.'};
-  if(type==='square') return {tb:true, complete:true, compact:true, note:'The closed square is closed and bounded in â„Â², hence compact. The finite Îµ-net picture is a direct grid version of total boundedness.'};
-  if(type==='annulus') return {tb:true, complete:true, compact:true, note:'The closed annulus is closed and bounded in â„Â². The hole does not break compactness because the set is still closed.'};
-  if(type==='line') return {tb:false, complete:true, compact:false, note:'An unbounded line cannot be covered by finitely many Îµ-balls for a fixed small Îµ. Completeness alone is not compactness.'};
+  if(type==='closedDisk') return {tb:true, complete:true, compact:true, note:'A closed bounded subset of ℝ² is compact by Heine–Borel. Therefore it is complete and totally bounded.'};
+  if(type==='openDisk') return {tb:true, complete:false, compact:false, note:'The open disk is bounded, hence totally bounded in ℝ², but it is not complete as a metric subspace: Cauchy sequences can converge to the missing boundary.'};
+  if(type==='square') return {tb:true, complete:true, compact:true, note:'The closed square is closed and bounded in ℝ², hence compact. The finite ε-net picture is a direct grid version of total boundedness.'};
+  if(type==='annulus') return {tb:true, complete:true, compact:true, note:'The closed annulus is closed and bounded in ℝ². The hole does not break compactness because the set is still closed.'};
+  if(type==='line') return {tb:false, complete:true, compact:false, note:'An unbounded line cannot be covered by finitely many ε-balls for a fixed small ε. Completeness alone is not compactness.'};
 }
 function px(p){return 630 + p.x*210;}
 function py(p){return 305 - p.y*210;}
@@ -502,8 +534,8 @@ function renderNets(){
   const type=els.space.value, metric=els.metric.value, eps=+els.eps.value, res=+els.density.value;
   const facts=trueFacts(type);
   add(svg,'rect',{x:0,y:0,width:1260,height:590,fill:'transparent'});
-  mathText(svg,630,42,'Finite Îµ-cover by metric balls','middle',24);
-  text(svg,630,70,'The drawing shows one finite visual Îµ-net at the chosen scale. Total boundedness asks for this at every Îµ>0.','middle',14);
+  mathText(svg,630,42,'Finite ε-cover by metric balls','middle',24);
+  text(svg,630,70,'The drawing shows one finite visual ε-net at the chosen scale. Total boundedness asks for this at every ε>0.','middle',14);
   drawGrid(svg);
   drawShape(svg,type);
   const samples=buildSamples(type,res);
@@ -517,11 +549,11 @@ function renderNets(){
   }
   const metricLabel=metric==='euclidean'?'Euclidean balls':metric==='sup'?'sup-metric squares':'taxicab diamonds';
   mathText(svg,160,115,metricLabel,'start',18,css('--ink'));
-  text(svg,160,140,'Îµ = '+fmt(eps),'start',13,css('--muted'));
+  text(svg,160,140,'ε = '+fmt(eps),'start',13,css('--muted'));
   els.epsVal.textContent=fmt(eps);
   els.densityVal.textContent=res;
   els.centersStatus.textContent=type==='line'?centers.length+' shown':centers.length;
-  els.netStatus.innerHTML=type==='line'?badge('bad','no, globally'):badge('good','yes, at this Îµ');
+  els.netStatus.innerHTML=type==='line'?badge('bad','no, globally'):badge('good','yes, at this ε');
   els.tbStatus.innerHTML=facts.tb?badge('good','yes'):badge('bad','no');
   els.compactStatus.innerHTML=facts.compact?badge('good','yes'):badge(facts.complete?'warn':'bad','no');
   els.netNote.textContent=facts.note;
@@ -529,10 +561,10 @@ function renderNets(){
 
 const examples={
   closedInterval:{title:'[0,1]', complete:true, tb:true, compact:true, failure:'none', note:'The interval [0,1] is complete and totally bounded. In a metric space, this is exactly compactness.', seq:n=>1/(n+1), domain:[-.08,1.08], missing:null},
-  openInterval:{title:'(0,1)', complete:false, tb:true, compact:false, failure:'missing endpoint', note:'The space is totally bounded because it is bounded in â„, but it is not complete: xâ‚™=1/(n+1) is Cauchy and converges to 0 outside the space.', seq:n=>1/(n+1), domain:[-.08,1.08], missing:0},
-  realLine:{title:'â„', complete:true, tb:false, compact:false, failure:'too large', note:'The real line is complete, but not totally bounded: no finite Îµ-net can cover all of â„ for a fixed Îµ.', seq:n=>n/12, domain:[-1,5.2], missing:null},
-  rationalsInterval:{title:'â„šâˆ©[0,1]', complete:false, tb:true, compact:false, failure:'irrational cut', note:'The rational points in [0,1] are totally bounded but not complete. Rational Cauchy sequences can converge to irrational limits.', seq:n=>Math.floor(Math.SQRT2/2*Math.pow(10,Math.min(n,12)))/Math.pow(10,Math.min(n,12)), domain:[.58,.78], missing:Math.SQRT2/2},
-  naturalDiscrete:{title:'â„• with discrete metric', complete:true, tb:false, compact:false, failure:'infinitely separated', note:'With the discrete metric, every Cauchy sequence is eventually constant, so â„• is complete. But for Îµ<1, each Îµ-ball contains only one point, so no finite Îµ-net covers â„•.', seq:n=>n, domain:[0,14], missing:null}
+  openInterval:{title:'(0,1)', complete:false, tb:true, compact:false, failure:'missing endpoint', note:'The space is totally bounded because it is bounded in ℝ, but it is not complete: xₙ=1/(n+1) is Cauchy and converges to 0 outside the space.', seq:n=>1/(n+1), domain:[-.08,1.08], missing:0},
+  realLine:{title:'ℝ', complete:true, tb:false, compact:false, failure:'too large', note:'The real line is complete, but not totally bounded: no finite ε-net can cover all of ℝ for a fixed ε.', seq:n=>n/12, domain:[-1,5.2], missing:null},
+  rationalsInterval:{title:'ℚ∩[0,1]', complete:false, tb:true, compact:false, failure:'irrational cut', note:'The rational points in [0,1] are totally bounded but not complete. Rational Cauchy sequences can converge to irrational limits.', seq:n=>Math.floor(Math.SQRT2/2*Math.pow(10,Math.min(n,12)))/Math.pow(10,Math.min(n,12)), domain:[.58,.78], missing:Math.SQRT2/2},
+  naturalDiscrete:{title:'ℕ with discrete metric', complete:true, tb:false, compact:false, failure:'infinitely separated', note:'With the discrete metric, every Cauchy sequence is eventually constant, so ℕ is complete. But for ε<1, each ε-ball contains only one point, so no finite ε-net covers ℕ.', seq:n=>n, domain:[0,14], missing:null}
 };
 function lineMap(x,domain){return 130+(x-domain[0])/(domain[1]-domain[0])*1000;}
 function drawCriterion(){
@@ -563,7 +595,7 @@ function drawCriterion(){
     }
     const m=lineMap(ex.missing,domain);
     add(svg,'circle',{cx:m,cy:y,r:9,fill:css('--paper-soft'),stroke:css('--bad'),'stroke-width':2.5});
-    text(svg,m,y-30,'âˆš2/2 not rational','middle',13,css('--bad'));
+    text(svg,m,y-30,'√2/2 not rational','middle',13,css('--bad'));
   }
   if(els.example.value==='naturalDiscrete'){
     for(let k=1;k<=12;k++){
@@ -592,7 +624,7 @@ function drawCriterion(){
   }
   if(!ex.tb){
     add(svg,'rect',{x:116,y:284,width:1028,height:92,rx:18,fill:css('--bad'),opacity:.06,stroke:css('--bad'),'stroke-width':1.2,'stroke-dasharray':'7 8'});
-    text(svg,630,356,'finite Îµ-balls cannot cover the whole space','middle',15,css('--bad'));
+    text(svg,630,356,'finite ε-balls cannot cover the whole space','middle',15,css('--bad'));
   }
   els.critEpsVal.textContent=fmt(eps);
   els.tailVal.textContent=N;
@@ -604,16 +636,18 @@ function drawCriterion(){
 }
 
 const proofSteps=[
-  {title:'1. What Îµ-nets say', equation:'F finite and X âŠ‚ â‹ƒâ‚šâˆˆF BÎµ(p)', body:'An Îµ-net is a finite list of landmarks. Every point of the space lies within Îµ of at least one landmark.'},
-  {title:'2. Compact â‡’ totally bounded', equation:'{BÎµ(x) : xâˆˆK} is an open cover of K', body:'For fixed Îµ>0, the Îµ-balls around all points cover K. Compactness gives a finite subcover, hence a finite Îµ-net.'},
-  {title:'3. Compact â‡’ complete', equation:'Cauchy sequence + compactness â‡’ convergent subsequence â‡’ full convergence', body:'In a compact metric space, every sequence has a convergent subsequence. If the original sequence is Cauchy, the whole sequence converges to the same limit.'},
-  {title:'4. Complete + totally bounded â‡’ compact', equation:'total boundedness gives nested finite choices; completeness gives the limit', body:'Total boundedness forces every sequence to have a Cauchy subsequence. Completeness then turns that Cauchy subsequence into a convergent subsequence.'},
-  {title:'5. In â„â¿', equation:'K compact â‡” K closed and bounded', body:'In Euclidean space, boundedness implies total boundedness, and closed subsets of complete spaces are complete. Thus Heineâ€“Borel is the â„â¿ version of the metric criterion.'}
+  {title:'1. What ε-nets say', equation:'\\[F\\subset X\\text{ finite and }X\\subset\\bigcup_{p\\in F}B_{\\varepsilon}(p).\\]', body:'An ε-net is a finite list of landmarks. Every point of the space lies within ε of at least one landmark.'},
+  {title:'2. Compact ⇒ totally bounded', equation:'\\[\\{B_{\\varepsilon}(x):x\\in K\\}\\text{ is an open cover of }K.\\]', body:'For fixed ε>0, the ε-balls around all points cover K. Compactness gives a finite subcover, hence a finite ε-net.'},
+  {title:'3. Compact ⇒ complete', equation:'\\[\\text{Cauchy sequence}+\\text{compactness}\\Rightarrow\\text{convergent subsequence}\\Rightarrow\\text{full convergence}.\\]', body:'In a compact metric space, every sequence has a convergent subsequence. If the original sequence is Cauchy, the whole sequence converges to the same limit.'},
+  {title:'4. Complete + totally bounded ⇒ compact', equation:'\\[\\text{total boundedness}\\Rightarrow\\text{Cauchy subsequence},\\qquad \\text{completeness}\\Rightarrow\\text{limit}.\\]', body:'Total boundedness forces every sequence to have a Cauchy subsequence. Completeness then turns that Cauchy subsequence into a convergent subsequence.'},
+  {title:'5. In ℝⁿ', equation:'\\[K\\subset\\mathbb{R}^{n}\\text{ compact}\\iff K\\text{ closed and bounded}.\\]', body:'In Euclidean space, boundedness implies total boundedness, and closed subsets of complete spaces are complete. Thus Heine–Borel is the ℝⁿ version of the metric criterion.'}
 ];
 function renderProof(i=0){
   document.querySelectorAll('.step').forEach(s=>s.classList.toggle('active',+s.dataset.step===i));
   const s=proofSteps[i];
-  document.getElementById('proofBox').innerHTML='<h3>'+s.title+'</h3><div class="equation">'+s.equation+'</div><p>'+s.body+'</p>';
+  const box=document.getElementById('proofBox');
+  box.innerHTML='<h3>'+s.title+'</h3><div class="equation">'+s.equation+'</div><p>'+s.body+'</p>';
+  renderKatex(box);
 }
 document.getElementById('proofSteps').addEventListener('click',e=>{
   if(e.target.matches('.step')) renderProof(+e.target.dataset.step);
@@ -623,6 +657,7 @@ function renderAll(){
   drawCriterion();
   const active=document.querySelector('.step.active');
   renderProof(active ? +active.dataset.step : 0);
+  renderKatex(document);
 }
 renderAll();
 </script>

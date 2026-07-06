@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -9,6 +9,56 @@
 <meta name="description" content="Interactive real analysis diagram for the Heine-Borel theorem.">
   <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
 <title>Heine-Borel Theorem | Real Analysis Diagrams</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script>
+function renderExplicitKatex(root=document){
+  if(!window.katex) return false;
+  const nodes = root.querySelectorAll ? root.querySelectorAll('.katex-math') : [];
+  nodes.forEach(node => {
+    const tex = node.getAttribute('data-tex');
+    if(!tex || node.dataset.rendered === '1') return;
+    try{
+      katex.render(tex, node, {
+        displayMode: node.classList.contains('katex-displayish'),
+        throwOnError:false,
+        strict:'ignore',
+        trust:true
+      });
+      node.dataset.rendered = '1';
+    }catch(e){
+      node.textContent = node.getAttribute('data-fallback') || tex;
+    }
+  });
+  return true;
+}
+function renderAutoKatex(root=document){
+  if(!window.renderMathInElement) return false;
+  renderMathInElement(root.body || root, {
+    delimiters:[
+      {left:'$$', right:'$$', display:true},
+      {left:'\\[', right:'\\]', display:true},
+      {left:'\\(', right:'\\)', display:false}
+    ],
+    ignoredTags:['script','noscript','style','textarea','pre','code','option','svg'],
+    throwOnError:false,
+    strict:'ignore'
+  });
+  return true;
+}
+function renderMathNow(){
+  const a = renderExplicitKatex(document);
+  const b = renderAutoKatex(document);
+  return a || b;
+}
+function queueMathRender(tries=0){
+  if(renderMathNow()) return;
+  if(tries < 120) setTimeout(()=>queueMathRender(tries+1), 50);
+}
+window.addEventListener('load', () => queueMathRender());
+</script>
+
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
 <script>
@@ -110,17 +160,20 @@
   input[type="range"]{width:100%; accent-color:var(--accent)}
   .math-row{
     display:grid;
-    grid-template-columns:1.2fr .8fr;
+    grid-template-columns:1fr 1fr;
     gap:14px;
     margin:18px 0;
   }
-  .math-card{padding:18px 18px 16px}
+  .math-row > *{min-width:0}
+  .math-card{padding:18px 18px 16px; overflow:hidden}
   .math-title{font-size:.78rem; text-transform:uppercase; letter-spacing:.14em; color:var(--accent); font-weight:850; margin-bottom:10px}
   .equation{
     font-family:"STIX Two Text", "Cambria Math", Georgia, serif;
-    font-size:clamp(1.05rem, 1.8vw, 1.35rem);
-    line-height:1.7;
+    font-size:clamp(1rem, 1.55vw, 1.22rem);
+    line-height:1.58;
     letter-spacing:.01em;
+    max-width:100%;
+    overflow-wrap:normal;
   }
   .equation .small{font-size:.9em; color:var(--muted)}
   .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px; align-items:stretch}
@@ -153,6 +206,15 @@
   .dot{width:9px; height:9px; border-radius:50%; display:inline-block; background:var(--accent)}
   .dot.orange{background:var(--accent2)} .dot.blue{background:var(--accent3)} .dot.red{background:var(--bad)}
   .footer-note{color:var(--muted); font-size:.86rem; margin-top:16px; text-align:center}
+
+  .katex-math{font-family:inherit}
+  .katex-displayish{display:block; max-width:100%; overflow:hidden}
+  .equation .katex{font-size:1.02em; max-width:100%}
+  .equation .katex-display{margin:.10em 0}
+  .equation .katex-html{max-width:100%; overflow:hidden}
+  .equation .small{display:block; margin-top:.7rem; line-height:1.55}
+  .mini-math .katex{font-size:1.02em}
+  .math-card .small .katex{font-size:1em}
   @media (max-width:900px){
     header,.math-row,.grid2,.lower,.controls{grid-template-columns:1fr}
     .top-actions{justify-content:flex-start}
@@ -164,8 +226,8 @@
 <div class="wrap">
   <header>
     <div>
-      <div class="eyebrow">06 Â· compactness in Râ¿</div>
-      <h1>Heineâ€“Borel theorem</h1>
+      <div class="eyebrow">06 · compactness in Rⁿ</div>
+      <h1>Heine–Borel theorem</h1>
       <div class="subtitle">Closed and bounded sets are exactly the compact subsets of finite-dimensional Euclidean space. The app separates the theorem from the two tempting but false half-statements.</div>
     </div>
     <div class="top-actions">
@@ -177,17 +239,14 @@
     <div class="panel math-card">
       <div class="math-title">The theorem</div>
       <div class="equation">
-        K âŠ‚ â„<sup>n</sup> is compact
-        &nbsp;â‡”&nbsp;
-        K is closed and bounded.
-        <br><span class="small">In metric spaces generally, compact â‡’ closed and bounded; the converse is special to â„<sup>n</sup>.</span>
+        <span class="katex-math katex-displayish" data-tex="\begin{gathered} K\subset \mathbb{R}^{n}\text{ is compact}\\ \Longleftrightarrow\\ K\text{ is closed and bounded} \end{gathered}" data-fallback="K ⊂ ℝⁿ is compact ⇔ K is closed and bounded.">K ⊂ ℝⁿ is compact ⇔ K is closed and bounded.</span>
+        <br><span class="small">In metric spaces generally, <span class="katex-math" data-tex="\text{compact}\Rightarrow\text{closed and bounded}" data-fallback="compact ⇒ closed and bounded">compact ⇒ closed and bounded</span>; the converse is special to <span class="katex-math" data-tex="\mathbb{R}^{n}" data-fallback="ℝⁿ">ℝⁿ</span>.</span>
       </div>
     </div>
     <div class="panel math-card">
-      <div class="math-title">Two equivalent lenses in â„â¿</div>
+      <div class="math-title">Two equivalent lenses in ℝⁿ</div>
       <div class="equation">
-        every open cover has a finite subcover
-        <br>â‡” every sequence has a subsequence converging to a point of K.
+        <span class="katex-math katex-displayish" data-tex="\begin{gathered} \text{every open cover of }K\text{ has a finite subcover}\\ \Longleftrightarrow\\ \text{every sequence in }K\text{ has a subsequence}\\ \text{converging to a point of }K \end{gathered}" data-fallback="every open cover of K has a finite subcover ⇔ every sequence in K has a subsequence converging to a point of K.">every open cover of K has a finite subcover ⇔ every sequence in K has a subsequence converging to a point of K.</span>
       </div>
     </div>
   </section>
@@ -204,9 +263,9 @@
     </label>
     <label>Norm used for the visual ball
       <select id="normType">
-        <option value="euclidean">Euclidean norm â€–Â·â€–â‚‚</option>
-        <option value="sup">Sup norm â€–Â·â€–âˆž</option>
-        <option value="taxicab">Taxicab norm â€–Â·â€–â‚</option>
+        <option value="euclidean">Euclidean norm ‖·‖₂</option>
+        <option value="sup">Sup norm ‖·‖∞</option>
+        <option value="taxicab">Taxicab norm ‖·‖₁</option>
       </select>
     </label>
     <label>Size parameter R: <span id="rVal">1.80</span>
@@ -265,16 +324,16 @@
     <div class="panel summary">
       <h3>Compact exam summary</h3>
       <ul>
-        <li><span class="mini-math">K compact in â„<sup>n</sup> â‡’ K closed and bounded.</span></li>
-        <li><span class="mini-math">K closed and bounded in â„<sup>n</sup> â‡’ K compact.</span> This uses finite-dimensional completeness plus Bolzanoâ€“Weierstrass.</li>
-        <li><span class="mini-math">bounded alone fails:</span> the open ball B(0,1) is bounded but not compact.</li>
-        <li><span class="mini-math">closed alone fails:</span> â„<sup>n</sup> or any closed unbounded ray is closed but not compact.</li>
-        <li><span class="mini-math">In general metric spaces:</span> closed + bounded need not imply compact.</li>
+        <li><span class="mini-math"><span class="katex-math" data-tex="K\text{ compact in }\mathbb{R}^{n}\Rightarrow K\text{ closed and bounded.}" data-fallback="K compact in ℝⁿ ⇒ K closed and bounded.">K compact in ℝⁿ ⇒ K closed and bounded.</span></span></li>
+        <li><span class="mini-math"><span class="katex-math" data-tex="K\text{ closed and bounded in }\mathbb{R}^{n}\Rightarrow K\text{ compact.}" data-fallback="K closed and bounded in ℝⁿ ⇒ K compact.">K closed and bounded in ℝⁿ ⇒ K compact.</span></span> This uses finite-dimensional completeness plus Bolzano–Weierstrass.</li>
+        <li><span class="mini-math"><span class="katex-math" data-tex="\text{bounded alone fails:}" data-fallback="bounded alone fails:">bounded alone fails:</span></span> the open ball B(0,1) is bounded but not compact.</li>
+        <li><span class="mini-math"><span class="katex-math" data-tex="\text{closed alone fails:}" data-fallback="closed alone fails:">closed alone fails:</span></span> ℝⁿ or any closed unbounded ray is closed but not compact.</li>
+        <li><span class="mini-math"><span class="katex-math" data-tex="\text{In general metric spaces:}" data-fallback="In general metric spaces:">In general metric spaces:</span></span> closed + bounded need not imply compact.</li>
       </ul>
     </div>
   </section>
 
-  <div class="footer-note">The diagrams are 2D coordinate slices. The statements are the finite-dimensional theorem in â„<sup>n</sup>.</div>
+  <div class="footer-note">The diagrams are 2D coordinate slices. The statements are the finite-dimensional theorem in ℝⁿ.</div>
 </div>
 
 <script>
@@ -340,8 +399,8 @@
       el('line',{x1:cx-4,y1:Y(x),x2:cx+4,y2:Y(x),stroke:css('--line')},svg);
       text(svg,cx-18,Y(x)+4,t,'.72rem',css('--muted'),'end');
     });
-    text(svg,W-margin+22,cy+5,'xâ‚','.82rem',css('--muted'),'middle');
-    text(svg,cx-2,margin-16,'xâ‚‚','.82rem',css('--muted'),'middle');
+    text(svg,W-margin+22,cy+5,'x₁','.82rem',css('--muted'),'middle');
+    text(svg,cx-2,margin-16,'x₂','.82rem',css('--muted'),'middle');
   }
   function text(svg,x,y,content,size='13px',fill=css('--ink'),anchor='start',weight='600'){
     const t=el('text',{x,y,fill,'font-size':size,'text-anchor':anchor,'font-weight':weight,'font-family':'Inter, system-ui, sans-serif'},svg);
@@ -373,7 +432,7 @@
       el('line',{x1:margin,y1:cy-h,x2:W-margin,y2:cy-h,stroke:edge,'stroke-width':2.6},svg);
       el('line',{x1:margin,y1:cy+h,x2:W-margin,y2:cy+h,stroke:edge,'stroke-width':2.6},svg);
       el('path',{d:`M${W-margin-18},${cy-h} l18,0 M${W-margin-18},${cy+h} l18,0`,stroke:edge,'stroke-width':2.6},svg);
-      mathText(svg,X(-3.55),Y(2.55),'closed strip, unbounded in xâ‚', '14px', css('--muted'));
+      mathText(svg,X(-3.55),Y(2.55),'closed strip, unbounded in x₁', '14px', css('--muted'));
     } else if(type==='neither'){
       const h = Math.min(R*.50,1.0)*scale;
       el('rect',{x:0,y:cy-h,width:W,height:2*h,fill:setFill,stroke:'none'},svg);
@@ -412,22 +471,22 @@
         el('circle',{cx:X(c[0]),cy:Y(c[1]),r:(.72+((i%2)*.07))*scale,fill:colorMix(css('--accent3'),.13),stroke:css('--accent3'),'stroke-width':1.6,opacity:.95},coverSvg);
       });
       text(coverSvg,X(-3.55),Y(-2.65),'finite subcover selected from the open cover','.82rem',css('--muted'));
-      coverCaption.innerHTML='For a closed bounded set in â„<sup>n</sup>, every open cover admits finitely many members that still cover K.';
+      coverCaption.innerHTML='For a closed bounded set in ℝⁿ, every open cover admits finitely many members that still cover K.';
       coverSub.textContent='Finite subcover exists because K is compact.';
     } else if(type==='openbounded'){
       // Nested cover U_m = ball of radius R - R/m. Finite stage misses outer shell.
       const maxr = R - R/(N+1);
       ballShape(coverSvg,maxr,norm,{fill:colorMix(css('--accent3'),.13),stroke:css('--accent3'),'stroke-width':2.1});
       ballShape(coverSvg,R,norm,{fill:'none',stroke:css('--bad'),'stroke-width':2.5,'stroke-dasharray':'8 7'});
-      mathText(coverSvg,X(-3.3),Y(-2.62),'Uâ‚˜ = B(0, R âˆ’ R/m),   â‹ƒâ‚˜ Uâ‚˜ = B(0,R)', '15px', css('--ink'));
-      mathText(coverSvg,X(.45),Y(-2.25),`finite stage m â‰¤ ${N} leaves an outer annulus`, '14px', css('--bad'));
+      mathText(coverSvg,X(-3.3),Y(-2.62),'Uₘ = B(0, R − R/m),   ⋃ₘ Uₘ = B(0,R)', '15px', css('--ink'));
+      mathText(coverSvg,X(.45),Y(-2.25),`finite stage m ≤ ${N} leaves an outer annulus`, '14px', css('--bad'));
       coverCaption.innerHTML='Boundedness alone fails: the open ball is covered by nested smaller open balls, but no finite stage reaches the missing boundary.';
       coverSub.textContent='No finite subcover for the displayed nested cover.';
     } else if(type==='closedunbounded'){
       const rr = Math.min(.45*N,3.05);
       el('circle',{cx,cy,r:rr*scale,fill:colorMix(css('--accent3'),.14),stroke:css('--accent3'),'stroke-width':2.1},coverSvg);
-      mathText(coverSvg,X(-3.35),Y(-2.62),'Uâ‚˜ = B(0,m),   â‹ƒâ‚˜ Uâ‚˜ covers the unbounded set', '15px', css('--ink'));
-      mathText(coverSvg,X(1.25),Y(.45),`finite stage m â‰¤ ${N} misses the tail`, '14px', css('--bad'));
+      mathText(coverSvg,X(-3.35),Y(-2.62),'Uₘ = B(0,m),   ⋃ₘ Uₘ covers the unbounded set', '15px', css('--ink'));
+      mathText(coverSvg,X(1.25),Y(.45),`finite stage m ≤ ${N} misses the tail`, '14px', css('--bad'));
       el('path',{d:`M${X(2.25)},${Y(0)} C ${X(2.6)},${Y(.45)} ${X(2.9)},${Y(.35)} ${X(3.28)},${Y(.1)}`,fill:'none',stroke:css('--bad'),'stroke-width':2.2,'marker-end':'url(#arrow)'},coverSvg);
       coverCaption.innerHTML='Closedness alone fails: an unbounded closed set can be covered by expanding balls B(0,m), but finitely many only reach a largest radius.';
       coverSub.textContent='No finite subcover because K is not bounded.';
@@ -483,7 +542,7 @@
       el('circle',{cx:X(bd[0]),cy:Y(bd[1]),r:10,fill:css('--paper'),stroke:css('--bad'),'stroke-width':2.4,'stroke-dasharray':'5 4'},seqSvg);
       mathText(seqSvg,X(bd[0])-.95*scale,Y(.42),'limit lies on missing boundary','14px',css('--bad'));
       el('path',{d:`M${X(R-.65)},${Y(.32)} C${X(R-.35)},${Y(.55)} ${X(R-.14)},${Y(.38)} ${X(R-.02)},${Y(.08)}`,fill:'none',stroke:css('--bad'),'stroke-width':2,'marker-end':'url(#arrow)'},seqSvg);
-      mathText(seqSvg,X(-3.35),Y(-2.62),'xâ‚˜ â†’ boundary point not in K', '15px', css('--ink'));
+      mathText(seqSvg,X(-3.35),Y(-2.62),'xₘ → boundary point not in K', '15px', css('--ink'));
       seqCaption.innerHTML='The sequence stays in the bounded open ball, but its limit belongs to the missing boundary. No subsequence converges to a point of K.';
       seqSub.textContent='Bounded but not closed: sequential compactness fails.';
     } else if(type==='closedunbounded'){
@@ -493,7 +552,7 @@
       pts.forEach((p,i)=>drawSequencePoint(seqSvg,p,i,pts.length,i%4===0));
       el('path',{d:`M${X(1.7)},${Y(.45)} C ${X(2.2)},${Y(.75)} ${X(2.75)},${Y(.45)} ${X(3.32)},${Y(.14)}`,fill:'none',stroke:css('--bad'),'stroke-width':2.2,'marker-end':'url(#arrow)'},seqSvg);
       mathText(seqSvg,X(1.35),Y(.82),'sequence escapes every bounded region','14px',css('--bad'));
-      mathText(seqSvg,X(-3.35),Y(-2.62),'xâ‚˜ = m eâ‚ has no convergent subsequence', '15px', css('--ink'));
+      mathText(seqSvg,X(-3.35),Y(-2.62),'xₘ = m e₁ has no convergent subsequence', '15px', css('--ink'));
       seqCaption.innerHTML='The set is closed, so limits would stay inside if they existed. The problem is unboundedness: a sequence can run away and have no convergent subsequence.';
       seqSub.textContent='Closed but unbounded: sequential compactness fails.';
     } else if(type==='neither'){
@@ -519,11 +578,11 @@
   function renderStatus(){
     const type=setType.value;
     const data={
-      compact:{closed:true,bounded:true,compact:true,notice:'Heineâ€“Borel says this is the good case: closedness keeps limits inside K, while boundedness prevents sequences and covers from escaping to infinity.'},
+      compact:{closed:true,bounded:true,compact:true,notice:'Heine–Borel says this is the good case: closedness keeps limits inside K, while boundedness prevents sequences and covers from escaping to infinity.'},
       openbounded:{closed:false,bounded:true,compact:false,notice:'This isolates the first false shortcut. A bounded set can still fail compactness when it misses its boundary; sequences may converge to points outside the set.'},
       closedunbounded:{closed:true,bounded:false,compact:false,notice:'This isolates the second false shortcut. A closed set can still fail compactness when it is unbounded; sequences may escape and open covers may need infinitely many expanding balls.'},
       neither:{closed:false,bounded:false,compact:false,notice:'Here both compactness mechanisms fail: limits can fall outside the set and points can run arbitrarily far away.'},
-      finite:{closed:true,bounded:true,compact:true,notice:'Finite subsets of â„â¿ are compact. They are closed, bounded, and every open cover is reduced by choosing one cover member per point.'}
+      finite:{closed:true,bounded:true,compact:true,notice:'Finite subsets of ℝⁿ are compact. They are closed, bounded, and every open cover is reduced by choosing one cover member per point.'}
     }[type];
     function yn(v){return v?'<span class="ok">yes</span>':'<span class="no">no</span>'}
     closedStatus.innerHTML=yn(data.closed);
@@ -536,6 +595,7 @@
     rVal.textContent=fmt(+radius.value);
     nVal.textContent=stage.value;
     renderCover(); renderSequence(); renderStatus();
+    queueMathRender();
   }
 
   themeBtn.addEventListener('click',()=>{

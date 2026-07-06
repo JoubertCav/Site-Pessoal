@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -9,6 +9,10 @@
 <meta name="description" content="Interactive real analysis diagram for interior, closure, and boundary.">
   <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
 <title>Interior, Closure, and Boundary | Real Analysis Diagrams</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
 <script>
@@ -182,18 +186,31 @@ svg{display:block;width:100%;height:auto}
 .summaryGrid .mathline{font-size:.98rem}
 @media(max-width:940px){.grid,.twoCols{grid-template-columns:1fr}.panelGrid,.summaryGrid{grid-template-columns:1fr}.kpi{grid-template-columns:1fr 1fr}header{grid-template-columns:1fr}.toolbar{justify-content:flex-start}.svg-wrap{min-height:auto}}
 @media(max-width:560px){.container{padding:20px 12px 32px}.row2,.quick,.kpi{grid-template-columns:1fr}h1{font-size:2.2rem}.panelGrid{gap:9px}.card.pad{padding:14px}}
+
+/* KaTeX and equation-panel polish */
+.mathline{
+  font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  white-space:normal;
+  overflow-x:auto;
+}
+.mathline .katex{font-size:1.02em}
+.formulaBox .katex{font-size:1.02em}
+.info .big .katex{font-size:1.02em}
+.subtitle .katex, .smallNote .katex, .item .katex{font-size:1em}
+.katex-display{margin:.25em 0;text-align:left}
+
 </style>
 </head>
 <body data-theme="light">
 <div class="container">
   <header>
     <div>
-      <div class="eyebrow">Real analysis Â· topology of â„â¿</div>
+      <div class="eyebrow">Real analysis · topology of ℝⁿ</div>
       <h1>Interior, closure, and boundary</h1>
-      <p class="subtitle">A point is classified by what every sufficiently small neighborhood around it sees. The diagram is a two-coordinate slice; the definitions are the full topology of <strong>â„â¿</strong>.</p>
+      <p class="subtitle">A point is classified by what every sufficiently small neighborhood around it sees. The diagram is a two-coordinate slice; the definitions are the full topology of <strong>ℝⁿ</strong>.</p>
     </div>
     <div class="toolbar">
-      <span class="chip" id="sliceChip">2D slice of â„Â²</span>
+      <span class="chip" id="sliceChip">2D slice of ℝ²</span>
       <button class="btn" id="themeBtn">Dark mode</button>
     </div>
   </header>
@@ -206,45 +223,45 @@ svg{display:block;width:100%;height:auto}
       </div>
 
       <div class="control">
-        <label>Ambient space <span class="value" id="dimVal">â„Â²</span></label>
+        <label>Ambient space <span class="value" id="dimVal">ℝ²</span></label>
         <select id="dim">
-          <option value="1">â„Â¹</option>
-          <option value="2" selected>â„Â²</option>
-          <option value="3">â„Â³</option>
-          <option value="5">â„âµ</option>
-          <option value="n">â„â¿</option>
+          <option value="1">ℝ¹</option>
+          <option value="2" selected>ℝ²</option>
+          <option value="3">ℝ³</option>
+          <option value="5">ℝ⁵</option>
+          <option value="n">ℝⁿ</option>
         </select>
       </div>
 
       <div class="control">
         <label>Norm generating the balls <span class="value" id="normVal">Euclidean</span></label>
         <select id="norm">
-          <option value="l2" selected>Euclidean â€–Â·â€–â‚‚</option>
-          <option value="linf">Sup norm â€–Â·â€–âˆž</option>
-          <option value="l1">Taxicab norm â€–Â·â€–â‚</option>
+          <option value="l2" selected>Euclidean ‖·‖₂</option>
+          <option value="linf">Sup norm ‖·‖∞</option>
+          <option value="l1">Taxicab norm ‖·‖₁</option>
         </select>
       </div>
 
       <div class="control">
         <label>Set A <span class="value" id="setVal">open unit ball</span></label>
         <select id="setType">
-          <option value="openBall" selected>Open unit ball Bâ‚(0)</option>
-          <option value="closedBall">Closed unit ball BÌ„â‚(0)</option>
-          <option value="puncturedBall">Punctured ball Bâ‚(0) \ {0}</option>
-          <option value="annulus">Open annulus 0.45 &lt; â€–xâ€– &lt; 1</option>
-          <option value="halfspace">Closed half-space xâ‚ â‰¥ 0</option>
-          <option value="finite">Finite set in â„â¿</option>
-          <option value="dense">Dense countable model Qâ¿</option>
+          <option value="openBall" selected>Open unit ball B₁(0)</option>
+          <option value="closedBall">Closed unit ball B̄₁(0)</option>
+          <option value="puncturedBall">Punctured ball B₁(0) \ {0}</option>
+          <option value="annulus">Open annulus 0.45 &lt; ‖x‖ &lt; 1</option>
+          <option value="halfspace">Closed half-space x₁ ≥ 0</option>
+          <option value="finite">Finite set in ℝⁿ</option>
+          <option value="dense">Dense countable model Qⁿ</option>
         </select>
       </div>
 
       <div class="control row2">
         <div>
-          <label>xâ‚ <span class="value" id="xVal">0.35</span></label>
+          <label>x₁ <span class="value" id="xVal">0.35</span></label>
           <input type="range" id="xRange" min="-1.45" max="1.45" value="0.35" step="0.01" />
         </div>
         <div>
-          <label>xâ‚‚ <span class="value" id="yVal">0.20</span></label>
+          <label>x₂ <span class="value" id="yVal">0.20</span></label>
           <input type="range" id="yRange" min="-1.45" max="1.45" value="0.20" step="0.01" />
         </div>
       </div>
@@ -262,10 +279,10 @@ svg{display:block;width:100%;height:auto}
 
       <div class="formulaBox">
         <h3>Metric-topology definitions</h3>
-        <div class="mathline">B<sub>r</sub>(x) = { y âˆˆ â„<sup>n</sup> : d(x,y) &lt; r }</div>
-        <div class="mathline">x âˆˆ <span class="op">int</span>(A) â‡” âˆƒr&gt;0 : B<sub>r</sub>(x) âŠ‚ A</div>
-        <div class="mathline">x âˆˆ <span class="op">cl</span>(A) â‡” âˆ€r&gt;0 : B<sub>r</sub>(x) âˆ© A â‰  âˆ…</div>
-        <div class="mathline">x âˆˆ <span class="op">bd</span>(A) â‡” âˆ€r&gt;0 : B<sub>r</sub>(x) sees A and â„<sup>n</sup> \ A</div>
+        <div class="mathline">\(B_r(x)=\{y\in\mathbb{R}^n:d(x,y)<r\}\)</div>
+        <div class="mathline">\(x\in\operatorname{int}(A)\Longleftrightarrow \exists r>0:\ B_r(x)\subset A\)</div>
+        <div class="mathline">\(x\in\operatorname{cl}(A)\Longleftrightarrow \forall r>0:\ B_r(x)\cap A\neq\varnothing\)</div>
+        <div class="mathline">\(x\in\partial A\Longleftrightarrow \forall r>0,\ B_r(x)\cap A\neq\varnothing\ 	ext{ and }\ B_r(x)\cap(\mathbb{R}^n\setminus A)\neq\varnothing\)</div>
       </div>
     </aside>
 
@@ -287,12 +304,12 @@ svg{display:block;width:100%;height:auto}
         </div>
         <div class="info">
           <div class="name">This chosen ball</div>
-          <div class="big" id="ballBig">Báµ£(x) âŠ‚ A</div>
+          <div class="big" id="ballBig">Bᵣ(x) ⊂ A</div>
           <div class="small" id="ballSmall">For this radius, the visible neighborhood is contained in A.</div>
         </div>
         <div class="info">
           <div class="name">Closure / limit behavior</div>
-          <div class="big" id="closureBig">x âˆˆ cl(A)</div>
+          <div class="big" id="closureBig">x ∈ cl(A)</div>
           <div class="small" id="closureSmall">Every ball around x meets A.</div>
         </div>
       </section>
@@ -303,7 +320,7 @@ svg{display:block;width:100%;height:auto}
     <div class="card pad">
       <h2>What the topology is doing</h2>
       <div class="list">
-        <div class="item"><div class="badge">1</div><div><strong>Balls are the primitive test objects.</strong><span>Changing the norm changes the shape of balls, but on finite-dimensional â„â¿ the usual norms generate the same open sets.</span></div></div>
+        <div class="item"><div class="badge">1</div><div><strong>Balls are the primitive test objects.</strong><span>Changing the norm changes the shape of balls, but on finite-dimensional ℝⁿ the usual norms generate the same open sets.</span></div></div>
         <div class="item"><div class="badge">2</div><div><strong>Interior means stable membership.</strong><span>If x is interior, small perturbations of x remain in A.</span></div></div>
         <div class="item"><div class="badge">3</div><div><strong>Closure means arbitrarily good approximation.</strong><span>x belongs to cl(A) when points of A can be found inside every neighborhood of x.</span></div></div>
         <div class="item"><div class="badge">4</div><div><strong>Boundary means unavoidable ambiguity.</strong><span>Every neighborhood intersects both A and its complement.</span></div></div>
@@ -313,29 +330,29 @@ svg{display:block;width:100%;height:auto}
     <div class="card pad">
       <h2>Live exact verdict</h2>
       <div class="kpi">
-        <div class="cell"><b>x âˆˆ A</b><span id="kA">yes</span></div>
-        <div class="cell"><b>x âˆˆ int(A)</b><span id="kInt">yes</span></div>
-        <div class="cell"><b>x âˆˆ cl(A)</b><span id="kCl">yes</span></div>
-        <div class="cell"><b>x âˆˆ bd(A)</b><span id="kBd">no</span></div>
+        <div class="cell"><b>x ∈ A</b><span id="kA">yes</span></div>
+        <div class="cell"><b>x ∈ int(A)</b><span id="kInt">yes</span></div>
+        <div class="cell"><b>x ∈ cl(A)</b><span id="kCl">yes</span></div>
+        <div class="cell"><b>x ∈ bd(A)</b><span id="kBd">no</span></div>
       </div>
       <div class="formulaBox" style="margin-top:12px">
-        <div class="mathline" id="setFormula">A = B<sub>1</sub>(0) = {x : â€–xâ€– &lt; 1}</div>
-        <div class="mathline" id="pointFormula">x = (0.35, 0.20), &nbsp; â€–xâ€– = 0.40</div>
-        <div class="mathline" id="localRadiusFormula">largest visible interior margin â‰ˆ 0.60</div>
+        <div class="mathline" id="setFormula">\(A=B_1(0)=\{x:\|x\|<1\}\)</div>
+        <div class="mathline" id="pointFormula">\(x=(0.35,0.20),\quad \|x\|=0.40\)</div>
+        <div class="mathline" id="localRadiusFormula">\(\text{largest visible interior margin}\approx0.60\)</div>
       </div>
-      <p class="smallNote" style="margin-bottom:0">For the dense model Qâ¿, the plotted dots are only a finite visual shadow. The verdict uses the theorem cl(Qâ¿)=â„â¿ and int(Qâ¿)=âˆ….</p>
+      <p class="smallNote" style="margin-bottom:0">For the dense model Qⁿ, the plotted dots are only a finite visual shadow. The verdict uses the theorem cl(Qⁿ)=ℝⁿ and int(Qⁿ)=∅.</p>
     </div>
   </section>
 
   <section class="footerSummary">
     <h2>Compact exam-style summary</h2>
     <div class="summaryGrid">
-      <div class="mathline"><span class="op">int</span>(A) = {x : âˆƒr&gt;0, B<sub>r</sub>(x) âŠ‚ A}</div>
-      <div class="mathline"><span class="op">cl</span>(A) = {x : âˆ€r&gt;0, B<sub>r</sub>(x) âˆ© A â‰  âˆ…}</div>
-      <div class="mathline"><span class="op">bd</span>(A) = <span class="op">cl</span>(A) \ <span class="op">int</span>(A)</div>
-      <div class="mathline">x âˆˆ Aâ€² â‡” âˆ€r&gt;0, (B<sub>r</sub>(x) \ {x}) âˆ© A â‰  âˆ…</div>
-      <div class="mathline">A dense in â„<sup>n</sup> â‡” <span class="op">cl</span>(A)=â„<sup>n</sup></div>
-      <div class="mathline">x isolated in A â‡” âˆƒr&gt;0, B<sub>r</sub>(x) âˆ© A = {x}</div>
+      <div class="mathline">\(\operatorname{int}(A)=\{x:\exists r>0,\ B_r(x)\subset A\}\)</div>
+      <div class="mathline">\(\operatorname{cl}(A)=\{x:orall r>0,\ B_r(x)\cap A\neq\varnothing\}\)</div>
+      <div class="mathline">\(\partial A=\operatorname{cl}(A)\setminus\operatorname{int}(A)\)</div>
+      <div class="mathline">\(x\in A^{\prime}\Longleftrightarrow \forall r>0,\ (B_r(x)\setminus\{x\})\cap A\neq\varnothing\)</div>
+      <div class="mathline">\(A\ 	ext{dense in }\mathbb{R}^n\Longleftrightarrow \operatorname{cl}(A)=\mathbb{R}^n\)</div>
+      <div class="mathline">\(x\ 	ext{isolated in }A\Longleftrightarrow \exists r>0,\ B_r(x)\cap A=\{x\}\)</div>
     </div>
   </section>
 </div>
@@ -373,7 +390,7 @@ function ballPath(cx,cy,r){
 function normName(){return state.norm==='l2'?'Euclidean':state.norm==='linf'?'sup norm':'taxicab'}
 function setName(){
   return {
-    openBall:'open unit ball', closedBall:'closed unit ball', puncturedBall:'punctured ball', annulus:'open annulus', halfspace:'closed half-space', finite:'finite set', dense:'dense Qâ¿ model'
+    openBall:'open unit ball', closedBall:'closed unit ball', puncturedBall:'punctured ball', annulus:'open annulus', halfspace:'closed half-space', finite:'finite set', dense:'dense Qⁿ model'
   }[state.setType];
 }
 function approxEq(a,b){return Math.abs(a-b)<0.025}
@@ -435,8 +452,8 @@ function drawGrid(){
   }
   s+=`<line x1="${sx(minX)}" y1="${sy(0)}" x2="${sx(maxX)}" y2="${sy(0)}" stroke="var(--line)" stroke-width="1.4"/>`;
   s+=`<line x1="${sx(0)}" y1="${sy(minY)}" x2="${sx(0)}" y2="${sy(maxY)}" stroke="var(--line)" stroke-width="1.4"/>`;
-  s+=`<text x="${sx(maxX)-10}" y="${sy(0)-8}" text-anchor="end" fill="var(--muted)" font-size="13" font-weight="700">xâ‚</text>`;
-  s+=`<text x="${sx(0)+8}" y="${sy(maxY)+15}" fill="var(--muted)" font-size="13" font-weight="700">xâ‚‚</text>`;
+  s+=`<text x="${sx(maxX)-10}" y="${sy(0)-8}" text-anchor="end" fill="var(--muted)" font-size="13" font-weight="700">x₁</text>`;
+  s+=`<text x="${sx(0)+8}" y="${sy(maxY)+15}" fill="var(--muted)" font-size="13" font-weight="700">x₂</text>`;
   return s;
 }
 function drawSet(){
@@ -447,7 +464,7 @@ function drawSet(){
   } else if(state.setType==='puncturedBall'){
     s+=`<g fill="var(--accent-mid)" stroke="var(--warm)" stroke-width="3" stroke-dasharray="7 6">${ballPath(0,0,1)}</g>`;
     s+=`<circle cx="${sx(0)}" cy="${sy(0)}" r="8" fill="var(--paper)" stroke="var(--warm)" stroke-width="3"/>`;
-    s+=`<text x="${sx(.66)}" y="${sy(.62)}" fill="var(--muted)" font-size="13" font-weight="800">A = Bâ‚(0) without 0</text>`;
+    s+=`<text x="${sx(.66)}" y="${sy(.62)}" fill="var(--muted)" font-size="13" font-weight="800">A = B₁(0) without 0</text>`;
   } else if(state.setType==='annulus'){
     const outer = shapeD(0,0,1), inner = shapeD(0,0,0.45);
     if(state.norm==='l2'){
@@ -459,7 +476,7 @@ function drawSet(){
   } else if(state.setType==='halfspace'){
     s+=`<rect x="${sx(0)}" y="${sy(maxY)}" width="${sx(maxX)-sx(0)}" height="${sy(minY)-sy(maxY)}" fill="var(--accent-mid)"/>`;
     s+=`<line x1="${sx(0)}" y1="${sy(minY)}" x2="${sx(0)}" y2="${sy(maxY)}" stroke="var(--warm)" stroke-width="3"/>`;
-    s+=`<text x="${sx(.35)}" y="${sy(.95)}" fill="var(--muted)" font-size="13" font-weight="800">A = {xâ‚ â‰¥ 0}</text>`;
+    s+=`<text x="${sx(.35)}" y="${sy(.95)}" fill="var(--muted)" font-size="13" font-weight="800">A = {x₁ ≥ 0}</text>`;
   } else if(state.setType==='finite'){
     finitePts.forEach((p,i)=>{
       s+=`<circle cx="${sx(p[0])}" cy="${sy(p[1])}" r="8" fill="var(--accent)" stroke="var(--paper)" stroke-width="3"/>`;
@@ -475,7 +492,7 @@ function drawSet(){
         }
       }
     }
-    s+=`<text x="${sx(-1.32)}" y="${sy(1.1)}" fill="var(--muted)" font-size="13" font-weight="800">visual shadow of Qâ¿: dense, not open</text>`;
+    s+=`<text x="${sx(-1.32)}" y="${sy(1.1)}" fill="var(--muted)" font-size="13" font-weight="800">visual shadow of Qⁿ: dense, not open</text>`;
   }
   return s;
 }
@@ -511,8 +528,8 @@ function drawSmallTopologyRibbon(){
 function render(){
   $('xVal').textContent=fmt(state.x); $('yVal').textContent=fmt(state.y); $('rVal').textContent=fmt(state.r);
   $('normVal').textContent=normName(); $('setVal').textContent=setName();
-  $('dimVal').innerHTML=state.dim==='n'?'â„<sup>n</sup>':'â„<sup>'+state.dim+'</sup>';
-  $('sliceChip').innerHTML= state.dim==='2' ? '2D picture of â„Â²' : '2D coordinate slice of '+(state.dim==='n'?'â„â¿':'â„'+supChar(state.dim));
+  $('dimVal').innerHTML=state.dim==='n'?'ℝ<sup>n</sup>':'ℝ<sup>'+state.dim+'</sup>';
+  $('sliceChip').innerHTML= state.dim==='2' ? '2D picture of ℝ²' : '2D coordinate slice of '+(state.dim==='n'?'ℝⁿ':'ℝ'+supChar(state.dim));
   svg.innerHTML = `
     <rect x="0" y="0" width="760" height="560" fill="var(--paper)"/>
     ${drawGrid()}
@@ -523,39 +540,59 @@ function render(){
   `;
   const v=verdict(state.x,state.y), bs=ballStatus(v), d=norm2(state.x,state.y);
   let classBig='Exterior point', classSmall='Some ball around x misses A completely.';
-  if(v.int){classBig='Interior point'; classSmall='There exists a radius Ï>0 with BÏ(x) contained in A.';}
+  if(v.int){classBig='Interior point'; classSmall='There exists a radius ρ>0 with Bρ(x) contained in A.';}
   else if(v.bd){classBig='Boundary point'; classSmall='Every ball around x meets both A and its complement.';}
   else if(v.cl){classBig='Closure point'; classSmall='Every ball around x meets A, although x may not be in A.';}
   if(v.isolated){classBig='Isolated point'; classSmall='x is in A, but some ball meets A only at x.';}
   $('classBig').textContent=classBig; $('classSmall').textContent=classSmall;
-  $('ballBig').textContent = bs.subset ? 'Báµ£(x) âŠ‚ A' : (bs.meetsA && bs.meetsC ? 'Báµ£(x) sees both' : bs.meetsA ? 'Báµ£(x) meets A' : 'Báµ£(x) misses A');
+  $('ballBig').innerHTML = bs.subset ? '\\(B_r(x)\\subset A\\)' : (bs.meetsA && bs.meetsC ? '\\(B_r(x)\\) sees both' : bs.meetsA ? '\\(B_r(x)\\) meets \\(A\\)' : '\\(B_r(x)\\) misses \\(A\\)');
   $('ballSmall').textContent = bs.subset ? 'This particular radius is small enough to fit inside A.' : (bs.meetsA&&bs.meetsC ? 'For this radius, the neighborhood crosses the boundary.' : bs.meetsA ? 'It touches A, but is not contained in A.' : 'It lies in the exterior region.');
-  $('closureBig').textContent = v.cl ? 'x âˆˆ cl(A)' : 'x âˆ‰ cl(A)';
+  $('closureBig').innerHTML = v.cl ? '\\(x\\in\\operatorname{cl}(A)\\)' : '\\(x\\notin\\operatorname{cl}(A)\\)';
   $('closureSmall').textContent = v.limit ? (v.isolated ? 'But x is not a limit point; it is isolated.' : 'x is also a limit/accumulation point of A.') : 'There is a positive distance from x to A.';
   $('kA').textContent = v.inA?'yes':'no'; $('kInt').textContent=v.int?'yes':'no'; $('kCl').textContent=v.cl?'yes':'no'; $('kBd').textContent=v.bd?'yes':'no';
   $('setFormula').innerHTML = setFormula();
-  $('pointFormula').innerHTML = `x = (${fmt(state.x)}, ${fmt(state.y)}${state.dim!=='1'&&state.dim!=='2'?', 0, â€¦, 0':''}), &nbsp; â€–xâ€– = ${fmt(d)}`;
+  $('pointFormula').innerHTML = `\\(x=(${fmt(state.x)}, ${fmt(state.y)}${state.dim!=='1'&&state.dim!=='2'?',0,\\ldots,0':''}),\\quad \\|x\\|=${fmt(d)}\\)`;
   $('localRadiusFormula').innerHTML = localFormula(v);
+  queueMathRender();
 }
-function supChar(s){return {'1':'Â¹','2':'Â²','3':'Â³','5':'âµ'}[s]||'â¿'}
+
+function renderMathNow(){
+  if(!window.renderMathInElement) return false;
+  renderMathInElement(document.body,{
+    delimiters:[
+      {left:"$$",right:"$$",display:true},
+      {left:"\\[",right:"\\]",display:true},
+      {left:"\\(",right:"\\)",display:false}
+    ],
+    throwOnError:false,
+    ignoredTags:["script","noscript","style","textarea","pre","code","option"]
+  });
+  return true;
+}
+function queueMathRender(tries=0){
+  if(renderMathNow()) return;
+  if(tries<80) setTimeout(()=>queueMathRender(tries+1),50);
+}
+
+function supChar(s){return {'1':'¹','2':'²','3':'³','5':'⁵'}[s]||'ⁿ'}
 function setFormula(){
   switch(state.setType){
-    case 'openBall': return `A = B<sub>1</sub>(0) = {x âˆˆ â„<sup>n</sup> : â€–xâ€– &lt; 1}`;
-    case 'closedBall': return `A = BÌ„<sub>1</sub>(0) = {x âˆˆ â„<sup>n</sup> : â€–xâ€– â‰¤ 1}`;
-    case 'puncturedBall': return `A = B<sub>1</sub>(0) \ {0}`;
-    case 'annulus': return `A = {x âˆˆ â„<sup>n</sup> : 0.45 &lt; â€–xâ€– &lt; 1}`;
-    case 'halfspace': return `A = {x âˆˆ â„<sup>n</sup> : x<sub>1</sub> â‰¥ 0}`;
-    case 'finite': return `A is finite; in â„<sup>n</sup>, finite sets are closed and have empty interior.`;
-    case 'dense': return `A = Q<sup>n</sup>; cl(A)=â„<sup>n</sup>, int(A)=âˆ…, bd(A)=â„<sup>n</sup>.`;
+    case 'openBall': return `\\(A=B_1(0)=\\{x\\in\\mathbb{R}^n:\\|x\\|<1\\}\\)`;
+    case 'closedBall': return `\\(A=\\overline{B}_1(0)=\\{x\\in\\mathbb{R}^n:\\|x\\|\\le 1\\}\\)`;
+    case 'puncturedBall': return `\\(A=B_1(0)\\setminus\\{0\\}\\)`;
+    case 'annulus': return `\\(A=\\{x\\in\\mathbb{R}^n:0.45<\\|x\\|<1\\}\\)`;
+    case 'halfspace': return `\\(A=\\{x\\in\\mathbb{R}^n:x_1\\ge 0\\}\\)`;
+    case 'finite': return `\\(A\\text{ is finite; in }\\mathbb{R}^n,\\ A\\text{ is closed and }\\operatorname{int}(A)=\\varnothing.\\)`;
+    case 'dense': return `\\(A=\\mathbb{Q}^n,\\quad \\operatorname{cl}(A)=\\mathbb{R}^n,\\quad \\operatorname{int}(A)=\\varnothing,\\quad \\partial A=\\mathbb{R}^n.\\)`;
   }
 }
 function localFormula(v){
-  if(state.setType==='dense') return `Every nonempty ball contains points of Q<sup>n</sup> and of â„<sup>n</sup> \ Q<sup>n</sup>.`;
-  if(state.setType==='finite') return v.isolated ? `x is isolated: some B<sub>Ï</sub>(x) meets A only at x.` : `x is outside the finite closed set A unless it coincides with one listed point.`;
-  if(v.int) return `interior margin Ï can be chosen with 0 &lt; Ï â‰¤ ${fmt(v.margin)}`;
-  if(v.bd) return `no positive ball fits inside A or inside the exterior.`;
-  if(v.cl) return `x is approximated by A: every B<sub>r</sub>(x) intersects A.`;
-  return `x has positive distance from A; a small ball misses A.`;
+  if(state.setType==='dense') return `\\(\\text{Every nonempty ball contains points of }\\mathbb{Q}^n\\text{ and of }\\mathbb{R}^n\\setminus\\mathbb{Q}^n.\\)`;
+  if(state.setType==='finite') return v.isolated ? `\\(x\\text{ is isolated: for some }\\rho>0,\\ B_\\rho(x)\\cap A=\\{x\\}.\\)` : `\\(x\\text{ is outside the finite closed set }A\\text{ unless it equals one listed point.}\\)`;
+  if(v.int) return `\\(\\text{interior margin }\\rho\\text{ can be chosen with }0<\\rho\\le ${fmt(v.margin)}\\)`;
+  if(v.bd) return `\\(\\text{No positive ball fits entirely inside }A\\text{ or inside the exterior.}\\)`;
+  if(v.cl) return `\\(x\\text{ is approximated by }A:\\text{ every }B_r(x)\\text{ intersects }A.\\)`;
+  return `\\(x\\text{ has positive distance from }A;\\text{ a small ball misses }A.\\)`;
 }
 function preset(kind){
   const t=state.setType;
@@ -599,6 +636,7 @@ $('yRange').addEventListener('input',e=>{state.y=parseFloat(e.target.value); ren
 $('rRange').addEventListener('input',e=>{state.r=parseFloat(e.target.value); render();});
 document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click',()=>preset(b.dataset.preset)));
 render();
+window.addEventListener('load',()=>queueMathRender());
 </script>
 </body>
 </html>

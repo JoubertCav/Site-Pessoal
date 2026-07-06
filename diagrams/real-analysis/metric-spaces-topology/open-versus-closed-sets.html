@@ -1,16 +1,20 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="google-site-verification" content="google2c37f7a4206c9d3a.html">
-<meta name="google-site-verification" content="fSWAEb_oSSHr_eJXL9gHYxIn879tRaBwJ42f_aD9o2s">
-<meta name="google-site-verification" content="ftZ4QVMrlub9jbolsIeo4Ix4UBw0-BJrFeorzqKLXng">
-<meta name="description" content="Interactive real analysis diagram for open versus closed sets.">
-  <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="google2c37f7a4206c9d3a.html" name="google-site-verification"/>
+<meta content="fSWAEb_oSSHr_eJXL9gHYxIn879tRaBwJ42f_aD9o2s" name="google-site-verification"/>
+<meta content="ftZ4QVMrlub9jbolsIeo4Ix4UBw0-BJrFeorzqKLXng" name="google-site-verification"/>
+<meta content="Interactive real analysis diagram for open versus closed sets." name="description"/>
+<link href="../../../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
 <title>Open versus Closed Sets | Real Analysis Diagrams</title>
+<link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet"/>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -88,7 +92,13 @@ h1{font-size:clamp(2rem,5vw,4.3rem);line-height:.95;margin:0;letter-spacing:-.07
   border:1px solid var(--line);background:var(--paper2);border-radius:18px;padding:14px 16px;margin:10px 0;
   font-family:ui-serif, Georgia, Cambria, "Times New Roman", serif;font-size:1.05rem;line-height:1.65;color:var(--ink)
 }
-.mathrow{display:block;margin:4px 0}.symbol{color:var(--accent);font-weight:760}.danger{color:var(--bad);font-weight:760}.ok{color:var(--good);font-weight:760}.warn{color:var(--accent2);font-weight:760}
+
+.mathbox .katex{font-size:1.02em}
+.mathbox .katex-display{margin:.2em 0;overflow-x:auto;overflow-y:hidden;padding:.15em 0}
+.mathrow{display:block;margin:6px 0;line-height:1.55;white-space:normal;overflow-x:auto}
+.katex{color:var(--ink)}
+.katex .mord.text{font-family:Inter,ui-sans-serif,system-ui,sans-serif}
+.mathrow{display:block;margin:6px 0}.symbol{color:var(--accent);font-weight:760}.danger{color:var(--bad);font-weight:760}.ok{color:var(--good);font-weight:760}.warn{color:var(--accent2);font-weight:760}
 .controls{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
 .control{background:var(--paper2);border:1px solid var(--line);border-radius:16px;padding:12px}
 label{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:.82rem;font-weight:760;margin-bottom:8px}
@@ -107,131 +117,152 @@ svg{width:100%;height:auto;display:block;border-radius:18px;background:color-mix
 .footergrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}.summary{font-size:.92rem;color:var(--muted);line-height:1.6}.summary b{color:var(--ink)}
 @media(max-width:900px){.grid,.grid3,.footergrid{grid-template-columns:1fr}.controls,.status{grid-template-columns:1fr}header{grid-template-columns:1fr}.trow{grid-template-columns:1fr}.cell.head:nth-child(n+2){display:none}}
 </style>
-</head>
+<style>
+/* Polished KaTeX equation layout */
+.mathbox.mathbox-polished{
+  display:grid;
+  gap:10px;
+  font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height:1.45;
+}
+.math-item{
+  display:grid;
+  grid-template-columns:112px minmax(0,1fr);
+  gap:10px;
+  align-items:center;
+  border:1px solid var(--line);
+  background:color-mix(in srgb, var(--paper) 62%, var(--paper2));
+  border-radius:15px;
+  padding:10px 12px;
+}
+.math-item.compact{grid-template-columns:118px minmax(0,1fr)}
+.math-label{
+  color:var(--accent);
+  font-size:.72rem;
+  font-weight:900;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+.tex-render{
+  min-width:0;
+  overflow-x:auto;
+  overflow-y:hidden;
+  padding:.08rem 0;
+}
+.tex-render .katex{font-size:1.03em; line-height:1.35;}
+.tex-render .katex-display{margin:0; text-align:left;}
+.mathbox-polished .katex-display>.katex{white-space:normal;}
+#opsFormula .math-item{min-height:70px;}
+@media(max-width:680px){
+  .math-item,.math-item.compact{grid-template-columns:1fr;gap:6px;}
+  .tex-render .katex{font-size:.98em;}
+}
+</style></head>
 <body>
 <div class="app" id="app">
 <header>
-  <div>
-    <div class="eyebrow">Real analysis Â· Topology of R<sup>n</sup></div>
-    <h1>Open versus closed sets</h1>
-    <p class="subtitle">A set in <b>R<sup>n</sup></b> is open when every point carries a small ball staying inside. It is closed when it contains all its sequential limit points â€” equivalently, when its complement is open.</p>
-  </div>
-  <button class="toggle" id="themeBtn">Dark mode</button>
-</header>
-
-<div class="grid">
-  <section class="card">
-    <h2>1. The local test in R<sup>n</sup></h2>
-    <div class="mathbox">
-      <span class="mathrow"><span class="symbol">A open</span> â‡” for every x âˆˆ A, there is r &gt; 0 such that B<sub>r</sub>(x) âŠ‚ A.</span>
-      <span class="mathrow"><span class="symbol">A closed</span> â‡” whenever x<sub>k</sub> âˆˆ A and x<sub>k</sub> â†’ x in R<sup>n</sup>, then x âˆˆ A.</span>
-      <span class="mathrow">B<sub>r</sub>(x) = { y âˆˆ R<sup>n</sup> : â€–y âˆ’ xâ€– &lt; r }.</span>
-    </div>
-    <svg id="mainSvg" viewBox="0 0 720 470" aria-label="R n topology open closed diagram"></svg>
-    <div class="legend">
-      <span class="pill"><strong>2D slice</strong> of R<sup>n</sup></span>
-      <span class="pill">filled region = A</span>
-      <span class="pill">thin curve = boundary âˆ‚A</span>
-      <span class="pill">small ball = B<sub>r</sub>(x)</span>
-    </div>
-    <div class="controls">
-      <div class="control"><label>Example set A <span id="setLabel"></span></label><select id="setType">
-        <option value="openBall">open unit ball â€–xâ€– &lt; 1</option>
-        <option value="closedBall">closed unit ball â€–xâ€– â‰¤ 1</option>
-        <option value="sphere">unit sphere â€–xâ€– = 1</option>
-        <option value="annulus">open annulus 0.45 &lt; â€–xâ€– &lt; 1</option>
-        <option value="closedAnnulus">closed annulus 0.45 â‰¤ â€–xâ€– â‰¤ 1</option>
-        <option value="halfOpen">open half-space xâ‚ &gt; 0</option>
-        <option value="halfClosed">closed half-space xâ‚ â‰¥ 0</option>
-        <option value="strip">closed strip |xâ‚‚| â‰¤ 0.45</option>
-      </select></div>
-      <div class="control"><label>Norm used for balls <span id="normLabel"></span></label><select id="normType">
-        <option value="euclidean">Euclidean â€–Â·â€–â‚‚</option>
-        <option value="sup">sup norm â€–Â·â€–âˆž</option>
-        <option value="taxicab">taxicab norm â€–Â·â€–â‚</option>
-      </select></div>
-      <div class="control"><label>xâ‚ coordinate <span id="xVal"></span></label><input id="xSlider" type="range" min="-1.45" max="1.45" step="0.01" value="0.48"></div>
-      <div class="control"><label>xâ‚‚ coordinate <span id="yVal"></span></label><input id="ySlider" type="range" min="-1.25" max="1.25" step="0.01" value="0.24"></div>
-      <div class="control"><label>radius r <span id="rVal"></span></label><input id="rSlider" type="range" min="0.04" max="0.8" step="0.01" value="0.22"></div>
-      <div class="control"><label>ambient dimension n <span id="dimVal"></span></label><input id="dimSlider" type="range" min="1" max="8" step="1" value="3"></div>
-    </div>
-    <div class="status">
-      <div class="stat"><div class="k">Membership</div><div class="v" id="memStat"></div><div class="ex" id="memEx"></div></div>
-      <div class="stat"><div class="k">Local ball test</div><div class="v" id="ballStat"></div><div class="ex" id="ballEx"></div></div>
-      <div class="stat"><div class="k">Open?</div><div class="v" id="openStat"></div><div class="ex" id="openEx"></div></div>
-      <div class="stat"><div class="k">Closed?</div><div class="v" id="closedStat"></div><div class="ex" id="closedEx"></div></div>
-    </div>
-  </section>
-
-  <aside class="card">
-    <h2>2. Complement duality</h2>
-    <div class="mathbox">
-      <span class="mathrow">A is <span class="symbol">open</span> â‡” R<sup>n</sup> \ A is <span class="symbol">closed</span>.</span>
-      <span class="mathrow">A is <span class="symbol">closed</span> â‡” R<sup>n</sup> \ A is <span class="symbol">open</span>.</span>
-    </div>
-    <svg id="compSvg" viewBox="0 0 520 345" aria-label="Complement duality diagram"></svg>
-    <div class="tabs" id="compTabs">
-      <button class="tab active" data-comp="openBall">A = open ball</button>
-      <button class="tab" data-comp="closedBall">A = closed ball</button>
-      <button class="tab" data-comp="sphere">A = sphere</button>
-      <button class="tab" data-comp="clopen">A = R<sup>n</sup></button>
-    </div>
-    <div class="note" id="compNote"></div>
-
-    <h2 style="margin-top:18px">3. Clopen sets in R<sup>n</sup></h2>
-    <div class="mathbox">
-      <span class="mathrow">For n â‰¥ 1, R<sup>n</sup> is connected.</span>
-      <span class="mathrow">Therefore the only clopen subsets of R<sup>n</sup> are âˆ… and R<sup>n</sup>.</span>
-    </div>
-    <svg id="clopenSvg" viewBox="0 0 520 215" aria-label="Clopen sets diagram"></svg>
-  </aside>
+<div>
+<div class="eyebrow">Real analysis · Topology of ℝⁿ</div>
+<h1>Open versus closed sets</h1>
+<p class="subtitle">A set in <b>ℝⁿ</b> is open when every point carries a small ball staying inside. It is closed when it contains all its sequential limit points — equivalently, when its complement is open.</p>
 </div>
-
-<section class="card" style="margin-top:16px">
-  <h2>4. Finite versus arbitrary operations</h2>
-  <p class="small">The topology of R<sup>n</sup> is built to be stable under arbitrary unions and finite intersections of open sets. By complement duality, closed sets are stable under arbitrary intersections and finite unions.</p>
-  <div class="grid">
-    <div>
-      <svg id="opsSvg" viewBox="0 0 720 390" aria-label="Operations on open and closed sets in R n"></svg>
-      <div class="tabs" id="opsTabs">
-        <button class="tab active" data-op="openUnion">arbitrary union of open sets</button>
-        <button class="tab" data-op="openFiniteInter">finite intersection of open sets</button>
-        <button class="tab" data-op="openInfiniteInter">infinite intersection may fail</button>
-        <button class="tab" data-op="closedInter">arbitrary intersection of closed sets</button>
-        <button class="tab" data-op="closedFiniteUnion">finite union of closed sets</button>
-        <button class="tab" data-op="closedInfiniteUnion">infinite union may fail</button>
-      </div>
-    </div>
-    <div>
-      <div class="mathbox" id="opsFormula"></div>
-      <div class="note" id="opsNote"></div>
-      <div class="table">
-        <div class="trow"><div class="cell head">Family</div><div class="cell head">Always true</div><div class="cell head">Can fail</div></div>
-        <div class="trow"><div class="cell">Open sets</div><div class="cell yes">arbitrary unions<br>finite intersections</div><div class="cell no">infinite intersections</div></div>
-        <div class="trow"><div class="cell">Closed sets</div><div class="cell yes">arbitrary intersections<br>finite unions</div><div class="cell no">infinite unions</div></div>
-      </div>
-    </div>
-  </div>
+<button class="toggle" id="themeBtn">Dark mode</button>
+</header>
+<div class="grid">
+<section class="card">
+<h2>1. The local test in R<sup>n</sup></h2>
+<div class="mathbox mathbox-polished"><div class="math-item"><div class="math-label">Open test</div><div class="tex-render" data-display="true" data-tex="A\text{ open}\Longleftrightarrow \forall x\in A,\ \exists r&gt;0:\ B_r(x)\subset A."></div></div><div class="math-item"><div class="math-label">Closed test</div><div class="tex-render" data-display="true" data-tex="A\text{ closed}\Longleftrightarrow (x_k\in A\text{ and }x_k\to x\text{ in }\mathbb{R}^n)\Rightarrow x\in A."></div></div><div class="math-item"><div class="math-label">Metric ball</div><div class="tex-render" data-display="true" data-tex="B_r(x)=\{y\in \mathbb{R}^n:\lVert y-x\rVert&lt;r\}."></div></div></div>
+<svg aria-label="R n topology open closed diagram" id="mainSvg" viewbox="0 0 720 470"></svg>
+<div class="legend">
+<span class="pill"><strong>2D slice</strong> of R<sup>n</sup></span>
+<span class="pill">filled region = A</span>
+<span class="pill">thin curve = boundary ∂A</span>
+<span class="pill">small ball = B<sub>r</sub>(x)</span>
+</div>
+<div class="controls">
+<div class="control"><label>Example set A <span id="setLabel"></span></label><select id="setType">
+<option value="openBall">open unit ball ‖x‖ &lt; 1</option>
+<option value="closedBall">closed unit ball ‖x‖ ≤ 1</option>
+<option value="sphere">unit sphere ‖x‖ = 1</option>
+<option value="annulus">open annulus 0.45 &lt; ‖x‖ &lt; 1</option>
+<option value="closedAnnulus">closed annulus 0.45 ≤ ‖x‖ ≤ 1</option>
+<option value="halfOpen">open half-space x₁ &gt; 0</option>
+<option value="halfClosed">closed half-space x₁ ≥ 0</option>
+<option value="strip">closed strip |x₂| ≤ 0.45</option>
+</select></div>
+<div class="control"><label>Norm used for balls <span id="normLabel"></span></label><select id="normType">
+<option value="euclidean">Euclidean ‖·‖₂</option>
+<option value="sup">sup norm ‖·‖∞</option>
+<option value="taxicab">taxicab norm ‖·‖₁</option>
+</select></div>
+<div class="control"><label>x₁ coordinate <span id="xVal"></span></label><input id="xSlider" max="1.45" min="-1.45" step="0.01" type="range" value="0.48"/></div>
+<div class="control"><label>x₂ coordinate <span id="yVal"></span></label><input id="ySlider" max="1.25" min="-1.25" step="0.01" type="range" value="0.24"/></div>
+<div class="control"><label>radius r <span id="rVal"></span></label><input id="rSlider" max="0.8" min="0.04" step="0.01" type="range" value="0.22"/></div>
+<div class="control"><label>ambient dimension n <span id="dimVal"></span></label><input id="dimSlider" max="8" min="1" step="1" type="range" value="3"/></div>
+</div>
+<div class="status">
+<div class="stat"><div class="k">Membership</div><div class="v" id="memStat"></div><div class="ex" id="memEx"></div></div>
+<div class="stat"><div class="k">Local ball test</div><div class="v" id="ballStat"></div><div class="ex" id="ballEx"></div></div>
+<div class="stat"><div class="k">Open?</div><div class="v" id="openStat"></div><div class="ex" id="openEx"></div></div>
+<div class="stat"><div class="k">Closed?</div><div class="v" id="closedStat"></div><div class="ex" id="closedEx"></div></div>
+</div>
 </section>
-
+<aside class="card">
+<h2>2. Complement duality</h2>
+<div class="mathbox mathbox-polished"><div class="math-item"><div class="math-label">Complement duality</div><div class="tex-render" data-display="true" data-tex="A\text{ open}\Longleftrightarrow \mathbb{R}^n\setminus A\text{ closed}."></div></div><div class="math-item"><div class="math-label">Dual statement</div><div class="tex-render" data-display="true" data-tex="A\text{ closed}\Longleftrightarrow \mathbb{R}^n\setminus A\text{ open}."></div></div></div>
+<svg aria-label="Complement duality diagram" id="compSvg" viewbox="0 0 520 345"></svg>
+<div class="tabs" id="compTabs">
+<button class="tab active" data-comp="openBall">A = open ball</button>
+<button class="tab" data-comp="closedBall">A = closed ball</button>
+<button class="tab" data-comp="sphere">A = sphere</button>
+<button class="tab" data-comp="clopen">A = R<sup>n</sup></button>
+</div>
+<div class="note" id="compNote"></div>
+<h2 style="margin-top:18px">3. Clopen sets in R<sup>n</sup></h2>
+<div class="mathbox mathbox-polished"><div class="math-item"><div class="math-label">Connectedness</div><div class="tex-render" data-display="true" data-tex="n\ge 1\quad\Longrightarrow\quad \mathbb{R}^n\text{ is connected}."></div></div><div class="math-item"><div class="math-label">Clopen sets</div><div class="tex-render" data-display="true" data-tex="A\subset \mathbb{R}^n\text{ clopen}\quad\Longrightarrow\quad A=\varnothing\text{ or }A=\mathbb{R}^n."></div></div></div>
+<svg aria-label="Clopen sets diagram" id="clopenSvg" viewbox="0 0 520 215"></svg>
+</aside>
+</div>
+<section class="card" style="margin-top:16px">
+<h2>4. Finite versus arbitrary operations</h2>
+<p class="small">The topology of R<sup>n</sup> is built to be stable under arbitrary unions and finite intersections of open sets. By complement duality, closed sets are stable under arbitrary intersections and finite unions.</p>
+<div class="grid">
+<div>
+<svg aria-label="Operations on open and closed sets in R n" id="opsSvg" viewbox="0 0 720 390"></svg>
+<div class="tabs" id="opsTabs">
+<button class="tab active" data-op="openUnion">arbitrary union of open sets</button>
+<button class="tab" data-op="openFiniteInter">finite intersection of open sets</button>
+<button class="tab" data-op="openInfiniteInter">infinite intersection may fail</button>
+<button class="tab" data-op="closedInter">arbitrary intersection of closed sets</button>
+<button class="tab" data-op="closedFiniteUnion">finite union of closed sets</button>
+<button class="tab" data-op="closedInfiniteUnion">infinite union may fail</button>
+</div>
+</div>
+<div>
+<div class="mathbox mathbox-polished" id="opsFormula"></div>
+<div class="note" id="opsNote"></div>
+<div class="table">
+<div class="trow"><div class="cell head">Family</div><div class="cell head">Always true</div><div class="cell head">Can fail</div></div>
+<div class="trow"><div class="cell">Open sets</div><div class="cell yes">arbitrary unions<br/>finite intersections</div><div class="cell no">infinite intersections</div></div>
+<div class="trow"><div class="cell">Closed sets</div><div class="cell yes">arbitrary intersections<br/>finite unions</div><div class="cell no">infinite unions</div></div>
+</div>
+</div>
+</div>
+</section>
 <div class="footergrid">
-  <section class="card">
-    <h2>What to notice</h2>
-    <div class="summary">
-      <p><b>Open</b> is a local property: every point of A has room to move inside A.</p>
-      <p><b>Closed</b> is a limit property: A contains the limits forced by sequences in A.</p>
-      <p>A set can be open, closed, both, or neither. In R<sup>n</sup>, only âˆ… and R<sup>n</sup> are both open and closed.</p>
-    </div>
-  </section>
-  <section class="card">
-    <h2>Compact exam summary</h2>
-    <div class="mathbox">
-      <span class="mathrow">A open â‡” âˆ€x âˆˆ A âˆƒr &gt; 0 : B<sub>r</sub>(x) âŠ‚ A.</span>
-      <span class="mathrow">A closed â‡” R<sup>n</sup> \ A open â‡” A contains all sequential limits.</span>
-      <span class="mathrow">â‹ƒ<sub>Î±</sub> U<sub>Î±</sub> open, and â‹‚<sub>i=1</sub><sup>m</sup> U<sub>i</sub> open.</span>
-      <span class="mathrow">â‹‚<sub>Î±</sub> F<sub>Î±</sub> closed, and â‹ƒ<sub>i=1</sub><sup>m</sup> F<sub>i</sub> closed.</span>
-    </div>
-  </section>
+<section class="card">
+<h2>What to notice</h2>
+<div class="summary">
+<p><b>Open</b> is a local property: every point of A has room to move inside A.</p>
+<p><b>Closed</b> is a limit property: A contains the limits forced by sequences in A.</p>
+<p>A set can be open, closed, both, or neither. In R<sup>n</sup>, only ∅ and R<sup>n</sup> are both open and closed.</p>
+</div>
+</section>
+<section class="card">
+<h2>Compact exam summary</h2>
+<div class="mathbox mathbox-polished"><div class="math-item"><div class="math-label">Open</div><div class="tex-render" data-display="true" data-tex="A\text{ open}\Longleftrightarrow \forall x\in A,\ \exists r&gt;0:\ B_r(x)\subset A."></div></div><div class="math-item"><div class="math-label">Closed</div><div class="tex-render" data-display="true" data-tex="A\text{ closed}\Longleftrightarrow \mathbb{R}^n\setminus A\text{ open}\Longleftrightarrow A\text{ contains all sequential limits}."></div></div><div class="math-item"><div class="math-label">Open operations</div><div class="tex-render" data-display="true" data-tex="\bigcup_{\alpha\in I}U_\alpha\text{ open},\qquad \bigcap_{i=1}^{m}U_i\text{ open}."></div></div><div class="math-item"><div class="math-label">Closed operations</div><div class="tex-render" data-display="true" data-tex="\bigcap_{\alpha\in I}F_\alpha\text{ closed},\qquad \bigcup_{i=1}^{m}F_i\text{ closed}."></div></div></div>
+</section>
 </div>
 </div>
 <script>
@@ -253,21 +284,21 @@ function clear(svg){ while(svg.firstChild) svg.removeChild(svg.firstChild); }
 function fmt(x){return Number(x).toFixed(2)};
 function norm2(x,y,type){ if(type==='sup') return Math.max(Math.abs(x),Math.abs(y)); if(type==='taxicab') return Math.abs(x)+Math.abs(y); return Math.hypot(x,y); }
 function mapFactory(w,h,range=1.7){ const cx=w/2, cy=h/2, s=Math.min(w,h)*0.39/range; return {X:x=>cx+x*s,Y:y=>cy-y*s,S:v=>v*s,cx,cy,s,range}; }
-function grid(svg,w,h,m){ const c=colors(); svg.appendChild(S('rect',{x:0,y:0,width:w,height:h,fill:'transparent'})); for(let v=-1.5;v<=1.51;v+=.5){ svg.appendChild(S('line',{x1:m.X(v),y1:m.Y(-1.5),x2:m.X(v),y2:m.Y(1.5),stroke:c.grid,'stroke-width':1})); svg.appendChild(S('line',{x1:m.X(-1.5),y1:m.Y(v),x2:m.X(1.5),y2:m.Y(v),stroke:c.grid,'stroke-width':1})); } svg.appendChild(S('line',{x1:m.X(-1.6),y1:m.Y(0),x2:m.X(1.6),y2:m.Y(0),stroke:c.line,'stroke-width':1.2})); svg.appendChild(S('line',{x1:m.X(0),y1:m.Y(-1.4),x2:m.X(0),y2:m.Y(1.4),stroke:c.line,'stroke-width':1.2})); svg.appendChild(T(m.X(1.52),m.Y(0)-8,'xâ‚',{fill:c.muted,'font-size':13,'font-weight':700})); svg.appendChild(T(m.X(0)+8,m.Y(1.33),'xâ‚‚',{fill:c.muted,'font-size':13,'font-weight':700})); }
+function grid(svg,w,h,m){ const c=colors(); svg.appendChild(S('rect',{x:0,y:0,width:w,height:h,fill:'transparent'})); for(let v=-1.5;v<=1.51;v+=.5){ svg.appendChild(S('line',{x1:m.X(v),y1:m.Y(-1.5),x2:m.X(v),y2:m.Y(1.5),stroke:c.grid,'stroke-width':1})); svg.appendChild(S('line',{x1:m.X(-1.5),y1:m.Y(v),x2:m.X(1.5),y2:m.Y(v),stroke:c.grid,'stroke-width':1})); } svg.appendChild(S('line',{x1:m.X(-1.6),y1:m.Y(0),x2:m.X(1.6),y2:m.Y(0),stroke:c.line,'stroke-width':1.2})); svg.appendChild(S('line',{x1:m.X(0),y1:m.Y(-1.4),x2:m.X(0),y2:m.Y(1.4),stroke:c.line,'stroke-width':1.2})); svg.appendChild(T(m.X(1.52),m.Y(0)-8,'x₁',{fill:c.muted,'font-size':13,'font-weight':700})); svg.appendChild(T(m.X(0)+8,m.Y(1.33),'x₂',{fill:c.muted,'font-size':13,'font-weight':700})); }
 function unitPath(m,r=1,segments=180){ let d=''; for(let i=0;i<=segments;i++){ const a=2*Math.PI*i/segments, x=m.X(r*Math.cos(a)), y=m.Y(r*Math.sin(a)); d+=(i?'L':'M')+x+' '+y+' '; } return d+'Z'; }
 function diamondPath(m,r=1){ return `M ${m.X(0)} ${m.Y(r)} L ${m.X(r)} ${m.Y(0)} L ${m.X(0)} ${m.Y(-r)} L ${m.X(-r)} ${m.Y(0)} Z`; }
 function squarePath(m,r=1){ return `M ${m.X(-r)} ${m.Y(r)} L ${m.X(r)} ${m.Y(r)} L ${m.X(r)} ${m.Y(-r)} L ${m.X(-r)} ${m.Y(-r)} Z`; }
 function ballPath(m,x,y,r,norm){ if(norm==='sup') return `M ${m.X(x-r)} ${m.Y(y+r)} L ${m.X(x+r)} ${m.Y(y+r)} L ${m.X(x+r)} ${m.Y(y-r)} L ${m.X(x-r)} ${m.Y(y-r)} Z`; if(norm==='taxicab') return `M ${m.X(x)} ${m.Y(y+r)} L ${m.X(x+r)} ${m.Y(y)} L ${m.X(x)} ${m.Y(y-r)} L ${m.X(x-r)} ${m.Y(y)} Z`; let d=''; for(let i=0;i<=120;i++){ const a=2*Math.PI*i/120; d+=(i?'L':'M')+m.X(x+r*Math.cos(a))+' '+m.Y(y+r*Math.sin(a))+' '; } return d+'Z'; }
 function setInfo(type){
  const info={
-  openBall:['â€–xâ€– < 1',true,false,'Every point inside has positive distance to the boundary sphere. Boundary points are missing.'],
-  closedBall:['â€–xâ€– â‰¤ 1',false,true,'It contains its boundary sphere, so it contains limits of sequences from inside.'],
-  sphere:['â€–xâ€– = 1',false,true,'It has empty interior in Râ¿ but contains all its own limits.'],
-  annulus:['0.45 < â€–xâ€– < 1',true,false,'Both boundary spheres are excluded, leaving room around each point in the annulus.'],
-  closedAnnulus:['0.45 â‰¤ â€–xâ€– â‰¤ 1',false,true,'Both boundary spheres are included.'],
-  halfOpen:['xâ‚ > 0',true,false,'Each point has positive distance from the hyperplane xâ‚ = 0.'],
-  halfClosed:['xâ‚ â‰¥ 0',false,true,'The boundary hyperplane xâ‚ = 0 is included.'],
-  strip:['|xâ‚‚| â‰¤ 0.45',false,true,'The two boundary hyperplanes xâ‚‚ = Â±0.45 are included.']
+  openBall:['‖x‖ < 1',true,false,'Every point inside has positive distance to the boundary sphere. Boundary points are missing.'],
+  closedBall:['‖x‖ ≤ 1',false,true,'It contains its boundary sphere, so it contains limits of sequences from inside.'],
+  sphere:['‖x‖ = 1',false,true,'It has empty interior in Rⁿ but contains all its own limits.'],
+  annulus:['0.45 < ‖x‖ < 1',true,false,'Both boundary spheres are excluded, leaving room around each point in the annulus.'],
+  closedAnnulus:['0.45 ≤ ‖x‖ ≤ 1',false,true,'Both boundary spheres are included.'],
+  halfOpen:['x₁ > 0',true,false,'Each point has positive distance from the hyperplane x₁ = 0.'],
+  halfClosed:['x₁ ≥ 0',false,true,'The boundary hyperplane x₁ = 0 is included.'],
+  strip:['|x₂| ≤ 0.45',false,true,'The two boundary hyperplanes x₂ = ±0.45 are included.']
  }[type]; return {formula:info[0], open:info[1], closed:info[2], reason:info[3]};
 }
 function inSet(type,x,y){ const r=Math.hypot(x,y), e=0.025; if(type==='openBall') return r<1; if(type==='closedBall') return r<=1+1e-9; if(type==='sphere') return Math.abs(r-1)<e; if(type==='annulus') return r>.45 && r<1; if(type==='closedAnnulus') return r>=.45-e && r<=1+e; if(type==='halfOpen') return x>0; if(type==='halfClosed') return x>=0; if(type==='strip') return Math.abs(y)<=.45; return false; }
@@ -281,65 +312,100 @@ function drawSet(svg,m,type){ const c=colors(); const fill=`color-mix(in srgb, $
 }
 function drawMain(){ const svg=$('mainSvg'); clear(svg); const c=colors(); const m=mapFactory(720,470,1.7); grid(svg,720,470,m); const type=$('setType').value, norm=$('normType').value, x=parseFloat($('xSlider').value), y=parseFloat($('ySlider').value), r=parseFloat($('rSlider').value), n=parseInt($('dimSlider').value);
  drawSet(svg,m,type); svg.appendChild(S('path',{d:ballPath(m,x,y,r,norm),fill:`color-mix(in srgb, ${c.accent2} 18%, transparent)`,stroke:c.accent2,'stroke-width':2.6,'stroke-dasharray':'5 5'})); svg.appendChild(S('circle',{cx:m.X(x),cy:m.Y(y),r:6.2,fill:c.accent2,stroke:c.paper,'stroke-width':2})); svg.appendChild(T(m.X(x)+10,m.Y(y)-10,'x',{fill:c.ink,'font-size':16,'font-weight':800}));
- svg.appendChild(T(26,34,`A = {x âˆˆ Râ¿ : ${setInfo(type).formula}}`,{fill:c.ink,'font-size':18,'font-weight':800})); svg.appendChild(T(26,58,`visual slice: xâ‚ƒ = Â·Â·Â· = xâ‚™ = 0, n = ${n}`,{fill:c.muted,'font-size':13,'font-weight':700}));
- $('xVal').textContent=fmt(x); $('yVal').textContent=fmt(y); $('rVal').textContent=fmt(r); $('dimVal').textContent=n; $('setLabel').textContent=setInfo(type).formula; $('normLabel').textContent= norm==='euclidean'?'â€–Â·â€–â‚‚':norm==='sup'?'â€–Â·â€–âˆž':'â€–Â·â€–â‚';
+ svg.appendChild(T(26,34,`A = {x ∈ Rⁿ : ${setInfo(type).formula}}`,{fill:c.ink,'font-size':18,'font-weight':800})); svg.appendChild(T(26,58,`visual slice: x₃ = ··· = xₙ = 0, n = ${n}`,{fill:c.muted,'font-size':13,'font-weight':700}));
+ $('xVal').textContent=fmt(x); $('yVal').textContent=fmt(y); $('rVal').textContent=fmt(r); $('dimVal').textContent=n; $('setLabel').textContent=setInfo(type).formula; $('normLabel').textContent= norm==='euclidean'?'‖·‖₂':norm==='sup'?'‖·‖∞':'‖·‖₁';
  const member=inSet(type,x,y), inside=approxBallInside(type,x,y,r,norm), info=setInfo(type);
- $('memStat').innerHTML=member?'<span class="ok">x âˆˆ A</span>':'<span class="danger">x âˆ‰ A</span>'; $('memEx').textContent=`In the displayed slice, x = (${fmt(x)}, ${fmt(y)}, 0, â€¦, 0).`;
- $('ballStat').innerHTML=inside?'<span class="ok">Báµ£(x) âŠ‚ A</span>':'<span class="danger">not contained</span>'; $('ballEx').textContent=inside?'This particular ball fits inside A.':'This radius is too large, or x is not an interior point.';
- $('openStat').innerHTML=info.open?'<span class="ok">open in Râ¿</span>':'<span class="danger">not open in Râ¿</span>'; $('openEx').textContent=info.open?'Every point of A has some smaller ball contained in A.':'At boundary points, no positive-radius ball stays inside A.';
- $('closedStat').innerHTML=info.closed?'<span class="ok">closed in Râ¿</span>':'<span class="danger">not closed in Râ¿</span>'; $('closedEx').textContent=info.reason;
+ $('memStat').innerHTML=member?'<span class="ok">x ∈ A</span>':'<span class="danger">x ∉ A</span>'; $('memEx').textContent=`In the displayed slice, x = (${fmt(x)}, ${fmt(y)}, 0, …, 0).`;
+ $('ballStat').innerHTML=inside?'<span class="ok">Bᵣ(x) ⊂ A</span>':'<span class="danger">not contained</span>'; $('ballEx').textContent=inside?'This particular ball fits inside A.':'This radius is too large, or x is not an interior point.';
+ $('openStat').innerHTML=info.open?'<span class="ok">open in Rⁿ</span>':'<span class="danger">not open in Rⁿ</span>'; $('openEx').textContent=info.open?'Every point of A has some smaller ball contained in A.':'At boundary points, no positive-radius ball stays inside A.';
+ $('closedStat').innerHTML=info.closed?'<span class="ok">closed in Rⁿ</span>':'<span class="danger">not closed in Rⁿ</span>'; $('closedEx').textContent=info.reason;
 }
 function drawComplement(){ const svg=$('compSvg'); clear(svg); const c=colors(); const m=mapFactory(520,345,1.7); grid(svg,520,345,m); const type=state.comp;
  svg.appendChild(S('rect',{x:0,y:0,width:520,height:345,fill:`color-mix(in srgb, ${c.accent3} 12%, transparent)`}));
- if(type==='clopen'){ svg.appendChild(S('rect',{x:m.X(-1.5),y:m.Y(1.3),width:m.S(3),height:m.S(2.6),fill:`color-mix(in srgb, ${c.accent} 20%, transparent)`,stroke:c.accent,'stroke-width':2.5})); $('compNote').innerHTML='A = R<sup>n</sup> is both open and closed. Its complement is âˆ…, also both open and closed.'; }
- else { drawSet(svg,m,type); $('compNote').innerHTML= type==='openBall'?'If A is the open unit ball, then R<sup>n</sup> \\ A is the closed exterior {â€–xâ€– â‰¥ 1}.': type==='closedBall'?'If A is the closed unit ball, then R<sup>n</sup> \\ A is the open exterior {â€–xâ€– &gt; 1}.':'The unit sphere is closed, but not open. Its complement is open but not closed.'; }
- svg.appendChild(T(22,32,'Complement view in Râ¿',{fill:c.ink,'font-size':18,'font-weight':850})); svg.appendChild(T(22,55,'colored background represents Râ¿ \\ A',{fill:c.muted,'font-size':13,'font-weight':700}));
+ if(type==='clopen'){ svg.appendChild(S('rect',{x:m.X(-1.5),y:m.Y(1.3),width:m.S(3),height:m.S(2.6),fill:`color-mix(in srgb, ${c.accent} 20%, transparent)`,stroke:c.accent,'stroke-width':2.5})); $('compNote').innerHTML='A = R<sup>n</sup> is both open and closed. Its complement is ∅, also both open and closed.'; }
+ else { drawSet(svg,m,type); $('compNote').innerHTML= type==='openBall'?'If A is the open unit ball, then R<sup>n</sup> \\ A is the closed exterior {‖x‖ ≥ 1}.': type==='closedBall'?'If A is the closed unit ball, then R<sup>n</sup> \\ A is the open exterior {‖x‖ &gt; 1}.':'The unit sphere is closed, but not open. Its complement is open but not closed.'; }
+ svg.appendChild(T(22,32,'Complement view in Rⁿ',{fill:c.ink,'font-size':18,'font-weight':850})); svg.appendChild(T(22,55,'colored background represents Rⁿ \\ A',{fill:c.muted,'font-size':13,'font-weight':700}));
 }
 function drawClopen(){ const svg=$('clopenSvg'); clear(svg); const c=colors();
- svg.appendChild(S('rect',{x:28,y:44,width:138,height:104,rx:22,fill:`color-mix(in srgb, ${c.accent} 16%, transparent)`,stroke:c.accent,'stroke-width':2})); svg.appendChild(T(78,104,'âˆ…',{fill:c.ink,'font-size':28,'font-weight':900})); svg.appendChild(T(43,176,'empty set',{fill:c.muted,'font-size':13,'font-weight':700}));
- svg.appendChild(S('rect',{x:198,y:44,width:138,height:104,rx:22,fill:`color-mix(in srgb, ${c.accent3} 14%, transparent)`,stroke:c.accent3,'stroke-width':2})); svg.appendChild(T(240,104,'Râ¿',{fill:c.ink,'font-size':28,'font-weight':900})); svg.appendChild(T(222,176,'whole space',{fill:c.muted,'font-size':13,'font-weight':700}));
- svg.appendChild(S('line',{x1:365,y1:96,x2:485,y2:96,stroke:c.line,'stroke-width':2,'stroke-dasharray':'5 6'})); svg.appendChild(T(365,60,'No nontrivial split',{fill:c.ink,'font-size':18,'font-weight':850})); svg.appendChild(T(365,126,'in standard Râ¿, n â‰¥ 1',{fill:c.muted,'font-size':13,'font-weight':700}));
+ svg.appendChild(S('rect',{x:28,y:44,width:138,height:104,rx:22,fill:`color-mix(in srgb, ${c.accent} 16%, transparent)`,stroke:c.accent,'stroke-width':2})); svg.appendChild(T(78,104,'∅',{fill:c.ink,'font-size':28,'font-weight':900})); svg.appendChild(T(43,176,'empty set',{fill:c.muted,'font-size':13,'font-weight':700}));
+ svg.appendChild(S('rect',{x:198,y:44,width:138,height:104,rx:22,fill:`color-mix(in srgb, ${c.accent3} 14%, transparent)`,stroke:c.accent3,'stroke-width':2})); svg.appendChild(T(240,104,'Rⁿ',{fill:c.ink,'font-size':28,'font-weight':900})); svg.appendChild(T(222,176,'whole space',{fill:c.muted,'font-size':13,'font-weight':700}));
+ svg.appendChild(S('line',{x1:365,y1:96,x2:485,y2:96,stroke:c.line,'stroke-width':2,'stroke-dasharray':'5 6'})); svg.appendChild(T(365,60,'No nontrivial split',{fill:c.ink,'font-size':18,'font-weight':850})); svg.appendChild(T(365,126,'in standard Rⁿ, n ≥ 1',{fill:c.muted,'font-size':13,'font-weight':700}));
 }
 function drawOps(){ const svg=$('opsSvg'); clear(svg); const c=colors(); const m=mapFactory(720,390,1.7); grid(svg,720,390,m); const op=state.op;
  function circle(cx,cy,r,fill,stroke,dash='none'){svg.appendChild(S('path',{d:unitPath({X:x=>m.X(cx+x*r),Y:y=>m.Y(cy+y*r)},1),fill,stroke,'stroke-width':2.2,'stroke-dasharray':dash}));}
  if(op==='openUnion'){
   [[-.55,.15,.55],[.05,.05,.65],[.55,-.2,.48],[-.02,.55,.42]].forEach(a=>circle(...a,`color-mix(in srgb, ${c.accent} 18%, transparent)`,c.accent,'6 6'));
-  $('opsFormula').innerHTML='<span class="mathrow">If each U<sub>Î±</sub> is open, then â‹ƒ<sub>Î±âˆˆI</sub> U<sub>Î±</sub> is open.</span>';
-  $('opsNote').innerHTML='Reason: if x is in the union, then x lies in at least one open U<sub>Î±</sub>, so that one set already supplies a ball around x.';
+  setMathBox($('opsFormula'), "Open union", "\begin{aligned} U_\alpha&\text{ open for every }\alpha\in I\\[2pt] &\Longrightarrow\quad \bigcup_{\alpha\in I}U_\alpha\text{ is open.}\end{aligned}");
+  $('opsNote').innerHTML='Reason: if x is in the union, then x lies in at least one open U<sub>α</sub>, so that one set already supplies a ball around x.';
  }
  if(op==='openFiniteInter'){
   circle(-.23,0,.82,`color-mix(in srgb, ${c.accent} 14%, transparent)`,c.accent,'6 6'); circle(.23,0,.82,`color-mix(in srgb, ${c.accent3} 14%, transparent)`,c.accent3,'6 6'); svg.appendChild(S('ellipse',{cx:m.X(0),cy:m.Y(0),rx:m.S(.54),ry:m.S(.78),fill:`color-mix(in srgb, ${c.accent2} 22%, transparent)`,stroke:c.accent2,'stroke-width':2}));
-  $('opsFormula').innerHTML='<span class="mathrow">If U<sub>1</sub>, â€¦, U<sub>m</sub> are open, then â‹‚<sub>i=1</sub><sup>m</sup> U<sub>i</sub> is open.</span>';
-  $('opsNote').innerHTML='Reason: each U<sub>i</sub> gives a radius r<sub>i</sub>. Use the minimum radius min{r<sub>1</sub>, â€¦, r<sub>m</sub>}.';
+  setMathBox($('opsFormula'), "Finite intersection", "\begin{aligned} U_1,\ldots,U_m&\text{ open}\\[2pt] &\Longrightarrow\quad \bigcap_{i=1}^{m}U_i\text{ is open.}\end{aligned}");
+  $('opsNote').innerHTML='Reason: each U<sub>i</sub> gives a radius r<sub>i</sub>. Use the minimum radius min{r<sub>1</sub>, …, r<sub>m</sub>}.';
  }
  if(op==='openInfiniteInter'){
   [1.35,1.18,1.06,1.0].forEach((r,i)=>circle(0,0,r,'none', i===3?c.accent2:c.accent, i===3?'none':'6 7')); circle(0,0,1,`color-mix(in srgb, ${c.accent2} 13%, transparent)`,c.accent2,'none');
-  $('opsFormula').innerHTML='<span class="mathrow">â‹‚<sub>mâ‰¥1</sub> B(0, 1 + 1/m) = closed ball BÌ„(0,1).</span>';
-  $('opsNote').innerHTML='Each B(0, 1 + 1/m) is open, but the infinite intersection includes the boundary sphere â€–xâ€– = 1, so it is not open.';
+  setMathBox($('opsFormula'), "Failure", "\bigcap_{m\ge1}B(0,1+1/m)=\overline{B}(0,1)");
+  $('opsNote').innerHTML='Each B(0, 1 + 1/m) is open, but the infinite intersection includes the boundary sphere ‖x‖ = 1, so it is not open.';
  }
  if(op==='closedInter'){
   [1.35,1.15,1.0].forEach((r,i)=>circle(0,0,r,'none',c.accent3,'none')); circle(0,0,.82,`color-mix(in srgb, ${c.accent3} 18%, transparent)`,c.accent3,'none');
-  $('opsFormula').innerHTML='<span class="mathrow">If each F<sub>Î±</sub> is closed, then â‹‚<sub>Î±âˆˆI</sub> F<sub>Î±</sub> is closed.</span>';
-  $('opsNote').innerHTML='Complement proof: R<sup>n</sup> \\ â‹‚F<sub>Î±</sub> = â‹ƒ(R<sup>n</sup> \\ F<sub>Î±</sub>), an arbitrary union of open sets.';
+  setMathBox($('opsFormula'), "Closed intersection", "\begin{aligned} F_\alpha&\text{ closed for every }\alpha\in I\\[2pt] &\Longrightarrow\quad \bigcap_{\alpha\in I}F_\alpha\text{ is closed.}\end{aligned}");
+  $('opsNote').innerHTML='Complement proof: R<sup>n</sup> \\ ⋂F<sub>α</sub> = ⋃(R<sup>n</sup> \\ F<sub>α</sub>), an arbitrary union of open sets.';
  }
  if(op==='closedFiniteUnion'){
   [[-.45,.04,.5],[.34,.08,.44],[.03,-.42,.34]].forEach(a=>circle(...a,`color-mix(in srgb, ${c.accent3} 18%, transparent)`,c.accent3,'none'));
-  $('opsFormula').innerHTML='<span class="mathrow">If F<sub>1</sub>, â€¦, F<sub>m</sub> are closed, then â‹ƒ<sub>i=1</sub><sup>m</sup> F<sub>i</sub> is closed.</span>';
-  $('opsNote').innerHTML='Complement proof: R<sup>n</sup> \\ â‹ƒF<sub>i</sub> = â‹‚(R<sup>n</sup> \\ F<sub>i</sub>), a finite intersection of open sets.';
+  setMathBox($('opsFormula'), "Finite union", "\begin{aligned} F_1,\ldots,F_m&\text{ closed}\\[2pt] &\Longrightarrow\quad \bigcup_{i=1}^{m}F_i\text{ is closed.}\end{aligned}");
+  $('opsNote').innerHTML='Complement proof: R<sup>n</sup> \\ ⋃F<sub>i</sub> = ⋂(R<sup>n</sup> \\ F<sub>i</sub>), a finite intersection of open sets.';
  }
  if(op==='closedInfiniteUnion'){
   [.38,.55,.72,.88,.98].forEach((r,i)=>circle(0,0,r,`color-mix(in srgb, ${c.accent3} ${6+i*2}%, transparent)`,c.accent3,'none')); svg.appendChild(S('path',{d:unitPath(m,1),fill:'none',stroke:c.accent2,'stroke-width':2.5,'stroke-dasharray':'6 6'}));
-  $('opsFormula').innerHTML='<span class="mathrow">â‹ƒ<sub>mâ‰¥2</sub> BÌ„(0, 1 âˆ’ 1/m) = B(0,1).</span>';
-  $('opsNote').innerHTML='Each closed ball BÌ„(0, 1 âˆ’ 1/m) is closed, but their infinite union misses the boundary sphere, so the union is not closed.';
+  setMathBox($('opsFormula'), "Failure", "\bigcup_{m\ge2}\overline{B}(0,1-1/m)=B(0,1)");
+  $('opsNote').innerHTML='Each closed ball B̄(0, 1 − 1/m) is closed, but their infinite union misses the boundary sphere, so the union is not closed.';
  }
- svg.appendChild(T(26,34,'Operation lab in a 2D slice of Râ¿',{fill:c.ink,'font-size':18,'font-weight':850}));
+ svg.appendChild(T(26,34,'Operation lab in a 2D slice of Rⁿ',{fill:c.ink,'font-size':18,'font-weight':850}));
 }
-function drawAll(){ drawMain(); drawComplement(); drawClopen(); drawOps(); }
-['setType','normType','xSlider','ySlider','rSlider','dimSlider'].forEach(id=>$(id).addEventListener('input',drawMain));
-document.querySelectorAll('#compTabs .tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('#compTabs .tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.comp=b.dataset.comp;drawComplement();});
-document.querySelectorAll('#opsTabs .tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('#opsTabs .tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.op=b.dataset.op;drawOps();});
-root.setAttribute('data-theme','light'); drawAll();
+
+
+function setMathBox(el, label, tex){
+  el.innerHTML='';
+  const item=document.createElement('div');
+  item.className='math-item compact';
+  const lab=document.createElement('div');
+  lab.className='math-label';
+  lab.textContent=label;
+  const row=document.createElement('div');
+  row.className='tex-render';
+  row.setAttribute('data-display','true');
+  row.setAttribute('data-tex',tex);
+  item.appendChild(lab);
+  item.appendChild(row);
+  el.appendChild(item);
+}
+function renderMathNow(root=document){
+  if(!window.katex) return false;
+  root.querySelectorAll('.tex-render[data-tex]').forEach(node=>{
+    const tex=node.getAttribute('data-tex') || '';
+    const display=node.getAttribute('data-display')==='true';
+    if(node.dataset.renderedTex===tex) return;
+    try{
+      katex.render(tex,node,{displayMode:display,throwOnError:false,strict:'ignore',trust:false});
+      node.dataset.renderedTex=tex;
+    }catch(e){
+      node.textContent=tex;
+    }
+  });
+  return true;
+}
+function queueMathRender(tries=0){
+  if(renderMathNow()) return;
+  if(tries<80) setTimeout(()=>queueMathRender(tries+1),50);
+}
+function drawAll(){ drawMain(); drawComplement(); drawClopen(); drawOps(); queueMathRender(); }
+['setType','normType','xSlider','ySlider','rSlider','dimSlider'].forEach(id=>$(id).addEventListener('input',()=>{drawMain(); queueMathRender();}));
+document.querySelectorAll('#compTabs .tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('#compTabs .tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.comp=b.dataset.comp;drawComplement();queueMathRender();});
+document.querySelectorAll('#opsTabs .tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('#opsTabs .tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.op=b.dataset.op;drawOps();queueMathRender();});
+root.setAttribute('data-theme','light'); drawAll(); window.addEventListener('load',()=>queueMathRender());
 </script>
 </body>
 </html>
-

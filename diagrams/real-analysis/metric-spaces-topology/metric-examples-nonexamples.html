@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -9,6 +9,9 @@
 <meta name="description" content="Interactive real analysis diagram for metric examples and non-examples.">
   <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
 <title>Metric Examples and Non-examples | Real Analysis Diagrams</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
 <script>
@@ -134,6 +137,12 @@ button.action.primary{background:var(--accent); border-color:transparent; color:
 }
 .formula-box h3{margin:0 0 8px; font-size:13px; text-transform:uppercase; letter-spacing:.09em; color:var(--muted)}
 .math{font-family:"Times New Roman", ui-serif, Georgia, serif; font-size:21px; line-height:1.45}
+.math .katex{font-size:1.02em}
+.math.smallmath .katex{font-size:1em}
+.formula-box .katex{font-size:1.05em}
+.table .katex{font-size:1em}
+.math{overflow-x:auto; overflow-y:hidden; white-space:normal}
+
 .math.smallmath{font-size:18px}
 .note{color:var(--muted); font-size:14px; margin-top:9px}
 .diagram-card{padding:14px}
@@ -185,12 +194,12 @@ svg{width:100%; height:auto; display:block; border-radius:20px; background:linea
 <div class="container">
   <header>
     <div>
-      <div class="eyebrow">Real Analysis Â· Metric spaces</div>
+      <div class="eyebrow">Real Analysis · Metric spaces</div>
       <h1>Metric examples and non-examples</h1>
-      <p class="subtitle">A metric is not â€œa formula that looks like distance.â€ It is a rule whose open balls, convergence, and topology are justified by four axioms.</p>
+      <p class="subtitle">A metric is not “a formula that looks like distance.” It is a rule whose open balls, convergence, and topology are justified by four axioms.</p>
     </div>
     <div class="top-actions">
-      <div class="pill">inline SVG Â· no external libraries</div>
+      <div class="pill">inline SVG · no external libraries</div>
       <button class="toggle" id="themeBtn">Dark mode</button>
     </div>
   </header>
@@ -205,15 +214,15 @@ svg{width:100%; height:auto; display:block; border-radius:20px; background:linea
       <div class="control">
         <label>metric model</label>
         <select id="metricSelect">
-          <option value="euclidean">Euclidean metric on RÂ²</option>
-          <option value="taxicab">Taxicab metric on RÂ²</option>
-          <option value="sup">Sup metric on RÂ²</option>
+          <option value="euclidean">Euclidean metric on R²</option>
+          <option value="taxicab">Taxicab metric on R²</option>
+          <option value="sup">Sup metric on R²</option>
           <option value="discrete">Discrete metric on a finite set</option>
           <option value="sequence">Sequence-space product metric</option>
           <option value="functionSup">Function-space sup metric</option>
-          <option value="functionL1">Function-space LÂ¹ metric on C[0,1]</option>
+          <option value="functionL1">Function-space L¹ metric on C[0,1]</option>
           <option value="squared">Non-example: squared Euclidean distance</option>
-          <option value="pointValue">Non-example: point-value â€œdistanceâ€</option>
+          <option value="pointValue">Non-example: point-value “distance”</option>
         </select>
       </div>
 
@@ -223,27 +232,27 @@ svg{width:100%; height:auto; display:block; border-radius:20px; background:linea
       </div>
 
       <div class="control point-control">
-        <label>xâ‚ / parameter A <span class="val" id="x1Val"></span></label>
+        <label>x₁ / parameter A <span class="val" id="x1Val"></span></label>
         <input id="x1" type="range" min="-3" max="3" step="0.1" value="-1.3" />
       </div>
       <div class="control point-control">
-        <label>xâ‚‚ / parameter B <span class="val" id="y1Val"></span></label>
+        <label>x₂ / parameter B <span class="val" id="y1Val"></span></label>
         <input id="y1" type="range" min="-3" max="3" step="0.1" value="0.8" />
       </div>
       <div class="control point-control">
-        <label>yâ‚ / parameter C <span class="val" id="x2Val"></span></label>
+        <label>y₁ / parameter C <span class="val" id="x2Val"></span></label>
         <input id="x2" type="range" min="-3" max="3" step="0.1" value="1.1" />
       </div>
       <div class="control point-control">
-        <label>yâ‚‚ / parameter D <span class="val" id="y2Val"></span></label>
+        <label>y₂ / parameter D <span class="val" id="y2Val"></span></label>
         <input id="y2" type="range" min="-3" max="3" step="0.1" value="-0.9" />
       </div>
       <div class="control point-control">
-        <label>zâ‚ / parameter E <span class="val" id="x3Val"></span></label>
+        <label>z₁ / parameter E <span class="val" id="x3Val"></span></label>
         <input id="x3" type="range" min="-3" max="3" step="0.1" value="2.1" />
       </div>
       <div class="control point-control">
-        <label>zâ‚‚ / parameter F <span class="val" id="y3Val"></span></label>
+        <label>z₂ / parameter F <span class="val" id="y3Val"></span></label>
         <input id="y3" type="range" min="-3" max="3" step="0.1" value="1.7" />
       </div>
 
@@ -268,8 +277,8 @@ svg{width:100%; height:auto; display:block; border-radius:20px; background:linea
           </div>
           <div class="formula-box">
             <h3>Metric axioms</h3>
-            <div class="math smallmath">d:XÃ—Xâ†’[0,âˆž)</div>
-            <div class="note">For all x,y,zâˆˆX: positivity, identity, symmetry, and triangle inequality. The topology comes from balls Báµ£(x)={y:d(x,y)&lt;r}.</div>
+            <div class="math smallmath">\(d:X\times X\to[0,\infty)\)</div>
+            <div class="note">For all \(x,y,z\in X\): positivity, identity, symmetry, and triangle inequality. The topology comes from balls \(B_r(x)=\{y:d(x,y)<r\}\).</div>
           </div>
         </div>
       </section>
@@ -284,7 +293,7 @@ svg{width:100%; height:auto; display:block; border-radius:20px; background:linea
             <span class="chip"><span class="dot" style="background:var(--x)"></span>x</span>
             <span class="chip"><span class="dot" style="background:var(--y)"></span>y</span>
             <span class="chip"><span class="dot" style="background:var(--z)"></span>z</span>
-            <span class="chip">Báµ£(x)</span>
+            <span class="chip">Bᵣ(x)</span>
           </div>
         </div>
         <svg id="mainSvg" viewBox="0 0 920 500" role="img" aria-label="interactive metric diagram"></svg>
@@ -313,13 +322,13 @@ svg{width:100%; height:auto; display:block; border-radius:20px; background:linea
         <div class="card-title"><h2>Exam-style summary</h2><span class="small">compact</span></div>
         <div class="exam-grid">
           <div class="exam-item"><b>Metric proof</b><p>Verify the four axioms. Triangle inequality is usually the only nontrivial step.</p></div>
-          <div class="exam-item"><b>Same topology?</b><p>Different formulas can induce the same open sets, as Euclidean, taxicab, and sup metrics do on Râ¿.</p></div>
+          <div class="exam-item"><b>Same topology?</b><p>Different formulas can induce the same open sets, as Euclidean, taxicab, and sup metrics do on Rⁿ.</p></div>
           <div class="exam-item"><b>Non-example test</b><p>A distance-looking formula fails if one axiom fails, even if it behaves well in many cases.</p></div>
         </div>
       </section>
     </main>
   </div>
-  <div class="footer">Metric geometry is the visible part of the axioms: balls â†’ neighborhoods â†’ convergence â†’ topology.</div>
+  <div class="footer">Metric geometry is the visible part of the axioms: balls → neighborhoods → convergence → topology.</div>
 </div>
 
 <script>
@@ -330,48 +339,48 @@ const metricSelect = $('metricSelect');
 
 const formulas = {
   euclidean:{
-    title:'Euclidean metric on RÂ²',
-    formula:'dâ‚‚(x,y)=âˆš((xâ‚âˆ’yâ‚)Â²+(xâ‚‚âˆ’yâ‚‚)Â²)',
+    title:'Euclidean metric on R²',
+    formula:'\\(d_2(x,y)=\\sqrt{(x_1-y_1)^2+(x_2-y_2)^2}\\)',
     note:'Balls are round disks. This is the geometry of the usual real plane.'
   },
   taxicab:{
-    title:'Taxicab metric on RÂ²',
-    formula:'dâ‚(x,y)=|xâ‚âˆ’yâ‚|+|xâ‚‚âˆ’yâ‚‚|',
+    title:'Taxicab metric on R²',
+    formula:'\\(d_1(x,y)=|x_1-y_1|+|x_2-y_2|\\)',
     note:'Balls are diamonds. Distance is horizontal movement plus vertical movement.'
   },
   sup:{
-    title:'Sup metric on RÂ²',
-    formula:'dâˆž(x,y)=max{|xâ‚âˆ’yâ‚|,|xâ‚‚âˆ’yâ‚‚|}',
+    title:'Sup metric on R²',
+    formula:'\\(d_\\infty(x,y)=\\max\\{|x_1-y_1|,|x_2-y_2|\\}\\)',
     note:'Balls are axis-parallel squares. Distance is the worst coordinate error.'
   },
   discrete:{
     title:'Discrete metric',
-    formula:'d(x,y)=0 if x=y, and d(x,y)=1 if xâ‰ y',
-    note:'Every singleton is open. For râ‰¤1, Báµ£(x)={x}; for r>1, the ball is the whole space.'
+    formula:'\\(d(x,y)=0\\) if \\(x=y\\), and \\(d(x,y)=1\\) if \\(x\\ne y\\)',
+    note:'Every singleton is open. For \\(r\\le 1\\), \\(B_r(x)=\\{x\\}\\); for \\(r>1\\), the ball is the whole space.'
   },
   sequence:{
     title:'Sequence-space product metric',
-    formula:'d(x,y)=Î£â‚™â‰¥1 2â»â¿ min{1, |xâ‚™âˆ’yâ‚™|}',
+    formula:'\\(d(x,y)=\\sum_{n\\ge 1}2^{-n}\\min\\{1,|x_n-y_n|\\}\\)',
     note:'Early coordinates matter more; tail coordinates are discounted. This metric detects coordinatewise convergence.'
   },
   functionSup:{
     title:'Function-space sup metric',
-    formula:'dâˆž(f,g)=supâ‚œâˆˆ[0,1] |f(t)âˆ’g(t)|',
+    formula:'\\(d_\\infty(f,g)=\\sup_{t\\in[0,1]}|f(t)-g(t)|\\)',
     note:'Uniform distance: the worst vertical gap between two functions.'
   },
   functionL1:{
-    title:'Function-space LÂ¹ metric on C[0,1]',
-    formula:'dâ‚(f,g)=âˆ«â‚€Â¹ |f(t)âˆ’g(t)| dt',
-    note:'Area distance. On continuous functions this is a metric: zero area under |fâˆ’g| forces f=g everywhere.'
+    title:'Function-space L¹ metric on C[0,1]',
+    formula:'\\(d_1(f,g)=\\int_0^1 |f(t)-g(t)|\\,dt\\)',
+    note:'Area distance. On continuous functions this is a metric: zero area under \\(|f-g|\\) forces \\(f=g\\) everywhere.'
   },
   squared:{
     title:'Non-example: squared Euclidean distance',
-    formula:'Ï(x,y)=((xâ‚âˆ’yâ‚)Â²+(xâ‚‚âˆ’yâ‚‚)Â²)',
+    formula:'\\(\\rho(x,y)=(x_1-y_1)^2+(x_2-y_2)^2\\)',
     note:'Looks harmless, but it fails the triangle inequality.'
   },
   pointValue:{
     title:'Non-example: point-value distance on C[0,1]',
-    formula:'Ï(f,g)=|f(0)âˆ’g(0)|',
+    formula:'\\(\\rho(f,g)=|f(0)-g(0)|\\)',
     note:'It ignores the rest of the function. Distinct functions can have distance zero.'
   }
 };
@@ -386,6 +395,24 @@ function state(){return {
 function fmt(x){return Math.abs(x)<1e-9 ? '0.000' : x.toFixed(3)}
 function escapeHTML(s){return s.replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]))}
 
+
+function renderMathNow(){
+  if(!window.renderMathInElement) return false;
+  renderMathInElement(document.body,{
+    delimiters:[
+      {left:'$$',right:'$$',display:true},
+      {left:'\\[',right:'\\]',display:true},
+      {left:'\\(',right:'\\)',display:false}
+    ],
+    throwOnError:false,
+    ignoredTags:['script','noscript','style','textarea','pre','code','option']
+  });
+  return true;
+}
+function queueMathRender(tries=0){
+  if(renderMathNow()) return;
+  if(tries<80) setTimeout(()=>queueMathRender(tries+1),50);
+}
 function r2Metric(kind,a,b){
   const dx=Math.abs(a[0]-b[0]), dy=Math.abs(a[1]-b[1]);
   if(kind==='euclidean') return Math.hypot(dx,dy);
@@ -448,34 +475,34 @@ function axiomData(st){
   let identityNote = 'd(x,x)='+fmt(dxx);
   if(st.kind==='pointValue'){
     identity = false;
-    identityNote = 'fâ‰ g but Ï(f,g)=0 is possible';
+    identityNote = 'f≠g but ρ(f,g)=0 is possible';
   }
   const sym = Math.abs(dxy-dyx)<1e-8;
   const tri = dxz <= dxy + dyz + 1e-8;
   return [
-    {name:'Positivity', ok:nonneg, detail:'d(x,y)â‰¥0', num:'d(x,y)='+fmt(dxy)},
-    {name:'Identity', ok:identity, detail:'d(x,y)=0 â‡” x=y', num:identityNote},
+    {name:'Positivity', ok:nonneg, detail:'d(x,y)≥0', num:'d(x,y)='+fmt(dxy)},
+    {name:'Identity', ok:identity, detail:'d(x,y)=0 ⇔ x=y', num:identityNote},
     {name:'Symmetry', ok:sym, detail:'d(x,y)=d(y,x)', num:fmt(dxy)+' vs '+fmt(dyx)},
-    {name:'Triangle', ok:tri, detail:'d(x,z)â‰¤d(x,y)+d(y,z)', num:fmt(dxz)+' â‰¤ '+fmt(dxy+dyz)}
+    {name:'Triangle', ok:tri, detail:'d(x,z)≤d(x,y)+d(y,z)', num:fmt(dxz)+' ≤ '+fmt(dxy+dyz)}
   ];
 }
 function setAxiomPanel(st){
   $('axiomPanel').innerHTML = axiomData(st).map(a => `
     <div class="axiom">
-      <div class="badge ${a.ok?'':'bad'}">${a.ok?'âœ“':'Ã—'}</div>
+      <div class="badge ${a.ok?'':'bad'}">${a.ok?'✓':'×'}</div>
       <div><b>${a.name}</b><span>${a.detail}</span></div>
       <div class="num">${a.num}</div>
     </div>`).join('');
 }
 function setNotice(st){
   const map={
-    euclidean:['The ball is rotationally symmetric: direction does not matter.', 'The triangle inequality is the usual geometry of shortest paths.', 'In finite-dimensional Râ¿, dâ‚‚, dâ‚, and dâˆž define the same convergent sequences.'],
-    taxicab:['A shortest route may not be unique: many stair-step paths have the same length.', 'The unit ball changes shape, but the local topology in RÂ² is still the usual one.', 'Coordinate errors add rather than combine quadratically.'],
+    euclidean:['The ball is rotationally symmetric: direction does not matter.', 'The triangle inequality is the usual geometry of shortest paths.', 'In finite-dimensional Rⁿ, d₂, d₁, and d∞ define the same convergent sequences.'],
+    taxicab:['A shortest route may not be unique: many stair-step paths have the same length.', 'The unit ball changes shape, but the local topology in R² is still the usual one.', 'Coordinate errors add rather than combine quadratically.'],
     sup:['The ball asks every coordinate to stay within the same tolerance.', 'Uniform control in finitely many coordinates looks like a square.', 'This is the finite-dimensional analogue of the sup metric for functions.'],
     discrete:['Small balls isolate points, so every subset is open.', 'A sequence converges only if it is eventually constant.', 'The formula is extreme but perfectly valid as a metric.'],
-    sequence:['The infinite sum is forced to converge by the weights 2â»â¿.', 'Large late-coordinate errors are visible but strongly discounted.', 'Convergence in this metric means coordinatewise convergence, not uniform convergence of coordinates.'],
+    sequence:['The infinite sum is forced to converge by the weights 2⁻ⁿ.', 'Large late-coordinate errors are visible but strongly discounted.', 'Convergence in this metric means coordinatewise convergence, not uniform convergence of coordinates.'],
     functionSup:['The distance is the single worst vertical gap.', 'Convergence in this metric is uniform convergence.', 'The open ball is a tube around the graph of f.'],
-    functionL1:['Distance is accumulated area between graphs.', 'On continuous functions, zero area under |fâˆ’g| implies f=g.', 'LÂ¹ convergence can allow thin tall discrepancies that sup convergence does not.'],
+    functionL1:['Distance is accumulated area between graphs.', 'On continuous functions, zero area under |f−g| implies f=g.', 'L¹ convergence can allow thin tall discrepancies that sup convergence does not.'],
     squared:['The ball shape looks Euclidean, but the triangle inequality is broken.', 'A formula can have positive values and symmetry and still fail to be a metric.', 'Squaring distances makes long jumps too expensive compared with two short jumps.'],
     pointValue:['This rule sees only t=0 and ignores the rest of the graph.', 'It is a pseudometric-style object, not a metric on C[0,1].', 'Identity of indiscernibles is the failure: different functions may be distance zero.']
   };
@@ -483,24 +510,24 @@ function setNotice(st){
 }
 function setFormula(st){
   const f=formulas[st.kind];
-  $('formulaBox').textContent=f.formula;
-  $('formulaNote').textContent=f.note;
+  $('formulaBox').innerHTML=f.formula;
+  $('formulaNote').innerHTML=f.note;
   $('diagramTitle').textContent=f.title;
   $('diagramSubtitle').textContent = diagramSubtitle(st);
 }
 function diagramSubtitle(st){
   const dxy=currentD(st,st.x,st.y), dxz=currentD(st,st.x,st.z), dyz=currentD(st,st.y,st.z);
-  return `d(x,y)=${fmt(dxy)} Â· d(x,z)=${fmt(dxz)} Â· d(y,z)=${fmt(dyz)}`;
+  return `d(x,y)=${fmt(dxy)} · d(x,z)=${fmt(dxz)} · d(y,z)=${fmt(dyz)}`;
 }
 function setTable(){
   const rows = [
-    ['RÂ²','dâ‚‚(x,y)=âˆšÎ£(xáµ¢âˆ’yáµ¢)Â²','round disks'],
-    ['RÂ²','dâ‚(x,y)=Î£|xáµ¢âˆ’yáµ¢|','diamonds'],
-    ['RÂ²','dâˆž(x,y)=maxáµ¢|xáµ¢âˆ’yáµ¢|','squares'],
-    ['any set X','d(x,y)=1 for xâ‰ y','isolated points'],
-    ['Rá´º','Î£2â»â¿ min(1,|xâ‚™âˆ’yâ‚™|)','weighted coordinate tubes'],
-    ['C[0,1]','sup |fâˆ’g|','uniform graph tubes'],
-    ['C[0,1]','âˆ«|fâˆ’g|','area neighborhoods']
+    ['\\(\\mathbb{R}^2\\)','\\(d_2(x,y)=\\sqrt{\\sum_i (x_i-y_i)^2}\\)','round disks'],
+    ['\\(\\mathbb{R}^2\\)','\\(d_1(x,y)=\\sum_i |x_i-y_i|\\)','diamonds'],
+    ['\\(\\mathbb{R}^2\\)','\\(d_\\infty(x,y)=\\max_i |x_i-y_i|\\)','squares'],
+    ['any set \\(X\\)','\\(d(x,y)=1\\) for \\(x\\ne y\\)','isolated points'],
+    ['\\(\\mathbb{R}^{\\mathbb{N}}\\)','\\(\\sum_{n\\ge 1}2^{-n}\\min\\{1,|x_n-y_n|\\}\\)','weighted coordinate tubes'],
+    ['\\(C[0,1]\\)','\\(\\sup |f-g|\\)','uniform graph tubes'],
+    ['\\(C[0,1]\\)','\\(\\int |f-g|\\)','area neighborhoods']
   ];
   $('comparisonTable').innerHTML = rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('');
 }
@@ -541,7 +568,7 @@ function drawR2(st){
     el('rect',{x:cx-r*scale,y:cy-r*scale,width:2*r*scale,height:2*r*scale,fill:'rgba(45,156,143,.16)',stroke:'var(--accent)','stroke-width':2,rx:10});
   } else if(st.kind==='squared'){
     el('circle',{cx,cy,r:Math.sqrt(r)*scale,fill:'rgba(198,93,93,.14)',stroke:'var(--bad)','stroke-width':2});
-    txt(92,82,'Ï-ball: Ï(x,y)<r means Euclidean distance < âˆšr',{fill:'var(--bad)','font-size':13});
+    txt(92,82,'ρ-ball: ρ(x,y)<r means Euclidean distance < √r',{fill:'var(--bad)','font-size':13});
   }
   el('line',{x1:mapX(st.x[0]),y1:mapY(st.x[1]),x2:mapX(st.y[0]),y2:mapY(st.y[1]),stroke:'var(--y)','stroke-width':2,'stroke-dasharray':'5 5',opacity:.8});
   el('line',{x1:mapX(st.y[0]),y1:mapY(st.y[1]),x2:mapX(st.z[0]),y2:mapY(st.z[1]),stroke:'var(--z)','stroke-width':2,'stroke-dasharray':'5 5',opacity:.8});
@@ -554,7 +581,7 @@ function drawR2(st){
   txt(612,100,'Triangle inequality lens',{fill:'var(--muted)','font-size':13},box);
   txt(612,128,`d(x,z) = ${fmt(dxz)}`,{fill:'var(--ink)','font-size':15},box);
   txt(612,153,`d(x,y)+d(y,z) = ${fmt(dxy+dyz)}`,{fill:'var(--ink)','font-size':15},box);
-  txt(795,128,ok?'âœ“':'Ã—',{fill:ok?'var(--good)':'var(--bad)','font-size':30,'font-weight':900},box);
+  txt(795,128,ok?'✓':'×',{fill:ok?'var(--good)':'var(--bad)','font-size':30,'font-weight':900},box);
 }
 function drawDiscrete(st){
   clearSvg();
@@ -570,9 +597,9 @@ function drawDiscrete(st){
   }
   const labels=[['x',xi,'var(--x)'],['y',yi,'var(--y)'],['z',zi,'var(--z)']];
   labels.forEach((it,j)=>{const p=nodes[it[1]]; el('circle',{cx:p[0]+22-8*j,cy:p[1]-22,r:7,fill:it[2]}); txt(p[0]+28-8*j,p[1]-26,it[0],{fill:it[2],'font-weight':900,'font-size':14});});
-  txt(75,90,`Báµ£(x) = ${includeAll?'X':'{x}'}`,{fill:'var(--ink)','font-size':24,'font-weight':800});
-  txt(75,122,`because r = ${st.r.toFixed(2)} ${includeAll?'>':'â‰¤'} 1`,{fill:'var(--muted)','font-size':14});
-  txt(75,382,'Discrete convergence: xâ‚™â†’x iff eventually xâ‚™=x',{fill:'var(--muted)','font-size':16});
+  txt(75,90,`Bᵣ(x) = ${includeAll?'X':'{x}'}`,{fill:'var(--ink)','font-size':24,'font-weight':800});
+  txt(75,122,`because r = ${st.r.toFixed(2)} ${includeAll?'>':'≤'} 1`,{fill:'var(--muted)','font-size':14});
+  txt(75,382,'Discrete convergence: xₙ→x iff eventually xₙ=x',{fill:'var(--muted)','font-size':16});
 }
 function drawSequence(st){
   clearSvg();
@@ -587,7 +614,7 @@ function drawSequence(st){
     if((k+1)%5===0) txt(left+k*barW,base+18,String(k+1));
   }
   el('line',{x1:left,y1:top+height,x2:right,y2:top+height,stroke:'var(--line)'});
-  txt(left,45,'weighted coordinate contributions 2â»â¿ min(1, |xâ‚™âˆ’yâ‚™|)',{fill:'var(--ink)','font-size':16,'font-weight':800});
+  txt(left,45,'weighted coordinate contributions 2⁻ⁿ min(1, |xₙ−yₙ|)',{fill:'var(--ink)','font-size':16,'font-weight':800});
   const dxy=seqD(st.x,st.y,N), dxz=seqD(st.x,st.z,N), dyz=seqD(st.y,st.z,N);
   const maxv=Math.max(...xs,...ys,...zs,1), minv=Math.min(...xs,...ys,...zs,-1);
   const ymap=v=> 430 - (v-minv)/(maxv-minv)*80;
@@ -603,7 +630,7 @@ function drawSequence(st){
   el('path',{d:pathZ,fill:'none',stroke:'var(--z)','stroke-width':2.2,opacity:.8});
   txt(left,470,'coordinate index n',{fill:'var(--muted)'});
   txt(600,380,`finite approximation: d_N(x,y)=${fmt(dxy)}`,{fill:'var(--ink)','font-size':16,'font-weight':800});
-  txt(600,405,`triangle: ${fmt(dxz)} â‰¤ ${fmt(dxy+dyz)}`,{fill:dxz<=dxy+dyz+1e-8?'var(--good)':'var(--bad)','font-size':15});
+  txt(600,405,`triangle: ${fmt(dxz)} ≤ ${fmt(dxy+dyz)}`,{fill:dxz<=dxy+dyz+1e-8?'var(--good)':'var(--bad)','font-size':15});
 }
 function drawFunction(st){
   clearSvg();
@@ -621,7 +648,7 @@ function drawFunction(st){
     const upper=fx.map(p=>[p[0],p[1]+st.r]), lower=fx.slice().reverse().map(p=>[p[0],p[1]-st.r]);
     const tube=[...upper,...lower].map((p,i)=>(i?'L':'M')+X(p[0])+' '+Y(p[1])).join(' ')+' Z';
     el('path',{d:tube,fill:'rgba(45,156,143,.15)',stroke:'var(--accent)','stroke-width':1.5});
-    txt(610,86,`Báµ£(f): all graphs within vertical tube r=${st.r.toFixed(2)}`,{fill:'var(--accent)','font-size':13});
+    txt(610,86,`Bᵣ(f): all graphs within vertical tube r=${st.r.toFixed(2)}`,{fill:'var(--accent)','font-size':13});
   }
   if(st.kind==='functionL1'){
     let area='';
@@ -629,11 +656,11 @@ function drawFunction(st){
     for(let i=N;i>=0;i--) area+='L'+X(fy[i][0])+' '+Y(fy[i][1])+' ';
     area+='Z';
     el('path',{d:area,fill:'rgba(195,122,74,.18)',stroke:'transparent'});
-    txt(625,86,'shaded area represents âˆ«|fâˆ’g|',{fill:'var(--accent2)','font-size':13});
+    txt(625,86,'shaded area represents ∫|f−g|',{fill:'var(--accent2)','font-size':13});
   }
   if(st.kind==='pointValue'){
     el('line',{x1:left,y1:top,x2:left,y2:bottom,stroke:'var(--bad)','stroke-width':2,'stroke-dasharray':'5 5'});
-    txt(left+12,86,'Ï sees only t=0',{fill:'var(--bad)','font-size':14,'font-weight':800});
+    txt(left+12,86,'ρ sees only t=0',{fill:'var(--bad)','font-size':14,'font-weight':800});
   }
   el('path',{d:path(fx),fill:'none',stroke:'var(--x)','stroke-width':3});
   el('path',{d:path(fy),fill:'none',stroke:'var(--y)','stroke-width':3});
@@ -651,6 +678,7 @@ function draw(){
   else if(st.kind==='discrete') drawDiscrete(st);
   else if(st.kind==='sequence') drawSequence(st);
   else drawFunction(st);
+  queueMathRender();
 }
 function updateVals(st){
   $('rVal').textContent=st.r.toFixed(2);
@@ -691,6 +719,7 @@ $('themeBtn').addEventListener('click',()=>{
   $('themeBtn').textContent=dark?'Dark mode':'Light mode';
 });
 canonical();
+window.addEventListener('load',()=>queueMathRender());
 </script>
 </body>
 </html>
