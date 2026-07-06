@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -206,6 +206,14 @@
     .formula-card .math { overflow-x: auto; padding-bottom: 2px; }
     .formula-card p { color: var(--muted); line-height: 1.48; font-size: 13px; margin: 10px 0 0; }
 
+    .katex { color: inherit; }
+    .katex-display { margin: .35rem 0 .45rem; overflow-x: auto; overflow-y: hidden; }
+    .formula-card .math .katex-display { text-align: left; }
+    .formula-card .math { line-height: 1.65; }
+    .ledger .katex, .status .katex, .concept .katex { font-size: 1em; }
+    .katex-fallback { font-family: var(--serif); letter-spacing: .01em; }
+
+
     .ledger { width: 100%; border-collapse: separate; border-spacing: 0; overflow: hidden; font-size: 13px; }
     .ledger th, .ledger td { text-align: left; vertical-align: top; padding: 13px 12px; border-bottom: 1px solid var(--line); }
     .ledger th { color: var(--muted); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; background: rgba(255,255,255,.24); }
@@ -284,7 +292,7 @@
           <div class="kicker">Probability as constrained ignorance</div>
           <h1>Maximum entropy and distributional assumptions</h1>
           <p class="subtitle">
-            Choose what you claim to know â€” support, mean, variance, positivity â€” and watch the least-informative distribution emerge. The app makes the logic visible: constraints define a feasible set; entropy selects the flattest member; the solution naturally becomes an exponential family.
+            Choose what you claim to know — support, mean, variance, positivity — and watch the least-informative distribution emerge. The app makes the logic visible: constraints define a feasible set; entropy selects the flattest member; the solution naturally becomes an exponential family.
           </p>
         </div>
         <div class="hero-actions">
@@ -356,9 +364,9 @@
 
       <section class="stack">
         <div class="grid-3">
-          <div class="metric"><div class="name">Entropy</div><div class="big" id="entropyVal">â€”</div><div class="note" id="entropyNote">â€”</div></div>
-          <div class="metric"><div class="name">Natural parameter</div><div class="big" id="etaVal">â€”</div><div class="note" id="etaNote">â€”</div></div>
-          <div class="metric"><div class="name">Realized moments</div><div class="big" id="momentVal">â€”</div><div class="note" id="momentNote">â€”</div></div>
+          <div class="metric"><div class="name">Entropy</div><div class="big" id="entropyVal">—</div><div class="note" id="entropyNote">—</div></div>
+          <div class="metric"><div class="name">Natural parameter</div><div class="big" id="etaVal">—</div><div class="note" id="etaNote">—</div></div>
+          <div class="metric"><div class="name">Realized moments</div><div class="big" id="momentVal">—</div><div class="note" id="momentNote">—</div></div>
         </div>
 
         <div class="grid-2">
@@ -463,7 +471,7 @@
   const $ = (id) => document.getElementById(id);
   const scenario = $('scenario'), supportSize = $('supportSize'), meanSlider = $('meanSlider'), varSlider = $('varSlider'), temp = $('temperature'), geom = $('geometryMean');
   const distSvg = $('distSvg'), simplexSvg = $('simplexSvg');
-  const fmt = (x, d=3) => Number.isFinite(x) ? x.toFixed(d).replace(/\.?0+$/,'') : 'â€”';
+  const fmt = (x, d=3) => Number.isFinite(x) ? x.toFixed(d).replace(/\.?0+$/,'') : '—';
 
   function entropy(p){ return -p.reduce((s,pi)=> pi>0 ? s + pi*Math.log(pi) : s, 0); }
   function logSumExp(arr){ const m = Math.max(...arr); return m + Math.log(arr.reduce((s,a)=>s+Math.exp(a-m),0)); }
@@ -645,9 +653,9 @@
     const mval=+geom.value;
     const A=baryToXY(1,0,0), B=baryToXY(0,1,0), C=baryToXY(0,0,1);
     simplexSvg.appendChild(svgEl('polygon',{points:`${A.x},${A.y} ${B.x},${B.y} ${C.x},${C.y}`,class:'simplex-fill'}));
-    simplexSvg.appendChild(svgEl('text',{x:A.x-8,y:A.y+26,'text-anchor':'middle',class:'label-ink'})).textContent='pâ‚€=1';
-    simplexSvg.appendChild(svgEl('text',{x:B.x,y:B.y-18,'text-anchor':'middle',class:'label-ink'})).textContent='pâ‚=1';
-    simplexSvg.appendChild(svgEl('text',{x:C.x+8,y:C.y+26,'text-anchor':'middle',class:'label-ink'})).textContent='pâ‚‚=1';
+    simplexSvg.appendChild(svgEl('text',{x:A.x-8,y:A.y+26,'text-anchor':'middle',class:'label-ink'})).textContent='p₀=1';
+    simplexSvg.appendChild(svgEl('text',{x:B.x,y:B.y-18,'text-anchor':'middle',class:'label-ink'})).textContent='p₁=1';
+    simplexSvg.appendChild(svgEl('text',{x:C.x+8,y:C.y+26,'text-anchor':'middle',class:'label-ink'})).textContent='p₂=1';
     // entropy contours by drawing faint points near H levels
     const levels=[.55,.82,1.02];
     for(let step=0; step<=44; step++){
@@ -702,10 +710,23 @@
     $('geomVal').textContent=fmt(+geom.value,2);
   }
 
-  function renderKatex(){
-    if(window.renderMathInElement){
-      renderMathInElement(document.body, {delimiters:[{left:'$$',right:'$$',display:true},{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}], throwOnError:false});
+  function renderKatex(root=document.body){
+    if(!root) return;
+    if(!window.renderMathInElement){
+      setTimeout(()=>renderKatex(root), 80);
+      return;
     }
+    renderMathInElement(root, {
+      delimiters:[
+        {left:'$$', right:'$$', display:true},
+        {left:'\\[', right:'\\]', display:true},
+        {left:'\\(', right:'\\)', display:false},
+        {left:'$', right:'$', display:false}
+      ],
+      throwOnError:false,
+      strict:'ignore',
+      ignoredTags:['script','noscript','style','textarea','pre','code','svg']
+    });
   }
 
   function updateLedger(model){
@@ -724,7 +745,7 @@
     $('entropyNote').innerHTML = `${fmt(100*H/Hmax,1)}% of support maximum \(\log |S|=${fmt(Hmax,3)}\). Comparison entropy: ${fmt(Halt,3)}.`;
     $('etaVal').textContent = model.eta.length ? model.eta.map(v=>fmt(v,3)).join(', ') : '0';
     $('etaNote').innerHTML = model.eta.length===0 ? 'No tilt is needed: all states receive equal mass.' : 'These multipliers are the shadow prices of the moment constraints.';
-    $('momentVal').textContent = `Î¼=${fmt(model.moments.mean,2)}`;
+    $('momentVal').textContent = `μ=${fmt(model.moments.mean,2)}`;
     $('momentNote').innerHTML = `Variance \(=${fmt(model.moments.variance,3)}\), second moment \(=${fmt(model.moments.second,3)}\).`;
     $('familyChip').textContent = model.family;
     $('constraintFormula').innerHTML = model.constraints;
@@ -734,7 +755,7 @@
     else if(model.mode==='meanvar') fam='\\[p_\\eta(x)=\\exp\\{\\eta_1x+\\eta_2x^2-A(\\eta)\\}\\]';
     else fam='\\[p_\\eta(x)=\\exp\\{\\eta x-A(\\eta)\\}\\]';
     $('familyFormula').innerHTML=fam;
-    $('familyText').textContent = model.eta.length ? 'The log-partition function A(Î·) normalizes probabilities and generates moments by differentiation.' : 'The uniform law is the zero-information member of the exponential-family logic.';
+    $('familyText').textContent = model.eta.length ? 'The log-partition function A(η) normalizes probabilities and generates moments by differentiation.' : 'The uniform law is the zero-information member of the exponential-family logic.';
     $('interpretation').innerHTML = `<strong>Reading this model:</strong> ${model.text} ` + (model.ok ? `The displayed distribution satisfies the active constraints numerically.` : `<span class="warning">${model.msg}</span>`);
   }
 
@@ -742,7 +763,7 @@
     updateControls();
     const model=getModel();
     drawDist(model); drawSimplex(); updateText(model); updateLedger(model);
-    setTimeout(renderKatex, 0);
+    setTimeout(()=>renderKatex(document.body), 0);
   }
 
   [scenario,supportSize,meanSlider,varSlider,temp,geom].forEach(el=>el.addEventListener('input', update));
@@ -766,7 +787,8 @@
     update();
   });
 
-  document.addEventListener('DOMContentLoaded',()=>{ update(); setTimeout(renderKatex, 300); });
+  document.addEventListener('DOMContentLoaded',()=>{ update(); setTimeout(()=>renderKatex(document.body), 180); });
+  window.addEventListener('load',()=>setTimeout(()=>renderKatex(document.body), 250));
   update();
 })();
 </script>

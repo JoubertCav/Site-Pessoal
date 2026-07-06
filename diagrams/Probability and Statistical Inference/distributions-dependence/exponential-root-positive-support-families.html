@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -18,8 +18,8 @@
 
   gtag('config', 'G-NHXHEJP1G0');
 </script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <style>
   :root{
     --bg:#f6f1e8;
@@ -127,6 +127,12 @@
   .math-inline{display:inline-flex;align-items:baseline;vertical-align:-0.12em;margin:0 .08em}
   .math-block{display:block;margin:.28rem 0}
   .katex{color:inherit}
+  .formula .katex{font-size:1.02em;line-height:1.25}
+  .math-inline .katex{font-size:1em}
+  .formula[data-tex], .formula[data-katex]{min-height:1.65em}
+  .pipebox .formula .katex{white-space:normal}
+  .formula-card .formula{min-height:2.1em}
+  .katex .mord, .katex .mrel, .katex .mbin, .katex .mopen, .katex .mclose, .katex .mpunct{color:inherit}
   .metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:14px}
   .metric{border:1px solid var(--line);border-radius:16px;padding:11px;background:color-mix(in srgb, var(--paper) 84%, var(--paper2))}
   .metric b{display:block;font-size:.78rem;color:var(--muted);font-weight:600;margin-bottom:3px}.metric span{font-variant-numeric:tabular-nums}
@@ -143,7 +149,7 @@
   .pipebox .tiny{font-size:.77rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700}
   .arrow{color:var(--muted);font-size:1.15rem;text-align:center;line-height:1;opacity:.8}
   .pipebox .formula{font-size:.90rem;line-height:1.42;display:flex;justify-content:center;align-items:center;min-height:2.45em;overflow:visible}
-  .support-strip{height:18px;border-radius:999px;background:linear-gradient(90deg, color-mix(in srgb, var(--accent) 22%, transparent), color-mix(in srgb, var(--accent) 4%, transparent) 72%, transparent);border-left:4px solid var(--accent);margin-top:14px;position:relative}.support-strip:before{content:'0';position:absolute;left:-2px;top:22px;color:var(--muted);font-size:11px}.support-strip:after{content:'support on \(0,\infty)';position:absolute;right:0;top:22px;color:var(--muted);font-size:11px}
+  .support-strip{height:18px;border-radius:999px;background:linear-gradient(90deg, color-mix(in srgb, var(--accent) 22%, transparent), color-mix(in srgb, var(--accent) 4%, transparent) 72%, transparent);border-left:4px solid var(--accent);margin-top:14px;position:relative}.support-strip:before{content:'0';position:absolute;left:-2px;top:22px;color:var(--muted);font-size:11px}.support-strip:after{content:'support on (0,∞)';position:absolute;right:0;top:22px;color:var(--muted);font-size:11px}
   .mini-grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(340px,.92fr);gap:20px;align-items:start}.sample-bars{display:grid;gap:7px;margin-top:12px}.sample-row{display:grid;grid-template-columns:42px 1fr 54px;align-items:center;gap:8px;font-size:.78rem;color:var(--muted)}.bar-track{height:9px;border-radius:999px;background:var(--paper2);overflow:hidden}.bar{height:100%;border-radius:999px;background:var(--accent);width:10%}
   @media(max-width:1180px){.grid,.vizgrid,.explain,.mini-grid{grid-template-columns:1fr}.top-actions{justify-content:flex-start}header{grid-template-columns:1fr}.grid > aside.card{position:static;max-height:none;overflow:visible}}
 </style>
@@ -232,9 +238,9 @@
             <div class="muted small">Read top to bottom: start from a uniform draw, apply the structural map, and obtain a positive-support law.</div>
             <div class="pipeline">
               <div class="pipebox"><div class="tiny">uniform seed</div><div class="formula" data-katex="U\sim U(0,1)"></div></div>
-              <div class="arrow">â†“</div>
+              <div class="arrow">↓</div>
               <div class="pipebox"><div class="tiny" id="middleTitle">root mechanism</div><div id="middleFormula" class="formula"></div></div>
-              <div class="arrow">â†“</div>
+              <div class="arrow">↓</div>
               <div class="pipebox"><div class="tiny">positive-support law</div><div id="lawFormula" class="formula"></div></div>
             </div>
             <div class="support-strip"></div>
@@ -274,7 +280,7 @@ const $ = (id)=>document.getElementById(id);
 const state = { family:'exp' };
 const controls = ['lambda','shape','eta','t0'].map($);
 
-function fmt(x,d=2){ if(!isFinite(x)) return 'âˆž'; return Number(x).toFixed(d); }
+function fmt(x,d=2){ if(!isFinite(x)) return '∞'; return Number(x).toFixed(d); }
 function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
 
 function gamma(z){
@@ -415,7 +421,7 @@ function drawPdf(){
     const y=clamp(pdf(t0),0,ymax);
     svg.appendChild(svgEl('line',{x1:xs(t0),y1:y0+h,x2:xs(t0),y2:ys(y),class:'guide'}));
     svg.appendChild(svgEl('circle',{cx:xs(t0),cy:ys(y),r:4.5,class:'dot'}));
-    text(svg,xs(t0)+8,ys(y)+18,`F(tâ‚€)=${fmt(cdf(t0),3)}`,'inklabel','start');
+    text(svg,xs(t0)+8,ys(y)+18,`F(t₀)=${fmt(cdf(t0),3)}`,'inklabel','start');
   }
   text(svg,x0+w-2,y0+18,familyName()+' density','inklabel','end');
 }
@@ -456,7 +462,7 @@ function drawSurvival(){
   svg.appendChild(svgEl('line',{x1:xs(t0),y1:y0,x2:xs(t0),y2:y0+h,class:'guide'}));
   text(svg,x0+w-5,y0+18,'S(t)','inklabel','end');
   text(svg,x0+w-5,y0+h-12,'F(t)','inklabel','end');
-  text(svg,xs(t0)+8,y0+26,`S(tâ‚€)=${fmt(survival(t0),3)}`,'inklabel','start');
+  text(svg,xs(t0)+8,y0+26,`S(t₀)=${fmt(survival(t0),3)}`,'inklabel','start');
 }
 function hazardLabel(){
   if(state.family==='exp') return 'constant';
@@ -467,26 +473,37 @@ function hazardLabel(){
 function setKatex(el,tex,display=false){
   el.dataset.tex=tex;
   el.dataset.display = display ? '1' : '0';
-  if(window.katex) katex.render(tex, el, {throwOnError:false, displayMode:display});
+  if(window.katex){
+    katex.render(tex, el, {throwOnError:false, displayMode:display, strict:'ignore'});
+  } else {
+    el.textContent = tex;
+  }
 }
 function setMathHTML(el, html){
   el.innerHTML = html;
   renderAll();
 }
 function renderAll(){
-  if(!window.katex) return;
-  document.querySelectorAll('[data-katex]').forEach(el=>katex.render(el.dataset.katex,el,{throwOnError:false,displayMode:el.dataset.display==='1'}));
-  document.querySelectorAll('[data-tex]').forEach(el=>katex.render(el.dataset.tex,el,{throwOnError:false,displayMode:el.dataset.display==='1'}));
+  if(!window.katex){
+    setTimeout(renderAll,80);
+    return;
+  }
+  document.querySelectorAll('[data-katex]').forEach(el=>{
+    katex.render(el.dataset.katex,el,{throwOnError:false,displayMode:el.dataset.display==='1',strict:'ignore'});
+  });
+  document.querySelectorAll('[data-tex]').forEach(el=>{
+    katex.render(el.dataset.tex,el,{throwOnError:false,displayMode:el.dataset.display==='1',strict:'ignore'});
+  });
 }
 function updateText(){
   const p=effParams(), raw=params(), mv=meanVar();
   $('lambdaVal').textContent=fmt(raw.lam,2);
-  $('etaVal').textContent=fmt(raw.eta,2)+`  Ã—${fmt(raw.mult,2)}`;
+  $('etaVal').textContent=fmt(raw.eta,2)+`  ×${fmt(raw.mult,2)}`;
   $('t0Val').textContent=fmt(raw.t0,2);
   $('shapeControl').style.opacity = state.family==='exp' ? .48 : 1;
   $('shape').disabled = state.family==='exp';
   $('shapeLabel').innerHTML = state.family==='gamma' ? 'gamma shape / arrival count <span class="math-inline" data-tex="r"></span>' : state.family==='weibull' ? 'Weibull shape <span class="math-inline" data-tex="k"></span>' : 'shape not needed';
-  $('shapeVal').textContent = state.family==='exp' ? 'â€”' : fmt(raw.sh,2);
+  $('shapeVal').textContent = state.family==='exp' ? '—' : fmt(raw.sh,2);
   $('meanMetric').textContent=fmt(mv.m,3);
   $('varMetric').textContent=fmt(mv.v,3);
   $('cdfMetric').textContent=fmt(cdf(raw.t0),3);
@@ -534,6 +551,7 @@ $('themeBtn').addEventListener('click',()=>{
   $('themeBtn').textContent=dark?'Dark mode':'Light mode';
   update();
 });
+window.addEventListener('DOMContentLoaded',()=>{renderAll(); update();});
 window.addEventListener('load',()=>{renderAll(); update();});
 setTimeout(update,250);
 </script>

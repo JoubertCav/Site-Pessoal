@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -18,6 +18,8 @@
 
   gtag('config', 'G-NHXHEJP1G0');
 </script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <style>
   :root{
     --bg:#f6f1e8; --panel:#fffaf2; --panel2:#fcf5ea; --text:#17212b; --muted:#65717d;
@@ -54,6 +56,10 @@
   .math{font-family:Cambria, Georgia, "Times New Roman", serif;line-height:1.45;font-size:1.01rem;color:var(--text)}
   .formula{display:block;margin:.1rem 0 .28rem;font-family:"STIX Two Text", Cambria, Georgia, "Times New Roman", serif;font-size:1.06rem;line-height:1.35}
   .mathNote{display:block;color:var(--muted);font-family:Inter, ui-sans-serif, system-ui, sans-serif;font-size:.82rem;line-height:1.35;margin-top:.2rem}
+
+  .math .katex, .eqBox .katex, .summary .katex, .pill .katex{font-size:1.03em;}
+  .formula .katex{font-size:1.08em;}
+  .katex-fallback{font-family:"STIX Two Text", Cambria, Georgia, "Times New Roman", serif;}
   .layout{display:grid;grid-template-columns:350px 1fr;gap:16px;align-items:start}
   .side{padding:16px}
   .panelTitle{margin:0 0 12px;color:var(--muted);font-size:.82rem;font-weight:900;text-transform:uppercase;letter-spacing:.13em}
@@ -120,28 +126,28 @@
     <div class="def">
       <div class="tag">Core theorem</div>
       <div class="math">
-        <span class="formula">X<sub>n</sub> â‡’ X, &nbsp; Y<sub>n</sub> â†’ c</span>
+        <span class="formula" data-katex="X_n \Rightarrow X,\quad Y_n \xrightarrow{p} c">Xₙ ⇒ X, Yₙ →ₚ c</span>
         <span class="mathNote">then sums, products, and quotients inherit limits</span>
       </div>
     </div>
     <div class="def">
       <div class="tag">Feasible statistic</div>
       <div class="math">
-        <span class="formula">T<sub>n</sub> = X<sub>n</sub> / R<sub>n</sub></span>
-        <span class="mathNote">where \(R_n=\widehat\sigma_n/\sigma \to_p 1\)</span>
+        <span class="formula" data-katex="T_n=X_n/R_n">Tₙ = Xₙ/Rₙ</span>
+        <span class="mathNote">where <span data-katex="R_n=\widehat\sigma_n/\sigma \xrightarrow{p} 1">Rₙ=σ̂ₙ/σ →ₚ 1</span></span>
       </div>
     </div>
     <div class="def">
       <div class="tag">Mean inference</div>
       <div class="math">
-        <span class="formula">âˆšn( XÌ„<sub>n</sub>âˆ’Î¼ ) / S<sub>n</sub> â‡’ N(0,1)</span>
-        <span class="mathNote">unknown Ïƒ replaced by sample standard deviation</span>
+        <span class="formula" data-katex="\sqrt n(\bar X_n-\mu)/S_n \Rightarrow N(0,1)">√n(X̄ₙ−μ)/Sₙ ⇒ N(0,1)</span>
+        <span class="mathNote">unknown σ replaced by sample standard deviation</span>
       </div>
     </div>
     <div class="def">
       <div class="tag">Confidence interval</div>
       <div class="math">
-        <span class="formula">XÌ„<sub>n</sub> Â± z<sub>1âˆ’Î±/2</sub>S<sub>n</sub>/âˆšn</span>
+        <span class="formula" data-katex="\bar X_n \pm z_{1-\alpha/2}S_n/\sqrt n">X̄ₙ ± z₍₁₋α/₂₎Sₙ/√n</span>
         <span class="mathNote">feasible asymptotic inference</span>
       </div>
     </div>
@@ -166,8 +172,8 @@
         <select id="scaleSelect">
           <option value="sample" selected>consistent: sample sd</option>
           <option value="slow">consistent but noisy</option>
-          <option value="biased">inconsistent: 1.25 Ã— sample sd</option>
-          <option value="oracle">oracle: true Ïƒ</option>
+          <option value="biased">inconsistent: 1.25 × sample sd</option>
+          <option value="oracle">oracle: true σ</option>
         </select>
       </div>
 
@@ -211,13 +217,13 @@
           <div>
             <div class="plotTitle">Infeasible versus feasible statistic</div>
             <div class="pillRow">
-              <span class="pill"><span class="dot"></span> feasible \(T_n\)</span>
-              <span class="pill"><span class="dot" style="background:var(--blue)"></span> infeasible \(Z_n\)</span>
-              <span class="pill"><span class="dot" style="background:var(--violet)"></span> \(N(0,1)\)</span>
+              <span class="pill"><span class="dot"></span> feasible <span data-katex="T_n">Tₙ</span></span>
+              <span class="pill"><span class="dot" style="background:var(--blue)"></span> infeasible <span data-katex="Z_n">Zₙ</span></span>
+              <span class="pill"><span class="dot" style="background:var(--violet)"></span> <span data-katex="N(0,1)">N(0,1)</span></span>
               <span class="pill"><span class="dot" style="background:var(--warn)"></span> replacement error</span>
             </div>
           </div>
-          <div class="plotSub">If \( \widehat\sigma_n/\sigma \to_p 1 \), replacing Ïƒ does not change the limit.</div>
+          <div class="plotSub">If <span data-katex="\widehat\sigma_n/\sigma \xrightarrow{p} 1">σ̂ₙ/σ →ₚ 1</span>, replacing σ does not change the limit.</div>
         </div>
         <svg id="mainSvg" viewBox="0 0 980 500" preserveAspectRatio="xMidYMid meet"></svg>
       </div>
@@ -226,7 +232,7 @@
         <div class="card plotCard">
           <div class="plotHead">
             <div class="plotTitle">Replacement geometry</div>
-            <div class="plotSub">scale ratio \(R_n=\widehat\sigma_n/\sigma\) collapsing to 1</div>
+            <div class="plotSub">scale ratio <span data-katex="R_n=\widehat\sigma_n/\sigma">Rₙ=σ̂ₙ/σ</span> collapsing to 1</div>
           </div>
           <svg id="ratioSvg" viewBox="0 0 520 320" preserveAspectRatio="xMidYMid meet"></svg>
         </div>
@@ -234,7 +240,7 @@
         <div class="card plotCard">
           <div class="plotHead">
             <div class="plotTitle">Feasible confidence intervals</div>
-            <div class="plotSub">coverage from \( \bar X_n \pm zS_n/\sqrt n \)</div>
+            <div class="plotSub">coverage from <span data-katex="\bar X_n \pm zS_n/\sqrt n">X̄ₙ ± zSₙ/√n</span></div>
           </div>
           <svg id="ciSvg" viewBox="0 0 520 320" preserveAspectRatio="xMidYMid meet"></svg>
         </div>
@@ -245,8 +251,8 @@
           <div class="panelTitle">Interpretation</div>
           <div class="smallText" id="interpretText"></div>
           <div class="summary">
-            <div><strong>Infeasible limit.</strong><br>If \(Z_n=\sqrt n(\hat\theta_n-\theta)/\sigma\Rightarrow Z\), the limit often contains unknown \(\sigma\).</div>
-            <div><strong>Consistent replacement.</strong><br>If \(R_n=\widehat\sigma_n/\sigma\to_p1\), then \(Z_n/R_n\Rightarrow Z\).</div>
+            <div><strong>Infeasible limit.</strong><br>If <span data-katex="Z_n=\sqrt n(\hat\theta_n-\theta)/\sigma\Rightarrow Z">Zₙ=√n(θ̂ₙ−θ)/σ⇒Z</span>, the limit often contains unknown <span data-katex="\sigma">σ</span>.</div>
+            <div><strong>Consistent replacement.</strong><br>If <span data-katex="R_n=\widehat\sigma_n/\sigma\xrightarrow{p}1">Rₙ=σ̂ₙ/σ→ₚ1</span>, then <span data-katex="Z_n/R_n\Rightarrow Z">Zₙ/Rₙ⇒Z</span>.</div>
             <div><strong>Feasible inference.</strong><br>The limiting distribution becomes usable because all unknown pieces are estimated.</div>
             <div><strong>Failure mode.</strong><br>If the replacement converges to the wrong constant, the feasible statistic has the wrong scale.</div>
           </div>
@@ -260,7 +266,7 @@
     </section>
   </main>
 
-  <footer>Minimal interactive notebook â€” Slutsky, consistent replacement, feasible statistics, and inference.</footer>
+  <footer>Minimal interactive notebook — Slutsky, consistent replacement, feasible statistics, and inference.</footer>
 </div>
 
 <script>
@@ -276,7 +282,7 @@ const levelRange=document.getElementById("levelRange");
 
 function css(v){return getComputedStyle(body).getPropertyValue(v).trim();}
 function fmt(x){
-  if(!isFinite(x)) return "âˆž";
+  if(!isFinite(x)) return "∞";
   if(Math.abs(x)<0.0001 && x!==0) return x.toExponential(2);
   if(Math.abs(x)<10) return x.toFixed(4);
   return x.toFixed(2);
@@ -305,6 +311,29 @@ function erf(x){
   return sign*y;
 }
 function normalCdf(x){return .5*(1+erf(x/Math.sqrt(2)));}
+
+function escapeHtml(str){return String(str).replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));}
+function renderMath(root=document){
+  if(!window.katex){ setTimeout(()=>renderMath(root),80); return; }
+  root.querySelectorAll('[data-katex]').forEach(el=>{
+    if(el.dataset.rendered==='1') return;
+    const tex=el.getAttribute('data-katex');
+    katex.render(tex, el, {throwOnError:false, displayMode:false, strict:'ignore'});
+    el.dataset.rendered='1';
+  });
+}
+function renderTexBlock(el, tex, fallback){
+  if(window.katex){
+    katex.render(tex, el, {throwOnError:false, displayMode:false, strict:'ignore'});
+  } else {
+    el.textContent = fallback || tex;
+    setTimeout(()=>renderTexBlock(el, tex, fallback),80);
+  }
+}
+function setHTMLWithMath(el, html){
+  el.innerHTML = html;
+  renderMath(el);
+}
 function invNormal(p){
   // Acklam approximation
   const a=[-39.69683028665376,220.9460984245205,-275.9285104469687,138.357751867269,-30.66479806614716,2.506628277459239];
@@ -420,7 +449,7 @@ function drawMain(){
   const densT=countsT.map(c=>c/(Ts.length*bw)), densZ=countsZ.map(c=>c/(Zs.length*bw));
   const maxY=Math.max(.42,...densT,...densZ)*1.15;
   let h='<rect x="8" y="10" width="964" height="470" rx="20" fill="'+panel+'" stroke="'+border+'"/>';
-  h+=text(68,38,"histograms of infeasible Zâ‚™ and feasible Tâ‚™",muted,13,850);
+  h+=text(68,38,"histograms of infeasible Zₙ and feasible Tₙ",muted,13,850);
   for(let k=0;k<=5;k++) h+=line(X0,Y1-(Y1-Y0)*k/5,X1,Y1-(Y1-Y0)*k/5,grid,1,.85);
   for(let k=-4;k<=4;k++){
     const xx=px(k,xlo,xhi,X0,X1);
@@ -446,12 +475,12 @@ function drawMain(){
   h+='<rect x="730" y="72" width="205" height="272" rx="20" fill="'+panel2+'" stroke="'+border+'"/>';
   h+=text(752,104,"Current laws",textc,16,900);
   const rows=[
-    ["sd(Zâ‚™)",fmt(zst.sd),blue],
-    ["sd(Tâ‚™)",fmt(tst.sd),acc],
-    ["mean |Tâˆ’Z|",fmt(replErr),warn],
+    ["sd(Zₙ)",fmt(zst.sd),blue],
+    ["sd(Tₙ)",fmt(tst.sd),acc],
+    ["mean |T−Z|",fmt(replErr),warn],
     ["CDF gap T",fmt(kolmogorov(Ts)),violet],
-    ["mean Râ‚™",fmt(stats(arr.map(d=>d.R)).mean),acc],
-    ["sd Râ‚™",fmt(stats(arr.map(d=>d.R)).sd),acc]
+    ["mean Rₙ",fmt(stats(arr.map(d=>d.R)).mean),acc],
+    ["sd Rₙ",fmt(stats(arr.map(d=>d.R)).sd),acc]
   ];
   rows.forEach((r,i)=>{
     const y=138+i*31;
@@ -460,7 +489,7 @@ function drawMain(){
   });
   h+='<rect x="730" y="370" width="205" height="62" rx="16" fill="'+css("--accentSoft")+'" stroke="'+css("--accentLine")+'"/>';
   h+=text(752,398,"Slutsky reading",textc,13,900);
-  h+=text(752,420,scaleSelect.value==="biased"?"wrong constant: scale distorted":"Râ‚™ close to 1: laws match",muted,12,780);
+  h+=text(752,420,scaleSelect.value==="biased"?"wrong constant: scale distorted":"Rₙ close to 1: laws match",muted,12,780);
   svg.innerHTML=h;
 }
 function drawRatio(){
@@ -482,9 +511,9 @@ function drawRatio(){
     const bad=Math.abs(d.R-1)>.18;
     h+='<circle cx="'+x+'" cy="'+y+'" r="3.1" fill="'+(bad?warn:acc)+'" fill-opacity=".58"/>';
   }
-  h+=text(68,34,"points: (infeasible Zâ‚™, scale ratio Râ‚™)",muted,12,850);
-  h+=text(X1,Y1+24,"Zâ‚™",muted,10,850,"end");
-  h+=text(X0-10,Y0+10,"Râ‚™",muted,10,850,"end");
+  h+=text(68,34,"points: (infeasible Zₙ, scale ratio Rₙ)",muted,12,850);
+  h+=text(X1,Y1+24,"Zₙ",muted,10,850,"end");
+  h+=text(X0-10,Y0+10,"Rₙ",muted,10,850,"end");
   svg.innerHTML=h;
 }
 function drawCI(){
@@ -502,14 +531,14 @@ function drawCI(){
   h+=line(X0,Y1,X1,Y1,muted,1.2,.8);
   const thetaX=px(info.theta,lo,hi,X0,X1);
   h+=line(thetaX,Y0,thetaX,Y1,blue,2,.65,"7 5");
-  h+=text(thetaX,Y0-8,"Î¸",blue,11,900,"middle");
+  h+=text(thetaX,Y0-8,"θ",blue,11,900,"middle");
   intervals.forEach((d,i)=>{
     const y=Y0+10+i*(Y1-Y0-20)/(intervals.length-1);
     h+=line(px(d.lo,lo,hi,X0,X1),y,px(d.hi,lo,hi,X0,X1),y,d.cover?acc:warn,2.2,.82);
     h+='<circle cx="'+px(d.mean,lo,hi,X0,X1)+'" cy="'+y+'" r="2.6" fill="'+(d.cover?acc:warn)+'"/>';
   });
   h+='<rect x="64" y="262" width="385" height="18" rx="9" fill="'+css("--accentSoft")+'" stroke="'+css("--accentLine")+'"/>';
-  h+=text(78,275,"coverage â‰ˆ "+fmt(cov.rate)+"   target level = "+fmt(Number(levelRange.value))+"   z = "+fmt(cov.z),textc,11,850);
+  h+=text(78,275,"coverage ≈ "+fmt(cov.rate)+"   target level = "+fmt(Number(levelRange.value))+"   z = "+fmt(cov.z),textc,11,850);
   svg.innerHTML=h;
 }
 function updateText(){
@@ -521,39 +550,40 @@ function updateText(){
   document.getElementById("dfVal").textContent=fmt(df);
   document.getElementById("levelVal").textContent=fmt(level);
 
-  document.getElementById("eqBox").innerHTML =
-    '<span class="formula">Tâ‚™ = Zâ‚™ / Râ‚™, &nbsp; Râ‚™ = ÏƒÌ‚â‚™/Ïƒ</span>'+
-    '<span class="mathNote">'+info.label+' Â· '+scaleSelect.options[scaleSelect.selectedIndex].text+'</span>';
+  const eqBox = document.getElementById("eqBox");
+  setHTMLWithMath(eqBox, '<span class="formula" data-katex="T_n=Z_n/R_n,\\quad R_n=\\widehat\\sigma_n/\\sigma">Tₙ=Zₙ/Rₙ, Rₙ=σ̂ₙ/σ</span>' +
+    '<span class="mathNote">'+info.label+' · '+scaleSelect.options[scaleSelect.selectedIndex].text+'</span>');
 
   const cov=coverage(arr);
   const mini=[
-    ["mean Râ‚™",fmt(Rst.mean)],
-    ["sd Râ‚™",fmt(Rst.sd)],
-    ["mean |Tâˆ’Z|",fmt(replErr)],
+    ["mean Rₙ",fmt(Rst.mean)],
+    ["sd Rₙ",fmt(Rst.sd)],
+    ["mean |T−Z|",fmt(replErr)],
     ["coverage",fmt(cov.rate)],
-    ["Î¸",fmt(info.theta)],
-    ["Ïƒ",fmt(info.sigma)]
+    ["θ",fmt(info.theta)],
+    ["σ",fmt(info.sigma)]
   ];
   document.getElementById("miniGrid").innerHTML=mini.map(d=>'<div class="miniStat"><div class="k">'+d[0]+'</div><div class="v">'+d[1]+'</div></div>').join("");
 
   const logic=[
-    ["1","infeasible statistic: Zâ‚™ â‡’ Z"],
-    ["2","replacement ratio: Râ‚™ â†’p 1"],
-    ["3","feasible statistic: Tâ‚™ = Zâ‚™/Râ‚™"],
-    ["â†’","Slutsky: Tâ‚™ â‡’ Z"]
+    ["1","infeasible statistic: Zₙ ⇒ Z"],
+    ["2","replacement ratio: Rₙ →ₚ 1"],
+    ["3","feasible statistic: Tₙ = Zₙ/Rₙ"],
+    ["→","Slutsky: Tₙ ⇒ Z"]
   ];
   document.getElementById("logicList").innerHTML=logic.map(it=>'<div class="logicItem"><span class="mark">'+it[0]+'</span><span>'+it[1]+'</span></div>').join("");
 
-  let interp="The infeasible statistic uses the true standard error. Slutsky says we may replace it by a consistent estimate: the scale ratio \(R_n=\widehat\sigma_n/\sigma\) collapses to 1, so \(T_n=Z_n/R_n\) has the same limiting law.";
-  if(scaleSelect.value==="biased") interp="This intentionally violates Slutsky's replacement condition. The ratio \(R_n\) converges near 1.25 instead of 1, so the feasible statistic has the wrong scale and coverage changes.";
+  let interp=`The infeasible statistic uses the true standard error. Slutsky says we may replace it by a consistent estimate: the scale ratio <span data-katex="R_n=\\widehat\\sigma_n/\\sigma">Rₙ=σ̂ₙ/σ</span> collapses to 1, so <span data-katex="T_n=Z_n/R_n">Tₙ=Zₙ/Rₙ</span> has the same limiting law.`;
+  if(scaleSelect.value==="biased") interp=`This intentionally violates Slutsky's replacement condition. The ratio <span data-katex="R_n">Rₙ</span> converges near 1.25 instead of 1, so the feasible statistic has the wrong scale and coverage changes.`;
   if(scaleSelect.value==="slow") interp="The replacement is still consistent, but noisy at finite n. The feasible law is close asymptotically, yet finite-sample replacement error remains visible.";
-  if(scaleSelect.value==="oracle") interp="With the oracle scale, \(R_n=1\) exactly. Feasible and infeasible statistics coincide, so there is no replacement error.";
+  if(scaleSelect.value==="oracle") interp=`With the oracle scale, <span data-katex="R_n=1">Rₙ=1</span> exactly. Feasible and infeasible statistics coincide, so there is no replacement error.`;
   document.getElementById("interpretText").innerHTML=interp;
 
-  let notice="The important geometry is the horizontal collapse of the cloud toward \(R_n=1\). Once that happens, dividing by \(R_n\) barely moves the distribution.";
+  let notice=`The important geometry is the horizontal collapse of the cloud toward <span data-katex="R_n=1">Rₙ=1</span>. Once that happens, dividing by <span data-katex="R_n">Rₙ</span> barely moves the distribution.`;
   if(scaleSelect.value==="biased") notice="Here the cloud collapses to the wrong horizontal line. The statistic remains asymptotically normal but with the wrong variance scale.";
   if(n<30) notice="At small n, asymptotic replacement is visible but imperfect. Increase n to see Slutsky stabilize.";
   document.getElementById("noticeText").innerHTML=notice;
+  renderMath(document);
 }
 function drawAll(){updateText();drawMain();drawRatio();drawCI();}
 themeBtn.addEventListener("click",()=>{
@@ -564,6 +594,7 @@ themeBtn.addEventListener("click",()=>{
 });
 [modelSelect,scaleSelect,nRange,repsRange,pRange,dfRange,levelRange].forEach(el=>el.addEventListener("input",drawAll));
 drawAll();
+window.addEventListener("load",()=>renderMath(document));
 </script>
 </body>
 </html>

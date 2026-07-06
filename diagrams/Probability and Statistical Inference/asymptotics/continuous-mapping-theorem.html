@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -18,6 +18,8 @@
 
   gtag('config', 'G-NHXHEJP1G0');
 </script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <style>
   :root{
     --bg:#f6f1e8; --panel:#fffaf2; --panel2:#fcf5ea; --text:#17212b; --muted:#65717d;
@@ -90,6 +92,11 @@
   .miniStat .k{font-size:.76rem;color:var(--muted);font-weight:860;text-transform:uppercase;letter-spacing:.09em}
   .miniStat .v{font-size:1rem;font-weight:850;margin-top:6px}
   footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
+
+  .katex{font-size:1.02em}
+  .formula .katex{font-size:1.08em}
+  .eqBox .katex{font-size:1.04em}
+  .summary [data-tex]{white-space:nowrap}
   @media(max-width:1080px){
     .defs,.layout,.two,.interpretation{grid-template-columns:1fr}
     header{flex-direction:column}
@@ -120,29 +127,29 @@
     <div class="def">
       <div class="tag">CMT</div>
       <div class="math">
-        <span class="formula">X<sub>n</sub> â‡’ X, &nbsp; g continuous</span>
-        <span class="formula">g(X<sub>n</sub>) â‡’ g(X)</span>
+        <span class="formula" data-tex="X_n \Rightarrow X,\quad g\text{ continuous}">Xₙ ⇒ X, g continuous</span>
+        <span class="formula" data-tex="g(X_n) \Rightarrow g(X)">g(Xₙ) ⇒ g(X)</span>
       </div>
     </div>
     <div class="def">
       <div class="tag">In probability</div>
       <div class="math">
-        <span class="formula">X<sub>n</sub> â†’<sub>p</sub> X</span>
-        <span class="formula">â‡’ g(X<sub>n</sub>) â†’<sub>p</sub> g(X)</span>
+        <span class="formula" data-tex="X_n \xrightarrow{p} X">Xₙ →ₚ X</span>
+        <span class="formula" data-tex="g(X_n) \xrightarrow{p} g(X)">g(Xₙ) →ₚ g(X)</span>
       </div>
     </div>
     <div class="def">
       <div class="tag">General form</div>
       <div class="math">
-        <span class="formula">P(X âˆˆ D<sub>g</sub>) = 0</span>
+        <span class="formula" data-tex="P(X\in D_g)=0">P(X ∈ Dg) = 0</span>
         <span class="mathNote">continuity is only needed where the limit lands</span>
       </div>
     </div>
     <div class="def">
       <div class="tag">Delta method seed</div>
       <div class="math">
-        <span class="formula">âˆšn(X<sub>n</sub>âˆ’Î¸) â‡’ Z</span>
-        <span class="formula">g(X<sub>n</sub>) â†’ g(Î¸)</span>
+        <span class="formula" data-tex="\sqrt n\,(X_n-\theta)\Rightarrow Z">√n(Xₙ−θ) ⇒ Z</span>
+        <span class="formula" data-tex="g(X_n)\to g(\theta)">g(Xₙ) → g(θ)</span>
       </div>
     </div>
   </section>
@@ -152,21 +159,21 @@
       <div class="panelTitle">Controls</div>
 
       <div class="control">
-        <label for="seqSelect">Convergent sequence \(X_n\)</label>
+        <label for="seqSelect">Convergent sequence Xₙ</label>
         <select id="seqSelect">
-          <option value="point">point limit: Î¸ + Z/âˆšn</option>
-          <option value="normal">law limit: N(Î¸, 1+1/n)</option>
-          <option value="atom">moving atom: Î´_{Î¸+1/n}</option>
-          <option value="uniform">shrinking uniform around Î¸</option>
+          <option value="point">point limit: θ + Z/√n</option>
+          <option value="normal">law limit: N(θ, 1+1/n)</option>
+          <option value="atom">moving atom: δ_{θ+1/n}</option>
+          <option value="uniform">shrinking uniform around θ</option>
           <option value="continuous">limit law: N(0,1)</option>
         </select>
       </div>
 
       <div class="control">
-        <label for="gSelect">Transformation \(g\)</label>
+        <label for="gSelect">Transformation g</label>
         <select id="gSelect">
           <option value="identity">identity: g(x)=x</option>
-          <option value="square">square: g(x)=xÂ²</option>
+          <option value="square">square: g(x)=x²</option>
           <option value="exp">exponential: g(x)=exp(x/2)</option>
           <option value="abs">absolute value: g(x)=|x|</option>
           <option value="sin">sine: g(x)=sin(2x)</option>
@@ -181,7 +188,7 @@
       </div>
 
       <div class="control">
-        <label for="thetaRange">Limit point Î¸ <span class="value" id="thetaVal">0.50</span></label>
+        <label for="thetaRange">Limit point θ <span class="value" id="thetaVal">0.50</span></label>
         <input id="thetaRange" type="range" min="-2.00" max="2.00" step="0.05" value="0.50"/>
       </div>
 
@@ -208,11 +215,11 @@
       <div class="card plotCard">
         <div class="plotHead">
           <div>
-            <div class="plotTitle">Geometry of the map: mass moves through \(g\)</div>
+            <div class="plotTitle">Geometry of the map: mass moves through g</div>
             <div class="pillRow">
-              <span class="pill"><span class="dot"></span> \(X_n\) points</span>
+              <span class="pill"><span class="dot"></span> Xₙ points</span>
               <span class="pill"><span class="dot" style="background:var(--blue)"></span> limiting support</span>
-              <span class="pill"><span class="dot" style="background:var(--violet)"></span> graph of \(g\)</span>
+              <span class="pill"><span class="dot" style="background:var(--violet)"></span> graph of g</span>
               <span class="pill"><span class="dot" style="background:var(--warn)"></span> discontinuity danger</span>
             </div>
           </div>
@@ -225,7 +232,7 @@
         <div class="card plotCard">
           <div class="plotHead">
             <div class="plotTitle">Law of transformed variables</div>
-            <div class="plotSub">histogram of \(g(X_n)\) versus limiting \(g(X)\)</div>
+            <div class="plotSub">histogram of g(Xₙ) versus limiting g(X)</div>
           </div>
           <svg id="lawSvg" viewBox="0 0 520 320" preserveAspectRatio="xMidYMid meet"></svg>
         </div>
@@ -233,7 +240,7 @@
         <div class="card plotCard">
           <div class="plotHead">
             <div class="plotTitle">Distributional convergence after mapping</div>
-            <div class="plotSub">empirical CDFs of \(g(X_n)\) and \(g(X)\)</div>
+            <div class="plotSub">empirical CDFs of g(Xₙ) and g(X)</div>
           </div>
           <svg id="cdfSvg" viewBox="0 0 520 320" preserveAspectRatio="xMidYMid meet"></svg>
         </div>
@@ -244,8 +251,8 @@
           <div class="panelTitle">Interpretation</div>
           <div class="smallText" id="interpretText"></div>
           <div class="summary">
-            <div><strong>CMT.</strong><br>If \(X_n\Rightarrow X\) and \(g\) is continuous, then \(g(X_n)\Rightarrow g(X)\).</div>
-            <div><strong>Why continuity?</strong><br>Small errors in \(X_n\) must become small errors after applying \(g\).</div>
+            <div><strong>CMT.</strong><br>If <span data-tex="X_n\Rightarrow X">Xₙ ⇒ X</span> and <span data-tex="g">g</span> is continuous, then <span data-tex="g(X_n)\Rightarrow g(X)">g(Xₙ) ⇒ g(X)</span>.</div>
+            <div><strong>Why continuity?</strong><br>Small errors in <span data-tex="X_n">Xₙ</span> must become small errors after applying <span data-tex="g">g</span>.</div>
             <div><strong>Discontinuities.</strong><br>A discontinuity is harmless only if the limiting random variable avoids it with probability one.</div>
             <div><strong>Feasible inference.</strong><br>CMT lets asymptotic approximations survive transformations such as squares, exponentials, and absolute values.</div>
           </div>
@@ -259,7 +266,7 @@
     </section>
   </main>
 
-  <footer>Minimal interactive notebook â€” continuous mapping theorem, transformed limits, and discontinuity traps.</footer>
+  <footer>Minimal interactive notebook — continuous mapping theorem, transformed limits, and discontinuity traps.</footer>
 </div>
 
 <script>
@@ -272,9 +279,39 @@ const thetaRange=document.getElementById("thetaRange");
 const repsRange=document.getElementById("repsRange");
 const xRange=document.getElementById("xRange");
 
+function renderDataTex(root=document){
+  const nodes = root.querySelectorAll ? root.querySelectorAll("[data-tex]") : [];
+  nodes.forEach(el=>{
+    const tex = el.getAttribute("data-tex") || "";
+    if(window.katex){
+      katex.render(tex, el, {throwOnError:false, displayMode:false, strict:"ignore"});
+    } else {
+      el.textContent = el.textContent || tex;
+    }
+  });
+}
+function setMathBox(el, tex, note, fallback){
+  el.innerHTML =
+    '<span class="formula" data-tex="'+tex.replace(/"/g,'&quot;')+'">'+(fallback||tex)+'</span>' +
+    '<span class="mathNote">'+note+'</span>';
+  renderDataTex(el);
+}
+function gTexLabel(){
+  const type=gSelect.value;
+  if(type==="identity") return "g(x)=x";
+  if(type==="square") return "g(x)=x^2";
+  if(type==="exp") return "g(x)=\\exp(x/2)";
+  if(type==="abs") return "g(x)=|x|";
+  if(type==="sin") return "g(x)=\\sin(2x)";
+  if(type==="indicator") return "g(x)=\\mathbf 1\\{x>0\\}";
+  if(type==="reciprocal") return "g(x)=1/x";
+  return "";
+}
+
+
 function css(v){return getComputedStyle(body).getPropertyValue(v).trim();}
 function fmt(x){
-  if(!isFinite(x)) return "âˆž";
+  if(!isFinite(x)) return "∞";
   if(Math.abs(x)<0.0001 && x!==0) return x.toExponential(2);
   if(Math.abs(x)<10) return x.toFixed(4);
   return x.toFixed(2);
@@ -318,7 +355,7 @@ function g(x){
 function gLabel(){
   const type=gSelect.value;
   if(type==="identity") return "g(x)=x";
-  if(type==="square") return "g(x)=xÂ²";
+  if(type==="square") return "g(x)=x²";
   if(type==="exp") return "g(x)=exp(x/2)";
   if(type==="abs") return "g(x)=|x|";
   if(type==="sin") return "g(x)=sin(2x)";
@@ -375,7 +412,7 @@ function theoremStatus(){
   const type=gSelect.value, ok=continuityOK();
   if(type==="reciprocal" && !ok) return "fails at limit point";
   if(type==="indicator" && !ok) return "fails at jump";
-  if(discontinuities().length>0 && ok) return "allowed: P(XâˆˆDg)=0";
+  if(discontinuities().length>0 && ok) return "allowed: P(X∈D_g)=0";
   return "CMT applies";
 }
 function kolmogorov(a,b){
@@ -408,7 +445,7 @@ function drawMain(){
   const ypad=(yhi-ylo)*.12; ylo-=ypad; yhi+=ypad;
 
   let h='<rect x="8" y="10" width="964" height="470" rx="20" fill="'+panel+'" stroke="'+border+'"/>';
-  h+=text(68,38,"mapping diagram: x â†¦ g(x)",muted,13,850);
+  h+=text(68,38,"mapping diagram: x ↦ g(x)",muted,13,850);
   for(let k=0;k<=5;k++) h+=line(X0,Y1-(Y1-Y0)*k/5,X1,Y1-(Y1-Y0)*k/5,grid,1,.85);
   for(let k=-3;k<=3;k++){
     const xx=px(k,xlo,xhi,X0,X1);
@@ -460,7 +497,7 @@ function drawMain(){
     const ty=py(clamp(g(theta),ylo,yhi),ylo,yhi,Y0,Y1);
     h+=line(tx,Y0,tx,Y1,blue,1.4,.45,"5 5");
     h+='<circle cx="'+tx+'" cy="'+ty+'" r="6" fill="'+blue+'"/>';
-    h+=text(tx+8,ty-8,"(Î¸,g(Î¸))",blue,11,900);
+    h+=text(tx+8,ty-8,"(θ,g(θ))",blue,11,900);
   }else{
     let band="";
     const mu=seqSelect.value==="normal"?theta:0, sd=1;
@@ -486,9 +523,9 @@ function drawMain(){
     ["g",gLabel(),violet],
     ["status",theoremStatus(),continuityOK()?acc:warn],
     ["CDF gap",fmt(gap),warn],
-    ["mean |gXnâˆ’gX|",fmt(meanAbsDiff(data.Yn,data.Y)),acc],
+    ["mean |gXₙ−gX|",fmt(meanAbsDiff(data.Yn,data.Y)),acc],
     ["n",String(n),muted],
-    ["Î¸",fmt(theta),blue]
+    ["θ",fmt(theta),blue]
   ];
   rows.forEach((r,i)=>{
     const y=138+i*31;
@@ -529,9 +566,9 @@ function drawLaw(){
     h+='<rect x="'+(x+1)+'" y="'+yT+'" width="'+w+'" height="'+(Y1-yT)+'" rx="4" fill="'+blue+'" fill-opacity=".30"/>';
     h+='<rect x="'+(x+1+w*.18)+'" y="'+yN+'" width="'+(w*.64)+'" height="'+(Y1-yN)+'" rx="4" fill="'+acc+'" fill-opacity=".68"/>';
   }
-  h+=text(68,34,"law of g(Xâ‚™) approaching law of g(X)",muted,12,850);
+  h+=text(68,34,"law of g(Xₙ) approaching law of g(X)",muted,12,850);
   h+=text(72,278,"g(X)",blue,12,900);
-  h+=text(128,278,"g(Xâ‚™)",acc,12,900);
+  h+=text(128,278,"g(Xₙ)",acc,12,900);
   svg.innerHTML=h;
 }
 function drawCDF(){
@@ -559,7 +596,7 @@ function drawCDF(){
   h+='<path d="'+ecdfPath(a)+'" fill="none" stroke="'+acc+'" stroke-width="2.6"/>';
   h+=text(68,34,"empirical CDFs after transformation",muted,12,850);
   h+=text(72,278,"F of g(X)",blue,12,900);
-  h+=text(158,278,"F of g(Xâ‚™)",acc,12,900);
+  h+=text(158,278,"F of g(Xₙ)",acc,12,900);
   svg.innerHTML=h;
 }
 function updateText(){
@@ -570,9 +607,7 @@ function updateText(){
   document.getElementById("repsVal").textContent=String(reps);
   document.getElementById("yVal").textContent=fmt(y);
 
-  document.getElementById("eqBox").innerHTML =
-    '<span class="formula">'+gLabel()+'</span>'+
-    '<span class="mathNote">'+theoremStatus()+'</span>';
+  setMathBox(document.getElementById("eqBox"), gTexLabel(), theoremStatus(), gLabel());
 
   const vals=data.Yn;
   const m=vals.reduce((a,b)=>a+b,0)/vals.length;
@@ -581,33 +616,35 @@ function updateText(){
   const Fy=data.Y.filter(v=>v<=y).length/data.Y.length;
   const mini=[
     ["CDF gap",fmt(gap)],
-    ["Fâ‚™(y)",fmt(Fny)],
+    ["Fₙ(y)",fmt(Fny)],
     ["F(y)",fmt(Fy)],
-    ["mean gXâ‚™",fmt(m)],
-    ["sd gXâ‚™",fmt(Math.sqrt(v))],
+    ["mean gXₙ",fmt(m)],
+    ["sd gXₙ",fmt(Math.sqrt(v))],
     ["CMT",continuityOK()?"ok":"danger"]
   ];
   document.getElementById("miniGrid").innerHTML=mini.map(d=>'<div class="miniStat"><div class="k">'+d[0]+'</div><div class="v">'+d[1]+'</div></div>').join("");
 
   const logic=[
-    ["1","start with Xâ‚™ converging to X"],
+    ["1","start with Xₙ converging to X"],
     ["2","push both laws through g"],
     ["3","if g is continuous where X lands"],
-    ["â†’","then g(Xâ‚™) converges to g(X)"]
+    ["→","then g(Xₙ) converges to g(X)"]
   ];
   document.getElementById("logicList").innerHTML=logic.map(it=>'<div class="logicItem"><span class="mark">'+it[0]+'</span><span>'+it[1]+'</span></div>').join("");
 
-  let interp="The plot shows the law of \(X_n\) being pushed through the graph of \(g\). When \(g\) is continuous on the limiting support, nearby input mass becomes nearby output mass, so the transformed laws converge.";
-  if(!continuityOK()) interp="This is the failure geometry: \(X_n\) approaches a point where \(g\) jumps or is undefined. Small input errors do not become small output errors, so the transformed sequence need not converge to \(g(X)\).";
+  let interp='The plot shows the law of <span data-tex="X_n">Xₙ</span> being pushed through the graph of <span data-tex="g">g</span>. When <span data-tex="g">g</span> is continuous on the limiting support, nearby input mass becomes nearby output mass, so the transformed laws converge.';
+  if(!continuityOK()) interp='This is the failure geometry: <span data-tex="X_n">Xₙ</span> approaches a point where <span data-tex="g">g</span> jumps or is undefined. Small input errors do not become small output errors, so the transformed sequence need not converge to <span data-tex="g(X)">g(X)</span>.';
   if(gSelect.value==="indicator" && continuityOK()) interp="Although the indicator function is discontinuous at zero, the CMT still works when the limiting law puts no mass at that discontinuity. This is the common indicator-set version behind CDF convergence at continuity points.";
   document.getElementById("interpretText").innerHTML=interp;
+  renderDataTex(document.getElementById("interpretText"));
 
   let notice="Continuity means the graph does not tear the limiting mass.";
   if(!continuityOK()) notice="The limiting mass hits a discontinuity. This is exactly why continuity matters.";
-  if(seqSelect.value==="continuous" && gSelect.value==="indicator") notice="Here \(g\) has a jump, but \(X\) is continuous, so \(P(X=0)=0\). The discontinuity is invisible to the limiting law.";
+  if(seqSelect.value==="continuous" && gSelect.value==="indicator") notice='Here <span data-tex="g">g</span> has a jump, but <span data-tex="X">X</span> is continuous, so <span data-tex="P(X=0)=0">P(X=0)=0</span>. The discontinuity is invisible to the limiting law.';
   if(gSelect.value==="square") notice="Squaring folds negative and positive mass together; CMT says the folded laws still converge.";
   if(gSelect.value==="abs") notice="Absolute value folds the line at zero. It is continuous, so convergence survives.";
   document.getElementById("noticeText").innerHTML=notice;
+  renderDataTex(document.getElementById("noticeText"));
   document.getElementById("mainSub").textContent=continuityOK() ? "The limiting mass avoids discontinuities of g." : "The limiting mass lands on a bad point of g.";
 }
 function drawAll(){updateText();drawMain();drawLaw();drawCDF();}
@@ -619,6 +656,8 @@ themeBtn.addEventListener("click",()=>{
 });
 [seqSelect,gSelect,nRange,thetaRange,repsRange,xRange].forEach(el=>el.addEventListener("input",drawAll));
 drawAll();
+renderDataTex(document);
+window.addEventListener("load",()=>{ renderDataTex(document); drawAll(); });
 </script>
 </body>
 </html>

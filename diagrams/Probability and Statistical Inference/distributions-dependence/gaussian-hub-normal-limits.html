@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -101,6 +101,13 @@
   .formula{font-size:1.02rem;overflow-x:auto;padding:2px 0}
   .math-inline{display:inline-flex;align-items:baseline;vertical-align:-0.12em;margin:0 .08em}
   .katex{color:inherit}
+
+  .formula .katex, .math-inline .katex, .svgmath .katex{color:inherit}
+  .formula .katex{font-size:1.03em}
+  .formula .katex-display{margin:.15em 0!important}
+  .math-inline .katex{font-size:1em}
+  .svgmath .katex{font-size:1em}
+  [data-katex], [data-tex]{white-space:nowrap}
   .metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:14px}
   .metric{border:1px solid var(--line);border-radius:16px;padding:11px;background:color-mix(in srgb,var(--paper) 84%,var(--paper2))}
   .metric b{display:block;font-size:.78rem;color:var(--muted);font-weight:600;margin-bottom:3px}.metric span{font-variant-numeric:tabular-nums}
@@ -283,24 +290,41 @@ const $ = id => document.getElementById(id);
 const state = { mode:'standard' };
 const modeButtons = [...document.querySelectorAll('[data-mode]')];
 
-function fmt(x,d=2){ return isFinite(x) ? Number(x).toFixed(d) : 'âˆž'; }
+function fmt(x,d=2){ return isFinite(x) ? Number(x).toFixed(d) : '∞'; }
 function clamp(x,a,b){ return Math.max(a,Math.min(b,x)); }
 function clear(el){ el.innerHTML=''; }
 function svgEl(tag, attrs={}){ const e=document.createElementNS('http://www.w3.org/2000/svg',tag); for(const k in attrs) e.setAttribute(k,attrs[k]); return e; }
 function text(svg,x,y,txt,cls='label',anchor='middle'){ const t=svgEl('text',{x,y,'text-anchor':anchor,class:cls}); t.textContent=txt; svg.appendChild(t); return t; }
 function pathLine(pts,xs,ys){ return pts.map((p,i)=>(i?'L':'M')+xs(p[0])+','+ys(p[1])).join(' '); }
 function pathArea(pts,xs,ys,yBase){ if(!pts.length) return ''; let d=`M ${xs(pts[0][0])} ${yBase}`; for(const p of pts) d += ` L ${xs(p[0])} ${ys(p[1])}`; d += ` L ${xs(pts[pts.length-1][0])} ${yBase} Z`; return d; }
-function setKatex(el,tex,display=false){ el.dataset.tex=tex; el.dataset.display=display?'1':'0'; if(window.katex) katex.render(tex,el,{throwOnError:false,displayMode:display}); }
-function renderAll(){ if(!window.katex) return; document.querySelectorAll('[data-katex]').forEach(el=>katex.render(el.dataset.katex,el,{throwOnError:false,displayMode:el.dataset.display==='1'})); document.querySelectorAll('[data-tex]').forEach(el=>katex.render(el.dataset.tex,el,{throwOnError:false,displayMode:el.dataset.display==='1'})); }
+function setKatex(el,tex,display=false){
+  el.dataset.tex=tex;
+  el.dataset.display=display?'1':'0';
+  if(window.katex){
+    katex.render(tex,el,{throwOnError:false,displayMode:display,strict:'ignore',trust:true});
+  }else{
+    el.textContent=tex;
+  }
+}
+function renderAll(){
+  if(!window.katex){ setTimeout(renderAll,80); return; }
+  document.querySelectorAll('[data-katex]').forEach(el=>{
+    katex.render(el.dataset.katex,el,{throwOnError:false,displayMode:el.dataset.display==='1',strict:'ignore',trust:true});
+  });
+  document.querySelectorAll('[data-tex]').forEach(el=>{
+    katex.render(el.dataset.tex,el,{throwOnError:false,displayMode:el.dataset.display==='1',strict:'ignore',trust:true});
+  });
+}
 function svgKatex(svg,x,y,tex,{w=180,h=30,anchor='middle',cls='svgmath'}={}){
   const left = anchor==='middle' ? x-w/2 : (anchor==='end' ? x-w : x);
   const fo=svgEl('foreignObject',{x:left,y,width:w,height:h});
   const div=document.createElement('div');
   div.setAttribute('xmlns','http://www.w3.org/1999/xhtml');
   div.className=cls;
+  div.dataset.tex=tex;
   fo.appendChild(div); svg.appendChild(fo);
-  if(window.katex) katex.render(tex,div,{throwOnError:false,displayMode:false});
-  else div.dataset.tex=tex;
+  if(window.katex) katex.render(tex,div,{throwOnError:false,displayMode:false,strict:'ignore',trust:true});
+  else div.textContent=tex;
   return fo;
 }
 
@@ -374,7 +398,7 @@ function drawStandardMain(){
   const z=(point-mu)/sig, y=normalPdf(point,mu,sig);
   svg.appendChild(svgEl('line',{x1:xs(point),y1:y0+h,x2:xs(point),y2:ys(y),class:'guide'}));
   svg.appendChild(svgEl('circle',{cx:xs(point),cy:ys(y),r:5,class:'dot'}));
-  text(svg,xs(mu),y0+h+30,'Î¼','inklabel');
+  text(svg,xs(mu),y0+h+30,'μ','inklabel');
   text(svg,xs(point)+8,ys(y)-8,`z = ${fmt(z,2)}`,'inklabel','start');
   text(svg,x0+w-4,y0+18,'standardization moves x-units into z-units','inklabel','end');
   legend([{className:'sw',label:'current normal law'},{className:'sw3',label:'standard normal benchmark'}]);
@@ -515,7 +539,7 @@ function drawLimitsMain(){
   svg.appendChild(svgEl('path',{d:pathLine(ptsN,xs,ys),class:'curve','clip-path':'url(#clipLim)'}));
   svg.appendChild(svgEl('line',{x1:xs(m.mean),y1:y0+h,x2:xs(m.mean),y2:ys(normalPdf(m.mean,m.mean,m.sd)),class:'guide'}));
   text(svg,xs(m.mean)+8,ys(normalPdf(m.mean,m.mean,m.sd))-8,'matching mean','inklabel','start');
-  text(svg,x0+w-4,y0+18,m.label+' â†’ normal approximation','inklabel','end');
+  text(svg,x0+w-4,y0+18,m.label+' → normal approximation','inklabel','end');
   legend([{className:'sw2',label:'exact law'},{className:'sw',label:'matched normal limit'}]);
 }
 
@@ -544,7 +568,7 @@ function drawMultiMain(){
   const {rho,ratio}=params();
   const x0=72,y0=30,w=728,h=330, xMin=-4,xMax=4,yMin=-3.3,yMax=3.3;
   const xs=x=>x0+w*(x-xMin)/(xMax-xMin), ys=y=>y0+h-h*(y-yMin)/(yMax-yMin);
-  axes(svg,{x0,y0,w,h,xMin,xMax,yMin,yMax,xLabel:'xâ‚',yLabel:'xâ‚‚',ticksX:4,ticksY:4});
+  axes(svg,{x0,y0,w,h,xMin,xMax,yMin,yMax,xLabel:'x₁',yLabel:'x₂',ticksX:4,ticksY:4});
   const s1=1.25, s2=s1*ratio;
   const tr=s1*s1+s2*s2, det=s1*s1*s2*s2*(1-rho*rho);
   const disc=Math.sqrt(Math.max(0,tr*tr-4*det));
@@ -639,11 +663,11 @@ function updateTexts(){
     $('stdMetric').textContent='normal closed';
     $('geomMetric').textContent=p.a<0?'reflect + scale':'scale + shift';
     $('interpText').textContent='Linear transformations do not break Gaussianity. A negative coefficient reflects the axis; a larger absolute coefficient widens the bell.';
-    $('noticeText').textContent='The variance does not multiply by a; it multiplies by aÂ². This is the simplest form of the multivariate covariance rule.';
+    $('noticeText').textContent='The variance does not multiply by a; it multiplies by a². This is the simplest form of the multivariate covariance rule.';
     $('summaryText').innerHTML=String.raw`More generally, if <span class="math-inline" data-katex="X"></span> is Gaussian and <span class="math-inline" data-katex="A"></span> is linear, then <span class="math-inline" data-katex="AX+b"></span> is Gaussian.`;
   } else if(state.mode==='limits'){
     const m=limitMoments();
-    $('mainTitle').textContent='Binomialâ€“Poissonâ€“gamma normal limits';
+    $('mainTitle').textContent='Binomial–Poisson–gamma normal limits';
     $('mainSub').innerHTML=String.raw`After centering and scaling, many laws approach the Gaussian shape.`;
     $('secondaryTitle').textContent='Standardized error shape';
     $('secondarySub').textContent='Normal approximation means shape convergence after matching center and scale.';
@@ -663,8 +687,8 @@ function updateTexts(){
     $('secondarySub').textContent='Every one-dimensional shadow of a multivariate normal is normal.';
     $('badge').innerHTML=String.raw`law: <span class="math-inline" data-katex="N_d(\mu,\Sigma)"></span>`;
     setKatex($('definition'),String.raw`X\sim N_d(\mu,\Sigma),\qquad a^\top X\sim N(a^\top\mu,a^\top\Sigma a)`);
-    $('centerMetric').textContent='vector Î¼';
-    $('scaleMetric').textContent='matrix Î£';
+    $('centerMetric').textContent='vector μ';
+    $('scaleMetric').textContent='matrix Σ';
     $('stdMetric').textContent='elliptical contours';
     $('geomMetric').textContent='linear shadows';
     $('interpText').textContent='The multivariate normal is not merely several normal marginals. Its covariance matrix determines the orientation and thickness of the probability ellipses.';

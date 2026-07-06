@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -126,6 +126,10 @@ select:focus{border-color:var(--accent)}
 .math-card{background:var(--surface-2); border:1px solid var(--border); border-radius:20px; padding:15px 16px; margin-top:12px; overflow-x:auto}
 .math-line{min-height:28px; display:flex; align-items:center; margin:6px 0; color:var(--text)}
 .katex{font-size:1.03em}.katex-display{margin:0}
+.katex{color:inherit}
+.katex-display{margin:.15rem 0;overflow-x:auto;overflow-y:hidden}
+.math-line .katex{font-size:1.02em}
+
 .grid-main{display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); gap:18px}
 .chart-card{padding:20px 22px 18px}
 .chart-head{display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:8px}
@@ -168,8 +172,8 @@ ul.compact li{margin:6px 0}.exam{font-size:.92rem}.exam strong{color:var(--text)
       <p class="subtitle">Geometric, negative binomial, Poisson, rare-event limits, zero inflation, and the bridge from count laws to count regression.</p>
     </div>
     <div class="top-actions">
-      <button class="pill" id="themeBtn" type="button">â˜¾ <span>Dark mode</span></button>
-      <button class="pill" id="simBtn" type="button">â†» redraw sample</button>
+      <button class="pill" id="themeBtn" type="button">☾ <span>Dark mode</span></button>
+      <button class="pill" id="simBtn" type="button">↻ redraw sample</button>
     </div>
   </header>
 
@@ -194,7 +198,7 @@ ul.compact li{margin:6px 0}.exam{font-size:.92rem}.exam strong{color:var(--text)
         <div class="divider"></div>
 
         <div class="control-group cg-lambda">
-          <div class="control-label"><span id="lambdaName">intensity Î»</span><span class="value" id="lambdaVal"></span></div>
+          <div class="control-label"><span id="lambdaName">intensity λ</span><span class="value" id="lambdaVal"></span></div>
           <input type="range" id="lambda" min="0.2" max="16" step="0.1" value="3.0" />
         </div>
 
@@ -209,7 +213,7 @@ ul.compact li{margin:6px 0}.exam{font-size:.92rem}.exam strong{color:var(--text)
         </div>
 
         <div class="control-group cg-pi hidden-control">
-          <div class="control-label"><span>structural zero mass Ï€</span><span class="value" id="piVal"></span></div>
+          <div class="control-label"><span>structural zero mass π</span><span class="value" id="piVal"></span></div>
           <input type="range" id="pi" min="0" max="0.85" step="0.01" value="0.35" />
         </div>
 
@@ -219,30 +223,30 @@ ul.compact li{margin:6px 0}.exam{font-size:.92rem}.exam strong{color:var(--text)
         </div>
 
         <div class="control-group cg-beta hidden-control">
-          <div class="control-label"><span>intercept Î²â‚€</span><span class="value" id="b0Val"></span></div>
+          <div class="control-label"><span>intercept β₀</span><span class="value" id="b0Val"></span></div>
           <input type="range" id="b0" min="-1.5" max="2.2" step="0.05" value="0.55" />
         </div>
 
         <div class="control-group cg-beta hidden-control">
-          <div class="control-label"><span>slope Î²â‚</span><span class="value" id="b1Val"></span></div>
+          <div class="control-label"><span>slope β₁</span><span class="value" id="b1Val"></span></div>
           <input type="range" id="b1" min="-1.1" max="1.1" step="0.05" value="0.45" />
         </div>
 
         <div class="control-group cg-alpha hidden-control">
-          <div class="control-label"><span>overdispersion Î±</span><span class="value" id="alphaVal"></span></div>
+          <div class="control-label"><span>overdispersion α</span><span class="value" id="alphaVal"></span></div>
           <input type="range" id="alpha" min="0" max="1.8" step="0.02" value="0.45" />
         </div>
 
         <div class="control-group cg-x hidden-control">
-          <div class="control-label"><span>covariate xâ‚€</span><span class="value" id="xVal"></span></div>
+          <div class="control-label"><span>covariate x₀</span><span class="value" id="xVal"></span></div>
           <input type="range" id="x0" min="-2" max="2" step="0.05" value="0.4" />
         </div>
 
         <div class="metrics">
-          <div class="metric"><div class="label">mean</div><div class="num" id="meanBox">â€”</div></div>
-          <div class="metric"><div class="label">variance</div><div class="num" id="varBox">â€”</div></div>
-          <div class="metric"><div class="label">dispersion</div><div class="num" id="dispBox">â€”</div></div>
-          <div class="metric"><div class="label">zero mass</div><div class="num" id="zeroBox">â€”</div></div>
+          <div class="metric"><div class="label">mean</div><div class="num" id="meanBox">—</div></div>
+          <div class="metric"><div class="label">variance</div><div class="num" id="varBox">—</div></div>
+          <div class="metric"><div class="label">dispersion</div><div class="num" id="dispBox">—</div></div>
+          <div class="metric"><div class="label">zero mass</div><div class="num" id="zeroBox">—</div></div>
         </div>
 
         <div class="badges" id="badges"></div>
@@ -265,7 +269,7 @@ ul.compact li{margin:6px 0}.exam{font-size:.92rem}.exam strong{color:var(--text)
         <article class="card chart-card">
           <div class="chart-head">
             <div>
-              <div class="chart-title">Meanâ€“variance geometry</div>
+              <div class="chart-title">Mean–variance geometry</div>
               <div class="chart-note" id="mvSubtitle">The selected distribution now changes the curve, not only the point.</div>
             </div>
           </div>
@@ -308,7 +312,7 @@ ul.compact li{margin:6px 0}.exam{font-size:.92rem}.exam strong{color:var(--text)
     </section>
   </main>
 </div>
-<div class="toast" id="toast">The meanâ€“variance curve updates with the selected distribution.</div>
+<div class="toast" id="toast">The mean–variance curve updates with the selected distribution.</div>
 
 <script>
 (function(){
@@ -330,7 +334,7 @@ const state = {
 };
 
 const NS = 'http://www.w3.org/2000/svg';
-const fmt = (x,d=2)=> Number.isFinite(x) ? x.toFixed(d).replace(/\.00$/,'') : 'â€”';
+const fmt = (x,d=2)=> Number.isFinite(x) ? x.toFixed(d).replace(/\.00$/,'') : '—';
 const clamp = (x,a,b)=>Math.max(a,Math.min(b,x));
 
 const controls = ['lambda','p','r','pi','n','b0','b1','alpha','x0'];
@@ -341,7 +345,7 @@ $('themeBtn').addEventListener('click',()=>{
   const root=document.documentElement;
   const dark=root.getAttribute('data-theme')==='dark';
   root.setAttribute('data-theme', dark?'light':'dark');
-  $('themeBtn').innerHTML = dark ? 'â˜¾ <span>Dark mode</span>' : 'â˜¼ <span>Light mode</span>';
+  $('themeBtn').innerHTML = dark ? '☾ <span>Dark mode</span>' : '☼ <span>Light mode</span>';
   setTimeout(update,30);
 });
 
@@ -459,7 +463,7 @@ function currentStats(){
   if(m==='negbin'){
     const mu=state.r*(1-state.p)/state.p, v=state.r*(1-state.p)/(state.p*state.p);
     return {name:'Negative binomial', short:'NegBin', mean:mu, variance:v, zero:Math.pow(state.p,state.r), dispersion:v/mu,
-      pmf:negbinPmf(state.r,state.p), tags:['waiting failures','overdispersion','Poissonâ€“Gamma mixture']};
+      pmf:negbinPmf(state.r,state.p), tags:['waiting failures','overdispersion','Poisson–Gamma mixture']};
   }
   if(m==='zip'){
     const mu=(1-state.pi)*state.lambda;
@@ -473,7 +477,7 @@ function currentStats(){
     const mu=state.n*p;
     const v=state.n*p*(1-p);
     return {name:'Rare-event binomial', short:'Rare limit', mean:mu, variance:v, zero:Math.pow(1-p,state.n), dispersion:v/(mu||1),
-      pmf:binomialPmf(state.n,p), pRare:p, tags:['Binomial(n, Î»/n)','Poisson limit','underdispersed finite n']};
+      pmf:binomialPmf(state.n,p), pRare:p, tags:['Binomial(n, λ/n)','Poisson limit','underdispersed finite n']};
   }
   const mu=Math.exp(state.b0+state.b1*state.x0), v=mu+state.alpha*mu*mu;
   const p0= state.alpha < .005 ? Math.exp(-mu) : Math.pow((1/state.alpha)/(1/state.alpha+mu),1/state.alpha);
@@ -499,7 +503,7 @@ function setControlVisibility(){
   document.querySelectorAll('.cg-pi').forEach(n=>n.classList.toggle('hidden-control', !(m==='zip')));
   document.querySelectorAll('.cg-n').forEach(n=>n.classList.toggle('hidden-control', !(m==='rare')));
   document.querySelectorAll('.cg-beta,.cg-alpha,.cg-x').forEach(n=>n.classList.toggle('hidden-control', !(m==='regression')));
-  $('lambdaName').textContent = m==='rare' ? 'Poisson target Î»' : 'intensity Î»';
+  $('lambdaName').textContent = m==='rare' ? 'Poisson target λ' : 'intensity λ';
 }
 
 function updateLabels(stats){
@@ -515,19 +519,27 @@ function updateLabels(stats){
   $('modelShort').textContent=stats.short;
   $('meanBox').textContent=fmt(stats.mean,2);
   $('varBox').textContent=fmt(stats.variance,2);
-  $('dispBox').textContent=fmt(stats.dispersion,2)+'Ã—';
+  $('dispBox').textContent=fmt(stats.dispersion,2)+'×';
   $('zeroBox').textContent=fmt(100*stats.zero,1)+'%';
   $('badges').innerHTML = stats.tags.map(t=>`<span class="badge">${t}</span>`).join('');
 }
 
 function renderMath(id, tex, display=false){
   const node=$(id);
+  node.dataset.tex = tex;
+  node.dataset.display = display ? '1' : '0';
   node.innerHTML='';
   if(window.katex){
-    katex.render(tex,node,{throwOnError:false,displayMode:display,strict:false});
+    katex.render(tex,node,{throwOnError:false,displayMode:display,strict:'ignore'});
   }else{
     node.textContent = tex.replaceAll('\\','').replaceAll('{','').replaceAll('}','');
   }
+}
+function renderStoredMath(){
+  if(!window.katex) return;
+  document.querySelectorAll('[data-tex]').forEach(node=>{
+    katex.render(node.dataset.tex,node,{throwOnError:false,displayMode:node.dataset.display==='1',strict:'ignore'});
+  });
 }
 
 function updateText(stats){
@@ -536,38 +548,38 @@ function updateText(stats){
     law='X\\sim\\operatorname{Poisson}(\\lambda),\\quad \\mathbb P(X=k)=e^{-\\lambda}\\frac{\\lambda^k}{k!}';
     mv='\\mathbb E[X]=\\lambda,\\qquad \\operatorname{Var}(X)=\\lambda';
     gf='G_X(s)=\\mathbb E[s^X]=\\exp\\{\\lambda(s-1)\\}';
-    notice='Poisson lives exactly on the equidispersion line. Its whole geometry is governed by one number: the event intensity Î».';
+    notice='Poisson lives exactly on the equidispersion line. Its whole geometry is governed by one number: the event intensity λ.';
     exam=['Use when events are rare, independent, and counted in a fixed exposure.','Equidispersion: <strong>Var(X)=E[X]</strong>.','The pgf turns sums of independent Poisson counts into another Poisson count.'];
   } else if(state.model==='geometric'){
     law='X\\sim\\operatorname{Geom}(p),\\quad \\mathbb P(X=k)=p(1-p)^k,\\ k=0,1,2,\\ldots';
     mv='\\mathbb E[X]=\\frac{1-p}{p},\\qquad \\operatorname{Var}(X)=\\frac{1-p}{p^2}=\\mu+\\mu^2';
     gf='G_X(s)=\\frac{p}{1-(1-p)s}';
     notice='The geometric law is a waiting-time law. As success becomes rare, the mean grows and variance grows quadratically.';
-    exam=['Support starts at 0 here: failures before the first success.','It is the negative binomial with <strong>r=1</strong>.','It is overdispersed whenever the mean is positive: Var = Î¼ + Î¼Â².'];
+    exam=['Support starts at 0 here: failures before the first success.','It is the negative binomial with <strong>r=1</strong>.','It is overdispersed whenever the mean is positive: Var = μ + μ².'];
   } else if(state.model==='negbin'){
     law='X\\sim\\operatorname{NegBin}(r,p),\\quad \\mathbb P(X=k)=\\binom{k+r-1}{k}p^r(1-p)^k';
     mv='\\mathbb E[X]=\\frac{r(1-p)}{p},\\qquad \\operatorname{Var}(X)=\\mu+\\frac{\\mu^2}{r}';
     gf='G_X(s)=\\left(\\frac{p}{1-(1-p)s}\\right)^r';
     notice='The negative binomial bends above Poisson. Larger r flattens the curve back toward equidispersion.';
-    exam=['Waiting failures until r successes.','Variance exceeds mean by a quadratic term.','Common count-regression parameterization: Var(Y|x)=Î¼(x)+Î±Î¼(x)Â².'];
+    exam=['Waiting failures until r successes.','Variance exceeds mean by a quadratic term.','Common count-regression parameterization: Var(Y|x)=μ(x)+αμ(x)².'];
   } else if(state.model==='zip'){
     law='X=Z\\cdot Y,\\quad Z\\sim\\operatorname{Bernoulli}(1-\\pi),\\quad Y\\sim\\operatorname{Poisson}(\\lambda)';
     mv='\\mu=(1-\\pi)\\lambda,\\qquad \\operatorname{Var}(X)=\\mu+\\frac{\\pi}{1-\\pi}\\mu^2';
     gf='G_X(s)=\\pi+(1-\\pi)\\exp\\{\\lambda(s-1)\\}';
     notice='Zero inflation creates a spike at zero and also raises variance above the Poisson line.';
-    exam=['Model two sources of zero: structural zeros and sampling zeros.','P(X=0)=Ï€+(1âˆ’Ï€)e^{-Î»}.','ZIP is overdispersed relative to Poisson unless Ï€=0.'];
+    exam=['Model two sources of zero: structural zeros and sampling zeros.','P(X=0)=π+(1−π)e^{-λ}.','ZIP is overdispersed relative to Poisson unless π=0.'];
   } else if(state.model==='rare'){
     law='X_n\\sim\\operatorname{Binomial}(n,\\lambda/n),\\qquad X_n\\Rightarrow\\operatorname{Poisson}(\\lambda)';
     mv='\\mathbb E[X_n]=\\lambda,\\qquad \\operatorname{Var}(X_n)=\\lambda\\left(1-\\frac{\\lambda}{n}\\right)';
     gf='G_{X_n}(s)=\\left(1+\\frac{\\lambda}{n}(s-1)\\right)^n\\to e^{\\lambda(s-1)}';
-    notice='Finite binomial counts sit slightly below the Poisson variance line. As n grows with p=Î»/n, the curve approaches Poisson.';
-    exam=['Rare-event limit: many trials, tiny probability, fixed np=Î».','The pgf convergence gives distributional convergence.','Finite n is underdispersed: Var < Mean.'];
+    notice='Finite binomial counts sit slightly below the Poisson variance line. As n grows with p=λ/n, the curve approaches Poisson.';
+    exam=['Rare-event limit: many trials, tiny probability, fixed np=λ.','The pgf convergence gives distributional convergence.','Finite n is underdispersed: Var < Mean.'];
   } else {
     law='\\mu(x)=\\exp(\\beta_0+\\beta_1x),\\qquad Y\\mid x\\sim\\text{count law with mean }\\mu(x)';
     mv='\\operatorname{Var}(Y\\mid x)=\\mu(x)+\\alpha\\mu(x)^2';
     gf='\\alpha=0\\Rightarrow\\text{Poisson regression},\\qquad \\alpha>0\\Rightarrow\\text{negative-binomial-type overdispersion}';
-    notice='Count regression separates two choices: the conditional mean curve Î¼(x) and the variance law around that curve.';
-    exam=['Log link keeps the conditional mean positive.','Poisson GLM imposes Var(Y|x)=E(Y|x).','NB regression relaxes it with Var(Y|x)=Î¼+Î±Î¼Â².'];
+    notice='Count regression separates two choices: the conditional mean curve μ(x) and the variance law around that curve.';
+    exam=['Log link keeps the conditional mean positive.','Poisson GLM imposes Var(Y|x)=E(Y|x).','NB regression relaxes it with Var(Y|x)=μ+αμ².'];
   }
   renderMath('lawFormula',law);
   renderMath('mvFormula',mv);
@@ -601,11 +613,11 @@ function drawPmf(stats){
     const pts=pois.map(d=>[d.k,d.p]);
     el('path',{d:pathFrom(pts,x,y),class:'curve-bg'},g);
     pts.forEach(p=>el('circle',{cx:x(p[0]),cy:y(p[1]),r:3.2,class:'dot'},g));
-    $('pmfLegend').innerHTML='<span><i class="key"></i> Binomial(n, Î»/n)</span><span><i class="key dash"></i> Poisson(Î»)</span>';
+    $('pmfLegend').innerHTML='<span><i class="key"></i> Binomial(n, λ/n)</span><span><i class="key dash"></i> Poisson(λ)</span>';
   } else {
     $('pmfLegend').innerHTML='<span><i class="key"></i> selected probability masses</span>'+(state.model==='zip'?'<span><i class="key red"></i> extra mass at zero</span>':'');
   }
-  textNode(g,x(stats.mean),y0+h+67,'mean Î¼',{'text-anchor':'middle',class:'tick'});
+  textNode(g,x(stats.mean),y0+h+67,'mean μ',{'text-anchor':'middle',class:'tick'});
   el('line',{x1:x(stats.mean),x2:x(stats.mean),y1:y0,y2:y0+h,stroke:accent,'stroke-width':1.4,'stroke-dasharray':'4 5',opacity:.75},g);
 }
 
@@ -676,7 +688,7 @@ function drawMeanVariance(stats){
   let yMax=niceCeil(Math.max(xMax, vv, selectedAtRight)*1.08);
   if(!Number.isFinite(yMax) || yMax<=0) yMax=10;
 
-  axes(g,{x0,y0,w,h,xMax,yMax,xLabel:'conditional mean Î¼',yLabel:'conditional variance',xTicks:5,yTicks:5});
+  axes(g,{x0,y0,w,h,xMax,yMax,xLabel:'conditional mean μ',yLabel:'conditional variance',xTicks:5,yTicks:5});
   const x=a=>x0+(a/xMax)*w;
   const y=b=>y0+h-(b/yMax)*h;
 
@@ -712,7 +724,7 @@ function drawMeanVariance(stats){
   const anchor = px > x0+w-170 ? 'end' : 'start';
   textNode(g,lx,Math.max(py-12,y0+16),label,{class:'tick','text-anchor':anchor});
 
-  const formula = state.model==='poisson'?'Var = Î¼': state.model==='geometric'?'Var = Î¼ + Î¼Â²': state.model==='negbin'?`Var = Î¼ + Î¼Â² / ${state.r}`: state.model==='zip'?`Var = Î¼ + ${(state.pi/(1-state.pi)).toFixed(2)} Î¼Â²`: state.model==='rare'?'Var = Î¼(1 âˆ’ Î¼/n)':'Var = Î¼ + Î± Î¼Â²';
+  const formula = state.model==='poisson'?'Var = μ': state.model==='geometric'?'Var = μ + μ²': state.model==='negbin'?`Var = μ + μ² / ${state.r}`: state.model==='zip'?`Var = μ + ${(state.pi/(1-state.pi)).toFixed(2)} μ²`: state.model==='rare'?'Var = μ(1 − μ/n)':'Var = μ + α μ²';
   textNode(g,x0+w-8,y0+20,formula,{'text-anchor':'end',class:'tick'});
   $('mvLegend').innerHTML='<span><i class="key"></i> selected variance function</span><span><i class="key dash"></i> Poisson equidispersion</span><span><i class="key red"></i> current law</span>';
 }
@@ -764,7 +776,7 @@ function update(){
 window.addEventListener('resize',()=>{ update(); });
 function boot(){ readControls(); update(); }
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot); else boot();
-window.addEventListener('load', update);
+window.addEventListener('load',()=>{ renderStoredMath(); update(); });
 })();
 </script>
 </body>

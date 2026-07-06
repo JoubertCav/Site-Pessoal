@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -240,21 +240,45 @@ const $ = id => document.getElementById(id);
 const state = { mode:'beta' };
 const modeButtons = [...document.querySelectorAll('[data-mode]')];
 
-function fmt(x,d=2){ return isFinite(x) ? Number(x).toFixed(d) : 'âˆž'; }
+function fmt(x,d=2){ return isFinite(x) ? Number(x).toFixed(d) : '∞'; }
 function clamp(x,a,b){ return Math.max(a,Math.min(b,x)); }
 function clear(el){ el.innerHTML=''; }
 function svgEl(tag, attrs={}){ const e=document.createElementNS('http://www.w3.org/2000/svg',tag); for(const k in attrs)e.setAttribute(k,attrs[k]); return e; }
 function text(svg,x,y,txt,cls='label',anchor='middle'){ const t=svgEl('text',{x,y,'text-anchor':anchor,class:cls}); t.textContent=txt; svg.appendChild(t); return t; }
 function pathLine(pts,xs,ys){ return pts.map((p,i)=>(i?'L':'M')+xs(p[0])+','+ys(p[1])).join(' '); }
 function pathArea(pts,xs,ys,yBase){ if(!pts.length) return ''; let d=`M ${xs(pts[0][0])} ${yBase}`; for(const p of pts)d += ` L ${xs(p[0])} ${ys(p[1])}`; d += ` L ${xs(pts[pts.length-1][0])} ${yBase} Z`; return d; }
-function setKatex(el,tex,display=false){ el.dataset.tex=tex; el.dataset.display=display?'1':'0'; if(window.katex) katex.render(tex,el,{throwOnError:false,displayMode:display}); }
-function renderAll(){ if(!window.katex) return; document.querySelectorAll('[data-katex]').forEach(el=>katex.render(el.dataset.katex,el,{throwOnError:false,displayMode:el.dataset.display==='1'})); document.querySelectorAll('[data-tex]').forEach(el=>katex.render(el.dataset.tex,el,{throwOnError:false,displayMode:el.dataset.display==='1'})); }
+function setKatex(el,tex,display=false){
+  el.dataset.tex=tex;
+  el.dataset.display=display?'1':'0';
+  if(window.katex){
+    katex.render(tex,el,{throwOnError:false,displayMode:display,strict:'ignore'});
+  }else{
+    el.textContent=tex;
+  }
+}
+function renderAll(){
+  document.querySelectorAll('[data-katex]').forEach(el=>{
+    const tex=el.dataset.katex || '';
+    if(window.katex) katex.render(tex,el,{throwOnError:false,displayMode:el.dataset.display==='1',strict:'ignore'});
+    else if(!el.textContent.trim()) el.textContent=tex;
+  });
+  document.querySelectorAll('[data-tex]').forEach(el=>{
+    const tex=el.dataset.tex || '';
+    if(window.katex) katex.render(tex,el,{throwOnError:false,displayMode:el.dataset.display==='1',strict:'ignore'});
+    else if(!el.textContent.trim()) el.textContent=tex;
+  });
+}
 function svgKatex(svg,x,y,tex,{w=180,h=30,anchor='middle',cls='svgmath'}={}){
   const left=anchor==='middle'?x-w/2:(anchor==='end'?x-w:x);
   const fo=svgEl('foreignObject',{x:left,y,width:w,height:h});
   const div=document.createElement('div'); div.setAttribute('xmlns','http://www.w3.org/1999/xhtml'); div.className=cls;
   fo.appendChild(div); svg.appendChild(fo);
-  if(window.katex) katex.render(tex,div,{throwOnError:false,displayMode:false}); else div.dataset.tex=tex;
+  if(window.katex){
+    katex.render(tex,div,{throwOnError:false,displayMode:false,strict:'ignore'});
+  }else{
+    div.dataset.tex=tex;
+    div.textContent=tex;
+  }
   return fo;
 }
 function logGamma(z){
@@ -300,7 +324,7 @@ function legend(items){ $('legend').innerHTML=items.map(it=>`<span><i class="${i
 function drawBetaMain(){
   const svg=$('mainSvg'); clear(svg); const p=params();
   const a0=p.m*p.priorMean, b0=p.m*(1-p.priorMean), a1=a0+p.s, b1=b0+p.n-p.s;
-  drawBetaDensities(svg,a0,b0,a1,b1,'probability Î¸');
+  drawBetaDensities(svg,a0,b0,a1,b1,'probability θ');
   legend([{className:'sw3',label:'prior Beta'},{className:'sw',label:'posterior Beta'}]);
 }
 function drawBetaDensities(svg,a0,b0,a1,b1,xlab){
@@ -327,7 +351,7 @@ function drawGammaMain(){
   for(let i=1;i<=560;i++){ const x=xMax*i/560; const y0v=gammaPdf(x,a0,b0), y1v=gammaPdf(x,a1,b1); pts0.push([x,y0v]); pts1.push([x,y1v]); yMax=Math.max(yMax,y0v,y1v); }
   yMax=Math.max(yMax*1.16,.4);
   const xs=x=>x0+w*x/xMax, ys=y=>y0+h-h*y/yMax;
-  axes(svg,{x0,y0,w,h,xMin:0,xMax,yMax,xLabel:'Poisson intensity Î»',yLabel:'density'});
+  axes(svg,{x0,y0,w,h,xMin:0,xMax,yMax,xLabel:'Poisson intensity λ',yLabel:'density'});
   svg.appendChild(svgEl('path',{d:pathLine(pts0,xs,ys),class:'curve3'}));
   svg.appendChild(svgEl('path',{d:pathLine(pts1,xs,ys),class:'curve'}));
   [[a0/b0,'prior mean'],[a1/b1,'posterior mean']].forEach(([v,l],i)=>{
@@ -354,7 +378,7 @@ function drawDirichletMain(){
     svg.appendChild(svgEl('line',{x1:A[0]*(1-t)+B[0]*t,y1:A[1]*(1-t)+B[1]*t,x2:C[0]*(1-t)+B[0]*t,y2:C[1]*(1-t)+B[1]*t,class:'gridline'}));
     svg.appendChild(svgEl('line',{x1:B[0]*(1-t)+A[0]*t,y1:B[1]*(1-t)+A[1]*t,x2:C[0]*(1-t)+A[0]*t,y2:C[1]*(1-t)+A[1]*t,class:'gridline'}));
   }
-  text(svg,A[0]-18,A[1]+22,'Ï€â‚','inklabel','end'); text(svg,B[0]+18,B[1]+22,'Ï€â‚‚','inklabel','start'); text(svg,C[0],C[1]-16,'Ï€â‚ƒ','inklabel');
+  text(svg,A[0]-18,A[1]+22,'π₁','inklabel','end'); text(svg,B[0]+18,B[1]+22,'π₂','inklabel','start'); text(svg,C[0],C[1]-16,'π₃','inklabel');
   const priorP=simplexPoint(...base), postP=simplexPoint(...post), dataP=simplexPoint(p.c1+0.001,p.c2+0.001,c3+0.001);
   svg.appendChild(svgEl('circle',{cx:priorP[0],cy:priorP[1],r:7,fill:'var(--accent3)',stroke:'var(--paper)','stroke-width':2}));
   svg.appendChild(svgEl('circle',{cx:dataP[0],cy:dataP[1],r:7,fill:'var(--accent2)',stroke:'var(--paper)','stroke-width':2}));
@@ -378,7 +402,7 @@ function drawNormalMain(){
     pts0.push([x,y0v]); ptsL.push([x,yLv]); pts1.push([x,y1v]); yMax=Math.max(yMax,y0v,yLv,y1v);
   }
   yMax*=1.16; const xs=x=>x0+w*(x-xMin)/(xMax-xMin), ys=y=>y0+h-h*y/yMax;
-  axes(svg,{x0,y0,w,h,xMin,xMax,yMax,xLabel:'mean parameter Î¼',yLabel:'density'});
+  axes(svg,{x0,y0,w,h,xMin,xMax,yMax,xLabel:'mean parameter μ',yLabel:'density'});
   svg.appendChild(svgEl('path',{d:pathLine(pts0,xs,ys),class:'curve3'}));
   svg.appendChild(svgEl('path',{d:pathLine(ptsL,xs,ys),class:'curve2'}));
   svg.appendChild(svgEl('path',{d:pathLine(pts1,xs,ys),class:'curve'}));
@@ -387,12 +411,12 @@ function drawNormalMain(){
     svg.appendChild(svgEl('line',{x1:xs(v),y1:y0+h,x2:xs(v),y2:ys(y),class:'guide'}));
     text(svg,xs(v)+8,ys(y)+(i-1)*18,l,'inklabel','start');
   });
-  legend([{className:'sw3',label:'prior'},{className:'sw2',label:'likelihood in Î¼'},{className:'sw',label:'posterior'}]);
+  legend([{className:'sw3',label:'prior'},{className:'sw2',label:'likelihood in μ'},{className:'sw',label:'posterior'}]);
 }
 function drawGLMMain(){
   const svg=$('mainSvg'); clear(svg); const p=params(), idx=p.glmFamily;
   const x0=72,y0=30,w=728,h=330, etaMin=-4,etaMax=4;
-  let yMax=5, yMin=0, label='mean Î¼';
+  let yMax=5, yMin=0, label='mean μ';
   const link = idx===0 ? 'Bernoulli logit' : idx===1 ? 'Poisson log' : idx===2 ? 'Normal identity' : 'Gamma inverse';
   function mu(eta){
     if(idx===0) return logistic(eta);
@@ -412,16 +436,16 @@ function drawGLMMain(){
   if(idx===2){yMin=-4;yMax=4;}
   if(idx===3){yMin=0;yMax=5;pts=pts.filter(q=>q[1]<=5);}
   const xs=e=>x0+w*(e-etaMin)/(etaMax-etaMin), ys=y=>y0+h-h*(y-yMin)/(yMax-yMin);
-  axes(svg,{x0,y0,w,h,xMin:etaMin,xMax:etaMax,yMin,yMax,xLabel:'linear predictor Î· = xáµ€Î²',yLabel:label});
+  axes(svg,{x0,y0,w,h,xMin:etaMin,xMax:etaMax,yMin,yMax,xLabel:'linear predictor η = xᵀβ',yLabel:label});
   svg.appendChild(svgEl('path',{d:pathLine(pts,xs,ys),class:'curve'}));
   const eNow=idx===3?Math.min(-0.10,p.eta):p.eta, mNow=mu(eNow);
   if(isFinite(mNow)&&mNow>=yMin&&mNow<=yMax){
     svg.appendChild(svgEl('line',{x1:xs(eNow),y1:y0+h,x2:xs(eNow),y2:ys(mNow),class:'guide'}));
     svg.appendChild(svgEl('circle',{cx:xs(eNow),cy:ys(mNow),r:5,class:'dot'}));
-    text(svg,xs(eNow)+8,ys(mNow)-8,`Î¼=${fmt(mNow,2)}`,'inklabel','start');
+    text(svg,xs(eNow)+8,ys(mNow)-8,`μ=${fmt(mNow,2)}`,'inklabel','start');
   }
   text(svg,x0+w-4,y0+18,link,'inklabel','end');
-  legend([{className:'sw',label:'canonical inverse link: Î· â†’ Î¼'}]);
+  legend([{className:'sw',label:'canonical inverse link: η → μ'}]);
 }
 function drawUpdateSecondary(kind){
   const svg=$('secondarySvg'); clear(svg);
@@ -449,13 +473,13 @@ function drawUpdateSecondary(kind){
     svg.appendChild(svgEl('rect',{x:bx,y:yy,width:bw,height:bh,rx:16,fill:'var(--paper2)',class:'barstroke'}));
     text(svg,bx-12,yy+26,r[0],'label','end');
     svgKatex(svg,bx+bw/2,yy+8,r[1],{w:bw-20,h:26,cls:'svgmath small'});
-    if(i<2) text(svg,bx+bw/2,yy+58,'â†“','inklabel');
+    if(i<2) text(svg,bx+bw/2,yy+58,'↓','inklabel');
   });
   svgKatex(svg,310,292,String.raw`\text{posterior hyperparameters}=\text{prior hyperparameters}+\text{sufficient statistics}`,{w:540,h:32});
 }
 function drawGLMSecondary(){
   const svg=$('secondarySvg'); clear(svg);
-  text(svg,70,34,'Canonical links set Î· equal to the natural parameter','inklabel','start');
+  text(svg,70,34,'Canonical links set η equal to the natural parameter','inklabel','start');
   const rows=[
     ['Bernoulli',String.raw`\eta=\log\frac{\mu}{1-\mu}`],
     ['Poisson',String.raw`\eta=\log \mu`],
@@ -504,18 +528,18 @@ function updateTexts(){
     $('updateMetric').textContent='precision-weighted'; $('canonMetric').textContent='Normal-normal';
   } else {
     const m=p.glmFamily===0?logistic(p.eta):p.glmFamily===1?Math.exp(p.eta):p.glmFamily===2?p.eta:-1/Math.min(-.05,p.eta);
-    $('priorMetric').textContent='â€”'; $('postMetric').textContent=fmt(m,3); $('updateMetric').textContent='Î· = xáµ€Î²'; $('canonMetric').textContent=['logit','log','identity','inverse'][p.glmFamily];
+    $('priorMetric').textContent='—'; $('postMetric').textContent=fmt(m,3); $('updateMetric').textContent='η = xᵀβ'; $('canonMetric').textContent=['logit','log','identity','inverse'][p.glmFamily];
   }
 
   if(state.mode==='beta'){
-    $('mainTitle').textContent='Beta-Bernoulli conjugacy'; $('mainSub').innerHTML=String.raw`Bernoulli successes and failures add directly to Beta shape parameters.`; $('secondaryTitle').textContent='Sufficient-statistic update'; $('secondarySub').textContent='Only the number of successes matters for Î¸.';
+    $('mainTitle').textContent='Beta-Bernoulli conjugacy'; $('mainSub').innerHTML=String.raw`Bernoulli successes and failures add directly to Beta shape parameters.`; $('secondaryTitle').textContent='Sufficient-statistic update'; $('secondarySub').textContent='Only the number of successes matters for θ.';
     $('badge').innerHTML=String.raw`<span class="math-inline" data-katex="\theta\sim\mathrm{Beta}(\alpha,\beta)"></span>`;
     setKatex($('definition'),String.raw`\theta\sim\mathrm{Beta}(\alpha,\beta),\quad y_i\mid\theta\sim\mathrm{Bernoulli}(\theta),\quad \theta\mid y\sim\mathrm{Beta}(\alpha+s,\beta+n-s)`);
     $('interpText').textContent='The Beta prior behaves like pseudo-successes and pseudo-failures. The posterior combines prior pseudo-counts with observed counts.';
     $('noticeText').textContent='Increasing prior strength makes the posterior move less toward the data. Increasing sample size makes the data dominate.';
     $('summaryText').innerHTML=String.raw`Update rule: <span class="math-inline" data-katex="(\alpha,\beta)\mapsto(\alpha+s,\beta+n-s)"></span>.`;
   } else if(state.mode==='gamma'){
-    $('mainTitle').textContent='Gamma-Poisson conjugacy'; $('mainSub').innerHTML=String.raw`Poisson counts update Gamma shape by total count and rate by exposure/sample size.`; $('secondaryTitle').textContent='Sufficient-statistic update'; $('secondarySub').textContent='Only total count and exposure matter for Î».';
+    $('mainTitle').textContent='Gamma-Poisson conjugacy'; $('mainSub').innerHTML=String.raw`Poisson counts update Gamma shape by total count and rate by exposure/sample size.`; $('secondaryTitle').textContent='Sufficient-statistic update'; $('secondarySub').textContent='Only total count and exposure matter for λ.';
     $('badge').innerHTML=String.raw`<span class="math-inline" data-katex="\lambda\sim\mathrm{Gamma}(a,b)"></span>`;
     setKatex($('definition'),String.raw`\lambda\sim\mathrm{Gamma}(a,b),\quad y_i\mid\lambda\sim\mathrm{Poisson}(\lambda),\quad \lambda\mid y\sim\mathrm{Gamma}(a+\sum y_i,b+n)`);
     $('interpText').textContent='The prior shape acts like prior events; the prior rate acts like prior exposure. Observed total events and exposure are added.';
@@ -533,10 +557,10 @@ function updateTexts(){
     $('badge').innerHTML=String.raw`<span class="math-inline" data-katex="\mu\mid x\sim N(\mu_n,\tau_n^2)"></span>`;
     setKatex($('definition'),String.raw`\tau_n^{-2}=\tau_0^{-2}+n\sigma^{-2},\qquad \mu_n=\tau_n^2(\tau_0^{-2}\mu_0+n\sigma^{-2}\bar x)`);
     $('interpText').textContent='Normal conjugacy is precision arithmetic. More precise sources get larger weight in the posterior mean.';
-    $('noticeText').textContent='The likelihood in Î¼ narrows as n increases. The posterior lies between prior and data, closer to the more precise source.';
+    $('noticeText').textContent='The likelihood in μ narrows as n increases. The posterior lies between prior and data, closer to the more precise source.';
     $('summaryText').innerHTML=String.raw`Update rule: add precisions, then take a precision-weighted average.`;
   } else if(state.mode==='glm'){
-    $('mainTitle').textContent='GLM canonical links'; $('mainSub').innerHTML=String.raw`Canonical links identify the linear predictor with the natural parameter.`; $('secondaryTitle').textContent='Canonical link table'; $('secondarySub').textContent='Each exponential family has a natural link g(Î¼)=Î·.';
+    $('mainTitle').textContent='GLM canonical links'; $('mainSub').innerHTML=String.raw`Canonical links identify the linear predictor with the natural parameter.`; $('secondaryTitle').textContent='Canonical link table'; $('secondarySub').textContent='Each exponential family has a natural link g(μ)=η.';
     $('badge').innerHTML=String.raw`<span class="math-inline" data-katex="\eta=x^\top\beta"></span>`;
     setKatex($('definition'),String.raw`p(y\mid\eta)=h(y)\exp\{y\eta-A(\eta)\},\qquad g(\mu)=\eta,\qquad \mu=A'(\eta)`);
     $('interpText').textContent='A canonical link makes the regression index enter as the natural parameter. This gives clean score equations and sufficient-statistic geometry.';

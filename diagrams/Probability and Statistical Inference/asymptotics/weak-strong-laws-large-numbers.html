@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -18,6 +18,9 @@
 
   gtag('config', 'G-NHXHEJP1G0');
 </script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <style>
   :root{
     --bg:#f6f1e8; --panel:#fffaf2; --panel2:#fcf5ea; --text:#17212b; --muted:#65717d;
@@ -89,6 +92,12 @@
   .miniStat{border:1px solid var(--border);background:var(--panel2);border-radius:14px;padding:10px 11px}
   .miniStat .k{font-size:.76rem;color:var(--muted);font-weight:860;text-transform:uppercase;letter-spacing:.09em}
   .miniStat .v{font-size:1rem;font-weight:850;margin-top:6px}
+
+  .katex{color:inherit;font-size:1em}
+  .katex-display{margin:.16rem 0 .28rem;overflow-x:auto;overflow-y:hidden}
+  .math .katex,.formula .katex,.eqBox .katex{font-size:1.04em}
+  .tex-inline{display:inline-flex;align-items:baseline;vertical-align:-0.08em}
+  .summary .katex{font-size:.98em}
   footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
   @media(max-width:1080px){
     .defs,.layout,.two,.interpretation{grid-template-columns:1fr}
@@ -110,7 +119,7 @@
     <div>
       <h1>Weak and strong laws of large numbers</h1>
       <div class="subtitle">
-        Sample averages are projections of many random fluctuations into one number. The weak law is mass concentration of \(\bar X_n\); the strong law is path stabilization of \(\bar X_n(\omega)\).
+        Sample averages are projections of many random fluctuations into one number. The weak law is mass concentration of X̄ₙ; the strong law is path stabilization of X̄ₙ(ω).
       </div>
     </div>
     <button class="themeBtn" id="themeBtn">Dark mode</button>
@@ -120,29 +129,29 @@
     <div class="def">
       <div class="tag">Sample average</div>
       <div class="math">
-        <span class="formula">XÌ„<sub>n</sub> = n<sup>âˆ’1</sup>âˆ‘<sub>i=1</sub><sup>n</sup>X<sub>i</sub></span>
+        <span class="formula" data-tex="\bar X_n=\frac{1}{n}\sum_{i=1}^{n}X_i"></span>
         <span class="mathNote">random path compressed into one running mean</span>
       </div>
     </div>
     <div class="def">
       <div class="tag">Weak LLN</div>
       <div class="math">
-        <span class="formula">XÌ„<sub>n</sub> â†’ Î¼ in probability</span>
-        <span class="mathNote">mass outside every Îµ-tube vanishes</span>
+        <span class="formula" data-tex="\bar X_n \xrightarrow{p} \mu"></span>
+        <span class="mathNote">mass outside every ε-tube vanishes</span>
       </div>
     </div>
     <div class="def">
       <div class="tag">Strong LLN</div>
       <div class="math">
-        <span class="formula">XÌ„<sub>n</sub> â†’ Î¼ almost surely</span>
+        <span class="formula" data-tex="\bar X_n \xrightarrow{\mathrm{a.s.}} \mu"></span>
         <span class="mathNote">almost every path eventually settles</span>
       </div>
     </div>
     <div class="def">
       <div class="tag">Sample moments</div>
       <div class="math">
-        <span class="formula">n<sup>âˆ’1</sup>âˆ‘g(X<sub>i</sub>) â†’ E[g(X)]</span>
-        <span class="mathNote">requires integrability of \(g(X)\)</span>
+        <span class="formula" data-tex="\frac{1}{n}\sum_{i=1}^{n}g(X_i)\to E[g(X)]"></span>
+        <span class="mathNote">requires integrability of g(X)</span>
       </div>
     </div>
   </section>
@@ -170,7 +179,7 @@
       </div>
 
       <div class="control">
-        <label for="epsRange">Tube radius Îµ <span class="value" id="epsVal">0.30</span></label>
+        <label for="epsRange">Tube radius ε <span class="value" id="epsVal">0.30</span></label>
         <input id="epsRange" type="range" min="0.05" max="2.00" step="0.05" value="0.30"/>
       </div>
 
@@ -185,7 +194,7 @@
       </div>
 
       <div class="control">
-        <label for="alphaRange">Tail index Î± <span class="value" id="alphaVal">1.60</span></label>
+        <label for="alphaRange">Tail index α <span class="value" id="alphaVal">1.60</span></label>
         <input id="alphaRange" type="range" min="0.60" max="5.00" step="0.05" value="1.60"/>
       </div>
 
@@ -209,9 +218,9 @@
           <div>
             <div class="plotTitle">Strong-law geometry: running averages as paths</div>
             <div class="pillRow">
-              <span class="pill"><span class="dot"></span> paths \( \bar X_n(\omega) \)</span>
-              <span class="pill"><span class="dot" style="background:var(--blue)"></span> true mean \( \mu \)</span>
-              <span class="pill"><span class="dot" style="background:var(--warn)"></span> Îµ-tube</span>
+              <span class="pill"><span class="dot"></span> paths <span class="tex-inline" data-tex="\bar X_n(\omega)"></span></span>
+              <span class="pill"><span class="dot" style="background:var(--blue)"></span> true mean <span class="tex-inline" data-tex="\mu"></span></span>
+              <span class="pill"><span class="dot" style="background:var(--warn)"></span> ε-tube</span>
               <span class="pill"><span class="dot" style="background:var(--violet)"></span> current n</span>
             </div>
           </div>
@@ -224,7 +233,7 @@
         <div class="card plotCard">
           <div class="plotHead">
             <div class="plotTitle">Weak-law geometry</div>
-            <div class="plotSub">empirical distribution of \( \bar X_n \) across simulations</div>
+            <div class="plotSub">empirical distribution of <span class="tex-inline" data-tex="\bar X_n"></span> across simulations</div>
           </div>
           <svg id="distSvg" viewBox="0 0 520 320" preserveAspectRatio="xMidYMid meet"></svg>
         </div>
@@ -232,7 +241,7 @@
         <div class="card plotCard">
           <div class="plotHead">
             <div class="plotTitle">Sample moment consistency</div>
-            <div class="plotSub">\( n^{-1}\sum X_i^r \) versus \(E[X^r]\), when finite</div>
+            <div class="plotSub"><span class="tex-inline" data-tex="n^{-1}\sum X_i^r"></span> versus <span class="tex-inline" data-tex="E[X^r]"></span>, when finite</div>
           </div>
           <svg id="momentSvg" viewBox="0 0 520 320" preserveAspectRatio="xMidYMid meet"></svg>
         </div>
@@ -243,10 +252,10 @@
           <div class="panelTitle">Interpretation</div>
           <div class="smallText" id="interpretText"></div>
           <div class="summary">
-            <div><strong>Weak LLN.</strong><br>For iid integrable variables, \(P(|\bar X_n-\mu|>\varepsilon)\to0\).</div>
-            <div><strong>Strong LLN.</strong><br>For iid integrable variables, \(\bar X_n\to\mu\) almost surely.</div>
-            <div><strong>Finite variance.</strong><br>Not needed for the iid strong law, but makes concentration visually faster and Chebyshev-friendly.</div>
-            <div><strong>Moments.</strong><br>The sample \(r\)-moment is consistent only when \(E|X|^r<\infty\).</div>
+            <div><strong>Weak LLN.</strong><br>For iid integrable variables, <span class="tex-inline" data-tex="P(|\bar X_n-\mu|>\varepsilon)\to0"></span>.</div>
+            <div><strong>Strong LLN.</strong><br>For iid integrable variables, <span class="tex-inline" data-tex="\bar X_n\to\mu\;\mathrm{a.s.}"></span>.</div>
+            <div><strong>Finite variance.</strong><br>Not needed for the iid strong law, but it makes concentration visually faster and Chebyshev-friendly.</div>
+            <div><strong>Moments.</strong><br>The sample <span class="tex-inline" data-tex="r"></span>-moment is consistent only when <span class="tex-inline" data-tex="E|X|^r<\infty"></span>.</div>
           </div>
         </div>
 
@@ -258,7 +267,7 @@
     </section>
   </main>
 
-  <footer>Minimal interactive notebook â€” weak LLN, strong LLN, iid assumptions, and moment requirements.</footer>
+  <footer>Minimal interactive notebook — weak LLN, strong LLN, iid assumptions, and moment requirements.</footer>
 </div>
 
 <script>
@@ -272,9 +281,62 @@ const momentRange=document.getElementById("momentRange");
 const alphaRange=document.getElementById("alphaRange");
 const pRange=document.getElementById("pRange");
 
+function texFallback(tex){
+  return tex
+    .replace(/\\bar X_n/g,'X̄ₙ')
+    .replace(/\\bar X/g,'X̄')
+    .replace(/\\mu/g,'μ')
+    .replace(/\\varepsilon/g,'ε')
+    .replace(/\\alpha/g,'α')
+    .replace(/\\sum/g,'∑')
+    .replace(/\\frac\{1\}\{n\}/g,'1/n')
+    .replace(/\\xrightarrow\{p\}/g,'→ₚ')
+    .replace(/\\xrightarrow\{\\mathrm\{a\.s\.\}\}/g,'→ a.s.')
+    .replace(/\\to/g,'→')
+    .replace(/\\infty/g,'∞')
+    .replace(/\\mathrm\{a\.s\.\}/g,'a.s.')
+    .replace(/\\mathrm\{([^}]*)\}/g,'$1')
+    .replace(/\\left|\\right/g,'')
+    .replace(/[{}]/g,'');
+}
+function renderTex(el,tex,display=false){
+  if(!el) return;
+  if(window.katex){
+    katex.render(tex,el,{throwOnError:false,displayMode:display,strict:'ignore',trust:true});
+  }else{
+    el.textContent=texFallback(tex);
+    setTimeout(()=>renderTex(el,tex,display),120);
+  }
+}
+function renderStaticMath(){
+  document.querySelectorAll('[data-tex]').forEach(el=>{
+    const tex=el.getAttribute('data-tex');
+    const display=el.getAttribute('data-display')==='true';
+    if(window.katex){
+      if(el.dataset.renderedTex===tex) return;
+      katex.render(tex,el,{throwOnError:false,displayMode:display,strict:'ignore',trust:true});
+      el.dataset.renderedTex=tex;
+    }else{
+      if(!el.dataset.fallbackSet){ el.textContent=texFallback(tex); el.dataset.fallbackSet='1'; }
+      setTimeout(renderStaticMath,120);
+    }
+  });
+}
+function currentFormula(){
+  const d=distSelect.value;
+  if(d==="normal") return String.raw`X_i\sim N(0,1),\qquad \bar X_n\to 0`;
+  if(d==="bernoulli") return String.raw`X_i\sim \mathrm{Bernoulli}(p),\qquad \bar X_n\to p`;
+  if(d==="exponential") return String.raw`X_i\sim \mathrm{Exp}(1),\qquad \bar X_n\to 1`;
+  if(d==="paretoMean" || d==="paretoNoMean") return String.raw`X_i\sim \mathrm{Pareto}(\alpha),\qquad E[X_i]<\infty \iff \alpha>1`;
+  if(d==="cauchy") return String.raw`X_i\sim \mathrm{Cauchy},\qquad E[X_i]\text{ does not exist}`;
+  if(d==="commonShock") return String.raw`X_i=Z+\varepsilon_i,\qquad \bar X_n\to Z`;
+  return String.raw`\bar X_n=\frac{1}{n}\sum_{i=1}^n X_i`;
+}
+
+
 function css(v){return getComputedStyle(body).getPropertyValue(v).trim();}
 function fmt(x){
-  if(!isFinite(x)) return "âˆž";
+  if(!isFinite(x)) return "∞";
   if(Math.abs(x)<0.0001 && x!==0) return x.toExponential(2);
   if(Math.abs(x)<10) return x.toFixed(4);
   return x.toFixed(2);
@@ -302,10 +364,10 @@ function distInfo(){
   if(d==="normal") return {mu:0,finiteMean:true,finiteVar:true,label:"Normal(0,1)",iid:true};
   if(d==="bernoulli") return {mu:p,finiteMean:true,finiteVar:true,label:"Bernoulli("+fmt(p)+")",iid:true};
   if(d==="exponential") return {mu:1,finiteMean:true,finiteVar:true,label:"Exponential(1)",iid:true};
-  if(d==="paretoMean") return {mu:alpha>1?alpha/(alpha-1):Infinity,finiteMean:alpha>1,finiteVar:alpha>2,label:"Pareto(Î±="+fmt(alpha)+")",iid:true};
-  if(d==="paretoNoMean") return {mu:Infinity,finiteMean:false,finiteVar:false,label:"Pareto(Î±="+fmt(alpha)+")",iid:true};
+  if(d==="paretoMean") return {mu:alpha>1?alpha/(alpha-1):Infinity,finiteMean:alpha>1,finiteVar:alpha>2,label:"Pareto(α="+fmt(alpha)+")",iid:true};
+  if(d==="paretoNoMean") return {mu:Infinity,finiteMean:false,finiteVar:false,label:"Pareto(α="+fmt(alpha)+")",iid:true};
   if(d==="cauchy") return {mu:Infinity,finiteMean:false,finiteVar:false,label:"Cauchy",iid:true};
-  if(d==="commonShock") return {mu:0,finiteMean:true,finiteVar:true,label:"Xáµ¢=Z+Îµáµ¢ with common shock",iid:false};
+  if(d==="commonShock") return {mu:0,finiteMean:true,finiteVar:true,label:"Xᵢ=Z+εᵢ with common shock",iid:false};
   return {mu:0,finiteMean:true,finiteVar:true,label:"",iid:true};
 }
 function sampleX(path,i){
@@ -419,9 +481,9 @@ function drawMain(){
     h+=line(X0,muY,X1,muY,blue,2,.7,"7 5");
     h+=line(X0,upY,X1,upY,blue,1,.35,"4 5");
     h+=line(X0,dnY,X1,dnY,blue,1,.35,"4 5");
-    h+=text(X1+7,muY+4,"Î¼="+fmt(info.mu),blue,12,850);
+    h+=text(X1+7,muY+4,"μ="+fmt(info.mu),blue,12,850);
   }else{
-    h+=text(80,84,"No finite Î¼: LLN target does not exist.",warn,13,900);
+    h+=text(80,84,"No finite μ: LLN target does not exist.",warn,13,900);
   }
 
   paths.forEach((p,idx)=>{
@@ -445,8 +507,8 @@ function drawMain(){
   h+='<rect x="730" y="74" width="205" height="248" rx="20" fill="'+panel2+'" stroke="'+border+'"/>';
   h+=text(752,106,"Current concentration",textc,16,900);
   const bars=[
-    {name:"outside Îµ-tube",v:isFinite(met.outside)?met.outside:1,raw:isFinite(met.outside)?fmt(met.outside):"undefined",c:warn},
-    {name:"median XÌ„â‚™",v:.5,raw:fmt(met.med),c:acc},
+    {name:"outside ε-tube",v:isFinite(met.outside)?met.outside:1,raw:isFinite(met.outside)?fmt(met.outside):"undefined",c:warn},
+    {name:"median X̄ₙ",v:.5,raw:fmt(met.med),c:acc},
     {name:"10% quantile",v:.22,raw:fmt(met.q1),c:violet},
     {name:"90% quantile",v:.78,raw:fmt(met.q9),c:violet}
   ];
@@ -492,9 +554,9 @@ function drawDist(){
     const muX=px(info.mu,lo,hi,X0,X1), upX=px(info.mu+eps,lo,hi,X0,X1), dnX=px(info.mu-eps,lo,hi,X0,X1);
     h+='<rect x="'+Math.min(upX,dnX)+'" y="'+Y0+'" width="'+Math.abs(upX-dnX)+'" height="'+(Y1-Y0)+'" fill="'+css("--accentSoft")+'" stroke="none"/>';
     h+=line(muX,Y0,muX,Y1,blue,2,.65,"7 5");
-    h+=text(muX,Y0-8,"Î¼",blue,11,900,"middle");
+    h+=text(muX,Y0-8,"μ",blue,11,900,"middle");
   }
-  h+=text(68,34,"sampling distribution of XÌ„â‚™ across simulations",muted,12,850);
+  h+=text(68,34,"sampling distribution of X̄ₙ across simulations",muted,12,850);
   h+=text(X0,Y1+26,fmt(lo),muted,10,800);
   h+=text(X1,Y1+26,fmt(hi),muted,10,800,"end");
   svg.innerHTML=h;
@@ -532,7 +594,7 @@ function drawMoment(){
   });
   const curX=px(n,1,nMax,X0,X1);
   h+=line(curX,Y0,curX,Y1,acc,2,.7,"6 5");
-  h+=text(68,34,"running sample moment: nâ»Â¹Î£Xáµ¢^"+r,muted,12,850);
+  h+=text(68,34,"running sample moment: n⁻¹∑Xᵢ^"+r,muted,12,850);
   svg.innerHTML=h;
 }
 function updateText(){
@@ -545,49 +607,50 @@ function updateText(){
   document.getElementById("pVal").textContent=fmt(Number(pRange.value));
 
   document.getElementById("eqBox").innerHTML =
-    '<span class="formula">'+info.label+'</span>'+
-    '<span class="mathNote">mean: '+(info.finiteMean?fmt(info.mu):"not finite")+
-    ' Â· variance: '+(info.finiteVar?"finite":"not finite")+
-    ' Â· iid: '+(info.iid?"yes":"no")+'</span>';
+    '<span class="formula" id="eqFormula"></span>'+ 
+    '<span class="mathNote">'+info.label+' · mean: '+(info.finiteMean?fmt(info.mu):"not finite")+
+    ' · variance: '+(info.finiteVar?"finite":"not finite")+
+    ' · iid: '+(info.iid?"yes":"no")+'</span>';
+  renderTex(document.getElementById("eqFormula"), currentFormula());
 
   const mini=[
     ["weak LLN",info.finiteMean && info.iid ? "yes" : "no"],
     ["strong LLN",info.finiteMean && info.iid ? "yes" : "no"],
-    ["outside Îµ",isFinite(met.outside)?fmt(met.outside):"undef."],
-    ["E[X^"+r+"]",isFinite(mt)?fmt(mt):"âˆž"],
+    ["outside ε",isFinite(met.outside)?fmt(met.outside):"undef."],
+    ["E[X^"+r+"]",isFinite(mt)?fmt(mt):"∞"],
     ["moment OK",isFinite(mt)?"yes":"no"],
-    ["moment error",isFinite(met.momErr)?fmt(met.momErr):"âˆž"]
+    ["moment error",isFinite(met.momErr)?fmt(met.momErr):"∞"]
   ];
   document.getElementById("miniGrid").innerHTML=mini.map(d=>'<div class="miniStat"><div class="k">'+d[0]+'</div><div class="v">'+d[1]+'</div></div>').join("");
 
   const logic=[
-    ["âœ“","iid + E|X|<âˆž gives weak and strong LLN"],
-    ["âœ“","finite variance is sufficient, not necessary"],
-    ["âœ“","sample r-moment needs E|X|^r<âˆž"],
-    ["â†’","dependence can leave non-vanishing common noise"]
+    ["✓","iid + E|X|<∞ gives weak and strong LLN"],
+    ["✓","finite variance is sufficient, not necessary"],
+    ["✓","sample r-moment needs E|X|^r<∞"],
+    ["→","dependence can leave non-vanishing common noise"]
   ];
   document.getElementById("logicList").innerHTML=logic.map(it=>'<div class="logicItem"><span class="mark">'+it[0]+'</span><span>'+it[1]+'</span></div>').join("");
 
   let interp="";
   if(distSelect.value==="normal" || distSelect.value==="bernoulli" || distSelect.value==="exponential"){
-    interp="This is the clean iid integrable case. The path diagram shows running averages settling; the histogram of \(\\bar X_n\) concentrates near \(\\mu\); sample moments converge when their expectations are finite.";
+    interp="This is the clean iid integrable case. The path diagram shows running averages settling; the histogram of X̄ₙ concentrates near μ; sample moments converge when their expectations are finite.";
   }else if(distSelect.value==="paretoMean"){
     interp="Here the mean is finite, so iid LLN still holds. But if the variance is infinite, convergence can be visually slow and dominated by rare large observations.";
   }else if(distSelect.value==="paretoNoMean" || distSelect.value==="cauchy"){
-    interp="The mean is not finite. There is no finite LLN target \(\\mu\), so sample averages need not stabilize around a number.";
+    interp="The mean is not finite. There is no finite LLN target μ, so sample averages need not stabilize around a number.";
   }else{
     interp="The variables share a common shock. Individual observations are not iid in the usual independent sense; averaging removes idiosyncratic noise but not the common component.";
   }
   document.getElementById("interpretText").innerHTML=interp;
 
-  let notice="The weak law is about concentration of the distribution of \(\\bar X_n\); the strong law is about pathwise stabilization.";
-  if(!info.finiteMean) notice="Without \(E|X|<âˆž\), the usual iid LLN target is not available.";
+  let notice="The weak law is about concentration of the distribution of X̄ₙ; the strong law is about pathwise stabilization.";
+  if(!info.finiteMean) notice="Without E|X|<∞, the usual iid LLN target is not available.";
   else if(!info.iid) notice="Averaging many variables does not remove dependence that is common to all observations.";
   else if(!info.finiteVar) notice="Finite variance is not required for the iid strong law, but heavy tails make convergence look irregular.";
   if(!isFinite(mt)) notice="For the chosen r, the population moment is infinite, so the sample r-moment has no finite target.";
   document.getElementById("noticeText").innerHTML=notice;
 }
-function drawAll(){updateText();drawMain();drawDist();drawMoment();}
+function drawAll(){updateText();drawMain();drawDist();drawMoment();renderStaticMath();}
 themeBtn.addEventListener("click",()=>{
   const dark=body.getAttribute("data-theme")==="dark";
   body.setAttribute("data-theme",dark?"light":"dark");
@@ -596,6 +659,7 @@ themeBtn.addEventListener("click",()=>{
 });
 [distSelect,nRange,epsRange,pathsRange,momentRange,alphaRange,pRange].forEach(el=>el.addEventListener("input",drawAll));
 drawAll();
+window.addEventListener("load",renderStaticMath);
 </script>
 </body>
 </html>

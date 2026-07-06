@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -156,7 +156,12 @@
       color: var(--math);
       font-size: .95rem;
       line-height: 1.45;
+      overflow-x: auto;
     }
+
+    .katex { color: inherit; font-size: 1em; }
+    .math .katex, .miniEq .katex { white-space: normal; }
+    .miniEq .katex-display { margin: 0; overflow-x: auto; overflow-y: hidden; }
 
     .layout {
       display: grid;
@@ -416,7 +421,7 @@
   <div class="wrap">
     <header>
       <div>
-        <h1>07 Â· Conditional Probability as a Measure</h1>
+        <h1>07 · Conditional Probability as a Measure</h1>
         <p class="subtitle">
           Conditioning does not merely change a number. It changes the sample space:
           once information <strong>B</strong> is accepted, probability is re-measured inside <strong>B</strong>.
@@ -428,19 +433,19 @@
     <section class="defs">
       <div class="def">
         <div class="tag">Definition</div>
-        <div class="math">P<sub>B</sub>(A) = P(A | B) = P(A âˆ© B) / P(B), &nbsp; P(B) &gt; 0</div>
+        <div class="math" data-tex="P_B(A)=P(A\mid B)=\dfrac{P(A\cap B)}{P(B)},\quad P(B)>0"></div>
       </div>
       <div class="def">
         <div class="tag">New space</div>
-        <div class="math">Î©<sub>B</sub> = B<br>F<sub>B</sub> = { A âˆ© B : A âˆˆ F }</div>
+        <div class="math" data-tex="\Omega_B=B\qquad \mathcal F_B=\{A\cap B:A\in\mathcal F\}"></div>
       </div>
       <div class="def">
         <div class="tag">Measure</div>
-        <div class="math">P<sub>B</sub>(B) = 1<br>P<sub>B</sub>(â‹ƒ C<sub>i</sub>) = Î£ P<sub>B</sub>(C<sub>i</sub>)</div>
+        <div class="math" data-tex="P_B(B)=1\qquad P_B\left(\bigcup_i C_i\right)=\sum_i P_B(C_i)"></div>
       </div>
       <div class="def">
         <div class="tag">Null condition</div>
-        <div class="math">P(B)=0 â‡’ P(A | B) is not defined by the ratio.</div>
+        <div class="math" data-tex="P(B)=0\Rightarrow P(A\mid B)\text{ is not defined by the ratio.}"></div>
       </div>
     </section>
 
@@ -485,9 +490,7 @@
           <button class="smallBtn" id="resampleBtn">Resample</button>
         </div>
 
-        <div class="miniEq" id="activeEq">
-          P(A | B) = P(A âˆ© B) / P(B)
-        </div>
+        <div class="miniEq" id="activeEq" data-tex="P(A\mid B)=\dfrac{P(A\cap B)}{P(B)}"></div>
       </aside>
 
       <section class="main">
@@ -495,7 +498,7 @@
           <div class="plotHeader">
             <div>
               <div class="plotTitle">Geometric conditioning</div>
-              <div class="pill"><span class="dot"></span> Î© = [0,1], probability = length</div>
+              <div class="pill"><span class="dot"></span> Ω = [0, 1], probability = length</div>
             </div>
             <div class="plotSubtitle" id="mainSubtitle">B becomes the whole universe after updating.</div>
           </div>
@@ -503,8 +506,8 @@
           <div class="kpiGrid">
             <div class="kpi"><div class="name">P(A)</div><div class="num" id="paKpi">0.380</div></div>
             <div class="kpi"><div class="name">P(B)</div><div class="num" id="pbKpi">0.340</div></div>
-            <div class="kpi"><div class="name">P(A âˆ© B)</div><div class="num" id="pabKpi">0.260</div></div>
-            <div class="kpi"><div class="name">P(A | B)</div><div class="num" id="condKpi">0.765</div></div>
+            <div class="kpi"><div class="name">P(A ∩ B)</div><div class="num" id="pabKpi">0.260</div></div>
+            <div class="kpi"><div class="name">P(A ∣ B)</div><div class="num" id="condKpi">0.765</div></div>
           </div>
         </div>
 
@@ -542,16 +545,16 @@
         <div class="card cardPad">
           <div class="panelTitle">Compact exam-style summary</div>
           <div class="summary">
-            <div><strong>1.</strong> If P(B) &gt; 0, then A â†¦ P(A | B) is a probability measure on F.</div>
-            <div><strong>2.</strong> Conditioning replaces Î© by B. The relevant event is A âˆ© B, not A alone.</div>
-            <div><strong>3.</strong> P(A | B)=1 means B \ A is null. P(A | B)=0 means A âˆ© B is null.</div>
+            <div><strong>1.</strong> If P(B) &gt; 0, then A ↦ P(A ∣ B) is a probability measure on F.</div>
+            <div><strong>2.</strong> Conditioning replaces Ω by B. The relevant event is A ∩ B, not A alone.</div>
+            <div><strong>3.</strong> P(A ∣ B)=1 means B \ A is null. P(A ∣ B)=0 means A ∩ B is null.</div>
             <div><strong>4.</strong> If P(B)=0, the elementary ratio has denominator zero. One needs a limiting rule or a regular conditional probability.</div>
           </div>
         </div>
       </section>
     </main>
 
-    <footer>Minimal probability dashboard Â· conditional probability as geometry</footer>
+    <footer>Minimal probability dashboard · conditional probability as geometry</footer>
   </div>
 
   <script>
@@ -633,6 +636,45 @@
     function clear(svg) { while (svg.firstChild) svg.removeChild(svg.firstChild); }
     function sx(x, left, width) { return left + x * width; }
 
+    function renderTex(el, tex, displayMode = false) {
+      if (!el) return;
+      if (window.katex) {
+        katex.render(tex, el, {
+          throwOnError: false,
+          displayMode,
+          strict: 'ignore',
+          trust: false
+        });
+      } else {
+        el.textContent = tex;
+      }
+    }
+
+    function renderStaticTex() {
+      document.querySelectorAll('[data-tex]').forEach((el) => {
+        renderTex(el, el.getAttribute('data-tex'));
+      });
+    }
+
+    function loadKatexAssets() {
+      if (window.katex || document.querySelector('script[data-katex-loader]')) return;
+
+      const css = document.createElement('link');
+      css.rel = 'stylesheet';
+      css.href = 'https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css';
+      css.setAttribute('data-katex-loader', 'true');
+      document.head.appendChild(css);
+
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js';
+      script.async = true;
+      script.setAttribute('data-katex-loader', 'true');
+      script.onload = () => { renderStaticTex(); update(); };
+      document.head.appendChild(script);
+    }
+
+
+
     function drawMain(s) {
       const svg = els.mainSvg;
       clear(svg);
@@ -647,7 +689,7 @@
       }
 
       svg.appendChild(svgEl('rect', { x: left, y: top, width: w, height: h, rx: 18, class: 'omegaBox' }));
-      svg.appendChild(svgEl('text', { x: left, y: top - 25, class: 'labelText' }, 'Original space Î©'));
+      svg.appendChild(svgEl('text', { x: left, y: top - 25, class: 'labelText' }, 'Original space Ω'));
       svg.appendChild(svgEl('text', { x: left + w - 3, y: top - 25, 'text-anchor': 'end', class: 'axisText' }, 'probability = length'));
 
       const aX = sx(s.a0, left, w), aW = Math.max(0, sx(s.a1, left, w) - aX);
@@ -663,7 +705,7 @@
           const o0 = Math.max(s.a0, s.b0), o1 = Math.min(s.a1, s.b1);
           const oX = sx(o0, left, w), oW = sx(o1, left, w) - oX;
           svg.appendChild(svgEl('rect', { x: oX, y: top + 24, width: oW, height: h - 48, rx: 9, class: 'overlapRect' }));
-          svg.appendChild(svgEl('text', { x: oX + oW / 2, y: top + h / 2 + 5, 'text-anchor': 'middle', class: 'mathText' }, 'A âˆ© B'));
+          svg.appendChild(svgEl('text', { x: oX + oW / 2, y: top + h / 2 + 5, 'text-anchor': 'middle', class: 'mathText' }, 'A ∩ B'));
         }
       } else {
         const x = sx(s.bC, left, w);
@@ -673,7 +715,7 @@
 
       svg.appendChild(svgEl('line', { x1: left, y1: axisY - 17, x2: left + w, y2: axisY - 17, stroke: 'var(--border)', 'stroke-width': 1.2 }));
 
-      svg.appendChild(svgEl('text', { x: left, y: bTop - 22, class: 'labelText' }, 'Conditioned space Î©B = B'));
+      svg.appendChild(svgEl('text', { x: left, y: bTop - 22, class: 'labelText' }, 'Conditioned space Ω_B = B'));
       svg.appendChild(svgEl('rect', { x: left, y: bTop, width: w, height: bH, rx: 17, class: 'omegaBox' }));
 
       if (s.pb > 0) {
@@ -687,7 +729,7 @@
         }
         svg.appendChild(svgEl('text', { x: left + 10, y: bTop + bH + 33, class: 'axisText' }, '0 inside B'));
         svg.appendChild(svgEl('text', { x: left + w - 10, y: bTop + bH + 33, 'text-anchor': 'end', class: 'axisText' }, '1 inside B'));
-        svg.appendChild(svgEl('text', { x: left + w / 2, y: bTop + bH / 2 + 5, 'text-anchor': 'middle', class: 'mathText' }, 'P_B(A âˆ© B) = P(A | B) = ' + fmt(s.cond)));
+        svg.appendChild(svgEl('text', { x: left + w / 2, y: bTop + bH / 2 + 5, 'text-anchor': 'middle', class: 'mathText' }, 'P_B(A ∩ B) = P(A ∣ B) = ' + fmt(s.cond)));
       } else {
         svg.appendChild(svgEl('text', { x: left + w / 2, y: bTop + bH / 2 + 5, 'text-anchor': 'middle', class: 'mathText' }, 'No normalized probability space from the elementary ratio'));
         svg.appendChild(svgEl('text', { x: left + w / 2, y: bTop + bH + 33, 'text-anchor': 'middle', class: 'axisText' }, 'zero length cannot be stretched into total mass one by division'));
@@ -698,7 +740,7 @@
       const svg = els.barSvg;
       clear(svg);
       const left = 72, top = 30, w = 370, h = 188;
-      const labels = ['P(A)', 'P(B)', 'P(Aâˆ©B)', 'P(A|B)'];
+      const labels = ['P(A)', 'P(B)', 'P(A ∩ B)', 'P(A∣B)'];
       const values = [s.pa, s.pb, s.pab, s.cond];
       const barW = 54;
 
@@ -768,8 +810,8 @@
 
       const empirical = countB > 0 ? countAB / countB : NaN;
       svg.appendChild(svgEl('text', { x: left, y: top + h + 33, class: 'labelText' }, 'hits in B: ' + countB));
-      svg.appendChild(svgEl('text', { x: left + 142, y: top + h + 33, class: 'labelText' }, 'hits in Aâˆ©B: ' + countAB));
-      svg.appendChild(svgEl('text', { x: left, y: top + h + 61, class: 'mathText' }, 'empirical P(A|B) â‰ˆ ' + fmt(empirical)));
+      svg.appendChild(svgEl('text', { x: left + 142, y: top + h + 33, class: 'labelText' }, 'hits in A∩B: ' + countAB));
+      svg.appendChild(svgEl('text', { x: left, y: top + h + 61, class: 'mathText' }, 'empirical P(A∣B) ≈ ' + fmt(empirical)));
       svg.appendChild(svgEl('text', { x: left, y: top + h + 88, class: 'axisText' }, countB > 0 ? 'Estimate uses only observations compatible with B.' : 'No surviving observations: the conditional frequency is undefined.'));
 
       els.simSubtitle.textContent = countB > 0 ? `${countAB}/${countB} surviving points are also in A.` : 'No point survives B.';
@@ -793,18 +835,18 @@
       els.condKpi.textContent = fmt(s.cond);
 
       if (s.pb > 0) {
-        els.activeEq.innerHTML = 'P(A | B) = P(A âˆ© B) / P(B) = ' + fmt(s.pab) + ' / ' + fmt(s.pb) + ' = <strong>' + fmt(s.cond) + '</strong>';
-        els.logicEq.innerHTML = 'Updated truth: inside B, the proposition A is read as A âˆ© B. The new measure satisfies P<sub>B</sub>(B)=1.';
+        renderTex(els.activeEq, String.raw`P(A\mid B)=\dfrac{P(A\cap B)}{P(B)}=\dfrac{${fmt(s.pab)}}{${fmt(s.pb)}}=\mathbf{${fmt(s.cond)}}`);
+        renderTex(els.logicEq, String.raw`P_B(C)=\dfrac{P(C\cap B)}{P(B)},\qquad P_B(B)=1`);
         els.mainSubtitle.textContent = 'B is stretched to full mass one; A is remeasured inside it.';
         els.interpretation.innerHTML =
-          'Before conditioning, <strong>A</strong> occupies ' + pct(s.pa) + ' of Î©. ' +
-          'After information <strong>B</strong> is accepted, Î© is no longer the relevant universe. ' +
-          'The new universe is <strong>B</strong>, and only the part <strong>A âˆ© B</strong> remains visible. ' +
+          'Before conditioning, <strong>A</strong> occupies ' + pct(s.pa) + ' of Ω. ' +
+          'After information <strong>B</strong> is accepted, Ω is no longer the relevant universe. ' +
+          'The new universe is <strong>B</strong>, and only the part <strong>A ∩ B</strong> remains visible. ' +
           'Thus the conditional mass is <strong>' + pct(s.cond) + '</strong>.';
 
         let notice = '';
         if (s.pab === 0) {
-          notice = 'A and B do not overlap. Once B is known, A becomes impossible: P(A | B)=0.';
+          notice = 'A and B do not overlap. Once B is known, A becomes impossible: P(A ∣ B)=0.';
         } else if (s.cond > .92) {
           notice = 'Almost all of B lies inside A. Conditional on B, A is almost sure: B \ A is nearly null.';
         } else if (s.cond < .12) {
@@ -814,16 +856,16 @@
         } else if (s.cond < s.pa - .12) {
           notice = 'Conditioning decreases the probability of A because B mostly avoids A.';
         } else {
-          notice = 'The conditional probability is close to the original probability: B samples Î© in a nearly neutral way with respect to A.';
+          notice = 'The conditional probability is close to the original probability: B samples Ω in a nearly neutral way with respect to A.';
         }
         els.notice.textContent = notice;
       } else {
-        els.activeEq.innerHTML = 'P(A | B) = P(A âˆ© B) / P(B) = 0 / 0 &nbsp; â†’ &nbsp; <strong>undefined</strong>';
-        els.logicEq.innerHTML = 'A null condition has no elementary normalized measure. A special limiting construction may exist, but it is extra structure.';
+        renderTex(els.activeEq, String.raw`P(A\mid B)=\dfrac{P(A\cap B)}{P(B)}=\dfrac{0}{0}\quad\Rightarrow\quad\text{undefined}`);
+        renderTex(els.logicEq, String.raw`P(B)=0\quad\Longrightarrow\quad\text{the elementary ratio does not define }P(A\mid B)`);
         els.mainSubtitle.textContent = 'A null event cannot be turned into a probability space by this ratio.';
         els.interpretation.innerHTML =
           'When <strong>P(B)=0</strong>, the ordinary formula has denominator zero. ' +
-          'The information â€œB occurredâ€ is too thin for elementary conditioning by division. ' +
+          'The information “B occurred” is too thin for elementary conditioning by division. ' +
           'One may define conditional laws on null events only with additional structure, usually by a limiting or regular conditional probability argument.';
         els.notice.textContent = 'A vertical line has length zero. Uniform simulation almost never lands exactly on it; therefore relative frequency inside B has no denominator.';
       }
@@ -857,8 +899,10 @@
       update();
     });
 
+    renderStaticTex();
     randomPoints(+els.sampleN.value);
     update();
+    loadKatexAssets();
   </script>
 </body>
 </html>

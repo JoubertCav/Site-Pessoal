@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -9,6 +9,8 @@
   <meta name="description" content="Interactive diagram for continuity and almost-sure statements in probability.">
     <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
 <title>Continuity and Almost-Sure Statements</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
   <script>
@@ -72,7 +74,17 @@
     .def,.card{background:color-mix(in srgb,var(--paper) 94%,transparent);border:1px solid var(--border);box-shadow:var(--shadow);border-radius:var(--radius)}
     .def{padding:15px;min-height:115px}
     .kicker{font-size:.72rem;text-transform:uppercase;letter-spacing:.105em;color:var(--muted);font-weight:850;margin-bottom:8px}
-    .formula{font-family:"Cambria Math", "STIX Two Text", Georgia, serif;color:var(--accent-dark);font-size:1.02rem;line-height:1.42;overflow-x:auto}
+    .formula{color:var(--accent-dark);font-size:1rem;line-height:1.42;overflow-x:auto}
+    .formula.eqstack{display:grid;gap:7px}
+    .math-render{display:inline-block;color:var(--accent-dark)}
+    .math-render.fallback{font-family:"STIX Two Text","Cambria Math",Georgia,serif;letter-spacing:.01em}
+    .formula .katex,.eqbox .katex,.mono .katex{font-size:1.02em}
+    .eqbox .katex{white-space:normal}
+    .eqrow{display:block;margin:2px 0}
+    .summary .math-render{margin-bottom:2px}
+    .summary .katex{font-size:1em}
+    .eqbox{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    .mono{font-family:inherit}
     .layout{display:grid;grid-template-columns:332px 1fr;gap:16px;align-items:start}
     .pad{padding:18px}
     .controls h2,.panel-title{font-size:.78rem;text-transform:uppercase;letter-spacing:.115em;color:var(--muted);font-weight:850;margin:0 0 14px}
@@ -83,8 +95,8 @@
     input[type="range"]{width:100%;accent-color:var(--accent)}
     select,.btn{width:100%;border:1px solid var(--border);background:var(--paper2);color:var(--ink);border-radius:14px;padding:10px 11px;font-weight:720;outline:none;cursor:pointer}
     .seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}.seg .active{border-color:var(--accent);background:var(--accent-2)}
-    .eqbox{margin-top:12px;border:1px solid var(--accent-3);background:var(--formula-bg);border-radius:16px;padding:12px;color:var(--accent-dark);font-family:"Cambria Math", Georgia, serif;line-height:1.45;overflow-x:auto}
-    .main{display:grid;gap:16px}.plot-card{padding:10px 10px 4px}.plot-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:8px 10px 0}.plot-title{font-weight:850;letter-spacing:-.025em}.plot-note{color:var(--muted);font-size:.83rem;text-align:right;line-height:1.35}.pill{margin-top:8px;display:inline-flex;align-items:center;gap:7px;border:1px solid var(--border);background:var(--paper2);border-radius:999px;padding:7px 10px;color:var(--muted);font-size:.78rem;font-weight:760}.dot{width:8px;height:8px;background:var(--accent);border-radius:999px;display:inline-block}.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}.three{display:grid;grid-template-columns:1.05fr .95fr;gap:16px}.svg-wrap{width:100%;height:100%;min-height:0}svg{display:block;width:100%;height:100%;overflow:visible}.space{height:332px}.seq,.sim,.nullvis{height:282px}.interpret{font-size:.94rem;line-height:1.58;color:var(--ink)}.interpret strong{color:var(--accent-dark)}.notice{border-left:3px solid var(--accent);padding-left:13px;color:var(--muted);font-size:.92rem;line-height:1.55}.summary{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.summary > div{border:1px solid var(--border);background:var(--paper2);border-radius:16px;padding:12px;font-size:.9rem;line-height:1.48}.tiny{font-size:.78rem;color:var(--muted);line-height:1.45}.mono{font-family:"Cambria Math", Georgia, serif;color:var(--accent-dark)}footer{margin-top:16px;text-align:center;color:var(--muted);font-size:.78rem}.axis text,.label{fill:var(--muted);font-size:12px}.axis line,.axis path{stroke:var(--grid)}.gridline{stroke:var(--grid);stroke-width:1}.event-fill{fill:var(--accent);opacity:.38}.event-limit{fill:none;stroke:var(--accent);stroke-width:2;stroke-dasharray:6 5}.omega{fill:var(--paper2);stroke:var(--border);stroke-width:1}.line{fill:none;stroke:var(--accent);stroke-width:2.5}.line2{fill:none;stroke:var(--warn);stroke-width:2;stroke-dasharray:5 4}.mark{fill:var(--accent);stroke:var(--paper);stroke-width:2}.nullpt{fill:var(--warn);stroke:var(--paper);stroke-width:2}.thin{fill:var(--warn);opacity:.22}.smalltext{fill:var(--muted);font-size:11px}.bigtext{fill:var(--ink);font-size:13px;font-weight:700}
+    .eqbox{margin-top:12px;border:1px solid var(--accent-3);background:var(--formula-bg);border-radius:16px;padding:12px;color:var(--accent-dark);line-height:1.45;overflow-x:auto}
+    .main{display:grid;gap:16px}.plot-card{padding:10px 10px 4px}.plot-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:8px 10px 0}.plot-title{font-weight:850;letter-spacing:-.025em}.plot-note{color:var(--muted);font-size:.83rem;text-align:right;line-height:1.35}.pill{margin-top:8px;display:inline-flex;align-items:center;gap:7px;border:1px solid var(--border);background:var(--paper2);border-radius:999px;padding:7px 10px;color:var(--muted);font-size:.78rem;font-weight:760}.dot{width:8px;height:8px;background:var(--accent);border-radius:999px;display:inline-block}.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}.three{display:grid;grid-template-columns:1.05fr .95fr;gap:16px}.svg-wrap{width:100%;height:100%;min-height:0}svg{display:block;width:100%;height:100%;overflow:visible}.space{height:332px}.seq,.sim,.nullvis{height:282px}.interpret{font-size:.94rem;line-height:1.58;color:var(--ink)}.interpret strong{color:var(--accent-dark)}.notice{border-left:3px solid var(--accent);padding-left:13px;color:var(--muted);font-size:.92rem;line-height:1.55}.summary{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.summary > div{border:1px solid var(--border);background:var(--paper2);border-radius:16px;padding:12px;font-size:.9rem;line-height:1.48}.tiny{font-size:.78rem;color:var(--muted);line-height:1.45}.mono{color:var(--accent-dark)}footer{margin-top:16px;text-align:center;color:var(--muted);font-size:.78rem}.axis text,.label{fill:var(--muted);font-size:12px}.axis line,.axis path{stroke:var(--grid)}.gridline{stroke:var(--grid);stroke-width:1}.event-fill{fill:var(--accent);opacity:.38}.event-limit{fill:none;stroke:var(--accent);stroke-width:2;stroke-dasharray:6 5}.omega{fill:var(--paper2);stroke:var(--border);stroke-width:1}.line{fill:none;stroke:var(--accent);stroke-width:2.5}.line2{fill:none;stroke:var(--warn);stroke-width:2;stroke-dasharray:5 4}.mark{fill:var(--accent);stroke:var(--paper);stroke-width:2}.nullpt{fill:var(--warn);stroke:var(--paper);stroke-width:2}.thin{fill:var(--warn);opacity:.22}.smalltext{fill:var(--muted);font-size:11px}.bigtext{fill:var(--ink);font-size:13px;font-weight:700}
     @media(max-width:1000px){.defs,.layout,.two,.three{grid-template-columns:1fr}header{flex-direction:column}.theme{align-self:flex-start}.space{height:315px}.seq,.sim,.nullvis{height:260px}}
     @media(max-width:560px){.wrap{width:min(100% - 20px,1240px);padding-top:18px}.pad{padding:14px}.summary{grid-template-columns:1fr}.plot-head{flex-direction:column}.plot-note{text-align:left}}
   </style>
@@ -100,10 +112,34 @@
     </header>
 
     <section class="defs">
-      <div class="def"><div class="kicker">from below</div><div class="formula">Aâ‚ âŠ† Aâ‚‚ âŠ† â‹¯, A = â‹ƒâ‚™Aâ‚™<br>P(Aâ‚™) â†‘ P(A)</div></div>
-      <div class="def"><div class="kicker">from above</div><div class="formula">Bâ‚ âŠ‡ Bâ‚‚ âŠ‡ â‹¯, B = â‹‚â‚™Bâ‚™<br>P(Bâ‚™) â†“ P(B)</div></div>
-      <div class="def"><div class="kicker">almost sure</div><div class="formula">X = Y a.s. â‡” P(X â‰  Y)=0<br>P(E)=1 â‡” P(Eá¶œ)=0</div></div>
-      <div class="def"><div class="kicker">completion</div><div class="formula">N âˆˆ â„±, P(N)=0, C âŠ† N<br>C âˆˆ â„±Ì„ and PÌ„(C)=0</div></div>
+      <div class="def">
+        <div class="kicker">from below</div>
+        <div class="formula eqstack">
+          <span class="math-render" data-tex="A_1\subseteq A_2\subseteq\cdots,\quad A=\bigcup_{n\ge1}A_n" data-fallback="A₁ ⊆ A₂ ⊆ ⋯,  A = ⋃ₙ Aₙ"></span>
+          <span class="math-render" data-tex="P(A_n)\uparrow P(A)" data-fallback="P(Aₙ) ↑ P(A)"></span>
+        </div>
+      </div>
+      <div class="def">
+        <div class="kicker">from above</div>
+        <div class="formula eqstack">
+          <span class="math-render" data-tex="B_1\supseteq B_2\supseteq\cdots,\quad B=\bigcap_{n\ge1}B_n" data-fallback="B₁ ⊇ B₂ ⊇ ⋯,  B = ⋂ₙ Bₙ"></span>
+          <span class="math-render" data-tex="P(B_n)\downarrow P(B)" data-fallback="P(Bₙ) ↓ P(B)"></span>
+        </div>
+      </div>
+      <div class="def">
+        <div class="kicker">almost sure</div>
+        <div class="formula eqstack">
+          <span class="math-render" data-tex="X=Y\ \mathrm{a.s.}\Longleftrightarrow P(X\ne Y)=0" data-fallback="X = Y a.s. ⇔ P(X ≠ Y)=0"></span>
+          <span class="math-render" data-tex="P(E)=1\Longleftrightarrow P(E^c)=0" data-fallback="P(E)=1 ⇔ P(Eᶜ)=0"></span>
+        </div>
+      </div>
+      <div class="def">
+        <div class="kicker">completion</div>
+        <div class="formula eqstack">
+          <span class="math-render" data-tex="N\in\mathcal F,\ P(N)=0,\ C\subseteq N" data-fallback="N ∈ ℱ, P(N)=0, C ⊆ N"></span>
+          <span class="math-render" data-tex="C\in\overline{\mathcal F}\quad\text{and}\quad \overline P(C)=0" data-fallback="C ∈ ℱ̄ and P̄(C)=0"></span>
+        </div>
+      </div>
     </section>
 
     <main class="layout">
@@ -117,21 +153,23 @@
         <div class="control"><label for="speed">Approach speed <span class="val" id="speedVal">4</span></label><input id="speed" type="range" min="1" max="10" step="1" value="4"></div>
         <div class="control"><label for="nIndex">Visible index n <span class="val" id="nVal">12</span></label><input id="nIndex" type="range" min="1" max="60" step="1" value="12"></div>
         <div class="control"><label for="simN">Simulation size <span class="val" id="simVal">600</span></label><input id="simN" type="range" min="50" max="5000" step="50" value="600"></div>
-        <div class="control"><label for="nullMode">Null geometry</label><select id="nullMode"><option value="points">finite exceptional points</option><option value="pointtube">Îµ-neighborhood of one point</option></select></div>
-        <div class="control"><label for="eps">Thickness Îµ <span class="val" id="epsVal">0.020</span></label><input id="eps" type="range" min="0" max="0.12" step="0.002" value="0.020"></div>
+        <div class="control"><label for="nullMode">Null geometry</label><select id="nullMode"><option value="points">finite exceptional points</option><option value="pointtube">ε-neighborhood of one point</option></select></div>
+        <div class="control"><label for="eps">Thickness ε <span class="val" id="epsVal">0.020</span></label><input id="eps" type="range" min="0" max="0.12" step="0.002" value="0.020"></div>
         <div class="control"><button class="btn" id="resimBtn">Resimulate</button></div>
-        <div class="eqbox" id="formulaBox">Aâ‚™=[0,aâ‚™], &nbsp; aâ‚™=a(1âˆ’e<sup>âˆ’n/k</sup>)</div>
+        <div class="eqbox" id="formulaBox">
+          <div class="eqrow"><span class="math-render" data-tex="A_n=[0,a_n],\quad a_n=a(1-e^{-n/k})" data-fallback="Aₙ=[0,aₙ],  aₙ=a(1−e⁻ⁿᐟᵏ)"></span></div>
+        </div>
       </aside>
 
       <section class="main">
         <div class="card plot-card">
-          <div class="plot-head"><div><div class="plot-title">Main diagram: event geometry inside Î©</div><div class="pill"><span class="dot"></span> Î©=[0,1], P = length</div></div><div class="plot-note" id="spaceNote">event grows toward its union</div></div>
+          <div class="plot-head"><div><div class="plot-title">Main diagram: event geometry inside Ω</div><div class="pill"><span class="dot"></span> Ω=[0,1], P = length</div></div><div class="plot-note" id="spaceNote">event grows toward its union</div></div>
           <div class="svg-wrap space"><svg id="spaceSvg" viewBox="0 0 820 332" preserveAspectRatio="none"></svg></div>
         </div>
 
         <div class="two">
           <div class="card plot-card">
-            <div class="plot-head"><div class="plot-title">Continuity of probability</div><div class="plot-note" id="seqNote">P(Aâ‚™) â†’ P(A)</div></div>
+            <div class="plot-head"><div class="plot-title">Continuity of probability</div><div class="plot-note" id="seqNote">P(Aₙ) → P(A)</div></div>
             <div class="svg-wrap seq"><svg id="seqSvg" viewBox="0 0 520 282" preserveAspectRatio="none"></svg></div>
           </div>
           <div class="card plot-card">
@@ -142,13 +180,13 @@
 
         <div class="three">
           <div class="card plot-card">
-            <div class="plot-head"><div><div class="plot-title">Almost sure and completion</div><div class="pill"><span class="dot"></span> invisible sets can still matter logically</div></div><div class="plot-note" id="nullNote">C âŠ† N, P(N)=0</div></div>
+            <div class="plot-head"><div><div class="plot-title">Almost sure and completion</div><div class="pill"><span class="dot"></span> invisible sets can still matter logically</div></div><div class="plot-note" id="nullNote">C ⊆ N, P(N)=0</div></div>
             <div class="svg-wrap nullvis"><svg id="nullSvg" viewBox="0 0 560 282" preserveAspectRatio="none"></svg></div>
           </div>
           <div class="card pad">
             <div class="panel-title">Interpretation</div>
             <div class="interpret" id="interpretation"></div>
-            <div class="eqbox" id="asFormula">Eâ‚™={Uâ‰¤1/n} â†“ âˆ…, so 1{Eâ‚™}(U) â†’ 0 a.s.</div>
+            <div class="eqbox" id="asFormula"><span class="math-render" data-tex="E_n=\{U\le 1/n\}\downarrow\varnothing,\quad \mathbf 1_{E_n}(U)\to0\ \text{a.s.}" data-fallback="Eₙ={U≤1/n} ↓ ∅,  1_{Eₙ}(U) → 0 a.s."></span></div>
           </div>
         </div>
 
@@ -160,16 +198,16 @@
           <div class="card pad">
             <div class="panel-title">Compact exam-style summary</div>
             <div class="summary">
-              <div><span class="mono">Aâ‚™ â†‘ A</span><br>Then <span class="mono">P(Aâ‚™) â†‘ P(A)</span>. Proof: disjoint increments.</div>
-              <div><span class="mono">Bâ‚™ â†“ B</span><br>If <span class="mono">P(Bâ‚)&lt;âˆž</span>, then <span class="mono">P(Bâ‚™) â†“ P(B)</span>.</div>
-              <div><span class="mono">a.s.</span><br>A claim may fail on <span class="mono">N</span> and still be true if <span class="mono">P(N)=0</span>.</div>
-              <div><span class="mono">completion</span><br>Every subset of a null measurable set becomes measurable with probability zero.</div>
+              <div><span class="mono math-render" data-tex="A_n\uparrow A" data-fallback="Aₙ ↑ A"></span><br>Then <span class="mono math-render" data-tex="P(A_n)\uparrow P(A)" data-fallback="P(Aₙ) ↑ P(A)"></span>. Proof: disjoint increments.</div>
+              <div><span class="mono math-render" data-tex="B_n\downarrow B" data-fallback="Bₙ ↓ B"></span><br>If <span class="mono math-render" data-tex="P(B_1)<\infty" data-fallback="P(B₁)<∞"></span>, then <span class="mono math-render" data-tex="P(B_n)\downarrow P(B)" data-fallback="P(Bₙ) ↓ P(B)"></span>.</div>
+              <div><span class="mono math-render" data-tex="\mathrm{a.s.}" data-fallback="a.s."></span><br>A claim may fail on <span class="mono math-render" data-tex="N" data-fallback="N"></span> and still be true if <span class="mono math-render" data-tex="P(N)=0" data-fallback="P(N)=0"></span>.</div>
+              <div><span class="mono math-render" data-tex="\overline{\mathcal F}" data-fallback="ℱ̄"></span><br>Every subset of a null measurable set becomes measurable with probability zero.</div>
             </div>
           </div>
         </div>
       </section>
     </main>
-    <footer>Minimal probability dashboard Â· continuity, null events, almost-sure logic, completion</footer>
+    <footer>Minimal probability dashboard · continuity, null events, almost-sure logic, completion</footer>
   </div>
 
 <script>
@@ -183,6 +221,43 @@
   function el(name, attrs={}, parent){ const node=document.createElementNS('http://www.w3.org/2000/svg', name); for(const [k,v] of Object.entries(attrs)) node.setAttribute(k,v); if(parent) parent.appendChild(node); return node; }
   function text(parent,x,y,content,cls='label',anchor='middle'){ const t=el('text',{x,y,class:cls,'text-anchor':anchor},parent); t.textContent=content; return t; }
   function lcg(seed){ let s=seed>>>0; return function(){ s=(1664525*s+1013904223)>>>0; return s/4294967296; }; }
+
+  function renderMath(root=document){
+    root.querySelectorAll('.math-render').forEach(node => {
+      const tex = node.dataset.tex || '';
+      const fallback = node.dataset.fallback || tex;
+      const displayMode = node.dataset.display === 'true';
+      if (window.katex) {
+        try {
+          katex.render(tex, node, { throwOnError:false, displayMode, output:'html' });
+          node.classList.remove('fallback');
+          return;
+        } catch (err) {
+          // Fall through to readable Unicode fallback instead of exposing raw TeX.
+        }
+      }
+      node.textContent = fallback;
+      node.classList.add('fallback');
+    });
+  }
+  function makeMath(tex, fallback, display=false){
+    const span = document.createElement('span');
+    span.className = 'math-render';
+    span.dataset.tex = tex;
+    span.dataset.fallback = fallback;
+    if (display) span.dataset.display = 'true';
+    renderMath(span);
+    return span;
+  }
+  function setMathStack(container, rows){
+    container.innerHTML = '';
+    rows.forEach(([tex, fallback, display=false]) => {
+      const row = document.createElement('div');
+      row.className = 'eqrow';
+      row.appendChild(makeMath(tex, fallback, display));
+      container.appendChild(row);
+    });
+  }
   function get(){
     const a=+$('limitSize').value, speed=+$('speed').value, n=+$('nIndex').value, simN=+$('simN').value, eps=+$('eps').value;
     const k = 13 - speed;
@@ -200,11 +275,11 @@
     el('rect',{x:L,y:barY,width:Math.max(0,scale(s.p)-L),height:barH,rx:14,class:'event-fill'},svg);
     el('line',{x1:L,y1:barY+barH+22,x2:R,y2:barY+barH+22,stroke:css('--grid'),'stroke-width':1},svg);
     text(svg,L,barY-18,'0','bigtext','middle'); text(svg,R,barY-18,'1','bigtext','middle');
-    text(svg,scale(s.a),barY-22,state.mode==='below'?'limit A=â‹ƒAâ‚™':'limit B=â‹‚Bâ‚™','bigtext','middle');
-    text(svg,scale(s.p),barY+barH+44,state.mode==='below'?'current Aâ‚™':'current Bâ‚™','bigtext','middle');
+    text(svg,scale(s.a),barY-22,state.mode==='below'?'limit A=⋃Aₙ':'limit B=⋂Bₙ','bigtext','middle');
+    text(svg,scale(s.p),barY+barH+44,state.mode==='below'?'current Aₙ':'current Bₙ','bigtext','middle');
     el('line',{x1:scale(s.a),y1:barY-10,x2:scale(s.a),y2:barY+barH+10,stroke:css('--accent'),'stroke-width':2,'stroke-dasharray':'5 5'},svg);
     el('line',{x1:scale(s.p),y1:barY+barH+7,x2:scale(s.p),y2:barY+barH+30,stroke:css('--accent'),'stroke-width':2},svg);
-    text(svg,410,50,'Î© is the whole probability space; the colored length is the event probability.','smalltext');
+    text(svg,410,50,'Ω is the whole probability space; the colored length is the event probability.','smalltext');
     const gap=Math.abs(s.p-s.a);
     const x1=scale(Math.min(s.a,s.p)), x2=scale(Math.max(s.a,s.p));
     if(x2-x1>3){ el('rect',{x:x1,y:barY+barH+14,width:x2-x1,height:10,rx:5,fill:css('--warn'),opacity:.35},svg); text(svg,(x1+x2)/2,barY+barH+39,'remaining gap = '+fmt(gap),'smalltext'); }
@@ -257,7 +332,7 @@
       pts.forEach(x=>el('circle',{cx:scale(x),cy:Y+H/2,r:7,class:'nullpt'},svg));
       sub.forEach(x=>el('circle',{cx:scale(x),cy:Y+H/2,r:12,fill:'none',stroke:css('--accent'),'stroke-width':2},svg));
       text(svg,scale(.50),Y-18,'N = finite exceptional set','bigtext');
-      text(svg,scale(.49),Y+H+34,'C âŠ† N: completion assigns P(C)=0','smalltext');
+      text(svg,scale(.49),Y+H+34,'C ⊆ N: completion assigns P(C)=0','smalltext');
       text(svg,L,238,'P(N)=0, although N is visible as marked points.','bigtext','start');
       text(svg,L,260,'Almost-sure statements may fail exactly on N.','smalltext','start');
     } else {
@@ -265,10 +340,10 @@
       el('rect',{x:scale(a),y:Y,width:scale(b)-scale(a),height:H,rx:12,class:'thin'},svg);
       el('line',{x1:scale(c),y1:Y-8,x2:scale(c),y2:Y+H+8,stroke:css('--warn'),'stroke-width':2},svg);
       el('circle',{cx:scale(c),cy:Y+H/2,r:6,class:'nullpt'},svg);
-      text(svg,scale(c),Y-18,'point N={1/2}; its Îµ-neighborhood has length â‰ˆ 2Îµ','bigtext');
-      text(svg,scale(c),Y+H+34,'as Îµ â†’ 0, P(NÎµ) â†’ 0','smalltext');
-      text(svg,L,238,'P(NÎµ) = '+fmt(Math.min(1,2*s.eps))+'; the point itself has P(N)=0.','bigtext','start');
-      text(svg,L,260,'Completion closes the Ïƒ-algebra under subsets of such null sets.','smalltext','start');
+      text(svg,scale(c),Y-18,'point N={1/2}; its ε-neighborhood has length ≈ 2ε','bigtext');
+      text(svg,scale(c),Y+H+34,'as ε → 0, P(Nε) → 0','smalltext');
+      text(svg,L,238,'P(Nε) = '+fmt(Math.min(1,2*s.eps))+'; the point itself has P(N)=0.','bigtext','start');
+      text(svg,L,260,'Completion closes the σ-algebra under subsets of such null sets.','smalltext','start');
     }
     text(svg,L,46,'0','smalltext','middle'); text(svg,R,46,'1','smalltext','middle');
   }
@@ -276,25 +351,26 @@
     $('limitVal').textContent=fmt(s.a); $('speedVal').textContent=s.speed; $('nVal').textContent=s.n; $('simVal').textContent=s.simN; $('epsVal').textContent=(+s.eps).toFixed(3); $('modeVal').textContent=state.mode;
     $('belowBtn').classList.toggle('active',state.mode==='below'); $('aboveBtn').classList.toggle('active',state.mode==='above');
     if(state.mode==='below'){
-      $('spaceNote').textContent='event grows toward its union'; $('seqNote').textContent='P(Aâ‚™) â†‘ P(â‹ƒAâ‚™)';
-      $('formulaBox').innerHTML='Aâ‚™=[0,aâ‚™], &nbsp; aâ‚™=a(1âˆ’e<sup>âˆ’n/k</sup>)<br>A=â‹ƒâ‚™Aâ‚™=[0,a]';
+      $('spaceNote').textContent='event grows toward its union'; $('seqNote').textContent='P(Aₙ) ↑ P(⋃Aₙ)';
+      setMathStack($('formulaBox'), [ ['A_n=[0,a_n],\\quad a_n=a(1-e^{-n/k})', 'Aₙ=[0,aₙ],  aₙ=a(1−e⁻ⁿᐟᵏ)'], ['A=\\bigcup_{n\\ge1} A_n=[0,a]', 'A = ⋃ₙ Aₙ = [0,a]'] ]);
       $('interpretation').innerHTML='<strong>Continuity from below</strong> says that no probability is lost while we build the event by increasing approximations. The colored interval expands; its length converges upward to the dashed limit interval.';
-      $('noticeBox').innerHTML='The limit is not a new mysterious object: it is the geometric union of all previous events. The sequence of numbers P(Aâ‚™) is monotone because the sets are nested. The gap A\\Aâ‚™ becomes invisible in probability.';
+      $('noticeBox').innerHTML='The limit is not a new mysterious object: it is the geometric union of all previous events. The sequence of numbers P(Aₙ) is monotone because the sets are nested. The gap A\\Aₙ becomes invisible in probability.';
     } else {
-      $('spaceNote').textContent='event shrinks toward its intersection'; $('seqNote').textContent='P(Bâ‚™) â†“ P(â‹‚Bâ‚™)';
-      $('formulaBox').innerHTML='Bâ‚™=[0,bâ‚™], &nbsp; bâ‚™=a+(1âˆ’a)e<sup>âˆ’n/k</sup><br>B=â‹‚â‚™Bâ‚™=[0,a]';
+      $('spaceNote').textContent='event shrinks toward its intersection'; $('seqNote').textContent='P(Bₙ) ↓ P(⋂Bₙ)';
+      setMathStack($('formulaBox'), [ ['B_n=[0,b_n],\\quad b_n=a+(1-a)e^{-n/k}', 'Bₙ=[0,bₙ],  bₙ=a+(1−a)e⁻ⁿᐟᵏ'], ['B=\\bigcap_{n\\ge1} B_n=[0,a]', 'B = ⋂ₙ Bₙ = [0,a]'] ]);
       $('interpretation').innerHTML='<strong>Continuity from above</strong> says that shrinking nested events have probabilities converging downward to the probability of the intersection. The finite-measure condition prevents mass escaping at infinity.';
-      $('noticeBox').innerHTML='Now the event starts too large and the extra part is shaved away. The remaining intersection is the geometric core. In probability spaces, P(Bâ‚)â‰¤1, so the finite-measure condition is automatic.';
+      $('noticeBox').innerHTML='Now the event starts too large and the extra part is shaved away. The remaining intersection is the geometric core. In probability spaces, P(B₁)≤1, so the finite-measure condition is automatic.';
     }
-    $('nullNote').textContent = s.nullMode==='points' ? 'C âŠ† N, P(N)=0' : 'thickened null set: Îµ â†“ 0';
+    $('nullNote').textContent = s.nullMode==='points' ? 'C ⊆ N, P(N)=0' : 'thickened null set: ε ↓ 0';
   }
-  function render(){ const s=get(); updateText(s); drawSpace(s); drawSequence(s); drawSimulation(s); drawNull(s); }
+  function render(){ const s=get(); updateText(s); drawSpace(s); drawSequence(s); drawSimulation(s); drawNull(s); renderMath(); }
   $('belowBtn').addEventListener('click',()=>{state.mode='below';render();});
   $('aboveBtn').addEventListener('click',()=>{state.mode='above';render();});
   $('themeBtn').addEventListener('click',()=>{ const dark=document.body.getAttribute('data-theme')==='dark'; document.body.setAttribute('data-theme',dark?'light':'dark'); $('themeBtn').textContent=dark?'Dark mode':'Light mode'; render(); });
   $('resimBtn').addEventListener('click',()=>{state.seed=(state.seed*1103515245+12345)>>>0;render();});
   inputs.forEach(id=>$(id).addEventListener('input',render));
   render();
+  window.addEventListener('load', () => { renderMath(); });
 })();
 </script>
 </body>

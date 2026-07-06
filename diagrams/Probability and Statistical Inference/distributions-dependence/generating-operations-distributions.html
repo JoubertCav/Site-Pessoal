@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -18,7 +18,7 @@
 
   gtag('config', 'G-NHXHEJP1G0');
 </script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <style>
   :root{
     --bg:#f7f2e8;
@@ -100,7 +100,7 @@
   }
   button:hover,.selectWrap select:hover{border-color:var(--accent3)}
   .selectWrap{position:relative}
-  .selectWrap:after{content:"âŒ„";position:absolute;right:12px;top:8px;color:var(--muted);pointer-events:none;font-size:18px}
+  .selectWrap:after{content:"⌄";position:absolute;right:12px;top:8px;color:var(--muted);pointer-events:none;font-size:18px}
   .selectWrap select{padding-right:33px;min-width:210px;box-shadow:none}
   .grid{
     display:grid;
@@ -138,6 +138,10 @@
   .eq .katex-display{margin:.25rem 0 .35rem}
   .summaryItem .katex{font-size:1em}
   .definition .katex{color:var(--text)}
+
+  .katex-display{margin:.18rem 0 .28rem}
+  [data-katex], [data-tex]{white-space:normal}
+  .definition .katex-display{overflow-x:auto;overflow-y:hidden}
   .small{font-size:13px;color:var(--muted)}
   .controls{display:grid;gap:14px}
   .control{
@@ -189,7 +193,7 @@
   }
   .noticeList{display:grid;gap:10px;margin:0;padding:0;list-style:none}
   .noticeList li{display:grid;grid-template-columns:18px 1fr;gap:8px;align-items:start;color:var(--text);font-size:14px}
-  .noticeList li:before{content:"â€¢";color:var(--accent);font-size:26px;line-height:.7}
+  .noticeList li:before{content:"•";color:var(--accent);font-size:26px;line-height:.7}
   .summaryGrid{display:grid;gap:9px}
   .summaryItem{padding:10px 11px;border-radius:14px;border:1px solid var(--border);background:var(--panel2)}
   .summaryItem b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px}
@@ -262,7 +266,7 @@
             <input id="bSlider" type="range" min="-4" max="4" step="0.1" value="0.8" />
           </div>
           <div class="control" id="mixControl">
-            <div class="controlHead"><label for="mixSlider">mixture weight Ï€</label><span class="value" id="mixValue"></span></div>
+            <div class="controlHead"><label for="mixSlider">mixture weight π</label><span class="value" id="mixValue"></span></div>
             <input id="mixSlider" type="range" min="0" max="1" step="0.01" value="0.62" />
           </div>
           <div class="control" id="spreadControl">
@@ -289,9 +293,9 @@
         <svg id="mainSvg" viewBox="0 0 880 500" role="img" aria-label="main distribution diagram"></svg>
         <div class="legend" id="mainLegend"></div>
         <div class="miniStats">
-          <div class="stat"><b>mean</b><div id="meanStat">â€”</div></div>
-          <div class="stat"><b>variance</b><div id="varStat">â€”</div></div>
-          <div class="stat"><b>support / mass</b><div id="supportStat">â€”</div></div>
+          <div class="stat"><b>mean</b><div id="meanStat">—</div></div>
+          <div class="stat"><b>variance</b><div id="varStat">—</div></div>
+          <div class="stat"><b>support / mass</b><div id="supportStat">—</div></div>
         </div>
         <div class="caption"><span id="xCaption"></span><span id="sampleCaption"></span></div>
       </div>
@@ -336,8 +340,8 @@
   </section>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 <script>
 (function(){
   const $ = id => document.getElementById(id);
@@ -397,10 +401,22 @@
   function cAbs(z){ return Math.hypot(z.re,z.im); }
   function cScale(z,s){return {re:z.re*s, im:z.im*s};}
   function cAdd(a,b){return {re:a.re+b.re, im:a.im+b.im};}
-  function format(x,d=3){ if(!Number.isFinite(x)) return 'âˆž'; const ax=Math.abs(x); if(ax>=1000||ax<.001&&ax>0) return x.toExponential(2); return x.toFixed(d).replace(/\.0+$/,'').replace(/(\.\d*?)0+$/,'$1'); }
+  function format(x,d=3){ if(!Number.isFinite(x)) return '∞'; const ax=Math.abs(x); if(ax>=1000||ax<.001&&ax>0) return x.toExponential(2); return x.toFixed(d).replace(/\.0+$/,'').replace(/(\.\d*?)0+$/,'$1'); }
 
+  function renderDirectKatex(root=document){
+    if(!window.katex || !root) return;
+    const nodes = root.querySelectorAll ? root.querySelectorAll('[data-katex], [data-tex]') : [];
+    nodes.forEach(el=>{
+      const tex = el.getAttribute('data-katex') || el.getAttribute('data-tex') || '';
+      const display = el.getAttribute('data-display') === '1' || el.getAttribute('data-display') === 'true';
+      if(!tex) return;
+      katex.render(tex, el, {throwOnError:false, displayMode:display, strict:false});
+    });
+  }
   function renderEquations(root){
-    if(!window.renderMathInElement || !root) return;
+    if(!root) return;
+    renderDirectKatex(root);
+    if(!window.renderMathInElement) return;
     renderMathInElement(root, {
       delimiters: [
         {left: "$$", right: "$$", display: true},
@@ -410,7 +426,7 @@
       ],
       throwOnError: false,
       strict: false,
-      ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+      ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code", "annotation", "annotation-xml"]
     });
   }
   function mean(arr){return arr.reduce((a,b)=>a+b,0)/arr.length;}
@@ -584,7 +600,7 @@
       if(op==='clt') make('path',{d:pathFor(u=>Math.exp(-0.5*u*u)),class:'curve2'});
     }
     make('text',{x:W/2,y:H-2,'text-anchor':'middle',class:'axis'}).textContent='frequency t';
-    make('text',{x:15,y:H/2,transform:`rotate(-90 15 ${H/2})`,'text-anchor':'middle',class:'axis'}).textContent='|Ï†(t)|';
+    make('text',{x:15,y:H/2,transform:`rotate(-90 15 ${H/2})`,'text-anchor':'middle',class:'axis'}).textContent='|φ(t)|';
   }
 
   const content = {
@@ -598,7 +614,7 @@
     clt:{
       def:String.raw`<div class="eq center">\[Z_n={X_1+\cdots+X_n-n\mu\over \sigma\sqrt n}\]</div><div class="eq center">\[Z_n\Rightarrow N(0,1)\]</div><div class="eq center">\[\varphi_{Z_n}(t)=\left[\varphi_X\!\left({t\over\sqrt n}\right)e^{-it\mu/(\sigma\sqrt n)}\right]^n\]</div>`,
       title:'Limit geometry', sub:'Standardization prevents spreading and reveals the Gaussian attractor.', pill:'limit = shape stabilization',
-      interp:'The raw sum spreads out. Centering removes drift; scaling by âˆšn keeps variance fixed. What remains is the limiting shape: the normal law.',
+      interp:'The raw sum spreads out. Centering removes drift; scaling by √n keeps variance fixed. What remains is the limiting shape: the normal law.',
       notice:['The histogram is a finite-n object; the red curve is the limiting normal.', 'Higher n makes the central region more Gaussian.', 'Characteristic functions prove the limit by turning sums into powers.'],
       summary:[['CLT',String.raw`\(\sqrt n(\bar X_n-\mu)/\sigma\Rightarrow N(0,1)\)`],['Weak convergence',String.raw`\(F_n(x)\to F(x)\) at continuity points`],['Standardization',String.raw`center by \(n\mu\), scale by \(\sigma\sqrt n\)`],['Role of CF','local expansion near zero governs the limit']]
     },
@@ -634,7 +650,7 @@
     $('mixValue').textContent=format(state.pi,2);
     $('spreadValue').textContent=format(state.spread,1);
     $('simValue').textContent=state.sims.toLocaleString();
-    const baseNames={normal:'N(0,1)',uniform:'U[-âˆš3,âˆš3]',exponential:'Exp(1)-1'};
+    const baseNames={normal:'N(0,1)',uniform:'U[-√3,√3]',exponential:'Exp(1)-1'};
     $('baseTag').textContent=baseNames[state.base];
     $('nControl').style.display = (state.op==='sum'||state.op==='clt') ? '' : 'none';
     $('baseDist').parentElement.style.display = (state.op==='ratio'||state.op==='mixture') ? 'none' : '';
@@ -684,7 +700,7 @@
       (state.op==='mixture'?`<span class="key"><span class="swatch muted"></span>component centers</span>`:'');
     $('gfLegend').innerHTML = state.op==='ratio'
       ? `<span class="key"><span class="swatch"></span>tail-sensitive CF sketch</span><span class="key"><span class="swatch muted"></span>rapid decay benchmark</span>`
-      : `<span class="key"><span class="swatch"></span>result |Ï†(t)|</span><span class="key"><span class="swatch muted"></span>base |Ï†(t)|</span>` + (state.op==='clt'?`<span class="key"><span class="swatch warn"></span>normal limit</span>`:'');
+      : `<span class="key"><span class="swatch"></span>result |φ(t)|</span><span class="key"><span class="swatch muted"></span>base |φ(t)|</span>` + (state.op==='clt'?`<span class="key"><span class="swatch warn"></span>normal limit</span>`:'');
   }
 
   function render(){
@@ -708,6 +724,7 @@
   });
   render();
   renderEquations(document.querySelector('.rightCol .card:nth-child(2)'));
+  renderDirectKatex(document);
 })();
 </script>
 </body>

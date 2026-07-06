@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -98,9 +98,12 @@
   .value{color:var(--ink);font-variant-numeric:tabular-nums}
   input[type=range]{width:100%;accent-color:var(--accent)}
   .formula-card{border:1px solid var(--line);border-radius:20px;padding:16px;margin-top:14px;background:color-mix(in srgb,var(--paper) 84%,var(--accent) 5%)}
-  .formula{font-size:1.02rem;overflow-x:auto;padding:2px 0}
+  .formula{font-size:1.02rem;overflow-x:auto;overflow-y:hidden;padding:2px 0}
+  .formula .katex{font-size:1.02em}
   .math-inline{display:inline-flex;align-items:baseline;vertical-align:-0.12em;margin:0 .08em}
+  .math-inline .katex{font-size:1em}
   .katex{color:inherit}
+  .katex-display{margin:.25em 0!important}
   .metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:14px}
   .metric{border:1px solid var(--line);border-radius:16px;padding:11px;background:color-mix(in srgb,var(--paper) 84%,var(--paper2))}
   .metric b{display:block;font-size:.78rem;color:var(--muted);font-weight:600;margin-bottom:3px}.metric span{font-variant-numeric:tabular-nums}
@@ -146,7 +149,7 @@
     <div>
       <h1>Extreme-value distributions and tail risk</h1>
       <div class="subtitle">
-        Extreme-value theory studies the geometry of maxima and threshold exceedances. Gumbel, FrÃ©chet, and Weibull are the
+        Extreme-value theory studies the geometry of maxima and threshold exceedances. Gumbel, Fréchet, and Weibull are the
         three limiting shapes unified by the GEV family, while generalized Pareto laws describe excess losses beyond high thresholds.
       </div>
     </div>
@@ -271,15 +274,47 @@ const $ = id => document.getElementById(id);
 const state = { mode:'gev' };
 const modeButtons = [...document.querySelectorAll('[data-mode]')];
 
-function fmt(x,d=2){ return isFinite(x) ? Number(x).toFixed(d) : 'âˆž'; }
+function fmt(x,d=2){ return isFinite(x) ? Number(x).toFixed(d) : '∞'; }
 function clamp(x,a,b){ return Math.max(a,Math.min(b,x)); }
 function clear(el){ el.innerHTML=''; }
 function svgEl(tag, attrs={}){ const e=document.createElementNS('http://www.w3.org/2000/svg',tag); for(const k in attrs) e.setAttribute(k,attrs[k]); return e; }
 function text(svg,x,y,txt,cls='label',anchor='middle'){ const t=svgEl('text',{x,y,'text-anchor':anchor,class:cls}); t.textContent=txt; svg.appendChild(t); return t; }
 function pathLine(pts,xs,ys){ return pts.map((p,i)=>(i?'L':'M')+xs(p[0])+','+ys(p[1])).join(' '); }
 function pathArea(pts,xs,ys,yBase){ if(!pts.length) return ''; let d=`M ${xs(pts[0][0])} ${yBase}`; for(const p of pts) d += ` L ${xs(p[0])} ${ys(p[1])}`; d += ` L ${xs(pts[pts.length-1][0])} ${yBase} Z`; return d; }
-function setKatex(el,tex,display=false){ el.dataset.tex=tex; el.dataset.display=display?'1':'0'; if(window.katex) katex.render(tex,el,{throwOnError:false,displayMode:display}); }
-function renderAll(){ if(!window.katex) return; document.querySelectorAll('[data-katex]').forEach(el=>katex.render(el.dataset.katex,el,{throwOnError:false,displayMode:el.dataset.display==='1'})); document.querySelectorAll('[data-tex]').forEach(el=>katex.render(el.dataset.tex,el,{throwOnError:false,displayMode:el.dataset.display==='1'})); }
+function texFallback(tex){
+  return String(tex)
+    .replace(/\\left|\\right/g,'')
+    .replace(/\\mathrm\{([^{}]*)\}/g,'$1')
+    .replace(/\\text\{([^{}]*)\}/g,'$1')
+    .replace(/\\operatorname\{([^{}]*)\}/g,'$1')
+    .replace(/\\frac\{([^{}]*)\}\{([^{}]*)\}/g,'($1)/($2)')
+    .replace(/\\exp/g,'exp')
+    .replace(/\\log/g,'log')
+    .replace(/\\le/g,'≤')
+    .replace(/\\ge/g,'≥')
+    .replace(/\\infty/g,'∞')
+    .replace(/\\xi/g,'ξ')
+    .replace(/\\mu/g,'μ')
+    .replace(/\\sigma/g,'σ')
+    .replace(/\\lambda/g,'λ')
+    .replace(/\\mathrm/g,'')
+    .replace(/\\/g,'');
+}
+function renderKatexNode(el,tex,display=false){
+  el.dataset.tex=tex;
+  el.dataset.display=display?'1':'0';
+  if(window.katex){
+    katex.render(tex,el,{throwOnError:false,displayMode:display,strict:'ignore'});
+  }else{
+    el.textContent=texFallback(tex);
+  }
+}
+function setKatex(el,tex,display=false){ renderKatexNode(el,tex,display); }
+function renderAll(){
+  const nodes=[...document.querySelectorAll('[data-katex]'),...document.querySelectorAll('[data-tex]')];
+  nodes.forEach(el=>renderKatexNode(el,el.dataset.katex||el.dataset.tex,el.dataset.display==='1'));
+  if(!window.katex) setTimeout(renderAll,250);
+}
 function svgKatex(svg,x,y,tex,{w=180,h=30,anchor='middle',cls='svgmath'}={}){
   const left = anchor==='middle' ? x-w/2 : (anchor==='end' ? x-w : x);
   const fo=svgEl('foreignObject',{x:left,y,width:w,height:h});
@@ -287,8 +322,7 @@ function svgKatex(svg,x,y,tex,{w=180,h=30,anchor='middle',cls='svgmath'}={}){
   div.setAttribute('xmlns','http://www.w3.org/1999/xhtml');
   div.className=cls;
   fo.appendChild(div); svg.appendChild(fo);
-  if(window.katex) katex.render(tex,div,{throwOnError:false,displayMode:false});
-  else div.dataset.tex=tex;
+  renderKatexNode(div,tex,false);
   return fo;
 }
 
@@ -332,7 +366,7 @@ function gevEndpoint(mu,sigma,xi){
   return Infinity;
 }
 function gevFamily(xi){
-  if(xi>0.04) return 'FrÃ©chet';
+  if(xi>0.04) return 'Fréchet';
   if(xi<-0.04) return 'Weibull';
   return 'Gumbel';
 }
@@ -417,7 +451,7 @@ function drawGevMain(){
       text(svg,xs(ep)-8,y0+18,'finite endpoint','inklabel','end');
     }
   }
-  text(svg,x0+w-4,y0+18,`${gevFamily(xi)} domain: Î¾ = ${fmt(xi,2)}`,'inklabel','end');
+  text(svg,x0+w-4,y0+18,`${gevFamily(xi)} domain: ξ = ${fmt(xi,2)}`,'inklabel','end');
   legend([{className:'sw',label:'GEV density'},{className:'sw2',label:'tail beyond return level'}]);
 }
 function drawGevSecondary(){
@@ -428,7 +462,7 @@ function drawGevSecondary(){
   const regions=[
     [0,.333,'Weibull','bounded upper endpoint','var(--accent2)'],
     [.333,.666,'Gumbel','light tail / no finite endpoint','var(--accent3)'],
-    [.666,1,'FrÃ©chet','heavy power tail','var(--accent)']
+    [.666,1,'Fréchet','heavy power tail','var(--accent)']
   ];
   regions.forEach(r=>{
     svg.appendChild(svgEl('rect',{x:xs(r[0]),y:y0+48,width:w*(r[1]-r[0]),height:80,rx:14,fill:r[4],opacity:.18,stroke:'var(--line)'}));
@@ -508,14 +542,14 @@ function drawMaximaSecondary(){
     ['raw observations',String.raw`X_1,\ldots,X_n`],
     ['maximum',String.raw`M_n=\max_i X_i`],
     ['normalize',parent===0?String.raw`n(M_n-1)`:parent===1?String.raw`M_n-\log n`:String.raw`M_n/n`],
-    ['limit law',parent===0?String.raw`\text{Weibull}`:parent===1?String.raw`\text{Gumbel}`:String.raw`\text{FrÃ©chet}`]
+    ['limit law',parent===0?String.raw`\text{Weibull}`:parent===1?String.raw`\text{Gumbel}`:String.raw`\text{Fréchet}`]
   ];
   blocks.forEach((b,i)=>{
     const yy=by+i*52;
     svg.appendChild(svgEl('rect',{x:bx,y:yy,width:bw,height:bh,rx:16,fill:'var(--paper2)',class:'barstroke'}));
     text(svg,bx-10,yy+22,b[0],'label','end');
     svgKatex(svg,bx+bw/2,yy+6,b[1],{w:bw-20,h:24,cls:'svgmath small'});
-    if(i<3) text(svg,bx+bw/2,yy+48,'â†“','inklabel');
+    if(i<3) text(svg,bx+bw/2,yy+48,'↓','inklabel');
   });
   svgKatex(svg,310,292,String.raw`P(M_n\le x)=F(x)^n`,{w:360,h:30});
 }
@@ -548,7 +582,7 @@ function drawGpdMain(){
     svg.appendChild(svgEl('line',{x1:xs(ep),y1:y0,x2:xs(ep),y2:y0+h,class:'guide'}));
     text(svg,xs(ep)-8,y0+18,'finite excess endpoint','inklabel','end');
   }
-  text(svg,x0+w-4,y0+18,`GPD excess shape Î¾ = ${fmt(xi,2)}`,'inklabel','end');
+  text(svg,x0+w-4,y0+18,`GPD excess shape ξ = ${fmt(xi,2)}`,'inklabel','end');
   legend([{className:'sw',label:'GPD excess density'},{className:'sw2',label:'tail beyond excess quantile'}]);
 }
 function drawGpdSecondary(){
@@ -655,17 +689,17 @@ function updateTexts(){
   if(state.mode==='gev'){
     const q=gevQuantile(p.p,p.mu,p.sigma,p.xi);
     $('mainTitle').textContent='GEV structure';
-    $('mainSub').innerHTML=String.raw`One shape parameter unifies Gumbel, FrÃ©chet, and Weibull maxima limits.`;
+    $('mainSub').innerHTML=String.raw`One shape parameter unifies Gumbel, Fréchet, and Weibull maxima limits.`;
     $('secondaryTitle').textContent='Domain geometry';
-    $('secondarySub').textContent='The sign of Î¾ determines whether the upper tail is light, heavy, or bounded.';
+    $('secondarySub').textContent='The sign of ξ determines whether the upper tail is light, heavy, or bounded.';
     $('badge').innerHTML=String.raw`family: <span class="math-inline" data-katex="G_{\xi}"></span>`;
     setKatex($('definition'),String.raw`G_\xi(x)=\exp\left\{-\left(1+\xi\frac{x-\mu}{\sigma}\right)^{-1/\xi}\right\},\qquad 1+\xi\frac{x-\mu}{\sigma}>0`);
     $('familyMetric').textContent=gevFamily(xi);
-    $('endpointMetric').textContent=xi<0?fmt(gevEndpoint(p.mu,p.sigma,xi),2):'âˆž';
+    $('endpointMetric').textContent=xi<0?fmt(gevEndpoint(p.mu,p.sigma,xi),2):'∞';
     $('riskMetric').textContent=fmt(q,2);
     $('tailMetric').textContent=xi>0?'heavy tail':xi<0?'bounded tail':'light tail';
-    $('interpText').textContent='GEV is the canonical limit law for normalized block maxima. Its shape parameter Î¾ is the tail-type switch.';
-    $('noticeText').textContent='Positive Î¾ creates a FrÃ©chet heavy tail. Negative Î¾ creates a finite upper endpoint. Î¾ close to zero gives the Gumbel light-tail case.';
+    $('interpText').textContent='GEV is the canonical limit law for normalized block maxima. Its shape parameter ξ is the tail-type switch.';
+    $('noticeText').textContent='Positive ξ creates a Fréchet heavy tail. Negative ξ creates a finite upper endpoint. ξ close to zero gives the Gumbel light-tail case.';
     $('summaryText').innerHTML=String.raw`If normalized maxima converge nondegenerately, the limit must be GEV. The sign of <span class="math-inline" data-katex="\xi"></span> classifies the domain of attraction.`;
   } else if(state.mode==='maxima'){
     $('mainTitle').textContent='Maxima and domains of attraction';
@@ -674,8 +708,8 @@ function updateTexts(){
     $('secondarySub').textContent='Maxima first amplify the tail, then normalization reveals a stable limiting shape.';
     $('badge').textContent=parentName(p.parent);
     setKatex($('definition'),String.raw`M_n=\max\{X_1,\ldots,X_n\},\qquad P(M_n\le x)=F(x)^n`);
-    $('familyMetric').textContent=p.parent===0?'Weibull':p.parent===1?'Gumbel':'FrÃ©chet';
-    $('endpointMetric').textContent=p.parent===0?'finite':'âˆž';
+    $('familyMetric').textContent=p.parent===0?'Weibull':p.parent===1?'Gumbel':'Fréchet';
+    $('endpointMetric').textContent=p.parent===0?'finite':'∞';
     $('riskMetric').textContent='block n='+p.n;
     $('tailMetric').textContent=p.parent===2?'power tail':p.parent===1?'light tail':'bounded';
     $('interpText').textContent='Extreme-value limits are about tail geometry, not the full body of the parent distribution.';
@@ -690,11 +724,11 @@ function updateTexts(){
     $('badge').innerHTML=String.raw`excess law: <span class="math-inline" data-katex="Y=X-u"></span>`;
     setKatex($('definition'),String.raw`P(Y>y\mid X>u)\approx \left(1+\xi\frac{y}{\sigma}\right)^{-1/\xi},\qquad y\ge0`);
     $('familyMetric').textContent=xi>0?'heavy excess':xi<0?'bounded excess':'exponential excess';
-    $('endpointMetric').textContent=xi<0?fmt(-p.sigma/xi,2):'âˆž';
+    $('endpointMetric').textContent=xi<0?fmt(-p.sigma/xi,2):'∞';
     $('riskMetric').textContent=fmt(q,2);
     $('tailMetric').textContent=fmt(gpdSurv(q,p.sigma,xi),3);
     $('interpText').textContent='GEV describes block maxima. GPD describes exceedances above a high threshold. These are two faces of the same tail theory.';
-    $('noticeText').textContent='For Î¾>0, mean excess increases with the threshold. For Î¾<0, the excess distribution has a finite endpoint.';
+    $('noticeText').textContent='For ξ>0, mean excess increases with the threshold. For ξ<0, the excess distribution has a finite endpoint.';
     $('summaryText').innerHTML=String.raw`Peaks-over-threshold method: model <span class="math-inline" data-katex="X-u\mid X>u"></span> by a GPD, then extrapolate high quantiles.`;
   } else {
     const q=clamp(1-(1-p.p)/p.rate,0.001,0.999999), varLevel=p.u+gpdQuantile(q,p.sigma,p.xi);
@@ -702,15 +736,15 @@ function updateTexts(){
     $('mainTitle').textContent='Tail risk: return levels, VaR, and ES';
     $('mainSub').innerHTML=String.raw`Extreme-risk applications extrapolate beyond ordinary sample quantiles using a tail model.`;
     $('secondaryTitle').textContent='Return-level curve';
-    $('secondarySub').textContent='The curve steepens when Î¾ is positive: very high confidence levels become expensive.';
+    $('secondarySub').textContent='The curve steepens when ξ is positive: very high confidence levels become expensive.';
     $('badge').innerHTML=String.raw`P(X>\mathrm{VaR}_p)=1-p`;
     setKatex($('definition'),String.raw`\mathrm{VaR}_p=u+\frac{\sigma}{\xi}\left[\left(\frac{\lambda_u}{1-p}\right)^\xi-1\right],\qquad \lambda_u=P(X>u)`);
     $('familyMetric').textContent=xi>0?'unbounded risk':xi<0?'bounded risk':'exponential tail risk';
-    $('endpointMetric').textContent=xi<0?fmt(p.u-p.sigma/xi,2):'âˆž';
+    $('endpointMetric').textContent=xi<0?fmt(p.u-p.sigma/xi,2):'∞';
     $('riskMetric').textContent=fmt(varLevel,2);
     $('tailMetric').textContent=xi<1&&isFinite(es)?'ES '+fmt(es,2):'ES infinite';
     $('interpText').textContent='Tail risk is about rare losses beyond a threshold. VaR marks a high quantile; expected shortfall averages losses beyond it.';
-    $('noticeText').textContent='When Î¾ rises above zero, the return-level curve bends upward. Small probability changes near one can imply large loss changes.';
+    $('noticeText').textContent='When ξ rises above zero, the return-level curve bends upward. Small probability changes near one can imply large loss changes.';
     $('summaryText').innerHTML=String.raw`For GPD tails, <span class="math-inline" data-katex="\xi"></span> controls whether extrapolated risk is bounded, exponential-like, or heavy-tailed. Expected shortfall is finite only if <span class="math-inline" data-katex="\xi<1"></span>.`;
   }
   renderAll();

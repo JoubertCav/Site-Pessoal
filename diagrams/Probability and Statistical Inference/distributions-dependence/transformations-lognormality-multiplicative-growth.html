@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -101,6 +101,10 @@
   .formula{font-size:1.02rem;overflow-x:auto;padding:2px 0}
   .math-inline{display:inline-flex;align-items:baseline;vertical-align:-0.12em;margin:0 .08em}
   .katex{color:inherit}
+
+  .katex-display{margin:.18rem 0 .32rem;overflow-x:auto;overflow-y:hidden}
+  .formula .katex,.math-inline .katex{color:inherit}
+  .formula[data-tex]{min-height:1.6em}
   .metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:14px}
   .metric{border:1px solid var(--line);border-radius:16px;padding:11px;background:color-mix(in srgb,var(--paper) 84%,var(--paper2))}
   .metric b{display:block;font-size:.78rem;color:var(--muted);font-weight:600;margin-bottom:3px}.metric span{font-variant-numeric:tabular-nums}
@@ -272,24 +276,83 @@ const $ = id => document.getElementById(id);
 const state = { mode:'transform' };
 const modeButtons = [...document.querySelectorAll('[data-mode]')];
 
-function fmt(x,d=2){ return isFinite(x) ? Number(x).toFixed(d) : 'âˆž'; }
+function fmt(x,d=2){ return isFinite(x) ? Number(x).toFixed(d) : '∞'; }
 function clamp(x,a,b){ return Math.max(a,Math.min(b,x)); }
 function clear(el){ el.innerHTML=''; }
 function svgEl(tag, attrs={}){ const e=document.createElementNS('http://www.w3.org/2000/svg',tag); for(const k in attrs) e.setAttribute(k,attrs[k]); return e; }
 function text(svg,x,y,txt,cls='label',anchor='middle'){ const t=svgEl('text',{x,y,'text-anchor':anchor,class:cls}); t.textContent=txt; svg.appendChild(t); return t; }
 function pathLine(pts,xs,ys){ return pts.map((p,i)=>(i?'L':'M')+xs(p[0])+','+ys(p[1])).join(' '); }
 function pathArea(pts,xs,ys,yBase){ if(!pts.length) return ''; let d=`M ${xs(pts[0][0])} ${yBase}`; for(const p of pts) d += ` L ${xs(p[0])} ${ys(p[1])}`; d += ` L ${xs(pts[pts.length-1][0])} ${yBase} Z`; return d; }
-function setKatex(el,tex,display=false){ el.dataset.tex=tex; el.dataset.display=display?'1':'0'; if(window.katex) katex.render(tex,el,{throwOnError:false,displayMode:display}); }
-function renderAll(){ if(!window.katex) return; document.querySelectorAll('[data-katex]').forEach(el=>katex.render(el.dataset.katex,el,{throwOnError:false,displayMode:el.dataset.display==='1'})); document.querySelectorAll('[data-tex]').forEach(el=>katex.render(el.dataset.tex,el,{throwOnError:false,displayMode:el.dataset.display==='1'})); }
+function texFallback(tex){
+  return tex
+    .replace(/\\Longleftrightarrow/g,'⇔')
+    .replace(/\\Longrightarrow/g,'⇒')
+    .replace(/\\Rightarrow/g,'⇒')
+    .replace(/\\approx/g,'≈')
+    .replace(/\\le/g,'≤')
+    .replace(/\\ge/g,'≥')
+    .replace(/\\mu/g,'μ')
+    .replace(/\\sigma/g,'σ')
+    .replace(/\\varepsilon/g,'ε')
+    .replace(/\\pi/g,'π')
+    .replace(/\\log/g,'log')
+    .replace(/\\exp/g,'exp')
+    .replace(/\\sqrt/g,'√')
+    .replace(/\\prod/g,'∏')
+    .replace(/\\sum/g,'∑')
+    .replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g,'($1)/($2)')
+    .replace(/\\operatorname\{([^{}]+)\}/g,'$1')
+    .replace(/\\mathrm\{([^{}]+)\}/g,'$1')
+    .replace(/\\left|\\right/g,'')
+    .replace(/\\!/g,'')
+    .replace(/[{}]/g,'')
+    .replace(/\\,/g,' ')
+    .replace(/\\quad/g,'  ')
+    .replace(/\\;/g,' ')
+    .replace(/\\/g,'');
+}
+function katexOptions(display=false){
+  return {throwOnError:false,displayMode:display,strict:'ignore',trust:true};
+}
+function setKatex(el,tex,display=false){
+  if(!el) return;
+  el.dataset.tex=tex;
+  el.dataset.display=display?'1':'0';
+  if(window.katex){
+    katex.render(tex,el,katexOptions(display));
+    el.dataset.renderedTex=tex;
+  }else{
+    el.textContent=texFallback(tex);
+  }
+}
+function renderAll(){
+  const nodes=[...document.querySelectorAll('[data-katex]'),...document.querySelectorAll('[data-tex]')];
+  if(!window.katex){
+    nodes.forEach(el=>{
+      const tex=el.dataset.katex || el.dataset.tex || '';
+      if(!el.dataset.fallbackSet){ el.textContent=texFallback(tex); el.dataset.fallbackSet='1'; }
+    });
+    setTimeout(renderAll,120);
+    return;
+  }
+  nodes.forEach(el=>{
+    const tex=el.dataset.katex || el.dataset.tex || '';
+    const display=el.dataset.display==='1' || el.dataset.display==='true';
+    if(el.dataset.renderedTex===tex) return;
+    katex.render(tex,el,katexOptions(display));
+    el.dataset.renderedTex=tex;
+  });
+}
 function svgKatex(svg,x,y,tex,{w=180,h=30,anchor='middle',cls='svgmath'}={}){
   const left = anchor==='middle' ? x-w/2 : (anchor==='end' ? x-w : x);
   const fo=svgEl('foreignObject',{x:left,y,width:w,height:h});
   const div=document.createElement('div');
   div.setAttribute('xmlns','http://www.w3.org/1999/xhtml');
   div.className=cls;
+  div.dataset.tex=tex;
   fo.appendChild(div); svg.appendChild(fo);
-  if(window.katex) katex.render(tex,div,{throwOnError:false,displayMode:false});
-  else div.dataset.tex=tex;
+  if(window.katex) katex.render(tex,div,katexOptions(false));
+  else div.textContent=texFallback(tex);
   return fo;
 }
 
@@ -380,7 +443,7 @@ function drawLognormalDensity({compare=false,perturb=false}={}){
   if(cutoff>0 && cutoff<xMax){
     const y=lognormalPdf(cutoff,mu,sig);
     svg.appendChild(svgEl('circle',{cx:xs(cutoff),cy:ys(Math.min(y,yMax)),r:5,class:'dot'}));
-    text(svg,xs(cutoff)+8,ys(Math.min(y,yMax))-8,`F(yâ‚€)=${fmt(lognormalCdf(cutoff,mu,sig),3)}`,'inklabel','start');
+    text(svg,xs(cutoff)+8,ys(Math.min(y,yMax))-8,`F(y₀)=${fmt(lognormalCdf(cutoff,mu,sig),3)}`,'inklabel','start');
   }
   text(svg,x0+w-4,y0+18,perturb?'same moments, different density':'lognormal right-tail geometry','inklabel','end');
 }
@@ -391,7 +454,7 @@ function drawTransformSecondary(){
   const xMin=mu-3.2*sig, xMax=mu+3.2*sig, yMax=Math.exp(xMax), yMin=Math.exp(xMin);
   const x0=60,y0=36,w=500,h=220;
   const xs=x=>x0+w*(x-xMin)/(xMax-xMin), ys=y=>y0+h-h*(y-yMin)/(yMax-yMin);
-  axes(svg,{x0,y0,w,h,xMin,xMax,yMin,yMax,xLabel:'log variable x',yLabel:'transformed y=eË£',ticksX:4,ticksY:4});
+  axes(svg,{x0,y0,w,h,xMin,xMax,yMin,yMax,xLabel:'log variable x',yLabel:'transformed y=eˣ',ticksX:4,ticksY:4});
   const pts=[];
   for(let i=0;i<=260;i++){ const x=xMin+(xMax-xMin)*i/260; pts.push([x,Math.exp(x)]); }
   svg.appendChild(svgEl('path',{d:pathLine(pts,xs,ys),class:'curve'}));
@@ -453,7 +516,7 @@ function drawGrowthMain(){
       text(svg,xs(v)+8,ys(y)+(i?18:-8),l,'inklabel','start');
     }
   });
-  text(svg,x0+w-4,y0+18,'product of shocks â†’ lognormal outcome','inklabel','end');
+  text(svg,x0+w-4,y0+18,'product of shocks → lognormal outcome','inklabel','end');
 }
 
 function drawGrowthSecondary(){
@@ -548,8 +611,8 @@ function updateTexts(){
     $('secondarySub').textContent='The bell is symmetric only before exponentiation.';
     $('badge').innerHTML=String.raw`law: <span class="math-inline" data-katex="\log Y\sim N(\mu,\sigma^2)"></span>`;
     setKatex($('definition'),String.raw`Y=e^X,\quad X\sim N(\mu,\sigma^2),\quad f_Y(y)=\frac{1}{y\sigma\sqrt{2\pi}}\exp\!\left[-\frac{(\log y-\mu)^2}{2\sigma^2}\right]`);
-    $('interpText').textContent='The median is exp(Î¼), the mode is exp(Î¼âˆ’ÏƒÂ²), and the mean is exp(Î¼+ÏƒÂ²/2). Their separation is the geometry of right skewness.';
-    $('noticeText').textContent='Increasing Ïƒ moves the mean far to the right while the median stays tied to Î¼. This is why averages of multiplicative outcomes can be tail dominated.';
+    $('interpText').textContent='The median is exp(μ), the mode is exp(μ−σ²), and the mean is exp(μ+σ²/2). Their separation is the geometry of right skewness.';
+    $('noticeText').textContent='Increasing σ moves the mean far to the right while the median stays tied to μ. This is why averages of multiplicative outcomes can be tail dominated.';
     $('summaryText').innerHTML=String.raw`Useful identities: <span class="math-inline" data-katex="E[Y]=e^{\mu+\sigma^2/2}"></span>, <span class="math-inline" data-katex="\operatorname{Med}(Y)=e^\mu"></span>, <span class="math-inline" data-katex="\operatorname{Mode}(Y)=e^{\mu-\sigma^2}"></span>.`;
   } else if(state.mode==='growth'){
     $('mainTitle').textContent='Multiplicative growth';
@@ -576,7 +639,7 @@ function updateTexts(){
   $('meanMetric').textContent=fmt(mean,3);
   $('medianMetric').textContent=fmt(med,3);
   $('spreadMetric').textContent=fmt(Math.sqrt(variance),3);
-  $('tailMetric').textContent=state.mode==='growth' ? 'right-skewed' : `F(yâ‚€)=${fmt(cdf,3)}`;
+  $('tailMetric').textContent=state.mode==='growth' ? 'right-skewed' : `F(y₀)=${fmt(cdf,3)}`;
   renderAll();
 }
 
@@ -610,7 +673,7 @@ $('themeBtn').addEventListener('click',()=>{
   document.documentElement.dataset.theme=dark?'':'dark';
   $('themeBtn').textContent=dark?'Dark mode':'Light mode';
 });
-window.addEventListener('load',()=>{ renderAll(); draw(); });
+window.addEventListener('load',()=>{ renderAll(); draw(); setTimeout(renderAll,250); });
 </script>
 </body>
 </html>
