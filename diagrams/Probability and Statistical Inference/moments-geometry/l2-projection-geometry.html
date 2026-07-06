@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -18,6 +18,9 @@
 
   gtag('config', 'G-NHXHEJP1G0');
 </script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 <style>
   :root{
     --bg:#f6f1e8; --panel:#fffaf2; --panel2:#fcf5ea; --text:#17212b; --muted:#65717d;
@@ -52,6 +55,7 @@
   .def{padding:14px 15px;min-height:126px}
   .tag{color:var(--muted);font-size:.74rem;font-weight:850;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
   .math{font-family:Cambria, Georgia, "Times New Roman", serif;line-height:1.45;font-size:1.01rem;color:var(--text)}
+  .katex{font-size:1em;color:var(--text)}
   .formula{
     display:block;
     margin:.15rem 0 .35rem;
@@ -137,7 +141,7 @@
 <div class="wrap">
   <header>
     <div>
-      <h1>LÂ² projection geometry</h1>
+      <h1>L² projection geometry</h1>
       <div class="subtitle">
         In \(L^2(P)\), random variables are vectors and the inner product is \(\langle U,V\rangle=E[UV]\).
         Best linear prediction is an orthogonal projection: \(Y=\widehat Y+e\), with \(e\perp\mathcal M\).
@@ -150,32 +154,32 @@
     <div class="def">
       <div class="tag">Hilbert space</div>
       <div class="math">
-        <span class="formula"><span class="hl">L</span><sup>2</sup>(P) <span class="op">=</span> <span class="bracket">{</span>Y : E[Y<sup>2</sup>] &lt; âˆž<span class="bracket">}</span></span>
-        <span class="formula small">âŸ¨U,VâŸ© <span class="op">=</span> E[UV]</span>
+        <span class="formula">\(L^2(P)=\{Y:E[Y^2]<\infty\}\)</span>
+        <span class="formula small">\(\langle U,V\rangle=E[UV]\)</span>
         <span class="mathNote">random variables as vectors</span>
       </div>
     </div>
     <div class="def">
       <div class="tag">Projection</div>
       <div class="math">
-        <span class="formula"><span class="blue">Å¶</span> <span class="op">=</span> P<sub>ð“œ</sub>Y</span>
-        <span class="formula small"><span class="blue">Å¶</span> âˆˆ ð“œ, &nbsp; Yâˆ’<span class="blue">Å¶</span> âŸ‚ ð“œ</span>
+        <span class="formula">\(\widehat Y=P_{\mathcal M}Y\)</span>
+        <span class="formula small">\(\widehat Y\in\mathcal M,\quad Y-\widehat Y\perp\mathcal M\)</span>
         <span class="mathNote">closest point inside the model space</span>
       </div>
     </div>
     <div class="def">
       <div class="tag">Best predictor</div>
       <div class="math">
-        <span class="formula"><span class="blue">Å¶</span> <span class="op">=</span> Î± + Î²X</span>
-        <span class="formula small">(Î±,Î²) âˆˆ argmin<sub>a,b</sub> E[(Yâˆ’aâˆ’bX)<sup>2</sup>]</span>
+        <span class="formula">\(\widehat Y=\alpha+\beta X\)</span>
+        <span class="formula small">\((\alpha,\beta)\in\arg\min_{a,b}E[(Y-a-bX)^2]\)</span>
         <span class="mathNote">least squares as projection</span>
       </div>
     </div>
     <div class="def">
       <div class="tag">Normal equations</div>
       <div class="math">
-        <span class="formula">E[e] <span class="op">=</span> 0, &nbsp; E[eX] <span class="op">=</span> 0</span>
-        <span class="formula small">e <span class="op">=</span> Y âˆ’ <span class="blue">Å¶</span></span>
+        <span class="formula">\(E[e]=0,\quad E[eX]=0\)</span>
+        <span class="formula small">\(e=Y-\widehat Y\)</span>
         <span class="mathNote">residual orthogonal to each regressor</span>
       </div>
     </div>
@@ -191,7 +195,7 @@
           <option value="const">constants: span{1}</option>
           <option value="xonly">through origin: span{X}</option>
           <option value="linear" selected>linear: span{1, X}</option>
-          <option value="quadratic">quadratic: span{1, X, XÂ²}</option>
+          <option value="quadratic">quadratic: span{1, X, X²}</option>
         </select>
       </div>
 
@@ -300,7 +304,7 @@
     </section>
   </main>
 
-  <footer>Minimal interactive notebook â€” LÂ² geometry, projection, normal equations, and residual orthogonality.</footer>
+  <footer>Minimal interactive notebook — L² geometry, projection, normal equations, and residual orthogonality.</footer>
 </div>
 
 <script>
@@ -317,10 +321,22 @@ const n=13;
 
 function css(v){return getComputedStyle(body).getPropertyValue(v).trim();}
 function fmt(x){
-  if(!isFinite(x)) return "âˆž";
+  if(!isFinite(x)) return "∞";
   if(Math.abs(x)<0.0001 && x!==0) return x.toExponential(2);
   if(Math.abs(x)<10) return x.toFixed(4);
   return x.toFixed(2);
+}
+function renderMath(root=document.body){
+  if(window.renderMathInElement){
+    renderMathInElement(root,{
+      delimiters:[
+        {left:"$$",right:"$$",display:true},
+        {left:"\\[",right:"\\]",display:true},
+        {left:"\\(",right:"\\)",display:false}
+      ],
+      throwOnError:false
+    });
+  }
 }
 function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
 function line(x1,y1,x2,y2,stroke,w=1,op=1,dash=""){
@@ -408,7 +424,7 @@ function basisFor(X,w){
   if(kind==="const") return {names:["1"],B:[one]};
   if(kind==="xonly") return {names:["X"],B:[centeredX]};
   if(kind==="linear") return {names:["1","X"],B:[one,centeredX]};
-  return {names:["1","X","XÂ²"],B:[one,centeredX,X2.map(v=>v-EX2)]};
+  return {names:["1","X","X²"],B:[one,centeredX,X2.map(v=>v-EX2)]};
 }
 function project(Y,B,w){
   const k=B.length;
@@ -445,12 +461,12 @@ function drawMain(){
   const projX=px0+yhLen, projY=py0;
   const yX=projX, yY=py0-eLen;
   let h='<rect x="8" y="10" width="964" height="475" rx="20" fill="'+panel+'" stroke="'+border+'"/>';
-  h+=text(72,42,"orthogonal decomposition in LÂ²(P)",muted,13,850);
+  h+=text(72,42,"orthogonal decomposition in L²(P)",muted,13,850);
 
   // subspace band
   h+=line(58,py0,560,py0,violet,5,.18);
   h+=line(58,py0,560,py0,violet,2,.75);
-  h+=text(565,py0+4,"subspace ð“œ = span{"+m.names.join(", ")+"}",violet,13,900);
+  h+=text(565,py0+4,"subspace 𝓜 = span{"+m.names.join(", ")+"}",violet,13,900);
 
   // ambient grid
   for(let i=0;i<=5;i++){
@@ -468,9 +484,9 @@ function drawMain(){
   h+='<circle cx="'+px0+'" cy="'+py0+'" r="5" fill="'+muted+'"/>';
   h+='<circle cx="'+projX+'" cy="'+projY+'" r="6" fill="'+blue+'"/>';
   h+='<circle cx="'+yX+'" cy="'+yY+'" r="6" fill="'+acc+'"/>';
-  h+=text(projX+8,projY+20,"Å¶ = Pð“œY",blue,13,900);
+  h+=text(projX+8,projY+20,"Ŷ = P𝓜Y",blue,13,900);
   h+=text(yX+8,yY-8,"Y",acc,13,900);
-  h+=text((projX+yX)/2+8,(projY+yY)/2,"e = Yâˆ’Å¶",warn,13,900);
+  h+=text((projX+yX)/2+8,(projY+yY)/2,"e = Y−Ŷ",warn,13,900);
 
   // dashed distance arcs
   h+=line(px0,yY,yX,yY,grid,1.5,.8,"5 5");
@@ -479,10 +495,10 @@ function drawMain(){
   // Pythagorean panel
   h+='<rect x="645" y="70" width="278" height="210" rx="20" fill="'+panel2+'" stroke="'+border+'"/>';
   h+=text(670,104,"Pythagorean identity",textc,16,900);
-  h+=text(670,138,"||Y||Â² = ||Å¶||Â² + ||e||Â²",textc,15,850);
-  h+=text(670,174,"||Y||Â²",acc,13,900)+text(900,174,fmt(m.yNorm*m.yNorm),textc,13,850,"end");
-  h+=text(670,202,"||Å¶||Â²",blue,13,900)+text(900,202,fmt(m.yhNorm*m.yhNorm),textc,13,850,"end");
-  h+=text(670,230,"||e||Â² = MSE",warn,13,900)+text(900,230,fmt(m.mse),textc,13,850,"end");
+  h+=text(670,138,"||Y||² = ||Ŷ||² + ||e||²",textc,15,850);
+  h+=text(670,174,"||Y||²",acc,13,900)+text(900,174,fmt(m.yNorm*m.yNorm),textc,13,850,"end");
+  h+=text(670,202,"||Ŷ||²",blue,13,900)+text(900,202,fmt(m.yhNorm*m.yhNorm),textc,13,850,"end");
+    ["MSE \\(\\|e\\|^2\\)", fmt(m.mse)],
   h+=text(670,258,"gap",muted,12,850)+text(900,258,fmt(m.yNorm*m.yNorm-m.yhNorm*m.yhNorm-m.eNorm*m.eNorm),textc,12,850,"end");
 
   // coefficients
@@ -491,7 +507,7 @@ function drawMain(){
   let coefText="";
   for(let i=0;i<m.names.length;i++) coefText+=m.names[i]+": "+fmt(m.coef[i])+(i<m.names.length-1?"   ":"");
   h+=text(670,364,coefText,muted,12,850);
-  h+=text(670,390,"Å¶ is the closest point to Y inside ð“œ.",textc,12,850);
+  h+=text(670,390,"Ŷ is the closest point to Y inside 𝓜.",textc,12,850);
 
   svg.innerHTML=h;
 }
@@ -523,11 +539,11 @@ function drawState(){
     h+='<rect x="'+(cx+bw)+'" y="'+Math.min(zero,er)+'" width="'+bw+'" height="'+Math.abs(zero-er)+'" rx="4" fill="'+warn+'" fill-opacity=".70"/>';
     const r=3+45*Math.sqrt(m.w[i]);
     h+='<circle cx="'+cx+'" cy="266" r="'+r+'" fill="'+blue+'" fill-opacity=".16" stroke="'+blue+'" stroke-opacity=".35"/>';
-    h+=text(cx,294,"Ï‰"+(i+1),muted,9,750,"middle");
+    h+=text(cx,294,"ω"+(i+1),muted,9,750,"middle");
   }
   h+=text(66,34,"bars by state; circles show probability weight",muted,12,850);
   h+=text(72,258,"Y",acc,12,900);
-  h+=text(104,258,"Å¶",blue,12,900);
+  h+=text(104,258,"Ŷ",blue,12,900);
   h+=text(137,258,"e",warn,12,900);
   svg.innerHTML=h;
 }
@@ -539,7 +555,7 @@ function drawNormal(){
   let h='<rect x="8" y="10" width="504" height="290" rx="18" fill="'+panel+'" stroke="'+border+'"/>';
   h+=text(66,34,"residual inner products",muted,12,850);
 
-  const labels=["1","X","XÂ²"];
+  const labels=["1","X","X²"];
   const basisAll=[Array(n).fill(1),m.X,m.X.map(x=>x*x)];
   const vals=labels.map((lab,i)=>inner(m.e,basisAll[i],m.w));
   const active=labels.map(lab=>m.names.indexOf(lab)>=0);
@@ -580,8 +596,8 @@ function drawNormal(){
   }
   h+='<path d="'+path+'" fill="none" stroke="'+warn+'" stroke-width="2.2"/>';
   h+=line(curveX0,curveY1,curveX1,curveY1,grid,1,.8);
-  h+=text(curveX0,205,"loss curve: min E[(Y-a-bX)Â²]",muted,11,850);
-  h+=text(curveX1,288,"slope Î²",muted,10,850,"end");
+  h+=text(curveX0,205,"loss curve: min E[(Y-a-bX)²]",muted,11,850);
+  h+=text(curveX1,288,"slope β",muted,10,850,"end");
 
   svg.innerHTML=h;
 }
@@ -592,45 +608,46 @@ function updateText(){
   document.getElementById("noiseVal").textContent=fmt(Number(noiseRange.value));
   document.getElementById("rareVal").textContent=fmt(Number(rareRange.value));
 
-  let yhat="Å¶ = ";
+  let yhat="\\widehat Y = ";
   for(let i=0;i<m.names.length;i++){
     const coef=m.coef[i];
-    const sign=i===0?"":(coef>=0?" + ":" âˆ’ ");
-    yhat += sign + fmt(Math.abs(coef)) + (m.names[i]==="1"?"":m.names[i]);
+    const sign=i===0 ? (coef<0?"-":"") : (coef>=0?" + ":" - ");
+    const basisName=m.names[i]==="1" ? "" : "\\,"+m.names[i].replace("X²","X^2");
+    yhat += sign + fmt(Math.abs(coef)) + basisName;
   }
   document.getElementById("eqBox").innerHTML =
-    '<span class="formula small"><span class="blue">'+yhat+'</span></span>'+
-    '<span class="formula small">âŸ¨e, B<sub>j</sub>âŸ© = 0 &nbsp; for every &nbsp; B<sub>j</sub> âˆˆ ð“œ</span>'+
+    '<span class="formula small">\\('+yhat+'\\)</span>'+
+    '<span class="formula small">\\(\\langle e,B_j\\rangle=0\\quad\\text{for every }B_j\\in\\mathcal M\\)</span>'+
     '<span class="mathNote">normal equations = residual orthogonality</span>';
 
   const mini=[
-    ["MSE ||e||Â²", fmt(m.mse)],
-    ["||Y||", fmt(m.yNorm)],
-    ["||Å¶||", fmt(m.yhNorm)],
-    ["||e||", fmt(m.eNorm)],
-    ["RÂ²", fmt(m.r2)],
+    ["MSE \\(\\|e\\|^2\\)", fmt(m.mse)],
+    ["\\(\\|Y\\|\\)", fmt(m.yNorm)],
+    ["\\(\\|\\widehat Y\\|\\)", fmt(m.yhNorm)],
+    ["\\(\\|e\\|\\)", fmt(m.eNorm)],
+    ["\\(R^2\\)", fmt(m.r2)],
     ["basis dim", String(m.names.length)]
   ];
   document.getElementById("miniGrid").innerHTML=mini.map(d=>'<div class="miniStat"><div class="k">'+d[0]+'</div><div class="v">'+d[1]+'</div></div>').join("");
 
   const items=[
-    ["âœ“","choose a closed subspace ð“œ"],
-    ["âœ“","find the closest element Å¶ âˆˆ ð“œ"],
-    ["âœ“","residual e = Yâˆ’Å¶ is orthogonal to ð“œ"],
-    ["â†’","normal equations are orthogonality conditions"]
+    ["✓","choose a closed subspace 𝓜"],
+    ["✓","find the closest element Ŷ ∈ 𝓜"],
+    ["✓","residual e = Y−Ŷ is orthogonal to 𝓜"],
+    ["→","normal equations are orthogonality conditions"]
   ];
   document.getElementById("logicList").innerHTML=items.map(it=>'<div class="logicItem"><span class="mark">'+it[0]+'</span><span>'+it[1]+'</span></div>').join("");
 
   document.getElementById("interpretText").innerHTML =
-    "The app uses a finite probability space, so \(L^2(P)\) is a weighted Euclidean space. The projection \(\widehat Y\) is not merely a fitted line: it is the closest point to \(Y\) inside the chosen subspace \(\mathcal M\). The residual vector \(e=Y-\widehat Y\) is perpendicular to every direction allowed in the model.";
+    String.raw`The app uses a finite probability space, so \(L^2(P)\) is a weighted Euclidean space. The projection \(\widehat Y\) is not merely a fitted line: it is the closest point to \(Y\) inside the chosen subspace \(\mathcal M\). The residual vector \(e=Y-\widehat Y\) is perpendicular to every direction allowed in the model.`;
 
-  let notice="When the subspace is span{1,X}, the residual has zero inner product with both 1 and X. This is exactly the usual regression normal equation.";
-  if(subspaceSelect.value==="const") notice="With constants only, the projection is \(E[Y]\). The residual has mean zero, but it need not be orthogonal to X.";
-  if(subspaceSelect.value==="xonly") notice="With span{X} only, the fitted predictor is forced through the origin. Orthogonality to X holds, but the residual mean need not be zero.";
-  if(subspaceSelect.value==="quadratic") notice="Adding \(X^2\) expands the subspace. Projection error weakly falls because the closest point is chosen from a larger set.";
+  let notice=String.raw`When the subspace is \(\operatorname{span}\{1,X\}\), the residual has zero inner product with both \(1\) and \(X\). This is exactly the usual regression normal equation.`;
+  if(subspaceSelect.value==="const") notice=String.raw`With constants only, the projection is \(E[Y]\). The residual has mean zero, but it need not be orthogonal to \(X\).`;
+  if(subspaceSelect.value==="xonly") notice=String.raw`With \(\operatorname{span}\{X\}\) only, the fitted predictor is forced through the origin. Orthogonality to \(X\) holds, but the residual mean need not be zero.`;
+  if(subspaceSelect.value==="quadratic") notice=String.raw`Adding \(X^2\) expands the subspace. Projection error weakly falls because the closest point is chosen from a larger set.`;
   document.getElementById("noticeText").innerHTML=notice;
 }
-function drawAll(){updateText();drawMain();drawState();drawNormal();}
+function drawAll(){updateText();drawMain();drawState();drawNormal();renderMath();}
 themeBtn.addEventListener("click",()=>{
   const dark=body.getAttribute("data-theme")==="dark";
   body.setAttribute("data-theme",dark?"light":"dark");

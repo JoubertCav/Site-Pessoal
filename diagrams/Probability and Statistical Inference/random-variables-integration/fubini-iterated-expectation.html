@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -8,6 +8,9 @@
   <meta name="google-site-verification" content="ftZ4QVMrlub9jbolsIeo4Ix4UBw0-BJrFeorzqKLXng">
   <meta name="description" content="Interactive diagram for Fubini and iterated expectation.">
     <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
 <title>Fubini and Iterated Expectation</title>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
@@ -109,6 +112,11 @@
     .logicList{display:grid;gap:8px;margin-top:10px}
     .logicItem{border:1px solid var(--border);background:var(--panel2);border-radius:14px;padding:10px 11px;font-size:.88rem;color:var(--muted);display:flex;gap:9px;align-items:flex-start}
     .mark{font-weight:900;color:var(--accent);min-width:17px}
+
+    .katex{font-size:1.02em}
+    .math .katex,.eqBox .katex{font-size:1.04em}
+    .math-display{display:block;margin:.18rem 0}
+    .eqBox{font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif}
     footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
     @media(max-width:1080px){
       .defs,.layout,.two,.interpretation{grid-template-columns:1fr}
@@ -130,8 +138,7 @@
       <div>
         <h1>Fubini and iterated expectation</h1>
         <div class="subtitle">
-          Product integration is geometry on a rectangle: integrate by summing vertical slices, or by summing horizontal slices.
-          Fubini says both orders agree when the integrand is integrable; Tonelli says nonnegative mass is safe even before integrability is known.
+          Product integration is geometry on a rectangle: sum vertical slices or horizontal slices. Fubini says both orders agree when the integrand is integrable; Tonelli says nonnegative mass is safe even before integrability is known.
         </div>
       </div>
       <button class="themeBtn" id="themeBtn">Dark mode</button>
@@ -140,19 +147,19 @@
     <section class="defs">
       <div class="def">
         <div class="tag">Product integral</div>
-        <div class="math">âˆ«<sub>XÃ—Y</sub> h(x,y)d(Î¼Ã—Î½)<br>=âˆ«âˆ«h(x,y)dÎ½(y)dÎ¼(x)</div>
+        <div class="math"><span class="math-display" data-tex="\int_{X\times Y} h(x,y)\,d(\mu\times\nu)"></span><span class="math-display" data-tex="=\int\!\int h(x,y)\,d\nu(y)\,d\mu(x)"></span></div>
       </div>
       <div class="def">
         <div class="tag">Change order</div>
-        <div class="math">âˆ«[âˆ«h(x,y)dÎ½]dÎ¼<br>=âˆ«[âˆ«h(x,y)dÎ¼]dÎ½</div>
+        <div class="math"><span class="math-display" data-tex="\int\!\left[\int h(x,y)\,d\nu(y)\right]d\mu(x)"></span><span class="math-display" data-tex="=\int\!\left[\int h(x,y)\,d\mu(x)\right]d\nu(y)"></span></div>
       </div>
       <div class="def">
         <div class="tag">Independence</div>
-        <div class="math">P<sub>(X,Y)</sub>=P<sub>X</sub>Ã—P<sub>Y</sub><br>E[h(X,Y)]=âˆ«âˆ«h dP<sub>X</sub>dP<sub>Y</sub></div>
+        <div class="math"><span class="math-display" data-tex="P_{(X,Y)}=P_X\times P_Y"></span><span class="math-display" data-tex="E[h(X,Y)]=\int\!\int h\,dP_X\,dP_Y"></span></div>
       </div>
       <div class="def">
         <div class="tag">Iterated expectation</div>
-        <div class="math">E[h(X,Y)] = E[E[h(X,Y)|X]]<br>=E[E[h(X,Y)|Y]]</div>
+        <div class="math"><span class="math-display" data-tex="E[h(X,Y)]=E[E[h(X,Y)\mid X]]"></span><span class="math-display" data-tex="=E[E[h(X,Y)\mid Y]]"></span></div>
       </div>
     </section>
 
@@ -163,7 +170,7 @@
         <div class="control">
           <label for="funcSelect">Integrand h(x,y)</label>
           <select id="funcSelect">
-            <option value="product">smooth product: xÂ·y</option>
+            <option value="product">smooth product: x·y</option>
             <option value="interaction">interaction: sin + xy</option>
             <option value="indicator">event: 1{x+y&gt;c}</option>
             <option value="peak">localized peak</option>
@@ -184,8 +191,8 @@
         <div class="control">
           <label for="orderSelect">Integration order</label>
           <select id="orderSelect">
-            <option value="yx">first y, then x: âˆ«[âˆ«h dy]dx</option>
-            <option value="xy">first x, then y: âˆ«[âˆ«h dx]dy</option>
+            <option value="yx">first y, then x: ∫[∫h dy]dx</option>
+            <option value="xy">first x, then y: ∫[∫h dx]dy</option>
           </select>
         </div>
 
@@ -212,7 +219,7 @@
         </div>
 
         <div class="eqBox" id="eqBox">
-          âˆ«âˆ«h(x,y)dÎ¼(x)dÎ½(y) = âˆ«âˆ«h(x,y)dÎ½(y)dÎ¼(x).
+          <span class="math-display" data-tex="\int\!\int h(x,y)\,d\mu(x)\,d\nu(y)=\int\!\int h(x,y)\,d\nu(y)\,d\mu(x)"></span>
         </div>
 
         <div class="control">
@@ -241,7 +248,7 @@
           <div class="card plotCard">
             <div class="plotHead">
               <div class="plotTitle">Inner integral as a function</div>
-              <div class="plotSub" id="sliceSub">x â†¦ âˆ«h(x,y)dÎ½(y)</div>
+              <div class="plotSub" id="sliceSub"><span class="math-inline" data-tex="x\mapsto \int h(x,y)\,d\nu(y)"></span></div>
             </div>
             <svg id="sliceSvg" viewBox="0 0 520 285" preserveAspectRatio="xMidYMid meet"></svg>
           </div>
@@ -263,9 +270,9 @@
             </div>
             <div class="summary">
               <div><strong>Product integral.</strong><br>Area is computed over the rectangle by adding contributions from small cells.</div>
-              <div><strong>Fubini.</strong><br>If âˆ«|h|d(Î¼Ã—Î½)&lt;âˆž, both iterated integrals exist and agree.</div>
-              <div><strong>Tonelli.</strong><br>If hâ‰¥0, both orders are safe, possibly with value +âˆž.</div>
-              <div><strong>Iterated expectation.</strong><br>E[h(X,Y)] = E[E[h(X,Y)|X]], a slice-average followed by an outer average.</div>
+              <div><strong>Fubini.</strong><br>If <span class="math-inline" data-tex="\int |h|\,d(\mu\times\nu)&lt;\infty"></span>, both iterated integrals exist and agree.</div>
+              <div><strong>Tonelli.</strong><br>If <span class="math-inline" data-tex="h\ge 0"></span>, both orders are safe, possibly with value <span class="math-inline" data-tex="+\infty"></span>.</div>
+              <div><strong>Iterated expectation.</strong><br><span class="math-inline" data-tex="E[h(X,Y)]=E[E[h(X,Y)\mid X]]"></span>, a slice-average followed by an outer average.</div>
             </div>
           </div>
 
@@ -279,7 +286,7 @@
       </section>
     </main>
 
-    <footer>Minimal interactive notebook â€” Fubini as slice geometry.</footer>
+    <footer>Minimal interactive notebook — Fubini as slice geometry.</footer>
   </div>
 
 <script>
@@ -298,10 +305,45 @@ const viewMass=document.getElementById("viewMass");
 const viewSigned=document.getElementById("viewSigned");
 let displayMode="mass";
 
+
+function escapeAttr(s){
+  return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+function mathInline(tex){
+  return '<span class="math-inline" data-tex="'+escapeAttr(tex)+'"></span>';
+}
+function mathDisplay(tex){
+  return '<span class="math-display" data-tex="'+escapeAttr(tex)+'"></span>';
+}
+function renderKatex(root=document){
+  if(typeof window.katex === "undefined") return false;
+  root.querySelectorAll(".math-inline[data-tex]:not([data-rendered]), .math-display[data-tex]:not([data-rendered])").forEach(el=>{
+    try{
+      katex.render(el.getAttribute("data-tex"), el, {
+        displayMode: el.classList.contains("math-display"),
+        throwOnError:false,
+        strict:false
+      });
+      el.setAttribute("data-rendered","1");
+    }catch(e){
+      el.textContent = el.getAttribute("data-tex");
+    }
+  });
+  return true;
+}
+function scheduleKatex(){
+  let tries=0;
+  function tick(){
+    if(renderKatex(document) || tries++>80) return;
+    setTimeout(tick,60);
+  }
+  tick();
+}
+
 function css(v){return getComputedStyle(body).getPropertyValue(v).trim();}
 function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
 function fmt(x){
-  if(!isFinite(x)) return x>0?"+âˆž":"âˆ’âˆž";
+  if(!isFinite(x)) return x>0?"+∞":"−∞";
   if(Math.abs(x)<10) return x.toFixed(4);
   return x.toFixed(2);
 }
@@ -414,8 +456,8 @@ function drawMain(){
   const panel=css("--panel"),border=css("--border"),muted=css("--muted"),textc=css("--text"),grid=css("--grid"),acc=css("--accent"),blue=css("--blue"),warn=css("--warn");
   const x0=70,y0=52,size=330;
   let out=`<rect x="8" y="10" width="964" height="405" rx="20" fill="${panel}" stroke="${border}"/>`;
-  out+=text(70,34,"product space [0,1]Ã—[0,1]",muted,13,850);
-  out+=text(502,34,"cell contribution: h(x,y) Â· density",muted,13,850);
+  out+=text(70,34,"product space [0,1]×[0,1]",muted,13,850);
+  out+=text(502,34,"cell contribution: h(x,y) · density",muted,13,850);
   out+=`<rect x="${x0}" y="${y0}" width="${size}" height="${size}" rx="12" fill="${css("--panel2")}" stroke="${border}"/>`;
 
   const n=data.n, cell=size/n;
@@ -454,9 +496,9 @@ function drawMain(){
   const t1=orderTotal("yx"), t2=orderTotal("xy");
   out+=`<rect x="465" y="200" width="445" height="142" rx="18" fill="${panel2}" stroke="${border}"/>`;
   out+=text(488,232,"Iterated totals",textc,15,900);
-  out+=text(488,263,`âˆ«[âˆ«h(x,y) dy] dx â‰ˆ ${fmt(t1)}`,blue,14,900);
-  out+=text(488,292,`âˆ«[âˆ«h(x,y) dx] dy â‰ˆ ${fmt(t2)}`,acc,14,900);
-  out+=text(488,321,`âˆ«|h| d(Î¼Ã—Î½) â‰ˆ ${fmt(data.absTotal)}`,funcSelect.value==="unsafe"?warn:muted,13,850);
+  out+=text(488,263,`∫[∫h(x,y) dy] dx ≈ ${fmt(t1)}`,blue,14,900);
+  out+=text(488,292,`∫[∫h(x,y) dx] dy ≈ ${fmt(t2)}`,acc,14,900);
+  out+=text(488,321,`∫|h| d(μ×ν) ≈ ${fmt(data.absTotal)}`,funcSelect.value==="unsafe"?warn:muted,13,850);
 
   if(funcSelect.value==="unsafe"){
     out+=`<rect x="465" y="358" width="445" height="36" rx="13" fill="${warn}" fill-opacity=".10" stroke="${warn}" stroke-opacity=".35"/>`;
@@ -499,7 +541,7 @@ function drawSlice(){
   const sx=px(vals[k].t,0,1,x0,x1), sy=py(sv,minv,maxv,y0,y1);
   out+=line(sx,y0,sx,y1,blue,1.4,.35,"5 5");
   out+=`<circle cx="${sx}" cy="${sy}" r="6" fill="${blue}" stroke="${panel}" stroke-width="2"/>`;
-  out+=text(66,32,orderSelect.value==="yx"?"x â†¦ âˆ«h(x,y)dÎ½(y)":"y â†¦ âˆ«h(x,y)dÎ¼(x)",blue,12,900);
+  out+=text(66,32,orderSelect.value==="yx"?"x ↦ ∫h(x,y)dν(y)":"y ↦ ∫h(x,y)dμ(x)",blue,12,900);
   out+=text(sx,sy-12,fmt(sv),textc,12,900,"middle");
   out+=text(250,260,orderSelect.value==="yx"?"outer variable x":"outer variable y",muted,12,800,"middle");
   svg.innerHTML=out;
@@ -518,13 +560,13 @@ function drawFlow(){
   node(42,54,132,74,"h(x,y)","cell values",acc);
   node(198,38,132,74,"inner y","vertical slices",blue);
   node(198,142,132,74,"inner x","horizontal slices",acc);
-  node(354,92,126,84,"same total",`diff â‰ˆ ${fmt(diff)}`,funcSelect.value==="unsafe"?warn:acc);
+  node(354,92,126,84,"same total",`diff ≈ ${fmt(diff)}`,funcSelect.value==="unsafe"?warn:acc);
   out+=line(174,91,198,75,muted,1.4,.6);
   out+=line(174,91,198,179,muted,1.4,.6);
   out+=line(330,75,354,121,muted,1.4,.6);
   out+=line(330,179,354,121,muted,1.4,.6);
-  out+=text(264,122,`âˆ«âˆ« = ${fmt(t1)}`,blue,12,900,"middle");
-  out+=text(264,236,`âˆ«âˆ« = ${fmt(t2)}`,acc,12,900,"middle");
+  out+=text(264,122,`∫∫ = ${fmt(t1)}`,blue,12,900,"middle");
+  out+=text(264,236,`∫∫ = ${fmt(t2)}`,acc,12,900,"middle");
   if(funcSelect.value==="unsafe"){
     out+=text(260,250,"mathematical equality may fail without absolute integrability",warn,12,850,"middle");
   }else{
@@ -535,11 +577,21 @@ function drawFlow(){
 function hName(){
   const f=funcSelect.value;
   if(f==="product") return "h(x,y)=xy";
-  if(f==="interaction") return "h(x,y)=.35+.35sin(2Ï€x)cos(2Ï€y)+a xy";
+  if(f==="interaction") return "h(x,y)=.35+.35sin(2πx)cos(2πy)+a xy";
   if(f==="indicator") return "h(x,y)=1{x+y>c}";
   if(f==="peak") return "h is a localized nonnegative peak";
   if(f==="signed") return "h is a signed wave";
   return "h is a singular signed kernel";
+}
+
+function hNameTex(){
+  const f=funcSelect.value;
+  if(f==="product") return "h(x,y)=xy";
+  if(f==="interaction") return "h(x,y)=0.35+0.35\sin(2\pi x)\cos(2\pi y)+a xy";
+  if(f==="indicator") return "h(x,y)=\mathbf{1}_{\{x+y>c\}}";
+  if(f==="peak") return "h(x,y)\ge 0\text{ is a localized peak}";
+  if(f==="signed") return "h(x,y)\text{ is a signed wave}";
+  return "h(x,y)\text{ is a singular signed kernel}";
 }
 function measureName(){
   const m=measureSelect.value;
@@ -552,26 +604,26 @@ function updateText(){
   paramVal.textContent=(+paramRange.value).toFixed(2);
   gridVal.textContent=gridRange.value;
   const t1=orderTotal("yx"), t2=orderTotal("xy");
-  document.getElementById("sliceSub").innerHTML=orderSelect.value==="yx"?"x â†¦ âˆ«h(x,y)dÎ½(y)":"y â†¦ âˆ«h(x,y)dÎ¼(x)";
+  document.getElementById("sliceSub").innerHTML=orderSelect.value==="yx"?mathInline("x\mapsto \int h(x,y)\,d\nu(y)"):mathInline("y\mapsto \int h(x,y)\,d\mu(x)");
   document.getElementById("eqBox").innerHTML=
-    `Current: ${hName()}<br>`+
-    `vertical order â‰ˆ <strong>${fmt(t1)}</strong>, horizontal order â‰ˆ <strong>${fmt(t2)}</strong>.`;
+    `Current: ${mathInline(hNameTex())}<br>`+
+    `${mathInline("\text{vertical order}\approx "+fmt(t1))} &nbsp; ${mathInline("\text{horizontal order}\approx "+fmt(t2))}.`;
 
   const safe = funcSelect.value!=="unsafe";
   const nonneg = ["product","indicator","peak"].includes(funcSelect.value);
   const list=document.getElementById("logicList");
   let items=[];
   if(nonneg){
-    items=[["âœ“","hâ‰¥0: Tonelli allows either order, even before knowing finiteness."],
-           ["âœ“","inner slice integrals are nonnegative."],
-           ["âœ“","expectation is accumulated mass."]];
+    items=[["✓","h≥0: Tonelli allows either order, even before knowing finiteness."],
+           ["✓","inner slice integrals are nonnegative."],
+           ["✓","expectation is accumulated mass."]];
   }else if(safe){
-    items=[["âœ“","signed, but numerically integrable on the square."],
-           ["âœ“","absolute integrability makes Fubini safe."],
-           ["âœ“","order change preserves the total."]];
+    items=[["✓","signed, but numerically integrable on the square."],
+           ["✓","absolute integrability makes Fubini safe."],
+           ["✓","order change preserves the total."]];
   }else{
     items=[["!","signed singular behavior near the diagonal."],
-           ["âœ•","absolute integrability is not guaranteed."],
+           ["✕","absolute integrability is not guaranteed."],
            ["!","changing order can become mathematically unsafe."]];
   }
   list.innerHTML=items.map(([m,t])=>`<div class="logicItem"><span class="mark">${m}</span><span>${t}</span></div>`).join("");
@@ -596,6 +648,7 @@ function drawAll(){
   drawMain();
   drawSlice();
   drawFlow();
+  scheduleKatex();
 }
 themeBtn.addEventListener("click",()=>{
   const dark=body.getAttribute("data-theme")==="dark";
@@ -607,6 +660,7 @@ themeBtn.addEventListener("click",()=>{
 viewMass.addEventListener("click",()=>{displayMode="mass";viewMass.classList.add("active");viewSigned.classList.remove("active");drawAll();});
 viewSigned.addEventListener("click",()=>{displayMode="signed";viewSigned.classList.add("active");viewMass.classList.remove("active");drawAll();});
 drawAll();
+window.addEventListener("load", scheduleKatex);
 </script>
 </body>
 </html>

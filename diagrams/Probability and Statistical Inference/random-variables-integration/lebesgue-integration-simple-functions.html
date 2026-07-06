@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -9,6 +9,10 @@
 <meta name="description" content="Interactive diagram for Lebesgue integration from simple functions.">
   <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
 <title>Lebesgue Integration from Simple Functions</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
 <script>
@@ -86,6 +90,12 @@ svg{display:block; width:100%}
 .pillRow{display:flex; flex-wrap:wrap; gap:8px; margin-top:9px}
 .pill{border:1px solid var(--border); background:var(--panel2); border-radius:999px; padding:7px 10px; color:var(--muted); font-size:.80rem; font-weight:760; display:inline-flex; gap:7px; align-items:center}
 .dot{width:9px; height:9px; border-radius:50%; background:var(--accent); display:inline-block}
+
+.katex{font-size:1.02em}
+.math .katex{font-size:1.05em}
+.eqBox .katex{font-size:1.03em}
+.summary .katex,.subtitle .katex,.smallText .katex,.notice .katex,.plotSub .katex,.pill .katex{font-size:1em}
+.eqBox,.math{font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif}
 footer{margin-top:14px; text-align:center; color:var(--muted); font-size:.78rem}
 @media(max-width:1080px){
   .defs,.layout,.two,.interpretation{grid-template-columns:1fr}
@@ -106,7 +116,7 @@ footer{margin-top:14px; text-align:center; color:var(--muted); font-size:.78rem}
     <h1>Lebesgue integration from simple functions</h1>
     <div class="subtitle">
       Build the integral from measurable blocks. A simple function assigns one height to each measurable piece;
-      the integral is the sum of height Ã— measure. General integrals arise by approximation and decomposition.
+      the integral is the sum of height × measure. General integrals arise by approximation and decomposition.
     </div>
   </div>
   <button class="themeBtn" id="themeBtn">Dark mode</button>
@@ -114,20 +124,16 @@ footer{margin-top:14px; text-align:center; color:var(--muted); font-size:.78rem}
 
 <section class="defs">
   <div class="def">
-    <div class="tag">Simple function</div>
-    <div class="math">s = âˆ‘<sub>i=1</sub><sup>m</sup> a<sub>i</sub> 1<sub>Aáµ¢</sub><br>A<sub>i</sub> âˆˆ â„±</div>
+    <div class="tag">Simple function</div><div class="math">\(s=\sum_{i=1}^m a_i\mathbf 1_{A_i}\)<br>\(A_i\in\mathcal F\)</div>
   </div>
   <div class="def">
-    <div class="tag">Simple integral</div>
-    <div class="math">âˆ« s dÎ¼ = âˆ‘<sub>i=1</sub><sup>m</sup> a<sub>i</sub> Î¼(A<sub>i</sub>)</div>
+    <div class="tag">Simple integral</div><div class="math">\(\int s\,d\mu=\sum_{i=1}^m a_i\mu(A_i)\)</div>
   </div>
   <div class="def">
-    <div class="tag">Nonnegative integral</div>
-    <div class="math">âˆ« f dÎ¼ = sup{âˆ«s dÎ¼ : 0â‰¤sâ‰¤f}</div>
+    <div class="tag">Nonnegative integral</div><div class="math">\(\int f\,d\mu=\sup\{\int s\,d\mu:0\le s\le f\}\)</div>
   </div>
   <div class="def">
-    <div class="tag">Signed / expectation</div>
-    <div class="math">âˆ« f dÎ¼ = âˆ«fâºdÎ¼ âˆ’ âˆ«fâ»dÎ¼<br>E[X]=âˆ«Î© X dP</div>
+    <div class="tag">Signed / expectation</div><div class="math">\(\int f\,d\mu=\int f^+\,d\mu-\int f^-\,d\mu\)<br>\(E[X]=\int_\Omega X\,dP\)</div>
   </div>
 </section>
 
@@ -146,10 +152,10 @@ footer{margin-top:14px; text-align:center; color:var(--muted); font-size:.78rem}
     </div>
 
     <div class="control">
-      <label for="measureSelect">Measure Î¼</label>
+      <label for="measureSelect">Measure μ</label>
       <select id="measureSelect">
         <option value="uniform">uniform probability</option>
-        <option value="tilted">tilted probability dÎ¼ = 2Ï‰ dÏ‰</option>
+        <option value="tilted">tilted probability dμ = 2ω dω</option>
         <option value="atom">atom + continuous part</option>
       </select>
     </div>
@@ -182,14 +188,14 @@ footer{margin-top:14px; text-align:center; color:var(--muted); font-size:.78rem}
     </div>
 
     <div class="eqBox" id="eqBox">
-      âˆ«s dÎ¼ = âˆ‘ aáµ¢ Î¼(Aáµ¢).<br>
-      Each rectangle is not â€œwidth Ã— heightâ€ unless Î¼ is uniform.
+      \(\int s\,d\mu=\sum_i a_i\mu(A_i)\).<br>
+      Each rectangle is not “width × height” unless \(\mu\) is uniform.
     </div>
 
     <div class="control">
       <div class="panelTitle" style="margin-bottom:8px">What to notice</div>
       <div class="notice" id="noticeText">
-        Lebesgue integration begins with measurable pieces in Î©, not with intervals on the vertical axis. The measure of each piece decides its weight.
+        Lebesgue integration begins with measurable pieces in Ω, not with intervals on the vertical axis. The measure of each piece decides its weight.
       </div>
     </div>
   </aside>
@@ -198,14 +204,14 @@ footer{margin-top:14px; text-align:center; color:var(--muted); font-size:.78rem}
     <div class="card plotCard">
       <div class="plotHead">
         <div>
-          <div class="plotTitle">Function, simple approximation, and measure on Î©</div>
+          <div class="plotTitle">Function, simple approximation, and measure on Ω</div>
           <div class="pillRow">
             <span class="pill"><span class="dot"></span> target f</span>
             <span class="pill"><span class="dot" style="background:var(--blue)"></span> simple function s</span>
-            <span class="pill"><span class="dot" style="background:var(--warn)"></span> measure weight Î¼</span>
+            <span class="pill"><span class="dot" style="background:var(--warn)"></span> measure weight μ</span>
           </div>
         </div>
-        <div class="plotSub" id="mainSub">s is constant on measurable cells Aáµ¢</div>
+        <div class="plotSub" id="mainSub">s is constant on measurable cells Aᵢ</div>
       </div>
       <svg id="mainSvg" viewBox="0 0 980 430" preserveAspectRatio="xMidYMid meet"></svg>
     </div>
@@ -214,14 +220,14 @@ footer{margin-top:14px; text-align:center; color:var(--muted); font-size:.78rem}
       <div class="card plotCard">
         <div class="plotHead">
           <div class="plotTitle">Contribution decomposition</div>
-          <div class="plotSub">aáµ¢ Î¼(Aáµ¢)</div>
+          <div class="plotSub">aᵢ μ(Aᵢ)</div>
         </div>
         <svg id="contribSvg" viewBox="0 0 520 265" preserveAspectRatio="xMidYMid meet"></svg>
       </div>
       <div class="card plotCard">
         <div class="plotHead">
           <div class="plotTitle">Expectation as an integral</div>
-          <div class="plotSub">sample average approaches âˆ«f dP</div>
+          <div class="plotSub">sample average approaches ∫f dP</div>
         </div>
         <svg id="expectSvg" viewBox="0 0 520 265" preserveAspectRatio="xMidYMid meet"></svg>
       </div>
@@ -231,26 +237,26 @@ footer{margin-top:14px; text-align:center; color:var(--muted); font-size:.78rem}
       <div class="card cardPad">
         <div class="panelTitle">Interpretation</div>
         <div class="smallText" id="interpretText">
-          A simple function compresses f into finitely many heights. The integral adds these heights with weights Î¼(Aáµ¢).
+          A simple function compresses f into finitely many heights. The integral adds these heights with weights μ(Aᵢ).
         </div>
         <div class="summary">
-          <div><strong>Simple functions.</strong><br>s = âˆ‘aáµ¢1<sub>Aáµ¢</sub>. Geometry: finitely many horizontal slabs over measurable pieces.</div>
+          <div><strong>Simple functions.</strong><br>\(s=\sum_i a_i\mathbf 1_{A_i}\). Geometry: finitely many horizontal slabs over measurable pieces.</div>
           <div><strong>Nonnegative integral.</strong><br>Approximate from below and take the supremum of simple integrals.</div>
-          <div><strong>Signed integral.</strong><br>Write f=fâºâˆ’fâ». The integral exists when âˆ«fâºdÎ¼ and âˆ«fâ»dÎ¼ are not both infinite.</div>
-          <div><strong>Expectation.</strong><br>A random variable is a measurable function; its mean is its Lebesgue integral under P.</div>
+          <div><strong>Signed integral.</strong><br>Write \(f=f^+-f^-\). The integral exists when \(\int f^+\,d\mu\) and \(\int f^-\,d\mu\) are not both infinite.</div>
+          <div><strong>Expectation.</strong><br>A random variable is a measurable function; its mean is its Lebesgue integral under \(P\).</div>
         </div>
       </div>
       <div class="card cardPad">
         <div class="panelTitle">Exam-style summary</div>
         <div class="smallText">
-          For s=âˆ‘aáµ¢1<sub>Aáµ¢</sub>, define âˆ«s dÎ¼=âˆ‘aáµ¢Î¼(Aáµ¢). For fâ‰¥0, define âˆ«f dÎ¼ as the supremum over simple 0â‰¤sâ‰¤f.
-          For signed f, set fâº=max(f,0), fâ»=max(âˆ’f,0), and âˆ«f=âˆ«fâºâˆ’âˆ«fâ» when âˆ«|f|dÎ¼&lt;âˆž.
+          For \(s=\sum_i a_i\mathbf 1_{A_i}\), define \(\int s\,d\mu=\sum_i a_i\mu(A_i)\). For \(f\ge0\), define \(\int f\,d\mu\) as the supremum over simple \(0\le s\le f\).
+          For signed \(f\), set \(f^+=\max(f,0)\), \(f^-=\max(-f,0)\), and \(\int f=\int f^+-\int f^-\) when \(\int |f|\,d\mu<\infty\).
         </div>
       </div>
     </div>
   </section>
 </main>
-<footer>Minimal interactive notebook â€” Lebesgue integral as weighted geometry over Î©.</footer>
+<footer>Minimal interactive notebook — Lebesgue integral as weighted geometry over Ω.</footer>
 </div>
 
 <script>
@@ -408,7 +414,7 @@ function drawMain(){
   }
   html+=`<line x1="${x0}" y1="${zero}" x2="${x0+w}" y2="${zero}" stroke="${muted}" stroke-width="1.2"/>`;
   html+=`<text x="${x0-10}" y="${zero+4}" text-anchor="end" fill="${muted}" font-size="11">0</text>`;
-  html+=`<text x="${x0}" y="${y0-13}" fill="${muted}" font-size="13" font-weight="700">Î©=[0,1]</text>`;
+  html+=`<text x="${x0}" y="${y0-13}" fill="${muted}" font-size="13" font-weight="700">Ω=[0,1]</text>`;
 
   cells.forEach(c=>{
     const px=xMap(c.a), pw=xMap(c.b)-xMap(c.a);
@@ -423,7 +429,7 @@ function drawMain(){
 
   // measure strip
   const sy=344, sh=34;
-  html+=`<text x="${x0}" y="${sy-16}" fill="${muted}" font-size="12" font-weight="700">measure weight on Î©</text>`;
+  html+=`<text x="${x0}" y="${sy-16}" fill="${muted}" font-size="12" font-weight="700">measure weight on Ω</text>`;
   html+=`<rect x="${x0}" y="${sy}" width="${w}" height="${sh}" rx="12" fill="none" stroke="${border}"/>`;
   const M=160;
   for(let i=0;i<M;i++){
@@ -439,11 +445,11 @@ function drawMain(){
     html+=`<circle cx="${ax}" cy="${sy-20}" r="${6+16*(+atomMass.value)}" fill="${red}" fill-opacity=".75"/>`;
     html+=`<text x="${ax}" y="${sy+sh+24}" text-anchor="middle" fill="${red}" font-size="11" font-weight="800">atom</text>`;
   }
-  html+=`<text x="${x0+w+8}" y="${sy+22}" fill="${muted}" font-size="12">Î¼</text>`;
+  html+=`<text x="${x0+w+8}" y="${sy+22}" fill="${muted}" font-size="12">μ</text>`;
 
   const exact=integralOf(f);
   const simp=cells.reduce((s,c)=>s+c.contrib,0);
-  html+=`<text x="${x0+w-4}" y="${y0-14}" text-anchor="end" fill="${text}" font-size="13" font-weight="800">âˆ«f dÎ¼ â‰ˆ ${fmt(exact)}  Â·  âˆ«s dÎ¼ â‰ˆ ${fmt(simp)}</text>`;
+  html+=`<text x="${x0+w-4}" y="${y0-14}" text-anchor="end" fill="${text}" font-size="13" font-weight="800">∫f dμ ≈ ${fmt(exact)}  ·  ∫s dμ ≈ ${fmt(simp)}</text>`;
   svg.innerHTML=html;
 }
 
@@ -470,7 +476,7 @@ function drawContrib(){
   html+=`<text x="${x0}" y="226" fill="${muted}" font-size="12">signed pieces: positive bars add, negative bars subtract</text>`;
   const plus=integralOf(x=>Math.max(f(x),0));
   const minus=integralOf(x=>Math.max(-f(x),0));
-  html+=`<text x="${x0+w}" y="226" text-anchor="end" fill="${text}" font-size="13" font-weight="800">âˆ«fâº=${fmt(plus)} Â· âˆ«fâ»=${fmt(minus)}</text>`;
+  html+=`<text x="${x0+w}" y="226" text-anchor="end" fill="${text}" font-size="13" font-weight="800">∫f⁺=${fmt(plus)} · ∫f⁻=${fmt(minus)}</text>`;
   svg.innerHTML=html;
 }
 
@@ -502,8 +508,8 @@ function drawExpect(){
   }
   html+=`<path d="${d}" fill="none" stroke="${blue}" stroke-width="2.6" stroke-linecap="round"/>`;
   html+=`<line x1="${x0}" y1="${yMap(exact)}" x2="${x0+w}" y2="${yMap(exact)}" stroke="${accent}" stroke-width="2" stroke-dasharray="6 5"/>`;
-  html+=`<text x="${x0}" y="226" fill="${muted}" font-size="12">blue: empirical average Â· dashed: Lebesgue integral</text>`;
-  html+=`<text x="${x0+w}" y="226" text-anchor="end" fill="${text}" font-size="13" font-weight="800">mean=${fmt(mean)} Â· âˆ«f dP=${fmt(exact)}</text>`;
+  html+=`<text x="${x0}" y="226" fill="${muted}" font-size="12">blue: empirical average · dashed: Lebesgue integral</text>`;
+  html+=`<text x="${x0+w}" y="226" text-anchor="end" fill="${text}" font-size="13" font-weight="800">mean=${fmt(mean)} · ∫f dP=${fmt(exact)}</text>`;
   svg.innerHTML=html;
 }
 
@@ -518,19 +524,33 @@ function refreshText(){
   const simp=cells.reduce((s,c)=>s+c.contrib,0);
   const abs=integralOf(x=>Math.abs(f(x)));
   document.getElementById("eqBox").innerHTML =
-    `âˆ«s dÎ¼ = âˆ‘ aáµ¢ Î¼(Aáµ¢) = <strong>${fmt(simp)}</strong><br>`+
-    `âˆ«f dÎ¼ â‰ˆ <strong>${fmt(exact)}</strong>, &nbsp; âˆ«|f|dÎ¼ â‰ˆ <strong>${fmt(abs)}</strong>`;
-  let note="Lebesgue integration starts from measurable pieces Aáµ¢. The horizontal width of a piece is not its weight unless Î¼ is uniform.";
-  if(functionSelect.value==="signed") note="For signed functions, the geometry splits into positive and negative mass. Integrability means the total absolute area âˆ«|f|dÎ¼ is finite.";
+    String.raw`\(\int s\,d\mu=\sum_i a_i\mu(A_i)=${fmt(simp)}\)<br>`+
+    String.raw`\(\int f\,d\mu\approx ${fmt(exact)}\), &nbsp; \(\int |f|\,d\mu\approx ${fmt(abs)}\)`;
+  let note=String.raw`\(A_i\) are the measurable pieces. The horizontal width of a piece is not its weight unless \(\mu\) is uniform.`;
+  if(functionSelect.value==="signed") note=String.raw`For signed functions, the geometry splits into positive and negative mass. Integrability means \(\int |f|\,d\mu<\infty\).`;
   if(functionSelect.value==="singular") note="A spike can be tall near a point and still be integrable: finite measure-weighted mass matters, not pointwise height alone.";
-  if(measureSelect.value==="atom") note="An atom gives positive weight to a single point. The value f(Ï‰â‚€) contributes directly through mÂ·f(Ï‰â‚€).";
+  if(measureSelect.value==="atom") note=String.raw`An atom gives positive weight to a single point. The value \(f(\omega_0)\) contributes directly through \(m\,f(\omega_0)\).`;
   document.getElementById("noticeText").textContent=note;
 
   document.getElementById("interpretText").innerHTML =
-    `The current simple function has <strong>${bins.value}</strong> measurable pieces. `+
-    `Each piece Aáµ¢ has one height aáµ¢ and one measure Î¼(Aáµ¢). `+
-    `The simple integral is the finite weighted sum <strong>${fmt(simp)}</strong>. `+
-    `The target integral is approximately <strong>${fmt(exact)}</strong>.`;
+    String.raw`The current simple function has <strong>${bins.value}</strong> measurable pieces. `+
+    String.raw`Each piece \(A_i\) has one height \(a_i\) and one measure \(\mu(A_i)\). `+
+    String.raw`The simple integral is \(\int s\,d\mu\approx ${fmt(simp)}\). `+
+    String.raw`The target integral is \(\int f\,d\mu\approx ${fmt(exact)}\).`;
+}
+
+
+function renderMath(){
+  if(typeof renderMathInElement !== "function") return;
+  const options={
+    delimiters:[
+      {left:"$$", right:"$$", display:true},
+      {left:"\\[", right:"\\]", display:true},
+      {left:"\\(", right:"\\)", display:false}
+    ],
+    throwOnError:false
+  };
+  document.querySelectorAll(".subtitle,.math,.eqBox,.summary,.smallText,.notice,.plotSub,.pill,.panelTitle").forEach(el=>renderMathInElement(el, options));
 }
 
 function drawAll(){
@@ -538,6 +558,7 @@ function drawAll(){
   drawMain();
   drawContrib();
   drawExpect();
+  renderMath();
 }
 
 themeBtn.addEventListener("click",()=>{

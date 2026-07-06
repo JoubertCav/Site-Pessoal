@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -9,6 +9,10 @@
   <meta name="description" content="Interactive diagram for CDFs and quantile functions.">
     <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
 <title>CDFs and Quantile Functions</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
   <script>
@@ -43,6 +47,9 @@
     .def{padding:14px 15px; min-height:112px}
     .tag{color:var(--muted); font-size:.74rem; font-weight:850; letter-spacing:.12em; text-transform:uppercase; margin-bottom:8px}
     .math{font-family:Cambria,Georgia,"Times New Roman",serif; line-height:1.45; font-size:1.01rem; color:var(--text)}
+    .math .katex{font-size:1.02em}
+    .eqBox .katex{font-size:1.03em}
+    .mathText{font-family:Inter,ui-sans-serif,system-ui,sans-serif;color:var(--muted);font-size:.86rem;line-height:1.35}
     .layout{display:grid; grid-template-columns:340px 1fr; gap:16px; align-items:start}
     .side{padding:16px}.panelTitle{margin:0 0 12px; color:var(--muted); font-size:.82rem; font-weight:900; text-transform:uppercase; letter-spacing:.13em}
     .control{padding:12px 0; border-top:1px solid var(--border)}.control:first-of-type{border-top:0; padding-top:0}
@@ -65,24 +72,24 @@
   </header>
 
   <section class="defs">
-    <div class="def"><div class="tag">Distribution function</div><div class="math">F(x)=P(Xâ‰¤x)</div></div>
-    <div class="def"><div class="tag">Right-continuity</div><div class="math">F(x)=F(x+)<br>jumps include their mass</div></div>
-    <div class="def"><div class="tag">Generalized inverse</div><div class="math">Q(u)=inf{x:F(x)â‰¥u}</div></div>
-    <div class="def"><div class="tag">Quantile representation</div><div class="math">Uâˆ¼Unif(0,1) â‡’ Q(U)âˆ¼F</div></div>
+    <div class="def"><div class="tag">Distribution function</div><div class="math">\(F(x)=\Pr(X\le x)\)</div></div>
+    <div class="def"><div class="tag">Right-continuity</div><div class="math">\(F(x)=F(x^+)\)<br><span class="mathText">jumps include their mass</span></div></div>
+    <div class="def"><div class="tag">Generalized inverse</div><div class="math">\(Q(u)=\inf\{x:F(x)\ge u\}\)</div></div>
+    <div class="def"><div class="tag">Quantile representation</div><div class="math">\(U\sim \mathrm{Unif}(0,1)\Rightarrow Q(U)\sim F\)</div></div>
   </section>
 
   <main class="layout">
     <aside class="card side">
       <div class="panelTitle">Controls</div>
-      <div class="control"><label for="model">Distribution</label><select id="model"><option value="smooth">smooth: F(x)=x^Î± on [0,1]</option><option value="discrete">discrete: four atoms</option><option value="mixed">mixed: atom + continuous mass</option></select></div>
-      <div class="control" id="shapeBlock"><label for="shape">Shape Î± <span class="value" id="shapeVal">1.60</span></label><input id="shape" type="range" min="0.30" max="4.00" step="0.05" value="1.60"/></div>
+      <div class="control"><label for="model">Distribution</label><select id="model"><option value="smooth">smooth: F(x)=x^α on [0,1]</option><option value="discrete">discrete: four atoms</option><option value="mixed">mixed: atom + continuous mass</option></select></div>
+      <div class="control" id="shapeBlock"><label for="shape">Shape α <span class="value" id="shapeVal">1.60</span></label><input id="shape" type="range" min="0.30" max="4.00" step="0.05" value="1.60"/></div>
       <div class="control" id="massBlock"><label for="mass">Atom / tilt <span class="value" id="massVal">0.30</span></label><input id="mass" type="range" min="0.05" max="0.70" step="0.01" value="0.30"/></div>
       <div class="control"><label for="uRange">Probability level u <span class="value" id="uVal">0.62</span></label><input id="uRange" type="range" min="0.01" max="0.99" step="0.01" value="0.62"/></div>
       <div class="control"><label for="nRange">Sample size n <span class="value" id="nVal">24</span></label><input id="nRange" type="range" min="5" max="120" step="1" value="24"/></div>
       <div class="control"><label for="kRange">Order statistic k <span class="value" id="kVal">12</span></label><input id="kRange" type="range" min="1" max="24" step="1" value="12"/></div>
       <div class="control"><div class="seg"><button class="btn active" id="cdfBtn">CDF</button><button class="btn" id="qBtn">Quantile</button></div></div>
       <div class="control"><button class="btn" id="resampleBtn">Resimulate order statistics</button></div>
-      <div class="eqBox" id="eqBox">Q(u)=inf{x:F(x)â‰¥u}<br>The quantile is the leftmost crossing of the horizontal level u.</div>
+      <div class="eqBox" id="eqBox">\(Q(u)=\inf\{x:F(x)\ge u\}\)<br><span class="mathText">The quantile is the leftmost crossing of the horizontal level \(u\).</span></div>
     </aside>
 
     <section class="main">
@@ -92,12 +99,12 @@
         <div class="card plotCard"><div class="plotHead"><div class="plotTitle">Order statistics intuition</div><div class="plotSub">sort U's, then push them through Q</div></div><svg id="orderSvg" viewBox="0 0 520 275" preserveAspectRatio="xMidYMid meet"></svg></div>
       </div>
       <div class="interpretation">
-        <div class="card cardPad"><div class="panelTitle">Interpretation</div><div class="smallText" id="interpretText">F(x) is accumulated probability. Q(u) is the smallest x whose accumulated mass reaches u.</div><div class="summary"><div><strong>CDF.</strong><br>Nondecreasing, right-continuous, with limits 0 and 1.</div><div><strong>Jump.</strong><br>A vertical jump is an atom: P(X=x)=F(x)-F(xâˆ’).</div><div><strong>Quantile.</strong><br>Use infimum, not ordinary inverse, because F may jump or be flat.</div><div><strong>Order stats.</strong><br>X<sub>(k)</sub>â‰ˆQ(k/(n+1)): sample ranks are probability levels.</div></div></div>
+        <div class="card cardPad"><div class="panelTitle">Interpretation</div><div class="smallText" id="interpretText">F(x) is accumulated probability. Q(u) is the smallest x whose accumulated mass reaches u.</div><div class="summary"><div><strong>CDF.</strong><br>Nondecreasing, right-continuous, with limits 0 and 1.</div><div><strong>Jump.</strong><br>A vertical jump is an atom: \(P(X=x)=F(x)-F(x^-)\).</div><div><strong>Quantile.</strong><br>Use infimum, not ordinary inverse, because F may jump or be flat.</div><div><strong>Order stats.</strong><br>\(X_{(k)}\approx Q(k/(n+1))\): sample ranks are probability levels.</div></div></div>
         <div class="card cardPad"><div class="panelTitle">What to notice</div><div class="notice" id="noticeText">For continuous strictly increasing F, the quantile is the usual inverse. For jumps and flats, the generalized inverse keeps the construction well-defined.</div></div>
       </div>
     </section>
   </main>
-  <footer>Minimal interactive notebook â€” CDFs, generalized inverses, and order statistics.</footer>
+  <footer>Minimal interactive notebook — CDFs, generalized inverses, and order statistics.</footer>
 </div>
 <script>
 const body=document.body,themeBtn=document.getElementById('themeBtn');
@@ -125,11 +132,29 @@ const sx=690,sy=82,sw=220,sh=255;s+=`<text x="${sx}" y="${sy-24}" fill="${muted}
 if(model.value==='discrete'){weights().forEach((wt,i)=>{const x=sx+atoms[i]*sw,hh=wt*190;s+=`<line x1="${x}" y1="${sy+sh}" x2="${x}" y2="${sy+sh-hh}" stroke="${accent}" stroke-width="10" stroke-linecap="round"/><text x="${x}" y="${sy+sh+20}" text-anchor="middle" fill="${muted}" font-size="11">${atoms[i].toFixed(2)}</text>`})}
 else{let d=`M ${sx} ${sy+sh}`;for(let i=0;i<=120;i++){const x=i/120,xx=sx+x*sw,hh=Math.min(190,pdfHeight(x)*70);d+=` L ${xx} ${sy+sh-hh}`;}d+=` L ${sx+sw} ${sy+sh} Z`;s+=`<path d="${d}" fill="${accent}" fill-opacity=".22" stroke="${accent}" stroke-width="2"/>`; if(model.value==='mixed'){const ax=sx+.55*sw,hh=(+mass.value)*180;s+=`<line x1="${ax}" y1="${sy+sh}" x2="${ax}" y2="${sy+sh-hh}" stroke="${orange}" stroke-width="9" stroke-linecap="round"/>`;}}
 s+=`<text x="${sx}" y="${sy+sh+38}" fill="${muted}" font-size="12">The same object: mass distribution, CDF, quantile.</text>`;svg.innerHTML=s;}
-function drawQuantile(){const svg=document.getElementById('quantileSvg'),panel=css('--panel'),border=css('--border'),muted=css('--muted'),text=css('--text'),accent=css('--accent'),blue=css('--blue');let s=`<rect x="8" y="10" width="504" height="245" rx="20" fill="${panel}" stroke="${border}"/>`;const ux=90,uy=50,uh=170,rx=300,rw=155; s+=`<line x1="${ux}" y1="${uy+uh}" x2="${ux}" y2="${uy}" stroke="${muted}"/><text x="${ux}" y="${uy-12}" text-anchor="middle" fill="${muted}" font-size="13">Uâˆˆ[0,1]</text><line x1="${rx}" y1="${uy+uh}" x2="${rx+rw}" y2="${uy+uh}" stroke="${muted}"/><text x="${rx+rw/2}" y="${uy-12}" text-anchor="middle" fill="${muted}" font-size="13">X=Q(U)</text>`;const picks=[.12,.28,.47,.66,.84];picks.forEach((u,i)=>{const y=uy+uh-u*uh,x=rx+Q(u)*rw;s+=`<circle cx="${ux}" cy="${y}" r="5" fill="${blue}"/><path d="M ${ux+8} ${y} C 155 ${y}, 205 ${uy+uh-Q(u)*uh*.25}, ${x} ${uy+uh}" fill="none" stroke="${accent}" stroke-opacity=".42"/><circle cx="${x}" cy="${uy+uh}" r="5" fill="${accent}"/>`;});s+=`<text x="${50}" y="${242}" fill="${muted}" font-size="12">A uniform vertical coordinate is bent into the distribution by Q.</text>`;svg.innerHTML=s;}
-function drawOrder(){const svg=document.getElementById('orderSvg'),panel=css('--panel'),border=css('--border'),muted=css('--muted'),accent=css('--accent'),blue=css('--blue'),orange=css('--orange');let s=`<rect x="8" y="10" width="504" height="245" rx="20" fill="${panel}" stroke="${border}"/>`;const n=+nRange.value,k=+kRange.value; if(uniforms.length!==n)makeSamples();const x0=62,w=390,yU=86,yX=178;s+=`<line x1="${x0}" y1="${yU}" x2="${x0+w}" y2="${yU}" stroke="${muted}"/><line x1="${x0}" y1="${yX}" x2="${x0+w}" y2="${yX}" stroke="${muted}"/><text x="${x0-10}" y="${yU+4}" text-anchor="end" fill="${muted}" font-size="13">U sorted</text><text x="${x0-10}" y="${yX+4}" text-anchor="end" fill="${muted}" font-size="13">Q(U)</text>`;uniforms.forEach((u,i)=>{const x=x0+u*w, qx=x0+Q(u)*w, active=i===k-1; s+=`<line x1="${x}" y1="${yU+9}" x2="${qx}" y2="${yX-9}" stroke="${active?orange:accent}" stroke-opacity="${active?.75:.17}"/><circle cx="${x}" cy="${yU}" r="${active?5:3.2}" fill="${active?orange:blue}"/><circle cx="${qx}" cy="${yX}" r="${active?5:3.2}" fill="${active?orange:accent}"/>`;});const uApprox=k/(n+1),qApprox=Q(uApprox);s+=`<text x="${x0}" y="${230}" fill="${muted}" font-size="12">Rank rule: X(${k}) is near Q(${k}/(${n}+1)) = Q(${uApprox.toFixed(2)}) â‰ˆ ${qApprox.toFixed(2)}.</text>`;svg.innerHTML=s;}
-function refreshText(){const u=+uRange.value,q=Q(u);document.getElementById('eqBox').innerHTML=`Q(u)=inf{x:F(x)â‰¥u}<br>u=${fmt(u)}, &nbsp; Q(u)=${fmt(q)}`;let t='';if(model.value==='smooth')t='Here F is continuous and strictly increasing, so Q behaves like an ordinary inverse.';if(model.value==='discrete')t='Here F is a step function. Many probability levels map to the same atom, so Q has flat pieces.';if(model.value==='mixed')t='Here F has both a continuous slope and a jump. The jump creates an interval of u-levels with the same quantile.';document.getElementById('interpretText').innerHTML=t+' The generalized inverse chooses the first point where accumulated mass reaches the chosen level.';document.getElementById('noticeText').textContent=model.value==='discrete'||model.value==='mixed'?'Right-continuity means the value at a jump is the top of the jump. That is why atoms are included by events of the form {Xâ‰¤x}.':'For a smooth distribution, horizontal probability levels and vertical CDF values correspond one-to-one.';document.getElementById('mainSub').innerHTML=view==='cdf'?'horizontal u meets the graph at the leftmost admissible x':'the inverse picture reads the graph from probability level back to x';}
-function drawAll(){refreshControls();refreshText();drawMain();drawQuantile();drawOrder()}
-makeSamples();drawAll();
+function drawQuantile(){const svg=document.getElementById('quantileSvg'),panel=css('--panel'),border=css('--border'),muted=css('--muted'),text=css('--text'),accent=css('--accent'),blue=css('--blue');let s=`<rect x="8" y="10" width="504" height="245" rx="20" fill="${panel}" stroke="${border}"/>`;const ux=90,uy=50,uh=170,rx=300,rw=155; s+=`<line x1="${ux}" y1="${uy+uh}" x2="${ux}" y2="${uy}" stroke="${muted}"/><text x="${ux}" y="${uy-12}" text-anchor="middle" fill="${muted}" font-size="13">U∈[0,1]</text><line x1="${rx}" y1="${uy+uh}" x2="${rx+rw}" y2="${uy+uh}" stroke="${muted}"/><text x="${rx+rw/2}" y="${uy-12}" text-anchor="middle" fill="${muted}" font-size="13">X=Q(U)</text>`;const picks=[.12,.28,.47,.66,.84];picks.forEach((u,i)=>{const y=uy+uh-u*uh,x=rx+Q(u)*rw;s+=`<circle cx="${ux}" cy="${y}" r="5" fill="${blue}"/><path d="M ${ux+8} ${y} C 155 ${y}, 205 ${uy+uh-Q(u)*uh*.25}, ${x} ${uy+uh}" fill="none" stroke="${accent}" stroke-opacity=".42"/><circle cx="${x}" cy="${uy+uh}" r="5" fill="${accent}"/>`;});s+=`<text x="${50}" y="${242}" fill="${muted}" font-size="12">A uniform vertical coordinate is bent into the distribution by Q.</text>`;svg.innerHTML=s;}
+function drawOrder(){const svg=document.getElementById('orderSvg'),panel=css('--panel'),border=css('--border'),muted=css('--muted'),accent=css('--accent'),blue=css('--blue'),orange=css('--orange');let s=`<rect x="8" y="10" width="504" height="245" rx="20" fill="${panel}" stroke="${border}"/>`;const n=+nRange.value,k=+kRange.value; if(uniforms.length!==n)makeSamples();const x0=62,w=390,yU=86,yX=178;s+=`<line x1="${x0}" y1="${yU}" x2="${x0+w}" y2="${yU}" stroke="${muted}"/><line x1="${x0}" y1="${yX}" x2="${x0+w}" y2="${yX}" stroke="${muted}"/><text x="${x0-10}" y="${yU+4}" text-anchor="end" fill="${muted}" font-size="13">U sorted</text><text x="${x0-10}" y="${yX+4}" text-anchor="end" fill="${muted}" font-size="13">Q(U)</text>`;uniforms.forEach((u,i)=>{const x=x0+u*w, qx=x0+Q(u)*w, active=i===k-1; s+=`<line x1="${x}" y1="${yU+9}" x2="${qx}" y2="${yX-9}" stroke="${active?orange:accent}" stroke-opacity="${active?.75:.17}"/><circle cx="${x}" cy="${yU}" r="${active?5:3.2}" fill="${active?orange:blue}"/><circle cx="${qx}" cy="${yX}" r="${active?5:3.2}" fill="${active?orange:accent}"/>`;});const uApprox=k/(n+1),qApprox=Q(uApprox);s+=`<text x="${x0}" y="${230}" fill="${muted}" font-size="12">Rank rule: X(${k}) is near Q(${k}/(${n}+1)) = Q(${uApprox.toFixed(2)}) ≈ ${qApprox.toFixed(2)}.</text>`;svg.innerHTML=s;}
+function refreshText(){const u=+uRange.value,q=Q(u);document.getElementById('eqBox').innerHTML=`\\(Q(u)=\\inf\\{x:F(x)\\ge u\\}\\)<br>\\(u=${fmt(u)}\\), &nbsp; \\(Q(u)=${fmt(q)}\\)`;let t='';if(model.value==='smooth')t='Here F is continuous and strictly increasing, so Q behaves like an ordinary inverse.';if(model.value==='discrete')t='Here F is a step function. Many probability levels map to the same atom, so Q has flat pieces.';if(model.value==='mixed')t='Here F has both a continuous slope and a jump. The jump creates an interval of u-levels with the same quantile.';document.getElementById('interpretText').innerHTML=t+' The generalized inverse chooses the first point where accumulated mass reaches the chosen level.';document.getElementById('noticeText').textContent=model.value==='discrete'||model.value==='mixed'?'Right-continuity means the value at a jump is the top of the jump. That is why atoms are included by events of the form {X≤x}.':'For a smooth distribution, horizontal probability levels and vertical CDF values correspond one-to-one.';document.getElementById('mainSub').innerHTML=view==='cdf'?'horizontal u meets the graph at the leftmost admissible x':'the inverse picture reads the graph from probability level back to x';}
+
+function renderMathNow(){
+  if(!window.renderMathInElement) return false;
+  renderMathInElement(document.body,{
+    delimiters:[
+      {left:"$$",right:"$$",display:true},
+      {left:"\\[",right:"\\]",display:true},
+      {left:"\\(",right:"\\)",display:false}
+    ],
+    throwOnError:false,
+    ignoredTags:["script","noscript","style","textarea","pre","code","option"]
+  });
+  return true;
+}
+function queueMathRender(tries=0){
+  if(renderMathNow()) return;
+  if(tries<80) setTimeout(()=>queueMathRender(tries+1),50);
+}
+function drawAll(){refreshControls();refreshText();drawMain();drawQuantile();drawOrder();queueMathRender()}
+makeSamples();drawAll();window.addEventListener("load",()=>queueMathRender());
 </script>
 </body>
 </html>

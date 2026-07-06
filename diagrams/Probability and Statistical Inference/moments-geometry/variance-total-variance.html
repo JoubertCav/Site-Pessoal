@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -9,6 +9,10 @@
   <meta name="description" content="Interactive diagram for variance and total variance.">
     <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
 <title>Variance and Total Variance</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
   <script>
@@ -110,6 +114,11 @@
     .logicItem{border:1px solid var(--border);background:var(--panel2);border-radius:14px;padding:10px 11px;font-size:.88rem;color:var(--muted);display:flex;gap:9px;align-items:flex-start}
     .mark{font-weight:900;color:var(--accent);min-width:17px}
     footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
+
+    .katex{font-size:1.04em}
+    .math .katex{font-size:1.05em}
+    .mathLine{display:block;margin:.1rem 0 .35rem}
+    .eqBox .katex{font-size:1.04em}
     @media(max-width:1080px){
       .defs,.layout,.two,.interpretation{grid-template-columns:1fr}
       header{flex-direction:column}
@@ -130,7 +139,7 @@
       <div>
         <h1>Variance and total variance</h1>
         <div class="subtitle">
-          Variance is squared L2 distance from the mean. Total variance splits dispersion into two orthogonal pieces: variation inside groups and variation between group means.
+          Variance is squared \(L^2\) distance from the mean. Total variance splits dispersion into two orthogonal pieces: variation inside groups and variation between group means.
         </div>
       </div>
       <button class="themeBtn" id="themeBtn">Dark mode</button>
@@ -139,19 +148,31 @@
     <section class="defs">
       <div class="def">
         <div class="tag">Variance</div>
-        <div class="math">Var(X)=E[(Xâˆ’Î¼)Â²]<br>Î¼=E[X]</div>
+        <div class="math">
+          <span class="mathLine">\(\operatorname{Var}(X)=E[(X-\mu)^2]\)</span>
+          <span class="mathLine">\(\mu=E[X]\)</span>
+        </div>
       </div>
       <div class="def">
-        <div class="tag">L2 geometry</div>
-        <div class="math">Var(X)=||Xâˆ’E[X]||Â²â‚‚<br>Ïƒ=||Xâˆ’Î¼||â‚‚</div>
+        <div class="tag">L² geometry</div>
+        <div class="math">
+          <span class="mathLine">\(\operatorname{Var}(X)=\|X-E[X]\|_2^2\)</span>
+          <span class="mathLine">\(\sigma=\|X-\mu\|_2\)</span>
+        </div>
       </div>
       <div class="def">
         <div class="tag">Standardization</div>
-        <div class="math">Z=(Xâˆ’Î¼)/Ïƒ<br>E[Z]=0, Var(Z)=1</div>
+        <div class="math">
+          <span class="mathLine">\(Z=(X-\mu)/\sigma\)</span>
+          <span class="mathLine">\(E[Z]=0,\quad \operatorname{Var}(Z)=1\)</span>
+        </div>
       </div>
       <div class="def">
         <div class="tag">Total variance</div>
-        <div class="math">Var(X)=E[Var(X|G)]<br>+ Var(E[X|G])</div>
+        <div class="math">
+          <span class="mathLine">\(\operatorname{Var}(X)=E[\operatorname{Var}(X\mid G)]\)</span>
+          <span class="mathLine">\(+\operatorname{Var}(E[X\mid G])\)</span>
+        </div>
       </div>
     </section>
 
@@ -207,7 +228,7 @@
         </div>
 
         <div class="eqBox" id="eqBox">
-          Var(X)=E[Var(X|G)]+Var(E[X|G]).
+          \(\operatorname{Var}(X)=E[\operatorname{Var}(X\mid G)]+\operatorname{Var}(E[X\mid G])\).
         </div>
 
         <div class="control">
@@ -222,13 +243,13 @@
             <div>
               <div class="plotTitle">Dispersion as squared distance from the mean</div>
               <div class="pillRow">
-                <span class="pill"><span class="dot"></span> global mean Î¼</span>
+                <span class="pill"><span class="dot"></span> global mean μ</span>
                 <span class="pill"><span class="dot" style="background:var(--blue)"></span> group means</span>
                 <span class="pill"><span class="dot" style="background:var(--warn)"></span> within distances</span>
                 <span class="pill"><span class="dot" style="background:var(--violet)"></span> between distances</span>
               </div>
             </div>
-            <div class="plotSub" id="mainSub">Each point contributes a squared distance to Î¼.</div>
+            <div class="plotSub" id="mainSub">Each point contributes a squared distance to μ.</div>
           </div>
           <svg id="mainSvg" viewBox="0 0 980 470" preserveAspectRatio="xMidYMid meet"></svg>
         </div>
@@ -245,7 +266,7 @@
           <div class="card plotCard">
             <div class="plotHead">
               <div class="plotTitle">Standardization</div>
-              <div class="plotSub">translate by Î¼, rescale by Ïƒ</div>
+              <div class="plotSub">translate by μ, rescale by σ</div>
             </div>
             <svg id="stdSvg" viewBox="0 0 520 305" preserveAspectRatio="xMidYMid meet"></svg>
           </div>
@@ -275,10 +296,28 @@
       </section>
     </main>
 
-    <footer>Minimal interactive notebook â€” variance as L2 distance and total variance as orthogonal decomposition.</footer>
+    <footer>Minimal interactive notebook — variance as L2 distance and total variance as orthogonal decomposition.</footer>
   </div>
 
 <script>
+
+function renderMath(root){
+  if(typeof renderMathInElement !== "function") return;
+  renderMathInElement(root || document.body, {
+    delimiters: [
+      {left: "$$", right: "$$", display: true},
+      {left: "\\[", right: "\\]", display: true},
+      {left: "\\(", right: "\\)", display: false}
+    ],
+    throwOnError: false,
+    strict: false
+  });
+}
+function renderDynamicMath(){
+  document.querySelectorAll('.math,.eqBox,.smallText,.summary,.notice,.logicList,.pill,.plotSub').forEach(el=>renderMath(el));
+}
+window.addEventListener('DOMContentLoaded',()=>renderMath(document.body));
+
 const body = document.body;
 const themeBtn = document.getElementById("themeBtn");
 const scenario = document.getElementById("scenario");
@@ -295,7 +334,7 @@ let seed = 73421;
 
 function css(v){ return getComputedStyle(body).getPropertyValue(v).trim(); }
 function fmt(x){
-  if(!isFinite(x)) return "âˆž";
+  if(!isFinite(x)) return "∞";
   if(Math.abs(x)<10) return x.toFixed(4);
   return x.toFixed(2);
 }
@@ -391,7 +430,7 @@ function drawMain(){
 
   const x0=58, x1=690, yA=155, yB=270, axisY=375;
   let h = '<rect x="8" y="10" width="964" height="440" rx="20" fill="'+panel+'" stroke="'+border+'"/>';
-  h += text(60,40, mode==="decomp" ? "each point decomposes into within + between distance" : "standardization: subtract Î¼ and divide by Ïƒ", muted,13,850);
+  h += text(60,40, mode==="decomp" ? "each point decomposes into within + between distance" : "standardization: subtract μ and divide by σ", muted,13,850);
 
   for(let k=0;k<=6;k++){
     const x = x0+(x1-x0)*k/6;
@@ -403,7 +442,7 @@ function drawMain(){
 
   const muX = px(st.mu,dom[0],dom[1],x0,x1);
   h += line(muX,72,muX,axisY+18,acc,2.8,.86);
-  h += text(muX,64,"global mean Î¼",acc,12,900,"middle");
+  h += text(muX,64,"global mean μ",acc,12,900,"middle");
 
   Object.keys(st.groups).forEach(g=>{
     const gs = st.groups[g];
@@ -411,7 +450,7 @@ function drawMain(){
     const gy = g==="A" ? yA : yB;
     const col = g==="A" ? blue : violet;
     h += line(gmX,gy-46,gmX,gy+46,col,2.4,.75,"7 5");
-    h += text(gmX,gy-56,"Î¼"+g,col,12,900,"middle");
+    h += text(gmX,gy-56,"μ"+g,col,12,900,"middle");
     h += line(gmX,gy+60,muX,gy+60,col,3,.35);
     h += line(gmX,gy+67,muX,gy+67,acc,1.8,.45,"5 5");
     h += text((gmX+muX)/2,gy+84,"between",muted,11,800,"middle");
@@ -446,11 +485,11 @@ function drawMain(){
   h += text(742,238,"within + between",muted,13,850);
   h += text(742,260,"= "+fmt(st.within+st.between),textc,14,900);
   h += line(742,278,910,278,grid,1,.8);
-  h += text(742,296,"Ïƒ = "+fmt(st.sd),muted,13,850);
+  h += text(742,296,"σ = "+fmt(st.sd),muted,13,850);
 
   h += '<rect x="720" y="330" width="218" height="62" rx="18" fill="'+css("--accentSoft")+'" stroke="'+css("--accentLine")+'"/>';
-  h += text(742,358,"L2 distance",textc,14,900);
-  h += text(742,380,"Var(X)=||Xâˆ’Î¼||â‚‚Â²",muted,13,850);
+  h += text(742,358,"L² distance",textc,14,900);
+  h += text(742,380,"Var(X)=‖X−μ‖₂²",muted,13,850);
 
   svg.innerHTML = h;
 }
@@ -488,7 +527,7 @@ function drawStd(){
   const dom = xDomain(data,st);
   const zVals = data.map(d=>({z:(d.x-st.mu)/(st.sd || 1), g:d.g}));
   let h = '<rect x="8" y="10" width="504" height="280" rx="18" fill="'+panel+'" stroke="'+border+'"/>';
-  h += text(68,36,"Z = (Xâˆ’Î¼)/Ïƒ",muted,12,850);
+  h += text(68,36,"Z = (X−μ)/σ",muted,12,850);
   h += line(x0,yTop,x1,yTop,muted,1.2,.8);
   h += line(x0,yBot,x1,yBot,muted,1.2,.8);
   h += text(x0,yTop-18,"original X",textc,12,850);
@@ -496,7 +535,7 @@ function drawStd(){
 
   const muX = px(st.mu,dom[0],dom[1],x0,x1);
   h += line(muX,yTop-32,muX,yTop+32,acc,2,.75);
-  h += text(muX,yTop+50,"Î¼",acc,11,900,"middle");
+  h += text(muX,yTop+50,"μ",acc,11,900,"middle");
 
   const zLo=-3.2,zHi=3.2;
   const z0=px(0,zLo,zHi,x0,x1);
@@ -506,7 +545,7 @@ function drawStd(){
   h += line(zm,yBot-28,zm,yBot+28,warn,1.6,.55,"5 5");
   h += line(zp,yBot-28,zp,yBot+28,warn,1.6,.55,"5 5");
   h += text(z0,yBot+50,"0",acc,11,900,"middle");
-  h += text(zm,yBot+50,"âˆ’1",warn,11,900,"middle");
+  h += text(zm,yBot+50,"−1",warn,11,900,"middle");
   h += text(zp,yBot+50,"1",warn,11,900,"middle");
 
   const maxDraw = Math.min(data.length,150);
@@ -531,15 +570,15 @@ function updateText(){
   document.getElementById("outVal").textContent = Number(outRange.value).toFixed(2);
 
   document.getElementById("eqBox").innerHTML =
-    "Var(X) = <strong>"+fmt(st.total)+"</strong><br>" +
-    "E[Var(X|G)] + Var(E[X|G]) = <strong>"+fmt(st.within)+" + "+fmt(st.between)+"</strong>.";
+    "\\(\\operatorname{Var}(X)=\\) <strong>"+fmt(st.total)+"</strong><br>" +
+    "\\(E[\\operatorname{Var}(X\\mid G)]+\\operatorname{Var}(E[X\\mid G])=\\) <strong>"+fmt(st.within)+" + "+fmt(st.between)+"</strong>.";
 
   const list = document.getElementById("logicList");
   const items = [
-    ["âœ“","mean is the L2 projection onto constants"],
-    ["âœ“","variance is squared distance from that projection"],
-    ["âœ“","conditioning splits noise inside groups from distance between group means"],
-    ["â†’","standardization makes the new mean 0 and variance 1"]
+    ["✓","mean is the \\(L^2\\) projection onto constants"],
+    ["✓","variance is squared distance from that projection"],
+    ["✓","conditioning splits noise inside groups from distance between group means"],
+    ["→","standardization makes the new mean \\(0\\) and variance \\(1\\)"]
   ];
   list.innerHTML = items.map(it => '<div class="logicItem"><span class="mark">'+it[0]+'</span><span>'+it[1]+'</span></div>').join("");
 
@@ -548,7 +587,7 @@ function updateText(){
   const interp = document.getElementById("interpretText");
   const notice = document.getElementById("noticeText");
   interp.innerHTML =
-    "Here, <strong>"+(100*withinShare).toFixed(1)+"%</strong> of the variance is within-group and <strong>"+(100*(1-withinShare)).toFixed(1)+"%</strong> is between-group. The identity is exact because the two components are orthogonal in L2.";
+    "Here, <strong>"+(100*withinShare).toFixed(1)+"%</strong> of the variance is within-group and <strong>"+(100*(1-withinShare)).toFixed(1)+"%</strong> is between-group. The identity is exact because the two components are orthogonal in \\(L^2\\).";
   if(st.between > st.within){
     notice.innerHTML = "Most dispersion comes from the distance between group means. Knowing the group explains a large part of X.";
   }else{
@@ -563,6 +602,7 @@ function drawAll(){
   drawMain();
   drawBars();
   drawStd();
+  renderDynamicMath();
 }
 themeBtn.addEventListener("click", function(){
   const dark = body.getAttribute("data-theme")==="dark";

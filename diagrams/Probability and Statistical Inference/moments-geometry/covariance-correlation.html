@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -6,9 +6,12 @@
   <meta name="google-site-verification" content="google2c37f7a4206c9d3a.html">
   <meta name="google-site-verification" content="fSWAEb_oSSHr_eJXL9gHYxIn879tRaBwJ42f_aD9o2s">
   <meta name="google-site-verification" content="ftZ4QVMrlub9jbolsIeo4Ix4UBw0-BJrFeorzqKLXng">
-  <meta name="description" content="Interactive diagram for covariance and correlation.">
+  <meta name="description" content="A polished interactive app for covariance, correlation, PSD matrices, and partial correlation with KaTeX-rendered formulas.">
     <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
-<title>Covariance and Correlation</title>
+<title>Covariance and Correlation — Interactive Geometry</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"></script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
   <script>
@@ -52,6 +55,15 @@
       --violet:#bba6ff;
       --shadow:0 18px 55px rgba(0,0,0,.30);
     }
+
+    html{color-scheme:light dark}
+    .katex-display{overflow-x:auto;overflow-y:hidden;padding:.15rem 0;margin:.35rem 0}
+    .math,.eqBox{overflow-x:auto;scrollbar-width:thin}
+    .math{font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif}
+    .math .katex{font-size:1.04em}
+    .eqBox .katex{font-size:1.03em}
+    .formulaLine{display:block;margin:.2rem 0 .35rem}
+    .subnote{color:var(--muted);font-size:.86rem;line-height:1.45;margin-top:.15rem}
     *{box-sizing:border-box}
     body{
       margin:0;
@@ -74,6 +86,8 @@
     .def{padding:14px 15px;min-height:118px}
     .tag{color:var(--muted);font-size:.74rem;font-weight:850;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
     .math{font-family:Cambria, Georgia, "Times New Roman", serif;line-height:1.45;font-size:1.01rem;color:var(--text)}
+    .math .katex,.eqBox .katex,label .katex{font-size:1.02em}
+    .eqBox .katex{line-height:1.35}
     .layout{display:grid;grid-template-columns:340px 1fr;gap:16px;align-items:start}
     .side{padding:16px}
     .panelTitle{margin:0 0 12px;color:var(--muted);font-size:.82rem;font-weight:900;text-transform:uppercase;letter-spacing:.13em}
@@ -129,7 +143,7 @@
       <div>
         <h1>Covariance and correlation</h1>
         <div class="subtitle">
-          Covariance is an inner product between centered random variables. Correlation is its normalized cosine. Partial correlation removes the component explained by a third variable.
+          A compact geometric view: covariance is a centered inner product, correlation is a normalized angle, and partial correlation is the angle left after projecting out a third variable.
         </div>
       </div>
       <button class="themeBtn" id="themeBtn">Dark mode</button>
@@ -138,19 +152,19 @@
     <section class="defs">
       <div class="def">
         <div class="tag">Covariance</div>
-        <div class="math">Cov(X,Y)=E[(Xâˆ’Î¼X)(Yâˆ’Î¼Y)]<br>centered inner product</div>
+        <div class="math"><span class="formulaLine">\(\operatorname{Cov}(X,Y)=\mathbb{E}[(X-\mu_X)(Y-\mu_Y)]\)</span><div class="subnote">centered inner product</div></div>
       </div>
       <div class="def">
         <div class="tag">Correlation</div>
-        <div class="math">ÏXY = Cov(X,Y)/(ÏƒXÏƒY)<br>cosine in LÂ²</div>
+        <div class="math"><span class="formulaLine">\(\rho_{XY}=\dfrac{\operatorname{Cov}(X,Y)}{\sigma_X\sigma_Y}\)</span><div class="subnote">cosine in \(L^2\)</div></div>
       </div>
       <div class="def">
         <div class="tag">PSD matrix</div>
-        <div class="math">Î£ = E[(Xâˆ’Î¼)(Xâˆ’Î¼)â€²]<br>aâ€²Î£a = Var(aâ€²X) â‰¥ 0</div>
+        <div class="math"><span class="formulaLine">\(\Sigma=\mathbb{E}[(X-\mu)(X-\mu)^\top]\)</span><div class="subnote">\(a^\top\Sigma a=\operatorname{Var}(a^\top X)\ge 0\)</div></div>
       </div>
       <div class="def">
         <div class="tag">Partial correlation</div>
-        <div class="math">ÏXYÂ·Z = Corr(XâŠ¥Z,YâŠ¥Z)<br>correlation after residualizing</div>
+        <div class="math"><span class="formulaLine">\(\rho_{XY\cdot Z}=\operatorname{Corr}(X_{\perp Z},Y_{\perp Z})\)</span><div class="subnote">correlation after residualizing</div></div>
       </div>
     </section>
 
@@ -164,17 +178,17 @@
         </div>
 
         <div class="control">
-          <label for="xzRange">ÏXZ <span class="value" id="xzVal">0.60</span></label>
+          <label for="xzRange">\(\rho_{XZ}\) <span class="value" id="xzVal">0.60</span></label>
           <input id="xzRange" type="range" min="-0.95" max="0.95" step="0.01" value="0.60"/>
         </div>
 
         <div class="control">
-          <label for="yzRange">ÏYZ <span class="value" id="yzVal">0.60</span></label>
+          <label for="yzRange">\(\rho_{YZ}\) <span class="value" id="yzVal">0.60</span></label>
           <input id="yzRange" type="range" min="-0.95" max="0.95" step="0.01" value="0.60"/>
         </div>
 
         <div class="control">
-          <label for="partialRange">ÏXYÂ·Z <span class="value" id="partialVal">0.00</span></label>
+          <label for="partialRange">\(\rho_{XY\cdot Z}\) <span class="value" id="partialVal">0.00</span></label>
           <input id="partialRange" type="range" min="-0.95" max="0.95" step="0.01" value="0.00"/>
         </div>
 
@@ -195,7 +209,7 @@
         </div>
 
         <div class="eqBox" id="eqBox">
-          ÏXY = ÏXZÏYZ + ÏXYÂ·Zâˆš(1âˆ’ÏXZÂ²)âˆš(1âˆ’ÏYZÂ²).
+          \(\rho_{XY}=\rho_{XZ}\rho_{YZ}+\rho_{XY\cdot Z}\sqrt{1-\rho_{XZ}^2}\sqrt{1-\rho_{YZ}^2}\).
         </div>
 
         <div class="control">
@@ -208,7 +222,7 @@
         <div class="card plotCard">
           <div class="plotHead">
             <div>
-              <div class="plotTitle">Linear dependence as angle in LÂ²</div>
+              <div class="plotTitle">Linear dependence as angle in L²</div>
               <div class="pillRow">
                 <span class="pill"><span class="dot"></span> covariance = centered inner product</span>
                 <span class="pill"><span class="dot" style="background:var(--blue)"></span> correlation = normalized slope/angle</span>
@@ -246,7 +260,7 @@
             </div>
             <div class="summary">
               <div><strong>Covariance.</strong><br>Positive if centered variables move together; negative if they move in opposite directions.</div>
-              <div><strong>Correlation.</strong><br>Scale-free covariance: always between âˆ’1 and 1.</div>
+              <div><strong>Correlation.</strong><br>Scale-free covariance: always between \(-1\) and \(1\).</div>
               <div><strong>PSD matrix.</strong><br>A covariance matrix is always positive semidefinite because every linear combination has nonnegative variance.</div>
               <div><strong>Partial correlation.</strong><br>Correlation of residuals after projecting X and Y away from Z.</div>
             </div>
@@ -262,7 +276,7 @@
       </section>
     </main>
 
-    <footer>Minimal interactive notebook â€” covariance as inner product, correlation as angle, partial correlation as residual angle.</footer>
+    <footer>Interactive notebook — covariance as inner product, correlation as angle, partial correlation as residual angle.</footer>
   </div>
 
 <script>
@@ -281,7 +295,7 @@ let seed = 135791;
 
 function css(v){ return getComputedStyle(body).getPropertyValue(v).trim(); }
 function fmt(x){
-  if(!isFinite(x)) return "âˆž";
+  if(!isFinite(x)) return "∞";
   if(Math.abs(x)<10) return x.toFixed(4);
   return x.toFixed(2);
 }
@@ -306,6 +320,31 @@ function text(x,y,s,fill,size,weight,anchor){
 }
 function px(v,a,b,x0,x1){ return x0+(v-a)/(b-a)*(x1-x0); }
 function py(v,a,b,y0,y1){ return y1-(v-a)/(b-a)*(y1-y0); }
+function mathHTML(tex, displayMode=false){
+  if(window.katex){
+    return katex.renderToString(tex, {
+      throwOnError:false,
+      displayMode:displayMode,
+      strict:"ignore",
+      trust:false
+    });
+  }
+  return (displayMode ? "\\[" + tex + "\\]" : "\\(" + tex + "\\)");
+}
+function renderMath(){
+  if(window.renderMathInElement){
+    renderMathInElement(document.body, {
+      delimiters:[
+        {left:"$$", right:"$$", display:true},
+        {left:"\\[", right:"\\]", display:true},
+        {left:"\\(", right:"\\)", display:false}
+      ],
+      ignoredTags:["script","noscript","style","textarea","pre","code","option","svg"],
+      throwOnError:false,
+      strict:"ignore"
+    });
+  }
+}
 
 function params(){
   const a = Number(xzRange.value);
@@ -388,7 +427,7 @@ function drawMain(){
   const xs = data.map(d=>d[xKey]), ys=data.map(d=>d[yKey]);
   const maxAbs = Math.max(2.5, ...xs.map(Math.abs), ...ys.map(Math.abs))*1.08;
   let h = '<rect x="8" y="10" width="964" height="430" rx="20" fill="'+panel+'" stroke="'+border+'"/>';
-  h += text(64,38, mode==="raw" ? "raw plane: X versus Y" : "residual plane: XâŠ¥Z versus YâŠ¥Z", muted,13,850);
+  h += text(64,38, mode==="raw" ? "raw plane: X versus Y" : "residual plane: X⊥Z versus Y⊥Z", muted,13,850);
 
   for(let k=0;k<=6;k++){
     const xx=x0+(x1-x0)*k/6;
@@ -418,22 +457,22 @@ function drawMain(){
     h += '<circle cx="'+X+'" cy="'+Y+'" r="3.5" fill="'+zColor+'" fill-opacity=".58" stroke="'+panel+'" stroke-width=".5"/>';
   }
 
-  h += text(x1,yZero+24, mode==="raw" ? "X" : "XâŠ¥Z", muted,12,850,"end");
-  h += text(xZero+8,y0+14, mode==="raw" ? "Y" : "YâŠ¥Z", muted,12,850);
+  h += text(x1,yZero+24, mode==="raw" ? "X" : "X⊥Z", muted,12,850,"end");
+  h += text(xZero+8,y0+14, mode==="raw" ? "Y" : "Y⊥Z", muted,12,850);
 
   h += '<rect x="710" y="72" width="220" height="226" rx="20" fill="'+panel2+'" stroke="'+border+'"/>';
   h += text(734,104, mode==="raw" ? "Raw correlation" : "Partial correlation", textc,16,900);
-  h += text(734,138,"sample Ï = "+fmt(rho),warn,14,900);
-  h += text(734,169,"theory Ï = "+fmt(theory),acc,14,900);
+  h += text(734,138,"sample ρ = "+fmt(rho),warn,14,900);
+  h += text(734,169,"theory ρ = "+fmt(theory),acc,14,900);
   h += text(734,202,"Cov = "+fmt(cov),blue,13,850);
-  h += text(734,228,"Ïƒx = "+fmt(sx),muted,13,850);
-  h += text(734,252,"Ïƒy = "+fmt(sy),muted,13,850);
+  h += text(734,228,"σx = "+fmt(sx),muted,13,850);
+  h += text(734,252,"σy = "+fmt(sy),muted,13,850);
   h += line(734,270,900,270,grid,1,.8);
   h += text(734,286, mode==="raw" ? "common Z may create slope" : "Z direction removed", muted,12,800);
 
   h += '<rect x="710" y="326" width="220" height="58" rx="18" fill="'+css("--accentSoft")+'" stroke="'+css("--accentLine")+'"/>';
   h += text(734,354, "angle view", textc,14,900);
-  h += text(734,376, "Ï = cos(angle in centered LÂ²)", muted,12,800);
+  h += text(734,376, "ρ = cos(angle in centered L²)", muted,12,800);
 
   svg.innerHTML = h;
 }
@@ -475,7 +514,7 @@ function drawMatrix(){
   h += '<rect x="'+bx+'" y="'+by+'" width="158" height="144" rx="18" fill="'+panel2+'" stroke="'+border+'"/>';
   h += text(bx+20,by+32,"PSD tests",textc,14,900);
   h += text(bx+20,by+62,"det(R) = "+fmt(det),det>=-1e-6?acc:warn,12,850);
-  h += text(bx+20,by+88,"aâ€²Ra â‰¥ 0",acc,12,850);
+  h += text(bx+20,by+88,"a′Ra ≥ 0",acc,12,850);
   h += text(bx+20,by+114,"[1,-1,0]: "+fmt(q2),muted,11,800);
   h += text(bx+20,by+134,"[1,1,-1]: "+fmt(q3),muted,11,800);
 
@@ -517,12 +556,12 @@ function drawPartial(){
   h += text(yEnd.x+8,yEnd.y+12,"Y",violet,12,900);
   h += text(cx+xz+8,cy-12,"projection of X on Z",muted,11,800);
   h += text(cx+yz+8,cy+24,"projection of Y on Z",muted,11,800);
-  h += text(70,230,"residual XâŠ¥Z",warn,12,900);
-  h += text(200,230,"residual YâŠ¥Z",warn,12,900);
+  h += text(70,230,"residual X⊥Z",warn,12,900);
+  h += text(200,230,"residual Y⊥Z",warn,12,900);
   h += text(340,230,"corr = "+fmt(p),acc,12,900);
 
   h += '<rect x="56" y="244" width="410" height="28" rx="13" fill="'+panel2+'" stroke="'+border+'"/>';
-  h += text(75,263,"ÏXY = ÏXZÏYZ + ÏXYÂ·Zâˆš(1âˆ’ÏXZÂ²)âˆš(1âˆ’ÏYZÂ²)",muted,11,800);
+  h += text(75,263,"ρXY = ρXZρYZ + ρXY·Z√(1−ρXZ²)√(1−ρYZ²)",muted,11,800);
   svg.innerHTML = h;
 }
 
@@ -535,15 +574,16 @@ function updateText(){
   document.getElementById("scaleVal").textContent = fmt(par.scale);
 
   document.getElementById("eqBox").innerHTML =
-    "Ï<sub>XY</sub> = Ï<sub>XZ</sub>Ï<sub>YZ</sub> + Ï<sub>XYÂ·Z</sub>âˆš(1âˆ’Ï<sub>XZ</sub>Â²)âˆš(1âˆ’Ï<sub>YZ</sub>Â²)<br>" +
-    "Ï<sub>XY</sub> = <strong>"+fmt(par.rxy)+"</strong>, Ï<sub>XYÂ·Z</sub> = <strong>"+fmt(par.p)+"</strong>.";
+    mathHTML("\\rho_{XY}=\\rho_{XZ}\\rho_{YZ}+\\rho_{XY\\cdot Z}\\sqrt{1-\\rho_{XZ}^{2}}\\sqrt{1-\\rho_{YZ}^{2}}", true) +
+    "<br>" +
+    mathHTML("\\rho_{XY}=" + fmt(par.rxy) + ",\\quad \\rho_{XY\\cdot Z}=" + fmt(par.p));
 
   const list = document.getElementById("logicList");
   const items = [
-    ["âœ“","centered covariance is an LÂ² inner product"],
-    ["âœ“","correlation normalizes covariance into a cosine"],
-    ["âœ“","covariance/correlation matrices are positive semidefinite"],
-    ["â†’","partial correlation is correlation after projecting away Z"]
+    ["✓","centered covariance is an L² inner product"],
+    ["✓","correlation normalizes covariance into a cosine"],
+    ["✓","covariance/correlation matrices are positive semidefinite"],
+    ["→","partial correlation is correlation after projecting away Z"]
   ];
   list.innerHTML = items.map(it => '<div class="logicItem"><span class="mark">'+it[0]+'</span><span>'+it[1]+'</span></div>').join("");
 
@@ -568,6 +608,7 @@ function drawAll(){
   drawMain();
   drawMatrix();
   drawPartial();
+  renderMath();
 }
 themeBtn.addEventListener("click", function(){
   const dark = body.getAttribute("data-theme")==="dark";
@@ -600,6 +641,7 @@ resimulate.addEventListener("click", function(){
   drawAll();
 });
 drawAll();
+window.addEventListener("load", drawAll);
 </script>
 </body>
 </html>

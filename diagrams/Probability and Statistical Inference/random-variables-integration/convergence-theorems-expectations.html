@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -18,6 +18,9 @@
 
     gtag('config', 'G-NHXHEJP1G0');
   </script>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
   <style>
     :root{
       --bg:#f6f1e8;
@@ -74,6 +77,12 @@
     .def{padding:14px 15px;min-height:118px}
     .tag{color:var(--muted);font-size:.74rem;font-weight:850;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
     .math{font-family:Cambria, Georgia, "Times New Roman", serif;line-height:1.45;font-size:1.01rem;color:var(--text)}
+    .tex-slot{display:inline-block;vertical-align:middle}
+    .tex-display{display:block;margin:.18rem 0 .28rem}
+    .math .katex{font-size:1.02em}
+    .eqBox .katex{font-size:1.04em}
+    .katex-error-fallback{font-family:Cambria, Georgia, "Times New Roman", serif}
+
     .layout{display:grid;grid-template-columns:340px 1fr;gap:16px;align-items:start}
     .side{padding:16px}
     .panelTitle{margin:0 0 12px;color:var(--muted);font-size:.82rem;font-weight:900;text-transform:uppercase;letter-spacing:.13em}
@@ -140,19 +149,31 @@
     <section class="defs">
       <div class="def">
         <div class="tag">Monotone convergence</div>
-        <div class="math">0â‰¤fâ‚™â†‘f<br>âˆ«fâ‚™ dP â†‘ âˆ«f dP</div>
+        <div class="math">
+          <span class="tex-slot tex-display" data-tex="0\le f_n\uparrow f"></span>
+          <span class="tex-slot tex-display" data-tex="\int f_n\,dP\uparrow\int f\,dP"></span>
+        </div>
       </div>
       <div class="def">
         <div class="tag">Dominated convergence</div>
-        <div class="math">fâ‚™â†’f, |fâ‚™|â‰¤g, âˆ«g dP&lt;âˆž<br>âˆ«fâ‚™ dPâ†’âˆ«f dP</div>
+        <div class="math">
+          <span class="tex-slot tex-display" data-tex="f_n\to f,\ |f_n|\le g,\ \int g\,dP\lt\infty"></span>
+          <span class="tex-slot tex-display" data-tex="\int f_n\,dP\to\int f\,dP"></span>
+        </div>
       </div>
       <div class="def">
         <div class="tag">Fatou</div>
-        <div class="math">fâ‚™â‰¥0<br>âˆ«liminf fâ‚™ dP â‰¤ liminf âˆ«fâ‚™ dP</div>
+        <div class="math">
+          <span class="tex-slot tex-display" data-tex="f_n\ge 0"></span>
+          <span class="tex-slot tex-display" data-tex="\int \liminf f_n\,dP\le \liminf \int f_n\,dP"></span>
+        </div>
       </div>
       <div class="def">
         <div class="tag">Unsafe interchange</div>
-        <div class="math">fâ‚™â†’0 pointwise<br>but âˆ«fâ‚™ dPâ†›0</div>
+        <div class="math">
+          <span class="tex-slot tex-display" data-tex="f_n\to 0\text{ pointwise}"></span>
+          <span class="tex-slot tex-display" data-tex="\int f_n\,dP\not\to 0"></span>
+        </div>
       </div>
     </section>
 
@@ -187,7 +208,7 @@
 
         <div class="control">
           <div class="seg">
-            <button class="btn active" id="showCurrent">Current fâ‚™</button>
+            <button class="btn active" id="showCurrent">Current fₙ</button>
             <button class="btn" id="showMany">Sequence view</button>
           </div>
         </div>
@@ -197,7 +218,7 @@
         </div>
 
         <div class="eqBox" id="eqBox">
-          0â‰¤fâ‚™â†‘f â‡’ E[fâ‚™]â†‘E[f].
+          <span class="tex-slot tex-display" data-tex="0\le f_n\uparrow f\quad\Rightarrow\quad E[f_n]\uparrow E[f]"></span>
         </div>
 
         <div class="control">
@@ -210,14 +231,14 @@
         <div class="card plotCard">
           <div class="plotHead">
             <div>
-              <div class="plotTitle">Function geometry on Î©=[0,1]</div>
+              <div class="plotTitle">Function geometry on Ω=[0,1]</div>
               <div class="pillRow">
                 <span class="pill"><span class="dot"></span> area = expectation</span>
                 <span class="pill"><span class="dot" style="background:var(--blue)"></span> limit f</span>
                 <span class="pill"><span class="dot" style="background:var(--warn)"></span> domination / warning</span>
               </div>
             </div>
-            <div class="plotSub" id="mainSub">The integral is the visible area under fâ‚™.</div>
+            <div class="plotSub" id="mainSub">The integral is the visible area under fₙ.</div>
           </div>
           <svg id="mainSvg" viewBox="0 0 980 430" preserveAspectRatio="xMidYMid meet"></svg>
         </div>
@@ -226,7 +247,7 @@
           <div class="card plotCard">
             <div class="plotHead">
               <div class="plotTitle">Expectation sequence</div>
-              <div class="plotSub">E[fâ‚™] versus E[f]</div>
+              <div class="plotSub">E[fₙ] versus E[f]</div>
             </div>
             <svg id="integralSvg" viewBox="0 0 520 280" preserveAspectRatio="xMidYMid meet"></svg>
           </div>
@@ -257,14 +278,14 @@
           <div class="card cardPad">
             <div class="panelTitle">What to notice</div>
             <div class="notice" id="noticeText">
-              The key question is not only whether fâ‚™(Ï‰) converges for each Ï‰. The key question is whether the mass is controlled while it converges.
+              The key question is not only whether fₙ(ω) converges for each ω. The key question is whether the mass is controlled while it converges.
             </div>
           </div>
         </div>
       </section>
     </main>
 
-    <footer>Minimal interactive notebook â€” expectation limits as controlled area.</footer>
+    <footer>Minimal interactive notebook — expectation limits as controlled area.</footer>
   </div>
 
 <script>
@@ -283,10 +304,31 @@ const playBtn=document.getElementById("playBtn");
 let view="current";
 let timer=null;
 
+function escapeHtml(str){
+  return String(str).replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[ch]));
+}
+function tex(src, display=false){
+  return `<span class="tex-slot ${display?'tex-display':''}" data-tex="${escapeHtml(src)}" data-display="${display?'1':'0'}"></span>`;
+}
+function renderTeX(root=document){
+  if(!window.katex) return;
+  root.querySelectorAll('.tex-slot').forEach(el=>{
+    const src=el.getAttribute('data-tex') || '';
+    const display=el.getAttribute('data-display')==='1' || el.classList.contains('tex-display');
+    try{
+      window.katex.render(src, el, {displayMode:display, throwOnError:false, strict:'ignore'});
+    }catch(err){
+      el.innerHTML=`<span class="katex-error-fallback">${escapeHtml(src)}</span>`;
+    }
+  });
+}
+function mathLine(src){return tex(src,true);}
+
+
 function css(v){return getComputedStyle(body).getPropertyValue(v).trim();}
 function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
 function fmt(x){
-  if(!isFinite(x)) return "âˆž";
+  if(!isFinite(x)) return "∞";
   if(Math.abs(x)<10) return x.toFixed(4);
   return x.toFixed(2);
 }
@@ -389,9 +431,9 @@ function drawMain(){
   }
   h+=line(x0,y1,x1,y1,muted,1.2,.8);
   h+=line(x0,y0,x0,y1,muted,1.2,.8);
-  h+=text(x0,y1+25,"Ï‰",muted,12,800);
+  h+=text(x0,y1+25,"ω",muted,12,800);
   h+=text(x1,y1+25,"1",muted,12,800,"end");
-  h+=text(x0,32,`${titleCase()} Â· n=${n}`,textc,14,900);
+  h+=text(x0,32,`${titleCase()} · n=${n}`,textc,14,900);
 
   if(view==="many"){
     [1,2,4,8,16,32,64].filter(k=>k<=80).forEach((k,idx)=>{
@@ -410,20 +452,20 @@ function drawMain(){
     const width=1/(n*val("speedRange"));
     const spikeX=px(width,0,1,x0,x1);
     h+=`<rect x="${x0}" y="${yScale(f(c,n,0))}" width="${spikeX-x0}" height="${y1-yScale(f(c,n,0))}" fill="${warn}" fill-opacity=".16" stroke="${warn}" stroke-opacity=".55"/>`;
-    h+=text(spikeX+8,yScale(f(c,n,0))+18,"thin spike: height â†‘, width â†“",warn,12,850);
+    h+=text(spikeX+8,yScale(f(c,n,0))+18,"thin spike: height ↑, width ↓",warn,12,850);
   } else {
     h+=`<path d="${areaPath(yn,x0,x1,y1,null,yScale)}" fill="${acc}" fill-opacity=".18" stroke="none"/>`;
   }
   h+=`<path d="${curvePath(yn,x0,x1,yScale)}" fill="none" stroke="${acc}" stroke-width="3"/>`;
   h+=`<path d="${curvePath(yl,x0,x1,yScale)}" fill="none" stroke="${blue}" stroke-width="2.4" stroke-dasharray="7 5"/>`;
-  h+=text(740,68,"fâ‚™",acc,13,900);
+  h+=text(740,68,"fₙ",acc,13,900);
   h+=text(785,68,"limit f",blue,13,900);
   h+=line(730,64,758,64,acc,3);
   h+=line(778,64,806,64,blue,2.4,1,"7 5");
 
   const intn=exactIntegral(c,n), intlim=limitIntegral(c);
   h+=`<rect x="650" y="308" width="250" height="58" rx="15" fill="${css("--panel2")}" stroke="${border}"/>`;
-  h+=text(670,331,`E[fâ‚™] = ${fmt(intn)}`,textc,14,900);
+  h+=text(670,331,`E[fₙ] = ${fmt(intn)}`,textc,14,900);
   h+=text(670,353,`E[f] = ${fmt(intlim)}`,muted,13,800);
 
   svg.innerHTML=h;
@@ -459,7 +501,7 @@ function drawIntegral(){
   const yn=yScale(exactIntegral(c,n));
   h+=line(xn,y1,xn,y0,muted,1,.22);
   h+=`<circle cx="${xn}" cy="${yn}" r="6" fill="${acc}" stroke="${panel}" stroke-width="2"/>`;
-  h+=text(64,32,"n â†¦ E[fâ‚™]",acc,12,900);
+  h+=text(64,32,"n ↦ E[fₙ]",acc,12,900);
   h+=text(64,253,"1",muted,11,700);
   h+=text(488,253,"80",muted,11,700,"end");
   h+=text(250,253,"index n",muted,12,800,"middle");
@@ -491,7 +533,7 @@ function drawLogic(){
   let msg="";
   if(c==="mct") msg="monotonicity replaces domination";
   if(c==="dct") msg="domination prevents escaping mass";
-  if(c==="fatou") msg="safe conclusion is â‰¤, not equality";
+  if(c==="fatou") msg="safe conclusion is ≤, not equality";
   if(c==="unsafe") msg="pointwise convergence is not enough";
   h+=text(260,232,msg,c==="unsafe"?warn:acc,13,900,"middle");
   svg.innerHTML=h;
@@ -502,26 +544,26 @@ function setChecks(){
   let items=[];
   if(c==="mct"){
     items=[
-      ["âœ“","nonnegative functions"],
-      ["âœ“","monotone increase: fâ‚™â‰¤fâ‚™â‚Šâ‚"],
-      ["âœ“","conclusion: E[fâ‚™]â†‘E[f]"]
+      ["✓","nonnegative functions"],
+      ["✓","monotone increase: fₙ≤fₙ₊₁"],
+      ["✓","conclusion: E[fₙ]↑E[f]"]
     ];
   }else if(c==="dct"){
     items=[
-      ["âœ“","pointwise convergence fâ‚™â†’f"],
-      ["âœ“","one integrable roof: |fâ‚™|â‰¤g"],
-      ["âœ“","conclusion: E[fâ‚™]â†’E[f]"]
+      ["✓","pointwise convergence fₙ→f"],
+      ["✓","one integrable roof: |fₙ|≤g"],
+      ["✓","conclusion: E[fₙ]→E[f]"]
     ];
   }else if(c==="fatou"){
     items=[
-      ["âœ“","nonnegative sequence"],
-      ["âœ“","no domination required"],
-      ["â†’","only inequality: E[liminf fâ‚™]â‰¤liminf E[fâ‚™]"]
+      ["✓","nonnegative sequence"],
+      ["✓","no domination required"],
+      ["→","only inequality: E[liminf fₙ]≤liminf E[fₙ]"]
     ];
   }else{
     items=[
-      ["âœ•","pointwise convergence alone"],
-      ["âœ•","no integrable dominating roof"],
+      ["✕","pointwise convergence alone"],
+      ["✕","no integrable dominating roof"],
       ["!","thin spikes keep area while disappearing pointwise"]
     ];
   }
@@ -537,33 +579,35 @@ function updateText(){
   const notice=document.getElementById("noticeText");
   const sub=document.getElementById("mainSub");
   if(c==="mct"){
-    eq.innerHTML="0â‰¤fâ‚™â†‘f &nbsp;â‡’&nbsp; E[fâ‚™]â†‘E[f].";
+    eq.innerHTML = mathLine("0\\le f_n\\uparrow f\\quad\\Rightarrow\\quad E[f_n]\\uparrow E[f]");
     interp.innerHTML="In MCT, the functions climb upward everywhere. The visible area cannot oscillate or escape; it increases to the area under the pointwise limit.";
     notice.innerHTML="No domination is needed because monotonicity gives one-directional control of mass.";
     sub.innerHTML="The area grows from below toward the limiting area.";
   }else if(c==="dct"){
-    eq.innerHTML="fâ‚™â†’f, |fâ‚™|â‰¤g, E[g]&lt;âˆž &nbsp;â‡’&nbsp; E[fâ‚™]â†’E[f].";
+    eq.innerHTML = mathLine("f_n\\to f,\\ |f_n|\\le g,\\ E[g]<\\infty\\quad\\Rightarrow\\quad E[f_n]\\to E[f]");
     interp.innerHTML="In DCT, functions may wiggle and change sign, but all graphs remain trapped under one integrable envelope. The roof prevents mass from escaping.";
     notice.innerHTML="Domination is a geometric roof. It is what licenses moving the limit inside the expectation.";
     sub.innerHTML="The envelope keeps the whole sequence uniformly integrable.";
   }else if(c==="fatou"){
-    eq.innerHTML="fâ‚™â‰¥0 &nbsp;â‡’&nbsp; E[liminf fâ‚™]â‰¤liminf E[fâ‚™].";
+    eq.innerHTML = mathLine("f_n\\ge 0\\quad\\Rightarrow\\quad E[\\liminf f_n]\\le\\liminf E[f_n]");
     interp.innerHTML="Fatou is a one-sided safety theorem. Even when mass disappears pointwise into a spike, the limit inferior cannot have more expectation than the limiting lower bound of expectations.";
     notice.innerHTML="Fatou gives inequality, not equality. It is the weak safe statement when nonnegativity is all you know.";
     sub.innerHTML="The spike vanishes pointwise, but Fatou still gives a valid inequality.";
   }else{
-    eq.innerHTML="fâ‚™â†’0 pointwise, but E[fâ‚™]=1. Therefore E[fâ‚™]â†›E[0].";
+    eq.innerHTML = mathLine("f_n\\to 0\\text{ pointwise, but }E[f_n]=1.\\text{ Hence }E[f_n]\\not\\to E[0].");
     interp.innerHTML="This is the canonical failure: a spike becomes narrower and taller. Each fixed point eventually misses it, but the total area stays equal to one.";
-    notice.innerHTML="Pointwise convergence watches each Ï‰ separately. Expectation watches total mass. A moving or shrinking spike can fool pointwise convergence.";
+    notice.innerHTML="Pointwise convergence watches each ω separately. Expectation watches total mass. A moving or shrinking spike can fool pointwise convergence.";
     sub.innerHTML="Mass escapes through a thinner and taller spike.";
   }
   setChecks();
+  renderTeX(document.getElementById("eqBox"));
 }
 function drawAll(){
   updateText();
   drawMain();
   drawIntegral();
   drawLogic();
+  renderTeX(document);
 }
 themeBtn.addEventListener("click",()=>{
   const dark=body.getAttribute("data-theme")==="dark";
@@ -587,6 +631,7 @@ playBtn.addEventListener("click",()=>{
   },120);
 });
 drawAll();
+window.addEventListener("load",()=>renderTeX(document));
 </script>
 </body>
 </html>
