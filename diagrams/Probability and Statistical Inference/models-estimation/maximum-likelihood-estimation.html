@@ -9,6 +9,10 @@
 <meta name="description" content="Interactive diagram for maximum likelihood estimation.">
   <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
 <title>Maximum Likelihood Estimation</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
 <script>
@@ -102,6 +106,12 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
   .defs{grid-template-columns:1fr}
   #profileSvg{height:650px}
 }
+
+.katex{color:inherit;font-size:1.02em}
+.katex-display{margin:.14rem 0 .22rem;overflow-x:auto;overflow-y:hidden}
+.formula{overflow-x:auto;overflow-y:hidden}
+.math-inline{display:inline-flex;align-items:baseline;vertical-align:-0.12em;margin:0 .06em}
+.math-fallback{font-family:"STIX Two Text",Cambria,Georgia,"Times New Roman",serif;letter-spacing:.01em}
 </style>
 </head>
 <body data-theme="light">
@@ -119,27 +129,27 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
 <section class="defs">
   <div class="def">
     <div class="tag">Likelihood</div>
-    <div class="math"><span class="formula">Lâ‚™(Î¸)=âˆáµ¢ fÎ¸(Xáµ¢)</span><span class="mathNote">compatibility of Î¸ with observed data</span></div>
+    <div class="math"><span class="formula" data-katex="L_n(\theta)=\prod_i f_\theta(X_i)" data-display="1"></span><span class="mathNote">compatibility of θ with observed data</span></div>
   </div>
   <div class="def">
     <div class="tag">MLE</div>
-    <div class="math"><span class="formula">Î¸Ì‚â‚™ âˆˆ argmaxÎ¸ â„“â‚™(Î¸)</span><span class="mathNote">random maximizer: sample â†¦ parameter</span></div>
+    <div class="math"><span class="formula" data-katex="\hat\theta_n\in\arg\max_\theta \ell_n(\theta)" data-display="1"></span><span class="mathNote">random maximizer: sample ↦ parameter</span></div>
   </div>
   <div class="def">
     <div class="tag">Invariance</div>
-    <div class="math"><span class="formula">Î·=g(Î¸) â‡’ Î·Ì‚=g(Î¸Ì‚)</span><span class="mathNote">maximize first, transform after</span></div>
+    <div class="math"><span class="formula" data-katex="\eta=g(\theta)\Rightarrow \hat\eta=g(\hat\theta)" data-display="1"></span><span class="mathNote">maximize first, transform after</span></div>
   </div>
   <div class="def">
     <div class="tag">Consistency</div>
-    <div class="math"><span class="formula">Î¸Ì‚â‚™ â†’ Î¸â‚€ or Î¸*</span><span class="mathNote">target = true if specified; pseudo-true if not</span></div>
+    <div class="math"><span class="formula" data-katex="\hat\theta_n\to\theta_0\ \text{or}\ \theta^*" data-display="1"></span><span class="mathNote">target = true if specified; pseudo-true if not</span></div>
   </div>
   <div class="def">
     <div class="tag">Asymptotic normality</div>
-    <div class="math"><span class="formula">âˆšn(Î¸Ì‚â‚™âˆ’Î¸*) â‡’ N(0,V)</span><span class="mathNote">curvature turns noise into inference</span></div>
+    <div class="math"><span class="formula" data-katex="\sqrt n\,(\hat\theta_n-\theta^*)\Rightarrow N(0,V)" data-display="1"></span><span class="mathNote">curvature turns noise into inference</span></div>
   </div>
   <div class="def">
     <div class="tag">QMLE</div>
-    <div class="math"><span class="formula">Î¸* = argmax Eâ‚€ log fÎ¸(X)</span><span class="mathNote">best approximation inside a wrong family</span></div>
+    <div class="math"><span class="formula" data-katex="\theta^*=\arg\max_\theta E_0\log f_\theta(X)" data-display="1"></span><span class="mathNote">best approximation inside a wrong family</span></div>
   </div>
 </section>
 
@@ -166,7 +176,7 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
   </div>
 
   <div class="control">
-    <label for="thetaRange">True / structural parameter Î¸â‚€ <span class="value" id="thetaVal">0.80</span></label>
+    <label for="thetaRange">True / structural parameter θ₀ <span class="value" id="thetaVal">0.80</span></label>
     <input id="thetaRange" type="range" min="-1.5" max="2.5" step="0.02" value="0.80"/>
   </div>
 
@@ -193,9 +203,9 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
   <div class="control">
     <label for="transSelect">Invariance transform g</label>
     <select id="transSelect">
-      <option value="identity">g(Î¸)=Î¸</option>
-      <option value="square">g(Î¸)=Î¸Â²</option>
-      <option value="exp">g(Î¸)=exp(Î¸)</option>
+      <option value="identity">g(θ)=θ</option>
+      <option value="square">g(θ)=θ²</option>
+      <option value="exp">g(θ)=exp(θ)</option>
       <option value="logit">g(p)=logit(p)</option>
     </select>
   </div>
@@ -211,9 +221,9 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
       <div>
         <div class="plotTitle">Likelihood profile: observed maximizer and population target</div>
         <div class="pillRow">
-          <span class="pill"><span class="dot" style="background:var(--accent)"></span> observed profile â„“â‚™(Î¸)âˆ’max</span>
-          <span class="pill"><span class="dot" style="background:var(--blue)"></span> target Î¸* or Î¸â‚€</span>
-          <span class="pill"><span class="dot" style="background:var(--warn)"></span> MLE Î¸Ì‚â‚™</span>
+          <span class="pill"><span class="dot" style="background:var(--accent)"></span> observed profile ℓₙ(θ)−max</span>
+          <span class="pill"><span class="dot" style="background:var(--blue)"></span> target θ* or θ₀</span>
+          <span class="pill"><span class="dot" style="background:var(--warn)"></span> MLE θ̂ₙ</span>
           <span class="pill"><span class="dot" style="background:var(--violet)"></span> expected profile</span>
         </div>
       </div>
@@ -226,14 +236,14 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
     <div class="card plotCard">
       <div class="plotHead">
         <div class="plotTitle">MLE as a map from samples to parameters</div>
-        <div class="plotSub">one dot = one whole sample; arrow sends sample to Î¸Ì‚â‚™</div>
+        <div class="plotSub">one dot = one whole sample; arrow sends sample to θ̂ₙ</div>
       </div>
       <svg id="mapSvg" viewBox="0 0 620 330" preserveAspectRatio="xMidYMid meet"></svg>
     </div>
     <div class="card plotCard">
       <div class="plotHead">
         <div class="plotTitle">Asymptotic normality and efficiency</div>
-        <div class="plotSub">distribution of âˆšn(Î¸Ì‚â‚™âˆ’Î¸*) with classical or sandwich scale</div>
+        <div class="plotSub">distribution of √n(θ̂ₙ−θ*) with classical or sandwich scale</div>
       </div>
       <svg id="asymSvg" viewBox="0 0 620 330" preserveAspectRatio="xMidYMid meet"></svg>
     </div>
@@ -260,16 +270,16 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:.78rem}
   <div class="card cardPad">
     <div class="panelTitle">Compact exam-style summary</div>
     <div class="summary">
-      <div><strong>Definition.</strong><br>\(\hat Î¸_n\in\arg\max_\theta \ell_n(\theta)\), where \(\ell_n(\theta)=\sum_i\log f_\theta(X_i)\).</div>
-      <div><strong>Invariance.</strong><br>For a function \(g\), the MLE of \(g(Î¸)\) is \(g(\hat Î¸_n)\), with care if \(g\) is many-to-one.</div>
-      <div><strong>Consistency.</strong><br>Under identification and regularity, \(\hat Î¸_n\to Î¸_0\). Under misspecification, \(\hat Î¸_n\to Î¸^*\).</div>
+      <div><strong>Definition.</strong><br>\(\hat\theta_n\in\arg\max_\theta \ell_n(\theta)\), where \(\ell_n(\theta)=\sum_i\log f_\theta(X_i)\).</div>
+      <div><strong>Invariance.</strong><br>For a function \(g\), the MLE of \(g(\theta)\) is \(g(\hat θ_n)\), with care if \(g\) is many-to-one.</div>
+      <div><strong>Consistency.</strong><br>Under identification and regularity, \(\hat θ_n\to θ_0\). Under misspecification, \(\hat θ_n\to θ^*\).</div>
       <div><strong>QMLE.</strong><br>When the model is wrong, use sandwich variance \(A^{-1}BA^{-1}/n\), not the inverse Hessian alone.</div>
     </div>
   </div>
 </section>
 </main>
 
-<footer>MLE Â· invariance Â· consistency Â· asymptotic normality Â· efficiency Â· quasi-MLE</footer>
+<footer>MLE · invariance · consistency · asymptotic normality · efficiency · quasi-MLE</footer>
 </div>
 
 <script>
@@ -277,8 +287,30 @@ const body=document.body, themeBtn=document.getElementById("themeBtn");
 const modelSelect=document.getElementById("modelSelect"), trueSelect=document.getElementById("trueSelect");
 const thetaRange=document.getElementById("thetaRange"), nRange=document.getElementById("nRange"), repsRange=document.getElementById("repsRange"), sampleIndexRange=document.getElementById("sampleIndexRange"), sigmaRange=document.getElementById("sigmaRange"), transSelect=document.getElementById("transSelect");
 
+
+function escapeHtml(s){return String(s).replace(/[&<>"]/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
+function renderMathNow(root=document.body){
+  if(window.renderMathInElement){
+    try{
+      renderMathInElement(root,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}],throwOnError:false,strict:false,ignoredTags:['script','noscript','style','textarea','pre','code']});
+    }catch(e){}
+  }
+  if(window.katex){
+    root.querySelectorAll('[data-katex]').forEach(el=>{
+      if(el.dataset.rendered==='1') return;
+      try{ katex.render(el.dataset.katex||'', el, {throwOnError:false, displayMode:el.dataset.display==='1', strict:'ignore'}); el.dataset.rendered='1'; }
+      catch(e){ el.textContent=el.dataset.katex||''; el.classList.add('math-fallback'); }
+    });
+    root.querySelectorAll('[data-tex]').forEach(el=>{
+      try{ katex.render(el.dataset.tex||'', el, {throwOnError:false, displayMode:el.dataset.display==='1', strict:'ignore'}); }
+      catch(e){ el.textContent=el.dataset.tex||''; el.classList.add('math-fallback'); }
+    });
+  }
+}
+function mathSpan(tex,display=false){return '<span class="formula" data-tex="'+escapeHtml(tex)+'" data-display="'+(display?'1':'0')+'"></span>';}
+
 function css(v){return getComputedStyle(body).getPropertyValue(v).trim();}
-function fmt(x){if(!isFinite(x))return"âˆž";if(Math.abs(x)<1e-4&&x!==0)return x.toExponential(2);if(Math.abs(x)<10)return x.toFixed(4);return x.toFixed(2);}
+function fmt(x){if(!isFinite(x))return"∞";if(Math.abs(x)<1e-4&&x!==0)return x.toExponential(2);if(Math.abs(x)<10)return x.toFixed(4);return x.toFixed(2);}
 function line(x1,y1,x2,y2,stroke,w=1,op=1,dash=""){return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+stroke+'" stroke-width="'+w+'" stroke-opacity="'+op+'" '+(dash?'stroke-dasharray="'+dash+'"':'')+'/>';}
 function text(x,y,s,fill,size=13,weight=600,anchor="start"){return '<text x="'+x+'" y="'+y+'" fill="'+fill+'" font-size="'+size+'" font-weight="'+weight+'" text-anchor="'+anchor+'" font-family="Inter,system-ui,sans-serif">'+s+'</text>';}
 function rect(x,y,w,h,fill,stroke="none",rx=0,op=1){return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+rx+'" fill="'+fill+'" stroke="'+stroke+'" opacity="'+op+'"/>';}
@@ -363,7 +395,7 @@ function target(par){
     if(par.truth==="outlier") return clamp(.92*par.theta+.08*.5,.02,.98);
   }
   if(par.model==="exponential"){
-    // Î¸* = 1/E_true[X]
+    // θ* = 1/E_true[X]
     if(par.truth==="well") return par.theta;
     if(par.truth==="miss") return 1/(.75*(1/par.theta)+.25*(3/par.theta));
     if(par.truth==="outlier") return 1/(.92*(1/par.theta)+.08*(8/par.theta));
@@ -422,9 +454,9 @@ function transformVal(x,par){
   return x;
 }
 function labelTrans(par){
-  if(par.trans==="identity") return "g(Î¸)=Î¸";
-  if(par.trans==="square") return "g(Î¸)=Î¸Â²";
-  if(par.trans==="exp") return "g(Î¸)=exp(Î¸)";
+  if(par.trans==="identity") return "g(θ)=θ";
+  if(par.trans==="square") return "g(θ)=θ²";
+  if(par.trans==="exp") return "g(θ)=exp(θ)";
   if(par.trans==="logit") return "g(p)=logit(p)";
 }
 
@@ -474,30 +506,30 @@ function drawProfile(d){
 
   const tx=px(ths,lo,hi,X0,X1), hx=px(hat,lo,hi,X0,X1), rawx=px(par.theta,lo,hi,X0,X1);
   h+=line(tx,Y0,tx,Y1,blue,1.7,.55,"5 5");
-  h+=text(tx,Y0-10,par.truth==="well"?"Î¸â‚€":"Î¸*",blue,12,900,"middle");
+  h+=text(tx,Y0-10,par.truth==="well"?"θ₀":"θ*",blue,12,900,"middle");
   h+=line(hx,Y0,hx,Y1,warn,1.7,.55,"5 5");
   h+=circle(hx,py(0,ylo,yhi,Y0,Y1),6,warn,panel,1);
-  h+=text(hx,py(0,ylo,yhi,Y0,Y1)-14,"Î¸Ì‚â‚™",warn,12,900,"middle");
-  if(par.truth!=="well"){h+=line(rawx,Y0,rawx,Y1,rose,1.2,.35,"4 5");h+=text(rawx,Y1+18,"structural Î¸â‚€",rose,10,850,"middle");}
+  h+=text(hx,py(0,ylo,yhi,Y0,Y1)-14,"θ̂ₙ",warn,12,900,"middle");
+  if(par.truth!=="well"){h+=line(rawx,Y0,rawx,Y1,rose,1.2,.35,"4 5");h+=text(rawx,Y1+18,"structural θ₀",rose,10,850,"middle");}
 
   // side score curvature diagram
   h+='<rect x="735" y="72" width="200" height="184" rx="18" fill="'+panel2+'" stroke="'+border+'"/>';
   h+=text(756,100,"Local MLE geometry",textc,14,900);
   const score=chosen.xs.reduce((s,x)=>s+scoreAt(hat,x,par),0);
   const Aobs=-chosen.xs.reduce((s,x)=>s+hessAt(hat,x,par),0)/chosen.xs.length;
-  h+=text(756,128,"score at Î¸Ì‚ â‰ˆ "+fmt(score),acc,11,900);
-  h+=text(756,151,"observed curvature â‰ˆ "+fmt(Aobs),warn,11,900);
-  h+=text(756,174,"A = âˆ’E[H] â‰ˆ "+fmt(sw.A),violet,11,900);
-  h+=text(756,197,"B = E[scoreÂ²] â‰ˆ "+fmt(sw.B),blue,11,900);
-  h+=text(756,220,par.truth==="well"?"well specified: Aâ‰ˆB":"QMLE: use sandwich",par.truth==="well"?blue:warn,11,900);
+  h+=text(756,128,"score at θ̂ ≈ "+fmt(score),acc,11,900);
+  h+=text(756,151,"observed curvature ≈ "+fmt(Aobs),warn,11,900);
+  h+=text(756,174,"A = −E[H] ≈ "+fmt(sw.A),violet,11,900);
+  h+=text(756,197,"B = E[score²] ≈ "+fmt(sw.B),blue,11,900);
+  h+=text(756,220,par.truth==="well"?"well specified: A≈B":"QMLE: use sandwich",par.truth==="well"?blue:warn,11,900);
 
   // QMLE box
   h+='<rect x="735" y="280" width="200" height="94" rx="18" fill="'+panel2+'" stroke="'+border+'"/>';
   h+=text(756,308,par.truth==="well"?"Consistency target":"Pseudo-true target",textc,14,900);
-  h+=text(756,333,par.truth==="well"?"Î¸* = Î¸â‚€":"Î¸* = argmax Eâ‚€ log fÎ¸",blue,11,900);
+  h+=text(756,333,par.truth==="well"?"θ* = θ₀":"θ* = argmax E_0 log f_θ",blue,11,900);
   h+=text(756,356,"target = "+fmt(ths),blue,12,900);
 
-  h+=text(X1,Y1+25,"parameter Î¸",muted,10,850,"end");
+  h+=text(X1,Y1+25,"parameter θ",muted,10,850,"end");
   svg.innerHTML=h;
 }
 function hist(vals,bins,lo,hi){const w=(hi-lo)/bins,c=Array(bins).fill(0);vals.forEach(v=>{const k=clamp(Math.floor((v-lo)/w),0,bins-1);c[k]++;});return {w,c,d:c.map(z=>z/(vals.length*w))};}
@@ -511,7 +543,7 @@ function drawMap(d){
   const xmin=Math.min(...coX),xmax=Math.max(...coX),ymin=Math.min(...coY),ymax=Math.max(...coY);
   const S={x0:44,x1:260,y0:72,y1:250}, T={x0:336,x1:585,y0:72,y1:250};
   let h='<rect x="8" y="10" width="604" height="300" rx="18" fill="'+panel+'" stroke="'+border+'"/>';
-  h+=text(42,40,"MLE map: sample cloud â†’ estimate distribution",muted,12,850);
+  h+=text(42,40,"MLE map: sample cloud → estimate distribution",muted,12,850);
   h+=rect(S.x0,S.y0,S.x1-S.x0,S.y1-S.y0,panel2,border,16,1);
   h+=rect(T.x0,T.y0,T.x1-T.x0,T.y1-T.y0,panel2,border,16,1);
   for(let k=1;k<4;k++){h+=line(S.x0+k*(S.x1-S.x0)/4,S.y0,S.x0+k*(S.x1-S.x0)/4,S.y1,grid,1,.7);h+=line(S.x0,S.y0+k*(S.y1-S.y0)/4,S.x1,S.y0+k*(S.y1-S.y0)/4,grid,1,.7);}
@@ -519,7 +551,7 @@ function drawMap(d){
     const x=px(coX[i],xmin,xmax,S.x0+14,S.x1-14), y=py(coY[i],ymin,ymax,S.y0+18,S.y1-14);
     h+=circle(x,y,i===par.idx?5.8:2.5,i===par.idx?warn:acc,panel,i===par.idx?1:.35);
   });
-  h+=text(S.x0+10,S.y1+22,"Î©â¿: each dot is one full dataset",muted,10,850);
+  h+=text(S.x0+10,S.y1+22,"Ωⁿ: each dot is one full dataset",muted,10,850);
 
   const H=hist(hats,24,lo,hi), maxD=Math.max(...H.d,1e-6)*1.18;
   for(let i=0;i<H.d.length;i++){
@@ -530,9 +562,9 @@ function drawMap(d){
   const tx=px(ths,lo,hi,T.x0+14,T.x1-14), hx=px(chosen.hat,lo,hi,T.x0+14,T.x1-14);
   h+=line(tx,T.y0+16,tx,T.y1-14,blue,1.4,.5,"5 5");
   h+=line(hx,T.y0+16,hx,T.y1-14,warn,1.3,.5,"5 5");
-  h+=text(tx,T.y0+10,par.truth==="well"?"Î¸â‚€":"Î¸*",blue,10,900,"middle");
+  h+=text(tx,T.y0+10,par.truth==="well"?"θ₀":"θ*",blue,10,900,"middle");
   h+=circle(hx,T.y1-24,5.5,warn,panel,1);
-  h+=text(T.x0+12,T.y1+22,"sampling distribution of Î¸Ì‚â‚™",muted,10,850);
+  h+=text(T.x0+12,T.y1+22,"sampling distribution of θ̂ₙ",muted,10,850);
 
   h+='<path d="M 270 160 C 294 130, 310 130, 330 160" stroke="'+acc+'" stroke-width="2.6" fill="none" marker-end="url(#arrow2)"/>';
   h+='<defs><marker id="arrow2" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="'+acc+'"/></marker></defs>';
@@ -549,7 +581,7 @@ function drawAsym(d){
   const H=hist(z,28,lo,hi), maxD=Math.max(...H.d,.42)*1.15;
   const X0=58,X1=568,Y0=64,Y1=240;
   let h='<rect x="8" y="10" width="604" height="300" rx="18" fill="'+panel+'" stroke="'+border+'"/>';
-  h+=text(58,40,"Scaled error: âˆšn(Î¸Ì‚â‚™âˆ’Î¸*) / sandwich sd",muted,12,850);
+  h+=text(58,40,"Scaled error: √n(θ̂ₙ−θ*) / sandwich sd",muted,12,850);
   for(let k=0;k<=4;k++)h+=line(X0,Y1-(Y1-Y0)*k/4,X1,Y1-(Y1-Y0)*k/4,grid,1,.75);
   h+=line(X0,Y1,X1,Y1,muted,1.2,.8);
   for(let i=0;i<H.d.length;i++){
@@ -565,7 +597,7 @@ function drawAsym(d){
   h+='<path d="'+pN+'" fill="none" stroke="'+blue+'" stroke-width="2.5" stroke-dasharray="7 5"/>';
   const zx=px(0,lo,hi,X0,X1); h+=line(zx,Y0,zx,Y1,blue,1.3,.45,"5 5");
   h+='<rect x="70" y="252" width="480" height="30" rx="12" fill="'+css("--panel2")+'" stroke="'+border+'"/>';
-  h+=text(90,272,(par.truth==="well"?"Efficiency: inverse Hessian is correct.":"QMLE: sandwich variance Aâ»Â¹BAâ»Â¹ is needed."),par.truth==="well"?blue:warn,11,900);
+  h+=text(90,272,(par.truth==="well"?"Efficiency: inverse Hessian is correct.":"QMLE: sandwich variance A^{-1}BA^{-1} is needed."),par.truth==="well"?blue:warn,11,900);
   svg.innerHTML=h;
 }
 function drawInv(d){
@@ -585,14 +617,14 @@ function drawInv(d){
   const hx=px(hat,tlo,thi,X0,X1), tx=px(ths,tlo,thi,X0,X1);
   const ehx=px(etaHat,elo,ehi,Z0,Z1), etx=px(etaTarget,elo,ehi,Z0,Z1);
   h+=circle(tx,Y,5,blue); h+=text(tx,Y-18,"target",blue,10,900,"middle");
-  h+=circle(hx,Y,6,warn); h+=text(hx,Y+28,"Î¸Ì‚",warn,11,900,"middle");
+  h+=circle(hx,Y,6,warn); h+=text(hx,Y+28,"θ̂",warn,11,900,"middle");
   h+=circle(etx,Y,5,blue); h+=text(etx,Y-18,"g(target)",blue,10,900,"middle");
-  h+=circle(ehx,Y,6,warn); h+=text(ehx,Y+28,"g(Î¸Ì‚)",warn,11,900,"middle");
+  h+=circle(ehx,Y,6,warn); h+=text(ehx,Y+28,"g(θ̂)",warn,11,900,"middle");
   h+='<path d="M 235 164 C 255 122, 276 122, 296 164" stroke="'+acc+'" stroke-width="2.6" fill="none" marker-end="url(#arrow3)"/>';
   h+='<defs><marker id="arrow3" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="'+acc+'"/></marker></defs>';
   h+=text(265,114,labelTrans(par),acc,11,900,"middle");
   h+='<rect x="58" y="220" width="390" height="42" rx="14" fill="'+css("--panel2")+'" stroke="'+border+'"/>';
-  h+=text(78,246,"MLE of g(Î¸):  g(Î¸Ì‚â‚™) = "+fmt(etaHat),textc,12,900);
+  h+=text(78,246,"MLE of g(θ):  g(θ̂ₙ) = "+fmt(etaHat),textc,12,900);
   svg.innerHTML=h;
 }
 function updateText(d){
@@ -604,16 +636,16 @@ function updateText(d){
   document.getElementById("sigmaVal").textContent=fmt(par.sigma);
 
   const m=mean(hats), v=variance(hats), bias=m-ths;
-  const pseudo=par.truth==="well"?"Î¸â‚€":"Î¸*";
-  document.getElementById("eqBox").innerHTML='<span class="formula">Î¸Ì‚â‚™ = argmaxÎ¸ Î£áµ¢ log fÎ¸(Xáµ¢)</span><span class="mathNote">Target: '+pseudo+' = '+fmt(ths)+'.  Selected sample gives Î¸Ì‚â‚™ = '+fmt(chosen.hat)+'.</span>';
+  const pseudo=par.truth==="well"?"θ₀":"θ*";
+  document.getElementById("eqBox").innerHTML=mathSpan('\hat\theta_n=\arg\max_\theta\sum_i\log f_\theta(X_i)',true)+'<span class="mathNote">Target: '+pseudo+' = '+fmt(ths)+'.  Selected sample gives θ̂ₙ = '+fmt(chosen.hat)+'.</span>';
 
   const mini=[
     ["target",fmt(ths)],
-    ["selected Î¸Ì‚",fmt(chosen.hat)],
-    ["E Î¸Ì‚",fmt(m)],
-    ["Var Î¸Ì‚",fmt(v)],
+    ["selected θ̂",fmt(chosen.hat)],
+    ["E θ̂",fmt(m)],
+    ["Var θ̂",fmt(v)],
     ["A=-E H",fmt(sw.A)],
-    ["B=E scoreÂ²",fmt(sw.B)]
+    ["B=E score²",fmt(sw.B)]
   ];
   document.getElementById("miniGrid").innerHTML=mini.map(z=>'<div class="miniStat"><div class="k">'+z[0]+'</div><div class="v">'+z[1]+'</div></div>').join("");
 
@@ -626,19 +658,23 @@ function updateText(d){
   document.getElementById("badges").innerHTML=badges.map(b=>'<div class="badge" style="color:'+(b[1]?css("--accent"):css("--warn"))+'">'+b[0]+': '+(b[1]?'yes':'no')+'</div>').join("");
 
   let interp="The MLE is a random variable: it maps each whole sample to the parameter value at the top of that sample's likelihood curve. Repeating the experiment generates a sampling distribution of those maximizers.";
-  if(par.truth!=="well") interp="This is quasi-MLE: the working model is not literally true. The observed MLE still maximizes the model likelihood, but the probability limit is the pseudo-true parameter Î¸*, the best approximating point inside the wrong family.";
+  if(par.truth!=="well") interp="This is quasi-MLE: the working model is not literally true. The observed MLE still maximizes the model likelihood, but the probability limit is the pseudo-true parameter θ*, the best approximating point inside the wrong family.";
   document.getElementById("interpretText").innerHTML=interp;
 
-  let notice="The main picture separates three objects: the observed peak Î¸Ì‚â‚™, the population peak Î¸* or Î¸â‚€, and the sampling distribution of Î¸Ì‚â‚™ across repeated samples.";
+  let notice="The main picture separates three objects: the observed peak θ̂ₙ, the population peak θ* or θ₀, and the sampling distribution of θ̂ₙ across repeated samples.";
   if(par.truth==="well") notice="Under correct specification, the Hessian curvature and score variance agree asymptotically. This gives classical efficiency.";
-  else notice="Under misspecification, curvature alone is not enough. The score variance B and curvature A differ, so the sandwich variance Aâ»Â¹BAâ»Â¹ is the right large-sample scale.";
+  else notice="Under misspecification, curvature alone is not enough. The score variance B and curvature A differ, so the sandwich variance A^{-1}BA^{-1} is the right large-sample scale.";
   document.getElementById("noticeText").innerHTML=notice;
+  renderMathNow(document.getElementById("eqBox"));
+  renderMathNow(document.querySelector(".summary"));
 }
 function drawAll(){adjust();const d=data();updateText(d);drawProfile(d);drawMap(d);drawAsym(d);drawInv(d);}
 themeBtn.addEventListener("click",()=>{const dark=body.getAttribute("data-theme")==="dark";body.setAttribute("data-theme",dark?"light":"dark");themeBtn.textContent=dark?"Dark mode":"Light mode";drawAll();});
 [modelSelect,trueSelect,thetaRange,nRange,repsRange,sampleIndexRange,sigmaRange,transSelect].forEach(el=>el.addEventListener("input",drawAll));
 populate = ()=>{}; // placeholder
 drawAll();
+renderMathNow(document.body);
+window.addEventListener("load",()=>renderMathNow(document.body));
 </script>
 </body>
 </html>
