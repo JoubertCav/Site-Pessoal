@@ -20,6 +20,7 @@
 </script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
 <style>
 :root{
   --bg:#f6f0e6;
@@ -123,6 +124,9 @@ svg{width:100%;height:auto;display:block;background:linear-gradient(180deg,var(-
 .warn{color:var(--bad);font-weight:700}.ok{color:var(--accent);font-weight:700}.blue{color:var(--blue);font-weight:700}.gold{color:var(--gold);font-weight:700}
 .katex{font-size:1.02em;color:var(--ink)}.katex-display{margin:.25rem 0 .15rem;overflow-x:auto;overflow-y:hidden;padding:.2rem 0}.eqBox .katex-display{font-size:1.02rem;text-align:left}.stripItem .katex-display{font-size:.95rem;text-align:left;margin:.1rem 0}.card .katex,.row .katex{font-size:1em}
 .math{font-family:var(--serif);font-size:18px;color:var(--ink);line-height:1.42}.math .katex{font-family:KaTeX_Main,serif}.math.small{font-size:15px}.math .muted{color:var(--muted)}
+.morphNote{border:1px solid var(--line);background:var(--paper2);border-radius:16px;padding:10px 12px;color:var(--muted);font-size:12px;margin-top:12px}
+.transitionHint{fill:var(--muted);font-size:11px;font-weight:700;opacity:.86}
+
 @media(max-width:1120px){.app{grid-template-columns:1fr}.sidebar{position:relative;top:0;max-height:none}.layout{grid-template-columns:1fr}.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.theoryStrip{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:680px){.app{padding:10px}.hero{grid-template-columns:1fr;padding:18px}.hero h2{font-size:25px}.eqGrid,.theoryStrip,.tiles{grid-template-columns:1fr}.caption{display:none}.panel{padding:12px}.sidebar{padding:14px}}
 </style>
@@ -136,7 +140,7 @@ svg{width:100%;height:auto;display:block;background:linear-gradient(180deg,var(-
         <h1>Indifference curves<br>and MRS</h1>
         <p class="sub">A geometric notebook for marginal rates of substitution, convexity, perfect substitutes, perfect complements, quasi-linear preferences, and kink points.</p>
       </div>
-      <button class="theme" id="themeBtn" aria-label="Toggle dark mode">â˜¾</button>
+      <button class="theme" id="themeBtn" aria-label="Toggle dark mode">☾</button>
     </div>
     <div class="nav" id="nav"></div>
     <div class="controls">
@@ -150,19 +154,19 @@ svg{width:100%;height:auto;display:block;background:linear-gradient(180deg,var(-
         </select>
       </div>
       <div class="control">
-        <label><span>Parameter Î±</span><b id="alphaVal">0.50</b></label>
+        <label><span>Parameter α</span><b id="alphaVal">0.50</b></label>
         <input id="alpha" type="range" min="0.15" max="0.85" step="0.01" value="0.50" />
       </div>
       <div class="control">
-        <label><span>Reference xâ‚</span><b id="xVal">4.00</b></label>
+        <label><span>Reference x₁</span><b id="xVal">4.00</b></label>
         <input id="x0" type="range" min="0.7" max="9.3" step="0.05" value="4.00" />
       </div>
       <div class="control">
-        <label><span>Reference xâ‚‚</span><b id="yVal">4.00</b></label>
+        <label><span>Reference x₂</span><b id="yVal">4.00</b></label>
         <input id="y0" type="range" min="0.7" max="9.3" step="0.05" value="4.00" />
       </div>
       <div class="control">
-        <label><span>Price ratio pâ‚/pâ‚‚</span><b id="pVal">1.00</b></label>
+        <label><span>Price ratio p₁/p₂</span><b id="pVal">1.00</b></label>
         <input id="priceRatio" type="range" min="0.20" max="4.00" step="0.02" value="1.00" />
       </div>
       <button id="snapBtn" class="miniButton">place reference at kink</button>
@@ -176,7 +180,10 @@ svg{width:100%;height:auto;display:block;background:linear-gradient(180deg,var(-
         <h2 id="heroTitle">Indifference curves as level sets</h2>
         <p id="heroText">Move the reference bundle and compare the indifference curve's local slope with the market tradeoff. The MRS is a local object; convexity is a global shape property of upper contour sets.</p>
       </div>
-      <div class="pill"><span class="dot"></span><span id="statusPill">smooth convex preferences</span></div>
+      <div>
+        <div class="pill"><span class="dot"></span><span id="statusPill">smooth convex preferences</span></div>
+        <div class="morphNote">Animation uses geometric morphing, tweening, and object constancy: old curves become new curves instead of being redrawn abruptly.</div>
+      </div>
     </section>
 
     <section class="theoryStrip">
@@ -197,7 +204,7 @@ svg{width:100%;height:auto;display:block;background:linear-gradient(180deg,var(-
         </div>
         <div class="eqGrid" id="mathPanel">
           <div class="eqBox"><div class="label">Selected utility</div><div id="eqUtility"></div></div>
-          <div class="eqBox"><div class="label">Local object at xâ°</div><div id="eqLocal"></div></div>
+          <div class="eqBox"><div class="label">Local object at x⁰</div><div id="eqLocal"></div></div>
         </div>
         <div class="svgWrap">
           <svg id="mainSvg" viewBox="0 0 760 560" role="img" aria-label="Indifference curve diagram"></svg>
@@ -276,16 +283,16 @@ const els = {
   alphaVal:$('alphaVal'), xVal:$('xVal'), yVal:$('yVal'), pVal:$('pVal'), themeBtn:$('themeBtn'), snapBtn:$('snapBtn')
 };
 const families = {
-  cd:{name:'Cobb-Douglas', short:'CD', icon:'âˆ‚', subtitle:'smooth, strictly convex, diminishing MRS'},
-  subs:{name:'Perfect substitutes', short:'SUB', icon:'âˆ¥', subtitle:'linear indifference, constant MRS'},
-  comp:{name:'Perfect complements', short:'LEO', icon:'âŒž', subtitle:'L-shaped indifference and a kink point'},
-  ql:{name:'Quasi-linear', short:'QL', icon:'â†•', subtitle:'parallel vertical shifts, MRS depends only on xâ‚'}
+  cd:{name:'Cobb-Douglas', short:'CD', icon:'∂', subtitle:'smooth, strictly convex, diminishing MRS'},
+  subs:{name:'Perfect substitutes', short:'SUB', icon:'∥', subtitle:'linear indifference, constant MRS'},
+  comp:{name:'Perfect complements', short:'LEO', icon:'⌞', subtitle:'L-shaped indifference and a kink point'},
+  ql:{name:'Quasi-linear', short:'QL', icon:'↕', subtitle:'parallel vertical shifts, MRS depends only on x₁'}
 };
 const W=760,H=560, m={l:62,r:26,t:28,b:54}, xmax=10, ymax=10;
 const MW=420,MH=280, mm={l:48,r:20,t:24,b:42};
 const NS='http://www.w3.org/2000/svg';
 function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
-function fmt(x,d=2){ if(!Number.isFinite(x)) return 'âˆž'; return Number(x).toFixed(d); }
+function fmt(x,d=2){ if(!Number.isFinite(x)) return '∞'; return Number(x).toFixed(d); }
 function X(x){return m.l + (x/xmax)*(W-m.l-m.r);}
 function Y(y){return H-m.b - (y/ymax)*(H-m.t-m.b);}
 function MX(x){return mm.l + (x/xmax)*(MW-mm.l-mm.r);}
@@ -306,10 +313,128 @@ function poly(svg,pts,attrs={}){if(pts.length<2)return null; return add(svg,'pol
 function path(svg,d,attrs={}){return add(svg,'path',Object.assign({d},attrs));}
 function math(id, tex, display=true){
   const el=$(id); if(!el) return;
-  if(window.katex){ try{katex.render(tex,el,{displayMode:display,throwOnError:false,trust:true}); return;}catch(e){} }
+  if(window.katex){
+    try{
+      katex.render(tex,el,{
+        displayMode:display,
+        throwOnError:false,
+        trust:true,
+        strict:false,
+        macros:{
+          "\\R":"\\mathbb{R}"
+        }
+      });
+      return;
+    }catch(e){}
+  }
   el.textContent = (display?'\\[':'\\(')+tex+(display?'\\]':'\\)');
 }
+let staticMathRendered = false;
+function renderStaticMath(){
+  if(staticMathRendered || !window.renderMathInElement) return;
+  renderMathInElement(document.body,{
+    delimiters:[
+      {left:"$$",right:"$$",display:true},
+      {left:"\\[",right:"\\]",display:true},
+      {left:"\\(",right:"\\)",display:false}
+    ],
+    throwOnError:false,
+    strict:false
+  });
+  staticMathRendered = true;
+}
 function state(){return {family:els.family.value, alpha:+els.alpha.value, x0:+els.x0.value, y0:+els.y0.value, p:+els.priceRatio.value};}
+let visualState = null;
+let animationFrameId = 0;
+function cloneState(s){return {family:s.family, alpha:s.alpha, x0:s.x0, y0:s.y0, p:s.p};}
+function lerp(a,b,t){return a+(b-a)*t;}
+function ease(t){return t<0.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2;}
+function lerpState(a,b,t){
+  if(!a || a.family!==b.family) return cloneState(b);
+  return {family:b.family, alpha:lerp(a.alpha,b.alpha,t), x0:lerp(a.x0,b.x0,t), y0:lerp(a.y0,b.y0,t), p:lerp(a.p,b.p,t)};
+}
+function screenPath(points){
+  if(!points.length) return '';
+  return points.map((pt,i)=>`${i?'L':'M'} ${pt[0].toFixed(2)} ${pt[1].toFixed(2)}`).join(' ');
+}
+function resamplePoint(points,i,n){
+  if(!points.length) return [0,0];
+  if(points.length===1) return points[0];
+  const pos=(i/(n-1))*(points.length-1);
+  const j=Math.floor(pos), f=pos-j;
+  const a=points[j], b=points[Math.min(points.length-1,j+1)];
+  return [lerp(a[0],b[0],f), lerp(a[1],b[1],f)];
+}
+function tweenPathPoints(a,b,t,n=180){
+  const out=[];
+  for(let i=0;i<n;i++){
+    const pa=resamplePoint(a,i,n), pb=resamplePoint(b,i,n);
+    out.push([lerp(pa[0],pb[0],t), lerp(pa[1],pb[1],t)]);
+  }
+  return out;
+}
+function levelCurveScreenPoints(s,u,n=180){
+  const pts=[];
+  if(s.family==='comp'){
+    const k=compKink(s,u);
+    for(let i=0;i<n;i++){
+      const r=i/(n-1);
+      let x,y;
+      if(r<0.5){
+        x=k.x;
+        y=ymax-(r/0.5)*(ymax-k.y);
+      }else{
+        y=k.y;
+        x=k.x+((r-0.5)/0.5)*(xmax-k.x);
+      }
+      pts.push([X(clamp(x,0,xmax)),Y(clamp(y,0,ymax))]);
+    }
+    return pts;
+  }
+  for(let i=0;i<n;i++){
+    const x=0.05+(xmax-0.05)*i/(n-1);
+    let y=yOnCurve(s,u,x);
+    if(!Number.isFinite(y)) y=i===0?ymax:0;
+    pts.push([X(x),Y(clamp(y,0,ymax))]);
+  }
+  return pts;
+}
+function mrsScreenPoints(s,n=180,maxY=5.2){
+  const pts=[], u0=currentLevel(s), {A,B,Q}=weights(s.alpha);
+  if(s.family==='comp'){
+    const k=compKink(s,u0);
+    for(let i=0;i<n;i++){
+      const x=.12+9.88*i/(n-1);
+      const y=x<k.x ? maxY : .08;
+      pts.push([MX(x),MY(y,maxY)]);
+    }
+    return pts;
+  }
+  for(let i=0;i<n;i++){
+    const x=.12+9.88*i/(n-1);
+    let y;
+    if(s.family==='cd'){
+      const yy=yOnCurve(s,u0,x); y=(A/B)*(yy/x);
+    }else if(s.family==='subs') y=A/B;
+    else y=Q/x;
+    pts.push([MX(x),MY(Math.min(y,maxY),maxY)]);
+  }
+  return pts;
+}
+function lineEndpointsScreen(s,slope){
+  const seg=segmentForLine(s.x0,s.y0,slope);
+  if(!seg) return null;
+  return [[X(seg[0][0]),Y(seg[0][1])],[X(seg[1][0]),Y(seg[1][1])]];
+}
+function tweenLine(a,b,t){
+  if(!a && !b) return null;
+  if(!a) a=b;
+  if(!b) b=a;
+  return [
+    [lerp(a[0][0],b[0][0],t),lerp(a[0][1],b[0][1],t)],
+    [lerp(a[1][0],b[1][0],t),lerp(a[1][1],b[1][1],t)]
+  ];
+}
 function weights(a){return {A:a, B:1-a, Q:1+4*a};}
 function utility(s,x,y){
   const {A,B,Q}=weights(s.alpha); x=Math.max(x,1e-8); y=Math.max(y,1e-8);
@@ -349,8 +474,8 @@ function drawGrid(svg){
   }
   line(svg,X(0),Y(0),X(10.25),Y(0),{stroke:ink,'stroke-width':1.4});
   line(svg,X(0),Y(0),X(0),Y(10.25),{stroke:ink,'stroke-width':1.4});
-  text(svg,X(10.05),Y(0)+35,'xâ‚',{'font-size':15,fill:ink,'font-weight':700});
-  text(svg,X(0)-26,Y(10.05),'xâ‚‚',{'font-size':15,fill:ink,'font-weight':700});
+  text(svg,X(10.05),Y(0)+35,'x₁',{'font-size':15,fill:ink,'font-weight':700});
+  text(svg,X(0)-26,Y(10.05),'x₂',{'font-size':15,fill:ink,'font-weight':700});
 }
 function segmentForLine(x0,y0,slope){
   const pts=[];
@@ -422,10 +547,10 @@ function drawCurves(svg,s,u0){
       poly(svg,pts,{fill:'none',stroke:main?accent:faint,'stroke-width':main?3:1.4,opacity:main?1:.58,'stroke-linecap':'round','stroke-linejoin':'round'});
     }
   });
-  text(svg,X(.28),Y(9.45),'higher utility â†‘',{'font-size':12,fill:blue,'font-weight':700});
+  text(svg,X(.28),Y(9.45),'higher utility ↑',{'font-size':12,fill:blue,'font-weight':700});
 }
-function drawMain(){
-  const s=state(), svg=$('mainSvg'); clear(svg); drawGrid(svg);
+function drawMain(sOverride=null){
+  const s=sOverride || state(), svg=$('mainSvg'); clear(svg); drawGrid(svg);
   const u0=currentLevel(s), M=mrsAt(s,s.x0,s.y0), accent=css('--accent'), blue=css('--blue'), gold=css('--gold'), bad=css('--bad'), ink=css('--ink'), muted=css('--muted'), paper=css('--paper');
   shadeUpper(svg,s,u0);
   drawCurves(svg,s,u0);
@@ -441,15 +566,15 @@ function drawMain(){
   }
   circle(svg,X(s.x0),Y(s.y0),6.5,{fill:ink,stroke:paper,'stroke-width':2});
   circle(svg,X(s.x0),Y(s.y0),12,{fill:'none',stroke:accent,'stroke-width':1.8,opacity:.7});
-  text(svg,X(s.x0)+12,Y(s.y0)-14,'xâ°',{'font-size':13,fill:ink,'font-weight':800});
-  text(svg,X(8.1),Y(1.25),'budget slope = âˆ’pâ‚/pâ‚‚',{'font-size':12,fill:blue,'font-weight':700});
-  if(Number.isFinite(M)) text(svg,X(6.9),Y(7.9),'tangent slope = âˆ’MRS',{'font-size':12,fill:gold,'font-weight':700});
+  text(svg,X(s.x0)+12,Y(s.y0)-14,'x⁰',{'font-size':13,fill:ink,'font-weight':800});
+  text(svg,X(8.1),Y(1.25),'budget slope = −p₁/p₂',{'font-size':12,fill:blue,'font-weight':700});
+  if(Number.isFinite(M)) text(svg,X(6.9),Y(7.9),'tangent slope = −MRS',{'font-size':12,fill:gold,'font-weight':700});
   if(s.family==='subs') text(svg,X(.55),Y(.72),'parallel lines: constant MRS',{'font-size':12,fill:muted,'font-weight':700});
-  if(s.family==='ql') text(svg,X(.55),Y(.72),'vertical translations: same MUâ‚‚',{'font-size':12,fill:muted,'font-weight':700});
+  if(s.family==='ql') text(svg,X(.55),Y(.72),'vertical translations: same MU₂',{'font-size':12,fill:muted,'font-weight':700});
   if(s.family==='comp') text(svg,X(.55),Y(.72),'no smooth tangent at the kink',{'font-size':12,fill:bad,'font-weight':700});
 }
-function drawMrs(){
-  const s=state(), svg=$('mrsSvg'); clear(svg);
+function drawMrs(sOverride=null){
+  const s=sOverride || state(), svg=$('mrsSvg'); clear(svg);
   const grid=css('--grid'), ink=css('--ink'), muted=css('--muted'), accent=css('--accent'), blue=css('--blue'), gold=css('--gold'), bad=css('--bad'), shade=css('--shadeA');
   const maxY=5.2;
   for(let i=0;i<=5;i++){
@@ -462,7 +587,7 @@ function drawMrs(){
   }
   line(svg,MX(0),MY(0,maxY),MX(10.15),MY(0,maxY),{stroke:ink,'stroke-width':1.3});
   line(svg,MX(0),MY(0,maxY),MX(0),MY(maxY,maxY),{stroke:ink,'stroke-width':1.3});
-  text(svg,MX(10.05),MY(0,maxY)+30,'xâ‚',{'font-size':12,fill:ink,'font-weight':700});
+  text(svg,MX(10.05),MY(0,maxY)+30,'x₁',{'font-size':12,fill:ink,'font-weight':700});
   text(svg,MX(0)-32,MY(maxY,maxY)-5,'MRS',{'font-size':12,fill:ink,'font-weight':700});
   const u0=currentLevel(s), {A,B,Q}=weights(s.alpha);
   if(s.family==='comp'){
@@ -470,7 +595,7 @@ function drawMrs(){
     add(svg,'rect',{x:MX(0),y:MY(maxY,maxY),width:MX(Math.min(k.x,10))-MX(0),height:MY(0,maxY)-MY(maxY,maxY),fill:css('--shadeBad'),stroke:'none'});
     add(svg,'rect',{x:MX(Math.min(k.x,10)),y:MY(.28,maxY),width:MX(10)-MX(Math.min(k.x,10)),height:MY(0,maxY)-MY(.28,maxY),fill:shade,stroke:'none'});
     line(svg,MX(k.x),MY(0,maxY),MX(k.x),MY(maxY,maxY),{stroke:gold,'stroke-width':2.2,'stroke-dasharray':'6 5'});
-    text(svg,MX(1.2),MY(4.35,maxY),'âˆž on vertical arm',{'font-size':12,fill:bad,'font-weight':700});
+    text(svg,MX(1.2),MY(4.35,maxY),'∞ on vertical arm',{'font-size':12,fill:bad,'font-weight':700});
     text(svg,MX(Math.min(k.x+1.2,8.5)),MY(.55,maxY),'0 on horizontal arm',{'font-size':12,fill:accent,'font-weight':700});
     text(svg,MX(k.x)+6,MY(4.9,maxY),'kink',{'font-size':11,fill:gold,'font-weight':800});
   }else{
@@ -488,9 +613,9 @@ function drawMrs(){
     const M=mrsAt(s,s.x0,s.y0);
     line(svg,MX(s.x0),MY(0,maxY),MX(s.x0),MY(Math.min(M,maxY),maxY),{stroke:blue,'stroke-width':1.6,'stroke-dasharray':'5 5'});
     circle(svg,MX(s.x0),MY(Math.min(M,maxY),maxY),5.5,{fill:blue,stroke:css('--paper'),'stroke-width':1.8});
-    text(svg,MX(s.x0)+8,MY(Math.min(M,maxY),maxY)-8,'at xâ°',{'font-size':11,fill:blue,'font-weight':800});
+    text(svg,MX(s.x0)+8,MY(Math.min(M,maxY),maxY)-8,'at x⁰',{'font-size':11,fill:blue,'font-weight':800});
     if(s.family==='subs') text(svg,MX(3),MY(Math.min(A/B,maxY),maxY)-10,'constant MRS',{'font-size':12,fill:accent,'font-weight':800});
-    if(s.family==='ql') text(svg,MX(5.2),MY(1.1,maxY),'depends only on xâ‚',{'font-size':12,fill:muted,'font-weight':700});
+    if(s.family==='ql') text(svg,MX(5.2),MY(1.1,maxY),'depends only on x₁',{'font-size':12,fill:muted,'font-weight':700});
   }
 }
 function utilityTex(s){
@@ -516,34 +641,34 @@ function localTex(s,M){
 }
 function notices(s,M){
   if(s.family==='cd') return [
-    ['1','Indifference curves are smooth and bowed toward the origin. Moving southeast along a curve raises xâ‚ and lowers xâ‚‚, so MRS falls.'],
+    ['1','Indifference curves are smooth and bowed toward the origin. Moving southeast along a curve raises x₁ and lowers x₂, so MRS falls.'],
     ['2','Strict convexity means averages of two indifferent bundles are strictly preferred. Geometrically, upper contour sets are strictly convex.'],
     ['3','Tangency is meaningful because the curve has a unique local slope at every positive bundle.']
   ];
   if(s.family==='subs') return [
     ['1','Indifference curves are straight because the goods trade at a constant subjective rate.'],
     ['2','Convexity holds, but strict convexity fails: mixtures of indifferent bundles can remain indifferent.'],
-    ['3','If MRS differs from pâ‚/pâ‚‚, utility maximization usually gives a corner, not an interior tangency.']
+    ['3','If MRS differs from p₁/p₂, utility maximization usually gives a corner, not an interior tangency.']
   ];
   if(s.family==='comp') return [
     ['1','The kink is the economically relevant point: extra units of only one good do not raise utility.'],
     ['2','MRS is not a single derivative at the kink. The vertical arm has infinite tradeoff; the horizontal arm has zero tradeoff.'],
-    ['3','Convexity appears as a north-east rectangle: the upper contour set is {xâ‚â‰¥kâ‚ and xâ‚‚â‰¥kâ‚‚}.']
+    ['3','Convexity appears as a north-east rectangle: the upper contour set is {x₁≥k₁ and x₂≥k₂}.']
   ];
   return [
-    ['1','Quasi-linear curves are vertical translations of each other: income shifts xâ‚‚, but the local MRS depends only on xâ‚.'],
-    ['2','The MRS falls as xâ‚ rises because ln xâ‚ is concave. This is diminishing marginal willingness to pay for good 1.'],
-    ['3','Interior demand for xâ‚ is pinned down by MRS=pâ‚/pâ‚‚, independent of income.']
+    ['1','Quasi-linear curves are vertical translations of each other: income shifts x₂, but the local MRS depends only on x₁.'],
+    ['2','The MRS falls as x₁ rises because ln x₁ is concave. This is diminishing marginal willingness to pay for good 1.'],
+    ['3','Interior demand for x₁ is pinned down by MRS=p₁/p₂, independent of income.']
   ];
 }
-function updateText(){
-  const s=state(), fam=families[s.family], M=mrsAt(s,s.x0,s.y0), u=currentLevel(s), price=s.p;
+function updateText(sOverride=null){
+  const s=sOverride || state(), fam=families[s.family], M=mrsAt(s,s.x0,s.y0), u=currentLevel(s), price=s.p;
   $('heroTitle').textContent = s.family==='comp' ? 'Kinks and nonsmooth indifference curves' : s.family==='subs' ? 'Linear indifference and constant MRS' : s.family==='ql' ? 'Quasi-linear indifference maps' : 'Smooth indifference curves and MRS';
-  $('heroText').textContent = s.family==='comp' ? 'Perfect complements make visible why MRS is not always a derivative. At the kink, there is no unique tangent slope.' : s.family==='subs' ? 'Perfect substitutes show that convex preferences may have straight indifference curves. The MRS is constant, so tangency is a knife-edge case.' : s.family==='ql' ? 'Quasi-linear preferences isolate the marginal tradeoff: MRS depends on xâ‚ only, while higher utility translates curves vertically.' : 'Cobb-Douglas preferences show the canonical smooth case: a unique tangent, diminishing MRS, and strictly convex upper contour sets.';
+  $('heroText').textContent = s.family==='comp' ? 'Perfect complements make visible why MRS is not always a derivative. At the kink, there is no unique tangent slope.' : s.family==='subs' ? 'Perfect substitutes show that convex preferences may have straight indifference curves. The MRS is constant, so tangency is a knife-edge case.' : s.family==='ql' ? 'Quasi-linear preferences isolate the marginal tradeoff: MRS depends on x₁ only, while higher utility translates curves vertically.' : 'Cobb-Douglas preferences show the canonical smooth case: a unique tangent, diminishing MRS, and strictly convex upper contour sets.';
   $('statusPill').textContent = fam.subtitle;
-  $('mainBadge').textContent = Number.isFinite(M) ? `MRS = ${fmt(M)}` : (M===Infinity ? 'MRS = âˆž on this arm' : 'MRS not unique at kink');
+  $('mainBadge').textContent = Number.isFinite(M) ? `MRS = ${fmt(M)}` : (M===Infinity ? 'MRS = ∞ on this arm' : 'MRS not unique at kink');
   $('readFamily').textContent = fam.name;
-  $('readMRS').innerHTML = Number.isFinite(M) ? fmt(M) : (M===Infinity ? 'âˆž' : '<span class="warn">not unique</span>');
+  $('readMRS').innerHTML = Number.isFinite(M) ? fmt(M) : (M===Infinity ? '∞' : '<span class="warn">not unique</span>');
   $('readPrice').textContent = fmt(price);
   let shape='', signal='';
   if(s.family==='cd') shape='smooth, monotone, strictly convex';
@@ -555,12 +680,12 @@ function updateText(){
     signal = Math.abs(diff)<.045 ? 'reference is approximately at the kink' : diff<0 ? 'good 1 is the limiting good; MRS is effectively infinite' : 'good 2 is the limiting good; MRS is effectively zero';
   }else if(s.family==='subs'){
     if(Math.abs(M-price)<.035) signal='knife-edge: every bundle on the budget line gives the same utility';
-    else if(M>price) signal='subjective value of xâ‚ exceeds market cost: corner toward good 1';
-    else signal='subjective value of xâ‚ is below market cost: corner toward good 2';
+    else if(M>price) signal='subjective value of x₁ exceeds market cost: corner toward good 1';
+    else signal='subjective value of x₁ is below market cost: corner toward good 2';
   }else{
-    if(Math.abs(M-price)<.06) signal='local tangency: MRS approximately equals pâ‚/pâ‚‚';
-    else if(M>price) signal='MRS>pâ‚/pâ‚‚: move toward more xâ‚ and less xâ‚‚ along a budget line';
-    else signal='MRS<pâ‚/pâ‚‚: move toward less xâ‚ and more xâ‚‚ along a budget line';
+    if(Math.abs(M-price)<.06) signal='local tangency: MRS approximately equals p₁/p₂';
+    else if(M>price) signal='MRS>p₁/p₂: move toward more x₁ and less x₂ along a budget line';
+    else signal='MRS<p₁/p₂: move toward less x₁ and more x₂ along a budget line';
   }
   $('readShape').textContent = shape;
   $('readSignal').textContent = signal;
@@ -588,7 +713,7 @@ function buildTiles(){
     cd:'Smooth benchmark. The tangent slope exists and MRS diminishes along the curve.',
     subs:'Straight indifference curves. MRS is constant; interior tangency is knife-edge.',
     comp:'L-shaped level sets. The kink is optimal under positive prices; no unique MRS at the kink.',
-    ql:'Vertical translations. MRS depends only on xâ‚, not on xâ‚‚.'
+    ql:'Vertical translations. MRS depends only on x₁, not on x₂.'
   };
   Object.entries(families).forEach(([key,f])=>{
     const t=document.createElement('div'); t.className='tile'; t.dataset.family=key;
@@ -608,7 +733,95 @@ function updateControls(){
   els.pVal.textContent=fmt(s.p);
   els.snapBtn.style.display = s.family==='comp' ? 'block' : 'none';
 }
-function update(){updateControls(); updateActive(); drawMain(); drawMrs(); updateText();}
+
+function drawMainMorph(start,target,t){
+  const svg=$('mainSvg'); clear(svg); drawGrid(svg);
+  const uA=currentLevel(start), uB=currentLevel(target);
+  if(t<0.5) shadeUpper(svg,start,uA); else shadeUpper(svg,target,uB);
+  const accent=css('--accent'), faint=css('--faint'), blue=css('--blue'), gold=css('--gold'), ink=css('--ink'), paper=css('--paper'), muted=css('--muted');
+  const levels=[.55,.75,1,1.28,1.58];
+  levels.forEach((k,idx)=>{
+    const a=levelCurveScreenPoints(start,uA*k,220);
+    const b=levelCurveScreenPoints(target,uB*k,220);
+    const pts=tweenPathPoints(a,b,t,220);
+    path(svg,screenPath(pts),{fill:'none',stroke:idx===2?accent:faint,'stroke-width':idx===2?3:1.4,opacity:idx===2?1:.58,'stroke-linecap':'round','stroke-linejoin':'round'});
+  });
+  const pLine=tweenLine(lineEndpointsScreen(start,start.p),lineEndpointsScreen(target,target.p),t);
+  if(pLine) line(svg,pLine[0][0],pLine[0][1],pLine[1][0],pLine[1][1],{stroke:blue,'stroke-width':2.1,'stroke-dasharray':'8 7','stroke-linecap':'round'});
+  const mA=mrsAt(start,start.x0,start.y0), mB=mrsAt(target,target.x0,target.y0);
+  const tLine=tweenLine(Number.isFinite(mA)?lineEndpointsScreen(start,mA):null,Number.isFinite(mB)?lineEndpointsScreen(target,mB):null,t);
+  if(tLine) line(svg,tLine[0][0],tLine[0][1],tLine[1][0],tLine[1][1],{stroke:gold,'stroke-width':2.2,'stroke-linecap':'round',opacity:.94});
+  const px=lerp(start.x0,target.x0,t), py=lerp(start.y0,target.y0,t);
+  circle(svg,X(px),Y(py),6.5,{fill:ink,stroke:paper,'stroke-width':2});
+  circle(svg,X(px),Y(py),12,{fill:'none',stroke:accent,'stroke-width':1.8,opacity:.7});
+  text(svg,X(px)+12,Y(py)-14,'x⁰',{'font-size':13,fill:ink,'font-weight':800});
+  text(svg,X(.35),Y(.55),'object constancy: old level set → new level set',{'class':'transitionHint'});
+  text(svg,X(8.1),Y(1.25),'budget slope = −p₁/p₂',{'font-size':12,fill:blue,'font-weight':700});
+  if(tLine) text(svg,X(6.9),Y(7.9),'tangent slope = −MRS',{'font-size':12,fill:gold,'font-weight':700});
+}
+
+function mrsVisualY(s,M,maxY){
+  if(M===Infinity) return maxY;
+  if(!Number.isFinite(M)) return maxY*.55;
+  return Math.min(M,maxY);
+}
+function drawMrsMorph(start,target,t){
+  const svg=$('mrsSvg'); clear(svg);
+  const grid=css('--grid'), ink=css('--ink'), muted=css('--muted'), accent=css('--accent'), blue=css('--blue'), paper=css('--paper');
+  const maxY=5.2;
+  for(let i=0;i<=5;i++){
+    line(svg,MX(0),MY(i,maxY),MX(10),MY(i,maxY),{stroke:grid,'stroke-width':1});
+    if(i>0) text(svg,MX(0)-11,MY(i,maxY)+4,String(i),{'font-size':10,fill:muted,'text-anchor':'end'});
+  }
+  for(let i=0;i<=10;i+=2){
+    line(svg,MX(i),MY(0,maxY),MX(i),MY(maxY,maxY),{stroke:grid,'stroke-width':1});
+    if(i>0) text(svg,MX(i),MY(0,maxY)+22,String(i),{'font-size':10,fill:muted,'text-anchor':'middle'});
+  }
+  line(svg,MX(0),MY(0,maxY),MX(10.15),MY(0,maxY),{stroke:ink,'stroke-width':1.3});
+  line(svg,MX(0),MY(0,maxY),MX(0),MY(maxY,maxY),{stroke:ink,'stroke-width':1.3});
+  text(svg,MX(10.05),MY(0,maxY)+30,'x₁',{'font-size':12,fill:ink,'font-weight':700});
+  text(svg,MX(0)-32,MY(maxY,maxY)-5,'MRS',{'font-size':12,fill:ink,'font-weight':700});
+  const pts=tweenPathPoints(mrsScreenPoints(start,180,maxY),mrsScreenPoints(target,180,maxY),t,180);
+  path(svg,screenPath(pts),{fill:'none',stroke:accent,'stroke-width':2.8,'stroke-linejoin':'round','stroke-linecap':'round'});
+  const mA=mrsAt(start,start.x0,start.y0), mB=mrsAt(target,target.x0,target.y0);
+  const px=lerp(start.x0,target.x0,t);
+  const py=lerp(mrsVisualY(start,mA,maxY),mrsVisualY(target,mB,maxY),t);
+  line(svg,MX(px),MY(0,maxY),MX(px),MY(py,maxY),{stroke:blue,'stroke-width':1.6,'stroke-dasharray':'5 5'});
+  circle(svg,MX(px),MY(py,maxY),5.5,{fill:blue,stroke:paper,'stroke-width':1.8});
+  text(svg,MX(px)+8,MY(py,maxY)-8,'at x⁰',{'font-size':11,fill:blue,'font-weight':800});
+}
+
+function animateTo(target){
+  const start = visualState ? cloneState(visualState) : cloneState(target);
+  const sameFamily = start.family===target.family;
+  if(animationFrameId) cancelAnimationFrame(animationFrameId);
+  const duration = 620;
+  const t0 = performance.now();
+  function frame(now){
+    const raw = Math.min(1,(now-t0)/duration);
+    const t = ease(raw);
+    if(sameFamily){
+      const current = lerpState(start,target,t);
+      drawMain(current);
+      drawMrs(current);
+      visualState = cloneState(current);
+    }else{
+      drawMainMorph(start,target,t);
+      drawMrsMorph(start,target,t);
+    }
+    if(raw<1){
+      animationFrameId = requestAnimationFrame(frame);
+    }else{
+      visualState = cloneState(target);
+      animationFrameId = 0;
+      drawMain(target);
+      drawMrs(target);
+    }
+  }
+  frame(t0);
+}
+
+function update(){const target=state(); updateControls(); updateActive(); updateText(target); renderStaticMath(); animateTo(target);}
 function snapToKink(){
   const s=state(); if(s.family!=='comp') return;
   const u=currentLevel(s); const k=compKink(s,u);
@@ -618,11 +831,12 @@ function snapToKink(){
 els.snapBtn.addEventListener('click',snapToKink);
 els.themeBtn.addEventListener('click',()=>{
   const dark=document.documentElement.getAttribute('data-theme')==='dark';
-  if(dark){document.documentElement.removeAttribute('data-theme'); els.themeBtn.textContent='â˜¾';}
-  else{document.documentElement.setAttribute('data-theme','dark'); els.themeBtn.textContent='â˜€';}
+  if(dark){document.documentElement.removeAttribute('data-theme'); els.themeBtn.textContent='☾';}
+  else{document.documentElement.setAttribute('data-theme','dark'); els.themeBtn.textContent='☀';}
   update();
 });
 buildNav(); buildTiles(); update();
+window.addEventListener('load',()=>setTimeout(renderStaticMath,80));
 </script>
 </body>
 </html>

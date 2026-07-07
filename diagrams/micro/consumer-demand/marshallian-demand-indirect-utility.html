@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8" />
@@ -18,9 +18,9 @@
 
   gtag('config', 'G-NHXHEJP1G0');
 </script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 <style>
 :root{
   --bg:#f6f1e8;
@@ -150,6 +150,14 @@ svg{display:block;width:100%;height:auto;overflow:visible;}
 .app{padding-top:8px;}
 @media(max-width:620px){.topbar{padding:10px 10px 0}.theme-top-btn{min-width:118px;font-size:.83rem}}
 
+
+.ghostPoint{fill:var(--paper2);stroke:var(--muted);stroke-width:2.4;}
+.targetPoint{fill:var(--paper);stroke:var(--accent);stroke-width:2.2;stroke-dasharray:3 4;}
+.ghostDemand{stroke:var(--muted);stroke-width:2;fill:none;stroke-dasharray:7 7;}
+.targetDemand{stroke:var(--blue);stroke-width:2;fill:none;stroke-dasharray:3 6;}
+.motion-path{stroke:var(--warn);stroke-width:2.1;fill:none;stroke-dasharray:4 6;opacity:.78;}
+.motion-dot{fill:var(--warn);stroke:var(--paper);stroke-width:2;}
+
 @media(max-width:1100px){.app{grid-template-columns:1fr}.sidebar{position:relative;top:0;max-height:none}.grid,.hero,.two,.footer-grid{grid-template-columns:1fr}}
 @media(max-width:620px){.app{padding:10px}.readout{grid-template-columns:1fr}.card,.hero,.sidebar{border-radius:16px;padding:14px}}
 </style>
@@ -167,7 +175,7 @@ svg{display:block;width:100%;height:auto;overflow:visible;}
       <div class="logo"></div>
       <div>
         <h1>Marshallian Demand</h1>
-        <p>ordinary demand Â· indirect utility</p>
+        <p>ordinary demand · indirect utility</p>
       </div>
     </div>
 
@@ -256,10 +264,10 @@ svg{display:block;width:100%;height:auto;overflow:visible;}
         <p class="sub">Move prices and income. The budget line rotates with prices and shifts with income. The solution updates immediately.</p>
         <div class="svg-wrap"><svg id="mainPlot" viewBox="0 0 720 520" aria-label="Consumer choice diagram"></svg></div>
         <div class="readout">
-          <div class="metric"><small>Good 1 solution</small><b id="x1Read">â€”</b><span id="x1Rule">â€”</span></div>
-          <div class="metric"><small>Good 2 solution</small><b id="x2Read">â€”</b><span id="x2Rule">â€”</span></div>
-          <div class="metric"><small>Indirect utility</small><b id="vRead">â€”</b><span id="uRule">â€”</span></div>
-          <div class="metric"><small>Case</small><b id="caseRead">â€”</b><span id="caseRule">â€”</span></div>
+          <div class="metric"><small>Good 1 solution</small><b id="x1Read">—</b><span id="x1Rule">—</span></div>
+          <div class="metric"><small>Good 2 solution</small><b id="x2Read">—</b><span id="x2Rule">—</span></div>
+          <div class="metric"><small>Indirect utility</small><b id="vRead">—</b><span id="uRule">—</span></div>
+          <div class="metric"><small>Case</small><b id="caseRead">—</b><span id="caseRule">—</span></div>
         </div>
       </div>
 
@@ -274,15 +282,15 @@ svg{display:block;width:100%;height:auto;overflow:visible;}
           <p class="sub">With locally nonsatiated preferences, the chosen bundle exhausts wealth.</p>
           <div class="note">
             <h4 id="walrasTitle">Budget exhaustion</h4>
-            <p id="walrasText">â€”</p>
+            <p id="walrasText">—</p>
           </div>
         </div>
         <div class="card">
           <h3>Homogeneity check</h3>
-          <p class="sub">Scale all nominal variables: \((p,m)\mapsto(\lambda p,\lambda m)\\). Real demand should not move.</p>
+          <p class="sub">Scale all nominal variables: \((p,m)\mapsto(\lambda p,\lambda m)\). Real demand should not move.</p>
           <div class="note">
             <h4 id="homTitle">Degree zero</h4>
-            <p id="homText">â€”</p>
+            <p id="homText">—</p>
           </div>
         </div>
       </div>
@@ -305,13 +313,13 @@ svg{display:block;width:100%;height:auto;overflow:visible;}
         <table class="table">
           <thead><tr><th>Object</th><th>Value</th></tr></thead>
           <tbody>
-            <tr><td>\(-v_{p_1}/v_m\)</td><td id="roy1">â€”</td></tr>
-            <tr><td>\(x_1(p,m)\)</td><td id="royx1">â€”</td></tr>
-            <tr><td>\(-v_{p_2}/v_m\)</td><td id="roy2">â€”</td></tr>
-            <tr><td>\(x_2(p,m)\)</td><td id="royx2">â€”</td></tr>
+            <tr><td>\(-v_{p_1}/v_m\)</td><td id="roy1">—</td></tr>
+            <tr><td>\(x_1(p,m)\)</td><td id="royx1">—</td></tr>
+            <tr><td>\(-v_{p_2}/v_m\)</td><td id="roy2">—</td></tr>
+            <tr><td>\(x_2(p,m)\)</td><td id="royx2">—</td></tr>
           </tbody>
         </table>
-        <div class="pill-row"><span class="status" id="royStatus">â€”</span></div>
+        <div class="pill-row"><span class="status" id="royStatus">—</span></div>
       </div>
     </section>
 
@@ -323,16 +331,16 @@ svg{display:block;width:100%;height:auto;overflow:visible;}
         <table class="table">
           <thead><tr><th>Aggregate</th><th>Value</th></tr></thead>
           <tbody>
-            <tr><td>\(X_1=n_Ax_1^A+n_Bx_1^B\)</td><td id="agg1">â€”</td></tr>
-            <tr><td>\(X_2=n_Ax_2^A+n_Bx_2^B\)</td><td id="agg2">â€”</td></tr>
-            <tr><td>Total expenditure</td><td id="aggExp">â€”</td></tr>
+            <tr><td>\(X_1=n_Ax_1^A+n_Bx_1^B\)</td><td id="agg1">—</td></tr>
+            <tr><td>\(X_2=n_Ax_2^A+n_Bx_2^B\)</td><td id="agg2">—</td></tr>
+            <tr><td>Total expenditure</td><td id="aggExp">—</td></tr>
           </tbody>
         </table>
       </div>
       <div class="card">
         <h3>Indirect utility properties</h3>
         <p class="sub">Read these as properties of the value function generated by the consumer problem.</p>
-        <div class="note"><h4>Core properties</h4><p id="propertiesText">â€”</p></div>
+        <div class="note"><h4>Core properties</h4><p id="propertiesText">—</p></div>
       </div>
       <div class="card">
         <h3>Exam summary</h3>
@@ -357,9 +365,21 @@ svg{display:block;width:100%;height:auto;overflow:visible;}
 
 <script>
 const $ = id => document.getElementById(id);
+
 const ids = ['family','alpha','rho','p1','p2','m','lambda','nA','nB','mB'];
-const fmt = (x,d=3)=> Number.isFinite(x) ? Number(x).toFixed(d) : 'â€”';
+const fmt = (x,d=3)=> Number.isFinite(x) ? Number(x).toFixed(d) : '—';
 const clamp = (x,a,b)=> Math.max(a,Math.min(b,x));
+const lerp = (a,b,t)=> a+(b-a)*t;
+const ease = t => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
+
+const visual = {
+  par:null,
+  sol:null,
+  raf:0
+};
+
+function clonePar(p){ return {...p}; }
+function cloneSol(s){ return {...s}; }
 
 function currentParams(){
   return {
@@ -373,6 +393,21 @@ function currentParams(){
     nA:parseInt($('nA').value,10),
     nB:parseInt($('nB').value,10),
     mB:parseFloat($('mB').value)
+  };
+}
+
+function interpolateParams(a,b,t){
+  return {
+    family:b.family,
+    alpha:lerp(a.alpha,b.alpha,t),
+    rho:lerp(a.rho,b.rho,t),
+    p1:lerp(a.p1,b.p1,t),
+    p2:lerp(a.p2,b.p2,t),
+    m:lerp(a.m,b.m,t),
+    lambda:lerp(a.lambda,b.lambda,t),
+    nA:Math.round(lerp(a.nA,b.nA,t)),
+    nB:Math.round(lerp(a.nB,b.nB,t)),
+    mB:lerp(a.mB,b.mB,t)
   };
 }
 
@@ -395,8 +430,8 @@ function demand(par){
   let x1,x2,v,caseText,caseKind,rule1,rule2,uRule;
   if(par.family==='cd'){
     x1=a*m/p1; x2=b*m/p2; v=utility(x1,x2,par);
-    caseText='interior'; caseKind='Tangency: MRS = p1/p2';
-    rule1='x1 = Î±m/p1'; rule2='x2 = (1âˆ’Î±)m/p2'; uRule='Cobb-Douglas value';
+    caseText='interior'; caseKind='Tangency: MRS = p₁/p₂';
+    rule1='x₁ = αm/p₁'; rule2='x₂ = (1−α)m/p₂'; uRule='Cobb-Douglas value';
   } else if(par.family==='ces'){
     if(Math.abs(rho)<1e-5){
       x1=a*m/p1; x2=b*m/p2;
@@ -413,20 +448,20 @@ function demand(par){
     const den=a*p1+b*p2;
     const t=m/den; x1=a*t; x2=b*t; v=t;
     caseText='kink'; caseKind='Optimum at fixed-proportion kink';
-    rule1='x1 = Î±m/(Î±p1+(1âˆ’Î±)p2)'; rule2='x2 = (1âˆ’Î±)m/(Î±p1+(1âˆ’Î±)p2)'; uRule='v = m/(Î±p1+(1âˆ’Î±)p2)';
+    rule1='x₁ = αm/(αp₁+(1−α)p₂)'; rule2='x₂ = (1−α)m/(αp₁+(1−α)p₂)'; uRule='v = m/(αp₁+(1−α)p₂)';
   } else if(par.family==='linear'){
     const bang1=a/p1, bang2=b/p2;
     if(Math.abs(bang1-bang2)<1e-8){ x1=m/(2*p1); x2=m/(2*p2); caseText='multiple optima'; caseKind='Whole budget line is optimal'; }
     else if(bang1>bang2){ x1=m/p1; x2=0; caseText='corner on good 1'; caseKind='Higher utility per dollar for good 1'; }
     else { x1=0; x2=m/p2; caseText='corner on good 2'; caseKind='Higher utility per dollar for good 2'; }
     v=utility(x1,x2,par);
-    rule1='all spending goes to the higher bang-per-buck good'; rule2='all spending goes to the higher bang-per-buck good'; uRule='v = m max{Î±/p1,(1âˆ’Î±)/p2}';
+    rule1='all spending goes to the higher bang-per-buck good'; rule2='all spending goes to the higher bang-per-buck good'; uRule='v = m max{α/p₁,(1−α)/p₂}';
   } else if(par.family==='quasi'){
     const target=a*p2/p1;
-    if(m>=p1*target){ x1=target; x2=(m-p1*x1)/p2; caseText='interior in good 2'; caseKind='x1 independent of income after threshold'; }
-    else { x1=m/p1; x2=0; caseText='corner: x2 = 0'; caseKind='Income too low for interior quasi-linear solution'; }
+    if(m>=p1*target){ x1=target; x2=(m-p1*x1)/p2; caseText='interior in good 2'; caseKind='x₁ independent of income after threshold'; }
+    else { x1=m/p1; x2=0; caseText='corner: x₂ = 0'; caseKind='Income too low for interior quasi-linear solution'; }
     v=utility(x1,x2,par);
-    rule1='x1 = min{m/p1, Î±p2/p1}'; rule2='x2 = max{0, m/p2 âˆ’ Î±}'; uRule='v = Î± ln x1 + x2';
+    rule1='x₁ = min{m/p₁, αp₂/p₁}'; rule2='x₂ = max{0, m/p₂ − α}'; uRule='v = α ln x₁ + x₂';
   }
   return {x1,x2,v,caseText,caseKind,rule1,rule2,uRule,exp:p1*x1+p2*x2};
 }
@@ -434,7 +469,6 @@ function demand(par){
 function indirect(par){ return demand(par).v; }
 
 function derivativesRoy(par){
-  const base=indirect(par);
   const ep1=Math.max(1e-4,par.p1*1e-5), ep2=Math.max(1e-4,par.p2*1e-5), em=Math.max(1e-4,par.m*1e-5);
   const p1p={...par,p1:par.p1+ep1}, p1m={...par,p1:Math.max(1e-5,par.p1-ep1)};
   const p2p={...par,p2:par.p2+ep2}, p2m={...par,p2:Math.max(1e-5,par.p2-ep2)};
@@ -442,12 +476,10 @@ function derivativesRoy(par){
   const vp1=(indirect(p1p)-indirect(p1m))/(p1p.p1-p1m.p1);
   const vp2=(indirect(p2p)-indirect(p2m))/(p2p.p2-p2m.p2);
   const vm=(indirect(mp)-indirect(mm))/(mp.m-mm.m);
-  return {r1:-vp1/vm,r2:-vp2/vm,vm,vp1,vp2,base};
+  return {r1:-vp1/vm,r2:-vp2/vm,vm,vp1,vp2};
 }
 
 function formulaFor(par){
-  const a='\
-\\alpha', b='1-\\alpha';
   if(par.family==='cd') return String.raw`\[
 u(x)=x_1^{\alpha}x_2^{1-\alpha}
 \]
@@ -514,18 +546,22 @@ function makeScales(maxX,maxY,W,H,margin){
     maxX,maxY,W,H,margin
   };
 }
+
 function pathFrom(points,sc){
   const clean=points.filter(p=>Number.isFinite(p[0])&&Number.isFinite(p[1])&&p[0]>=0&&p[1]>=0&&p[0]<=sc.maxX*1.02&&p[1]<=sc.maxY*1.02);
   if(clean.length<2) return '';
   return clean.map((p,i)=>(i?'L':'M')+sc.X(p[0]).toFixed(2)+','+sc.Y(p[1]).toFixed(2)).join(' ');
 }
-function curveForU(U,par,maxX,steps=240){
+
+function curveForU(U,par,maxX,maxY,steps=260){
   const pts=[]; const a=par.alpha,b=1-a,rho=par.rho;
+  if(!Number.isFinite(U) || U<=0) return pts;
   if(par.family==='leontief'){
-    const k=U; return [[a*k,0],[a*k,b*k],[maxX,b*k]];
+    const k=U;
+    return [[a*k,maxY],[a*k,b*k],[maxX,b*k]];
   }
   for(let i=1;i<=steps;i++){
-    const x1=maxX*i/steps;
+    const x1=Math.max(1e-5,maxX*i/steps);
     let x2=NaN;
     if(par.family==='cd') x2=Math.pow(U/Math.pow(x1,a),1/b);
     else if(par.family==='ces'){
@@ -541,105 +577,271 @@ function curveForU(U,par,maxX,steps=240){
   return pts;
 }
 
-function drawMain(par,sol){
-  const svg=$('mainPlot'); const W=720,H=520, m={l:58,r:28,t:25,b:55};
+function lineSegmentThrough(x0,y0,slope,maxX,maxY){
+  const pts=[];
+  function addPoint(x,y){
+    if(Number.isFinite(x)&&Number.isFinite(y)&&x>=-1e-8&&x<=maxX+1e-8&&y>=-1e-8&&y<=maxY+1e-8){
+      pts.push([clamp(x,0,maxX),clamp(y,0,maxY)]);
+    }
+  }
+  addPoint(0, y0+slope*(0-x0));
+  addPoint(maxX, y0+slope*(maxX-x0));
+  if(Math.abs(slope)>1e-9){
+    addPoint(x0-y0/slope,0);
+    addPoint(x0+(maxY-y0)/slope,maxY);
+  }
+  const uniq=[];
+  pts.forEach(p=>{ if(!uniq.some(q=>Math.hypot(q[0]-p[0],q[1]-p[1])<1e-5)) uniq.push(p); });
+  if(uniq.length<2) return null;
+  let best=[uniq[0],uniq[1]], dist=-1;
+  for(let i=0;i<uniq.length;i++){
+    for(let j=i+1;j<uniq.length;j++){
+      const d=Math.hypot(uniq[i][0]-uniq[j][0],uniq[i][1]-uniq[j][1]);
+      if(d>dist){ dist=d; best=[uniq[i],uniq[j]]; }
+    }
+  }
+  return best;
+}
+
+function mainExtent(par,sol){
   const xInt=par.m/par.p1, yInt=par.m/par.p2;
-  const maxX=Math.max(xInt,sol.x1*1.35,6)*1.12;
-  const maxY=Math.max(yInt,sol.x2*1.35,6)*1.12;
-  const sc=makeScales(maxX,maxY,W,H,m);
+  let maxX=Math.max(xInt,sol.x1*1.45,6)*1.12;
+  let maxY=Math.max(yInt,sol.x2*1.45,6)*1.12;
+  return {maxX:Math.min(Math.max(maxX,3),120), maxY:Math.min(Math.max(maxY,3),120)};
+}
+
+function mergedMainExtent(items){
+  let maxX=6, maxY=6;
+  items.filter(Boolean).forEach(obj=>{
+    const ex=mainExtent(obj.par,obj.sol);
+    maxX=Math.max(maxX,ex.maxX);
+    maxY=Math.max(maxY,ex.maxY);
+  });
+  return {maxX,maxY};
+}
+
+function drawGrid(sc, count=6){
+  const {W,H,margin,maxX,maxY}=sc;
   let s='';
-  for(let i=0;i<=6;i++){
-    const x=maxX*i/6, y=maxY*i/6;
+  for(let i=0;i<=count;i++){
+    const x=maxX*i/count, y=maxY*i/count;
     s+=`<line class="gridline" x1="${sc.X(x)}" y1="${sc.Y(0)}" x2="${sc.X(x)}" y2="${sc.Y(maxY)}"/>`;
     s+=`<line class="gridline" x1="${sc.X(0)}" y1="${sc.Y(y)}" x2="${sc.X(maxX)}" y2="${sc.Y(y)}"/>`;
     if(i>0){
       s+=`<text class="label" x="${sc.X(x)}" y="${H-24}" text-anchor="middle">${fmt(x,1)}</text>`;
-      s+=`<text class="label" x="${m.l-12}" y="${sc.Y(y)+4}" text-anchor="end">${fmt(y,1)}</text>`;
+      s+=`<text class="label" x="${margin.l-12}" y="${sc.Y(y)+4}" text-anchor="end">${fmt(y,1)}</text>`;
     }
   }
   s+=`<line class="axis" x1="${sc.X(0)}" y1="${sc.Y(0)}" x2="${sc.X(maxX)}" y2="${sc.Y(0)}"/>`;
   s+=`<line class="axis" x1="${sc.X(0)}" y1="${sc.Y(0)}" x2="${sc.X(0)}" y2="${sc.Y(maxY)}"/>`;
-  s+=`<text class="label-strong" x="${W/2}" y="${H-8}" text-anchor="middle">good 1, xâ‚</text>`;
-  s+=`<text class="label-strong" transform="translate(16 ${H/2}) rotate(-90)" text-anchor="middle">good 2, xâ‚‚</text>`;
-  s+=`<polygon class="feasible" points="${sc.X(0)},${sc.Y(0)} ${sc.X(xInt)},${sc.Y(0)} ${sc.X(0)},${sc.Y(yInt)}"/>`;
-  s+=`<path class="budget" d="M${sc.X(0)},${sc.Y(yInt)} L${sc.X(xInt)},${sc.Y(0)}"/>`;
-  s+=`<text class="label-strong" x="${sc.X(xInt)*.85+sc.X(0)*.15}" y="${sc.Y(0)-8}" text-anchor="middle">m/pâ‚</text>`;
-  s+=`<text class="label-strong" x="${sc.X(0)+8}" y="${sc.Y(yInt)-8}">m/pâ‚‚</text>`;
+  return s;
+}
 
+function mainLayer(par,sol,sc,opts={}){
+  const opacity = opts.opacity ?? 1;
+  const ghost = opts.ghost ?? false;
+  const target = opts.target ?? false;
+  const showLabels = opts.labels ?? false;
+  const xInt=par.m/par.p1, yInt=par.m/par.p2;
   const U=utility(sol.x1,sol.x2,par);
-  const levels=[U*.72,U,U*1.32].filter(v=>Number.isFinite(v)&&v>0);
-  levels.forEach((lev,idx)=>{
-    const pts=curveForU(lev,par,maxX,260);
-    const d=pathFrom(pts,sc);
-    if(d) s+=`<path class="${idx===1?'indiff':'indiff-soft'}" d="${d}"/>`;
-  });
-  // Tangent / supporting line through optimum with slope -p1/p2
-  const slope=-par.p1/par.p2;
-  const xt0=Math.max(0, sol.x1 - sol.x2/(-slope));
-  const yt0=sol.x2 + slope*(xt0-sol.x1);
-  const xt1=Math.min(maxX, sol.x1 + sol.x2/(-slope) + maxX*.25);
-  const yt1=sol.x2 + slope*(xt1-sol.x1);
-  if(Number.isFinite(yt0)&&Number.isFinite(yt1)) s+=`<path class="tangent" d="M${sc.X(xt0)},${sc.Y(yt0)} L${sc.X(xt1)},${sc.Y(yt1)}"/>`;
-
-  s+=`<circle class="point" cx="${sc.X(sol.x1)}" cy="${sc.Y(sol.x2)}" r="6.5"/>`;
-  s+=`<text class="label-strong" x="${sc.X(sol.x1)+10}" y="${sc.Y(sol.x2)-10}">x(p,m)</text>`;
-  s+=`<line class="compBudget" x1="${sc.X(sol.x1)}" y1="${sc.Y(sol.x2)}" x2="${sc.X(sol.x1)}" y2="${sc.Y(0)}"/>`;
-  s+=`<line class="compBudget" x1="${sc.X(sol.x1)}" y1="${sc.Y(sol.x2)}" x2="${sc.X(0)}" y2="${sc.Y(sol.x2)}"/>`;
-  s+=`<text class="label" x="${sc.X(sol.x1)}" y="${sc.Y(0)+18}" text-anchor="middle">${fmt(sol.x1,2)}</text>`;
-  s+=`<text class="label" x="${sc.X(0)-9}" y="${sc.Y(sol.x2)+4}" text-anchor="end">${fmt(sol.x2,2)}</text>`;
-  svg.innerHTML=s;
-}
-
-function drawDemand(par,sol){
-  const svg=$('demandPlot'); const W=620,H=360,m={l:58,r:24,t:22,b:48};
-  const pMax=8.2, pMin=.25;
-  let xs=[];
-  for(let i=0;i<140;i++){
-    const p=pMin+(pMax-pMin)*i/139;
-    const d=demand({...par,p1:p}); xs.push([d.x1,p]);
-  }
-  const maxX=Math.max(...xs.map(z=>z[0]).filter(Number.isFinite),sol.x1,1)*1.12;
-  const maxY=pMax;
-  const sc=makeScales(maxX,maxY,W,H,m);
+  const curveClass = ghost ? 'indiff-soft' : target ? 'indiff-soft' : 'indiff';
+  const budgetClass = ghost ? 'compBudget' : 'budget';
   let s='';
-  for(let i=0;i<=5;i++){
-    const x=maxX*i/5, y=maxY*i/5;
-    s+=`<line class="gridline" x1="${sc.X(x)}" y1="${sc.Y(0)}" x2="${sc.X(x)}" y2="${sc.Y(maxY)}"/>`;
-    s+=`<line class="gridline" x1="${sc.X(0)}" y1="${sc.Y(y)}" x2="${sc.X(maxX)}" y2="${sc.Y(y)}"/>`;
-    if(i>0){s+=`<text class="label" x="${sc.X(x)}" y="${H-20}" text-anchor="middle">${fmt(x,1)}</text>`;s+=`<text class="label" x="${m.l-10}" y="${sc.Y(y)+4}" text-anchor="end">${fmt(y,1)}</text>`;}
+  s+=`<polygon class="feasible" style="opacity:${ghost ? opacity*.75 : opacity}" points="${sc.X(0)},${sc.Y(0)} ${sc.X(xInt)},${sc.Y(0)} ${sc.X(0)},${sc.Y(yInt)}"/>`;
+  s+=`<path class="${budgetClass}" style="opacity:${opacity}" d="M${sc.X(0)},${sc.Y(yInt)} L${sc.X(xInt)},${sc.Y(0)}"/>`;
+
+  const levels = ghost || target ? [U] : [U*.72,U,U*1.32].filter(v=>Number.isFinite(v)&&v>0);
+  levels.forEach((lev,idx)=>{
+    const pts=curveForU(lev,par,sc.maxX,sc.maxY,260);
+    const d=pathFrom(pts,sc);
+    if(d){
+      const main = ghost || target ? true : idx===1;
+      const cls = main ? curveClass : 'indiff-soft';
+      const dash = ghost ? 'stroke-dasharray:7 7;' : target ? 'stroke-dasharray:3 6;' : '';
+      s+=`<path class="${cls}" style="opacity:${main?opacity:opacity*.55};${dash}" d="${d}"/>`;
+    }
+  });
+
+  const tangent=lineSegmentThrough(sol.x1,sol.x2,-par.p1/par.p2,sc.maxX,sc.maxY);
+  if(tangent && !ghost && !target){
+    s+=`<path class="tangent" style="opacity:${opacity}" d="M${sc.X(tangent[0][0])},${sc.Y(tangent[0][1])} L${sc.X(tangent[1][0])},${sc.Y(tangent[1][1])}"/>`;
   }
-  s+=`<line class="axis" x1="${sc.X(0)}" y1="${sc.Y(0)}" x2="${sc.X(maxX)}" y2="${sc.Y(0)}"/>`;
-  s+=`<line class="axis" x1="${sc.X(0)}" y1="${sc.Y(0)}" x2="${sc.X(0)}" y2="${sc.Y(maxY)}"/>`;
-  s+=`<text class="label-strong" x="${W/2}" y="${H-8}" text-anchor="middle">ordinary demand, xâ‚(pâ‚,pâ‚‚,m)</text>`;
-  s+=`<text class="label-strong" transform="translate(15 ${H/2}) rotate(-90)" text-anchor="middle">price pâ‚</text>`;
-  const d=pathFrom(xs,sc);
-  if(d) s+=`<path class="indiff" d="${d}"/>`;
-  s+=`<circle class="point2" cx="${sc.X(sol.x1)}" cy="${sc.Y(par.p1)}" r="6"/>`;
-  s+=`<text class="label-strong" x="${sc.X(sol.x1)+9}" y="${sc.Y(par.p1)-8}">current</text>`;
+
+  const pointClass = ghost ? 'ghostPoint' : target ? 'targetPoint' : 'point';
+  s+=`<circle class="${pointClass}" style="opacity:${opacity}" cx="${sc.X(sol.x1)}" cy="${sc.Y(sol.x2)}" r="${ghost || target ? 5.6 : 6.5}"/>`;
+  if(showLabels){
+    s+=`<text class="label-strong" x="${sc.X(xInt)*.85+sc.X(0)*.15}" y="${sc.Y(0)-8}" text-anchor="middle">m/p₁</text>`;
+    s+=`<text class="label-strong" x="${sc.X(0)+8}" y="${sc.Y(yInt)-8}">m/p₂</text>`;
+    s+=`<text class="label-strong" x="${sc.X(sol.x1)+10}" y="${sc.Y(sol.x2)-10}">x(p,m)</text>`;
+    s+=`<line class="compBudget" x1="${sc.X(sol.x1)}" y1="${sc.Y(sol.x2)}" x2="${sc.X(sol.x1)}" y2="${sc.Y(0)}"/>`;
+    s+=`<line class="compBudget" x1="${sc.X(sol.x1)}" y1="${sc.Y(sol.x2)}" x2="${sc.X(0)}" y2="${sc.Y(sol.x2)}"/>`;
+    s+=`<text class="label" x="${sc.X(sol.x1)}" y="${sc.Y(0)+18}" text-anchor="middle">${fmt(sol.x1,2)}</text>`;
+    s+=`<text class="label" x="${sc.X(0)-9}" y="${sc.Y(sol.x2)+4}" text-anchor="end">${fmt(sol.x2,2)}</text>`;
+  }
+  return s;
+}
+
+function drawMotionTrace(start,target,sc,t){
+  if(!start || !target) return '';
+  const sx=start.sol.x1, sy=start.sol.x2, tx=target.sol.x1, ty=target.sol.x2;
+  if(![sx,sy,tx,ty].every(Number.isFinite)) return '';
+  if(Math.hypot(sc.X(tx)-sc.X(sx), sc.Y(ty)-sc.Y(sy))<3) return '';
+  const mx=lerp(sx,tx,.5), my=lerp(sy,ty,.5)+0.06*sc.maxY;
+  const cx=lerp(sx,tx,t), cy=lerp(sy,ty,t);
+  return `<path class="motion-path" d="M${sc.X(sx)},${sc.Y(sy)} Q${sc.X(mx)},${sc.Y(my)} ${sc.X(tx)},${sc.Y(ty)}"/>
+          <circle class="motion-dot" cx="${sc.X(cx)}" cy="${sc.Y(cy)}" r="4.6"/>`;
+}
+
+function drawMain(par,sol,ghost=null,target=null,t=1){
+  const svg=$('mainPlot'); const W=720,H=520, margin={l:58,r:28,t:25,b:55};
+  const bounds=mergedMainExtent([{par,sol},ghost,target]);
+  const sc=makeScales(bounds.maxX,bounds.maxY,W,H,margin);
+  let s=drawGrid(sc,6);
+  s+=`<text class="label-strong" x="${W/2}" y="${H-8}" text-anchor="middle">good 1, x₁</text>`;
+  s+=`<text class="label-strong" transform="translate(16 ${H/2}) rotate(-90)" text-anchor="middle">good 2, x₂</text>`;
+
+  if(ghost && ghost.par.family===par.family && t<.98) s+=mainLayer(ghost.par,ghost.sol,sc,{opacity:.35*(1-t)+.08,ghost:true});
+  if(target && target.par.family===par.family && t<.98) s+=mainLayer(target.par,target.sol,sc,{opacity:.12+.20*t,target:true});
+  s+=mainLayer(par,sol,sc,{opacity:1,labels:true});
+  if(ghost && target) s+=drawMotionTrace(ghost,target,sc,t);
+
+  if(t<.98 && ghost && target){
+    s+=`<text class="label" x="${W-28}" y="38" text-anchor="end">object constancy: budget, curve and bundle morph smoothly</text>`;
+  }
   svg.innerHTML=s;
 }
 
-function renderMath(){
+function demandCurvePoints(par,steps=160){
+  const pMax=8.2, pMin=.25;
+  const pts=[];
+  for(let i=0;i<steps;i++){
+    const p=pMin+(pMax-pMin)*i/(steps-1);
+    const d=demand({...par,p1:p});
+    pts.push([d.x1,p]);
+  }
+  return pts;
+}
+
+function demandExtent(items){
+  let maxX=1;
+  items.filter(Boolean).forEach(obj=>{
+    demandCurvePoints(obj.par,80).forEach(p=>{ if(Number.isFinite(p[0])) maxX=Math.max(maxX,p[0]); });
+    if(obj.sol && Number.isFinite(obj.sol.x1)) maxX=Math.max(maxX,obj.sol.x1);
+  });
+  return maxX*1.12;
+}
+
+function demandLayer(par,sol,sc,opts={}){
+  const opacity = opts.opacity ?? 1;
+  const ghost = opts.ghost ?? false;
+  const target = opts.target ?? false;
+  const cls = ghost ? 'ghostDemand' : target ? 'targetDemand' : 'indiff';
+  const d=pathFrom(demandCurvePoints(par,170),sc);
+  let s='';
+  if(d) s+=`<path class="${cls}" style="opacity:${opacity}" d="${d}"/>`;
+  const pointClass=ghost?'ghostPoint':target?'targetPoint':'point2';
+  s+=`<circle class="${pointClass}" style="opacity:${opacity}" cx="${sc.X(sol.x1)}" cy="${sc.Y(par.p1)}" r="${ghost || target ? 5.2 : 6}"/>`;
+  return s;
+}
+
+function drawDemand(par,sol,ghost=null,target=null,t=1){
+  const svg=$('demandPlot'); const W=620,H=360, margin={l:58,r:24,t:22,b:48};
+  const pMax=8.2;
+  const maxX=demandExtent([{par,sol},ghost,target]);
+  const sc=makeScales(maxX,pMax,W,H,margin);
+  let s=drawGrid(sc,5);
+  s+=`<text class="label-strong" x="${W/2}" y="${H-8}" text-anchor="middle">ordinary demand, x₁(p₁,p₂,m)</text>`;
+  s+=`<text class="label-strong" transform="translate(15 ${H/2}) rotate(-90)" text-anchor="middle">price p₁</text>`;
+
+  if(ghost && ghost.par.family===par.family && t<.98) s+=demandLayer(ghost.par,ghost.sol,sc,{opacity:.34*(1-t)+.08,ghost:true});
+  if(target && target.par.family===par.family && t<.98) s+=demandLayer(target.par,target.sol,sc,{opacity:.13+.18*t,target:true});
+  s+=demandLayer(par,sol,sc,{opacity:1});
+  s+=`<line class="compBudget" x1="${sc.X(sol.x1)}" y1="${sc.Y(0)}" x2="${sc.X(sol.x1)}" y2="${sc.Y(par.p1)}"/>`;
+  s+=`<text class="label-strong" x="${sc.X(sol.x1)+9}" y="${sc.Y(par.p1)-8}">current</text>`;
+
+  if(ghost && target && ghost.par.family===target.par.family){
+    const cx=lerp(ghost.sol.x1,target.sol.x1,t), cy=lerp(ghost.par.p1,target.par.p1,t);
+    s+=`<path class="motion-path" d="M${sc.X(ghost.sol.x1)},${sc.Y(ghost.par.p1)} L${sc.X(target.sol.x1)},${sc.Y(target.par.p1)}"/>`;
+    s+=`<circle class="motion-dot" cx="${sc.X(cx)}" cy="${sc.Y(cy)}" r="4.2"/>`;
+  }
+  svg.innerHTML=s;
+}
+
+function renderMath(target=document.body){
   if(window.renderMathInElement){
-    renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}],throwOnError:false});
+    renderMathInElement(target,{
+      delimiters:[
+        {left:'$$',right:'$$',display:true},
+        {left:'\\[',right:'\\]',display:true},
+        {left:'\\(',right:'\\)',display:false}
+      ],
+      throwOnError:false,
+      strict:false
+    });
   }
 }
 
-function update(){
-  const par=currentParams();
+function animateTo(targetPar,targetSol){
+  const target={par:clonePar(targetPar), sol:cloneSol(targetSol)};
+  if(visual.raf) cancelAnimationFrame(visual.raf);
+  if(!visual.par){
+    visual.par=clonePar(targetPar);
+    visual.sol=cloneSol(targetSol);
+    drawMain(targetPar,targetSol,null,null,1);
+    drawDemand(targetPar,targetSol,null,null,1);
+    return;
+  }
+
+  const start={par:clonePar(visual.par), sol:cloneSol(visual.sol)};
+  const sameFamily=start.par.family===targetPar.family;
+  const duration=sameFamily ? 620 : 520;
+  const t0=performance.now();
+
+  function frame(now){
+    const raw=Math.min(1,(now-t0)/duration);
+    const t=ease(raw);
+    let framePar, frameSol;
+    if(sameFamily){
+      framePar=interpolateParams(start.par,targetPar,t);
+      frameSol=demand(framePar);
+      visual.par=clonePar(framePar);
+      visual.sol=cloneSol(frameSol);
+      drawMain(framePar,frameSol,start,target,t);
+      drawDemand(framePar,frameSol,start,target,t);
+    }else{
+      framePar=targetPar;
+      frameSol=targetSol;
+      visual.par=clonePar(framePar);
+      visual.sol=cloneSol(frameSol);
+      drawMain(framePar,frameSol,start,target,t);
+      drawDemand(framePar,frameSol,start,target,t);
+    }
+    if(raw<1){
+      visual.raf=requestAnimationFrame(frame);
+    }else{
+      visual.par=clonePar(targetPar);
+      visual.sol=cloneSol(targetSol);
+      visual.raf=0;
+      drawMain(targetPar,targetSol,null,null,1);
+      drawDemand(targetPar,targetSol,null,null,1);
+    }
+  }
+  visual.raf=requestAnimationFrame(frame);
+}
+
+function updateReadouts(par,sol){
   $('familyLabel').textContent=familyName(par.family);
   $('alphaVal').textContent=fmt(par.alpha,2); $('rhoVal').textContent=fmt(par.rho,2);
   $('p1Val').textContent=fmt(par.p1,2); $('p2Val').textContent=fmt(par.p2,2); $('mVal').textContent=fmt(par.m,2);
   $('lambdaVal').textContent=fmt(par.lambda,2); $('nAVal').textContent=par.nA; $('nBVal').textContent=par.nB; $('mBVal').textContent=fmt(par.mB,2);
   $('rhoBox').style.display = par.family==='ces' ? 'block' : 'none';
 
-  const sol=demand(par);
-  drawMain(par,sol); drawDemand(par,sol);
   $('x1Read').textContent=fmt(sol.x1,3); $('x1Rule').textContent=sol.rule1;
   $('x2Read').textContent=fmt(sol.x2,3); $('x2Rule').textContent=sol.rule2;
   $('vRead').textContent=fmt(sol.v,4); $('uRule').textContent=sol.uRule;
   $('caseRead').textContent=sol.caseText; $('caseRule').textContent=sol.caseKind;
   $('solutionFormula').innerHTML=formulaFor(par);
+  renderMath($('solutionFormula'));
 
   const gap=sol.exp-par.m;
   const walrasOK=Math.abs(gap)<1e-6;
@@ -649,7 +851,7 @@ function update(){
   const scaled=demand({...par,p1:par.lambda*par.p1,p2:par.lambda*par.p2,m:par.lambda*par.m});
   const dist=Math.hypot(sol.x1-scaled.x1,sol.x2-scaled.x2);
   $('homTitle').textContent=dist<1e-5?'Demand is unchanged':'Check nonsmooth/tie case';
-  $('homText').innerHTML=`Original: x=(${fmt(sol.x1,3)}, ${fmt(sol.x2,3)}). Scaled: x(Î»p,Î»m)=(${fmt(scaled.x1,3)}, ${fmt(scaled.x2,3)}). Distance: <b>${fmt(dist,6)}</b>.`;
+  $('homText').innerHTML=`Original: x=(${fmt(sol.x1,3)}, ${fmt(sol.x2,3)}). Scaled: x(λp,λm)=(${fmt(scaled.x1,3)}, ${fmt(scaled.x2,3)}). Distance: <b>${fmt(dist,6)}</b>.`;
 
   const roy=derivativesRoy(par);
   $('roy1').textContent=fmt(roy.r1,4); $('royx1').textContent=fmt(sol.x1,4);
@@ -666,24 +868,40 @@ function update(){
   $('agg1').textContent=fmt(X1,3); $('agg2').textContent=fmt(X2,3);
   $('aggExp').textContent=fmt(par.p1*X1+par.p2*X2,3);
 
-  $('propertiesText').innerHTML=`For the selected family, <b>v(p,m)</b> is increasing in wealth and nonincreasing in prices. Ordinary demand is homogeneous of degree zero in <b>(p,m)</b>. If preferences are locally nonsatiated, <b>pÂ·x(p,m)=m</b>. If the solution is unique and <b>v</b> is differentiable, Roy's identity gives each good's demand.`;
-  setTimeout(renderMath,0);
+  $('propertiesText').innerHTML=`For the selected family, <b>v(p,m)</b> is increasing in wealth and nonincreasing in prices. Ordinary demand is homogeneous of degree zero in <b>(p,m)</b>. If preferences are locally nonsatiated, <b>p·x(p,m)=m</b>. If the solution is unique and <b>v</b> is differentiable, Roy's identity gives each good's demand.`;
+}
+
+function update(){
+  const par=currentParams();
+  const sol=demand(par);
+  updateReadouts(par,sol);
+  animateTo(par,sol);
 }
 
 ids.forEach(id=>$(id).addEventListener('input',update));
 $('family').addEventListener('change',update);
+
 function syncThemeButton(){
   const btn=$('themeBtn');
   if(btn) btn.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'Light mode':'Dark mode';
 }
+
 $('themeBtn').addEventListener('click',()=>{
   const root=document.documentElement;
   root.setAttribute('data-theme',root.getAttribute('data-theme')==='dark'?'light':'dark');
   syncThemeButton();
-  update();
+  if(visual.par && visual.sol){
+    drawMain(visual.par,visual.sol,null,null,1);
+    drawDemand(visual.par,visual.sol,null,null,1);
+  }
 });
+
 syncThemeButton();
-window.addEventListener('load',()=>{ update(); setTimeout(renderMath,300); });
+update();
+window.addEventListener('load',()=>{ 
+  renderMath(document.body);
+  syncThemeButton();
+});
 </script>
 </body>
 </html>
