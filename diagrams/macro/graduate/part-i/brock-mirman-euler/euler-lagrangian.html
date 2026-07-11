@@ -1,0 +1,1795 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Equação de Euler pela via Lagrangeana — edição vetorial</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
+
+  <style>
+    :root{
+      --bg:#f3f2ed;--panel:#fffefa;--soft:#f7f6f1;--text:#17212b;--muted:#68727e;
+      --line:#deded6;--blue:#2563eb;--teal:#0f9f95;--violet:#7c3aed;--rose:#d95672;
+      --amber:#b66c0a;--green:#18794e;--shadow:0 12px 32px rgba(25,32,42,.07);
+      --radius:18px;--sidebar:320px;
+    }
+
+    body.dark{
+      --bg:#0e151b;--panel:#151e27;--soft:#1a2630;--text:#eef3f6;--muted:#a9b5bf;
+      --line:#30404c;--blue:#79a9ff;--teal:#55d5c9;--violet:#b49aff;--rose:#ff8da4;
+      --amber:#f1bb62;--green:#69d59d;--shadow:0 16px 38px rgba(0,0,0,.27);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;background:var(--bg);color:var(--text);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.47;transition:background .2s,color .2s;
+    }
+
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    .app{max-width:1520px;margin:auto;padding:18px}
+
+    header{
+      display:flex;justify-content:space-between;align-items:center;gap:16px;
+      padding:16px 18px;border:1px solid var(--line);border-radius:20px;
+      background:var(--panel);box-shadow:var(--shadow);
+    }
+
+    .brand{display:flex;align-items:center;gap:12px;min-width:0}
+    .mark{
+      width:46px;height:46px;display:grid;place-items:center;flex:0 0 auto;border-radius:14px;
+      color:#fff;font-weight:900;background:linear-gradient(135deg,var(--blue),var(--teal));
+    }
+
+    h1{margin:0;font-size:clamp(1.25rem,2vw,1.95rem);line-height:1.08}
+    .subtitle{margin:4px 0 0;color:var(--muted);font-size:.91rem}
+    .header-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+    .btn{
+      border:1px solid var(--line);border-radius:11px;padding:8px 11px;
+      background:var(--soft);color:var(--text);font-weight:740;
+    }
+
+    .btn:hover{border-color:var(--blue)}
+    .btn.primary{border-color:transparent;background:var(--blue);color:#fff}
+
+    .topic-nav{
+      display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin:14px 0 16px;
+    }
+
+    .topic-btn{
+      min-height:72px;padding:10px 13px;border:1px solid var(--line);border-radius:14px;
+      background:var(--panel);color:var(--text);text-align:left;box-shadow:var(--shadow);
+      transition:transform .16s,border-color .16s,background .16s;
+    }
+
+    .topic-btn:hover{transform:translateY(-1px);border-color:var(--blue)}
+    .topic-btn.active{
+      color:#fff;border-color:transparent;background:linear-gradient(135deg,var(--blue),var(--teal));
+    }
+
+    .topic-btn strong{display:block;font-size:.88rem}
+    .topic-btn span{display:block;margin-top:2px;font-size:.71rem;opacity:.8}
+
+    .layout{
+      display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr);gap:16px;align-items:start;
+    }
+
+    aside{
+      position:sticky;top:18px;max-height:calc(100vh - 36px);overflow:auto;
+      padding:16px;border:1px solid var(--line);border-radius:var(--radius);
+      background:var(--panel);box-shadow:var(--shadow);
+    }
+
+    .sidebar-title{margin:0 0 3px;font-size:1rem}
+    .sidebar-subtitle{margin:0 0 14px;color:var(--muted);font-size:.81rem}
+
+    .control{padding:0 0 13px;margin:0 0 13px;border-bottom:1px solid var(--line)}
+    .control:last-child{margin-bottom:0;border-bottom:0}
+
+    .control-head{
+      display:flex;justify-content:space-between;gap:10px;align-items:baseline;
+      font-size:.87rem;font-weight:760;
+    }
+
+    .control output{color:var(--blue);font-variant-numeric:tabular-nums}
+    .control small{display:block;margin-top:4px;color:var(--muted);font-size:.75rem}
+    .control-head [data-tex]{display:inline-flex;align-items:baseline;min-width:.75em;vertical-align:baseline}
+    .control-head [data-tex] .katex{color:var(--blue);font-size:1.03em}
+
+    input[type=range]{width:100%;margin-top:9px;accent-color:var(--blue)}
+
+    select{
+      width:100%;margin-top:8px;padding:9px 10px;color:var(--text);
+      background:var(--soft);border:1px solid var(--line);border-radius:10px;
+    }
+
+    .preset-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
+    .preset{
+      padding:7px 8px;border:1px solid var(--line);border-radius:9px;
+      color:var(--text);background:var(--soft);font-size:.75rem;font-weight:700;
+    }
+    .preset:hover{color:var(--teal);border-color:var(--teal)}
+
+    main{display:grid;gap:16px;min-width:0}
+    .card{
+      min-width:0;padding:18px;border:1px solid var(--line);border-radius:var(--radius);
+      background:var(--panel);box-shadow:var(--shadow);
+    }
+
+    .eyebrow{
+      margin-bottom:4px;color:var(--teal);font-size:.69rem;font-weight:850;
+      letter-spacing:.12em;text-transform:uppercase;
+    }
+
+    h2{margin:0;font-size:1.1rem}
+    h3{margin:0;font-size:.96rem}
+    p{margin:9px 0}
+    .muted{color:var(--muted)}
+
+    .hero{display:grid;grid-template-columns:minmax(0,1.28fr) minmax(280px,.72fr);gap:16px}
+
+    .formula-box,.math-line,.equation{
+      position:relative;isolation:isolate;overflow:auto;
+      border:1px solid color-mix(in srgb,var(--line) 72%,var(--blue));
+      background:
+        radial-gradient(circle at 15% 0%,color-mix(in srgb,var(--blue) 8%,transparent),transparent 42%),
+        linear-gradient(145deg,var(--soft),color-mix(in srgb,var(--panel) 82%,var(--soft)));
+      box-shadow:inset 0 1px 0 color-mix(in srgb,#fff 55%,transparent),0 8px 24px rgba(24,33,43,.035);
+    }
+
+    .formula-box::before,.math-line::before{
+      content:"";position:absolute;left:18px;right:18px;top:0;height:2px;
+      border-radius:0 0 999px 999px;
+      background:linear-gradient(90deg,transparent,var(--blue),var(--teal),transparent);opacity:.65;
+    }
+
+    .formula-box{
+      display:grid;place-items:center;min-height:138px;margin-top:13px;padding:22px 20px;
+      border-radius:14px;font-size:clamp(.94rem,1.62vw,1.28rem);
+    }
+
+    .math-line{margin:10px 0;padding:16px 18px;border-radius:11px;color:var(--text)}
+    .equation{
+      min-height:72px;display:grid;place-items:center;padding:14px;border-radius:12px;text-align:center;
+    }
+
+    .formula-box .katex-display,.math-line .katex-display,.equation .katex-display{
+      width:100%;margin:0;overflow-x:auto;overflow-y:hidden;padding:2px 0;
+    }
+
+    .formula-box .katex{font-size:1.09em}
+    .math-line .katex{font-size:1.02em}
+    .equation .katex{font-size:1em}
+    [data-display="false"] .katex{
+      color:color-mix(in srgb,var(--text) 88%,var(--blue));font-size:1em;
+    }
+
+    .math-render-error{
+      color:var(--rose);font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+      font-size:.9rem;white-space:pre-wrap;
+    }
+
+    .insight{
+      padding:13px;border-left:4px solid var(--teal);border-radius:11px;
+      background:var(--soft);font-size:.86rem;
+    }
+    .insight + .insight{margin-top:9px}
+    .insight.warn{border-left-color:var(--amber)}
+    .insight.bad{border-left-color:var(--rose)}
+
+    .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+    .metric{
+      padding:13px;border:1px solid var(--line);border-radius:13px;
+      background:linear-gradient(145deg,var(--panel),color-mix(in srgb,var(--soft) 72%,var(--panel)));
+      box-shadow:var(--shadow);
+    }
+    .metric-label{
+      color:var(--muted);font-size:.71rem;font-weight:760;letter-spacing:.04em;text-transform:uppercase;
+    }
+    .metric-value{
+      margin-top:4px;color:color-mix(in srgb,var(--text) 88%,var(--blue));
+      font-size:1.16rem;font-weight:850;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;
+    }
+
+    .chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .chart-card{overflow:hidden;padding-bottom:12px}
+    .chart{
+      width:100%;height:360px;overflow:hidden;
+      border:1px solid color-mix(in srgb,var(--line) 82%,var(--blue));border-radius:15px;
+      background:
+        radial-gradient(circle at 12% 4%,color-mix(in srgb,var(--blue) 7%,transparent),transparent 36%),
+        linear-gradient(180deg,color-mix(in srgb,var(--panel) 92%,var(--soft)),var(--panel));
+    }
+    .chart.tall{height:420px}
+    .chart-note{
+      display:flex;align-items:flex-start;gap:7px;margin:8px 0 0;padding:0 2px;
+      color:var(--muted);font-size:.76rem;line-height:1.42;
+    }
+    .chart-note::before{
+      content:"";width:7px;height:7px;flex:0 0 auto;margin-top:.37em;
+      border-radius:50%;background:var(--teal);
+    }
+
+    .topic-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:13px}
+    .topic-box{padding:13px;border:1px solid var(--line);border-radius:13px;background:var(--soft)}
+    .topic-box strong{display:block;color:var(--blue);font-size:.82rem}
+    .topic-box p{margin:6px 0 0;color:var(--muted);font-size:.8rem}
+
+    .equation-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:13px}
+
+    details{border:1px solid var(--line);border-radius:12px;background:var(--soft)}
+    details + details{margin-top:9px}
+    details[open]{
+      border-color:color-mix(in srgb,var(--line) 65%,var(--blue));
+      box-shadow:0 8px 20px rgba(25,32,42,.035);
+    }
+    summary{padding:12px 14px;cursor:pointer;font-weight:780}
+    summary::marker{color:var(--blue)}
+    .details-body{padding:0 14px 14px;color:var(--muted);font-size:.87rem}
+
+    .timeline{
+      display:grid;grid-template-columns:repeat(5,minmax(130px,1fr));gap:8px;
+      align-items:center;margin-top:14px;overflow:auto;padding:4px 2px 10px;
+    }
+    .time-node{
+      min-height:112px;display:grid;place-items:center;padding:12px;border:1px solid var(--line);
+      border-radius:13px;background:var(--soft);text-align:center;
+    }
+    .time-node.active{
+      border-color:var(--blue);
+      box-shadow:0 10px 24px color-mix(in srgb,var(--blue) 13%,transparent);
+      transform:translateY(-2px);
+    }
+    .time-node strong{display:block;color:var(--blue);font-size:.8rem}
+    .time-node span{display:block;margin-top:5px;color:var(--muted);font-size:.72rem}
+    .time-arrow{color:var(--muted);font-weight:900;text-align:center}
+
+    /* Fluxos matemáticos editoriais */
+    .local-expansion{
+      display:grid;grid-template-columns:minmax(0,1fr) 168px minmax(0,1fr);
+      gap:14px;align-items:stretch;margin-top:16px;
+    }
+    .period-panel{
+      min-width:0;padding:17px;border:1px solid var(--line);border-radius:16px;
+      background:linear-gradient(145deg,var(--panel),color-mix(in srgb,var(--soft) 78%,var(--panel)));
+      box-shadow:0 12px 28px rgba(25,32,42,.05);
+    }
+    .period-panel.current{border-color:color-mix(in srgb,var(--blue) 55%,var(--line))}
+    .period-panel.future{border-color:color-mix(in srgb,var(--teal) 55%,var(--line))}
+    .period-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+    .period-index{
+      display:inline-grid;place-items:center;min-width:42px;height:29px;padding:0 10px;border-radius:999px;
+      background:color-mix(in srgb,var(--blue) 10%,var(--soft));color:var(--blue);font-weight:850;font-size:.78rem;
+    }
+    .future .period-index{background:color-mix(in srgb,var(--teal) 11%,var(--soft));color:var(--teal)}
+    .period-role{color:var(--muted);font-size:.74rem;font-weight:750}
+    .period-equation,.local-sum-formula,.step-formula{
+      overflow-x:auto;overflow-y:hidden;border:1px solid var(--line);border-radius:13px;
+      background:color-mix(in srgb,var(--soft) 82%,var(--panel));
+    }
+    .period-equation{display:grid;place-items:center;min-height:122px;padding:16px 13px}
+    .period-equation .katex-display,.local-sum-formula .katex-display,.step-formula .katex-display{margin:0}
+    .period-equation .katex-display>.katex,.local-sum-formula .katex-display>.katex,.step-formula .katex-display>.katex{white-space:nowrap}
+    .period-equation .katex{font-size:1.03em}
+    .term-legend{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+    .term-tag{
+      display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border:1px solid var(--line);
+      border-radius:999px;background:var(--soft);color:var(--muted);font-size:.72rem;font-weight:740;
+    }
+    .term-tag::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--blue)}
+    .term-tag.shadow::before{background:var(--teal)}
+    .period-evaluation{margin-top:12px;color:var(--muted);font-size:.78rem}
+    .period-evaluation strong{color:var(--text);font-variant-numeric:tabular-nums}
+    .bridge-panel{
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;
+      padding:14px 8px;border:1px dashed color-mix(in srgb,var(--line) 62%,var(--violet));
+      border-radius:16px;background:radial-gradient(circle at 50% 45%,color-mix(in srgb,var(--violet) 10%,transparent),transparent 65%);
+      text-align:center;
+    }
+    .bridge-caption{color:var(--muted);font-size:.68rem;font-weight:850;letter-spacing:.08em;text-transform:uppercase}
+    .bridge-symbol{
+      display:grid;place-items:center;width:78px;height:78px;border-radius:50%;
+      border:1px solid color-mix(in srgb,var(--violet) 45%,var(--line));
+      background:var(--panel);box-shadow:0 12px 26px color-mix(in srgb,var(--violet) 12%,transparent);
+    }
+    .bridge-symbol .katex{font-size:1.18em;color:var(--violet)}
+    .bridge-flow{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:.71rem;line-height:1.25}
+    .bridge-flow strong{color:var(--text)}
+    .bridge-line{width:2px;height:24px;background:linear-gradient(var(--blue),var(--teal));border-radius:999px}
+    .local-sum-formula{display:grid;place-items:center;min-height:88px;margin-top:14px;padding:16px}
+    .local-sum-formula .katex{font-size:1.03em}
+
+    .derivation-rail{
+      display:grid;grid-template-columns:minmax(0,1fr) 46px minmax(0,1fr) 46px minmax(0,1fr);
+      gap:10px;align-items:stretch;margin-top:16px;
+    }
+    .derivation-step{
+      min-width:0;padding:16px;border:1px solid var(--line);border-radius:16px;background:var(--soft);
+      box-shadow:0 10px 24px rgba(25,32,42,.04);
+    }
+    .derivation-step.cost{border-top:3px solid var(--rose)}
+    .derivation-step.benefit{border-top:3px solid var(--teal)}
+    .derivation-step.result{border-top:3px solid var(--blue);background:linear-gradient(145deg,var(--soft),color-mix(in srgb,var(--blue) 5%,var(--panel)))}
+    .step-kicker{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.7rem;font-weight:850;letter-spacing:.07em;text-transform:uppercase}
+    .step-number{display:grid;place-items:center;width:24px;height:24px;border-radius:8px;background:var(--panel);color:var(--blue);font-size:.72rem}
+    .step-formula{display:grid;place-items:center;min-height:112px;margin-top:11px;padding:14px 10px}
+    .step-formula .katex{font-size:.93em}
+    .step-value{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);color:var(--muted);font-size:.76rem}
+    .step-value strong{display:block;margin-top:3px;color:var(--text);font-size:1rem;font-variant-numeric:tabular-nums}
+    .rail-connector{display:grid;place-items:center;color:var(--muted);font-size:1.45rem;font-weight:850}
+
+    .vector-explainer{display:grid;grid-template-columns:minmax(0,1.16fr) minmax(330px,.84fr);gap:16px;align-items:stretch;margin-top:14px}
+    .vector-side{display:flex;flex-direction:column;gap:10px}
+    .vector-equation{margin:0}
+    .vector-equation .katex{font-size:.94em}
+    .component-list{display:grid;gap:8px}
+    .component-row{
+      display:grid;grid-template-columns:108px minmax(0,1fr);gap:10px;align-items:center;
+      padding:10px 11px;border:1px solid var(--line);border-radius:12px;background:var(--soft);
+    }
+    .component-label{color:var(--muted);font-size:.72rem;font-weight:850;text-transform:uppercase;letter-spacing:.05em}
+    .component-math{min-width:0;overflow-x:auto}
+    .component-math .katex{font-size:.94em}
+    .vector-bridge{
+      display:flex;align-items:center;justify-content:center;gap:9px;padding:10px;border:1px solid var(--line);
+      border-radius:12px;background:linear-gradient(90deg,color-mix(in srgb,var(--blue) 7%,var(--soft)),color-mix(in srgb,var(--teal) 7%,var(--soft)));
+      color:var(--muted);font-size:.78rem;text-align:center;
+    }
+    .vector-bridge strong{color:var(--text)}
+
+    .compare-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:.82rem}
+    .compare-table th,.compare-table td{
+      padding:9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;
+    }
+    .compare-table th{
+      color:var(--muted);font-size:.71rem;text-transform:uppercase;letter-spacing:.05em;
+    }
+
+    .status{
+      display:flex;align-items:center;gap:9px;margin-top:10px;padding:10px 12px;
+      border:1px solid var(--line);border-radius:12px;background:var(--soft);
+      font-size:.82rem;font-weight:730;
+    }
+    .status-dot{width:10px;height:10px;flex:0 0 auto;border-radius:50%;background:var(--green)}
+    .status.bad .status-dot{background:var(--rose)}
+
+    .hidden{display:none!important}
+    footer{padding:8px 4px 2px;color:var(--muted);text-align:center;font-size:.8rem}
+
+    @media(max-width:1180px){
+      .topic-nav{grid-template-columns:repeat(3,1fr)}
+      .layout{grid-template-columns:280px minmax(0,1fr)}
+      .hero,.chart-grid{grid-template-columns:1fr}
+      .topic-grid,.equation-strip{grid-template-columns:1fr}
+      .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .local-expansion,.vector-explainer{grid-template-columns:1fr}
+      .bridge-panel{min-height:170px}
+      .derivation-rail{grid-template-columns:1fr}
+      .rail-connector{min-height:34px;transform:rotate(90deg)}
+    }
+
+    @media(max-width:800px){
+      .app{padding:10px}
+      header{align-items:flex-start;flex-direction:column}
+      .topic-nav{grid-template-columns:1fr 1fr}
+      .layout{grid-template-columns:1fr}
+      aside{position:static;max-height:none}
+    }
+
+    @media(max-width:500px){
+      .topic-nav,.metrics{grid-template-columns:1fr}
+      .preset-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+
+<body>
+<div class="app">
+  <header>
+    <div class="brand">
+      <div class="mark">λ</div>
+      <div>
+        <h1>Equação de Euler pela via Lagrangeana</h1>
+        <p class="subtitle">CPOs, multiplicadores, eliminação dos preços-sombra e arbitragem intertemporal</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn" id="themeBtn">◐ Tema</button>
+      <button class="btn" id="resetBtn">Reiniciar tópico</button>
+    </div>
+  </header>
+
+  <nav class="topic-nav" aria-label="Escolha do laboratório">
+    <button class="topic-btn active" data-mode="theorem">
+      <strong>Resultado e interioridade</strong>
+      <span>Euler necessária, condições de Inada e limites do resultado</span>
+    </button>
+    <button class="topic-btn" data-mode="lagrangian">
+      <strong>Montagem do Lagrangeano</strong>
+      <span>Restrições por período e duas convenções para λₜ</span>
+    </button>
+    <button class="topic-btn" data-mode="focs">
+      <strong>CPOs e dois períodos</strong>
+      <span>Por que kₜ₊₁ aparece como saída hoje e entrada amanhã</span>
+    </button>
+    <button class="topic-btn" data-mode="euler">
+      <strong>Eliminar λ e obter Euler</strong>
+      <span>Substituição, residual e estado estacionário</span>
+    </button>
+    <button class="topic-btn" data-mode="extensions">
+      <strong>Interpretação e extensões</strong>
+      <span>Arbitragem, CRRA, depreciação parcial e wedges</span>
+    </button>
+  </nav>
+
+  <div class="layout">
+    <aside id="sidebar"></aside>
+    <main id="content"></main>
+  </div>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  const $=(selector,root=document)=>root.querySelector(selector);
+  const $$=(selector,root=document)=>[...root.querySelectorAll(selector)];
+
+  const defaults={
+    theorem:{beta:.95,A:1,alpha:.36,c:.8,k:1.1,epsilon:.08},
+    lagrangian:{beta:.95,A:1,alpha:.36,c0:.9,c1:1.05,k0:.7,k1:.45,k2:.33,convention:"current"},
+    focs:{beta:.95,A:1,alpha:.36,ct:.9,ctp1:1.05,kp:.45,showBoth:true},
+    euler:{beta:.95,A:1,alpha:.36,ct:.9,ctp1:1.05,kp:.45,kMax:2.5},
+    extensions:{beta:.95,A:1,alpha:.36,sigma:1,delta:1,wedge:0,expected:false,kp:.45,ct:.9}
+  };
+
+  const state={
+    mode:"theorem",
+    theorem:{...defaults.theorem},
+    lagrangian:{...defaults.lagrangian},
+    focs:{...defaults.focs},
+    euler:{...defaults.euler},
+    extensions:{...defaults.extensions}
+  };
+
+  const KOPT={throwOnError:false,strict:"ignore",trust:false};
+
+  const MATH=Object.freeze({
+    beta:String.raw`\beta`,
+    A:String.raw`A`,
+    alpha:String.raw`\alpha`,
+    c:String.raw`c_t`,
+    cp:String.raw`c_{t+1}`,
+    k:String.raw`k_{t+1}`,
+    lambda:String.raw`\lambda_t`,
+    sigma:String.raw`\sigma`,
+    delta:String.raw`\delta`,
+    tau:String.raw`\tau`,
+    epsilon:String.raw`\varepsilon`
+  });
+
+  const plotConfig={
+    responsive:true,displaylogo:false,scrollZoom:true,
+    toImageButtonOptions:{format:"png",filename:"euler_lagrangeana",scale:2},
+    modeBarButtonsToRemove:["lasso2d","select2d","autoScale2d","toggleSpikelines"]
+  };
+
+  function fmt(value,digits=3){
+    if(!Number.isFinite(value)) return "—";
+    if(Math.abs(value)>=1e5 || (Math.abs(value)>0 && Math.abs(value)<1e-4)){
+      return value.toExponential(2).replace(".",",");
+    }
+    return value.toLocaleString("pt-BR",{maximumFractionDigits:digits,minimumFractionDigits:0});
+  }
+
+  function linspace(a,b,n){
+    return Array.from({length:n},(_,i)=>a+(b-a)*i/(n-1));
+  }
+
+  function renderKatex(element,expression,display=true){
+    if(!element) return;
+    const source=String(expression??"");
+
+    if(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/.test(source)){
+      console.error("Expressão KaTeX contém caractere de controle:",source);
+      element.textContent=source;
+      element.classList.add("math-render-error");
+      return;
+    }
+
+    const prepared=display?String.raw`\displaystyle ${source}`:source;
+
+    if(!window.katex){
+      element.textContent=source;
+      return;
+    }
+
+    try{
+      katex.render(prepared,element,{...KOPT,displayMode:display,errorColor:"#d95672"});
+      element.classList.remove("math-render-error");
+    }catch(error){
+      console.error("Erro KaTeX:",source,error);
+      element.textContent=source;
+      element.classList.add("math-render-error");
+    }
+  }
+
+  function tex(element,expression,display=true){
+    renderKatex(element,expression,display);
+  }
+
+  function renderAllMath(root=document){
+    if(!window.katex) return;
+    $$("[data-tex]",root).forEach(element=>{
+      renderKatex(element,element.dataset.tex,element.dataset.display!=="false");
+    });
+  }
+
+  function chartTheme(){
+    const dark=document.body.classList.contains("dark");
+    return {
+      dark,
+      text:dark?"#a9b5bf":"#68727e",
+      strong:dark?"#eef3f6":"#17212b",
+      grid:dark?"rgba(74,94,108,.32)":"rgba(190,193,188,.42)",
+      axis:dark?"#40515f":"#c8c9c2",
+      panel:dark?"#151e27":"#fffefa",
+      blue:dark?"#79a9ff":"#2563eb",
+      teal:dark?"#55d5c9":"#0f9f95",
+      violet:dark?"#b49aff":"#7c3aed",
+      rose:dark?"#ff8da4":"#d95672",
+      amber:dark?"#f1bb62":"#b66c0a",
+      green:dark?"#69d59d":"#18794e"
+    };
+  }
+
+  function rgba(hex,alpha){
+    const value=hex.replace("#","");
+    const full=value.length===3?value.split("").map(char=>char+char).join(""):value;
+    const number=parseInt(full,16);
+    return `rgba(${(number>>16)&255},${(number>>8)&255},${number&255},${alpha})`;
+  }
+
+  function plotLayout(xTitle,yTitle,extra={}){
+    const theme=chartTheme();
+    const axis={
+      showline:true,linewidth:1,linecolor:theme.axis,ticks:"outside",ticklen:5,tickcolor:theme.axis,
+      tickfont:{size:11,color:theme.text},gridcolor:theme.grid,griddash:"dot",zeroline:true,
+      zerolinecolor:theme.axis,automargin:true,title:{font:{size:12,color:theme.text},standoff:12}
+    };
+
+    return {
+      margin:{l:68,r:30,t:28,b:68},
+      paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(0,0,0,0)",
+      font:{family:"Inter, system-ui, sans-serif",color:theme.text,size:12},
+      colorway:[theme.blue,theme.violet,theme.teal,theme.rose,theme.amber,theme.green],
+      xaxis:{...axis,title:{text:xTitle,font:{size:12,color:theme.text},standoff:12}},
+      yaxis:{...axis,title:{text:yTitle,font:{size:12,color:theme.text},standoff:12}},
+      hovermode:"x unified",
+      hoverlabel:{bgcolor:theme.panel,bordercolor:theme.axis,font:{family:"Inter, system-ui, sans-serif",size:12,color:theme.strong}},
+      legend:{orientation:"h",y:-.25,x:0,xanchor:"left",font:{size:11,color:theme.text},bgcolor:"rgba(0,0,0,0)"},
+      transition:{duration:280,easing:"cubic-in-out"},dragmode:"pan",
+      ...extra
+    };
+  }
+
+  function polishTraces(traces){
+    const theme=chartTheme();
+    const colors=[theme.blue,theme.violet,theme.teal,theme.rose,theme.amber,theme.green];
+
+    return traces.map((trace,index)=>{
+      const color=trace.line?.color||trace.marker?.color||colors[index%colors.length];
+      const polished={...trace};
+      const isScatter=(trace.type||"scatter")==="scatter";
+      const mode=trace.mode||"lines";
+
+      if(isScatter&&mode.includes("lines")){
+        polished.line={width:index===0?3.3:2.4,shape:"spline",smoothing:.5,...trace.line,color};
+      }
+
+      if(isScatter&&mode.includes("markers")){
+        polished.marker={size:trace.marker?.size||5,color,line:{width:1.3,color:theme.panel},...trace.marker};
+      }
+
+      if(trace.fill){
+        polished.fillcolor=trace.fillcolor||rgba(color,.10);
+      }
+
+      polished.hovertemplate=trace.hovertemplate||
+        `<b>${trace.name||"Série"}</b><br>x: %{x:.4g}<br>y: %{y:.4g}<extra></extra>`;
+
+      return polished;
+    });
+  }
+
+  function prettyPlot(id,traces,layout){
+    return Plotly.react(id,polishTraces(traces),layout,plotConfig);
+  }
+
+  function slider(id,label,value,min,max,step,help,symbol=""){
+    return String.raw`
+      <div class="control">
+        <div class="control-head">
+          <span>${label}${symbol?` <span data-tex="${symbol}" data-display="false"></span>`:""}</span>
+          <output id="${id}Out">${fmt(value,3)}</output>
+        </div>
+        <input id="${id}" type="range" min="${min}" max="${max}" step="${step}" value="${value}" aria-label="${label}">
+        <small>${help}</small>
+      </div>`;
+  }
+
+  function metric(label,id){
+    return `<div class="metric"><div class="metric-label">${label}</div><div class="metric-value" id="${id}">—</div></div>`;
+  }
+
+  function bindRange(id,object,key,callback){
+    const input=$("#"+id);
+    if(!input) return;
+
+    const run=()=>{
+      object[key]=Number(input.value);
+      const output=$("#"+id+"Out");
+      if(output) output.textContent=fmt(object[key],3);
+      callback();
+    };
+
+    input.addEventListener("input",run);
+    input.addEventListener("change",run);
+  }
+
+  function mpk(k,A,alpha){
+    return alpha*A*Math.pow(Math.max(k,1e-10),alpha-1);
+  }
+
+  function marginalUtility(c,sigma=1){
+    return Math.pow(Math.max(c,1e-10),-sigma);
+  }
+
+  function setMode(mode){
+    state.mode=mode;
+    $$(".topic-btn").forEach(button=>button.classList.toggle("active",button.dataset.mode===mode));
+    renderMode();
+  }
+
+  function renderMode(){
+    if(state.mode==="theorem") renderTheorem();
+    if(state.mode==="lagrangian") renderLagrangian();
+    if(state.mode==="focs") renderFOCs();
+    if(state.mode==="euler") renderEuler();
+    if(state.mode==="extensions") renderExtensions();
+  }
+
+  /* ============================================================
+     1. RESULTADO E INTERIORIDADE
+  ============================================================ */
+
+  function renderTheorem(){
+    const s=state.theorem;
+
+    $("#sidebar").innerHTML=String.raw`
+      <h2 class="sidebar-title">Resultado e interioridade</h2>
+      <p class="sidebar-subtitle">Inspecione a condição necessária e as forças que afastam a solução dos cantos.</p>
+
+      ${slider("thBeta","Fator de desconto",s.beta,.5,.995,.005,"Pondera o benefício marginal futuro.",MATH.beta)}
+      ${slider("thA","Produtividade",s.A,.4,2.2,.05,"Desloca o produto marginal do capital.",MATH.A)}
+      ${slider("thAlpha","Elasticidade",s.alpha,.08,.92,.01,"Com α < 1, F′ explode perto de zero.",MATH.alpha)}
+      ${slider("thC","Consumo avaliado",s.c,.04,3,.02,"Usado na utilidade marginal.",MATH.c)}
+      ${slider("thK","Capital futuro avaliado",s.k,.01,3,.02,"Usado no produto marginal.",MATH.k)}
+      ${slider("thEps","Vizinhança do canto",s.epsilon,.005,.4,.005,"Aproxime-se de zero para visualizar Inada.",MATH.epsilon)}
+
+      <div class="control">
+        <div class="control-head"><span>Presets</span></div>
+        <div class="preset-grid">
+          <button class="preset" data-th-preset="interior">Interior</button>
+          <button class="preset" data-th-preset="consumptionCorner">c ≈ 0</button>
+          <button class="preset" data-th-preset="capitalCorner">k′ ≈ 0</button>
+          <button class="preset" data-th-preset="patient">β elevado</button>
+        </div>
+      </div>`;
+
+    $("#content").innerHTML=String.raw`
+      <section class="hero">
+        <article class="card">
+          <div class="eyebrow">Teorema</div>
+          <h2>Euler pela rota sequencial</h2>
+          <div class="formula-box" data-tex="\begin{aligned}\frac{1}{c_t^*}&=\beta\,\frac{1}{c_{t+1}^*}\,\alpha A(k_{t+1}^*)^{\alpha-1},\\[3pt]\frac{c_{t+1}^*}{c_t^*}&=\beta\,\alpha A(k_{t+1}^*)^{\alpha-1}.\end{aligned}"></div>
+          <p class="muted">Toda solução interior ótima satisfaz a Euler. A recíproca exige condições adicionais.</p>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Escopo correto</div>
+          <div class="insight"><strong>Necessária:</strong> todo ótimo interior satisfaz a relação.</div>
+          <div class="insight"><strong>Não suficiente:</strong> Euler sozinha não elimina trajetórias de sobreacumulação.</div>
+          <div class="insight warn"><strong>Interior:</strong> as CPOs com igualdade dependem de cₜ &gt; 0 e kₜ₊₁ &gt; 0.</div>
+        </article>
+      </section>
+
+      <section class="metrics">
+        ${metric("Utilidade marginal","thMU")}
+        ${metric("Produto marginal","thMPK")}
+        ${metric("Retorno descontado","thReturn")}
+        ${metric("Diagnóstico de canto","thCorner")}
+      </section>
+
+      <section class="chart-grid">
+        <article class="card chart-card">
+          <div class="eyebrow">Inada da utilidade</div>
+          <h2>u′(c) = 1/c perto de zero</h2>
+          <div id="thUtilityChart" class="chart tall"></div>
+          <p class="chart-note">O custo marginal de levar consumo a zero diverge.</p>
+        </article>
+
+        <article class="card chart-card">
+          <div class="eyebrow">Inada da tecnologia</div>
+          <h2>F′(k) perto de zero</h2>
+          <div id="thTechnologyChart" class="chart tall"></div>
+          <p class="chart-note">Com 0 &lt; α &lt; 1, o retorno marginal de um capital muito pequeno diverge.</p>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Cantos e KKT</div>
+          <h2>O que mudaria fora do caso interior?</h2>
+          <div class="equation-strip">
+            <div class="equation" data-tex="c_t^*>0"></div>
+            <div class="equation" data-tex="k_{t+1}^*>0"></div>
+            <div class="equation" data-tex="\text{CPOs com igualdade}"></div>
+          </div>
+          <div class="insight bad" style="margin-top:12px"><strong>Se um canto puder ser ótimo:</strong> a Euler deve ser substituída por condições de Kuhn–Tucker com complementaridade.</div>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Necessidade versus suficiência</div>
+          <h2>O papel da transversalidade</h2>
+          <table class="compare-table">
+            <thead><tr><th>Condição</th><th>O que controla</th><th>Sozinha basta?</th></tr></thead>
+            <tbody>
+              <tr><td>Euler</td><td>Arbitragem marginal entre datas consecutivas.</td><td>Não.</td></tr>
+              <tr><td>Viabilidade</td><td>Respeito aos recursos em cada período.</td><td>Não.</td></tr>
+              <tr><td>TVC</td><td>Exclui valor residual desperdiçado no infinito.</td><td>Com concavidade e Euler, completa a caracterização.</td></tr>
+            </tbody>
+          </table>
+        </article>
+      </section>
+
+      <footer>O laboratório separa a condição local da caracterização global do ótimo.</footer>`;
+
+    renderAllMath();
+
+    bindRange("thBeta",s,"beta",updateTheorem);
+    bindRange("thA",s,"A",updateTheorem);
+    bindRange("thAlpha",s,"alpha",updateTheorem);
+    bindRange("thC",s,"c",updateTheorem);
+    bindRange("thK",s,"k",updateTheorem);
+    bindRange("thEps",s,"epsilon",updateTheorem);
+
+    $$("[data-th-preset]").forEach(button=>{
+      button.addEventListener("click",()=>{
+        const preset=button.dataset.thPreset;
+        if(preset==="interior") Object.assign(s,{beta:.95,A:1,alpha:.36,c:.8,k:1.1,epsilon:.08});
+        if(preset==="consumptionCorner") Object.assign(s,{c:.05,epsilon:.02});
+        if(preset==="capitalCorner") Object.assign(s,{k:.02,epsilon:.02});
+        if(preset==="patient") Object.assign(s,{beta:.99,c:.8,k:1.1});
+        renderTheorem();
+      });
+    });
+
+    updateTheorem();
+  }
+
+  function updateTheorem(){
+    const s=state.theorem;
+    const mu=1/s.c;
+    const product=mpk(s.k,s.A,s.alpha);
+    const discounted=s.beta*product;
+
+    $("#thMU").textContent=fmt(mu,4);
+    $("#thMPK").textContent=fmt(product,4);
+    $("#thReturn").textContent=fmt(discounted,4);
+
+    const corner=s.c<.08?"consumo próximo de zero":s.k<.08?"capital próximo de zero":"interior ilustrativo";
+    $("#thCorner").textContent=corner;
+
+    const theme=chartTheme();
+    const cGrid=linspace(Math.max(.002,s.epsilon),3,260);
+    const muGrid=cGrid.map(c=>1/c);
+
+    prettyPlot("thUtilityChart",[
+      {
+        x:cGrid,y:muGrid,type:"scatter",mode:"lines",name:"u′(c)",
+        fill:"tozeroy",fillcolor:rgba(theme.violet,.07),line:{color:theme.violet}
+      },
+      {
+        x:[s.c],y:[mu],type:"scatter",mode:"markers",name:"c avaliado",
+        marker:{size:11,color:theme.rose}
+      }
+    ],plotLayout("Consumo, c","Utilidade marginal, 1/c",{
+      yaxis:{...plotLayout("","").yaxis,type:"log",title:{text:"1/c — escala log"}}
+    }));
+
+    const kGrid=linspace(Math.max(.002,s.epsilon),3,260);
+    const mpkGrid=kGrid.map(k=>mpk(k,s.A,s.alpha));
+
+    prettyPlot("thTechnologyChart",[
+      {
+        x:kGrid,y:mpkGrid,type:"scatter",mode:"lines",name:"F′(k)",
+        fill:"tozeroy",fillcolor:rgba(theme.teal,.07),line:{color:theme.teal}
+      },
+      {
+        x:[s.k],y:[product],type:"scatter",mode:"markers",name:"k′ avaliado",
+        marker:{size:11,color:theme.rose}
+      }
+    ],plotLayout("Capital, k","Produto marginal",{
+      yaxis:{...plotLayout("","").yaxis,type:"log",title:{text:"F′(k) — escala log"}}
+    }));
+  }
+
+  /* ============================================================
+     2. LAGRANGEANO
+  ============================================================ */
+
+  function renderLagrangian(){
+    const s=state.lagrangian;
+
+    $("#sidebar").innerHTML=String.raw`
+      <h2 class="sidebar-title">Montagem do Lagrangeano</h2>
+      <p class="sidebar-subtitle">Compare convenções para o multiplicador e veja como cada restrição entra no somatório.</p>
+
+      ${slider("lagBeta","Fator de desconto",s.beta,.5,.995,.005,"Multiplica utilidade e restrição na convenção corrente.",MATH.beta)}
+      ${slider("lagA","Produtividade",s.A,.4,2.2,.05,"Define o produto em cada data.",MATH.A)}
+      ${slider("lagAlpha","Elasticidade",s.alpha,.08,.92,.01,"Controla a produção.",MATH.alpha)}
+      ${slider("lagC0","Consumo em t",s.c0,.08,2.5,.02,"Primeiro termo do exemplo.","c_t")}
+      ${slider("lagC1","Consumo em t+1",s.c1,.08,2.5,.02,"Segundo termo do exemplo.","c_{t+1}")}
+      ${slider("lagK0","Capital kₜ",s.k0,.05,2.5,.02,"Estado atual.","k_t")}
+      ${slider("lagK1","Capital kₜ₊₁",s.k1,.02,2.5,.02,"Escolha que liga os dois períodos.","k_{t+1}")}
+      ${slider("lagK2","Capital kₜ₊₂",s.k2,.02,2.5,.02,"Escolha do período seguinte.","k_{t+2}")}
+
+      <div class="control">
+        <div class="control-head"><span>Convenção do multiplicador</span></div>
+        <select id="lagConvention">
+          <option value="current" ${s.convention==="current"?"selected":""}>Unidades correntes</option>
+          <option value="present" ${s.convention==="present"?"selected":""}>Valor presente no instante zero</option>
+        </select>
+        <small>As duas convenções são equivalentes se usadas consistentemente.</small>
+      </div>`;
+
+    $("#content").innerHTML=String.raw`
+      <section class="hero">
+        <article class="card">
+          <div class="eyebrow">Passo 1</div>
+          <h2>Um multiplicador para cada restrição de viabilidade</h2>
+          <div class="formula-box" id="lagMainFormula"></div>
+          <p class="muted">A convenção escolhida determina onde aparece βᵗ, mas não altera a Euler final.</p>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Preço-sombra</div>
+          <div class="insight"><strong>λₜ:</strong> valor marginal de uma unidade adicional de recurso em t.</div>
+          <div class="insight"><strong>Unidades correntes:</strong> a interpretação é estacionária ao longo do tempo.</div>
+          <div class="insight warn"><strong>Consistência:</strong> trocar de convenção no meio da conta desloca fatores β indevidamente.</div>
+        </article>
+      </section>
+
+      <section class="metrics">
+        ${metric("Recurso líquido em t","lagSlack0")}
+        ${metric("Recurso líquido em t+1","lagSlack1")}
+        ${metric("Peso βᵗ relativo","lagWeight0")}
+        ${metric("Peso βᵗ⁺¹ relativo","lagWeight1")}
+      </section>
+
+      <section class="card">
+        <div class="eyebrow">Dois termos consecutivos</div>
+        <h2>Expansão local do somatório</h2>
+        <p class="muted">Em vez de fragmentar a expressão, isolamos os dois blocos completos conectados por <span data-tex="k_{t+1}" data-display="false"></span>.</p>
+
+        <div class="local-expansion">
+          <article class="period-panel current">
+            <div class="period-head">
+              <span class="period-index">Período t</span>
+              <span class="period-role">custo corrente</span>
+            </div>
+            <div class="period-equation" id="lagLocalT"></div>
+            <div class="term-legend">
+              <span class="term-tag">utilidade corrente</span>
+              <span class="term-tag shadow">restrição valorizada por λₜ</span>
+            </div>
+            <div class="period-evaluation">Restrição avaliada: <strong id="lagG0Inline">—</strong></div>
+          </article>
+
+          <div class="bridge-panel">
+            <div class="bridge-caption">variável de ligação</div>
+            <div class="bridge-symbol" data-tex="k_{t+1}" data-display="false"></div>
+            <div class="bridge-flow"><strong>−1</strong> unidade de recurso em t</div>
+            <div class="bridge-line"></div>
+            <div class="bridge-flow"><strong>F′(kₜ₊₁)</strong> unidades de produto em t+1</div>
+          </div>
+
+          <article class="period-panel future">
+            <div class="period-head">
+              <span class="period-index">Período t+1</span>
+              <span class="period-role">benefício futuro</span>
+            </div>
+            <div class="period-equation" id="lagLocalTp1"></div>
+            <div class="term-legend">
+              <span class="term-tag">utilidade futura</span>
+              <span class="term-tag shadow">produção valorizada por λₜ₊₁</span>
+            </div>
+            <div class="period-evaluation">Restrição avaliada: <strong id="lagG1Inline">—</strong></div>
+          </article>
+        </div>
+
+        <div class="local-sum-formula" id="lagLocalSum"></div>
+      </section>
+
+      <section class="chart-grid">
+        <article class="card chart-card">
+          <div class="eyebrow">Contribuições ao Lagrangeano</div>
+          <h2>Utilidade e termo de restrição</h2>
+          <div id="lagTermsChart" class="chart tall"></div>
+          <p class="chart-note">Os valores usam λₜ = 1/cₜ apenas para visualizar a escala dos componentes.</p>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Duas convenções</div>
+          <h2>Mesmo conteúdo, unidades diferentes</h2>
+          <table class="compare-table">
+            <thead><tr><th>Convenção</th><th>Lagrangeano</th><th>CPO em cₜ</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Corrente</td>
+                <td><span data-tex="\beta^t[\ln c_t+\lambda_t g_t]" data-display="false"></span></td>
+                <td><span data-tex="\lambda_t=1/c_t" data-display="false"></span></td>
+              </tr>
+              <tr>
+                <td>Valor presente</td>
+                <td><span data-tex="\beta^t\ln c_t+\mu_t g_t" data-display="false"></span></td>
+                <td><span data-tex="\mu_t=\beta^t/c_t" data-display="false"></span></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="insight bad" style="margin-top:12px"><strong>Erro comum:</strong> escrever o Lagrangeano na convenção de valor presente e depois usar λₜ = 1/cₜ como se estivesse na convenção corrente.</div>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Restrição padrão</div>
+          <h2>Orientação do multiplicador</h2>
+          <div class="formula-box" data-tex="g_t:=Ak_t^\alpha-c_t-k_{t+1}=0"></div>
+          <div class="topic-grid">
+            <div class="topic-box"><strong>Produto</strong><p>Entra com sinal positivo porque cria recursos.</p></div>
+            <div class="topic-box"><strong>Consumo</strong><p>Entra com sinal negativo porque usa recursos.</p></div>
+            <div class="topic-box"><strong>Capital futuro</strong><p>Entra com sinal negativo hoje, mas produz amanhã.</p></div>
+          </div>
+        </article>
+      </section>
+
+      <footer>A montagem correta já antecipa os sinais das condições de primeira ordem.</footer>`;
+
+    renderAllMath();
+
+    bindRange("lagBeta",s,"beta",updateLagrangian);
+    bindRange("lagA",s,"A",updateLagrangian);
+    bindRange("lagAlpha",s,"alpha",updateLagrangian);
+    bindRange("lagC0",s,"c0",updateLagrangian);
+    bindRange("lagC1",s,"c1",updateLagrangian);
+    bindRange("lagK0",s,"k0",updateLagrangian);
+    bindRange("lagK1",s,"k1",updateLagrangian);
+    bindRange("lagK2",s,"k2",updateLagrangian);
+
+    $("#lagConvention").addEventListener("change",event=>{
+      s.convention=event.target.value;
+      updateLagrangian();
+    });
+
+    updateLagrangian();
+  }
+
+  function updateLagrangian(){
+    const s=state.lagrangian;
+    const g0=s.A*Math.pow(s.k0,s.alpha)-s.c0-s.k1;
+    const g1=s.A*Math.pow(s.k1,s.alpha)-s.c1-s.k2;
+
+    const formula=s.convention==="current"
+      ?String.raw`\mathcal{L}=\sum_{t=0}^{\infty}\beta^t\left[\ln c_t+\lambda_t\big(Ak_t^\alpha-c_t-k_{t+1}\big)\right]`
+      :String.raw`\mathcal{L}=\sum_{t=0}^{\infty}\left[\beta^t\ln c_t+\mu_t\big(Ak_t^\alpha-c_t-k_{t+1}\big)\right]`;
+
+    tex($("#lagMainFormula"),formula);
+
+    $("#lagSlack0").textContent=fmt(g0,4);
+    $("#lagSlack1").textContent=fmt(g1,4);
+    $("#lagWeight0").textContent="1";
+    $("#lagWeight1").textContent=fmt(s.beta,4);
+
+    const localT=s.convention==="current"
+      ?String.raw`\beta^t\Big[\ln c_t+\lambda_t\big(Ak_t^\alpha-c_t-k_{t+1}\big)\Big]`
+      :String.raw`\beta^t\ln c_t+\mu_t\big(Ak_t^\alpha-c_t-k_{t+1}\big)`;
+
+    const localTp1=s.convention==="current"
+      ?String.raw`\beta^{t+1}\Big[\ln c_{t+1}+\lambda_{t+1}\big(Ak_{t+1}^\alpha-c_{t+1}-k_{t+2}\big)\Big]`
+      :String.raw`\beta^{t+1}\ln c_{t+1}+\mu_{t+1}\big(Ak_{t+1}^\alpha-c_{t+1}-k_{t+2}\big)`;
+
+    const localSum=String.raw`\mathcal L\;\supset\;${localT}\;+\;${localTp1}`;
+
+    tex($("#lagLocalT"),localT);
+    tex($("#lagLocalTp1"),localTp1);
+    tex($("#lagLocalSum"),localSum);
+    $("#lagG0Inline").textContent=`gₜ = ${fmt(g0,4)}`;
+    $("#lagG1Inline").textContent=`gₜ₊₁ = ${fmt(g1,4)}`;
+
+    const theme=chartTheme();
+    const lambda0=1/s.c0;
+    const lambda1=1/s.c1;
+
+    const utilityTerms=[Math.log(s.c0),s.beta*Math.log(s.c1)];
+    const constraintTerms=[
+      lambda0*g0,
+      s.beta*lambda1*g1
+    ];
+
+    prettyPlot("lagTermsChart",[
+      {
+        x:["t","t+1"],y:utilityTerms,type:"bar",name:"Utilidade",
+        marker:{color:theme.blue}
+      },
+      {
+        x:["t","t+1"],y:constraintTerms,type:"bar",name:"Restrição ponderada",
+        marker:{color:theme.teal}
+      }
+    ],plotLayout("Período","Contribuição",{
+      barmode:"group",hovermode:"closest",bargap:.35
+    }));
+  }
+
+  /* ============================================================
+     3. CPOs
+  ============================================================ */
+
+  function renderFOCs(){
+    const s=state.focs;
+
+    $("#sidebar").innerHTML=String.raw`
+      <h2 class="sidebar-title">CPOs e dois períodos</h2>
+      <p class="sidebar-subtitle">Rastreie cada aparição de cₜ e kₜ₊₁ antes de derivar.</p>
+
+      ${slider("focBeta","Fator de desconto",s.beta,.5,.995,.005,"Multiplica o benefício marginal futuro.",MATH.beta)}
+      ${slider("focA","Produtividade",s.A,.4,2.2,.05,"Afeta o produto marginal.",MATH.A)}
+      ${slider("focAlpha","Elasticidade",s.alpha,.08,.92,.01,"Determina F′(kₜ₊₁).",MATH.alpha)}
+      ${slider("focCt","Consumo em t",s.ct,.08,2.5,.02,"Determina λₜ pela CPO em consumo.",MATH.c)}
+      ${slider("focCtp1","Consumo em t+1",s.ctp1,.08,2.5,.02,"Determina λₜ₊₁.",MATH.cp)}
+      ${slider("focKp","Capital escolhido em t",s.kp,.02,2.5,.02,"Aparece em duas restrições consecutivas.",MATH.k)}
+
+      <div class="control">
+        <div class="control-head"><span>Mostrar os dois termos</span></div>
+        <select id="focShowBoth">
+          <option value="yes" ${s.showBoth?"selected":""}>Sim</option>
+          <option value="no" ${!s.showBoth?"selected":""}>Ocultar custo de hoje</option>
+        </select>
+        <small>Ocultar um termo reproduz o erro clássico de prova.</small>
+      </div>`;
+
+    $("#content").innerHTML=String.raw`
+      <section class="hero">
+        <article class="card">
+          <div class="eyebrow">Passo 2</div>
+          <h2>CPO em consumo</h2>
+          <div class="formula-box" data-tex="\frac{\partial\mathcal{L}}{\partial c_t}=\beta^t\left(\frac{1}{c_t}-\lambda_t\right)=0\quad\Longrightarrow\quad\lambda_t=\frac{1}{c_t}"></div>
+          <p class="muted">O multiplicador é a utilidade marginal de uma unidade adicional de recurso corrente.</p>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Passo 3</div>
+          <div class="insight"><strong>Em t:</strong> kₜ₊₁ usa uma unidade de recurso hoje.</div>
+          <div class="insight"><strong>Em t+1:</strong> kₜ₊₁ gera F′(kₜ₊₁) unidades de produto.</div>
+          <div class="insight warn"><strong>Derivada total:</strong> soma custo presente e benefício futuro.</div>
+        </article>
+      </section>
+
+      <section class="metrics">
+        ${metric("λₜ = 1/cₜ","focLambdaT")}
+        ${metric("λₜ₊₁ = 1/cₜ₊₁","focLambdaP")}
+        ${metric("Custo marginal presente","focCost")}
+        ${metric("Benefício marginal futuro","focBenefit")}
+      </section>
+
+      <section class="card">
+        <div class="eyebrow">Onde kₜ₊₁ aparece?</div>
+        <h2>Uma variável, dois efeitos marginais consecutivos</h2>
+        <p class="muted">Derivamos os dois blocos completos e só então somamos. Isso evita perder o sinal negativo do custo corrente.</p>
+
+        <div class="derivation-rail">
+          <article class="derivation-step cost">
+            <div class="step-kicker"><span class="step-number">1</span> efeito em t</div>
+            <div class="step-formula" data-tex="\begin{aligned}\frac{\partial}{\partial k_{t+1}}&\Big[\beta^t\lambda_t(-k_{t+1})\Big]\\[2pt]&=-\beta^t\lambda_t\end{aligned}"></div>
+            <div class="step-value">Após dividir por βᵗ:<strong id="focCostInline">—</strong></div>
+          </article>
+
+          <div class="rail-connector">+</div>
+
+          <article class="derivation-step benefit">
+            <div class="step-kicker"><span class="step-number">2</span> efeito em t+1</div>
+            <div class="step-formula" data-tex="\begin{aligned}\frac{\partial}{\partial k_{t+1}}&\Big[\beta^{t+1}\lambda_{t+1}Ak_{t+1}^{\alpha}\Big]\\[2pt]&=\beta^{t+1}\lambda_{t+1}F'(k_{t+1})\end{aligned}"></div>
+            <div class="step-value">Após dividir por βᵗ:<strong id="focBenefitInline">—</strong></div>
+          </article>
+
+          <div class="rail-connector">=</div>
+
+          <article class="derivation-step result">
+            <div class="step-kicker"><span class="step-number">3</span> estacionariedade</div>
+            <div class="step-formula" data-tex="-\lambda_t+\beta\lambda_{t+1}F'(k_{t+1})=0"></div>
+            <div class="step-value">Residual atual:<strong id="focResidualInline">—</strong></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="eyebrow">Interpretação vetorial</div>
+        <h2>A Euler nasce do fechamento de um polígono de vetores marginais</h2>
+        <p class="muted">Nas coordenadas das escolhas <span data-tex="(c_t,k_{t+1})" data-display="false"></span>, a estacionariedade exige que três forças marginais somem zero.</p>
+
+        <div class="math-line vector-equation" data-tex="\underbrace{\left(\frac{1}{c_t},0\right)}_{\nabla u_t}+\underbrace{\lambda_t(-1,-1)}_{\lambda_t\nabla g_t}+\underbrace{\left(0,\beta\lambda_{t+1}F'(k_{t+1})\right)}_{\text{continuação}}=(0,0)"></div>
+
+        <div class="vector-explainer">
+          <div id="focVectorChart" class="chart tall"></div>
+
+          <div class="vector-side">
+            <div class="component-list">
+              <div class="component-row">
+                <div class="component-label">componente cₜ</div>
+                <div class="component-math" data-tex="\frac{1}{c_t}-\lambda_t=0\;\Longrightarrow\;\lambda_t=\frac{1}{c_t}" data-display="false"></div>
+              </div>
+              <div class="component-row">
+                <div class="component-label">componente kₜ₊₁</div>
+                <div class="component-math" data-tex="-\lambda_t+\beta\lambda_{t+1}F'(k_{t+1})=0" data-display="false"></div>
+              </div>
+              <div class="component-row">
+                <div class="component-label">eliminar λ</div>
+                <div class="component-math" data-tex="\frac{1}{c_t}=\beta\frac{1}{c_{t+1}}F'(k_{t+1})" data-display="false"></div>
+              </div>
+            </div>
+
+            <div class="vector-bridge"><strong>Gradiente + restrição + continuação</strong> → preços-sombra → equação de Euler</div>
+            <div class="status" id="focVectorStatus"><span class="status-dot"></span><span id="focVectorStatusText">—</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="chart-grid">
+        <article class="card chart-card">
+          <div class="eyebrow">CPO em kₜ₊₁</div>
+          <h2>Custo e benefício em unidades de utilidade</h2>
+          <div id="focTermsChart" class="chart tall"></div>
+          <p class="chart-note">No ótimo, a soma algébrica dos dois termos é zero.</p>
+        </article>
+
+        <article class="card chart-card">
+          <div class="eyebrow">Derivada total</div>
+          <h2>Residual da CPO</h2>
+          <div id="focResidualChart" class="chart tall"></div>
+          <p class="chart-note">A linha zero marca a indiferença marginal entre consumir e poupar.</p>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Forma em preços-sombra</div>
+          <h2>Núcleo econômico antes de eliminar λ</h2>
+          <div class="formula-box" data-tex="\lambda_t=\beta\,\lambda_{t+1}\,\alpha Ak_{t+1}^{\alpha-1}"></div>
+          <div class="topic-grid">
+            <div class="topic-box"><strong>λₜ</strong><p>Valor de uma unidade de recurso hoje.</p></div>
+            <div class="topic-box"><strong>F′(kₜ₊₁)</strong><p>Conversão física entre recurso hoje e produto amanhã.</p></div>
+            <div class="topic-box"><strong>βλₜ₊₁</strong><p>Valor presente da utilidade marginal futura.</p></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Armadilha do sinal</div>
+          <h2>O que acontece ao esquecer o termo de t?</h2>
+          <div class="formula-box" id="focErrorFormula"></div>
+          <div class="status" id="focStatus">
+            <span class="status-dot"></span>
+            <span id="focStatusText">—</span>
+          </div>
+        </article>
+      </section>
+
+      <footer>A CPO em kₜ₊₁ exige olhar dois termos do somatório, não apenas o período futuro.</footer>`;
+
+    renderAllMath();
+
+    bindRange("focBeta",s,"beta",updateFOCs);
+    bindRange("focA",s,"A",updateFOCs);
+    bindRange("focAlpha",s,"alpha",updateFOCs);
+    bindRange("focCt",s,"ct",updateFOCs);
+    bindRange("focCtp1",s,"ctp1",updateFOCs);
+    bindRange("focKp",s,"kp",updateFOCs);
+
+    $("#focShowBoth").addEventListener("change",event=>{
+      s.showBoth=event.target.value==="yes";
+      updateFOCs();
+    });
+
+    updateFOCs();
+  }
+
+  function updateFOCs(){
+    const s=state.focs;
+    const lambdaT=1/s.ct;
+    const lambdaP=1/s.ctp1;
+    const cost=-lambdaT;
+    const benefit=s.beta*lambdaP*mpk(s.kp,s.A,s.alpha);
+    const residual=(s.showBoth?cost:0)+benefit;
+
+    $("#focLambdaT").textContent=fmt(lambdaT,4);
+    $("#focLambdaP").textContent=fmt(lambdaP,4);
+    $("#focCost").textContent=fmt(cost,4);
+    $("#focBenefit").textContent=fmt(benefit,4);
+
+    tex(
+      $("#focErrorFormula"),
+      s.showBoth
+        ?String.raw`-\lambda_t+\beta\lambda_{t+1}F'(k_{t+1})=0`
+        :String.raw`\color{#d95672}{\beta\lambda_{t+1}F'(k_{t+1})=0\quad\text{(termo presente perdido)}}`
+    );
+
+    $("#focStatus").classList.toggle("bad",!s.showBoth);
+    $("#focStatusText").textContent=s.showBoth
+      ?"A derivada inclui corretamente custo presente e benefício futuro."
+      :"A derivada está incompleta: aparece apenas o benefício de poupar.";
+
+    $("#focCostInline").textContent=s.showBoth?fmt(cost,5):"omitido";
+    $("#focBenefitInline").textContent=fmt(benefit,5);
+    $("#focResidualInline").textContent=fmt(residual,6);
+
+    const theme=chartTheme();
+
+    const utilityVector={x:lambdaT,y:0};
+    const constraintVector=s.showBoth?{x:-lambdaT,y:-lambdaT}:{x:0,y:0};
+    const continuationVector={x:0,y:benefit};
+    const p0={x:0,y:0};
+    const p1={x:utilityVector.x,y:utilityVector.y};
+    const p2={x:p1.x+constraintVector.x,y:p1.y+constraintVector.y};
+    const p3={x:p2.x+continuationVector.x,y:p2.y+continuationVector.y};
+    const vectorResidual=Math.hypot(p3.x,p3.y);
+    const vectorTol=.02*Math.max(1,lambdaT,benefit);
+    const vectorBalanced=s.showBoth&&vectorResidual<=vectorTol;
+
+    $("#focVectorStatus").classList.toggle("bad",!vectorBalanced);
+    $("#focVectorStatusText").textContent=!s.showBoth
+      ?"Sem o vetor da restrição corrente, o polígono não pode fechar: o custo de poupar desapareceu."
+      :vectorBalanced
+        ?"Os vetores fecham aproximadamente no zero: as duas CPOs e a Euler são compatíveis."
+        :"O polígono não fecha. O segmento tracejado é o residual da estacionariedade.";
+
+    const vectorScale=1.25*Math.max(1,Math.abs(lambdaT),Math.abs(benefit),Math.abs(p3.x),Math.abs(p3.y));
+    const vectorAnnotations=[
+      {x:p1.x,y:p1.y,ax:p0.x,ay:p0.y,xref:"x",yref:"y",axref:"x",ayref:"y",showarrow:true,arrowhead:3,arrowsize:1.15,arrowwidth:2.4,arrowcolor:theme.blue,text:""},
+      ...(s.showBoth?[{x:p2.x,y:p2.y,ax:p1.x,ay:p1.y,xref:"x",yref:"y",axref:"x",ayref:"y",showarrow:true,arrowhead:3,arrowsize:1.15,arrowwidth:2.4,arrowcolor:theme.rose,text:""}]:[]),
+      {x:p3.x,y:p3.y,ax:p2.x,ay:p2.y,xref:"x",yref:"y",axref:"x",ayref:"y",showarrow:true,arrowhead:3,arrowsize:1.15,arrowwidth:2.4,arrowcolor:theme.teal,text:""},
+      ...(!vectorBalanced?[{x:0,y:0,ax:p3.x,ay:p3.y,xref:"x",yref:"y",axref:"x",ayref:"y",showarrow:true,arrowhead:3,arrowsize:1.05,arrowwidth:1.8,arrowcolor:theme.amber,text:"residual",font:{color:theme.amber,size:11},bgcolor:rgba(theme.panel,.85),borderpad:4}]:[])
+    ];
+
+    const vectorTraces=[
+      {x:[p0.x,p1.x],y:[p0.y,p1.y],type:"scatter",mode:"lines+markers",name:"∇uₜ",line:{color:theme.blue,width:3},marker:{size:5,color:theme.blue},hovertemplate:"<b>Gradiente da utilidade</b><br>(1/cₜ, 0)<extra></extra>"},
+      ...(s.showBoth?[{x:[p1.x,p2.x],y:[p1.y,p2.y],type:"scatter",mode:"lines+markers",name:"λₜ∇gₜ",line:{color:theme.rose,width:3},marker:{size:5,color:theme.rose},hovertemplate:"<b>Restrição corrente</b><br>λₜ(−1,−1)<extra></extra>"}]:[]),
+      {x:[p2.x,p3.x],y:[p2.y,p3.y],type:"scatter",mode:"lines+markers",name:"continuação",line:{color:theme.teal,width:3},marker:{size:5,color:theme.teal},hovertemplate:"<b>Valor marginal futuro</b><br>(0, βλₜ₊₁F′)<extra></extra>"},
+      ...(!vectorBalanced?[{x:[p3.x,0],y:[p3.y,0],type:"scatter",mode:"lines",name:"residual",line:{color:theme.amber,width:2,dash:"dash"},hovertemplate:"<b>Residual</b><br>norma = "+fmt(vectorResidual,5)+"<extra></extra>"}]:[]),
+      {x:[0],y:[0],type:"scatter",mode:"markers",name:"origem",showlegend:false,marker:{size:9,color:theme.strong}}
+    ];
+
+    prettyPlot("focVectorChart",vectorTraces,plotLayout("componente em cₜ","componente em kₜ₊₁",{
+      hovermode:"closest",annotations:vectorAnnotations,
+      xaxis:{...plotLayout("","").xaxis,range:[-vectorScale,vectorScale],zeroline:true,title:{text:"componente em cₜ"}},
+      yaxis:{...plotLayout("","").yaxis,range:[-vectorScale,vectorScale],zeroline:true,scaleanchor:"x",scaleratio:1,title:{text:"componente em kₜ₊₁"}},
+      legend:{orientation:"h",y:-.2,x:0}
+    }));
+
+    prettyPlot("focTermsChart",[
+      {
+        x:["Custo em t","Benefício em t+1"],
+        y:[s.showBoth?cost:0,benefit],
+        type:"bar",
+        name:"Termos da CPO",
+        marker:{color:[theme.rose,theme.teal]},
+        text:[s.showBoth?fmt(cost,3):"omitido",fmt(benefit,3)],
+        textposition:"outside",
+        cliponaxis:false
+      }
+    ],plotLayout("Termo","Valor marginal",{
+      hovermode:"closest",bargap:.5
+    }));
+
+    const kGrid=linspace(.02,2.5,260);
+    const residualGrid=kGrid.map(k=>(s.showBoth?cost:0)+s.beta*lambdaP*mpk(k,s.A,s.alpha));
+
+    prettyPlot("focResidualChart",[
+      {
+        x:kGrid,y:residualGrid,type:"scatter",mode:"lines",name:"∂L/∂kₜ₊₁",
+        fill:"tozeroy",fillcolor:rgba(theme.blue,.06),line:{color:theme.blue}
+      },
+      {
+        x:[.02,2.5],y:[0,0],type:"scatter",mode:"lines",name:"CPO = 0",
+        line:{color:theme.teal,dash:"dash"}
+      },
+      {
+        x:[s.kp],y:[residual],type:"scatter",mode:"markers",name:"kₜ₊₁ atual",
+        marker:{size:11,color:theme.rose}
+      }
+    ],plotLayout("Capital futuro, kₜ₊₁","Residual da CPO"));
+  }
+
+  /* ============================================================
+     4. EULER
+  ============================================================ */
+
+  function renderEuler(){
+    const s=state.euler;
+
+    $("#sidebar").innerHTML=String.raw`
+      <h2 class="sidebar-title">Eliminar λ e obter Euler</h2>
+      <p class="sidebar-subtitle">Substitua os preços-sombra por utilidades marginais e teste a arbitragem.</p>
+
+      ${slider("euBeta","Fator de desconto",s.beta,.5,.995,.005,"Desconta o benefício futuro.",MATH.beta)}
+      ${slider("euA","Produtividade",s.A,.4,2.2,.05,"Afeta o retorno do capital.",MATH.A)}
+      ${slider("euAlpha","Elasticidade",s.alpha,.08,.92,.01,"Controla o produto marginal.",MATH.alpha)}
+      ${slider("euCt","Consumo atual",s.ct,.08,2.5,.02,"Determina o custo marginal presente.",MATH.c)}
+      ${slider("euCtp1","Consumo futuro",s.ctp1,.08,2.5,.02,"Determina a utilidade marginal futura.",MATH.cp)}
+      ${slider("euKp","Capital futuro",s.kp,.02,2.5,.02,"Determina o retorno marginal.",MATH.k)}
+      ${slider("euKMax","Capital máximo exibido",s.kMax,.6,5,.05,"Define a janela dos gráficos.","k_{\max}")}
+
+      <div class="control">
+        <div class="control-head"><span>Presets</span></div>
+        <div class="preset-grid">
+          <button class="preset" data-eu-preset="balanced">Euler satisfeita</button>
+          <button class="preset" data-eu-preset="save">Poupar mais</button>
+          <button class="preset" data-eu-preset="consume">Consumir mais</button>
+          <button class="preset" data-eu-preset="steady">Estado estacionário</button>
+        </div>
+      </div>`;
+
+    $("#content").innerHTML=String.raw`
+      <section class="hero">
+        <article class="card">
+          <div class="eyebrow">Passo 4</div>
+          <h2>Substituição dos multiplicadores</h2>
+          <div class="formula-box" data-tex="\begin{aligned}\lambda_t&=\frac{1}{c_t},\qquad \lambda_{t+1}=\frac{1}{c_{t+1}},\\[3pt]\frac{1}{c_t}&=\beta\,\frac{1}{c_{t+1}}\,\alpha Ak_{t+1}^{\alpha-1}.\end{aligned}"></div>
+          <p class="muted">O multiplicador desaparece, mas sua interpretação econômica permanece na igualdade.</p>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Leitura operacional</div>
+          <div class="insight"><strong>Lado esquerdo:</strong> utilidade marginal perdida ao consumir uma unidade a menos hoje.</div>
+          <div class="insight"><strong>Lado direito:</strong> utilidade marginal futura gerada pelo retorno dessa unidade.</div>
+          <div class="insight warn"><strong>Igualdade:</strong> ponto de indiferença marginal.</div>
+        </article>
+      </section>
+
+      <section class="metrics">
+        ${metric("Custo marginal presente","euLHS")}
+        ${metric("Benefício descontado","euRHS")}
+        ${metric("Residual LHS − RHS","euResidual")}
+        ${metric("Crescimento implícito","euGrowth")}
+      </section>
+
+      <section class="chart-grid">
+        <article class="card chart-card">
+          <div class="eyebrow">Arbitragem</div>
+          <h2>Custo presente e benefício futuro</h2>
+          <div id="euArbitrageChart" class="chart tall"></div>
+          <p class="chart-note">As barras coincidem quando a Euler é satisfeita.</p>
+        </article>
+
+        <article class="card chart-card">
+          <div class="eyebrow">Razão de crescimento</div>
+          <h2>βF′(k) e a linha unitária</h2>
+          <div id="euGrowthChart" class="chart tall"></div>
+          <p class="chart-note">A interseção com um determina o capital de estado estacionário.</p>
+        </article>
+
+        <article class="card chart-card">
+          <div class="eyebrow">Residual da Euler</div>
+          <h2>Qual consumo futuro fecha a igualdade?</h2>
+          <div id="euResidualChart" class="chart"></div>
+          <p class="chart-note">O zero do residual fornece cₜ₊₁ compatível com os demais valores.</p>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Diagnóstico atual</div>
+          <h2>Em qual direção ajustar?</h2>
+          <div class="formula-box" id="euDiagnosticFormula"></div>
+          <div class="status" id="euStatus">
+            <span class="status-dot"></span>
+            <span id="euStatusText">—</span>
+          </div>
+          <div class="insight bad" style="margin-top:12px"><strong>Importante:</strong> o diagnóstico é marginal e local. Uma trajetória ótima ainda precisa satisfazer viabilidade e transversalidade.</div>
+        </article>
+      </section>
+
+      <section class="card">
+        <div class="eyebrow">Estado estacionário</div>
+        <h2>Regra modificada de Ouro</h2>
+        <div class="equation-strip">
+          <div class="equation" data-tex="c_{t+1}=c_t"></div>
+          <div class="equation" data-tex="\beta\alpha A(k^{ss})^{\alpha-1}=1"></div>
+          <div class="equation" data-tex="k^{ss}=(\alpha\beta A)^{1/(1-\alpha)}"></div>
+        </div>
+      </section>
+
+      <footer>A Euler transforma a igualdade de preços-sombra em uma relação entre consumo e retorno.</footer>`;
+
+    renderAllMath();
+
+    bindRange("euBeta",s,"beta",updateEuler);
+    bindRange("euA",s,"A",updateEuler);
+    bindRange("euAlpha",s,"alpha",updateEuler);
+    bindRange("euCt",s,"ct",updateEuler);
+    bindRange("euCtp1",s,"ctp1",updateEuler);
+    bindRange("euKp",s,"kp",updateEuler);
+    bindRange("euKMax",s,"kMax",updateEuler);
+
+    $$("[data-eu-preset]").forEach(button=>{
+      button.addEventListener("click",()=>{
+        const preset=button.dataset.euPreset;
+
+        if(preset==="balanced"){
+          const rhsGrowth=s.beta*mpk(s.kp,s.A,s.alpha);
+          s.ctp1=s.ct*rhsGrowth;
+        }
+
+        if(preset==="save"){
+          s.ctp1=Math.max(.08,.65*s.ct*s.beta*mpk(s.kp,s.A,s.alpha));
+        }
+
+        if(preset==="consume"){
+          s.ctp1=1.45*s.ct*s.beta*mpk(s.kp,s.A,s.alpha);
+        }
+
+        if(preset==="steady"){
+          s.kp=Math.pow(s.alpha*s.beta*s.A,1/(1-s.alpha));
+          s.ctp1=s.ct;
+        }
+
+        renderEuler();
+      });
+    });
+
+    updateEuler();
+  }
+
+  function updateEuler(){
+    const s=state.euler;
+    const lhs=1/s.ct;
+    const rhs=s.beta*(1/s.ctp1)*mpk(s.kp,s.A,s.alpha);
+    const residual=lhs-rhs;
+    const growth=s.beta*mpk(s.kp,s.A,s.alpha);
+    const impliedCtp1=s.ct*growth;
+    const kss=Math.pow(s.alpha*s.beta*s.A,1/(1-s.alpha));
+
+    $("#euLHS").textContent=fmt(lhs,5);
+    $("#euRHS").textContent=fmt(rhs,5);
+    $("#euResidual").textContent=fmt(residual,6);
+    $("#euGrowth").textContent=fmt(growth,5);
+
+    const tolerance=.015*Math.max(1,Math.abs(lhs),Math.abs(rhs));
+    const balanced=Math.abs(residual)<=tolerance;
+
+    let message;
+    let formula;
+
+    if(balanced){
+      message="A arbitragem marginal está aproximadamente equilibrada.";
+      formula=String.raw`\frac{1}{c_t}\approx\beta\frac{1}{c_{t+1}}F'(k_{t+1})`;
+    }else if(rhs>lhs){
+      message="O benefício de poupar excede o custo: há incentivo marginal para elevar kₜ₊₁.";
+      formula=String.raw`\beta\frac{F'(k_{t+1})}{c_{t+1}}>\frac{1}{c_t}`;
+    }else{
+      message="O custo de poupar excede o benefício: há incentivo marginal para elevar consumo atual.";
+      formula=String.raw`\frac{1}{c_t}>\beta\frac{F'(k_{t+1})}{c_{t+1}}`;
+    }
+
+    tex($("#euDiagnosticFormula"),formula);
+    $("#euStatus").classList.toggle("bad",!balanced);
+    $("#euStatusText").textContent=message;
+
+    const theme=chartTheme();
+
+    prettyPlot("euArbitrageChart",[
+      {
+        x:["Custo presente","Benefício futuro"],
+        y:[lhs,rhs],
+        type:"bar",
+        name:"Margens",
+        marker:{color:[theme.rose,theme.teal]},
+        text:[fmt(lhs,3),fmt(rhs,3)],
+        textposition:"outside",
+        cliponaxis:false
+      }
+    ],plotLayout("Margem","Utilidade marginal",{
+      hovermode:"closest",bargap:.5
+    }));
+
+    const kGrid=linspace(.02,s.kMax,300);
+    const returnGrid=kGrid.map(k=>s.beta*mpk(k,s.A,s.alpha));
+
+    prettyPlot("euGrowthChart",[
+      {
+        x:kGrid,y:returnGrid,type:"scatter",mode:"lines",name:"βF′(k)",
+        fill:"tozeroy",fillcolor:rgba(theme.blue,.06),line:{color:theme.blue}
+      },
+      {
+        x:[.02,s.kMax],y:[1,1],type:"scatter",mode:"lines",name:"Unidade",
+        line:{color:theme.teal,dash:"dash"}
+      },
+      {
+        x:[kss],y:[1],type:"scatter",mode:"markers",name:"kˢˢ",
+        marker:{size:11,color:theme.rose}
+      }
+    ],plotLayout("Capital futuro, k","βF′(k)",{
+      annotations:[{
+        x:kss,y:1,text:"kˢˢ",showarrow:true,ax:28,ay:-28,
+        arrowcolor:theme.rose,font:{color:theme.rose,size:12}
+      }]
+    }));
+
+    const cFutureGrid=linspace(.08,Math.max(2.5,impliedCtp1*1.5),280);
+    const residualGrid=cFutureGrid.map(cFuture=>lhs-s.beta*(1/cFuture)*mpk(s.kp,s.A,s.alpha));
+
+    prettyPlot("euResidualChart",[
+      {
+        x:cFutureGrid,y:residualGrid,type:"scatter",mode:"lines",name:"Residual",
+        fill:"tozeroy",fillcolor:rgba(theme.violet,.06),line:{color:theme.violet}
+      },
+      {
+        x:[cFutureGrid[0],cFutureGrid.at(-1)],y:[0,0],type:"scatter",mode:"lines",name:"Euler",
+        line:{color:theme.teal,dash:"dash"}
+      },
+      {
+        x:[impliedCtp1],y:[0],type:"scatter",mode:"markers",name:"cₜ₊₁ implícito",
+        marker:{size:11,color:theme.rose}
+      }
+    ],plotLayout("Consumo futuro, cₜ₊₁","Residual LHS − RHS"));
+  }
+
+  /* ============================================================
+     5. EXTENSÕES
+  ============================================================ */
+
+  function renderExtensions(){
+    const s=state.extensions;
+
+    $("#sidebar").innerHTML=String.raw`
+      <h2 class="sidebar-title">Interpretação e extensões</h2>
+      <p class="sidebar-subtitle">Mude as primitivas e observe quais blocos da Euler são alterados.</p>
+
+      ${slider("exBeta","Fator de desconto",s.beta,.5,.995,.005,"Permanece como preço relativo intertemporal.",MATH.beta)}
+      ${slider("exA","Produtividade",s.A,.4,2.2,.05,"Afeta o retorno produtivo.",MATH.A)}
+      ${slider("exAlpha","Elasticidade",s.alpha,.08,.92,.01,"Controla o produto marginal.",MATH.alpha)}
+      ${slider("exSigma","Curvatura CRRA",s.sigma,.4,3,.05,"σ = 1 recupera o caso log.",MATH.sigma)}
+      ${slider("exDelta","Depreciação",s.delta,0,1,.01,"Capital sobrevivente entra no retorno bruto.",MATH.delta)}
+      ${slider("exWedge","Wedge tributário",s.wedge,0,.6,.01,"Reduz a parcela apropriável do produto marginal.",MATH.tau)}
+      ${slider("exKp","Capital futuro",s.kp,.02,2.5,.02,"Estado usado no retorno.",MATH.k)}
+      ${slider("exCt","Consumo atual",s.ct,.08,2.5,.02,"Base para o crescimento implícito.",MATH.c)}
+
+      <div class="control">
+        <div class="control-head"><span>Retorno futuro</span></div>
+        <select id="exExpected">
+          <option value="no" ${!s.expected?"selected":""}>Determinístico</option>
+          <option value="yes" ${s.expected?"selected":""}>Com expectativa condicional</option>
+        </select>
+        <small>A incerteza introduz Eₜ[·] sem mudar o esqueleto.</small>
+      </div>`;
+
+    $("#content").innerHTML=String.raw`
+      <section class="hero">
+        <article class="card">
+          <div class="eyebrow">Esqueleto invariante</div>
+          <h2>Utilidade marginal presente igual ao retorno descontado futuro</h2>
+          <div class="formula-box" id="exMainFormula"></div>
+          <p class="muted">As extensões alteram utilidade marginal, retorno bruto ou informação, mas preservam a arbitragem.</p>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Três blocos</div>
+          <div class="insight"><strong>Preferências:</strong> u′(c) determina como consumo vira valor marginal.</div>
+          <div class="insight"><strong>Tecnologia:</strong> retorno bruto converte capital hoje em recursos amanhã.</div>
+          <div class="insight warn"><strong>Instituições e risco:</strong> wedges e expectativas modificam o benefício apropriável.</div>
+        </article>
+      </section>
+
+      <section class="metrics">
+        ${metric("Elasticidade intertemporal","exEIS")}
+        ${metric("Retorno bruto","exGrossReturn")}
+        ${metric("Crescimento implícito","exGrowth")}
+        ${metric("Capital estacionário","exKSS")}
+      </section>
+
+      <section class="chart-grid">
+        <article class="card chart-card">
+          <div class="eyebrow">CRRA</div>
+          <h2>Crescimento do consumo para diferentes σ</h2>
+          <div id="exSigmaChart" class="chart tall"></div>
+          <p class="chart-note">Curvatura maior reduz a resposta do crescimento a uma mesma variação do retorno.</p>
+        </article>
+
+        <article class="card chart-card">
+          <div class="eyebrow">Retorno bruto</div>
+          <h2>Produção, sobrevivência e wedge</h2>
+          <div id="exReturnChart" class="chart tall"></div>
+          <p class="chart-note">Com δ &lt; 1, o capital sobrevivente adiciona 1−δ ao retorno bruto.</p>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Mapa das extensões</div>
+          <h2>Qual termo muda?</h2>
+          <table class="compare-table">
+            <thead><tr><th>Extensão</th><th>Euler</th><th>Bloco alterado</th></tr></thead>
+            <tbody>
+              <tr><td>CRRA σ ≠ 1</td><td><span data-tex="c_t^{-\sigma}=\beta c_{t+1}^{-\sigma}R_{t+1}" data-display="false"></span></td><td>Utilidade marginal.</td></tr>
+              <tr><td>δ &lt; 1</td><td><span data-tex="R_{t+1}=F'(k_{t+1})+1-\delta" data-display="false"></span></td><td>Retorno bruto.</td></tr>
+              <tr><td>Tributação</td><td><span data-tex="R_{t+1}=(1-\tau)F'(k_{t+1})+1-\delta" data-display="false"></span></td><td>Wedge no retorno.</td></tr>
+              <tr><td>Incerteza</td><td><span data-tex="u'(c_t)=\beta\mathbb{E}_t[u'(c_{t+1})R_{t+1}]" data-display="false"></span></td><td>Operador de expectativa.</td></tr>
+            </tbody>
+          </table>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Leitura como preços-sombra</div>
+          <h2>Ponte para a rota recursiva</h2>
+          <div class="equation-strip">
+            <div class="equation" data-tex="\lambda_t=u'(c_t)"></div>
+            <div class="equation" data-tex="\lambda_t=\beta\lambda_{t+1}R_{t+1}"></div>
+            <div class="equation" data-tex="\lambda_t=v'(k_t)\ \text{via envelope}"></div>
+          </div>
+          <div class="insight bad" style="margin-top:12px"><strong>Nuance:</strong> a igualdade λₜ = v′(kₜ) exige a conexão recursiva e um teorema de envelope; ela não é obtida apenas pela CPO em consumo.</div>
+        </article>
+      </section>
+
+      <section class="card">
+        <div class="eyebrow">Teste de fluência</div>
+        <h2>Reconheça o esqueleto em qualquer modelo</h2>
+        <div class="topic-grid">
+          <div class="topic-box"><strong>Custo presente</strong><p>Identifique u′(cₜ).</p></div>
+          <div class="topic-box"><strong>Benefício futuro</strong><p>Identifique u′(cₜ₊₁) multiplicada pelo retorno bruto.</p></div>
+          <div class="topic-box"><strong>Valor presente</strong><p>Aplique β e, se houver risco, a expectativa condicional.</p></div>
+        </div>
+      </section>
+
+      <footer>A forma muda; a arbitragem entre uma margem presente e uma margem futura permanece.</footer>`;
+
+    renderAllMath();
+
+    bindRange("exBeta",s,"beta",updateExtensions);
+    bindRange("exA",s,"A",updateExtensions);
+    bindRange("exAlpha",s,"alpha",updateExtensions);
+    bindRange("exSigma",s,"sigma",()=>{
+      if(Math.abs(s.sigma-1)<.026){
+        s.sigma=1;
+        $("#exSigma").value="1";
+        $("#exSigmaOut").textContent="1";
+      }
+      updateExtensions();
+    });
+    bindRange("exDelta",s,"delta",()=>{
+      if(s.delta>.995){
+        s.delta=1;
+        $("#exDelta").value="1";
+        $("#exDeltaOut").textContent="1";
+      }
+      updateExtensions();
+    });
+    bindRange("exWedge",s,"wedge",updateExtensions);
+    bindRange("exKp",s,"kp",updateExtensions);
+    bindRange("exCt",s,"ct",updateExtensions);
+
+    $("#exExpected").addEventListener("change",event=>{
+      s.expected=event.target.value==="yes";
+      updateExtensions();
+    });
+
+    updateExtensions();
+  }
+
+  function updateExtensions(){
+    const s=state.extensions;
+    const gross=(1-s.wedge)*mpk(s.kp,s.A,s.alpha)+(1-s.delta);
+    const growth=Math.pow(Math.max(1e-10,s.beta*gross),1/s.sigma);
+    const eis=1/s.sigma;
+
+    const effectiveScale=(1-s.wedge)*s.alpha*s.beta*s.A;
+    const denominator=1-s.beta*(1-s.delta);
+    const kss=denominator>0
+      ?Math.pow(Math.max(1e-12,effectiveScale/denominator),1/(1-s.alpha))
+      :Infinity;
+
+    $("#exEIS").textContent=fmt(eis,4);
+    $("#exGrossReturn").textContent=fmt(gross,4);
+    $("#exGrowth").textContent=fmt(growth,4);
+    $("#exKSS").textContent=Number.isFinite(kss)?fmt(kss,4):"—";
+
+    const expectation=s.expected?String.raw`\mathbb{E}_t\!\left[`:``;
+    const close=s.expected?String.raw`\right]`:``;
+
+    const formula=s.sigma===1
+      ?String.raw`\frac{1}{c_t}=\beta\,${expectation}\frac{1}{c_{t+1}}\left((1-\tau)\alpha Ak_{t+1}^{\alpha-1}+1-\delta\right)${close}`
+      :String.raw`c_t^{-\sigma}=\beta\,${expectation}c_{t+1}^{-\sigma}\left((1-\tau)\alpha Ak_{t+1}^{\alpha-1}+1-\delta\right)${close}`;
+
+    tex($("#exMainFormula"),formula);
+
+    const theme=chartTheme();
+    const returnGrid=linspace(.55,2.2,260);
+    const sigmas=[.5,1,2];
+    const sigmaTraces=sigmas.map((sigma,index)=>({
+      x:returnGrid,
+      y:returnGrid.map(R=>Math.pow(s.beta*R,1/sigma)),
+      type:"scatter",
+      mode:"lines",
+      name:`σ = ${fmt(sigma,1)}`,
+      line:{color:[theme.teal,theme.blue,theme.violet][index]}
+    }));
+
+    sigmaTraces.push({
+      x:[gross],
+      y:[growth],
+      type:"scatter",
+      mode:"markers",
+      name:"Configuração atual",
+      marker:{size:11,color:theme.rose}
+    });
+
+    prettyPlot("exSigmaChart",sigmaTraces,plotLayout("Retorno bruto, R","cₜ₊₁/cₜ"));
+
+    const kGrid=linspace(.02,2.5,280);
+    const productive=kGrid.map(k=>(1-s.wedge)*mpk(k,s.A,s.alpha));
+    const survival=kGrid.map(()=>1-s.delta);
+    const total=kGrid.map((_,index)=>productive[index]+survival[index]);
+
+    prettyPlot("exReturnChart",[
+      {
+        x:kGrid,y:total,type:"scatter",mode:"lines",name:"Retorno bruto",
+        fill:"tozeroy",fillcolor:rgba(theme.blue,.06),line:{color:theme.blue}
+      },
+      {
+        x:kGrid,y:productive,type:"scatter",mode:"lines",name:"Produto marginal líquido",
+        line:{color:theme.teal}
+      },
+      {
+        x:kGrid,y:survival,type:"scatter",mode:"lines",name:"Capital sobrevivente",
+        line:{color:theme.amber,dash:"dash"}
+      },
+      {
+        x:[s.kp],y:[gross],type:"scatter",mode:"markers",name:"kₜ₊₁ atual",
+        marker:{size:11,color:theme.rose}
+      }
+    ],plotLayout("Capital futuro, kₜ₊₁","Retorno bruto"));
+  }
+
+  function resetCurrent(){
+    state[state.mode]={...defaults[state.mode]};
+    renderMode();
+  }
+
+  $$(".topic-btn").forEach(button=>{
+    button.addEventListener("click",()=>setMode(button.dataset.mode));
+  });
+
+  $("#themeBtn").addEventListener("click",()=>{
+    document.body.classList.toggle("dark");
+    renderMode();
+  });
+
+  $("#resetBtn").addEventListener("click",resetCurrent);
+
+  window.addEventListener("resize",()=>{
+    $$(".chart").forEach(element=>{
+      if(window.Plotly) Plotly.Plots.resize(element);
+    });
+  });
+
+  document.addEventListener("DOMContentLoaded",renderMode);
+  window.addEventListener("load",renderMode);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TVC e armadilhas comuns — Brock–Mirman</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
+
+  <style>
+    :root{
+      --bg:#f3f2ed;--panel:#fffefa;--soft:#f7f6f1;--text:#17212b;--muted:#68727e;
+      --line:#deded6;--blue:#2563eb;--teal:#0f9f95;--violet:#7c3aed;--rose:#d95672;
+      --amber:#b66c0a;--green:#18794e;--shadow:0 12px 32px rgba(25,32,42,.07);
+      --radius:18px;--sidebar:320px;
+    }
+
+    body.dark{
+      --bg:#0e151b;--panel:#151e27;--soft:#1a2630;--text:#eef3f6;--muted:#a9b5bf;
+      --line:#30404c;--blue:#79a9ff;--teal:#55d5c9;--violet:#b49aff;--rose:#ff8da4;
+      --amber:#f1bb62;--green:#69d59d;--shadow:0 16px 38px rgba(0,0,0,.27);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;background:var(--bg);color:var(--text);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.47;transition:background .2s,color .2s;
+    }
+
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    .app{max-width:1520px;margin:auto;padding:18px}
+
+    header{
+      display:flex;justify-content:space-between;align-items:center;gap:16px;
+      padding:16px 18px;border:1px solid var(--line);border-radius:20px;
+      background:var(--panel);box-shadow:var(--shadow);
+    }
+
+    .brand{display:flex;align-items:center;gap:12px;min-width:0}
+    .mark{
+      width:46px;height:46px;display:grid;place-items:center;flex:0 0 auto;border-radius:14px;
+      color:#fff;font-weight:900;background:linear-gradient(135deg,var(--blue),var(--teal));
+    }
+
+    h1{margin:0;font-size:clamp(1.25rem,2vw,1.95rem);line-height:1.08}
+    .subtitle{margin:4px 0 0;color:var(--muted);font-size:.91rem}
+    .header-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+    .btn{
+      border:1px solid var(--line);border-radius:11px;padding:8px 11px;
+      background:var(--soft);color:var(--text);font-weight:740;
+    }
+
+    .btn:hover{border-color:var(--blue)}
+    .btn.primary{border-color:transparent;background:var(--blue);color:#fff}
+
+    .topic-nav{
+      display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin:14px 0 16px;
+    }
+
+    .topic-btn{
+      min-height:72px;padding:10px 13px;border:1px solid var(--line);border-radius:14px;
+      background:var(--panel);color:var(--text);text-align:left;box-shadow:var(--shadow);
+      transition:transform .16s,border-color .16s,background .16s;
+    }
+
+    .topic-btn:hover{transform:translateY(-1px);border-color:var(--blue)}
+    .topic-btn.active{
+      color:#fff;border-color:transparent;background:linear-gradient(135deg,var(--blue),var(--teal));
+    }
+
+    .topic-btn strong{display:block;font-size:.88rem}
+    .topic-btn span{display:block;margin-top:2px;font-size:.71rem;opacity:.8}
+
+    .layout{
+      display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr);gap:16px;align-items:start;
+    }
+
+    aside{
+      position:sticky;top:18px;max-height:calc(100vh - 36px);overflow:auto;
+      padding:16px;border:1px solid var(--line);border-radius:var(--radius);
+      background:var(--panel);box-shadow:var(--shadow);
+    }
+
+    .sidebar-title{margin:0 0 3px;font-size:1rem}
+    .sidebar-subtitle{margin:0 0 14px;color:var(--muted);font-size:.81rem}
+
+    .control{padding:0 0 13px;margin:0 0 13px;border-bottom:1px solid var(--line)}
+    .control:last-child{margin-bottom:0;border-bottom:0}
+
+    .control-head{
+      display:flex;justify-content:space-between;gap:10px;align-items:baseline;
+      font-size:.87rem;font-weight:760;
+    }
+
+    .control output{color:var(--blue);font-variant-numeric:tabular-nums}
+    .control small{display:block;margin-top:4px;color:var(--muted);font-size:.75rem}
+    .control-head [data-tex]{display:inline-flex;align-items:baseline;min-width:.75em;vertical-align:baseline}
+    .control-head [data-tex] .katex{color:var(--blue);font-size:1.03em}
+
+    input[type=range]{width:100%;margin-top:9px;accent-color:var(--blue)}
+
+    select{
+      width:100%;margin-top:8px;padding:9px 10px;color:var(--text);
+      background:var(--soft);border:1px solid var(--line);border-radius:10px;
+    }
+
+    .preset-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
+    .preset{
+      padding:7px 8px;border:1px solid var(--line);border-radius:9px;
+      color:var(--text);background:var(--soft);font-size:.75rem;font-weight:700;
+    }
+    .preset:hover{color:var(--teal);border-color:var(--teal)}
+
+    main{display:grid;gap:16px;min-width:0}
+
+    .card{
+      min-width:0;padding:18px;border:1px solid var(--line);border-radius:var(--radius);
+      background:var(--panel);box-shadow:var(--shadow);
+    }
+
+    .eyebrow{
+      margin-bottom:4px;color:var(--teal);font-size:.69rem;font-weight:850;
+      letter-spacing:.12em;text-transform:uppercase;
+    }
+
+    h2{margin:0;font-size:1.1rem}
+    h3{margin:0;font-size:.96rem}
+    p{margin:9px 0}
+    .muted{color:var(--muted)}
+
+    .hero{display:grid;grid-template-columns:minmax(0,1.28fr) minmax(280px,.72fr);gap:16px}
+
+    .formula-box,.math-line,.equation{
+      position:relative;isolation:isolate;overflow:auto;
+      border:1px solid color-mix(in srgb,var(--line) 72%,var(--blue));
+      background:
+        radial-gradient(circle at 15% 0%,color-mix(in srgb,var(--blue) 8%,transparent),transparent 42%),
+        linear-gradient(145deg,var(--soft),color-mix(in srgb,var(--panel) 82%,var(--soft)));
+      box-shadow:inset 0 1px 0 color-mix(in srgb,#fff 55%,transparent),0 8px 24px rgba(24,33,43,.035);
+    }
+
+    .formula-box::before,.math-line::before{
+      content:"";position:absolute;left:18px;right:18px;top:0;height:2px;
+      border-radius:0 0 999px 999px;
+      background:linear-gradient(90deg,transparent,var(--blue),var(--teal),transparent);opacity:.65;
+    }
+
+    .formula-box{
+      display:grid;place-items:center;min-height:138px;margin-top:13px;padding:22px 20px;
+      border-radius:14px;font-size:clamp(.94rem,1.62vw,1.28rem);
+    }
+
+    .math-line{margin:10px 0;padding:16px 18px;border-radius:11px;color:var(--text)}
+    .equation{
+      min-height:72px;display:grid;place-items:center;padding:14px;border-radius:12px;text-align:center;
+    }
+
+    .formula-box .katex-display,.math-line .katex-display,.equation .katex-display{
+      width:100%;margin:0;overflow-x:auto;overflow-y:hidden;padding:2px 0;
+    }
+
+    .formula-box .katex{font-size:1.09em}
+    .math-line .katex{font-size:1.02em}
+    .equation .katex{font-size:1em}
+    [data-display="false"] .katex{
+      color:color-mix(in srgb,var(--text) 88%,var(--blue));font-size:1em;
+    }
+
+    .math-render-error{
+      color:var(--rose);font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+      font-size:.9rem;white-space:pre-wrap;
+    }
+
+    .insight{
+      padding:13px;border-left:4px solid var(--teal);border-radius:11px;
+      background:var(--soft);font-size:.86rem;
+    }
+    .insight + .insight{margin-top:9px}
+    .insight.warn{border-left-color:var(--amber)}
+    .insight.bad{border-left-color:var(--rose)}
+
+    .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+    .metric{
+      padding:13px;border:1px solid var(--line);border-radius:13px;
+      background:linear-gradient(145deg,var(--panel),color-mix(in srgb,var(--soft) 72%,var(--panel)));
+      box-shadow:var(--shadow);
+    }
+
+    .metric-label{
+      color:var(--muted);font-size:.71rem;font-weight:760;letter-spacing:.04em;text-transform:uppercase;
+    }
+
+    .metric-value{
+      margin-top:4px;color:color-mix(in srgb,var(--text) 88%,var(--blue));
+      font-size:1.16rem;font-weight:850;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;
+    }
+
+    .chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .chart-card{overflow:hidden;padding-bottom:12px}
+
+    .chart{
+      width:100%;height:360px;overflow:hidden;
+      border:1px solid color-mix(in srgb,var(--line) 82%,var(--blue));border-radius:15px;
+      background:
+        radial-gradient(circle at 12% 4%,color-mix(in srgb,var(--blue) 7%,transparent),transparent 36%),
+        linear-gradient(180deg,color-mix(in srgb,var(--panel) 92%,var(--soft)),var(--panel));
+    }
+    .chart.tall{height:420px}
+
+    .chart-note{
+      display:flex;align-items:flex-start;gap:7px;margin:8px 0 0;padding:0 2px;
+      color:var(--muted);font-size:.76rem;line-height:1.42;
+    }
+
+    .chart-note::before{
+      content:"";width:7px;height:7px;flex:0 0 auto;margin-top:.37em;
+      border-radius:50%;background:var(--teal);
+    }
+
+    .topic-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:13px}
+    .topic-box{padding:13px;border:1px solid var(--line);border-radius:13px;background:var(--soft)}
+    .topic-box strong{display:block;color:var(--blue);font-size:.82rem}
+    .topic-box p{margin:6px 0 0;color:var(--muted);font-size:.8rem}
+
+    .equation-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:13px}
+
+    .horizon-compare{
+      display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:stretch;margin-top:14px;
+    }
+
+    .horizon-panel{
+      min-height:220px;padding:18px;border:1px solid var(--line);border-radius:15px;background:var(--soft);
+    }
+
+    .horizon-panel strong{display:block;color:var(--blue);font-size:.84rem}
+    .horizon-panel p{color:var(--muted);font-size:.8rem}
+    .horizon-arrow{display:grid;place-items:center;color:var(--teal);font-size:2rem;font-weight:900}
+
+    .proof-rail{
+      display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:10px;margin-top:14px;
+      overflow:auto;padding-bottom:6px;
+    }
+
+    .proof-step{
+      min-height:185px;padding:15px;border:1px solid var(--line);border-radius:14px;background:var(--soft);
+    }
+
+    .proof-step .number{
+      width:28px;height:28px;display:grid;place-items:center;border-radius:9px;
+      background:var(--blue);color:#fff;font-size:.75rem;font-weight:900;
+    }
+
+    .proof-step strong{display:block;margin-top:10px;color:var(--blue);font-size:.8rem}
+    .proof-step p{color:var(--muted);font-size:.76rem}
+
+    .trap-layout{
+      display:grid;grid-template-columns:minmax(260px,.72fr) minmax(0,1.28fr);gap:16px;
+    }
+
+    .trap-menu{display:grid;gap:8px}
+    .trap-button{
+      width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:12px;
+      background:var(--soft);color:var(--text);text-align:left;font-weight:760;
+    }
+
+    .trap-button.active{
+      color:#fff;border-color:transparent;background:linear-gradient(135deg,var(--blue),var(--teal));
+    }
+
+    .trap-display{
+      min-height:440px;padding:18px;border:1px solid var(--line);border-radius:15px;background:var(--soft);
+    }
+
+    .trap-display h3{font-size:1rem}
+    .trap-section{margin-top:15px}
+    .trap-label{
+      color:var(--muted);font-size:.68rem;font-weight:850;letter-spacing:.1em;text-transform:uppercase;
+    }
+
+    .timeline{
+      display:grid;grid-template-columns:repeat(5,minmax(125px,1fr));gap:8px;align-items:center;
+      margin-top:14px;overflow:auto;padding-bottom:8px;
+    }
+
+    .time-node{
+      min-height:120px;padding:14px;border:1px solid var(--line);border-radius:14px;
+      background:var(--soft);display:grid;align-content:center;text-align:center;
+    }
+
+    .time-node.active{border-color:var(--blue);box-shadow:0 10px 24px color-mix(in srgb,var(--blue) 13%,transparent)}
+    .time-node strong{display:block;color:var(--blue);font-size:.78rem}
+    .time-node p{margin:6px 0 0;color:var(--muted);font-size:.74rem}
+    .time-arrow{color:var(--teal);font-size:1.5rem;font-weight:900;text-align:center}
+
+    .compare-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:.82rem}
+    .compare-table th,.compare-table td{
+      padding:9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;
+    }
+    .compare-table th{
+      color:var(--muted);font-size:.71rem;text-transform:uppercase;letter-spacing:.05em;
+    }
+
+    .status{
+      display:flex;align-items:center;gap:9px;margin-top:10px;padding:10px 12px;
+      border:1px solid var(--line);border-radius:12px;background:var(--soft);
+      font-size:.82rem;font-weight:730;
+    }
+
+    .status-dot{width:10px;height:10px;flex:0 0 auto;border-radius:50%;background:var(--green)}
+    .status.bad .status-dot{background:var(--rose)}
+
+    .hidden{display:none!important}
+    footer{padding:8px 4px 2px;color:var(--muted);text-align:center;font-size:.8rem}
+
+    @media(max-width:1180px){
+      .topic-nav{grid-template-columns:repeat(3,1fr)}
+      .layout{grid-template-columns:280px minmax(0,1fr)}
+      .hero,.chart-grid,.trap-layout{grid-template-columns:1fr}
+      .topic-grid,.equation-strip{grid-template-columns:1fr}
+      .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+
+    @media(max-width:800px){
+      .app{padding:10px}
+      header{align-items:flex-start;flex-direction:column}
+      .topic-nav{grid-template-columns:1fr 1fr}
+      .layout{grid-template-columns:1fr}
+      aside{position:static;max-height:none}
+      .horizon-compare{grid-template-columns:1fr}
+      .horizon-arrow{transform:rotate(90deg)}
+    }
+
+    @media(max-width:500px){
+      .topic-nav,.metrics{grid-template-columns:1fr}
+      .preset-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+
+<body>
+<div class="app">
+  <header>
+    <div class="brand">
+      <div class="mark">∞</div>
+      <div>
+        <h1>TVC e armadilhas comuns</h1>
+        <p class="subtitle">Transversalidade, bolhas de capital, erros de índice, sinais e timing</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn" id="themeBtn">◐ Tema</button>
+      <button class="btn" id="resetBtn">Reiniciar tópico</button>
+    </div>
+  </header>
+
+  <nav class="topic-nav" aria-label="Escolha do laboratório">
+    <button class="topic-btn active" data-mode="terminal">
+      <strong>Do terminal à TVC</strong>
+      <span>Horizonte finito, condição terminal e limite descontado</span>
+    </button>
+
+    <button class="topic-btn" data-mode="forms">
+      <strong>Formas e teste assintótico</strong>
+      <span>Multiplicador, utilidade marginal e razão observável</span>
+    </button>
+
+    <button class="topic-btn" data-mode="filter">
+      <strong>Euler, bolhas e filtro</strong>
+      <span>Família de trajetórias e seleção pela TVC</span>
+    </button>
+
+    <button class="topic-btn" data-mode="sufficiency">
+      <strong>Euler + TVC</strong>
+      <span>Concavidade, telescopagem e suficiência</span>
+    </button>
+
+    <button class="topic-btn" data-mode="traps">
+      <strong>Armadilhas comuns</strong>
+      <span>Índices, sinais, desconto, timing e convenções</span>
+    </button>
+  </nav>
+
+  <div class="layout">
+    <aside id="sidebar"></aside>
+    <main id="content"></main>
+  </div>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  const $=(selector,root=document)=>root.querySelector(selector);
+  const $$=(selector,root=document)=>[...root.querySelectorAll(selector)];
+
+  const defaults={
+    terminal:{beta:.95,T:24,resources:1.4,leftover:.3,shadow:1,growth:1},
+    forms:{beta:.95,sigma:1,c0:1,k1:.6,gc:1.01,gk:1,T:40},
+    filter:{beta:.95,A:1,alpha:.36,k0:.45,cMultiplier:1,T:42},
+    sufficiency:{beta:.95,A:1,alpha:.36,k0:.45,sAlt:.45,T:30},
+    traps:{beta:.95,delta:1,t:4,trap:"index"}
+  };
+
+  const state={
+    mode:"terminal",
+    terminal:{...defaults.terminal},
+    forms:{...defaults.forms},
+    filter:{...defaults.filter},
+    sufficiency:{...defaults.sufficiency},
+    traps:{...defaults.traps}
+  };
+
+  const KOPT={throwOnError:false,strict:"ignore",trust:false};
+
+  const MATH=Object.freeze({
+    beta:String.raw`\beta`,
+    T:String.raw`T`,
+    lambda:String.raw`\lambda_T`,
+    sigma:String.raw`\sigma`,
+    c0:String.raw`c_0`,
+    k1:String.raw`k_1`,
+    gc:String.raw`g_c`,
+    gk:String.raw`g_k`,
+    A:String.raw`A`,
+    alpha:String.raw`\alpha`,
+    k0:String.raw`k_0`,
+    m:String.raw`m`,
+    s:String.raw`s`,
+    delta:String.raw`\delta`,
+    t:String.raw`t`
+  });
+
+  const TRAPS=Object.freeze({
+    index:{
+      title:"Erro de índice no estoque terminal",
+      wrong:String.raw`\lim_{t\to\infty}\beta^t\lambda_t k_t=0`,
+      correct:String.raw`\lim_{t\to\infty}\beta^t\lambda_t k_{t+1}=0`,
+      reason:"O multiplicador da restrição em t valoriza os recursos correntes; o estoque escolhido nessa restrição é kₜ₊₁.",
+      consequence:"Trocar kₜ₊₁ por kₜ desloca o timing e rompe a analogia com a condição terminal.",
+      memory:"Leia a restrição: o capital que sai de t é kₜ₊₁."
+    },
+    discount:{
+      title:"Esquecer o desconto",
+      wrong:String.raw`\lim_{t\to\infty}\lambda_t k_{t+1}=0`,
+      correct:String.raw`\lim_{t\to\infty}\beta^t\lambda_t k_{t+1}=0`,
+      reason:"A condição terminal do infinito deve ser trazida ao instante zero.",
+      consequence:"Sem βᵗ, trajetórias ótimas convergentes podem parecer violar a condição.",
+      memory:"A TVC é uma condição terminal em valor presente."
+    },
+    equation:{
+      title:"Tratar a TVC como equação de movimento",
+      wrong:String.raw`\text{resolver Euler e TVC período a período}`,
+      correct:String.raw`\text{gerar trajetórias pela Euler e usar a TVC como filtro assintótico}`,
+      reason:"A TVC não fornece uma nova lei local entre t e t+1.",
+      consequence:"O aluno tenta isolar kₜ₊₁ ou cₜ como se a TVC fosse uma CPO adicional.",
+      memory:"Euler gera; TVC seleciona."
+    },
+    sign:{
+      title:"Sinal errado no termo terminal",
+      wrong:String.raw`+\beta^T u'(c_T^*)\big(k_{T+1}-k_{T+1}^*\big)`,
+      correct:String.raw`-\beta^T u'(c_T^*)\big(k_{T+1}-k_{T+1}^*\big)`,
+      reason:"Na restrição, kₜ₊₁ usa recursos e entra com sinal negativo.",
+      consequence:"A desigualdade final da prova de suficiência é invertida.",
+      memory:"Capital futuro é uso de recursos hoje: sinal menos."
+    },
+    timing:{
+      title:"Confundir o momento de λ e do capital",
+      wrong:String.raw`\lambda_{t+1}k_{t+1}\ \text{na TVC padrão da restrição em }t`,
+      correct:String.raw`\lambda_t k_{t+1}`,
+      reason:"λₜ é o preço-sombra dos recursos em t que financiam o estoque carregado para t+1.",
+      consequence:"A expressão mistura o preço do período seguinte com o custo corrente do investimento.",
+      memory:"Preço hoje × estoque escolhido hoje."
+    },
+    convention:{
+      title:"Misturar multiplicador corrente e valor presente",
+      wrong:String.raw`\mu_t=u'(c_t)\quad\text{quando }\mathcal L=\sum_t[\beta^t u(c_t)+\mu_t g_t]`,
+      correct:String.raw`\mu_t=\beta^t u'(c_t),\qquad \lambda_t=u'(c_t)`,
+      reason:"μₜ já incorpora o desconto; λₜ está em unidades correntes.",
+      consequence:"A TVC ganha ou perde um fator βᵗ indevidamente.",
+      memory:"Defina a convenção antes de escrever a TVC."
+    },
+    partial:{
+      title:"Ignorar capital sobrevivente com δ < 1",
+      wrong:String.raw`u'(c_t)=\beta u'(c_{t+1})F'(k_{t+1})`,
+      correct:String.raw`u'(c_t)=\beta u'(c_{t+1})[F'(k_{t+1})+1-\delta]`,
+      reason:"O capital rende produto e devolve a parcela não depreciada do estoque.",
+      consequence:"A Euler e o estado estacionário ficam errados fora de δ=1.",
+      memory:"Retorno bruto = produto marginal + principal sobrevivente."
+    }
+  });
+
+  const plotConfig={
+    responsive:true,displaylogo:false,scrollZoom:true,
+    toImageButtonOptions:{format:"png",filename:"tvc_armadilhas",scale:2},
+    modeBarButtonsToRemove:["lasso2d","select2d","autoScale2d","toggleSpikelines"]
+  };
+
+  function fmt(value,digits=3){
+    if(!Number.isFinite(value)) return "—";
+    if(Math.abs(value)>=1e5 || (Math.abs(value)>0 && Math.abs(value)<1e-4)){
+      return value.toExponential(2).replace(".",",");
+    }
+    return value.toLocaleString("pt-BR",{maximumFractionDigits:digits,minimumFractionDigits:0});
+  }
+
+  function linspace(a,b,n){
+    return Array.from({length:n},(_,i)=>a+(b-a)*i/(n-1));
+  }
+
+  function renderKatex(element,expression,display=true){
+    if(!element) return;
+    const source=String(expression??"");
+
+    if(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/.test(source)){
+      console.error("Expressão KaTeX contém caractere de controle:",source);
+      element.textContent=source;
+      element.classList.add("math-render-error");
+      return;
+    }
+
+    const prepared=display?String.raw`\displaystyle ${source}`:source;
+
+    if(!window.katex){
+      element.textContent=source;
+      return;
+    }
+
+    try{
+      katex.render(prepared,element,{...KOPT,displayMode:display,errorColor:"#d95672"});
+      element.classList.remove("math-render-error");
+    }catch(error){
+      console.error("Erro KaTeX:",source,error);
+      element.textContent=source;
+      element.classList.add("math-render-error");
+    }
+  }
+
+  function tex(element,expression,display=true){
+    renderKatex(element,expression,display);
+  }
+
+  function renderAllMath(root=document){
+    if(!window.katex) return;
+    $$("[data-tex]",root).forEach(element=>{
+      renderKatex(element,element.dataset.tex,element.dataset.display!=="false");
+    });
+  }
+
+  function chartTheme(){
+    const dark=document.body.classList.contains("dark");
+    return {
+      dark,
+      text:dark?"#a9b5bf":"#68727e",
+      strong:dark?"#eef3f6":"#17212b",
+      grid:dark?"rgba(74,94,108,.32)":"rgba(190,193,188,.42)",
+      axis:dark?"#40515f":"#c8c9c2",
+      panel:dark?"#151e27":"#fffefa",
+      blue:dark?"#79a9ff":"#2563eb",
+      teal:dark?"#55d5c9":"#0f9f95",
+      violet:dark?"#b49aff":"#7c3aed",
+      rose:dark?"#ff8da4":"#d95672",
+      amber:dark?"#f1bb62":"#b66c0a",
+      green:dark?"#69d59d":"#18794e"
+    };
+  }
+
+  function rgba(hex,alpha){
+    const value=hex.replace("#","");
+    const full=value.length===3?value.split("").map(char=>char+char).join(""):value;
+    const number=parseInt(full,16);
+    return `rgba(${(number>>16)&255},${(number>>8)&255},${number&255},${alpha})`;
+  }
+
+  function plotLayout(xTitle,yTitle,extra={}){
+    const theme=chartTheme();
+    const axis={
+      showline:true,linewidth:1,linecolor:theme.axis,ticks:"outside",ticklen:5,tickcolor:theme.axis,
+      tickfont:{size:11,color:theme.text},gridcolor:theme.grid,griddash:"dot",zeroline:true,
+      zerolinecolor:theme.axis,automargin:true,title:{font:{size:12,color:theme.text},standoff:12}
+    };
+
+    return {
+      margin:{l:68,r:30,t:28,b:68},
+      paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(0,0,0,0)",
+      font:{family:"Inter, system-ui, sans-serif",color:theme.text,size:12},
+      colorway:[theme.blue,theme.violet,theme.teal,theme.rose,theme.amber,theme.green],
+      xaxis:{...axis,title:{text:xTitle,font:{size:12,color:theme.text},standoff:12}},
+      yaxis:{...axis,title:{text:yTitle,font:{size:12,color:theme.text},standoff:12}},
+      hovermode:"x unified",
+      hoverlabel:{bgcolor:theme.panel,bordercolor:theme.axis,font:{family:"Inter, system-ui, sans-serif",size:12,color:theme.strong}},
+      legend:{orientation:"h",y:-.25,x:0,xanchor:"left",font:{size:11,color:theme.text},bgcolor:"rgba(0,0,0,0)"},
+      transition:{duration:280,easing:"cubic-in-out"},dragmode:"pan",
+      ...extra
+    };
+  }
+
+  function polishTraces(traces){
+    const theme=chartTheme();
+    const colors=[theme.blue,theme.violet,theme.teal,theme.rose,theme.amber,theme.green];
+
+    return traces.map((trace,index)=>{
+      const color=trace.line?.color||trace.marker?.color||colors[index%colors.length];
+      const polished={...trace};
+      const isScatter=(trace.type||"scatter")==="scatter";
+      const mode=trace.mode||"lines";
+
+      if(isScatter&&mode.includes("lines")){
+        polished.line={width:index===0?3.3:2.4,shape:"spline",smoothing:.5,...trace.line,color};
+      }
+
+      if(isScatter&&mode.includes("markers")){
+        polished.marker={size:trace.marker?.size||5,color,line:{width:1.3,color:theme.panel},...trace.marker};
+      }
+
+      if(trace.fill){
+        polished.fillcolor=trace.fillcolor||rgba(color,.10);
+      }
+
+      polished.hovertemplate=trace.hovertemplate||
+        `<b>${trace.name||"Série"}</b><br>x: %{x:.4g}<br>y: %{y:.4g}<extra></extra>`;
+
+      return polished;
+    });
+  }
+
+  function prettyPlot(id,traces,layout){
+    return Plotly.react(id,polishTraces(traces),layout,plotConfig);
+  }
+
+  function slider(id,label,value,min,max,step,help,symbol=""){
+    return String.raw`
+      <div class="control">
+        <div class="control-head">
+          <span>${label}${symbol?` <span data-tex="${symbol}" data-display="false"></span>`:""}</span>
+          <output id="${id}Out">${fmt(value,3)}</output>
+        </div>
+        <input id="${id}" type="range" min="${min}" max="${max}" step="${step}" value="${value}" aria-label="${label}">
+        <small>${help}</small>
+      </div>`;
+  }
+
+  function metric(label,id){
+    return `<div class="metric"><div class="metric-label">${label}</div><div class="metric-value" id="${id}">—</div></div>`;
+  }
+
+  function bindRange(id,object,key,callback){
+    const input=$("#"+id);
+    if(!input) return;
+
+    const run=()=>{
+      object[key]=Number(input.value);
+      const output=$("#"+id+"Out");
+      if(output){
+        const integerKeys=["T","t"];
+        output.textContent=fmt(object[key],integerKeys.includes(key)?0:3);
+      }
+      callback();
+    };
+
+    input.addEventListener("input",run);
+    input.addEventListener("change",run);
+  }
+
+  function production(k,A,alpha){
+    return A*Math.pow(Math.max(k,0),alpha);
+  }
+
+  function mpk(k,A,alpha){
+    return alpha*A*Math.pow(Math.max(k,1e-12),alpha-1);
+  }
+
+  function setMode(mode){
+    state.mode=mode;
+    $$(".topic-btn").forEach(button=>button.classList.toggle("active",button.dataset.mode===mode));
+    renderMode();
+  }
+
+  function renderMode(){
+    if(state.mode==="terminal") renderTerminal();
+    if(state.mode==="forms") renderForms();
+    if(state.mode==="filter") renderFilter();
+    if(state.mode==="sufficiency") renderSufficiency();
+    if(state.mode==="traps") renderTraps();
+  }
+
+  /* ============================================================
+     1. TERMINAL
+  ============================================================ */
+
+  function renderTerminal(){
+    const s=state.terminal;
+
+    $("#sidebar").innerHTML=String.raw`
+      <h2 class="sidebar-title">Do terminal à TVC</h2>
+      <p class="sidebar-subtitle">Compare a condição terminal do horizonte finito com seu análogo descontado no infinito.</p>
+
+      ${slider("termBeta","Fator de desconto",s.beta,.5,.995,.005,"Controla o valor presente do termo terminal.",MATH.beta)}
+      ${slider("termT","Horizonte",s.T,4,70,1,"Última data do problema finito.",MATH.T)}
+      ${slider("termResources","Recursos no último período",s.resources,.4,3,.02,"Disponíveis entre consumo e capital terminal.","R_T")}
+      ${slider("termLeftover","Capital deixado após T",s.leftover,0,.95,.01,"Parcela dos recursos carregada além do horizonte.","\ell")}
+      ${slider("termShadow","Preço-sombra inicial",s.shadow,.1,3,.02,"Escala de λₜkₜ₊₁.","z_0")}
+      ${slider("termGrowth","Crescimento de λₜkₜ₊₁",s.growth,.7,1.35,.005,"Mostra quando o desconto domina ou não.","g_z")}
+
+      <div class="control">
+        <div class="control-head"><span>Presets</span></div>
+        <div class="preset-grid">
+          <button class="preset" data-term-preset="finite">Terminal ótimo</button>
+          <button class="preset" data-term-preset="bounded">Estoque limitado</button>
+          <button class="preset" data-term-preset="knife">Caso limítrofe</button>
+          <button class="preset" data-term-preset="bubble">Bolha terminal</button>
+        </div>
+      </div>`;
+
+    $("#content").innerHTML=String.raw`
+      <section class="hero">
+        <article class="card">
+          <div class="eyebrow">Analogia estrutural</div>
+          <h2>A TVC é a condição terminal levada ao infinito</h2>
+          <div class="formula-box" data-tex="\underbrace{\lambda_Tk_{T+1}=0}_{\text{horizonte finito}}\qquad\longrightarrow\qquad \underbrace{\lim_{t\to\infty}\beta^t\lambda_tk_{t+1}=0}_{\text{horizonte infinito}}"></div>
+          <p class="muted">No finito, não há razão para carregar capital para uma data sem utilidade. No infinito, exige-se que seu valor presente assintótico desapareça.</p>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">O que a Euler não controla</div>
+          <div class="insight"><strong>Euler:</strong> disciplina a troca marginal entre duas datas consecutivas.</div>
+          <div class="insight"><strong>Condição terminal:</strong> disciplina o que resta no fim do horizonte.</div>
+          <div class="insight warn"><strong>TVC:</strong> reproduz esse disciplinamento quando o fim recua para o infinito.</div>
+        </article>
+      </section>
+
+      <section class="metrics">
+        ${metric("Consumo terminal","termConsumption")}
+        ${metric("Utilidade terminal","termUtility")}
+        ${metric("Termo descontado em T","termPV")}
+        ${metric("Fator assintótico βg","termFactor")}
+      </section>
+
+      <section class="card">
+        <div class="eyebrow">Dois horizontes</div>
+        <h2>O mesmo problema terminal em duas linguagens</h2>
+        <div class="horizon-compare">
+          <div class="horizon-panel">
+            <strong>Horizonte finito</strong>
+            <div class="equation" data-tex="c_T+k_{T+1}=R_T"></div>
+            <p>Sem utilidade após T, deixar kₜ₊₁ positivo reduz cₜ e não oferece benefício futuro.</p>
+            <div class="equation" data-tex="\lambda_T>0\Rightarrow k_{T+1}=0"></div>
+          </div>
+
+          <div class="horizon-arrow">→</div>
+
+          <div class="horizon-panel">
+            <strong>Horizonte infinito</strong>
+            <div class="equation" data-tex="\beta^t\lambda_tk_{t+1}"></div>
+            <p>Não há última data; acompanha-se o valor presente do estoque carregado cada vez mais longe.</p>
+            <div class="equation" data-tex="\lim_{t\to\infty}\beta^t\lambda_tk_{t+1}=0"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="chart-grid">
+        <article class="card chart-card">
+          <div class="eyebrow">Último período</div>
+          <h2>Utilidade terminal e capital deixado</h2>
+          <div id="termUtilityChart" class="chart tall"></div>
+          <p class="chart-note">Sem valor de sucata ou herança, a utilidade terminal cai à medida que kₜ₊₁ aumenta.</p>
+        </article>
+
+        <article class="card chart-card">
+          <div class="eyebrow">Passagem ao infinito</div>
+          <h2>Valor presente do termo terminal</h2>
+          <div id="termPVChart" class="chart tall"></div>
+          <p class="chart-note">O produto converge a zero apenas quando βgᶻ &lt; 1.</p>
+        </article>
+      </section>
+
+      <section class="card">
+        <div class="eyebrow">Teste assintótico</div>
+        <h2>O desconto precisa dominar o crescimento do valor terminal</h2>
+        <div class="formula-box" data-tex="\beta^t\lambda_tk_{t+1}=z_0(\beta g_z)^t"></div>
+        <div class="status" id="termStatus">
+          <span class="status-dot"></span>
+          <span id="termStatusText">—</span>
+        </div>
+      </section>
+
+      <footer>A TVC não exige capital zero em cada data; exige valor terminal descontado nulo no limite.</footer>`;
+
+    renderAllMath();
+
+    bindRange("termBeta",s,"beta",updateTerminal);
+    bindRange("termT",s,"T",updateTerminal);
+    bindRange("termResources",s,"resources",updateTerminal);
+    bindRange("termLeftover",s,"leftover",updateTerminal);
+    bindRange("termShadow",s,"shadow",updateTerminal);
+    bindRange("termGrowth",s,"growth",updateTerminal);
+
+    $$("[data-term-preset]").forEach(button=>{
+      button.addEventListener("click",()=>{
+        const preset=button.dataset.termPreset;
+        if(preset==="finite") Object.assign(s,{leftover:0,growth:1});
+        if(preset==="bounded") Object.assign(s,{leftover:.25,growth:1});
+        if(preset==="knife") Object.assign(s,{growth:1/s.beta});
+        if(preset==="bubble") Object.assign(s,{growth:1.18/s.beta});
+        renderTerminal();
+      });
+    });
+
+    updateTerminal();
+  }
+
+  function updateTerminal(){
+    const s=state.terminal;
+    const leftoverCapital=s.leftover*s.resources;
+    const terminalConsumption=Math.max(1e-8,s.resources-leftoverCapital);
+    const terminalUtility=Math.log(terminalConsumption);
+    const factor=s.beta*s.growth;
+    const terminalPV=s.shadow*Math.pow(factor,s.T);
+
+    $("#termConsumption").textContent=fmt(terminalConsumption,5);
+    $("#termUtility").textContent=fmt(terminalUtility,5);
+    $("#termPV").textContent=fmt(terminalPV,6);
+    $("#termFactor").textContent=fmt(factor,5);
+
+    const converges=factor<1-1e-6;
+    $("#termStatus").classList.toggle("bad",!converges);
+    $("#termStatusText").textContent=converges
+      ?"βgᶻ < 1: o valor terminal descontado converge a zero."
+      :Math.abs(factor-1)<1e-5
+        ?"βgᶻ = 1: o termo terminal permanece constante e a TVC falha."
+        :"βgᶻ > 1: o termo terminal cresce; há comportamento de bolha/overaccumulação.";
+
+    const theme=chartTheme();
+    const kGrid=linspace(0,s.resources*.995,280);
+    const uGrid=kGrid.map(k=>Math.log(Math.max(1e-8,s.resources-k)));
+
+    prettyPlot("termUtilityChart",[
+      {
+        x:kGrid,y:uGrid,type:"scatter",mode:"lines",name:"ln(Rₜ−kₜ₊₁)",
+        fill:"tozeroy",fillcolor:rgba(theme.blue,.06),line:{color:theme.blue}
+      },
+      {
+        x:[leftoverCapital],y:[terminalUtility],type:"scatter",mode:"markers",name:"Escolha atual",
+        marker:{size:11,color:theme.rose}
+      },
+      {
+        x:[0],y:[Math.log(s.resources)],type:"scatter",mode:"markers",name:"Ótimo terminal",
+        marker:{size:11,color:theme.teal}
+      }
+    ],plotLayout("Capital deixado, kₜ₊₁","Utilidade terminal",{
+      hovermode:"closest"
+    }));
+
+    const tGrid=Array.from({length:s.T+1},(_,i)=>i);
+    const pvGrid=tGrid.map(t=>s.shadow*Math.pow(factor,t));
+
+    prettyPlot("termPVChart",[
+      {
+        x:tGrid,y:pvGrid,type:"scatter",mode:"lines+markers",name:"βᵗλₜkₜ₊₁",
+        fill:"tozeroy",fillcolor:rgba(converges?theme.teal:theme.rose,.07),
+        marker:{size:4,color:converges?theme.teal:theme.rose},
+        line:{color:converges?theme.teal:theme.rose}
+      }
+    ],plotLayout("Horizonte, t","Valor presente",{
+      yaxis:{...plotLayout("","").yaxis,type:"log",title:{text:"Valor presente — escala log"}}
+    }));
+  }
+
+  /* ============================================================
+     2. FORMAS
+  ============================================================ */
+
+  function renderForms(){
+    const s=state.forms;
+
+    $("#sidebar").innerHTML=String.raw`
+      <h2 class="sidebar-title">Formas e teste assintótico</h2>
+      <p class="sidebar-subtitle">Passe entre multiplicador, utilidade marginal e razão observável.</p>
+
+      ${slider("formsBeta","Fator de desconto",s.beta,.5,.995,.005,"Multiplica o valor marginal futuro.",MATH.beta)}
+      ${slider("formsSigma","Curvatura CRRA",s.sigma,.4,3,.05,"σ = 1 corresponde a log.",MATH.sigma)}
+      ${slider("formsC0","Consumo inicial",s.c0,.1,3,.02,"Escala de u′(cₜ).",MATH.c0)}
+      ${slider("formsK1","Capital inicial carregado",s.k1,.05,3,.02,"Escala do estoque terminal.",MATH.k1)}
+      ${slider("formsGc","Crescimento do consumo",s.gc,.75,1.25,.005,"cₜ = c₀g_cᵗ.",MATH.gc)}
+      ${slider("formsGk","Crescimento do capital",s.gk,.75,1.3,.005,"kₜ₊₁ = k₁g_kᵗ.",MATH.gk)}
+      ${slider("formsT","Horizonte exibido",s.T,10,80,1,"Usado para visualizar a sequência.",MATH.T)}
+
+      <div class="control">
+        <div class="control-head"><span>Presets</span></div>
+        <div class="preset-grid">
+          <button class="preset" data-forms-preset="vanish">TVC satisfeita</button>
+          <button class="preset" data-forms-preset="constant">Caso limítrofe</button>
+          <button class="preset" data-forms-preset="explode">Explosão</button>
+          <button class="preset" data-forms-preset="log">Log</button>
+        </div>
+      </div>`;
+
+    $("#content").innerHTML=String.raw`
+      <section class="hero">
+        <article class="card">
+          <div class="eyebrow">Definição formal</div>
+          <h2>Três apresentações do mesmo objeto</h2>
+          <div class="formula-box" data-tex="\lim_{t\to\infty}\beta^t\lambda_tk_{t+1}=0\quad\Longleftrightarrow\quad\lim_{t\to\infty}\beta^tu'(c_t)k_{t+1}=0"></div>
+          <p class="muted">Sob log, u′(cₜ)=1/cₜ e a TVC torna-se diretamente observável.</p>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Leituras</div>
+          <div class="insight"><strong>Preço-sombra:</strong> valor marginal do estoque carregado.</div>
+          <div class="insight"><strong>Utilidade marginal:</strong> custo em bem-estar de manter capital adicional.</div>
+          <div class="insight warn"><strong>Log:</strong> a razão kₜ₊₁/cₜ torna o teste mecânico.</div>
+        </article>
+      </section>
+
+      <section class="metrics">
+        ${metric("Razão geométrica q","formsQ")}
+        ${metric("Termo inicial","formsInitial")}
+        ${metric("Termo final exibido","formsFinal")}
+        ${metric("Diagnóstico","formsDiagnosis")}
+      </section>
+
+      <section class="card">
+        <div class="eyebrow">Passagem entre formas</div>
+        <h2>A CPO em consumo faz a ponte</h2>
+        <div class="equation-strip">
+          <div class="equation" data-tex="\lambda_t=u'(c_t)"></div>
+          <div class="equation" data-tex="\beta^t\lambda_tk_{t+1}=\beta^tu'(c_t)k_{t+1}"></div>
+          <div class="equation" data-tex="\sigma=1\Rightarrow\beta^t\frac{k_{t+1}}{c_t}"></div>
+        </div>
+      </section>
+
+      <section class="chart-grid">
+        <article class="card chart-card">
+          <div class="eyebrow">Sequência da TVC</div>
+          <h2>Valor presente do estoque marginal</h2>
+          <div id="formsTermChart" class="chart tall"></div>
+          <p class="chart-note">O comportamento é governado por q = βg_k/g_c^σ.</p>
+        </article>
+
+        <article class="card chart-card">
+          <div class="eyebrow">Decomposição</div>
+          <h2>Desconto, capital e utilidade marginal</h2>
+          <div id="formsComponentsChart" class="chart tall"></div>
+          <p class="chart-note">As séries são normalizadas em um para comparar suas taxas de crescimento.</p>
+        </article>
+      </section>
+
+      <section class="card">
+        <div class="eyebrow">Teste de uma linha</div>
+        <h2>Trajetórias geométricas</h2>
+        <div class="formula-box" data-tex="\beta^tu'(c_t)k_{t+1}=c_0^{-\sigma}k_1\left(\frac{\beta g_k}{g_c^\sigma}\right)^t"></div>
+        <div class="status" id="formsStatus">
+          <span class="status-dot"></span>
+          <span id="formsStatusText">—</span>
+        </div>
+      </section>
+
+      <footer>A TVC é um teste sobre a taxa conjunta de desconto, crescimento do capital e utilidade marginal.</footer>`;
+
+    renderAllMath();
+
+    bindRange("formsBeta",s,"beta",updateForms);
+    bindRange("formsSigma",s,"sigma",()=>{
+      if(Math.abs(s.sigma-1)<.026){
+        s.sigma=1;
+        $("#formsSigma").value="1";
+        $("#formsSigmaOut").textContent="1";
+      }
+      updateForms();
+    });
+    bindRange("formsC0",s,"c0",updateForms);
+    bindRange("formsK1",s,"k1",updateForms);
+    bindRange("formsGc",s,"gc",updateForms);
+    bindRange("formsGk",s,"gk",updateForms);
+    bindRange("formsT",s,"T",updateForms);
+
+    $$("[data-forms-preset]").forEach(button=>{
+      button.addEventListener("click",()=>{
+        const preset=button.dataset.formsPreset;
+        if(preset==="vanish") Object.assign(s,{sigma:1,gc:1.02,gk:1});
+        if(preset==="constant") Object.assign(s,{gk:Math.pow(s.gc,s.sigma)/s.beta});
+        if(preset==="explode") Object.assign(s,{gk:1.12*Math.pow(s.gc,s.sigma)/s.beta});
+        if(preset==="log") s.sigma=1;
+        renderForms();
+      });
+    });
+
+    updateForms();
+  }
+
+  function updateForms(){
+    const s=state.forms;
+    const q=s.beta*s.gk/Math.pow(s.gc,s.sigma);
+    const initial=Math.pow(s.c0,-s.sigma)*s.k1;
+    const final=initial*Math.pow(q,s.T);
+
+    $("#formsQ").textContent=fmt(q,6);
+    $("#formsInitial").textContent=fmt(initial,6);
+    $("#formsFinal").textContent=fmt(final,6);
+    $("#formsDiagnosis").textContent=q<1-1e-6?"converge":Math.abs(q-1)<1e-6?"constante":"explode";
+
+    const satisfied=q<1-1e-6;
+    $("#formsStatus").classList.toggle("bad",!satisfied);
+    $("#formsStatusText").textContent=satisfied
+      ?"q < 1: a TVC é satisfeita."
+      :Math.abs(q-1)<1e-6
+        ?"q = 1: o termo permanece positivo; a TVC falha."
+        :"q > 1: o termo explode; há uma bolha de valor terminal.";
+
+    const theme=chartTheme();
+    const tGrid=Array.from({length:s.T+1},(_,i)=>i);
+    const terms=tGrid.map(t=>initial*Math.pow(q,t));
+
+    prettyPlot("formsTermChart",[
+      {
+        x:tGrid,y:terms,type:"scatter",mode:"lines+markers",name:"TVC",
+        fill:"tozeroy",fillcolor:rgba(satisfied?theme.teal:theme.rose,.07),
+        marker:{size:4,color:satisfied?theme.teal:theme.rose},
+        line:{color:satisfied?theme.teal:theme.rose}
+      }
+    ],plotLayout("Data, t","βᵗu′(cₜ)kₜ₊₁",{
+      yaxis:{...plotLayout("","").yaxis,type:"log",title:{text:"Termo da TVC — escala log"}}
+    }));
+
+    const discount=tGrid.map(t=>Math.pow(s.beta,t));
+    const capital=tGrid.map(t=>Math.pow(s.gk,t));
+    const mu=tGrid.map(t=>Math.pow(s.gc,-s.sigma*t));
+
+    prettyPlot("formsComponentsChart",[
+      {
+        x:tGrid,y:discount,type:"scatter",mode:"lines",name:"βᵗ",
+        line:{color:theme.blue}
+      },
+      {
+        x:tGrid,y:capital,type:"scatter",mode:"lines",name:"k relativo",
+        line:{color:theme.teal}
+      },
+      {
+        x:tGrid,y:mu,type:"scatter",mode:"lines",name:"u′ relativo",
+        line:{color:theme.violet}
+      }
+    ],plotLayout("Data, t","Componente normalizado",{
+      yaxis:{...plotLayout("","").yaxis,type:"log",title:{text:"Índice — escala log"}}
+    }));
+  }
+
+  /* ============================================================
+     3. FILTRO
+  ============================================================ */
+
+  function renderFilter(){
+    const s=state.filter;
+
+    $("#sidebar").innerHTML=String.raw`
+      <h2 class="sidebar-title">Euler, bolhas e filtro</h2>
+      <p class="sidebar-subtitle">Escolha a semente c₀ e gere a trajetória que satisfaz a Euler enquanto permanece viável.</p>
+
+      ${slider("filterBeta","Fator de desconto",s.beta,.7,.995,.005,"Afeta a política canônica.",MATH.beta)}
+      ${slider("filterA","Produtividade",s.A,.5,1.8,.05,"Define os recursos.",MATH.A)}
+      ${slider("filterAlpha","Elasticidade",s.alpha,.12,.8,.01,"Controla a tecnologia.",MATH.alpha)}
+      ${slider("filterK0","Capital inicial",s.k0,.05,2,.02,"Primeira condição de contorno.",MATH.k0)}
+      ${slider("filterM","Multiplicador de c₀ ótimo",s.cMultiplier,.5,1.45,.005,"m = 1 usa a semente canônica.",MATH.m)}
+      ${slider("filterT","Horizonte exibido",s.T,10,70,1,"Número máximo de iterações.",MATH.T)}
+
+      <div class="control">
+        <div class="control-head"><span>Presets</span></div>
+        <div class="preset-grid">
+          <button class="preset" data-filter-preset="optimal">Semente ótima</button>
+          <button class="preset" data-filter-preset="oversave">Poupar demais</button>
+          <button class="preset" data-filter-preset="overconsume">Consumir demais</button>
+          <button class="preset" data-filter-preset="near">Quase ótima</button>
+        </div>
+      </div>`;
+
+    $("#content").innerHTML=String.raw`
+      <section class="hero">
+        <article class="card">
+          <div class="eyebrow">Família de trajetórias</div>
+          <h2>A Euler precisa de uma semente inicial de consumo</h2>
+          <div class="formula-box" data-tex="\begin{aligned}k_{t+1}&=Ak_t^\alpha-c_t,\\ c_{t+1}&=\beta\alpha Ak_{t+1}^{\alpha-1}c_t.\end{aligned}"></div>
+          <p class="muted">Dado k₀ e escolhido c₀, as duas equações geram o restante da trajetória.</p>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Papel da TVC</div>
+          <div class="insight"><strong>c₀ baixo:</strong> sobrepoupança, consumo colapsa e o valor terminal pode explodir.</div>
+          <div class="insight"><strong>c₀ alto:</strong> o capital pode se esgotar em tempo finito.</div>
+          <div class="insight warn"><strong>c₀ correto:</strong> a trajetória converge e o termo da TVC vai a zero.</div>
+        </article>
+      </section>
+
+      <section class="metrics">
+        ${metric("Consumo canônico c₀*","filterCStar")}
+        ${metric("Consumo usado c₀","filterC0")}
+        ${metric("Última data viável","filterLastT")}
+        ${metric("Termo final da TVC","filterFinalTVC")}
+      </section>
+
+      <section class="chart-grid">
+        <article class="card chart-card">
+          <div class="eyebrow">Trajetória gerada</div>
+          <h2>Capital e consumo</h2>
+          <div id="filterPathChart" class="chart tall"></div>
+          <p class="chart-note">A trajetória satisfaz Euler por construção até perder viabilidade, caso isso ocorra.</p>
+        </article>
+
+        <article class="card chart-card">
+          <div class="eyebrow">Filtro assintótico</div>
+          <h2>Sequência βᵗkₜ₊₁/cₜ</h2>
+          <div id="filterTVCChart" class="chart tall"></div>
+          <p class="chart-note">No caso log, esta é a forma observável da TVC.</p>
+        </article>
+
+        <article class="card chart-card">
+          <div class="eyebrow">Espaço de fases</div>
+          <h2>Caminho no plano (kₜ,cₜ)</h2>
+          <div id="filterPhaseChart" class="chart"></div>
+          <p class="chart-note">A curva de política canônica serve como referência, não como imposição à trajetória simulada.</p>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Diagnóstico</div>
+          <h2>O que a TVC seleciona?</h2>
+          <div class="formula-box" id="filterDiagnosisFormula"></div>
+          <div class="status" id="filterStatus">
+            <span class="status-dot"></span>
+            <span id="filterStatusText">—</span>
+          </div>
+          <div class="insight bad" style="margin-top:12px"><strong>Nuance:</strong> “bolha de capital” aqui significa valor terminal positivo ou explosivo devido à sobreacumulação; não é uma bolha financeira de mercado.</div>
+        </article>
+      </section>
+
+      <section class="card">
+        <div class="eyebrow">Política canônica</div>
+        <h2>A trajetória que Euler e TVC preservam</h2>
+        <div class="equation-strip">
+          <div class="equation" data-tex="k_{t+1}^*=\alpha\beta Ak_t^\alpha"></div>
+          <div class="equation" data-tex="c_t^*=(1-\alpha\beta)Ak_t^\alpha"></div>
+          <div class="equation" data-tex="\beta^t\frac{k_{t+1}^*}{c_t^*}\to0"></div>
+        </div>
+      </section>
+
+      <footer>A Euler gera uma família; a TVC elimina sobreacumulação e seleciona a trajetória economicamente admissível.</footer>`;
+
+    renderAllMath();
+
+    bindRange("filterBeta",s,"beta",updateFilter);
+    bindRange("filterA",s,"A",updateFilter);
+    bindRange("filterAlpha",s,"alpha",updateFilter);
+    bindRange("filterK0",s,"k0",updateFilter);
+    bindRange("filterM",s,"cMultiplier",updateFilter);
+    bindRange("filterT",s,"T",updateFilter);
+
+    $$("[data-filter-preset]").forEach(button=>{
+      button.addEventListener("click",()=>{
+        const preset=button.dataset.filterPreset;
+        if(preset==="optimal") s.cMultiplier=1;
+        if(preset==="oversave") s.cMultiplier=.72;
+        if(preset==="overconsume") s.cMultiplier=1.22;
+        if(preset==="near") s.cMultiplier=.98;
+        renderFilter();
+      });
+    });
+
+    updateFilter();
+  }
+
+  function simulateEulerPath(s){
+    const cStar0=(1-s.alpha*s.beta)*production(s.k0,s.A,s.alpha);
+    const capital=[s.k0];
+    const consumption=[s.cMultiplier*cStar0];
+    const tvc=[];
+    let valid=true;
+    let failureReason="";
+
+    for(let t=0;t<s.T;t++){
+      const resources=production(capital[t],s.A,s.alpha);
+      const nextK=resources-consumption[t];
+
+      if(!(nextK>1e-12)&&t<s.T){
+        valid=false;
+        failureReason="capital não positivo";
+        break;
+      }
+
+      tvc.push(Math.pow(s.beta,t)*nextK/consumption[t]);
+      capital.push(nextK);
+
+      const nextC=s.beta*mpk(nextK,s.A,s.alpha)*consumption[t];
+
+      if(!(nextC>1e-12)||!Number.isFinite(nextC)||nextC>1e12){
+        valid=false;
+        failureReason="consumo inválido";
+        break;
+      }
+
+      consumption.push(nextC);
+    }
+
+    return {capital,consumption,tvc,cStar0,valid,failureReason};
+  }
+
+  function updateFilter(){
+    const s=state.filter;
+    const path=simulateEulerPath(s);
+    const periodsK=Array.from({length:path.capital.length},(_,i)=>i);
+    const periodsC=Array.from({length:path.consumption.length},(_,i)=>i);
+    const periodsTVC=Array.from({length:path.tvc.length},(_,i)=>i);
+
+    const finalTVC=path.tvc.length?path.tvc.at(-1):NaN;
+    const canonical=Math.abs(s.cMultiplier-1)<.002;
+    const oversave=s.cMultiplier<1;
+    const viableToEnd=path.capital.length===s.T+1&&path.consumption.length===s.T+1;
+
+    $("#filterCStar").textContent=fmt(path.cStar0,5);
+    $("#filterC0").textContent=fmt(path.consumption[0],5);
+    $("#filterLastT").textContent=String(Math.min(path.capital.length,path.consumption.length)-1);
+    $("#filterFinalTVC").textContent=fmt(finalTVC,6);
+
+    let formula;
+    let status;
+
+    if(canonical&&viableToEnd){
+      formula=String.raw`\text{Euler satisfeita e TVC convergente}`;
+      status="A semente canônica gera a política ótima e o termo da TVC decresce.";
+    }else if(!viableToEnd){
+      formula=String.raw`\text{Euler local, mas a trajetória perde viabilidade}`;
+      status="O consumo inicial é alto demais para sustentar capital positivo.";
+    }else if(oversave){
+      formula=String.raw`\text{sobrepoupança}\Rightarrow c_t\downarrow,\quad \beta^t k_{t+1}/c_t\uparrow`;
+      status="A trajetória acumula capital demais e falha no teste assintótico.";
+    }else{
+      formula=String.raw`\text{semente distinta}\Rightarrow\text{trajetória Euler distinta}`;
+      status="A trajetória ainda difere da política canônica; a TVC deve ser examinada no limite.";
+    }
+
+    tex($("#filterDiagnosisFormula"),formula);
+    $("#filterStatus").classList.toggle("bad",!canonical);
+    $("#filterStatusText").textContent=status;
+
+    const theme=chartTheme();
+
+    prettyPlot("filterPathChart",[
+      {
+        x:periodsK,y:path.capital,type:"scatter",mode:"lines+markers",name:"Capital",
+        marker:{size:4,color:theme.blue},line:{color:theme.blue}
+      },
+      {
+        x:periodsC,y:path.consumption,type:"scatter",mode:"lines+markers",name:"Consumo",
+        marker:{size:4,color:theme.violet},line:{color:theme.violet}
+      }
+    ],plotLayout("Data, t","Nível"));
+
+    prettyPlot("filterTVCChart",[
+      {
+        x:periodsTVC,y:path.tvc,type:"scatter",mode:"lines+markers",name:"βᵗkₜ₊₁/cₜ",
+        fill:"tozeroy",fillcolor:rgba(canonical?theme.teal:theme.rose,.07),
+        marker:{size:4,color:canonical?theme.teal:theme.rose},
+        line:{color:canonical?theme.teal:theme.rose}
+      }
+    ],plotLayout("Data, t","Termo da TVC",{
+      yaxis:{...plotLayout("","").yaxis,type:"log",title:{text:"TVC — escala log"}}
+    }));
+
+    const kMax=Math.max(1,...path.capital)*1.08;
+    const kGrid=linspace(.001,kMax,280);
+    const canonicalC=kGrid.map(k=>(1-s.alpha*s.beta)*production(k,s.A,s.alpha));
+
+    prettyPlot("filterPhaseChart",[
+      {
+        x:kGrid,y:canonicalC,type:"scatter",mode:"lines",name:"Política c*(k)",
+        line:{color:theme.teal,dash:"dash"}
+      },
+      {
+        x:path.capital.slice(0,path.consumption.length),
+        y:path.consumption,
+        type:"scatter",mode:"lines+markers",name:"Trajetória",
+        marker:{size:5,color:theme.rose},line:{color:theme.rose}
+      }
+    ],plotLayout("Capital, kₜ","Consumo, cₜ",{
+      hovermode:"closest"
+    }));
+  }
+
+  /* ============================================================
+     4. SUFICIÊNCIA
+  ============================================================ */
+
+  function renderSufficiency(){
+    const s=state.sufficiency;
+
+    $("#sidebar").innerHTML=String.raw`
+      <h2 class="sidebar-title">Euler + TVC</h2>
+      <p class="sidebar-subtitle">Visualize como concavidade, Euler e TVC fecham a prova de suficiência.</p>
+
+      ${slider("sufBeta","Fator de desconto",s.beta,.7,.995,.005,"Pondera a soma e o termo terminal.",MATH.beta)}
+      ${slider("sufA","Produtividade",s.A,.5,1.8,.05,"Define as duas trajetórias.",MATH.A)}
+      ${slider("sufAlpha","Elasticidade",s.alpha,.12,.8,.01,"Garante concavidade tecnológica.",MATH.alpha)}
+      ${slider("sufK0","Capital inicial",s.k0,.05,2,.02,"Comum aos dois planos.",MATH.k0)}
+      ${slider("sufS","Poupança do plano alternativo",s.sAlt,.05,.9,.01,"A política ótima usa s*=αβ.",MATH.s)}
+      ${slider("sufT","Horizonte parcial",s.T,6,60,1,"Mostra a telescopagem até T.",MATH.T)}
+
+      <div class="control">
+        <div class="control-head"><span>Presets</span></div>
+        <div class="preset-grid">
+          <button class="preset" data-suf-preset="optimal">Plano ótimo</button>
+          <button class="preset" data-suf-preset="low">Poupa pouco</button>
+          <button class="preset" data-suf-preset="high">Poupa muito</button>
+          <button class="preset" data-suf-preset="near">Plano próximo</button>
+        </div>
+      </div>`;
+
+    $("#content").innerHTML=String.raw`
+      <section class="hero">
+        <article class="card">
+          <div class="eyebrow">Teorema de suficiência</div>
+          <h2>Euler + TVC + concavidade caracterizam o ótimo</h2>
+          <div class="formula-box" data-tex="\text{viabilidade interior}+\text{Euler}+\text{TVC}+\text{concavidade}\quad\Longrightarrow\quad\text{ótimo global}"></div>
+          <p class="muted">A concavidade transforma condições marginais locais em uma comparação global entre trajetórias.</p>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Divisão de trabalho</div>
+          <div class="insight"><strong>Concavidade:</strong> cria um limite linear para a diferença de utilidades.</div>
+          <div class="insight"><strong>Euler:</strong> cancela os termos intermediários da soma.</div>
+          <div class="insight warn"><strong>TVC:</strong> elimina o único termo que sobra no infinito.</div>
+        </article>
+      </section>
+
+      <section class="metrics">
+        ${metric("Poupança ótima αβ","sufSStar")}
+        ${metric("Utilidade parcial ótima","sufUStar")}
+        ${metric("Diferença alternativa − ótima","sufGap")}
+        ${metric("Envelope terminal","sufBoundary")}
+      </section>
+
+      <section class="card">
+        <div class="eyebrow">Esqueleto da prova</div>
+        <h2>Quatro operações</h2>
+        <div class="proof-rail">
+          <div class="proof-step">
+            <div class="number">1</div>
+            <strong>Concavidade de u</strong>
+            <div class="equation" data-tex="u(c_t)-u(c_t^*)\leq u'(c_t^*)(c_t-c_t^*)"></div>
+            <p>Troca uma diferença não linear por uma expressão marginal.</p>
+          </div>
+
+          <div class="proof-step">
+            <div class="number">2</div>
+            <strong>Factibilidade e concavidade de F</strong>
+            <div class="equation" data-tex="F(k_t)-F(k_t^*)\leq F'(k_t^*)(k_t-k_t^*)"></div>
+            <p>Reescreve desvios de consumo em desvios de capital.</p>
+          </div>
+
+          <div class="proof-step">
+            <div class="number">3</div>
+            <strong>Euler telescopa</strong>
+            <div class="equation" data-tex="\beta^tu'(c_t^*)F'(k_t^*)=\beta^{t-1}u'(c_{t-1}^*)"></div>
+            <p>Termos de capital em datas internas se cancelam.</p>
+          </div>
+
+          <div class="proof-step">
+            <div class="number">4</div>
+            <strong>TVC fecha o limite</strong>
+            <div class="equation" data-tex="\beta^Tu'(c_T^*)k_{T+1}^*\to0"></div>
+            <p>O resíduo terminal desaparece quando T cresce.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="chart-grid">
+        <article class="card chart-card">
+          <div class="eyebrow">Comparação global</div>
+          <h2>Diferença parcial de utilidades</h2>
+          <div id="sufUtilityChart" class="chart tall"></div>
+          <p class="chart-note">A trajetória ótima domina no limite, embora diferenças parciais possam variar ao longo do horizonte.</p>
+        </article>
+
+        <article class="card chart-card">
+          <div class="eyebrow">Resíduo da telescopagem</div>
+          <h2>Termo terminal que a TVC elimina</h2>
+          <div id="sufBoundaryChart" class="chart tall"></div>
+          <p class="chart-note">O envelope βᵀu′(cₜ*)kₜ₊₁* converge a zero.</p>
+        </article>
+      </section>
+
+      <section class="card">
+        <div class="eyebrow">Desigualdade final</div>
+        <h2>O termo alternativo só ajuda a prova</h2>
+        <div class="formula-box" data-tex="\sum_{t=0}^{T}\beta^t\!\left[u(c_t)-u(c_t^*)\right]\leq\beta^Tu'(c_T^*)k_{T+1}^*-\beta^Tu'(c_T^*)k_{T+1}"></div>
+        <div class="topic-grid">
+          <div class="topic-box"><strong>Primeiro termo</strong><p>Vai a zero pela TVC do candidato ótimo.</p></div>
+          <div class="topic-box"><strong>Segundo termo</strong><p>É não positivo porque o capital alternativo é não negativo.</p></div>
+          <div class="topic-box"><strong>Limite</strong><p>A alternativa não pode produzir utilidade maior.</p></div>
+        </div>
+      </section>
+
+      <footer>Euler cuida do interior da soma; a TVC cuida da borda no infinito.</footer>`;
+
+    renderAllMath();
+
+    bindRange("sufBeta",s,"beta",updateSufficiency);
+    bindRange("sufA",s,"A",updateSufficiency);
+    bindRange("sufAlpha",s,"alpha",updateSufficiency);
+    bindRange("sufK0",s,"k0",updateSufficiency);
+    bindRange("sufS",s,"sAlt",updateSufficiency);
+    bindRange("sufT",s,"T",updateSufficiency);
+
+    $$("[data-suf-preset]").forEach(button=>{
+      button.addEventListener("click",()=>{
+        const preset=button.dataset.sufPreset;
+        const sStar=s.alpha*s.beta;
+        if(preset==="optimal") s.sAlt=sStar;
+        if(preset==="low") s.sAlt=Math.max(.05,.55*sStar);
+        if(preset==="high") s.sAlt=Math.min(.9,1.65*sStar);
+        if(preset==="near") s.sAlt=Math.min(.9,1.05*sStar);
+        renderSufficiency();
+      });
+    });
+
+    updateSufficiency();
+  }
+
+  function constantSharePath(A,alpha,k0,share,T){
+    const capital=[k0];
+    const consumption=[];
+
+    for(let t=0;t<=T;t++){
+      const output=production(capital[t],A,alpha);
+      const c=(1-share)*output;
+      consumption.push(Math.max(c,1e-12));
+
+      if(t<T+1){
+        capital.push(share*output);
+      }
+    }
+
+    return {capital,consumption};
+  }
+
+  function updateSufficiency(){
+    const s=state.sufficiency;
+    const sStar=s.alpha*s.beta;
+    const star=constantSharePath(s.A,s.alpha,s.k0,sStar,s.T+1);
+    const alt=constantSharePath(s.A,s.alpha,s.k0,s.sAlt,s.T+1);
+
+    const utilityDiff=[];
+    const boundary=[];
+    let cumulative=0;
+
+    for(let t=0;t<=s.T;t++){
+      cumulative+=Math.pow(s.beta,t)*(Math.log(alt.consumption[t])-Math.log(star.consumption[t]));
+      utilityDiff.push(cumulative);
+
+      const terminal=Math.pow(s.beta,t)*(1/star.consumption[t])*star.capital[t+1];
+      boundary.push(terminal);
+    }
+
+    $("#sufSStar").textContent=fmt(sStar,5);
+
+    const uStar=star.consumption
+      .slice(0,s.T+1)
+      .reduce((sum,c,t)=>sum+Math.pow(s.beta,t)*Math.log(c),0);
+
+    $("#sufUStar").textContent=fmt(uStar,5);
+    $("#sufGap").textContent=fmt(utilityDiff.at(-1),6);
+    $("#sufBoundary").textContent=fmt(boundary.at(-1),6);
+
+    const theme=chartTheme();
+    const periods=Array.from({length:s.T+1},(_,i)=>i);
+
+    prettyPlot("sufUtilityChart",[
+      {
+        x:periods,y:utilityDiff,type:"scatter",mode:"lines+markers",
+        name:"U alternativa − U ótima",
+        fill:"tozeroy",
+        fillcolor:rgba(utilityDiff.at(-1)<=0?theme.teal:theme.rose,.06),
+        marker:{size:4,color:utilityDiff.at(-1)<=0?theme.teal:theme.rose},
+        line:{color:utilityDiff.at(-1)<=0?theme.teal:theme.rose}
+      },
+      {
+        x:[0,s.T],y:[0,0],type:"scatter",mode:"lines",name:"Igualdade",
+        line:{color:theme.blue,dash:"dash"}
+      }
+    ],plotLayout("Horizonte parcial, T","Diferença acumulada"));
+
+    prettyPlot("sufBoundaryChart",[
+      {
+        x:periods,y:boundary,type:"scatter",mode:"lines+markers",
+        name:"βᵀu′(cₜ*)kₜ₊₁*",
+        fill:"tozeroy",fillcolor:rgba(theme.violet,.07),
+        marker:{size:4,color:theme.violet},line:{color:theme.violet}
+      }
+    ],plotLayout("Horizonte parcial, T","Envelope terminal",{
+      yaxis:{...plotLayout("","").yaxis,type:"log",title:{text:"Envelope — escala log"}}
+    }));
+  }
+
+  /* ============================================================
+     5. ARMADILHAS
+  ============================================================ */
+
+  function renderTraps(){
+    const s=state.traps;
+
+    $("#sidebar").innerHTML=String.raw`
+      <h2 class="sidebar-title">Armadilhas comuns</h2>
+      <p class="sidebar-subtitle">Inspecione o erro, sua consequência e uma regra simples de memória.</p>
+
+      ${slider("trapBeta","Fator de desconto",s.beta,.7,.995,.005,"Usado nas fórmulas de timing.",MATH.beta)}
+      ${slider("trapDelta","Depreciação",s.delta,0,1,.01,"Mostra o caso geral e δ = 1.",MATH.delta)}
+      ${slider("trapT","Índice destacado",s.t,0,12,1,"Centraliza a linha do tempo.",MATH.t)}
+
+      <div class="control">
+        <div class="control-head"><span>Armadilha selecionada</span></div>
+        <select id="trapSelect">
+          <option value="index" ${s.trap==="index"?"selected":""}>Índice do capital</option>
+          <option value="discount" ${s.trap==="discount"?"selected":""}>Desconto ausente</option>
+          <option value="equation" ${s.trap==="equation"?"selected":""}>TVC como equação</option>
+          <option value="sign" ${s.trap==="sign"?"selected":""}>Sinal terminal</option>
+          <option value="timing" ${s.trap==="timing"?"selected":""}>Timing de λ</option>
+          <option value="convention" ${s.trap==="convention"?"selected":""}>Convenção do multiplicador</option>
+          <option value="partial" ${s.trap==="partial"?"selected":""}>Depreciação parcial</option>
+        </select>
+        <small>O painel central muda completamente para o erro escolhido.</small>
+      </div>`;
+
+    $("#content").innerHTML=String.raw`
+      <section class="hero">
+        <article class="card">
+          <div class="eyebrow">Regra-mãe</div>
+          <h2>Escreva primeiro a restrição e só depois os índices</h2>
+          <div class="formula-box" id="trapMasterFormula"></div>
+          <p class="muted">Quase todos os erros de sinal e timing desaparecem quando se identifica o papel econômico de cada variável.</p>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Checklist relâmpago</div>
+          <div class="insight"><strong>Preço:</strong> λₜ valoriza recursos na data t.</div>
+          <div class="insight"><strong>Estoque:</strong> kₜ₊₁ é escolhido em t e usado em t+1.</div>
+          <div class="insight warn"><strong>Limite:</strong> a TVC é descontada e assintótica.</div>
+        </article>
+      </section>
+
+      <section class="trap-layout">
+        <article class="card">
+          <div class="eyebrow">Navegação</div>
+          <h2>Escolha uma armadilha</h2>
+          <div class="trap-menu">
+            <button class="trap-button" data-trap="index">Índice do capital</button>
+            <button class="trap-button" data-trap="discount">Desconto ausente</button>
+            <button class="trap-button" data-trap="equation">TVC como equação</button>
+            <button class="trap-button" data-trap="sign">Sinal terminal</button>
+            <button class="trap-button" data-trap="timing">Timing de λ</button>
+            <button class="trap-button" data-trap="convention">Convenção do multiplicador</button>
+            <button class="trap-button" data-trap="partial">Depreciação parcial</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Inspetor</div>
+          <div class="trap-display">
+            <h3 id="trapTitle">—</h3>
+
+            <div class="trap-section">
+              <div class="trap-label">Forma errada</div>
+              <div class="math-line" id="trapWrong"></div>
+            </div>
+
+            <div class="trap-section">
+              <div class="trap-label">Forma correta</div>
+              <div class="math-line" id="trapCorrect"></div>
+            </div>
+
+            <div class="trap-section">
+              <div class="trap-label">Por que está errado?</div>
+              <p id="trapReason" class="muted">—</p>
+            </div>
+
+            <div class="trap-section">
+              <div class="trap-label">Consequência</div>
+              <p id="trapConsequence" class="muted">—</p>
+            </div>
+
+            <div class="status">
+              <span class="status-dot"></span>
+              <span id="trapMemory">—</span>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="card">
+        <div class="eyebrow">Timing correto</div>
+        <h2>Como kₜ₊₁ atravessa duas datas</h2>
+        <div class="timeline" id="trapTimeline"></div>
+      </section>
+
+      <section class="card">
+        <div class="eyebrow">Tabela de segurança</div>
+        <h2>Objeto, data e função econômica</h2>
+        <table class="compare-table">
+          <thead><tr><th>Objeto</th><th>Data</th><th>Papel</th></tr></thead>
+          <tbody>
+            <tr><td><span data-tex="\lambda_t" data-display="false"></span></td><td>t</td><td>Preço-sombra dos recursos correntes.</td></tr>
+            <tr><td><span data-tex="k_{t+1}" data-display="false"></span></td><td>Escolhido em t</td><td>Uso de recursos hoje e estado produtivo amanhã.</td></tr>
+            <tr><td><span data-tex="\beta^t" data-display="false"></span></td><td>Valor presente</td><td>Converte o termo terminal da data t para a data zero.</td></tr>
+            <tr><td><span data-tex="1-\delta" data-display="false"></span></td><td>t+1</td><td>Parcela do capital que sobrevive à depreciação.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <footer>Em prova: convenção, restrição, CPO, índice e desconto — nessa ordem.</footer>`;
+
+    renderAllMath();
+
+    bindRange("trapBeta",s,"beta",updateTraps);
+    bindRange("trapDelta",s,"delta",()=>{
+      if(s.delta>.995){
+        s.delta=1;
+        $("#trapDelta").value="1";
+        $("#trapDeltaOut").textContent="1";
+      }
+      updateTraps();
+    });
+    bindRange("trapT",s,"t",updateTraps);
+
+    $("#trapSelect").addEventListener("change",event=>{
+      s.trap=event.target.value;
+      updateTraps();
+    });
+
+    $$("[data-trap]").forEach(button=>{
+      button.addEventListener("click",()=>{
+        s.trap=button.dataset.trap;
+        $("#trapSelect").value=s.trap;
+        updateTraps();
+      });
+    });
+
+    updateTraps();
+  }
+
+  function updateTraps(){
+    const s=state.traps;
+    const trap=TRAPS[s.trap];
+    const t=s.t;
+
+    tex(
+      $("#trapMasterFormula"),
+      s.delta===1
+        ?String.raw`Ak_t^\alpha-c_t-k_{t+1}=0`
+        :String.raw`F(k_t)+(1-\delta)k_t-c_t-k_{t+1}=0`
+    );
+
+    $("#trapTitle").textContent=trap.title;
+    tex($("#trapWrong"),trap.wrong);
+    tex($("#trapCorrect"),trap.correct);
+    $("#trapReason").textContent=trap.reason;
+    $("#trapConsequence").textContent=trap.consequence;
+    $("#trapMemory").textContent=trap.memory;
+
+    $$(".trap-button").forEach(button=>{
+      button.classList.toggle("active",button.dataset.trap===s.trap);
+    });
+
+    $("#trapTimeline").innerHTML=String.raw`
+      <div class="time-node">
+        <div>
+          <strong>Estado herdado</strong>
+          <p data-tex="k_${t}" data-display="false"></p>
+        </div>
+      </div>
+
+      <div class="time-arrow">→</div>
+
+      <div class="time-node active">
+        <div>
+          <strong>Recursos em ${t}</strong>
+          <p data-tex="\lambda_${t}" data-display="false"></p>
+        </div>
+      </div>
+
+      <div class="time-arrow">→</div>
+
+      <div class="time-node active">
+        <div>
+          <strong>Escolha em ${t}</strong>
+          <p data-tex="k_${t+1}" data-display="false"></p>
+        </div>
+      </div>
+
+      <div class="time-arrow">→</div>
+
+      <div class="time-node">
+        <div>
+          <strong>Produção em ${t+1}</strong>
+          <p data-tex="F(k_${t+1})+(1-\delta)k_${t+1}" data-display="false"></p>
+        </div>
+      </div>
+
+      <div class="time-arrow">→</div>
+
+      <div class="time-node">
+        <div>
+          <strong>Preço seguinte</strong>
+          <p data-tex="\lambda_${t+1}" data-display="false"></p>
+        </div>
+      </div>`;
+
+    renderAllMath($("#trapTimeline"));
+  }
+
+  function resetCurrent(){
+    state[state.mode]={...defaults[state.mode]};
+    renderMode();
+  }
+
+  $$(".topic-btn").forEach(button=>{
+    button.addEventListener("click",()=>setMode(button.dataset.mode));
+  });
+
+  $("#themeBtn").addEventListener("click",()=>{
+    document.body.classList.toggle("dark");
+    renderMode();
+  });
+
+  $("#resetBtn").addEventListener("click",resetCurrent);
+
+  window.addEventListener("resize",()=>{
+    $$(".chart").forEach(element=>{
+      if(window.Plotly) Plotly.Plots.resize(element);
+    });
+  });
+
+  document.addEventListener("DOMContentLoaded",renderMode);
+  window.addEventListener("load",renderMode);
+})();
+</script>
+</body>
+</html>
