@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -19,9 +19,9 @@
     gtag('config', 'G-NHXHEJP1G0');
   </script>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" />
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
   <style>
     :root {
       --bg: #f6f1e7;
@@ -120,8 +120,29 @@
     aside {
       border-radius: var(--radius-lg);
       padding: 16px;
-      max-height: calc(100vh - 36px);
-      overflow: auto;
+      position: sticky;
+      top: 16px;
+      align-self: start;
+      height: calc(100vh - 32px);
+      max-height: calc(100vh - 32px);
+      overflow-y: auto;
+      overflow-x: hidden;
+      overscroll-behavior: contain;
+      scrollbar-gutter: stable;
+    }
+
+    aside::-webkit-scrollbar { width: 10px; }
+    aside::-webkit-scrollbar-track { background: transparent; }
+    aside::-webkit-scrollbar-thumb {
+      background: color-mix(in srgb, var(--muted) 32%, transparent);
+      border: 3px solid transparent;
+      border-radius: 999px;
+      background-clip: padding-box;
+    }
+    aside::-webkit-scrollbar-thumb:hover {
+      background: color-mix(in srgb, var(--accent) 44%, transparent);
+      border: 3px solid transparent;
+      background-clip: padding-box;
     }
 
     main {
@@ -404,9 +425,73 @@
     .point { stroke: var(--panel-solid); stroke-width: 3; cursor: grab; }
     .point:active { cursor: grabbing; }
 
+
+    .morph-hud {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 14px;
+      display: grid;
+      gap: 7px;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .morph-copy {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      color: var(--muted);
+      font-size: .78rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: color-mix(in srgb, var(--panel-solid) 82%, transparent);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .morph-copy b { color: var(--accent); font-weight: 850; }
+
+    .morph-bar {
+      height: 8px;
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--soft) 65%, transparent);
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .morph-bar span {
+      display: block;
+      height: 100%;
+      width: 100%;
+      transform-origin: left center;
+      transform: scaleX(1);
+      background: linear-gradient(90deg, var(--accent), var(--gold), var(--rose));
+      border-radius: 999px;
+    }
+
+    .morph-ghost-old { stroke: var(--muted); stroke-width: 2.25; stroke-dasharray: 8 7; fill: none; opacity: .45; }
+    .morph-ghost-new { stroke: var(--rose); stroke-width: 2.25; stroke-dasharray: 2 7; fill: none; opacity: .62; }
+    .morph-ghost-core-old { stroke: var(--muted); stroke-width: 5; stroke-dasharray: 9 7; fill: none; stroke-linecap: round; opacity: .35; }
+    .morph-ghost-core-new { stroke: var(--core); stroke-width: 5; stroke-dasharray: 2 7; fill: none; stroke-linecap: round; opacity: .50; }
+    .morph-trail { stroke: var(--rose); stroke-width: 2; stroke-dasharray: 4 6; fill: none; opacity: .80; }
+    .morph-target { fill: var(--rose); stroke: var(--panel-solid); stroke-width: 2.5; opacity: .72; }
+    .morph-start { fill: var(--muted); stroke: var(--panel-solid); stroke-width: 2.5; opacity: .55; }
+
     @media (max-width: 1140px) {
       .app { grid-template-columns: 1fr; }
-      aside { max-height: none; }
+      aside {
+        position: relative;
+        top: auto;
+        height: auto;
+        max-height: none;
+        overflow: visible;
+        scrollbar-gutter: auto;
+      }
       .stage { grid-template-columns: 1fr; }
       .bottom { grid-template-columns: 1fr; }
     }
@@ -502,7 +587,7 @@
     <main>
       <header class="hero">
         <div>
-          <div class="eyebrow">Pure exchange Â· CES utilities</div>
+          <div class="eyebrow">Pure exchange · CES utilities</div>
           <h1>Contract curve, core, and Pareto efficiency</h1>
           <p class="subtitle">See efficiency as tangency. The contract curve is determined by preferences and resources; the initial endowment carves out the individually rational segment: the core.</p>
         </div>
@@ -517,6 +602,14 @@
             <span class="pill"><span class="dot gold"></span>B indifference</span>
             <span class="pill"><span class="dot rose"></span>contract curve</span>
             <span class="pill"><span class="dot text"></span>core</span>
+          </div>
+
+          <div class="morph-hud" aria-hidden="true">
+            <div class="morph-copy">
+              <span><b>Morphing:</b> old contract curve → new contract curve</span>
+              <span id="morphLabel">t = 1.00</span>
+            </div>
+            <div class="morph-bar"><span id="morphBar"></span></div>
           </div>
         </div>
 
@@ -587,20 +680,100 @@
       showSupport: true
     };
 
+
+    const numericStateKeys = ["Xbar", "Ybar", "alphaA", "rhoA", "alphaB", "rhoB", "wX", "wY", "xA", "yA", "lambda"];
+    const checkboxStateKeys = ["showLens", "showEndowmentCurves", "showSupport"];
+    let visualSnapshot = null;
+    let animationStartSnapshot = null;
+    let animationEndSnapshot = null;
+    let animationProgress = 1;
+    let animationFrame = 0;
+    let staticMathRendered = false;
+
+    function snapshotState() {
+      return {
+        Xbar: state.Xbar, Ybar: state.Ybar,
+        alphaA: state.alphaA, rhoA: state.rhoA,
+        alphaB: state.alphaB, rhoB: state.rhoB,
+        wX: state.wX, wY: state.wY,
+        xA: state.xA, yA: state.yA,
+        lambda: state.lambda,
+        dark: state.dark,
+        showLens: state.showLens,
+        showEndowmentCurves: state.showEndowmentCurves,
+        showSupport: state.showSupport
+      };
+    }
+
+    function restoreState(s) {
+      Object.assign(state, s);
+    }
+
+    function interpolateState(a, b, t) {
+      const out = {...b};
+      for (const key of numericStateKeys) out[key] = a[key] + (b[key] - a[key]) * t;
+      for (const key of checkboxStateKeys) out[key] = b[key];
+      out.dark = b.dark;
+      return out;
+    }
+
+    function easeInOutCubic(t) {
+      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+
+    function withState(snapshot, fn) {
+      const backup = snapshotState();
+      restoreState(snapshot);
+      let result;
+      try { result = fn(); }
+      finally { restoreState(backup); }
+      return result;
+    }
+
+    function animateToState(nextState, duration = 760) {
+      if (animationFrame) cancelAnimationFrame(animationFrame);
+      sanitize();
+      const target = {...nextState};
+      const start = visualSnapshot ? {...visualSnapshot} : snapshotState();
+      animationStartSnapshot = {...start};
+      animationEndSnapshot = {...target};
+      const t0 = performance.now();
+
+      function step(now) {
+        const raw = Math.min(1, (now - t0) / duration);
+        const t = easeInOutCubic(raw);
+        animationProgress = t;
+        restoreState(interpolateState(start, target, t));
+        render();
+        visualSnapshot = snapshotState();
+        if (raw < 1) {
+          animationFrame = requestAnimationFrame(step);
+        } else {
+          restoreState(target);
+          animationProgress = 1;
+          render();
+          visualSnapshot = snapshotState();
+          animationFrame = 0;
+        }
+      }
+
+      animationFrame = requestAnimationFrame(step);
+    }
+
     const controlIds = ["Xbar", "Ybar", "alphaA", "rhoA", "alphaB", "rhoB", "wX", "wY", "xA", "yA", "lambda"];
     controlIds.forEach(id => {
       $(id).addEventListener("input", (e) => {
         state[id] = parseFloat(e.target.value);
         sanitize();
         syncInputs(false);
-        render();
+        animateToState(snapshotState());
       });
     });
 
     ["showLens", "showEndowmentCurves", "showSupport"].forEach(id => {
       $(id).addEventListener("change", (e) => {
         state[id] = e.target.checked;
-        render();
+        animateToState(snapshotState());
       });
     });
 
@@ -613,22 +786,23 @@
       $("app").setAttribute("data-theme", theme);
       $("themeToggle").textContent = state.dark ? "Light mode" : "Dark mode";
       render();
+      visualSnapshot = snapshotState();
     });
 
     $("toPlanner").addEventListener("click", () => {
       const p = plannerPoint();
-      if (p) { state.xA = p.x; state.yA = p.y; syncInputs(); render(); }
+      if (p) { state.xA = p.x; state.yA = p.y; syncInputs(); animateToState(snapshotState()); }
     });
 
     $("toEndowment").addEventListener("click", () => {
-      state.xA = state.wX; state.yA = state.wY; syncInputs(); render();
+      state.xA = state.wX; state.yA = state.wY; syncInputs(); animateToState(snapshotState());
     });
 
     $("toCoreMid").addEventListener("click", () => {
       const core = corePoints();
       if (core.length) {
         const p = core[Math.floor(core.length / 2)];
-        state.xA = p.x; state.yA = p.y; syncInputs(); render();
+        state.xA = p.x; state.yA = p.y; syncInputs(); animateToState(snapshotState());
       }
     });
 
@@ -638,7 +812,7 @@
         wX: 3.8, wY: 6.2, xA: 5.2, yA: 4.5, lambda: .50,
         showLens: true, showEndowmentCurves: true, showSupport: true
       });
-      syncInputs(); render();
+      syncInputs(); animateToState(snapshotState());
     });
 
     function sanitize() {
@@ -668,7 +842,7 @@
     }
 
     function clamp(x, lo, hi) { return Math.max(lo, Math.min(hi, x)); }
-    function fmt(x, d = 2) { return Number.isFinite(x) ? Number(x).toFixed(d) : "â€”"; }
+    function fmt(x, d = 2) { return Number.isFinite(x) ? Number(x).toFixed(d) : "—"; }
     function nearZero(rho) { return Math.abs(rho) < 0.035; }
 
     function ces(x, y, a, rho) {
@@ -801,7 +975,7 @@
       $("gainA").textContent = (gainA >= 0 ? "+" : "") + fmt(gainA, 3);
       $("gainB").textContent = (gainB >= 0 ? "+" : "") + fmt(gainB, 3);
       $("coreLength").textContent = core.length ? `${core.length} pts` : "empty";
-      $("supportPrice").textContent = pp ? fmt(price, 3) : "â€”";
+      $("supportPrice").textContent = pp ? fmt(price, 3) : "—";
     }
 
     function cssVar(name) { return getComputedStyle($("app")).getPropertyValue(name).trim(); }
@@ -826,12 +1000,14 @@
       for (let j = 1; j < state.Ybar; j++) line(svg, M.l, sy(j), M.l + bw, sy(j), grid, 1);
       rect(svg, M.l, M.t, bw, bh, "none", text, 2.2, "box-border");
 
-      label(svg, M.l - 12, M.t + bh + 28, "Oá´¬", "svg-title", "end");
-      label(svg, M.l + bw + 12, M.t - 16, "Oá´®", "svg-title", "start");
-      label(svg, M.l + bw / 2, M.t + bh + 48, "good 1 for A  â†’", "svg-label", "middle");
+      label(svg, M.l - 12, M.t + bh + 28, "Oᴬ", "svg-title", "end");
+      label(svg, M.l + bw + 12, M.t - 16, "Oᴮ", "svg-title", "start");
+      label(svg, M.l + bw / 2, M.t + bh + 48, "good 1 for A  →", "svg-label", "middle");
       label(svg, M.l - 48, M.t + bh / 2, "good 2 for A", "svg-label", "middle", -90);
-      label(svg, M.l + bw / 2, M.t - 34, "â†  good 1 for B", "svg-label", "middle");
+      label(svg, M.l + bw / 2, M.t - 34, "←  good 1 for B", "svg-label", "middle");
       label(svg, M.l + bw + 50, M.t + bh / 2, "good 2 for B", "svg-label", "middle", 90);
+
+      drawMorphGuides(svg, sx, sy, panel, rose, blue);
 
       if (state.showLens) drawLens(svg, sx, sy);
 
@@ -866,18 +1042,47 @@
           if (seg.length === 2) line(svg, sx(seg[0].x), sy(seg[0].y), sx(seg[1].x), sy(seg[1].y), blue, 2, "7 6", .95, "support");
         }
         circle(svg, sx(pp.x), sy(pp.y), 8.5, blue, panel, 3);
-        label(svg, sx(pp.x) + 11, sy(pp.y) - 11, "x(Î»)", "svg-title", "start");
+        label(svg, sx(pp.x) + 11, sy(pp.y) - 11, "x(λ)", "svg-title", "start");
       }
 
       drawTangent(svg, sx, sy, state.xA, state.yA, mrsAAt(state.xA, state.yA), accent, false);
       drawTangent(svg, sx, sy, state.xA, state.yA, mrsBAtAcoords(state.xA, state.yA), gold, true);
 
       circle(svg, sx(state.wX), sy(state.wY), 8.5, rose, panel, 3);
-      label(svg, sx(state.wX) + 12, sy(state.wY) + 23, "Ï‰", "svg-title", "start");
+      label(svg, sx(state.wX) + 12, sy(state.wY) + 23, "ω", "svg-title", "start");
 
       const alloc = circle(svg, sx(state.xA), sy(state.yA), 9, text, panel, 3);
       label(svg, sx(state.xA) + 12, sy(state.yA) - 12, "x", "svg-title", "start");
       dragPoint(svg, alloc, invX, invY);
+
+      function drawMorphGuides(svg, sx, sy, panel, rose, blue) {
+        if (!animationStartSnapshot || !animationEndSnapshot || animationProgress >= 0.995) return;
+        const start = animationStartSnapshot;
+        const end = animationEndSnapshot;
+
+        const oldContract = withState(start, () => contractPoints().map(p => [sx(p.x), sy(p.y)]));
+        const newContract = withState(end, () => contractPoints().map(p => [sx(p.x), sy(p.y)]));
+        const oldCore = withState(start, () => corePoints().map(p => [sx(p.x), sy(p.y)]));
+        const newCore = withState(end, () => corePoints().map(p => [sx(p.x), sy(p.y)]));
+
+        const oldPath = drawPath(svg, oldContract, "");
+        if (oldPath) oldPath.setAttribute("class", "morph-ghost-old");
+        const newPath = drawPath(svg, newContract, "");
+        if (newPath) newPath.setAttribute("class", "morph-ghost-new");
+
+        const oldCorePath = drawPath(svg, oldCore, "");
+        if (oldCorePath) oldCorePath.setAttribute("class", "morph-ghost-core-old");
+        const newCorePath = drawPath(svg, newCore, "");
+        if (newCorePath) newCorePath.setAttribute("class", "morph-ghost-core-new");
+
+        const sx0 = sx(start.xA), sy0 = sy(start.yA);
+        const sx1 = sx(end.xA), sy1 = sy(end.yA);
+        line(svg, sx0, sy0, sx1, sy1, rose, 2, "4 6", .82, "morph-trail");
+        circle(svg, sx0, sy0, 5.5, panel, rose, 2).setAttribute("class", "morph-start");
+        circle(svg, sx1, sy1, 6.5, rose, panel, 2).setAttribute("class", "morph-target");
+        label(svg, (sx0 + sx1) / 2, (sy0 + sy1) / 2 - 14, "x(t)=(1−t)x₀+tx₁", "svg-label", "middle");
+        label(svg, sx1 + 10, sy1 + 18, "target", "svg-label", "start");
+      }
 
       function defs(svg, accent, accentSoft, roseSoft) {
         const d = document.createElementNS("http://www.w3.org/2000/svg", "defs");
@@ -981,6 +1186,7 @@
           const p = pt.matrixTransform(svg.getScreenCTM().inverse());
           state.xA = invX(p.x); state.yA = invY(p.y);
           syncInputs(false); render();
+          visualSnapshot = snapshotState();
         };
         const up = () => {
           svg.removeEventListener("pointermove", move);
@@ -1032,7 +1238,7 @@
     }
 
     function renderStaticMath() {
-      if (!window.renderMathInElement) return;
+      if (staticMathRendered || !window.renderMathInElement) return;
       renderMathInElement(document.body, {
         delimiters: [
           {left: "$$", right: "$$", display: true},
@@ -1042,6 +1248,17 @@
         throwOnError: false,
         strict: false
       });
+      staticMathRendered = true;
+    }
+
+
+    function updateMorphUI() {
+      const bar = $("morphBar");
+      const label = $("morphLabel");
+      if (!bar || !label) return;
+      const t = Number.isFinite(animationProgress) ? animationProgress : 1;
+      bar.style.transform = `scaleX(${Math.max(0, Math.min(1, t))})`;
+      label.textContent = t >= 0.995 ? "stable state" : `t = ${fmt(t, 2)}`;
     }
 
     function render() {
@@ -1049,10 +1266,15 @@
       updateReadouts();
       renderMath();
       renderSvg();
+      updateMorphUI();
     }
 
     window.addEventListener("load", () => {
       syncInputs();
+      visualSnapshot = snapshotState();
+      animationStartSnapshot = snapshotState();
+      animationEndSnapshot = snapshotState();
+      animationProgress = 1;
       render();
       renderStaticMath();
     });

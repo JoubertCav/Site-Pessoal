@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
@@ -18,8 +18,8 @@
 
     gtag('config', 'G-NHXHEJP1G0');
   </script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
   <style>
     :root{
       color-scheme: light;
@@ -181,6 +181,58 @@
     .status.ok{color:var(--green);border-color:color-mix(in srgb,var(--green) 48%,var(--border));background:color-mix(in srgb,var(--green) 10%,transparent)}
     .status.bad{color:var(--red);border-color:color-mix(in srgb,var(--red) 48%,var(--border));background:color-mix(in srgb,var(--red) 9%,transparent)}
 
+
+    .morph-hud{
+      position:absolute;
+      left:12px;
+      right:12px;
+      top:12px;
+      display:grid;
+      gap:7px;
+      z-index:4;
+      pointer-events:none;
+    }
+    .morph-copy{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      padding:6px 9px;
+      color:var(--muted);
+      background:color-mix(in srgb,var(--panel) 84%,transparent);
+      box-shadow:var(--shadow-soft);
+      backdrop-filter:blur(12px);
+      font-size:.74rem;
+    }
+    .morph-copy b{color:var(--accent);font-weight:860}
+    .morph-bar{
+      height:8px;
+      border-radius:999px;
+      overflow:hidden;
+      border:1px solid var(--border);
+      background:color-mix(in srgb,var(--panel-3) 70%,transparent);
+      box-shadow:var(--shadow-soft);
+    }
+    .morph-bar span{
+      display:block;
+      width:100%;
+      height:100%;
+      transform:scaleX(1);
+      transform-origin:left center;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--accent),var(--purple),var(--gold),var(--red));
+    }
+    .morph-old-path{stroke:var(--muted);stroke-width:2.05;stroke-dasharray:8 7;fill:none;opacity:.42;pointer-events:none}
+    .morph-new-path{stroke:var(--purple);stroke-width:2.05;stroke-dasharray:2 7;fill:none;opacity:.55;pointer-events:none}
+    .morph-old-budget{stroke:var(--muted);stroke-width:1.9;stroke-dasharray:8 7;fill:none;opacity:.45;pointer-events:none}
+    .morph-new-budget{stroke:var(--gold);stroke-width:1.9;stroke-dasharray:2 7;fill:none;opacity:.58;pointer-events:none}
+    .morph-trail{stroke:var(--red);stroke-width:2;stroke-dasharray:4 6;fill:none;opacity:.84;pointer-events:none}
+    .morph-start{fill:var(--muted);stroke:var(--panel);stroke-width:2.6;opacity:.58;pointer-events:none}
+    .morph-target{fill:var(--red);stroke:var(--panel);stroke-width:2.6;opacity:.78;pointer-events:none}
+    .morph-pulse{fill:none;stroke:var(--accent);stroke-width:1.75;opacity:.30;pointer-events:none}
+
     .svg-label{font-size:13px;fill:var(--muted);user-select:none}.svg-title{font-size:14px;fill:var(--text);font-weight:850;user-select:none}.axis{stroke:var(--axis);stroke-width:1.55}.gridline{stroke:var(--grid);stroke-width:1}.ppf{stroke:var(--accent);stroke-width:3;fill:none}.frontier-fill{fill:color-mix(in srgb,var(--accent) 10%,transparent);stroke:none}.price-line,.budget{stroke:var(--axis);stroke-width:2.15;stroke-dasharray:7 6}.indiffA{stroke:var(--accent);stroke-width:2.15;fill:none}.indiffB{stroke:var(--gold);stroke-width:2.15;fill:none}.contract{stroke:var(--purple);stroke-width:2.45;fill:none;opacity:.9}.gap{stroke:var(--red);stroke-width:3;stroke-linecap:round;stroke-dasharray:6 5}.claim-ray{stroke:var(--border-strong);stroke-width:1.25;stroke-dasharray:3 5}.pt{stroke:var(--panel);stroke-width:3}.ptProd{fill:var(--purple)}.ptA{fill:var(--accent)}.ptB{fill:var(--gold)}.ptClaim{fill:var(--red)}.ptEq{fill:var(--purple)}
     html[data-theme="dark"] .pt{stroke:#071014}
 
@@ -245,7 +297,13 @@
             <div><h2>1. Production side</h2><p>Profit maximization: choose the point on the PPF with tangent slope equal to the price ratio.</p></div>
             <span class="status" id="prodStatus">MRT = p</span>
           </div>
-          <div class="svgbox"><svg id="ppfSvg" viewBox="0 0 760 540" preserveAspectRatio="xMidYMid meet" aria-label="Production possibility frontier diagram"></svg></div>
+          <div class="svgbox">
+            <div class="morph-hud" aria-hidden="true">
+              <div class="morph-copy"><span><b>Morphing:</b> PPF antiga → nova PPF</span><span class="morphLabel">stable state</span></div>
+              <div class="morph-bar"><span class="morphBarFill"></span></div>
+            </div>
+            <svg id="ppfSvg" viewBox="0 0 760 540" preserveAspectRatio="xMidYMid meet" aria-label="Production possibility frontier diagram"></svg>
+          </div>
           <div class="legend">
             <span class="pill"><span class="dot"></span>PPF</span>
             <span class="pill"><span class="dot purple"></span><span class="math" data-tex="y(p)"></span></span>
@@ -258,7 +316,13 @@
             <div><h2>2. Exchange side</h2><p>The produced bundle becomes the box. Demands must meet at one feasible allocation.</p></div>
             <span class="status" id="marketStatus">market gap</span>
           </div>
-          <div class="svgbox"><svg id="edgeSvg" viewBox="0 0 760 540" preserveAspectRatio="xMidYMid meet" aria-label="Edgeworth box diagram"></svg></div>
+          <div class="svgbox">
+            <div class="morph-hud" aria-hidden="true">
+              <div class="morph-copy"><span><b>Object constancy:</b> demandas e caixa mantêm identidade</span><span class="morphLabel">stable state</span></div>
+              <div class="morph-bar"><span class="morphBarFill"></span></div>
+            </div>
+            <svg id="edgeSvg" viewBox="0 0 760 540" preserveAspectRatio="xMidYMid meet" aria-label="Edgeworth box diagram"></svg>
+          </div>
           <div class="legend">
             <span class="pill"><span class="dot"></span>A demand</span>
             <span class="pill"><span class="dot gold"></span>B implied demand</span>
@@ -296,24 +360,89 @@
     const $ = id => document.getElementById(id);
     const state = { A:16, B:16, phi:2.2, p:1, theta:.5, alphaA:.58, rhoA:.05, alphaB:.38, rhoB:-.15, dark:true };
     const ids = ["A","B","phi","p","theta","alphaA","rhoA","alphaB","rhoB"];
+    const numericStateKeys = ["A","B","phi","p","theta","alphaA","rhoA","alphaB","rhoB"];
+    let visualSnapshot = null;
+    let animationStartSnapshot = null;
+    let animationEndSnapshot = null;
+    let animationProgress = 1;
+    let animationActive = false;
+    let animationFrame = 0;
+    let katexReady = false;
 
-    ids.forEach(id => $(id).addEventListener("input", e => { state[id] = +e.target.value; render(); }));
+    function snapshotState(){
+      return { A:state.A, B:state.B, phi:state.phi, p:state.p, theta:state.theta, alphaA:state.alphaA, rhoA:state.rhoA, alphaB:state.alphaB, rhoB:state.rhoB, dark:state.dark };
+    }
+    function restoreSnapshot(s){
+      state.A=s.A; state.B=s.B; state.phi=s.phi; state.p=s.p; state.theta=s.theta; state.alphaA=s.alphaA; state.rhoA=s.rhoA; state.alphaB=s.alphaB; state.rhoB=s.rhoB; state.dark=s.dark;
+    }
+    function interpolateSnapshot(a,b,t){
+      const out={...b};
+      for(const key of numericStateKeys) out[key]=a[key]+(b[key]-a[key])*t;
+      out.dark=b.dark;
+      return out;
+    }
+    function easeInOutCubic(t){ return t<.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2; }
+    function withSnapshot(s,fn){
+      const backup=snapshotState();
+      restoreSnapshot(s);
+      let result;
+      try{ result=fn(); }
+      finally{ restoreSnapshot(backup); }
+      return result;
+    }
+    function animateToCurrent(duration=760){
+      const target=snapshotState();
+      const start=visualSnapshot ? {...visualSnapshot} : target;
+      if(animationFrame) cancelAnimationFrame(animationFrame);
+      animationStartSnapshot=start;
+      animationEndSnapshot=target;
+      animationActive=true;
+      const t0=performance.now();
+
+      function step(now){
+        const raw=Math.min(1,(now-t0)/duration);
+        const t=easeInOutCubic(raw);
+        animationProgress=t;
+        restoreSnapshot(interpolateSnapshot(start,target,t));
+        render({skipKatex:true});
+        visualSnapshot=snapshotState();
+        if(raw<1){
+          animationFrame=requestAnimationFrame(step);
+        }else{
+          restoreSnapshot(target);
+          animationProgress=1;
+          animationActive=false;
+          render({skipKatex:false});
+          visualSnapshot=snapshotState();
+          animationFrame=0;
+        }
+      }
+      animationFrame=requestAnimationFrame(step);
+    }
+    function updateMorphUI(){
+      const t=Number.isFinite(animationProgress) ? Math.max(0,Math.min(1,animationProgress)) : 1;
+      document.querySelectorAll(".morphBarFill").forEach(el => el.style.transform=`scaleX(${t})`);
+      document.querySelectorAll(".morphLabel").forEach(el => el.textContent = t>=.995 ? "stable state" : `t = ${fmt(t,2)}`);
+    }
+
+    ids.forEach(id => $(id).addEventListener("input", e => { state[id] = +e.target.value; animateToCurrent(); }));
     $("theme").addEventListener("click", () => {
       state.dark = !state.dark;
       document.documentElement.setAttribute("data-theme", state.dark ? "dark" : "light");
       $("theme").textContent = state.dark ? "Light mode" : "Dark mode";
-      render();
+      render({skipKatex:true});
+      visualSnapshot=snapshotState();
     });
     $("reset").addEventListener("click", () => {
       Object.assign(state, { A:16, B:16, phi:2.2, p:1, theta:.5, alphaA:.58, rhoA:.05, alphaB:.38, rhoB:-.15 });
-      syncInputs(); render();
+      syncInputs(); animateToCurrent();
     });
-    $("solve").addEventListener("click", () => { state.p = solveGEPrice(); syncInputs(); render(); });
+    $("solve").addEventListener("click", () => { state.p = solveGEPrice(); syncInputs(); animateToCurrent(); });
 
     function syncInputs(){ ids.forEach(id => $(id).value = state[id]); }
     function css(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
     function clamp(x,a,b){ return Math.max(a, Math.min(b, x)); }
-    function fmt(x,d=2){ return isFinite(x) ? Number(x).toFixed(d) : "â€”"; }
+    function fmt(x,d=2){ return isFinite(x) ? Number(x).toFixed(d) : "—"; }
 
     function renderKatex(){
       if(!window.katex) return;
@@ -321,6 +450,7 @@
         const tex = el.dataset.tex || el.textContent;
         katex.render(tex, el, { throwOnError:false, displayMode: el.dataset.display === "1" });
       });
+      katexReady = true;
     }
 
     function ppfY(x){
@@ -397,7 +527,7 @@
       return clamp(Math.exp((lo+hi)/2), .2, 5);
     }
 
-    function render(){
+    function render(options={}){
       ids.forEach(id => {
         const digits = (id === "A" || id === "B") ? 1 : 2;
         $(id + "Val").textContent = fmt(state[id], digits);
@@ -406,7 +536,7 @@
       $("outY").textContent = `(${fmt(E.y.y1)}, ${fmt(E.y.y2)})`;
       $("outMRT").textContent = fmt(E.y.mrt,3);
       $("outValue").textContent = fmt(E.V,2);
-      $("boxSize").textContent = `${fmt(E.y.y1)} Ã— ${fmt(E.y.y2)}`;
+      $("boxSize").textContent = `${fmt(E.y.y1)} × ${fmt(E.y.y2)}`;
       $("dA").textContent = `(${fmt(E.dA.x1)}, ${fmt(E.dA.x2)})`;
       $("dB").textContent = `(${fmt(E.bAsA.x1)}, ${fmt(E.bAsA.x2)})`;
       $("z1").textContent = fmt(E.z1,3);
@@ -425,7 +555,8 @@
 
       drawPPF(E);
       drawEdgeworth(E);
-      renderKatex();
+      updateMorphUI();
+      if(!options.skipKatex) renderKatex();
     }
 
     function drawPPF(E){
@@ -433,6 +564,7 @@
       const text=css("--text"), axis=css("--axis"), grid=css("--grid"), accent=css("--accent"), purple=css("--purple"), panel=css("--panel");
       const W=760,H=540,m={l:72,r:34,t:34,b:64},bw=W-m.l-m.r,bh=H-m.t-m.b;
       const sx=x=>m.l + x/state.A*bw, sy=y=>m.t + bh - y/state.B*bh;
+      drawMorphPPFGuides(svg,sx,sy,purple,panel);
       line(svg,m.l,m.t+bh,m.l+bw,m.t+bh,axis,1.55); line(svg,m.l,m.t,m.l,m.t+bh,axis,1.55);
       for(let i=1;i<6;i++){ line(svg,m.l+i*bw/6,m.t,m.l+i*bw/6,m.t+bh,grid,1); line(svg,m.l,m.t+i*bh/6,m.l+bw,m.t+i*bh/6,grid,1); }
       textEl(svg,m.l+bw/2,m.t+bh+44,"good 1", "svg-label","middle");
@@ -455,19 +587,52 @@
       textEl(svg,m.l-10,m.t+6,fmt(state.B,1),"svg-label","end");
     }
 
+    function drawMorphPPFGuides(svg,sx,sy,purple,panel){
+      if(!animationActive || !animationStartSnapshot || !animationEndSnapshot) return;
+
+      const samplePPF = () => {
+        const pts=[];
+        for(let i=0;i<=240;i++){
+          const x=state.A*i/240;
+          pts.push({x:x/state.A*animationEndSnapshot.A, y:ppfY(x)/state.B*animationEndSnapshot.B});
+        }
+        const y=productionAtPrice(state.p);
+        const c=y.y2+state.p*y.y1;
+        const budget=clippedLineInBox(state.p,c,state.A,state.B).map(q=>({x:q.x/state.A*animationEndSnapshot.A, y:q.y/state.B*animationEndSnapshot.B}));
+        return { pts, prod:{x:y.y1/state.A*animationEndSnapshot.A, y:y.y2/state.B*animationEndSnapshot.B}, budget };
+      };
+
+      const oldData=withSnapshot(animationStartSnapshot,samplePPF);
+      const newData=withSnapshot(animationEndSnapshot,samplePPF);
+      if(oldData.pts.length>2) dataPath(svg,oldData.pts,sx,sy,"morph-old-path");
+      if(newData.pts.length>2) dataPath(svg,newData.pts,sx,sy,"morph-new-path");
+      if(oldData.budget.length===2) dataPath(svg,oldData.budget,sx,sy,"morph-old-budget");
+      if(newData.budget.length===2) dataPath(svg,newData.budget,sx,sy,"morph-new-budget");
+
+      lineClass(svg,sx(oldData.prod.x),sy(oldData.prod.y),sx(newData.prod.x),sy(newData.prod.y),"morph-trail");
+      circle(svg,sx(oldData.prod.x),sy(oldData.prod.y),5.6,"var(--muted)",panel,2.6,"morph-start");
+      circle(svg,sx(newData.prod.x),sy(newData.prod.y),6.5,"var(--red)",panel,2.6,"morph-target");
+      circle(svg,sx(state.A ? EasingSafeProdX() : 0),sy(state.B ? EasingSafeProdY() : 0),15+4*Math.sin(Math.PI*animationProgress),"none","var(--accent)",1.7,"morph-pulse");
+      textEl(svg,(sx(oldData.prod.x)+sx(newData.prod.x))/2,(sy(oldData.prod.y)+sy(newData.prod.y))/2-12,"y(t)=(1−t)y₀+ty₁","svg-label","middle");
+
+      function EasingSafeProdX(){ const y=productionAtPrice(state.p); return y.y1; }
+      function EasingSafeProdY(){ const y=productionAtPrice(state.p); return y.y2; }
+    }
+
     function drawEdgeworth(E){
       const svg = $("edgeSvg"); svg.innerHTML = "";
       const axis=css("--axis"), grid=css("--grid"), text=css("--text"), muted=css("--muted"), accent=css("--accent"), gold=css("--gold"), purple=css("--purple"), red=css("--red"), panel=css("--panel");
       const Y1=E.y.y1, Y2=E.y.y2;
       const W=760,H=540,m={l:76,r:76,t:48,b:70},bw=W-m.l-m.r,bh=H-m.t-m.b;
       const sx=x=>m.l + x/Y1*bw, sy=y=>m.t + bh - y/Y2*bh;
+      drawMorphEdgeworthGuides(svg,sx,sy,Y1,Y2,panel);
       line(svg,m.l,m.t+bh,m.l+bw,m.t+bh,axis,1.55); line(svg,m.l,m.t,m.l,m.t+bh,axis,1.55);
       line(svg,m.l+bw,m.t,m.l+bw,m.t+bh,axis,1.15); line(svg,m.l,m.t,m.l+bw,m.t,axis,1.15);
       for(let i=1;i<6;i++){ line(svg,m.l+i*bw/6,m.t,m.l+i*bw/6,m.t+bh,grid,1); line(svg,m.l,m.t+i*bh/6,m.l+bw,m.t+i*bh/6,grid,1); }
-      textEl(svg,m.l-8,m.t+bh+27,"Oá´¬","svg-title","end"); textEl(svg,m.l+bw+10,m.t-14,"Oá´®","svg-title","start");
-      textEl(svg,m.l+bw/2,m.t+bh+47,"good 1 for A  â†’","svg-label","middle");
+      textEl(svg,m.l-8,m.t+bh+27,"Oᴬ","svg-title","end"); textEl(svg,m.l+bw+10,m.t-14,"Oᴮ","svg-title","start");
+      textEl(svg,m.l+bw/2,m.t+bh+47,"good 1 for A  →","svg-label","middle");
       textEl(svg,m.l-46,m.t+bh/2,"good 2 for A","svg-label","middle",-90);
-      textEl(svg,m.l+bw/2,m.t-27,"â†  good 1 for B","svg-label","middle");
+      textEl(svg,m.l+bw/2,m.t-27,"←  good 1 for B","svg-label","middle");
 
       const claim = { x1:state.theta*Y1, x2:state.theta*Y2 };
       line(svg,sx(0),sy(0),sx(Y1),sy(Y2),css("--border-strong"),1.25,"3 5");
@@ -481,9 +646,52 @@
       circle(svg,sx(claim.x1),sy(claim.x2),8.2,red,panel,3,"pt ptClaim");
       circle(svg,sx(E.dA.x1),sy(E.dA.x2),8.4,accent,panel,3,"pt ptA");
       circle(svg,sx(E.bAsA.x1),sy(E.bAsA.x2),8.4,gold,panel,3,"pt ptB");
-      textEl(svg,sx(claim.x1)+11,sy(claim.x2)+22,"Ï‰A=Î¸y","svg-title");
+      textEl(svg,sx(claim.x1)+11,sy(claim.x2)+22,"ωA=θy","svg-title");
       textEl(svg,sx(E.dA.x1)+12,sy(E.dA.x2)-12,"xA(p)","svg-title");
-      textEl(svg,sx(E.bAsA.x1)+12,sy(E.bAsA.x2)+22,"yâˆ’xB(p)","svg-title");
+      textEl(svg,sx(E.bAsA.x1)+12,sy(E.bAsA.x2)+22,"y−xB(p)","svg-title");
+    }
+
+    function drawMorphEdgeworthGuides(svg,sx,sy,currentY1,currentY2,panel){
+      if(!animationActive || !animationStartSnapshot || !animationEndSnapshot) return;
+
+      const sampleEdge = () => {
+        const E=economyAtPrice(state.p);
+        const Y1=E.y.y1, Y2=E.y.y2;
+        const scalePoint = q => ({x:q.x1/Y1*currentY1, y:q.x2/Y2*currentY2});
+        const contract=[];
+        for(let i=1;i<190;i++){
+          const x=Y1*i/190;
+          let lo=1e-5,hi=Y2-1e-5;
+          for(let k=0;k<34;k++){
+            const mid=(lo+hi)/2;
+            const a=cesMRS(x,mid,state.alphaA,state.rhoA);
+            const b=cesMRS(Y1-x,Y2-mid,state.alphaB,state.rhoB);
+            if(a>b) hi=mid; else lo=mid;
+          }
+          const y=(lo+hi)/2;
+          if(y>0 && y<Y2) contract.push({x:x/Y1*currentY1, y:y/Y2*currentY2});
+        }
+        const claim=scalePoint({x1:state.theta*Y1,x2:state.theta*Y2});
+        const dA=scalePoint(E.dA);
+        const bAsA=scalePoint(E.bAsA);
+        const budget=clippedLineInBox(E.p,E.mA,Y1,Y2).map(q=>({x:q.x/Y1*currentY1, y:q.y/Y2*currentY2}));
+        return {contract, claim, dA, bAsA, budget};
+      };
+
+      const oldData=withSnapshot(animationStartSnapshot,sampleEdge);
+      const newData=withSnapshot(animationEndSnapshot,sampleEdge);
+      if(oldData.contract.length>2) dataPath(svg,oldData.contract,sx,sy,"morph-old-path");
+      if(newData.contract.length>2) dataPath(svg,newData.contract,sx,sy,"morph-new-path");
+      if(oldData.budget.length===2) dataPath(svg,oldData.budget,sx,sy,"morph-old-budget");
+      if(newData.budget.length===2) dataPath(svg,newData.budget,sx,sy,"morph-new-budget");
+
+      lineClass(svg,sx(oldData.dA.x),sy(oldData.dA.y),sx(newData.dA.x),sy(newData.dA.y),"morph-trail");
+      lineClass(svg,sx(oldData.bAsA.x),sy(oldData.bAsA.y),sx(newData.bAsA.x),sy(newData.bAsA.y),"morph-trail");
+      lineClass(svg,sx(oldData.claim.x),sy(oldData.claim.y),sx(newData.claim.x),sy(newData.claim.y),"morph-trail");
+      circle(svg,sx(oldData.dA.x),sy(oldData.dA.y),5.5,"var(--muted)",panel,2.6,"morph-start");
+      circle(svg,sx(newData.dA.x),sy(newData.dA.y),6.3,"var(--red)",panel,2.6,"morph-target");
+      circle(svg,sx(state.theta*currentY1),sy(state.theta*currentY2),14+4*Math.sin(Math.PI*animationProgress),"none","var(--accent)",1.7,"morph-pulse");
+      textEl(svg,(sx(oldData.dA.x)+sx(newData.dA.x))/2,(sy(oldData.dA.y)+sy(newData.dA.y))/2-12,"x(t)=(1−t)x₀+tx₁","svg-label","middle");
     }
 
     function clippedLineInBox(p,c,X,Y){
@@ -544,6 +752,18 @@
       line(svg,sx(x1),sy(y1),sx(x2),sy(y2),color,1.7,"3 4");
     }
 
+    function dataPath(svg,pts,sx,sy,cls){
+      if(!pts || pts.length<2) return null;
+      const pix=pts.map(q=>[sx(q.x),sy(q.y)]);
+      return path(svg,pix,cls);
+    }
+    function lineClass(svg,x1,y1,x2,y2,cls){
+      const el=document.createElementNS("http://www.w3.org/2000/svg","line");
+      el.setAttribute("x1",x1); el.setAttribute("y1",y1); el.setAttribute("x2",x2); el.setAttribute("y2",y2);
+      el.setAttribute("class",cls);
+      svg.appendChild(el); return el;
+    }
+
     function line(svg,x1,y1,x2,y2,stroke,width=1,dash=""){
       const el=document.createElementNS("http://www.w3.org/2000/svg","line");
       el.setAttribute("x1",x1); el.setAttribute("y1",y1); el.setAttribute("x2",x2); el.setAttribute("y2",y2);
@@ -570,6 +790,10 @@
 
     syncInputs();
     render();
+    visualSnapshot=snapshotState();
+    animationStartSnapshot=snapshotState();
+    animationEndSnapshot=snapshotState();
+    updateMorphUI();
     window.addEventListener("load", () => setTimeout(renderKatex, 80));
   </script>
 </body>

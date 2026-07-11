@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Primitivas do Brock–Mirman — edição refinada</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+
+  <style>
+    :root{
+      --bg:#f3f2ed;--panel:#fffefa;--soft:#f7f6f1;--text:#17212b;--muted:#68727e;
+      --line:#deded6;--blue:#2563eb;--teal:#0f9f95;--violet:#7c3aed;--rose:#d95672;
+      --amber:#b66c0a;--green:#18794e;--shadow:0 12px 32px rgba(25,32,42,.07);
+      --radius:18px;--sidebar:318px
+    }
+    body.dark{
+      --bg:#0e151b;--panel:#151e27;--soft:#1a2630;--text:#eef3f6;--muted:#a9b5bf;
+      --line:#30404c;--blue:#79a9ff;--teal:#55d5c9;--violet:#b49aff;--rose:#ff8da4;
+      --amber:#f1bb62;--green:#69d59d;--shadow:0 16px 38px rgba(0,0,0,.27)
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;background:var(--bg);color:var(--text);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.47;transition:background .2s,color .2s
+    }
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    .app{max-width:1500px;margin:auto;padding:18px}
+    header{
+      display:flex;justify-content:space-between;align-items:center;gap:16px;
+      padding:16px 18px;border:1px solid var(--line);border-radius:20px;
+      background:var(--panel);box-shadow:var(--shadow)
+    }
+    .brand{display:flex;align-items:center;gap:12px;min-width:0}
+    .mark{
+      width:44px;height:44px;display:grid;place-items:center;flex:0 0 auto;border-radius:14px;
+      color:#fff;font-weight:900;background:linear-gradient(135deg,var(--blue),var(--teal))
+    }
+    h1{margin:0;font-size:clamp(1.25rem,2vw,1.95rem);line-height:1.08}
+    .subtitle{margin:4px 0 0;color:var(--muted);font-size:.91rem}
+    .header-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{
+      border:1px solid var(--line);border-radius:11px;padding:8px 11px;
+      background:var(--soft);color:var(--text);font-weight:740
+    }
+    .btn:hover{border-color:var(--blue)}
+    .btn.primary{background:var(--blue);color:#fff;border-color:transparent}
+    .topic-nav{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:14px 0 16px
+    }
+    .topic-btn{
+      min-height:64px;padding:10px 13px;border:1px solid var(--line);border-radius:14px;
+      background:var(--panel);color:var(--text);text-align:left;box-shadow:var(--shadow);
+      transition:transform .16s,border-color .16s,background .16s
+    }
+    .topic-btn:hover{transform:translateY(-1px);border-color:var(--blue)}
+    .topic-btn.active{
+      color:#fff;border-color:transparent;background:linear-gradient(135deg,var(--blue),var(--teal))
+    }
+    .topic-btn strong{display:block;font-size:.91rem}
+    .topic-btn span{display:block;margin-top:2px;font-size:.75rem;opacity:.78}
+    .layout{
+      display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr);gap:16px;align-items:start
+    }
+    aside{
+      position:sticky;top:18px;padding:16px;border:1px solid var(--line);border-radius:var(--radius);
+      background:var(--panel);box-shadow:var(--shadow);max-height:calc(100vh - 36px);overflow:auto
+    }
+    .sidebar-title{margin:0 0 3px;font-size:1rem}
+    .sidebar-subtitle{margin:0 0 14px;color:var(--muted);font-size:.81rem}
+    .control{padding:0 0 13px;margin:0 0 13px;border-bottom:1px solid var(--line)}
+    .control:last-child{border:0;margin-bottom:0}
+    .control-head{display:flex;justify-content:space-between;gap:10px;align-items:baseline;font-size:.87rem;font-weight:760}
+    .control output{color:var(--blue);font-variant-numeric:tabular-nums}
+    .control small{display:block;margin-top:4px;color:var(--muted);font-size:.75rem}
+    input[type=range]{width:100%;margin-top:9px;accent-color:var(--blue)}
+    select{
+      width:100%;margin-top:8px;padding:9px 10px;color:var(--text);
+      background:var(--soft);border:1px solid var(--line);border-radius:10px
+    }
+    .preset-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
+    .preset{
+      padding:7px 8px;border:1px solid var(--line);border-radius:9px;
+      color:var(--text);background:var(--soft);font-size:.75rem;font-weight:700
+    }
+    .preset:hover{color:var(--teal);border-color:var(--teal)}
+    main{display:grid;gap:16px;min-width:0}
+    .card{
+      min-width:0;padding:18px;border:1px solid var(--line);border-radius:var(--radius);
+      background:var(--panel);box-shadow:var(--shadow)
+    }
+    .eyebrow{
+      margin-bottom:4px;color:var(--teal);font-size:.69rem;font-weight:850;
+      letter-spacing:.12em;text-transform:uppercase
+    }
+    h2{margin:0;font-size:1.1rem}
+    h3{margin:0;font-size:.96rem}
+    p{margin:9px 0}
+    .muted{color:var(--muted)}
+    .hero{display:grid;grid-template-columns:minmax(0,1.28fr) minmax(280px,.72fr);gap:16px}
+    .formula-box{
+      display:grid;place-items:center;min-height:112px;margin-top:13px;padding:16px;
+      overflow:auto;border:1px solid var(--line);border-radius:14px;background:var(--soft);
+      font-size:clamp(1rem,1.8vw,1.38rem)
+    }
+    .insight{
+      padding:13px;border-left:4px solid var(--teal);border-radius:11px;background:var(--soft);
+      font-size:.86rem
+    }
+    .insight + .insight{margin-top:9px}
+    .insight.warn{border-left-color:var(--amber)}
+    .insight.bad{border-left-color:var(--rose)}
+    .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+    .metric{
+      padding:13px;border:1px solid var(--line);border-radius:13px;background:var(--panel);
+      box-shadow:var(--shadow)
+    }
+    .metric-label{color:var(--muted);font-size:.71rem;font-weight:760;letter-spacing:.04em;text-transform:uppercase}
+    .metric-value{margin-top:4px;font-size:1.16rem;font-weight:850;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+    .chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .chart-card{padding-bottom:12px}
+    .chart{width:100%;height:350px}
+    .chart.tall{height:400px}
+    .chart-note{margin:2px 0 0;color:var(--muted);font-size:.76rem}
+    .topic-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:13px}
+    .topic-box{padding:13px;border:1px solid var(--line);border-radius:13px;background:var(--soft)}
+    .topic-box strong{display:block;color:var(--blue);font-size:.82rem}
+    .topic-box p{margin:6px 0 0;color:var(--muted);font-size:.8rem}
+    .equation-strip{
+      display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:13px
+    }
+    .equation{
+      min-width:0;padding:11px;border:1px solid var(--line);border-radius:12px;
+      background:var(--soft);text-align:center;overflow:auto;font-size:.91rem
+    }
+    details{border:1px solid var(--line);border-radius:12px;background:var(--soft)}
+    details+details{margin-top:9px}
+    summary{padding:12px 14px;cursor:pointer;font-weight:780}
+    .details-body{padding:0 14px 14px;color:var(--muted);font-size:.87rem}
+    .math-line{
+      margin:10px 0;padding:12px;overflow:auto;border:1px solid var(--line);
+      border-radius:11px;background:var(--panel);color:var(--text)
+    }
+    .mechanism{
+      display:grid;grid-template-columns:repeat(7,auto);align-items:center;
+      justify-content:space-between;gap:7px;overflow:auto;margin-top:13px;padding-bottom:3px
+    }
+    .node{
+      min-width:135px;padding:11px;border:1px solid var(--line);border-radius:12px;
+      background:var(--soft);text-align:center
+    }
+    .node strong{display:block;color:var(--blue);font-size:.78rem}
+    .node span{display:block;margin-top:3px;color:var(--muted);font-size:.72rem}
+    .arrow{color:var(--muted);font-weight:900}
+    .badge{
+      display:inline-flex;align-items:center;gap:7px;padding:6px 9px;border:1px solid var(--line);
+      border-radius:999px;background:var(--soft);font-size:.76rem;font-weight:780
+    }
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--green)}
+    .dot.bad{background:var(--rose)}
+    .compare-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:.82rem}
+    .compare-table th,.compare-table td{padding:9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+    .compare-table th{color:var(--muted);font-size:.71rem;text-transform:uppercase;letter-spacing:.05em}
+    .hidden{display:none!important}
+    footer{padding:8px 4px 2px;color:var(--muted);text-align:center;font-size:.8rem}
+
+    /* Sistema matemático unificado */
+    .formula-box,
+    .math-line,
+    .equation{
+      position:relative;
+      isolation:isolate;
+      background:
+        radial-gradient(circle at 15% 0%, color-mix(in srgb,var(--blue) 8%,transparent), transparent 42%),
+        linear-gradient(145deg,var(--soft),color-mix(in srgb,var(--panel) 82%,var(--soft)));
+      border-color:color-mix(in srgb,var(--line) 72%,var(--blue));
+      box-shadow:
+        inset 0 1px 0 color-mix(in srgb,#fff 55%,transparent),
+        0 8px 24px rgba(24,33,43,.035);
+    }
+    .formula-box::before,
+    .math-line::before{
+      content:"";
+      position:absolute;
+      left:18px;right:18px;top:0;height:2px;
+      border-radius:0 0 999px 999px;
+      background:linear-gradient(90deg,transparent,var(--blue),var(--teal),transparent);
+      opacity:.65;
+    }
+    .formula-box{
+      min-height:126px;
+      padding:22px 20px;
+    }
+    .math-line{
+      padding:16px 18px;
+    }
+    .equation{
+      min-height:70px;
+      display:grid;
+      place-items:center;
+      padding:14px;
+    }
+    .formula-box .katex-display,
+    .math-line .katex-display,
+    .equation .katex-display{
+      margin:0;
+      width:100%;
+      overflow-x:auto;
+      overflow-y:hidden;
+      padding:2px 0;
+    }
+    .formula-box .katex{font-size:1.16em}
+    .math-line .katex{font-size:1.02em}
+    .equation .katex{font-size:1em}
+    [data-display="false"] .katex,
+    .inline-math .katex{
+      font-size:1em;
+      color:color-mix(in srgb,var(--text) 88%,var(--blue));
+    }
+    .control-head [data-display="false"] .katex{
+      color:var(--blue);
+      font-weight:700;
+    }
+    .katex .mrel,
+    .katex .mbin{padding-left:.06em;padding-right:.06em}
+    .katex-display > .katex{white-space:nowrap}
+
+    /* Superfície editorial dos gráficos */
+    .chart-card{
+      overflow:hidden;
+    }
+    .chart{
+      overflow:hidden;
+      border:1px solid color-mix(in srgb,var(--line) 82%,var(--blue));
+      border-radius:15px;
+      background:
+        radial-gradient(circle at 12% 4%, color-mix(in srgb,var(--blue) 7%,transparent), transparent 36%),
+        linear-gradient(180deg,color-mix(in srgb,var(--panel) 92%,var(--soft)),var(--panel));
+    }
+    .chart .modebar{
+      top:8px!important;
+      right:8px!important;
+      padding:3px!important;
+      border:1px solid var(--line)!important;
+      border-radius:9px!important;
+      background:color-mix(in srgb,var(--panel) 86%,transparent)!important;
+      backdrop-filter:blur(7px);
+    }
+    .chart .modebar-btn path{fill:var(--muted)!important}
+    .chart .modebar-btn:hover path{fill:var(--blue)!important}
+    .chart-note{
+      display:flex;
+      align-items:flex-start;
+      gap:7px;
+      margin-top:8px;
+      padding:0 2px;
+      line-height:1.42;
+    }
+    .chart-note::before{
+      content:"";
+      width:7px;height:7px;flex:0 0 auto;margin-top:.37em;
+      border-radius:50%;background:var(--teal);
+    }
+    .metric{
+      background:
+        linear-gradient(145deg,var(--panel),color-mix(in srgb,var(--soft) 72%,var(--panel)));
+    }
+    .metric-value{
+      color:color-mix(in srgb,var(--text) 88%,var(--blue));
+    }
+    details[open]{
+      border-color:color-mix(in srgb,var(--line) 65%,var(--blue));
+      box-shadow:0 8px 20px rgba(25,32,42,.035);
+    }
+    summary::marker{color:var(--blue)}
+    @media(max-width:1120px){
+      .layout{grid-template-columns:280px minmax(0,1fr)}
+      .hero,.chart-grid{grid-template-columns:1fr}
+      .topic-grid,.equation-strip{grid-template-columns:1fr}
+      .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media(max-width:780px){
+      .app{padding:10px}
+      header{align-items:flex-start;flex-direction:column}
+      .topic-nav{grid-template-columns:1fr 1fr}
+      .layout{grid-template-columns:1fr}
+      aside{position:static;max-height:none}
+    }
+    @media(max-width:490px){
+      .topic-nav,.metrics{grid-template-columns:1fr}
+      .preset-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand">
+      <div class="mark">BM</div>
+      <div>
+        <h1>Primitivas do Brock–Mirman</h1>
+        <p class="subtitle">Quatro laboratórios para entender cada escolha isoladamente e a combinação completa</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn" id="themeBtn">◐ Tema</button>
+      <button class="btn" id="resetBtn">Reiniciar tópico</button>
+    </div>
+  </header>
+
+  <nav class="topic-nav" aria-label="Escolha do tópico">
+    <button class="topic-btn active" data-mode="utility">
+      <strong>Utilidade logarítmica</strong>
+      <span>Curvatura, utilidade marginal e caso limite CRRA</span>
+    </button>
+    <button class="topic-btn" data-mode="technology">
+      <strong>Tecnologia Cobb–Douglas</strong>
+      <span>Produto, produtividade marginal e linearidade em logs</span>
+    </button>
+    <button class="topic-btn" data-mode="depreciation">
+      <strong>Depreciação total</strong>
+      <span>Recursos, capital residual e o custo da simplificação</span>
+    </button>
+    <button class="topic-btn" data-mode="combination">
+      <strong>Combinação dos três</strong>
+      <span>Guess and Verify, políticas fechadas e dinâmica</span>
+    </button>
+  </nav>
+
+  <div class="layout">
+    <aside id="sidebar"></aside>
+    <main id="content"></main>
+  </div>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  const $ = (selector, root=document) => root.querySelector(selector);
+  const $$ = (selector, root=document) => [...root.querySelectorAll(selector)];
+
+  const defaults = {
+    utility: { sigma:1, cMin:0.15, cMax:4, cRef:1, scale:1.8 },
+    technology: { A:1, alpha:0.36, kMax:12, kRef:3, compareCes:false, rho:0.4 },
+    depreciation: { A:1, alpha:0.36, delta:1, kMax:12, kRef:4 },
+    combination: { beta:0.95, A:1, alpha:0.36, k0:0.25, horizon:30, b0:0 }
+  };
+
+  const state = {
+    mode:"utility",
+    utility:{...defaults.utility},
+    technology:{...defaults.technology},
+    depreciation:{...defaults.depreciation},
+    combination:{...defaults.combination}
+  };
+
+  const pt = (x,d=3) => {
+    if(!Number.isFinite(x)) return "—";
+    if(Math.abs(x)>=1e5 || (Math.abs(x)>0 && Math.abs(x)<1e-4)) return x.toExponential(2).replace(".",",");
+    return x.toLocaleString("pt-BR",{maximumFractionDigits:d,minimumFractionDigits:0});
+  };
+
+  function linspace(a,b,n){
+    return Array.from({length:n},(_,i)=>a+(b-a)*i/(n-1));
+  }
+
+  const KATEX_OPTIONS={
+    throwOnError:false,
+    strict:"ignore",
+    trust:false,
+    macros:{
+      "\\EIS":"\\operatorname{EIS}",
+      "\\MPK":"\\operatorname{PMgK}",
+      "\\R":"\\mathcal{R}",
+      "\\T":"\\mathcal{T}"
+    }
+  };
+
+  function tex(el, expression, display=true){
+    if(!el) return;
+    const prepared=display ? `\\displaystyle ${expression}` : expression;
+    if(window.katex){
+      katex.render(prepared,el,{...KATEX_OPTIONS,displayMode:display});
+    }else{
+      el.textContent=expression;
+    }
+  }
+
+  function renderAllMath(root=document){
+    if(!window.katex) return;
+    $$("[data-tex]",root).forEach(el=>{
+      const display=el.dataset.display!=="false";
+      const prepared=display ? `\\displaystyle ${el.dataset.tex}` : el.dataset.tex;
+      katex.render(prepared,el,{...KATEX_OPTIONS,displayMode:display});
+    });
+  }
+
+  function slider(id,label,value,min,max,step,help,symbol=""){
+    return `
+      <div class="control">
+        <div class="control-head">
+          <span>${label}${symbol?` <span data-tex="${symbol}" data-display="false"></span>`:""}</span>
+          <output id="${id}Out">${pt(value,3)}</output>
+        </div>
+        <input id="${id}" type="range" min="${min}" max="${max}" step="${step}" value="${value}">
+        <small>${help}</small>
+      </div>`;
+  }
+
+  function metric(label,id){
+    return `<div class="metric"><div class="metric-label">${label}</div><div class="metric-value" id="${id}">—</div></div>`;
+  }
+
+  function chartTheme(){
+    const dark=document.body.classList.contains("dark");
+    return {
+      dark,
+      text:dark?"#a9b5bf":"#68727e",
+      strong:dark?"#eef3f6":"#17212b",
+      grid:dark?"rgba(74,94,108,.32)":"rgba(190,193,188,.42)",
+      axis:dark?"#40515f":"#c8c9c2",
+      panel:dark?"#151e27":"#fffefa",
+      blue:dark?"#79a9ff":"#2563eb",
+      teal:dark?"#55d5c9":"#0f9f95",
+      violet:dark?"#b49aff":"#7c3aed",
+      rose:dark?"#ff8da4":"#d95672",
+      amber:dark?"#f1bb62":"#b66c0a",
+      green:dark?"#69d59d":"#18794e"
+    };
+  }
+
+  function rgba(hex,alpha){
+    const value=hex.replace("#","");
+    const full=value.length===3?value.split("").map(c=>c+c).join(""):value;
+    const n=parseInt(full,16);
+    return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${alpha})`;
+  }
+
+  function plotLayout(xTitle,yTitle,extra={}){
+    const t=chartTheme();
+    const baseAxis={
+      showline:true,
+      linewidth:1,
+      linecolor:t.axis,
+      ticks:"outside",
+      ticklen:5,
+      tickcolor:t.axis,
+      tickfont:{size:11,color:t.text},
+      gridcolor:t.grid,
+      griddash:"dot",
+      zeroline:true,
+      zerolinecolor:t.axis,
+      zerolinewidth:1,
+      fixedrange:false,
+      automargin:true,
+      title:{font:{size:12,color:t.text},standoff:12}
+    };
+    return {
+      margin:{l:68,r:30,t:28,b:68},
+      paper_bgcolor:"rgba(0,0,0,0)",
+      plot_bgcolor:"rgba(0,0,0,0)",
+      font:{family:'Inter, system-ui, sans-serif',color:t.text,size:12},
+      colorway:[t.blue,t.violet,t.teal,t.rose,t.amber,t.green],
+      xaxis:{...baseAxis,title:{text:xTitle,font:{size:12,color:t.text},standoff:12}},
+      yaxis:{...baseAxis,title:{text:yTitle,font:{size:12,color:t.text},standoff:12}},
+      hovermode:"x unified",
+      hoverlabel:{
+        bgcolor:t.panel,
+        bordercolor:t.axis,
+        font:{family:'Inter, system-ui, sans-serif',size:12,color:t.strong}
+      },
+      legend:{
+        orientation:"h",
+        y:-.25,
+        x:0,
+        xanchor:"left",
+        font:{size:11,color:t.text},
+        bgcolor:"rgba(0,0,0,0)"
+      },
+      transition:{duration:320,easing:"cubic-in-out"},
+      dragmode:"pan",
+      ...extra
+    };
+  }
+
+  function polishTraces(traces){
+    const t=chartTheme();
+    const colors=[t.blue,t.violet,t.teal,t.rose,t.amber,t.green];
+    return traces.map((trace,index)=>{
+      const color=trace.line?.color || trace.marker?.color || colors[index%colors.length];
+      const isScatter=(trace.type||"scatter")==="scatter";
+      const isLine=isScatter && (trace.mode||"lines").includes("lines");
+      const polished={...trace};
+      if(isLine){
+        polished.line={
+          width:index===0?3.4:2.5,
+          shape:"spline",
+          smoothing:.55,
+          ...trace.line,
+          color
+        };
+      }
+      if(isScatter && (trace.mode||"").includes("markers")){
+        polished.marker={
+          size:trace.marker?.size||5,
+          color,
+          line:{width:1.5,color:t.panel},
+          ...trace.marker
+        };
+      }
+      if(trace.fill){
+        polished.fillcolor=trace.fillcolor||rgba(color,.12);
+      }
+      polished.hovertemplate=trace.hovertemplate||
+        `<b>${trace.name||"Série"}</b><br>${trace.xaxis==="x2"?"x":"x"}: %{x:.4g}<br>y: %{y:.4g}<extra></extra>`;
+      return polished;
+    });
+  }
+
+  function prettyPlot(id,traces,layout,config=plotConfig){
+    return Plotly.react(id,polishTraces(traces),layout,config);
+  }
+
+  const plotConfig={
+    responsive:true,
+    displaylogo:false,
+    scrollZoom:true,
+    toImageButtonOptions:{format:"png",filename:"brock_mirman_grafico",scale:2},
+    modeBarButtonsToRemove:["lasso2d","select2d","autoScale2d","toggleSpikelines"]
+  };
+
+  function setMode(mode){
+    state.mode=mode;
+    $$(".topic-btn").forEach(btn=>btn.classList.toggle("active",btn.dataset.mode===mode));
+    renderMode();
+  }
+
+  function renderMode(){
+    if(state.mode==="utility") renderUtility();
+    if(state.mode==="technology") renderTechnology();
+    if(state.mode==="depreciation") renderDepreciation();
+    if(state.mode==="combination") renderCombination();
+  }
+
+  function bindRange(id,object,key,callback=()=>{}){
+    const input=$("#"+id);
+    if(!input) return;
+    const run=()=>{
+      object[key]=Number(input.value);
+      $("#"+id+"Out").textContent=pt(object[key],key==="horizon"?0:3);
+      callback();
+    };
+    input.addEventListener("input",run);
+    input.addEventListener("change",run);
+  }
+
+  function utilityValue(c,sigma){
+    return Math.abs(sigma-1)<1e-9 ? Math.log(c) : (Math.pow(c,1-sigma)-1)/(1-sigma);
+  }
+  function marginalUtility(c,sigma){ return Math.pow(c,-sigma); }
+
+  function renderUtility(){
+    const s=state.utility;
+    $("#sidebar").innerHTML=String.raw`
+      <h2 class="sidebar-title">Utilidade logarítmica</h2>
+      <p class="sidebar-subtitle">Compare o caso log com a família CRRA e observe o que torna σ = 1 especial.</p>
+      ${slider("uSigma","Curvatura CRRA",s.sigma,.4,3,.05,"σ = 1 produz a utilidade logarítmica.","\\sigma")}
+      ${slider("uCMin","Consumo mínimo",s.cMin,.05,1,.05,"Aproxime-se de zero para ver a barreira do log.","c_{\\min}")}
+      ${slider("uCMax","Consumo máximo",s.cMax,1.5,10,.1,"Define a janela dos gráficos.","c_{\\max}")}
+      ${slider("uCRef","Consumo de referência",s.cRef,.1,4,.05,"Usado nas métricas locais.","\\bar c")}
+      ${slider("uScale","Escala multiplicativa",s.scale,.5,3,.05,"Compara u(λc) − u(c).","\\lambda")}
+      <div class="control">
+        <div class="control-head"><span>Presets</span></div>
+        <div class="preset-grid">
+          <button class="preset" data-u-preset="log">Log</button>
+          <button class="preset" data-u-preset="low">σ baixo</button>
+          <button class="preset" data-u-preset="high">σ alto</button>
+          <button class="preset" data-u-preset="nearzero">Perto de zero</button>
+        </div>
+      </div>`;
+
+    $("#content").innerHTML=String.raw`
+      <section class="hero">
+        <article class="card">
+          <div class="eyebrow">Primitiva 1</div>
+          <h2>Utilidade logarítmica como caso singular da CRRA</h2>
+          <div class="formula-box" id="uFormula"></div>
+          <p class="muted">
+            A utilidade log é crescente, estritamente côncava e possui elasticidade intertemporal de substituição unitária.
+            Ela não é escolhida por realismo literal, mas porque combina curvatura econômica com forte tratabilidade.
+          </p>
+        </article>
+        <article class="card">
+          <div class="eyebrow">O que observar</div>
+          <div class="insight"><strong>Monotonicidade:</strong> mais consumo sempre eleva utilidade.</div>
+          <div class="insight"><strong>Concavidade:</strong> o ganho marginal cai à medida que o consumo aumenta.</div>
+          <div class="insight warn"><strong>Barreira:</strong> quando c → 0⁺, ln c → −∞.</div>
+        </article>
+      </section>
+
+      <section class="metrics">
+        ${metric("Elasticidade intertemporal","uIes")}
+        ${metric("Utilidade em c̄","uAtRef")}
+        ${metric("Utilidade marginal em c̄","uMuRef")}
+        ${metric("Ganho u(λc̄)−u(c̄)","uScaleGain")}
+      </section>
+
+      <section class="chart-grid">
+        <article class="card chart-card">
+          <div class="eyebrow">Comportamento gráfico</div>
+          <h2>Utilidade instantânea</h2>
+          <div id="uChart" class="chart"></div>
+          <p class="chart-note">A curva log é o limite contínuo da CRRA quando σ → 1.</p>
+        </article>
+        <article class="card chart-card">
+          <div class="eyebrow">Curvatura</div>
+          <h2>Utilidade marginal</h2>
+          <div id="muChart" class="chart"></div>
+          <p class="chart-note">A inclinação da utilidade marginal em escala log-log é −σ.</p>
+        </article>
+        <article class="card chart-card">
+          <div class="eyebrow">Propriedade especial</div>
+          <h2>Efeito de multiplicar o consumo por λ</h2>
+          <div id="scaleChart" class="chart"></div>
+          <p class="chart-note">No caso log, o ganho é ln λ e independe do nível inicial de consumo.</p>
+        </article>
+        <article class="card">
+          <div class="eyebrow">Importância no Brock–Mirman</div>
+          <h2>Por que o log ajuda o Guess and Verify?</h2>
+          <div class="equation-strip">
+            <div class="equation" data-tex="u'(c)=1/c"></div>
+            <div class="equation" data-tex="\ln(xy)=\ln x+\ln y"></div>
+            <div class="equation" data-tex="\text{EIS}=1"></div>
+          </div>
+          <div class="topic-grid">
+            <div class="topic-box"><strong>Razões, não níveis</strong><p>A Euler passa a relacionar crescimento do consumo e retorno.</p></div>
+            <div class="topic-box"><strong>Separabilidade em logs</strong><p>Produtos e proporções viram somas, compatíveis com a função valor log-linear.</p></div>
+            <div class="topic-box"><strong>Taxa de poupança constante</strong><p>No trio canônico, a fração poupada não depende de A nem de k.</p></div>
+          </div>
+          <div class="insight bad" style="margin-top:12px"><strong>Nuance:</strong> log sozinho não garante solução fechada. A tecnologia e a depreciação também precisam preservar a mesma estrutura.</div>
+        </article>
+      </section>
+
+      <section class="card">
+        <div class="eyebrow">Nuances</div>
+        <h2>Leitura cuidadosa</h2>
+        <details open><summary>Log como limite da CRRA</summary><div class="details-body"><div class="math-line" data-tex="\lim_{\sigma\to1}\frac{c^{1-\sigma}-1}{1-\sigma}=\ln c"></div>A normalização por −1 evita uma constante divergente e torna o limite transparente.</div></details>
+        <details><summary>Efeito renda e efeito substituição</summary><div class="details-body">Com EIS igual a um, o caso log ocupa um ponto especial dentro da CRRA. Em vários problemas homotéticos, a resposta da poupança a mudanças de retorno se simplifica fortemente.</div></details>
+        <details><summary>O que se perde com σ ≠ 1?</summary><div class="details-body">A concavidade e as propriedades qualitativas permanecem. O que normalmente se perde é a invariância da família <span data-tex="a+b\ln k" data-display="false"></span> sob o operador de Bellman.</div></details>
+      </section>
+      <footer>Laboratório isolado da preferência: nenhum resultado de poupança é atribuído ao log sem usar também tecnologia e restrição.</footer>`;
+
+    renderAllMath();
+    bindRange("uSigma",s,"sigma",updateUtility);
+    bindRange("uCMin",s,"cMin",()=>{ if(s.cMin>=s.cMax) s.cMin=s.cMax-.05; updateUtility();});
+    bindRange("uCMax",s,"cMax",()=>{ if(s.cMax<=s.cMin) s.cMax=s.cMin+.05; updateUtility();});
+    bindRange("uCRef",s,"cRef",updateUtility);
+    bindRange("uScale",s,"scale",updateUtility);
+    $$("[data-u-preset]").forEach(btn=>btn.addEventListener("click",()=>{
+      const p=btn.dataset.uPreset;
+      if(p==="log") Object.assign(s,{sigma:1,cMin:.15,cMax:4,cRef:1,scale:1.8});
+      if(p==="low") Object.assign(s,{sigma:.5,cMin:.15,cMax:4,cRef:1,scale:1.8});
+      if(p==="high") Object.assign(s,{sigma:2.5,cMin:.15,cMax:4,cRef:1,scale:1.8});
+      if(p==="nearzero") Object.assign(s,{sigma:1,cMin:.05,cMax:2,cRef:.25,scale:1.8});
+      renderUtility();
+    }));
+    updateUtility();
+  }
+
+  function updateUtility(){
+    const s=state.utility;
+    const sigma=Math.abs(s.sigma-1)<.026?1:s.sigma;
+    if(sigma===1){s.sigma=1;$("#uSigma").value="1";$("#uSigmaOut").textContent="1";}
+    const formula=sigma===1?"u(c)=\\ln c":"u(c)=\\dfrac{c^{1-\\sigma}-1}{1-\\sigma}";
+    tex($("#uFormula"),formula);
+
+    $("#uIes").textContent=pt(1/sigma,3);
+    $("#uAtRef").textContent=pt(utilityValue(s.cRef,sigma),4);
+    $("#uMuRef").textContent=pt(marginalUtility(s.cRef,sigma),4);
+    $("#uScaleGain").textContent=pt(utilityValue(s.scale*s.cRef,sigma)-utilityValue(s.cRef,sigma),4);
+
+    const c=linspace(Math.max(.001,s.cMin),s.cMax,240);
+    const current=c.map(x=>utilityValue(x,sigma));
+    const log=c.map(Math.log);
+    const theme=chartTheme();
+    prettyPlot("uChart",[
+      {x:c,y:current,type:"scatter",mode:"lines",name:sigma===1?"Utilidade log":"CRRA atual",fill:"tozeroy",fillcolor:rgba(theme.blue,.08)},
+      ...(sigma===1?[]:[{x:c,y:log,type:"scatter",mode:"lines",name:"Log — referência",line:{dash:"dash",color:theme.teal}}]),
+      {x:[s.cRef],y:[utilityValue(s.cRef,sigma)],type:"scatter",mode:"markers",name:"c̄",marker:{size:10,color:theme.rose},
+       hovertemplate:"<b>Consumo de referência</b><br>c̄ = %{x:.3g}<br>u(c̄) = %{y:.4g}<extra></extra>"}
+    ],plotLayout("Consumo, c","Utilidade, u(c)",{
+      shapes:[{type:"line",x0:s.cRef,x1:s.cRef,y0:0,y1:1,yref:"paper",line:{color:rgba(theme.rose,.55),width:1.5,dash:"dot"}}],
+      annotations:[{x:s.cRef,y:1,yref:"paper",text:"c̄",showarrow:false,yshift:10,font:{color:theme.rose,size:12}}]
+    }),plotConfig);
+
+    const mu=c.map(x=>marginalUtility(x,sigma));
+    prettyPlot("muChart",[
+      {x:c,y:mu,type:"scatter",mode:"lines",name:"Utilidade marginal",fill:"tozeroy",fillcolor:rgba(theme.violet,.07),line:{color:theme.violet}},
+      {x:[s.cRef],y:[marginalUtility(s.cRef,sigma)],type:"scatter",mode:"markers",name:"u′(c̄)",marker:{size:10,color:theme.rose}}
+    ],plotLayout("Consumo, c","Utilidade marginal, u′(c)",{
+      yaxis:{...plotLayout("","").yaxis,type:"log",title:{text:"Utilidade marginal, u′(c)"}},
+      shapes:[{type:"line",x0:s.cRef,x1:s.cRef,y0:0,y1:1,yref:"paper",line:{color:rgba(theme.rose,.5),width:1.4,dash:"dot"}}]
+    }),plotConfig);
+
+    const base=linspace(Math.max(.05,s.cMin),s.cMax,180);
+    const gains=base.map(x=>utilityValue(s.scale*x,sigma)-utilityValue(x,sigma));
+    const logGain=base.map(()=>Math.log(s.scale));
+    prettyPlot("scaleChart",[
+      {x:base,y:gains,type:"scatter",mode:"lines",name:"Ganho atual",fill:"tozeroy",fillcolor:rgba(theme.blue,.08)},
+      ...(sigma===1?[]:[{x:base,y:logGain,type:"scatter",mode:"lines",name:"Benchmark log",line:{dash:"dash",color:theme.teal}}])
+    ],plotLayout("Consumo inicial, c","Ganho de utilidade",{
+      annotations:sigma===1?[{
+        x:base[Math.floor(base.length*.72)],y:Math.log(s.scale),
+        text:"constante em c",showarrow:true,arrowcolor:theme.teal,
+        font:{color:theme.teal,size:11},bgcolor:rgba(theme.panel,.88),borderpad:5
+      }]:[]
+    }),plotConfig);
+  }
+
+  function cd(k,A,alpha){return A*Math.pow(k,alpha)}
+  function mpk(k,A,alpha){return alpha*A*Math.pow(k,alpha-1)}
+  function ces(k,A,alpha,rho){
+    if(Math.abs(rho)<.02) return cd(k,A,alpha);
+    return A*Math.pow(alpha*Math.pow(k,rho)+(1-alpha),1/rho);
+  }
+
+  function renderTechnology(){
+    const s=state.technology;
+    $("#sidebar").innerHTML=String.raw`
+      <h2 class="sidebar-title">Tecnologia Cobb–Douglas</h2>
+      <p class="sidebar-subtitle">Explore produto, produtividade marginal, elasticidade e linearidade em logaritmos.</p>
+      ${slider("tA","Produtividade total",s.A,.5,2,.05,"Desloca a função verticalmente.","A")}
+      ${slider("tAlpha","Elasticidade do capital",s.alpha,.1,.85,.01,"Também é a inclinação no gráfico log-log.","\\alpha")}
+      ${slider("tKMax","Capital máximo",s.kMax,3,30,.5,"Define a janela horizontal.","k_{\\max}")}
+      ${slider("tKRef","Capital de referência",s.kRef,.2,12,.1,"Usado nas métricas locais.","\\bar k")}
+      <div class="control">
+        <div class="control-head"><span>Comparação com CES</span><output id="tCompareOut">${s.compareCes?"ligada":"desligada"}</output></div>
+        <select id="tCompare"><option value="off" ${!s.compareCes?"selected":""}>Desligada</option><option value="on" ${s.compareCes?"selected":""}>Ligada</option></select>
+        <small>A CES revela o que a linearidade em logs da Cobb–Douglas elimina.</small>
+      </div>
+      <div class="control ${s.compareCes?"":"hidden"}" id="tRhoControl">
+        <div class="control-head"><span>Parâmetro CES <span data-tex="\\rho" data-display="false"></span></span><output id="tRhoOut">${pt(s.rho,2)}</output></div>
+        <input id="tRho" type="range" min="-1" max=".9" step=".05" value="${s.rho}">
+        <small>ρ → 0 recupera Cobb–Douglas.</small>
+      </div>
+      <div class="control">
+        <div class="control-head"><span>Presets</span></div>
+        <div class="preset-grid">
+          <button class="preset" data-t-preset="baseline">Padrão</button>
+          <button class="preset" data-t-preset="lowalpha">α baixo</button>
+          <button class="preset" data-t-preset="highalpha">α alto</button>
+          <button class="preset" data-t-preset="ces">Comparar CES</button>
+        </div>
+      </div>`;
+
+    $("#content").innerHTML=String.raw`
+      <section class="hero">
+        <article class="card">
+          <div class="eyebrow">Primitiva 2</div>
+          <h2>Cobb–Douglas com trabalho normalizado</h2>
+          <div class="formula-box" data-tex="F(k)=A k^{\alpha},\qquad 0<\alpha<1"></div>
+          <p class="muted">
+            É a forma intensiva de <span data-tex="F(K,N)=AK^\alpha N^{1-\alpha}" data-display="false"></span>
+            quando a oferta de trabalho é rígida e normalizada em um.
+          </p>
+        </article>
+        <article class="card">
+          <div class="eyebrow">Interpretação</div>
+          <div class="insight"><strong>A:</strong> desloca o nível de produtividade.</div>
+          <div class="insight"><strong>α:</strong> elasticidade do produto em relação ao capital.</div>
+          <div class="insight warn"><strong>0 &lt; α &lt; 1:</strong> produto marginal positivo e decrescente.</div>
+        </article>
+      </section>
+
+      <section class="metrics">
+        ${metric("Produto em k̄","tOutput")}
+        ${metric("Produto marginal","tMpk")}
+        ${metric("Produto médio","tApk")}
+        ${metric("Elasticidade","tElasticity")}
+      </section>
+
+      <section class="chart-grid">
+        <article class="card chart-card">
+          <div class="eyebrow">Níveis</div><h2>Produção e produto marginal</h2>
+          <div id="prodChart" class="chart"></div>
+          <p class="chart-note">A produção cresce, mas sua inclinação diminui.</p>
+        </article>
+        <article class="card chart-card">
+          <div class="eyebrow">Transformação decisiva</div><h2>Linearidade em logaritmos</h2>
+          <div id="logProdChart" class="chart"></div>
+          <p class="chart-note">Na Cobb–Douglas, a inclinação é exatamente α em todos os pontos.</p>
+        </article>
+        <article class="card chart-card">
+          <div class="eyebrow">Elasticidade</div><h2>Resposta percentual do produto</h2>
+          <div id="elasticityChart" class="chart"></div>
+          <p class="chart-note">A elasticidade Cobb–Douglas é constante; na CES, geralmente varia com k.</p>
+        </article>
+        <article class="card">
+          <div class="eyebrow">Importância no Brock–Mirman</div>
+          <h2>O encaixe com a função valor</h2>
+          <div class="formula-box" data-tex="\ln F(k)=\ln A+\alpha\ln k"></div>
+          <div class="topic-grid">
+            <div class="topic-box"><strong>Log-linearidade</strong><p>O estado entra no Bellman por uma expressão afim em ln k.</p></div>
+            <div class="topic-box"><strong>Política proporcional</strong><p>No caso canônico, k′ torna-se uma fração constante de F(k).</p></div>
+            <div class="topic-box"><strong>Parâmetro estrutural</strong><p>α reaparece na política, na dinâmica e no coeficiente da função valor.</p></div>
+          </div>
+          <div class="insight bad" style="margin-top:12px"><strong>Nuance:</strong> existência, monotonicidade e concavidade não exigem Cobb–Douglas; a solução explícita log-linear exige.</div>
+        </article>
+      </section>
+
+      <section class="card">
+        <div class="eyebrow">Nuances</div><h2>O que α significa — e o que não significa automaticamente</h2>
+        <details open><summary>Elasticidade versus participação da renda</summary><div class="details-body">α é sempre a elasticidade do produto em relação ao capital na Cobb–Douglas. A interpretação como participação da renda requer competição perfeita e remuneração dos fatores por seus produtos marginais.</div></details>
+        <details><summary>Condições de Inada</summary><div class="details-body"><div class="math-line" data-tex="\lim_{k\to0^+}F'(k)=\infty,\qquad \lim_{k\to\infty}F'(k)=0"></div>Essas condições ajudam a obter soluções interiores, mas não são a razão específica da forma fechada.</div></details>
+        <details><summary>Por que uma CES quebra o palpite?</summary><div class="details-body">Em geral, <span data-tex="\ln F(k)" data-display="false"></span> deixa de ser uma reta em <span data-tex="\ln k" data-display="false"></span>. A curvatura observada no gráfico é exatamente a falha da invariância log-linear.</div></details>
+      </section>
+      <footer>Laboratório isolado da tecnologia: o gráfico distingue propriedades econômicas robustas de conveniências algébricas específicas.</footer>`;
+
+    renderAllMath();
+    bindRange("tA",s,"A",updateTechnology);
+    bindRange("tAlpha",s,"alpha",updateTechnology);
+    bindRange("tKMax",s,"kMax",updateTechnology);
+    bindRange("tKRef",s,"kRef",updateTechnology);
+    $("#tCompare").addEventListener("change",e=>{s.compareCes=e.target.value==="on";renderTechnology();});
+    if($("#tRho")) bindRange("tRho",s,"rho",updateTechnology);
+    $$("[data-t-preset]").forEach(btn=>btn.addEventListener("click",()=>{
+      const p=btn.dataset.tPreset;
+      if(p==="baseline") Object.assign(s,{A:1,alpha:.36,kMax:12,kRef:3,compareCes:false,rho:.4});
+      if(p==="lowalpha") Object.assign(s,{A:1,alpha:.2,kMax:12,kRef:3,compareCes:false,rho:.4});
+      if(p==="highalpha") Object.assign(s,{A:1,alpha:.65,kMax:12,kRef:3,compareCes:false,rho:.4});
+      if(p==="ces") Object.assign(s,{A:1,alpha:.36,kMax:12,kRef:3,compareCes:true,rho:.5});
+      renderTechnology();
+    }));
+    updateTechnology();
+  }
+
+  function numericalElasticity(f,k){
+    const h=Math.max(1e-5,k*1e-4);
+    const fp=(f(k+h)-f(Math.max(1e-8,k-h)))/(2*h);
+    return fp*k/f(k);
+  }
+
+  function updateTechnology(){
+    const s=state.technology;
+    $("#tOutput").textContent=pt(cd(s.kRef,s.A,s.alpha),4);
+    $("#tMpk").textContent=pt(mpk(s.kRef,s.A,s.alpha),4);
+    $("#tApk").textContent=pt(cd(s.kRef,s.A,s.alpha)/s.kRef,4);
+    $("#tElasticity").textContent=pt(s.alpha,3);
+
+    const k=linspace(.03,s.kMax,260);
+    const y=k.map(x=>cd(x,s.A,s.alpha));
+    const m=k.map(x=>mpk(x,s.A,s.alpha));
+    const traces=[
+      {x:k,y,type:"scatter",mode:"lines",name:"F(k)",line:{width:3}},
+      {x:k,y:m,type:"scatter",mode:"lines",name:"F′(k)",line:{width:2,dash:"dash"},yaxis:"y2"}
+    ];
+    if(s.compareCes) traces.push({x:k,y:k.map(x=>ces(x,s.A,s.alpha,s.rho)),type:"scatter",mode:"lines",name:"CES",line:{width:2}});
+    const theme=chartTheme();
+    traces[0].fill="tozeroy";
+    traces[0].fillcolor=rgba(theme.blue,.075);
+    traces.push({
+      x:[s.kRef],y:[cd(s.kRef,s.A,s.alpha)],type:"scatter",mode:"markers",
+      name:"k̄",marker:{size:10,color:theme.rose},
+      hovertemplate:"<b>Ponto de referência</b><br>k̄ = %{x:.3g}<br>F(k̄) = %{y:.4g}<extra></extra>"
+    });
+    prettyPlot("prodChart",traces,plotLayout("Capital, k","Produto, F(k)",{
+      yaxis2:{
+        ...plotLayout("","").yaxis,
+        title:{text:"Produto marginal, F′(k)"},
+        overlaying:"y",side:"right",showgrid:false,zeroline:false
+      },
+      shapes:[{type:"line",x0:s.kRef,x1:s.kRef,y0:0,y1:1,yref:"paper",line:{color:rgba(theme.rose,.5),width:1.4,dash:"dot"}}],
+      margin:{l:68,r:72,t:28,b:68}
+    }),plotConfig);
+
+    const logk=linspace(-3,Math.log(s.kMax),240);
+    const kk=logk.map(Math.exp);
+    const logcd=kk.map(x=>Math.log(cd(x,s.A,s.alpha)));
+    const logTraces=[{x:logk,y:logcd,type:"scatter",mode:"lines",name:"Cobb–Douglas",line:{width:3}}];
+    if(s.compareCes) logTraces.push({x:logk,y:kk.map(x=>Math.log(ces(x,s.A,s.alpha,s.rho))),type:"scatter",mode:"lines",name:"CES",line:{width:2}});
+    prettyPlot("logProdChart",logTraces,plotLayout("Log do capital, ln k","Log do produto, ln F(k)",{
+      annotations:[{
+        x:logk[Math.floor(logk.length*.72)],
+        y:logcd[Math.floor(logcd.length*.72)],
+        text:`inclinação = α = ${pt(s.alpha,2)}`,
+        showarrow:true,arrowcolor:theme.blue,
+        font:{color:theme.blue,size:11},
+        bgcolor:rgba(theme.panel,.9),bordercolor:rgba(theme.blue,.25),borderpad:5
+      }]
+    }),plotConfig);
+
+    const elCD=k.map(()=>s.alpha);
+    const elTraces=[{x:k,y:elCD,type:"scatter",mode:"lines",name:"Cobb–Douglas",line:{width:3}}];
+    if(s.compareCes){
+      const f=x=>ces(x,s.A,s.alpha,s.rho);
+      elTraces.push({x:k,y:k.map(x=>numericalElasticity(f,x)),type:"scatter",mode:"lines",name:"CES",line:{width:2}});
+    }
+    elTraces[0].fill="tozeroy";
+    elTraces[0].fillcolor=rgba(theme.teal,.07);
+    prettyPlot("elasticityChart",elTraces,plotLayout("Capital, k","Elasticidade do produto",{
+      shapes:[{type:"line",x0:0,x1:1,xref:"paper",y0:s.alpha,y1:s.alpha,line:{color:rgba(theme.teal,.45),width:1.2,dash:"dot"}}]
+    }),plotConfig);
+  }
+
+  function resources(k,A,alpha,delta){return cd(k,A,alpha)+(1-delta)*k}
+
+  function renderDepreciation(){
+    const s=state.depreciation;
+    $("#sidebar").innerHTML=String.raw`
+      <h2 class="sidebar-title">Depreciação total</h2>
+      <p class="sidebar-subtitle">Veja exatamente qual termo desaparece quando δ = 1 e por que isso simplifica a álgebra.</p>
+      ${slider("dDelta","Taxa de depreciação",s.delta,0,1,.01,"δ = 1 significa que nenhum capital sobrevive.","\\delta")}
+      ${slider("dA","Produtividade",s.A,.5,2,.05,"Afeta a produção corrente.","A")}
+      ${slider("dAlpha","Elasticidade do capital",s.alpha,.1,.85,.01,"Controla a curvatura da produção.","\\alpha")}
+      ${slider("dKMax","Capital máximo",s.kMax,3,30,.5,"Define a janela dos gráficos.","k_{\\max}")}
+      ${slider("dKRef","Capital de referência",s.kRef,.2,12,.1,"Usado na decomposição dos recursos.","\\bar k")}
+      <div class="control">
+        <div class="control-head"><span>Presets</span></div>
+        <div class="preset-grid">
+          <button class="preset" data-d-preset="total">δ = 1</button>
+          <button class="preset" data-d-preset="annual">Anual 10%</button>
+          <button class="preset" data-d-preset="quarterly">Trimestral 2,5%</button>
+          <button class="preset" data-d-preset="none">Sem depreciação</button>
+        </div>
+      </div>`;
+
+    $("#content").innerHTML=String.raw`
+      <section class="hero">
+        <article class="card">
+          <div class="eyebrow">Primitiva 3</div>
+          <h2>Recursos disponíveis com depreciação parcial</h2>
+          <div class="formula-box" id="dFormula"></div>
+          <p class="muted">
+            A produção corrente e o capital não depreciado são objetos distintos.
+            A hipótese <span data-tex="\delta=1" data-display="false"></span> elimina o segundo.
+          </p>
+        </article>
+        <article class="card">
+          <div class="eyebrow">Interpretação correta</div>
+          <div class="insight"><strong>δ = 1:</strong> todo capital desaparece após produzir.</div>
+          <div class="insight"><strong>δ &lt; 1:</strong> parte do estoque atravessa o período.</div>
+          <div class="insight warn"><strong>Uso pedagógico:</strong> a simplificação é analítica, não empírica.</div>
+        </article>
+      </section>
+
+      <section class="metrics">
+        ${metric("Produção em k̄","dOutput")}
+        ${metric("Capital residual","dResidual")}
+        ${metric("Recursos totais","dResources")}
+        ${metric("Erro log-linear","dError")}
+      </section>
+
+      <section class="chart-grid">
+        <article class="card chart-card">
+          <div class="eyebrow">Decomposição</div><h2>Produção, capital residual e recursos</h2>
+          <div id="resourceChart" class="chart"></div>
+          <p class="chart-note">Com δ = 1, recursos e produção coincidem.</p>
+        </article>
+        <article class="card chart-card">
+          <div class="eyebrow">Estrutura funcional</div><h2>O que acontece em logaritmos?</h2>
+          <div id="logResourceChart" class="chart"></div>
+          <p class="chart-note">O desvio em relação à reta mede a quebra da log-linearidade.</p>
+        </article>
+        <article class="card chart-card">
+          <div class="eyebrow">Composição dos recursos</div><h2>Participação do capital residual</h2>
+          <div id="residualShareChart" class="chart"></div>
+          <p class="chart-note">Com depreciação parcial, a composição dos recursos varia com o estado.</p>
+        </article>
+        <article class="card">
+          <div class="eyebrow">Importância no Brock–Mirman</div><h2>O termo que quebra a solução fechada</h2>
+          <div class="formula-box" data-tex="Ak^\alpha+(1-\delta)k"></div>
+          <div class="topic-grid">
+            <div class="topic-box"><strong>Duas potências</strong><p>O recurso total soma k^α e k; não é uma única potência de k.</p></div>
+            <div class="topic-box"><strong>Log de soma</strong><p>Não existe regra que transforme ln(x+y) em soma de logs.</p></div>
+            <div class="topic-box"><strong>Custo algébrico</strong><p>A Euler e os teoremas sobrevivem, mas o palpite simples deixa de fechar.</p></div>
+          </div>
+          <div class="insight bad" style="margin-top:12px"><strong>Armadilha:</strong> δ = 1 não é necessário para existência, unicidade ou convergência. É necessário para esta solução fechada específica.</div>
+        </article>
+      </section>
+
+      <section class="card">
+        <div class="eyebrow">Nuances</div><h2>Realismo e tratabilidade</h2>
+        <table class="compare-table">
+          <thead><tr><th>Hipótese</th><th>Leitura econômica</th><th>Efeito matemático</th></tr></thead>
+          <tbody>
+            <tr><td><span data-tex="\delta=1" data-display="false"></span></td><td>Nenhum capital sobrevive.</td><td>Recursos são uma potência única: <span data-tex="Ak^\alpha" data-display="false"></span>.</td></tr>
+            <tr><td><span data-tex="0<\delta<1" data-display="false"></span></td><td>Parte do capital permanece.</td><td>Surge a soma <span data-tex="Ak^\alpha+(1-\delta)k" data-display="false"></span>.</td></tr>
+            <tr><td><span data-tex="\delta=0" data-display="false"></span></td><td>Capital não se deprecia.</td><td>O termo linear pode dominar para k elevado.</td></tr>
+          </tbody>
+        </table>
+        <details style="margin-top:12px"><summary>O que permanece quando δ &lt; 1?</summary><div class="details-body">Concavidade, condição de Euler, monotonicidade da política, existência do estado estacionário e métodos de programação dinâmica continuam disponíveis sob condições usuais. O que desaparece é a álgebra fechada do caso canônico.</div></details>
+      </section>
+      <footer>Laboratório isolado da depreciação: a hipótese total é apresentada como preço analítico explícito, não como calibração plausível.</footer>`;
+
+    renderAllMath();
+    bindRange("dDelta",s,"delta",()=>{if(s.delta>.995){s.delta=1;$("#dDelta").value=1;$("#dDeltaOut").textContent="1";} updateDepreciation();});
+    bindRange("dA",s,"A",updateDepreciation);
+    bindRange("dAlpha",s,"alpha",updateDepreciation);
+    bindRange("dKMax",s,"kMax",updateDepreciation);
+    bindRange("dKRef",s,"kRef",updateDepreciation);
+    $$("[data-d-preset]").forEach(btn=>btn.addEventListener("click",()=>{
+      const p=btn.dataset.dPreset;
+      if(p==="total") s.delta=1;
+      if(p==="annual") s.delta=.1;
+      if(p==="quarterly") s.delta=.025;
+      if(p==="none") s.delta=0;
+      renderDepreciation();
+    }));
+    updateDepreciation();
+  }
+
+  function regression(xs,ys){
+    const n=xs.length, xm=xs.reduce((a,b)=>a+b,0)/n, ym=ys.reduce((a,b)=>a+b,0)/n;
+    let num=0,den=0;
+    xs.forEach((x,i)=>{num+=(x-xm)*(ys[i]-ym);den+=(x-xm)**2});
+    const slope=num/den,intercept=ym-slope*xm;
+    const fitted=xs.map(x=>intercept+slope*x);
+    return {slope,intercept,fitted,maxError:Math.max(...ys.map((y,i)=>Math.abs(y-fitted[i])))};
+  }
+
+  function updateDepreciation(){
+    const s=state.depreciation;
+    tex($("#dFormula"),`R(k)=Ak^\\alpha+(1-\\delta)k=${pt(s.A,2)}k^{${pt(s.alpha,2)}}+${pt(1-s.delta,2)}k`);
+    const yref=cd(s.kRef,s.A,s.alpha), residual=(1-s.delta)*s.kRef, rref=yref+residual;
+    $("#dOutput").textContent=pt(yref,4);
+    $("#dResidual").textContent=pt(residual,4);
+    $("#dResources").textContent=pt(rref,4);
+
+    const k=linspace(.03,s.kMax,260);
+    const y=k.map(x=>cd(x,s.A,s.alpha));
+    const res=k.map(x=>(1-s.delta)*x);
+    const total=k.map((x,i)=>y[i]+res[i]);
+    const theme=chartTheme();
+    prettyPlot("resourceChart",[
+      {x:k,y,type:"scatter",mode:"lines",name:"Produção",fill:"tozeroy",fillcolor:rgba(theme.blue,.06),line:{color:theme.blue}},
+      {x:k,y:res,type:"scatter",mode:"lines",name:"Capital residual",line:{dash:"dash",color:theme.amber}},
+      {x:k,y:total,type:"scatter",mode:"lines",name:"Recursos totais",line:{color:theme.teal}},
+      {x:[s.kRef],y:[rref],type:"scatter",mode:"markers",name:"R(k̄)",marker:{size:10,color:theme.rose}}
+    ],plotLayout("Capital, k","Recursos disponíveis",{
+      shapes:[{type:"line",x0:s.kRef,x1:s.kRef,y0:0,y1:1,yref:"paper",line:{color:rgba(theme.rose,.5),width:1.4,dash:"dot"}}]
+    }),plotConfig);
+
+    const logk=linspace(-3,Math.log(s.kMax),250), kk=logk.map(Math.exp);
+    const logr=kk.map(x=>Math.log(resources(x,s.A,s.alpha,s.delta)));
+    const fit=regression(logk,logr);
+    $("#dError").textContent=pt(fit.maxError,5);
+    prettyPlot("logResourceChart",[
+      {x:logk,y:logr,type:"scatter",mode:"lines",name:"ln R(k)",line:{color:theme.blue}},
+      {x:logk,y:fit.fitted,type:"scatter",mode:"lines",name:"Melhor aproximação linear",line:{dash:"dash",color:theme.teal}}
+    ],plotLayout("Log do capital, ln k","Log dos recursos, ln R(k)",{
+      annotations:[{
+        x:logk[Math.floor(logk.length*.2)],y:logr[Math.floor(logr.length*.2)],
+        text:`desvio máx. = ${pt(fit.maxError,4)}`,
+        showarrow:false,font:{color:fit.maxError<1e-4?theme.green:theme.rose,size:11},
+        bgcolor:rgba(theme.panel,.9),bordercolor:rgba(fit.maxError<1e-4?theme.green:theme.rose,.25),borderpad:5
+      }]
+    }),plotConfig);
+
+    const share=k.map((x,i)=>total[i]>0?res[i]/total[i]:0);
+    prettyPlot("residualShareChart",[
+      {x:k,y:share.map(v=>100*v),type:"scatter",mode:"lines",name:"Capital residual",fill:"tozeroy",fillcolor:rgba(theme.amber,.12),line:{color:theme.amber}}
+    ],plotLayout("Capital, k","Participação nos recursos (%)",{
+      yaxis:{...plotLayout("","").yaxis,range:[0,Math.max(5,Math.min(100,Math.max(...share)*112))],ticksuffix:"%"}
+    }),plotConfig);
+  }
+
+  function renderCombination(){
+    const s=state.combination;
+    $("#sidebar").innerHTML=String.raw`
+      <h2 class="sidebar-title">Combinação dos três</h2>
+      <p class="sidebar-subtitle">Agora as primitivas trabalham juntas e a solução fechada aparece.</p>
+      ${slider("cBeta","Fator de desconto",s.beta,.5,.995,.005,"Maior β aumenta a fração poupada.","\\beta")}
+      ${slider("cA","Produtividade",s.A,.5,2,.05,"Desloca produto, política e estado estacionário.","A")}
+      ${slider("cAlpha","Elasticidade do capital",s.alpha,.1,.85,.01,"Afeta poupança e persistência.","\\alpha")}
+      ${slider("cK0","Capital inicial",s.k0,.02,8,.02,"Define o ponto de partida da transição.","k_0")}
+      ${slider("cHorizon","Horizonte",s.horizon,8,80,1,"Número de períodos simulados.","T")}
+      ${slider("cB0","Palpite inicial para b",s.b0,0,6,.1,"Usado para visualizar a iteração do coeficiente.","b_0")}
+      <div class="control">
+        <div class="control-head"><span>Presets</span></div>
+        <div class="preset-grid">
+          <button class="preset" data-c-preset="baseline">Padrão</button>
+          <button class="preset" data-c-preset="patient">Paciente</button>
+          <button class="preset" data-c-preset="below">Abaixo de k*</button>
+          <button class="preset" data-c-preset="above">Acima de k*</button>
+        </div>
+      </div>`;
+
+    $("#content").innerHTML=String.raw`
+      <section class="hero">
+        <article class="card">
+          <div class="eyebrow">O trio em ação</div>
+          <h2>Problema recursivo canônico</h2>
+          <div class="formula-box" data-tex="v(k)=\max_{0<k^{\prime}<A k^{\alpha}}\Bigl\{\ln\!\bigl(A k^{\alpha}-k^{\prime}\bigr)+\beta v(k^{\prime})\Bigr\}"></div>
+          <p class="muted">Log, Cobb–Douglas e depreciação total preservam uma mesma família funcional sob o operador de Bellman.</p>
+        </article>
+        <article class="card">
+          <div class="eyebrow">Resultado pedagógico</div>
+          <div class="insight"><strong>Função valor:</strong> <span data-tex="v(k)=a+b\ln k" data-display="false"></span>.</div>
+          <div class="insight"><strong>Política:</strong> <span data-tex="k'=\alpha\beta Ak^\alpha" data-display="false"></span>.</div>
+          <div class="insight"><strong>Consumo:</strong> <span data-tex="c=(1-\alpha\beta)Ak^\alpha" data-display="false"></span>.</div>
+        </article>
+      </section>
+
+      <section class="card">
+        <div class="eyebrow">Mecanismo estrutural</div><h2>Por que a forma fechada aparece</h2>
+        <div class="mechanism">
+          <div class="node"><strong>ln c</strong><span>produtos viram somas</span></div><div class="arrow">→</div>
+          <div class="node"><strong>Ak^α</strong><span>linear em ln k</span></div><div class="arrow">→</div>
+          <div class="node"><strong>δ = 1</strong><span>sem termo residual</span></div><div class="arrow">→</div>
+          <div class="node"><strong>a + b ln k</strong><span>família invariável</span></div>
+        </div>
+      </section>
+
+      <section class="metrics">
+        ${metric("Taxa de poupança","cSaving")}
+        ${metric("Estado estacionário k*","cKStar")}
+        ${metric("Consumo estacionário c*","cCStar")}
+        ${metric("Coeficiente b*","cBStar")}
+      </section>
+
+      <section class="chart-grid">
+        <article class="card chart-card">
+          <div class="eyebrow">Função política</div><h2>Diagrama de 45 graus</h2>
+          <div id="policyChart" class="chart"></div>
+          <p class="chart-note">A interseção entre g(k) e a linha de 45° é o estado estacionário.</p>
+        </article>
+        <article class="card chart-card">
+          <div class="eyebrow">Dinâmica</div><h2>Trajetórias de capital e consumo</h2>
+          <div id="transitionChart" class="chart"></div>
+          <p class="chart-note">A trajetória converge monotonicamente no caso canônico.</p>
+        </article>
+        <article class="card chart-card">
+          <div class="eyebrow">Operador de Bellman</div><h2>Iteração do coeficiente b</h2>
+          <div id="bIterationChart" class="chart"></div>
+          <p class="chart-note">A regra bₙ₊₁ = α(1 + βbₙ) converge para b*.</p>
+        </article>
+        <article class="card chart-card">
+          <div class="eyebrow">Solução fechada</div><h2>Função valor e política</h2>
+          <div id="valuePolicyChart" class="chart"></div>
+          <p class="chart-note">As duas funções são conhecidas analiticamente após o Guess and Verify.</p>
+        </article>
+      </section>
+
+      <section class="card">
+        <div class="eyebrow">Derivação compacta</div><h2>Como as peças se encaixam</h2>
+        <details open><summary>1. Palpite log-linear</summary><div class="details-body"><div class="math-line" data-tex="v(k)=a+b\ln k"></div>O palpite é motivado pela linearidade da tecnologia em logaritmos.</div></details>
+        <details><summary>2. Condição de primeira ordem</summary><div class="details-body"><div class="math-line" data-tex="\frac{1}{Ak^\alpha-k'}=\frac{\beta b}{k'}"></div>Ela implica que k′ é uma fração constante do produto.</div></details>
+        <details><summary>3. Consistência dos coeficientes</summary><div class="details-body"><div class="math-line" data-tex="\begin{aligned}b&=\alpha(1+\beta b)\\[2pt]&\Longrightarrow\quad b=\frac{\alpha}{1-\alpha\beta}\end{aligned}"></div>Substituindo b na FOC, a fração poupada torna-se <span data-tex="s=\alpha\beta" data-display="false"></span>.</div></details>
+        <details><summary>4. Estado estacionário</summary><div class="details-body"><div class="math-line" data-tex="k^*=(\alpha\beta A)^{1/(1-\alpha)}"></div>β maior eleva o nível de longo prazo, mas não gera crescimento permanente no estado estacionário.</div></details>
+        <div class="insight bad" style="margin-top:12px"><strong>Armadilha de prova:</strong> atribuir a forma fechada apenas ao log. Retire qualquer uma das três primitivas e a invariância simples pode desaparecer.</div>
+      </section>
+
+      <section class="card">
+        <div class="eyebrow">Diagnóstico comparativo</div><h2>O que cada alteração preserva ou destrói</h2>
+        <table class="compare-table">
+          <thead><tr><th>Alteração</th><th>Qualitativo</th><th>Forma fechada</th><th>Termo rompido</th></tr></thead>
+          <tbody>
+            <tr><td>CRRA com σ ≠ 1</td><td>Concavidade e Euler permanecem</td><td>Em geral, perdida</td><td>Utilidade deixa de ser log-separável</td></tr>
+            <tr><td>Tecnologia CES</td><td>Crescimento ótimo pode permanecer</td><td>Em geral, perdida</td><td>ln F(k) deixa de ser linear</td></tr>
+            <tr><td>δ &lt; 1</td><td>Existência e convergência permanecem</td><td>Em geral, perdida</td><td>Surge ln[Ak^α+(1−δ)k−k′]</td></tr>
+          </tbody>
+        </table>
+      </section>
+      <footer>Laboratório integrado: a solução fechada é apresentada como consequência conjunta, não como propriedade isolada de uma única primitiva.</footer>`;
+
+    renderAllMath();
+    bindRange("cBeta",s,"beta",updateCombination);
+    bindRange("cA",s,"A",updateCombination);
+    bindRange("cAlpha",s,"alpha",updateCombination);
+    bindRange("cK0",s,"k0",updateCombination);
+    bindRange("cHorizon",s,"horizon",updateCombination);
+    bindRange("cB0",s,"b0",updateCombination);
+    $$("[data-c-preset]").forEach(btn=>btn.addEventListener("click",()=>{
+      const p=btn.dataset.cPreset;
+      if(p==="baseline") Object.assign(s,{beta:.95,A:1,alpha:.36,k0:.25,horizon:30,b0:0});
+      if(p==="patient") Object.assign(s,{beta:.99,A:1,alpha:.36,k0:.25,horizon:30,b0:0});
+      const kstar=Math.pow(s.alpha*s.beta*s.A,1/(1-s.alpha));
+      if(p==="below") s.k0=.2*kstar;
+      if(p==="above") s.k0=2.2*kstar;
+      renderCombination();
+    }));
+    updateCombination();
+  }
+
+  function updateCombination(){
+    const s=state.combination;
+    const saving=s.alpha*s.beta;
+    const bstar=s.alpha/(1-s.alpha*s.beta);
+    const kstar=Math.pow(saving*s.A,1/(1-s.alpha));
+    const cstar=(1-saving)*s.A*Math.pow(kstar,s.alpha);
+    $("#cSaving").textContent=`${pt(100*saving,1)}%`;
+    $("#cKStar").textContent=pt(kstar,4);
+    $("#cCStar").textContent=pt(cstar,4);
+    $("#cBStar").textContent=pt(bstar,4);
+
+    const kmax=Math.max(1.5*kstar,1.2*s.k0,.5);
+    const kgrid=linspace(.001,kmax,280);
+    const policy=kgrid.map(k=>saving*s.A*Math.pow(k,s.alpha));
+    const theme=chartTheme();
+    prettyPlot("policyChart",[
+      {x:kgrid,y:policy,type:"scatter",mode:"lines",name:"Política g(k)",fill:"tozeroy",fillcolor:rgba(theme.blue,.055),line:{color:theme.blue}},
+      {x:kgrid,y:kgrid,type:"scatter",mode:"lines",name:"Linha de 45°",line:{dash:"dash",color:theme.teal}},
+      {x:[kstar],y:[kstar],type:"scatter",mode:"markers",name:"Estado estacionário",marker:{size:11,color:theme.rose},
+       hovertemplate:"<b>Estado estacionário</b><br>k* = %{x:.4g}<extra></extra>"}
+    ],plotLayout("Capital atual, k","Capital seguinte, k′",{
+      shapes:[
+        {type:"line",x0:kstar,x1:kstar,y0:0,y1:kstar,line:{color:rgba(theme.rose,.45),width:1.2,dash:"dot"}},
+        {type:"line",x0:0,x1:kstar,y0:kstar,y1:kstar,line:{color:rgba(theme.rose,.45),width:1.2,dash:"dot"}}
+      ],
+      annotations:[{x:kstar,y:kstar,text:"k*",showarrow:true,ax:28,ay:-28,arrowcolor:theme.rose,font:{color:theme.rose,size:12}}]
+    }),plotConfig);
+
+    const T=Math.round(s.horizon), kt=[Math.max(.000001,s.k0)], ct=[];
+    for(let t=0;t<T;t++){
+      const y=s.A*Math.pow(kt[t],s.alpha);
+      ct.push((1-saving)*y);
+      kt.push(saving*y);
+    }
+    ct.push((1-saving)*s.A*Math.pow(kt[T],s.alpha));
+    const periods=Array.from({length:T+1},(_,i)=>i);
+    prettyPlot("transitionChart",[
+      {x:periods,y:kt,type:"scatter",mode:"lines+markers",name:"Capital",line:{color:theme.blue},marker:{size:4}},
+      {x:periods,y:ct,type:"scatter",mode:"lines+markers",name:"Consumo",line:{color:theme.violet},marker:{size:4}}
+    ],plotLayout("Período, t","Nível",{
+      shapes:[
+        {type:"line",x0:0,x1:T,y0:kstar,y1:kstar,line:{color:rgba(theme.blue,.38),width:1.2,dash:"dot"}},
+        {type:"line",x0:0,x1:T,y0:cstar,y1:cstar,line:{color:rgba(theme.violet,.38),width:1.2,dash:"dot"}}
+      ],
+      annotations:[
+        {x:T,y:kstar,text:"k*",showarrow:false,xanchor:"right",yshift:10,font:{color:theme.blue,size:11}},
+        {x:T,y:cstar,text:"c*",showarrow:false,xanchor:"right",yshift:-10,font:{color:theme.violet,size:11}}
+      ]
+    }),plotConfig);
+
+    const bn=[s.b0];
+    for(let n=0;n<28;n++) bn.push(s.alpha*(1+s.beta*bn[n]));
+    prettyPlot("bIterationChart",[
+      {x:bn.map((_,i)=>i),y:bn,type:"scatter",mode:"lines+markers",name:"Sequência bₙ",line:{color:theme.blue},marker:{size:5}},
+      {x:[0,bn.length-1],y:[bstar,bstar],type:"scatter",mode:"lines",name:"Ponto fixo b*",line:{dash:"dash",color:theme.teal}}
+    ],plotLayout("Iteração, n","Coeficiente b",{
+      annotations:[{x:bn.length-1,y:bstar,text:"b*",showarrow:false,xanchor:"right",yshift:10,font:{color:theme.teal,size:11}}]
+    }),plotConfig);
+
+    const a=(Math.log(1-saving)+(1+s.beta*bstar)*Math.log(s.A)+s.beta*bstar*Math.log(saving))/(1-s.beta);
+    const v=kgrid.map(k=>a+bstar*Math.log(k));
+    const pnorm=policy.map(x=>x/kstar);
+    const vmin=Math.min(...v),vmax=Math.max(...v);
+    const vnorm=v.map(x=>(x-vmin)/(vmax-vmin||1));
+    prettyPlot("valuePolicyChart",[
+      {x:kgrid,y:vnorm,type:"scatter",mode:"lines",name:"Função valor normalizada",fill:"tozeroy",fillcolor:rgba(theme.blue,.055),line:{color:theme.blue}},
+      {x:kgrid,y:pnorm,type:"scatter",mode:"lines",name:"Política relativa a k*",line:{color:theme.violet}}
+    ],plotLayout("Capital, k","Índice normalizado",{
+      shapes:[{type:"line",x0:kstar,x1:kstar,y0:0,y1:1,yref:"paper",line:{color:rgba(theme.rose,.45),width:1.2,dash:"dot"}}],
+      annotations:[{x:kstar,y:1,yref:"paper",text:"k*",showarrow:false,yshift:10,font:{color:theme.rose,size:11}}]
+    }),plotConfig);
+  }
+
+  function resetCurrent(){
+    state[state.mode]={...defaults[state.mode]};
+    renderMode();
+  }
+
+  $$(".topic-btn").forEach(btn=>btn.addEventListener("click",()=>setMode(btn.dataset.mode)));
+  $("#themeBtn").addEventListener("click",()=>{
+    document.body.classList.toggle("dark");
+    renderMode();
+  });
+  $("#resetBtn").addEventListener("click",resetCurrent);
+  window.addEventListener("resize",()=>{
+    $$(".chart").forEach(el=>window.Plotly&&Plotly.Plots.resize(el));
+  });
+
+  document.addEventListener("DOMContentLoaded",renderMode);
+  window.addEventListener("load",renderMode);
+})();
+</script>
+</body>
+</html>

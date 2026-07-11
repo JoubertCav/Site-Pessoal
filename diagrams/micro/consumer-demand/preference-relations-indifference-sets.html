@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8" />
@@ -9,15 +9,16 @@
 <meta name="description" content="Interactive microeconomics diagram for preference relations and indifference sets: consumption sets, weak preference, strict preference, indifference, upper contour sets, and lower contour sets.">
 <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
 <title>Preference Relations and Indifference Sets | Consumer Demand Diagrams</title>
-<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
+  function gtag(){dataLayer.push(arguments);} 
   gtag('js', new Date());
-
   gtag('config', 'G-NHXHEJP1G0');
 </script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 <style>
 :root{
   --bg:#f6f1e7;
@@ -28,12 +29,13 @@
   --muted:#696457;
   --faint:#8c8677;
   --border:#ded4c3;
+  --grid:#e6ddcf;
   --accent:#0f766e;
   --accent2:#14b8a6;
   --accent-soft:#dff5ef;
   --warn:#b45309;
   --upper:rgba(15,118,110,.16);
-  --lower:rgba(180,83,9,.11);
+  --lower:rgba(180,83,9,.12);
   --indiff:#0f766e;
   --shadow:0 18px 46px rgba(55,43,20,.10);
   --radius:20px;
@@ -47,6 +49,7 @@
   --muted:#aab7b4;
   --faint:#798783;
   --border:#263544;
+  --grid:#223240;
   --accent:#2dd4bf;
   --accent2:#5eead4;
   --accent-soft:#102d2b;
@@ -67,246 +70,149 @@ body{
   font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   line-height:1.38;
 }
-.app{
-  min-height:100vh;
-  display:grid;
-  grid-template-columns:320px 1fr;
-  gap:18px;
-  padding:18px;
-}
-.sidebar,.card,.hero{
-  background:color-mix(in srgb, var(--panel) 94%, transparent);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-}
-.sidebar{
-  padding:18px;
-  position:sticky;
-  top:18px;
-  height:calc(100vh - 36px);
-  overflow:auto;
-}
-.brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  margin-bottom:16px;
-}
-.mark{
-  width:38px;height:38px;border-radius:13px;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  display:grid;place-items:center;color:white;font-weight:800;
-  box-shadow:0 10px 28px rgba(15,118,110,.22);
-}
+.app{min-height:100vh;display:grid;grid-template-columns:320px 1fr;gap:18px;padding:18px}
+.sidebar,.card,.hero{background:color-mix(in srgb, var(--panel) 94%, transparent);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+.sidebar{padding:18px;position:sticky;top:18px;height:calc(100vh - 36px);overflow:auto}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.mark{width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;color:white;font-weight:800;box-shadow:0 10px 28px rgba(15,118,110,.22)}
 h1,h2,h3,p{margin:0}
-h1{font-size:1.02rem;letter-spacing:-.02em}
-.kicker{font-size:.78rem;color:var(--muted);margin-top:2px}
-.theme-btn{
-  margin-left:auto;
-  border:1px solid var(--border);
-  background:var(--panel2);
-  color:var(--text);
-  border-radius:999px;
-  padding:7px 10px;
-  cursor:pointer;
-}
+h1{font-size:1.02rem;letter-spacing:-.02em}.kicker{font-size:.78rem;color:var(--muted);margin-top:2px}
+.theme-btn{margin-left:auto;border:1px solid var(--border);background:var(--panel2);color:var(--text);border-radius:999px;padding:7px 10px;cursor:pointer}
 .group{border-top:1px solid var(--border);padding-top:15px;margin-top:15px}
-.group-title{
-  display:flex;align-items:center;justify-content:space-between;
-  font-size:.76rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);
-  margin-bottom:10px;font-weight:700;
-}
+.group-title{display:flex;align-items:center;justify-content:space-between;font-size:.76rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:10px;font-weight:700}
 label{display:block;font-size:.82rem;color:var(--muted);margin:10px 0 6px}
-select,input[type="range"],input[type="number"]{
-  width:100%;
-}
-select,input[type="number"]{
-  background:var(--panel2);
-  color:var(--text);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:10px 11px;
-  outline:none;
-}
+select,input[type="range"],input[type="number"]{width:100%}
+select,input[type="number"]{background:var(--panel2);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:10px 11px;outline:none}
 input[type="range"]{accent-color:var(--accent)}
 .row{display:grid;grid-template-columns:1fr 58px;gap:10px;align-items:center}
-.value{
-  font-variant-numeric:tabular-nums;
-  color:var(--text);
-  background:var(--panel2);
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:6px 8px;
-  text-align:center;
-  font-size:.82rem;
-}
+.value{font-variant-numeric:tabular-nums;color:var(--text);background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:6px 8px;text-align:center;font-size:.82rem}
 .checks{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-.check{
-  border:1px solid var(--border);
-  background:var(--panel2);
-  border-radius:12px;
-  padding:8px 9px;
-  font-size:.8rem;
-  color:var(--muted);
-  display:flex;align-items:center;gap:7px;
-}
+.check{border:1px solid var(--border);background:var(--panel2);border-radius:12px;padding:8px 9px;font-size:.8rem;color:var(--muted);display:flex;align-items:center;gap:7px}
 .check input{accent-color:var(--accent)}
 .main{display:flex;flex-direction:column;gap:18px;min-width:0}
 .hero{padding:22px 22px 18px;position:relative;overflow:hidden}
-.hero:after{
-  content:"";position:absolute;inset:auto -80px -130px auto;width:260px;height:260px;border-radius:50%;
-  background:var(--accent-soft);opacity:.7;pointer-events:none;
-}
+.hero:after{content:"";position:absolute;inset:auto -80px -130px auto;width:260px;height:260px;border-radius:50%;background:var(--accent-soft);opacity:.7;pointer-events:none}
 .hero h2{font-size:clamp(1.6rem,3vw,2.45rem);letter-spacing:-.055em;line-height:1.02;margin-bottom:8px;max-width:900px}
 .hero p{color:var(--muted);max-width:880px;font-size:.98rem}
 .pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
-.pill{
-  border:1px solid var(--border);
-  background:var(--panel2);
-  color:var(--muted);
-  padding:7px 10px;border-radius:999px;font-size:.78rem;
-}
+.pill{border:1px solid var(--border);background:var(--panel2);color:var(--muted);padding:7px 10px;border-radius:999px;font-size:.78rem}
 .grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);gap:18px}
 .card{padding:18px;min-width:0}
 .card h3{font-size:.95rem;letter-spacing:-.01em;margin-bottom:4px}
 .sub{font-size:.82rem;color:var(--muted);margin-bottom:14px}
-.plot-wrap{
-  width:100%;
-  aspect-ratio:1.18/1;
-  min-height:430px;
-  position:relative;
-  border-radius:18px;
-  overflow:hidden;
-  border:1px solid var(--border);
-  background:var(--panel2);
-}
+.plot-wrap{width:100%;aspect-ratio:1.18/1;min-height:430px;position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--border);background:var(--panel2)}
 #plotCanvas,#plotSvg{position:absolute;inset:0;width:100%;height:100%}
 #plotSvg{pointer-events:none}
 .legend{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px;color:var(--muted);font-size:.8rem}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .sw{width:12px;height:12px;border-radius:4px;border:1px solid var(--border)}
-.sw.upper{background:var(--upper)}
-.sw.lower{background:var(--lower)}
-.sw.curve{background:var(--indiff)}
-.math-card{
-  background:var(--panel2);
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:14px;
-  margin:10px 0;
-}
+.sw.upper{background:var(--upper)} .sw.lower{background:var(--lower)} .sw.curve{background:var(--indiff)}
+.math-card{background:var(--panel2);border:1px solid var(--border);border-radius:16px;padding:14px;margin:10px 0}
 .math-title{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px;font-weight:700}
-.math{
-  font-family:"Times New Roman", Georgia, serif;
-  font-size:1.05rem;
-  color:var(--text);
-  overflow:auto;
-}
-.math .big{font-size:1.18rem}
+.math{font-size:1.02rem;color:var(--text);overflow:auto}.math .katex-display{margin:.25rem 0}.math .katex{font-size:1.02em}
 .sep{height:1px;background:var(--border);margin:14px 0}
-.notice{
-  border-left:3px solid var(--accent);
-  background:var(--accent-soft);
-  border-radius:14px;
-  padding:12px 13px;
-  color:var(--text);
-  font-size:.88rem;
-}
+.notice{border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:14px;padding:12px 13px;color:var(--text);font-size:.88rem}
 .small{font-size:.82rem;color:var(--muted)}
-.badge{
-  display:inline-flex;align-items:center;gap:6px;
-  background:var(--accent-soft);
-  color:var(--accent);
-  border:1px solid color-mix(in srgb,var(--accent) 28%, transparent);
-  border-radius:999px;
-  padding:5px 8px;
-  font-size:.76rem;
-  font-weight:700;
-  margin-bottom:8px;
-}
-.result{
-  font-size:.95rem;
-  background:var(--panel2);
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:13px;
-}
+.result{font-size:.95rem;background:var(--panel2);border:1px solid var(--border);border-radius:16px;padding:13px}
 .result b{color:var(--accent)}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .table{width:100%;border-collapse:collapse;font-size:.82rem;overflow:hidden;border-radius:14px;border:1px solid var(--border)}
 .table td,.table th{padding:9px;border-bottom:1px solid var(--border);vertical-align:top}
 .table tr:last-child td{border-bottom:none}
 .table th{text-align:left;color:var(--muted);font-weight:700;background:var(--panel2)}
 .exam{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.exam .mini{background:var(--panel2);border:1px solid var(--border);border-radius:16px;padding:13px}
-.exam .mini h4{margin:0 0 7px;font-size:.84rem}
-.exam .mini p{font-size:.8rem;color:var(--muted)}
+.exam .mini{background:var(--panel2);border:1px solid var(--border);border-radius:16px;padding:13px}.exam .mini h4{margin:0 0 7px;font-size:.84rem}.exam .mini p{font-size:.8rem;color:var(--muted)}
 .footer-note{font-size:.77rem;color:var(--faint);margin-top:10px}
-@media(max-width:980px){
-  .app{grid-template-columns:1fr;padding:12px}
-  .sidebar{position:relative;height:auto;top:auto}
-  .grid{grid-template-columns:1fr}
-  .exam{grid-template-columns:1fr}
-  .plot-wrap{min-height:360px}
+
+.transition-badge{
+  position:absolute;
+  top:12px;
+  right:12px;
+  z-index:4;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid color-mix(in srgb,var(--accent) 35%,var(--border));
+  background:color-mix(in srgb,var(--panel) 86%,transparent);
+  color:var(--muted);
+  backdrop-filter:blur(10px);
+  border-radius:999px;
+  padding:7px 10px;
+  font-size:.76rem;
+  font-weight:760;
+  box-shadow:0 10px 26px rgba(0,0,0,.08);
+  opacity:.92;
 }
+.transition-badge .meter{
+  width:54px;height:6px;border-radius:999px;background:color-mix(in srgb,var(--border) 65%,transparent);overflow:hidden;
+}
+.transition-badge .meter i{display:block;height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent2));}
+.morph-path{fill:none;stroke:var(--warn);stroke-width:2.2;stroke-dasharray:3 6;stroke-linecap:round;opacity:.72}
+.ghost-curve{fill:none;stroke:var(--faint);stroke-width:2;stroke-dasharray:8 8;stroke-linecap:round;stroke-linejoin:round;opacity:.58}
+.target-curve{fill:none;stroke:var(--accent2);stroke-width:2;stroke-dasharray:4 7;stroke-linecap:round;stroke-linejoin:round;opacity:.70}
+.current-curve{fill:none;stroke:var(--indiff);stroke-width:3.6;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 3px 6px rgba(15,118,110,.18))}
+.pulse-ring{fill:none;stroke:var(--accent);stroke-width:2;opacity:.55}
+.motion-dot{fill:var(--warn);stroke:var(--panel);stroke-width:2;opacity:.95}
+.math-card .katex-display{margin:.1rem 0;text-align:left}.math-card .katex{font-size:1.03em}.result .katex{font-size:1em}.table .katex{font-size:.98em}
+
+@media(max-width:980px){.app{grid-template-columns:1fr;padding:12px}.sidebar{position:relative;height:auto;top:auto}.grid{grid-template-columns:1fr}.exam{grid-template-columns:1fr}.plot-wrap{min-height:360px}}
+.katex-display{overflow-x:auto;overflow-y:hidden}
 </style>
 </head>
 <body>
 <div class="app">
   <aside class="sidebar">
     <div class="brand">
-      <div class="mark">â‰½</div>
+      <div class="mark">≽</div>
       <div>
         <h1>Preference Geometry</h1>
-        <div class="kicker">relations Â· contours Â· indifference</div>
+        <div class="kicker">relations · contours · indifference</div>
       </div>
-      <button class="theme-btn" id="themeBtn" title="Toggle dark mode">â—</button>
+      <button class="theme-btn" id="themeBtn" title="Toggle dark mode">◐</button>
     </div>
 
     <div class="group">
       <div class="group-title">Preference relation</div>
       <label for="prefType">Relation</label>
       <select id="prefType">
-        <option value="cd">Cobbâ€“Douglas: x â‰½ y â‡” u(x) â‰¥ u(y)</option>
+        <option value="cd">Cobb–Douglas: x ≽ y iff u(x) ≥ u(y)</option>
         <option value="subs">Perfect substitutes</option>
         <option value="compl">Perfect complements</option>
         <option value="satiation">Bliss point / local satiation</option>
         <option value="component">Componentwise order: incomplete</option>
       </select>
-      <label for="alpha">Preference parameter Î±</label>
+      <label for="alpha">Preference parameter \(\alpha\)</label>
       <div class="row"><input id="alpha" type="range" min="0.10" max="0.90" step="0.01" value="0.50"><div class="value" id="alphaVal">0.50</div></div>
-      <label for="blissX">Bliss xâ‚ <span class="small">only for satiation</span></label>
+      <label for="blissX">Bliss \(x_1\) <span class="small">only for satiation</span></label>
       <div class="row"><input id="blissX" type="range" min="0.50" max="9.50" step="0.10" value="6.20"><div class="value" id="blissXVal">6.2</div></div>
-      <label for="blissY">Bliss xâ‚‚ <span class="small">only for satiation</span></label>
+      <label for="blissY">Bliss \(x_2\) <span class="small">only for satiation</span></label>
       <div class="row"><input id="blissY" type="range" min="0.50" max="9.50" step="0.10" value="6.00"><div class="value" id="blissYVal">6.0</div></div>
     </div>
 
     <div class="group">
       <div class="group-title">Consumption set</div>
-      <label for="xset">Set X</label>
+      <label for="xset">Set \(X\)</label>
       <select id="xset">
-        <option value="quadrant">â„Â²â‚Š displayed on [0,10]Â²</option>
-        <option value="box">Box: [0, B]Â²</option>
-        <option value="simplex">Simplex: xâ‚ + xâ‚‚ â‰¤ B</option>
+        <option value="quadrant">R²₊ displayed on [0,10]²</option>
+        <option value="box">Box: [0,B]²</option>
+        <option value="simplex">Simplex: x₁+x₂ ≤ B</option>
       </select>
-      <label for="B">Bound B</label>
+      <label for="B">Bound \(B\)</label>
       <div class="row"><input id="B" type="range" min="3" max="10" step="0.1" value="8.0"><div class="value" id="BVal">8.0</div></div>
     </div>
 
     <div class="group">
-      <div class="group-title">Reference bundle xÌ„</div>
-      <label for="x0">xÌ„â‚</label>
+      <div class="group-title">Reference bundle \(\bar x\)</div>
+      <label for="x0">\(\bar x_1\)</label>
       <div class="row"><input id="x0" type="range" min="0.2" max="9.8" step="0.1" value="3.8"><div class="value" id="x0Val">3.8</div></div>
-      <label for="y0">xÌ„â‚‚</label>
+      <label for="y0">\(\bar x_2\)</label>
       <div class="row"><input id="y0" type="range" min="0.2" max="9.8" step="0.1" value="4.2"><div class="value" id="y0Val">4.2</div></div>
     </div>
 
     <div class="group">
-      <div class="group-title">Comparison bundle z</div>
-      <label for="zx">zâ‚</label>
+      <div class="group-title">Comparison bundle \(z\)</div>
+      <label for="zx">\(z_1\)</label>
       <div class="row"><input id="zx" type="range" min="0.2" max="9.8" step="0.1" value="6.4"><div class="value" id="zxVal">6.4</div></div>
-      <label for="zy">zâ‚‚</label>
+      <label for="zy">\(z_2\)</label>
       <div class="row"><input id="zy" type="range" min="0.2" max="9.8" step="0.1" value="2.8"><div class="value" id="zyVal">2.8</div></div>
     </div>
 
@@ -326,72 +232,54 @@ input[type="range"]{accent-color:var(--accent)}
       <h2>Preference relations and indifference sets</h2>
       <p>A consumption set is the feasible universe. A preference relation orders bundles inside it. Upper and lower contour sets are the geometric shadows of the relation around a reference bundle.</p>
       <div class="pills">
-        <span class="pill">weak preference: x â‰½ y</span>
-        <span class="pill">strict preference: x â‰» y</span>
-        <span class="pill">indifference: x âˆ¼ y</span>
-        <span class="pill">upper contour: U(xÌ„)</span>
-        <span class="pill">lower contour: L(xÌ„)</span>
+        <span class="pill">weak preference: \(x \succeq y\)</span>
+        <span class="pill">strict preference: \(x \succ y\)</span>
+        <span class="pill">indifference: \(x \sim y\)</span>
+        <span class="pill">upper contour: \(U(\bar x)\)</span>
+        <span class="pill">lower contour: \(L(\bar x)\)</span>
       </div>
     </section>
 
     <section class="grid">
       <div class="card">
         <h3>Main diagram</h3>
-        <div class="sub">The colored regions are sets in the consumption space, not areas of utility.</div>
+        <div class="sub">The colored regions are sets in the consumption space, not areas of utility. Curves, feasible sets, and bundles morph smoothly as parameters move.</div>
         <div class="plot-wrap">
           <canvas id="plotCanvas"></canvas>
           <svg id="plotSvg" viewBox="0 0 720 610" preserveAspectRatio="none"></svg>
+          <div class="transition-badge" id="transitionBadge"><span>object constancy</span><span class="meter"><i id="transitionMeter"></i></span></div>
         </div>
         <div class="legend">
-          <span><i class="sw upper"></i> U(xÌ„) = {x âˆˆ X : x â‰½ xÌ„}</span>
-          <span><i class="sw lower"></i> L(xÌ„) = {x âˆˆ X : xÌ„ â‰½ x}</span>
-          <span><i class="sw curve"></i> I(xÌ„) = {x âˆˆ X : x âˆ¼ xÌ„}</span>
+          <span><i class="sw upper"></i> \(U(\bar x)=\{x\in X:x\succeq \bar x\}\)</span>
+          <span><i class="sw lower"></i> \(L(\bar x)=\{x\in X:\bar x\succeq x\}\)</span>
+          <span><i class="sw curve"></i> \(I(\bar x)=\{x\in X:x\sim \bar x\}\)</span>
         </div>
       </div>
 
       <div class="card">
         <h3>Symbolic definition</h3>
         <div class="sub" id="relationSubtitle">A binary relation on the consumption set.</div>
-        <div class="math-card">
-          <div class="math-title">Consumption set</div>
-          <div class="math" id="xsetFormula">X = â„Â²â‚Š</div>
-        </div>
-        <div class="math-card">
-          <div class="math-title">Preference relation</div>
-          <div class="math" id="prefFormula">x â‰½ y â‡” u(x) â‰¥ u(y)</div>
-        </div>
-        <div class="math-card">
-          <div class="math-title">Derived relations</div>
-          <div class="math">
-            x â‰» y â‡” x â‰½ y and not(y â‰½ x)<br>
-            x âˆ¼ y â‡” x â‰½ y and y â‰½ x
-          </div>
-        </div>
-        <div class="math-card">
-          <div class="math-title">Contour sets at xÌ„</div>
-          <div class="math">
-            U(xÌ„) = {x âˆˆ X : x â‰½ xÌ„}<br>
-            L(xÌ„) = {x âˆˆ X : xÌ„ â‰½ x}<br>
-            I(xÌ„) = U(xÌ„) âˆ© L(xÌ„)
-          </div>
-        </div>
+        <div class="math-card"><div class="math-title">Consumption set</div><div class="math" id="xsetFormula"></div></div>
+        <div class="math-card"><div class="math-title">Preference relation</div><div class="math" id="prefFormula"></div></div>
+        <div class="math-card"><div class="math-title">Derived relations</div><div class="math" id="derivedFormula"></div></div>
+        <div class="math-card"><div class="math-title">Contour sets at \(\bar x\)</div><div class="math" id="contourFormula"></div></div>
         <div class="notice" id="noticeBox">For monotone preferences, the upper contour set lies northeast of the indifference curve.</div>
       </div>
     </section>
 
     <section class="grid">
       <div class="card">
-        <h3>Compare one bundle with xÌ„</h3>
-        <div class="sub">Move z and watch the relation classify it.</div>
+        <h3>Compare one bundle with \(\bar x\)</h3>
+        <div class="sub">Move \(z\) and watch the relation classify it.</div>
         <div class="result" id="comparisonResult"></div>
         <div class="sep"></div>
         <table class="table">
           <thead><tr><th>Object</th><th>Geometric meaning</th></tr></thead>
           <tbody>
-            <tr><td><b>U(xÌ„)</b></td><td>All bundles weakly preferred to the reference bundle. For utility-represented preferences: u(x) â‰¥ u(xÌ„).</td></tr>
-            <tr><td><b>L(xÌ„)</b></td><td>All bundles that xÌ„ weakly dominates. For utility-represented preferences: u(x) â‰¤ u(xÌ„).</td></tr>
-            <tr><td><b>I(xÌ„)</b></td><td>Bundles mutually weakly preferred to xÌ„. It is the boundary between better and worse only in well-behaved complete preferences.</td></tr>
-            <tr><td><b>Incomplete case</b></td><td>Some bundles may be incomparable: neither z â‰½ xÌ„ nor xÌ„ â‰½ z. Then z belongs to neither contour set.</td></tr>
+            <tr><td><b>\(U(\bar x)\)</b></td><td>All bundles weakly preferred to the reference bundle. For utility-represented preferences: \(u(x)\ge u(\bar x)\).</td></tr>
+            <tr><td><b>\(L(\bar x)\)</b></td><td>All bundles that \(\bar x\) weakly dominates. For utility-represented preferences: \(u(x)\le u(\bar x)\).</td></tr>
+            <tr><td><b>\(I(\bar x)\)</b></td><td>Bundles mutually weakly preferred to \(\bar x\). It is the boundary between better and worse only in well-behaved complete preferences.</td></tr>
+            <tr><td><b>Incomplete case</b></td><td>Some bundles may be incomparable: neither \(z\succeq \bar x\) nor \(\bar x\succeq z\). Then \(z\) belongs to neither contour set.</td></tr>
           </tbody>
         </table>
       </div>
@@ -399,15 +287,10 @@ input[type="range"]{accent-color:var(--accent)}
       <div class="card">
         <h3>What to notice</h3>
         <div class="sub">The same definitions generate different geometries.</div>
-        <div class="math-card">
-          <div class="math-title">Axioms currently illustrated</div>
-          <div class="math" id="axiomBox"></div>
-        </div>
+        <div class="math-card"><div class="math-title">Axioms currently illustrated</div><div class="math" id="axiomBox"></div></div>
         <div class="notice" id="noticeBox2"></div>
         <div class="sep"></div>
-        <div class="small">
-          A preference relation is primitive. A utility function is only a representation: it assigns numbers preserving the order. The geometry of contour sets is often more fundamental than the utility numbers themselves.
-        </div>
+        <div class="small">A preference relation is primitive. A utility function is only a representation: it assigns numbers preserving the order. The geometry of contour sets is often more fundamental than the utility numbers themselves.</div>
       </div>
     </section>
 
@@ -415,20 +298,11 @@ input[type="range"]{accent-color:var(--accent)}
       <h3>Compact exam-style summary</h3>
       <div class="sub">Minimal checklist for preference relations and indifference sets.</div>
       <div class="exam">
-        <div class="mini">
-          <h4>1. Start from X</h4>
-          <p>The relation is defined only on the consumption set X. If z âˆ‰ X, the preference comparison is not an admissible comparison inside the model.</p>
-        </div>
-        <div class="mini">
-          <h4>2. Define the relation</h4>
-          <p>Weak preference is primitive. Strict preference and indifference are derived from weak preference, not separate assumptions.</p>
-        </div>
-        <div class="mini">
-          <h4>3. Read contours</h4>
-          <p>Upper contour means â€œat least as good as xÌ„.â€ Lower contour means â€œno better than xÌ„.â€ Indifference is their intersection.</p>
-        </div>
+        <div class="mini"><h4>1. Start from \(X\)</h4><p>The relation is defined only on the consumption set \(X\). If \(z\notin X\), the preference comparison is not an admissible comparison inside the model.</p></div>
+        <div class="mini"><h4>2. Define the relation</h4><p>Weak preference is primitive. Strict preference and indifference are derived from weak preference, not separate assumptions.</p></div>
+        <div class="mini"><h4>3. Read contours</h4><p>Upper contour means “at least as good as \(\bar x\).” Lower contour means “no better than \(\bar x\).” Indifference is their intersection.</p></div>
       </div>
-      <div class="footer-note">This app uses a finite display window [0,10]Â². For â„Â²â‚Š, the mathematical set continues beyond the visible square.</div>
+      <div class="footer-note">This app uses a finite display window \([0,10]^2\). For \(\mathbb{R}^2_+\), the mathematical set continues beyond the visible square.</div>
     </section>
   </main>
 </div>
@@ -436,278 +310,285 @@ input[type="range"]{accent-color:var(--accent)}
 <script>
 const $ = id => document.getElementById(id);
 const ids = ["prefType","alpha","blissX","blissY","xset","B","x0","y0","zx","zy","showUpper","showLower","showIndiff","showGrid"];
-const state = {};
 const W = 720, H = 610;
 const margin = {l:62,r:24,t:28,b:58};
 const XMAX = 10, YMAX = 10;
 const canvas = $("plotCanvas");
 const svg = $("plotSvg");
 const ctx = canvas.getContext("2d");
+let visualState = null;
+let targetState = null;
+let startState = null;
+let raf = 0;
+let staticMathRendered = false;
 
 function css(name){return getComputedStyle(document.documentElement).getPropertyValue(name).trim();}
 function sx(x){return margin.l + (x/XMAX)*(W-margin.l-margin.r)}
 function sy(y){return H-margin.b - (y/YMAX)*(H-margin.t-margin.b)}
-function dx(px){return (px-margin.l)/(W-margin.l-margin.r)*XMAX}
-function dy(py){return (H-margin.b-py)/(H-margin.t-margin.b)*YMAX}
 function val(id){const el=$(id); return el.type === "checkbox" ? el.checked : el.value;}
 function num(id){return parseFloat($(id).value)}
-function inX(x,y){
-  const set = val("xset"), B = num("B");
-  if(x < -1e-9 || y < -1e-9) return false;
-  if(set === "quadrant") return true;
-  if(set === "box") return x <= B + 1e-9 && y <= B + 1e-9;
-  if(set === "simplex") return x + y <= B + 1e-9;
-  return true;
+function clone(o){return JSON.parse(JSON.stringify(o));}
+function ease(t){return t<0.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2}
+function lerp(a,b,t){return a+(b-a)*t}
+function canMorph(a,b){return a && b && a.prefType===b.prefType && a.xset===b.xset;}
+function readState(){
+  return {
+    prefType:val('prefType'), alpha:num('alpha'), blissX:num('blissX'), blissY:num('blissY'),
+    xset:val('xset'), B:num('B'), x0:num('x0'), y0:num('y0'), zx:num('zx'), zy:num('zy'),
+    showUpper:val('showUpper'), showLower:val('showLower'), showIndiff:val('showIndiff'), showGrid:val('showGrid')
+  };
 }
-function utility(x,y){
-  const type = val("prefType"), a = num("alpha"), bx = num("blissX"), by = num("blissY");
-  const eps = 1e-9;
-  if(type === "cd") return Math.pow(Math.max(x,eps),a)*Math.pow(Math.max(y,eps),1-a);
-  if(type === "subs") return a*x + (1-a)*y;
-  if(type === "compl") return Math.min(x/a, y/(1-a));
-  if(type === "satiation") return -((x-bx)*(x-bx) + (y-by)*(y-by));
-  return null;
+function interpolateState(a,b,t){
+  if(!a || !canMorph(a,b)) return clone(b);
+  return {
+    prefType:b.prefType, xset:b.xset,
+    alpha:lerp(a.alpha,b.alpha,t), blissX:lerp(a.blissX,b.blissX,t), blissY:lerp(a.blissY,b.blissY,t), B:lerp(a.B,b.B,t),
+    x0:lerp(a.x0,b.x0,t), y0:lerp(a.y0,b.y0,t), zx:lerp(a.zx,b.zx,t), zy:lerp(a.zy,b.zy,t),
+    showUpper:b.showUpper, showLower:b.showLower, showIndiff:b.showIndiff, showGrid:b.showGrid
+  };
 }
-function weakPref(x1,y1,x2,y2){
-  const type = val("prefType"), tol = 1e-7;
-  if(!inX(x1,y1) || !inX(x2,y2)) return false;
-  if(type === "component") return x1 >= x2 - tol && y1 >= y2 - tol;
-  return utility(x1,y1) >= utility(x2,y2) - tol;
-}
-function strictPref(x1,y1,x2,y2){return weakPref(x1,y1,x2,y2) && !weakPref(x2,y2,x1,y1)}
-function indifferent(x1,y1,x2,y2){return weakPref(x1,y1,x2,y2) && weakPref(x2,y2,x1,y1)}
-function relationText(zx,zy,x0,y0){
-  if(!inX(zx,zy)) return `<b>z âˆ‰ X.</b> The comparison is outside the consumption set.`;
-  if(!inX(x0,y0)) return `<b>xÌ„ âˆ‰ X.</b> Move the reference bundle back into X.`;
-  const zWeak = weakPref(zx,zy,x0,y0);
-  const xWeak = weakPref(x0,y0,zx,zy);
-  let line = "";
-  if(zWeak && xWeak) line = `<b>z âˆ¼ xÌ„</b>. The two bundles lie on the same indifference set.`;
-  else if(zWeak) line = `<b>z â‰» xÌ„</b>. The comparison bundle is strictly preferred to the reference bundle.`;
-  else if(xWeak) line = `<b>xÌ„ â‰» z</b>. The reference bundle is strictly preferred to the comparison bundle.`;
-  else line = `<b>z and xÌ„ are incomparable.</b> Neither bundle weakly dominates the other.`;
-  const u0 = utility(x0,y0), uz = utility(zx,zy);
-  if(val("prefType") === "component"){
-    return `${line}<br><span class="small">Membership: z ${zWeak ? "âˆˆ" : "âˆ‰"} U(xÌ„), z ${xWeak ? "âˆˆ" : "âˆ‰"} L(xÌ„). This relation is reflexive and transitive, but not complete.</span>`;
+function tex(id, source, display=true){
+  const el=$(id); if(!el) return;
+  el.dataset.tex = source;
+  if(window.katex){
+    try{ katex.render(source, el, {displayMode:display, throwOnError:false, strict:false, trust:true}); return; }catch(e){}
   }
-  return `${line}<br><span class="small">u(xÌ„) = ${u0.toFixed(3)}, u(z) = ${uz.toFixed(3)}. Membership: z ${zWeak ? "âˆˆ" : "âˆ‰"} U(xÌ„), z ${xWeak ? "âˆˆ" : "âˆ‰"} L(xÌ„).</span>`;
+  el.textContent = display ? `\\[${source}\\]` : `\\(${source}\\)`;
 }
-function formulas(){
-  const type=val("prefType"), a=num("alpha").toFixed(2), B=num("B").toFixed(1);
-  const set=val("xset");
-  $("xsetFormula").innerHTML = set === "quadrant" ? "X = â„Â²â‚Š" : set === "box" ? `X = [0, ${B}] Ã— [0, ${B}]` : `X = {x âˆˆ â„Â²â‚Š : xâ‚ + xâ‚‚ â‰¤ ${B}}`;
-  let f="", sub="", ax="", n1="", n2="";
-  if(type==="cd"){
-    f = `u(xâ‚,xâ‚‚)=xâ‚<sup>${a}</sup>xâ‚‚<sup>${(1-num("alpha")).toFixed(2)}</sup><br>x â‰½ y â‡” u(x) â‰¥ u(y)`;
-    sub = "Complete, transitive, continuous, monotone, convex preferences.";
-    ax = "Complete Â· transitive Â· continuous Â· locally nonsatiated Â· convex";
-    n1 = "Indifference curves are smooth and downward sloping. More is always better, so the upper contour set is northeast of the curve.";
-    n2 = "Convex upper contour sets encode preference for mixtures: averages of good bundles remain at least as good.";
-  } else if(type==="subs"){
-    f = `u(xâ‚,xâ‚‚)= ${a}xâ‚ + ${(1-num("alpha")).toFixed(2)}xâ‚‚<br>x â‰½ y â‡” u(x) â‰¥ u(y)`;
-    sub = "Complete, transitive, continuous, monotone; convex but not strictly convex.";
-    ax = "Complete Â· transitive Â· continuous Â· monotone Â· convex, not strictly convex";
-    n1 = "Indifference sets are straight parallel lines. The consumer is willing to trade goods at a constant rate.";
-    n2 = "Because the indifference set is flat, tangencies are not unique in many optimization problems.";
-  } else if(type==="compl"){
-    f = `u(xâ‚,xâ‚‚)=min{xâ‚/${a}, xâ‚‚/${(1-num("alpha")).toFixed(2)}}<br>x â‰½ y â‡” u(x) â‰¥ u(y)`;
-    sub = "Complete, transitive, continuous, monotone, convex; kinked indifference sets.";
-    ax = "Complete Â· transitive Â· continuous Â· monotone Â· convex Â· kinked";
-    n1 = "Indifference sets are L-shaped. Extra units of one good alone do not raise utility once the bottleneck good is fixed.";
-    n2 = "The kink is where the two inputs are in the desired proportion.";
-  } else if(type==="satiation"){
-    const bx=num("blissX").toFixed(1), by=num("blissY").toFixed(1);
-    f = `u(xâ‚,xâ‚‚)=âˆ’[(xâ‚âˆ’${bx})Â²+(xâ‚‚âˆ’${by})Â²]<br>x â‰½ y â‡” u(x) â‰¥ u(y)`;
-    sub = "Complete and transitive, but not monotone. Better means closer to the bliss point.";
-    ax = "Complete Â· transitive Â· continuous Â· convex upper contours Â· not monotone";
-    n1 = "Upper contour sets are disks around the bliss point. More of a good can become worse after satiation.";
-    n2 = "This example separates preference geometry from the usual monotonicity assumption.";
-  } else {
-    f = `x â‰½ y â‡” xâ‚ â‰¥ yâ‚ and xâ‚‚ â‰¥ yâ‚‚<br><span class="small">No scalar utility representation is used here.</span>`;
-    sub = "A partial order: reflexive and transitive, but not complete.";
-    ax = "Reflexive Â· transitive Â· antisymmetric Â· not complete";
-    n1 = "The upper contour is the northeast cone. The lower contour is the southwest cone. The remaining two rectangles are incomparable.";
-    n2 = "Completeness is an assumption, not a definition. Without it, indifference need not be a smooth curve.";
-  }
-  $("prefFormula").innerHTML = f;
-  $("relationSubtitle").textContent = sub;
-  $("axiomBox").textContent = ax;
-  $("noticeBox").textContent = n1;
-  $("noticeBox2").textContent = n2;
-}
-function drawCanvas(){
-  const rect = canvas.getBoundingClientRect();
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width = rect.width*dpr; canvas.height = rect.height*dpr;
-  ctx.setTransform(dpr*rect.width/W,0,0,dpr*rect.height/H,0,0);
-  ctx.clearRect(0,0,W,H);
-  ctx.fillStyle = css('--panel2'); ctx.fillRect(0,0,W,H);
-
-  const grid = 86;
-  const cellX = XMAX/grid, cellY = YMAX/grid;
-  const x0 = num("x0"), y0 = num("y0");
-  const showU = val("showUpper"), showL = val("showLower");
-  for(let i=0;i<grid;i++){
-    for(let j=0;j<grid;j++){
-      const x = (i+.5)*cellX, y = (j+.5)*cellY;
-      const px = sx(i*cellX), py = sy((j+1)*cellY);
-      const pw = sx((i+1)*cellX)-sx(i*cellX)+.8;
-      const ph = sy(j*cellY)-sy((j+1)*cellY)+.8;
-      if(!inX(x,y)){
-        ctx.fillStyle = colorMix(css('--border'), .32);
-        ctx.fillRect(px,py,pw,ph);
-        continue;
-      }
-      const u = weakPref(x,y,x0,y0), l = weakPref(x0,y0,x,y);
-      if(showU && showL && u && l){
-        ctx.fillStyle = colorMix(css('--accent'), .22);
-        ctx.fillRect(px,py,pw,ph);
-      } else if(showU && u){
-        ctx.fillStyle = css('--upper');
-        ctx.fillRect(px,py,pw,ph);
-      } else if(showL && l){
-        ctx.fillStyle = css('--lower');
-        ctx.fillRect(px,py,pw,ph);
-      }
-    }
+function renderInline(container){
+  if(window.renderMathInElement && container){
+    renderMathInElement(container, {
+      delimiters:[{left:'$$',right:'$$',display:true},{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}],
+      throwOnError:false,
+      ignoredTags:['script','noscript','style','textarea','pre','code','option']
+    });
   }
 }
-function colorMix(hexOrRgba, alpha){
-  const c = document.createElement('canvas').getContext('2d');
-  c.fillStyle = hexOrRgba;
-  const s = c.fillStyle;
-  if(s.startsWith('#')){
-    const n=parseInt(s.slice(1),16), r=(n>>16)&255,g=(n>>8)&255,b=n&255;
-    return `rgba(${r},${g},${b},${alpha})`;
-  }
-  return s.replace(/rgba?\(([^)]+)\)/, (m,p)=>{
-    const parts=p.split(',').map(v=>parseFloat(v));
-    return `rgba(${parts[0]},${parts[1]},${parts[2]},${alpha})`;
-  });
-}
-function el(name, attrs={}, text=""){
-  const e = document.createElementNS("http://www.w3.org/2000/svg", name);
-  for(const k in attrs) e.setAttribute(k, attrs[k]);
-  if(text) e.textContent = text;
-  return e;
-}
-function pathFrom(points){return points.map((p,i)=>(i?'L':'M')+p[0].toFixed(2)+','+p[1].toFixed(2)).join(' ')}
-function indiffPaths(){
-  const type=val("prefType"), a=num("alpha"), x0=num("x0"), y0=num("y0"), out=[];
-  if(!inX(x0,y0)) return out;
-  if(type==="component"){
-    out.push({kind:'circle',cx:sx(x0),cy:sy(y0),r:4});
-    return out;
-  }
-  if(type==="subs"){
-    const u0=utility(x0,y0), pts=[];
-    for(let x=0;x<=XMAX;x+=.05){
-      const y=(u0-a*x)/(1-a);
-      if(y>=0&&y<=YMAX&&inX(x,y)) pts.push([sx(x),sy(y)]);
-    }
-    if(pts.length>1) out.push({kind:'path',d:pathFrom(pts)});
-  } else if(type==="cd"){
-    const u0=utility(x0,y0), pts=[];
-    for(let x=.05;x<=XMAX;x+=.035){
-      const y=Math.pow(u0/Math.pow(x,a),1/(1-a));
-      if(isFinite(y)&&y>=0&&y<=YMAX&&inX(x,y)) pts.push([sx(x),sy(y)]);
-    }
-    if(pts.length>1) out.push({kind:'path',d:pathFrom(pts)});
-  } else if(type==="compl"){
-    const u0=utility(x0,y0);
-    const vx=a*u0, vy=(1-a)*u0;
-    const pts1=[], pts2=[];
-    for(let y=vy;y<=YMAX;y+=.05) if(inX(vx,y)) pts1.push([sx(vx),sy(y)]);
-    for(let x=vx;x<=XMAX;x+=.05) if(inX(x,vy)) pts2.push([sx(x),sy(vy)]);
-    if(pts1.length>1) out.push({kind:'path',d:pathFrom(pts1)});
-    if(pts2.length>1) out.push({kind:'path',d:pathFrom(pts2)});
-  } else if(type==="satiation"){
-    const bx=num("blissX"), by=num("blissY");
-    const r=Math.hypot(x0-bx,y0-by);
-    const pts=[];
-    for(let t=0;t<=Math.PI*2+.05;t+=.025){
-      const x=bx+r*Math.cos(t), y=by+r*Math.sin(t);
-      if(x>=0&&x<=XMAX&&y>=0&&y<=YMAX&&inX(x,y)) pts.push([sx(x),sy(y)]);
-      else if(pts.length>1){out.push({kind:'path',d:pathFrom(pts.splice(0))});}
-    }
-    if(pts.length>1) out.push({kind:'path',d:pathFrom(pts)});
-  }
-  return out;
-}
-function drawSvg(){
-  svg.innerHTML = '';
-  const gridColor=css('--grid') || css('--border');
-  if(val("showGrid")){
-    for(let k=0;k<=10;k++){
-      svg.appendChild(el('line',{x1:sx(k),y1:sy(0),x2:sx(k),y2:sy(10),stroke:gridColor,'stroke-width':.8,opacity:.55}));
-      svg.appendChild(el('line',{x1:sx(0),y1:sy(k),x2:sx(10),y2:sy(k),stroke:gridColor,'stroke-width':.8,opacity:.55}));
-    }
-  }
-  svg.appendChild(el('line',{x1:sx(0),y1:sy(0),x2:sx(10.15),y2:sy(0),stroke:css('--text'),'stroke-width':1.4}));
-  svg.appendChild(el('line',{x1:sx(0),y1:sy(0),x2:sx(0),y2:sy(10.15),stroke:css('--text'),'stroke-width':1.4}));
-  svg.appendChild(el('text',{x:sx(10.12),y:sy(0)+28,fill:css('--muted'),'font-size':15,'text-anchor':'end'},'xâ‚'));
-  svg.appendChild(el('text',{x:sx(0)-30,y:sy(10.1),fill:css('--muted'),'font-size':15},'xâ‚‚'));
-  for(let k=0;k<=10;k+=2){
-    svg.appendChild(el('text',{x:sx(k),y:sy(0)+22,fill:css('--faint'),'font-size':12,'text-anchor':'middle'},String(k)));
-    if(k>0) svg.appendChild(el('text',{x:sx(0)-12,y:sy(k)+4,fill:css('--faint'),'font-size':12,'text-anchor':'end'},String(k)));
-  }
-  drawConsumptionBoundary();
-  if(val("showIndiff")){
-    for(const p of indiffPaths()){
-      if(p.kind==='path') svg.appendChild(el('path',{d:p.d,fill:'none',stroke:css('--indiff'),'stroke-width':3,'stroke-linecap':'round','stroke-linejoin':'round'}));
-      if(p.kind==='circle') svg.appendChild(el('circle',{cx:p.cx,cy:p.cy,r:p.r,fill:css('--indiff'),stroke:css('--panel'),'stroke-width':2}));
-    }
-  }
-  drawPoint(num("x0"),num("y0"),'xÌ„',css('--accent'),true);
-  drawPoint(num("zx"),num("zy"),'z',css('--warn'),false);
-  if(val("prefType")==='satiation') drawPoint(num("blissX"),num("blissY"),'bliss',css('--accent2'),false,5);
-}
-function drawConsumptionBoundary(){
-  const set=val("xset"), B=num("B");
-  const stroke=css('--text'), muted=css('--muted');
-  if(set==='box'){
-    svg.appendChild(el('rect',{x:sx(0),y:sy(B),width:sx(B)-sx(0),height:sy(0)-sy(B),fill:'none',stroke:stroke,'stroke-width':2,'stroke-dasharray':'6 6',opacity:.65}));
-    svg.appendChild(el('text',{x:sx(B)-4,y:sy(B)+18,fill:muted,'font-size':12,'text-anchor':'end'},'X'));
-  }
-  if(set==='simplex'){
-    const b=Math.min(B,10);
-    svg.appendChild(el('path',{d:`M ${sx(0)} ${sy(b)} L ${sx(b)} ${sy(0)}`,fill:'none',stroke:stroke,'stroke-width':2,'stroke-dasharray':'6 6',opacity:.75}));
-    svg.appendChild(el('text',{x:sx(b/2)+10,y:sy(b/2)-8,fill:muted,'font-size':12},'xâ‚+xâ‚‚â‰¤B'));
-  }
-}
-function drawPoint(x,y,label,color,isRef,r=7){
-  const feasible=inX(x,y);
-  svg.appendChild(el('circle',{cx:sx(x),cy:sy(y),r:r+4,fill:color,opacity:.13}));
-  svg.appendChild(el('circle',{cx:sx(x),cy:sy(y),r:r,fill:color,stroke:css('--panel'),'stroke-width':2,opacity:feasible?1:.45}));
-  svg.appendChild(el('text',{x:sx(x)+12,y:sy(y)-12,fill:color,'font-size':15,'font-weight':700},label));
-  if(isRef){
-    svg.appendChild(el('line',{x1:sx(x),y1:sy(0),x2:sx(x),y2:sy(y),stroke:color,'stroke-width':1,'stroke-dasharray':'3 5',opacity:.45}));
-    svg.appendChild(el('line',{x1:sx(0),y1:sy(y),x2:sx(x),y2:sy(y),stroke:color,'stroke-width':1,'stroke-dasharray':'3 5',opacity:.45}));
-  }
+function renderStaticMathOnce(){
+  if(staticMathRendered || !window.renderMathInElement) return;
+  renderInline(document.body); staticMathRendered = true;
 }
 function updateValues(){
   for(const id of ["alpha","blissX","blissY","B","x0","y0","zx","zy"]){
-    const v=num(id);
-    const d = id === "alpha" ? v.toFixed(2) : v.toFixed(1);
-    $(id+"Val").textContent = d;
+    const v=num(id); $(id+'Val').textContent = id==='alpha' ? v.toFixed(2) : v.toFixed(1);
   }
 }
-function update(){
-  updateValues();
-  formulas();
-  drawCanvas();
-  drawSvg();
-  $("comparisonResult").innerHTML = relationText(num("zx"),num("zy"),num("x0"),num("y0"));
+function inX(s,x,y){
+  if(x < -1e-9 || y < -1e-9) return false;
+  if(s.xset==='quadrant') return true;
+  if(s.xset==='box') return x <= s.B + 1e-9 && y <= s.B + 1e-9;
+  if(s.xset==='simplex') return x + y <= s.B + 1e-9;
+  return true;
 }
-ids.forEach(id=>$(id).addEventListener('input',update));
-$("themeBtn").addEventListener('click',()=>{
-  const root=document.documentElement;
-  root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
-  setTimeout(update,20);
-});
-window.addEventListener('resize',update);
-update();
+function utility(s,x,y){
+  const a=s.alpha, bx=s.blissX, by=s.blissY, eps=1e-9;
+  if(s.prefType==='cd') return Math.pow(Math.max(x,eps),a)*Math.pow(Math.max(y,eps),1-a);
+  if(s.prefType==='subs') return a*x + (1-a)*y;
+  if(s.prefType==='compl') return Math.min(x/a, y/(1-a));
+  if(s.prefType==='satiation') return -((x-bx)*(x-bx) + (y-by)*(y-by));
+  return null;
+}
+function weakPref(s,x1,y1,x2,y2){
+  const tol=1e-7;
+  if(!inX(s,x1,y1) || !inX(s,x2,y2)) return false;
+  if(s.prefType==='component') return x1 >= x2 - tol && y1 >= y2 - tol;
+  return utility(s,x1,y1) >= utility(s,x2,y2) - tol;
+}
+function relationText(s){
+  const {zx,zy,x0,y0}=s;
+  if(!inX(s,zx,zy)) return `<b>\(z\notin X\).</b> The comparison is outside the consumption set.`;
+  if(!inX(s,x0,y0)) return `<b>\(\bar x\notin X\).</b> Move the reference bundle back into \(X\).`;
+  const zWeak=weakPref(s,zx,zy,x0,y0), xWeak=weakPref(s,x0,y0,zx,zy);
+  let line='';
+  if(zWeak && xWeak) line=`<b>\(z\sim\bar x\)</b>. The two bundles lie on the same indifference set.`;
+  else if(zWeak) line=`<b>\(z\succ\bar x\)</b>. The comparison bundle is strictly preferred to the reference bundle.`;
+  else if(xWeak) line=`<b>\(\bar x\succ z\)</b>. The reference bundle is strictly preferred to the comparison bundle.`;
+  else line=`<b>\(z\)</b> and <b>\(\bar x\)</b> are incomparable. Neither bundle weakly dominates the other.`;
+  if(s.prefType==='component'){
+    return `${line}<br><span class="small">Membership: \(z ${zWeak?'\\in':'\\notin'} U(\bar x)\), \(z ${xWeak?'\\in':'\\notin'} L(\bar x)\). This relation is reflexive and transitive, but not complete.</span>`;
+  }
+  const u0=utility(s,x0,y0), uz=utility(s,zx,zy);
+  return `${line}<br><span class="small">\(u(\bar x)=${u0.toFixed(3)}\), \(u(z)=${uz.toFixed(3)}\). Membership: \(z ${zWeak?'\\in':'\\notin'} U(\bar x)\), \(z ${xWeak?'\\in':'\\notin'} L(\bar x)\).</span>`;
+}
+function formulas(s){
+  const a=s.alpha.toFixed(2), b=(1-s.alpha).toFixed(2), B=s.B.toFixed(1);
+  tex('xsetFormula', s.xset==='quadrant' ? String.raw`X=\mathbb{R}^2_+` : s.xset==='box' ? String.raw`X=[0,${B}]\times[0,${B}]` : String.raw`X=\{x\in\mathbb{R}^2_+:x_1+x_2\le ${B}\}`);
+  let f='', sub='', ax='', n1='', n2='';
+  if(s.prefType==='cd'){
+    f=String.raw`u(x_1,x_2)=x_1^{${a}}x_2^{${b}},\qquad x\succeq y\iff u(x)\ge u(y)`;
+    sub='Complete, transitive, continuous, monotone, convex preferences.';
+    ax=String.raw`\text{complete}\;\cdot\;\text{transitive}\;\cdot\;\text{continuous}\;\cdot\;\text{locally nonsatiated}\;\cdot\;\text{convex}`;
+    n1='Indifference curves are smooth and downward sloping. More is always better, so the upper contour set is northeast of the curve.';
+    n2='Convex upper contour sets encode preference for mixtures: averages of good bundles remain at least as good.';
+  } else if(s.prefType==='subs'){
+    f=String.raw`u(x_1,x_2)=${a}x_1+${b}x_2,\qquad x\succeq y\iff u(x)\ge u(y)`;
+    sub='Complete, transitive, continuous, monotone; convex but not strictly convex.';
+    ax=String.raw`\text{complete}\;\cdot\;\text{transitive}\;\cdot\;\text{continuous}\;\cdot\;\text{monotone}\;\cdot\;\text{convex, not strictly convex}`;
+    n1='Indifference sets are straight parallel lines. The consumer is willing to trade goods at a constant rate.';
+    n2='Because the indifference set is flat, tangencies are not unique in many optimization problems.';
+  } else if(s.prefType==='compl'){
+    f=String.raw`u(x_1,x_2)=\min\left\{\frac{x_1}{${a}},\frac{x_2}{${b}}\right\},\qquad x\succeq y\iff u(x)\ge u(y)`;
+    sub='Complete, transitive, continuous, monotone, convex; kinked indifference sets.';
+    ax=String.raw`\text{complete}\;\cdot\;\text{transitive}\;\cdot\;\text{continuous}\;\cdot\;\text{monotone}\;\cdot\;\text{convex}\;\cdot\;\text{kinked}`;
+    n1='Indifference sets are L-shaped. Extra units of one good alone do not raise utility once the bottleneck good is fixed.';
+    n2='The kink is where the two inputs are in the desired proportion.';
+  } else if(s.prefType==='satiation'){
+    const bx=s.blissX.toFixed(1), by=s.blissY.toFixed(1);
+    f=String.raw`u(x_1,x_2)=-\left[(x_1-${bx})^2+(x_2-${by})^2\right],\qquad x\succeq y\iff u(x)\ge u(y)`;
+    sub='Complete and transitive, but not monotone. Better means closer to the bliss point.';
+    ax=String.raw`\text{complete}\;\cdot\;\text{transitive}\;\cdot\;\text{continuous}\;\cdot\;\text{convex upper contours}\;\cdot\;\text{not monotone}`;
+    n1='Upper contour sets are disks around the bliss point. More of a good can become worse after satiation.';
+    n2='This example separates preference geometry from the usual monotonicity assumption.';
+  } else {
+    f=String.raw`x\succeq y\iff x_1\ge y_1\ \text{and}\ x_2\ge y_2`;
+    sub='A partial order: reflexive and transitive, but not complete.';
+    ax=String.raw`\text{reflexive}\;\cdot\;\text{transitive}\;\cdot\;\text{antisymmetric}\;\cdot\;\text{not complete}`;
+    n1='The upper contour is the northeast cone. The lower contour is the southwest cone. The remaining two rectangles are incomparable.';
+    n2='Completeness is an assumption, not a definition. Without it, indifference need not be a smooth curve.';
+  }
+  tex('prefFormula', f);
+  tex('derivedFormula', String.raw`x\succ y\iff x\succeq y\ \text{and not}\ (y\succeq x),\qquad x\sim y\iff x\succeq y\ \text{and}\ y\succeq x`);
+  tex('contourFormula', String.raw`U(\bar x)=\{x\in X:x\succeq\bar x\},\quad L(\bar x)=\{x\in X:\bar x\succeq x\},\quad I(\bar x)=U(\bar x)\cap L(\bar x)`);
+  tex('axiomBox', ax);
+  $('relationSubtitle').textContent=sub; $('noticeBox').textContent=n1; $('noticeBox2').textContent=n2;
+}
+function makePath(points){
+  const clean=points.filter(p=>Number.isFinite(p[0])&&Number.isFinite(p[1]));
+  if(clean.length<2) return '';
+  return clean.map((p,i)=>(i?'L':'M')+sx(p[0]).toFixed(2)+','+sy(p[1]).toFixed(2)).join(' ');
+}
+function indiffGeometry(s){
+  const out=[], a=s.alpha, x0=s.x0, y0=s.y0; if(!inX(s,x0,y0)) return out;
+  if(s.prefType==='component'){ out.push({kind:'point',x:x0,y:y0}); return out; }
+  if(s.prefType==='subs'){
+    const u0=utility(s,x0,y0), pts=[]; for(let x=0;x<=XMAX;x+=0.04){const y=(u0-a*x)/(1-a); if(y>=0&&y<=YMAX&&inX(s,x,y)) pts.push([x,y]);}
+    if(pts.length>1) out.push({kind:'path',pts});
+  } else if(s.prefType==='cd'){
+    const u0=utility(s,x0,y0), pts=[]; for(let x=0.05;x<=XMAX;x+=0.025){const y=Math.pow(u0/Math.pow(x,a),1/(1-a)); if(isFinite(y)&&y>=0&&y<=YMAX&&inX(s,x,y)) pts.push([x,y]);}
+    if(pts.length>1) out.push({kind:'path',pts});
+  } else if(s.prefType==='compl'){
+    const u0=utility(s,x0,y0), vx=a*u0, vy=(1-a)*u0; const pts1=[], pts2=[];
+    for(let y=vy;y<=YMAX;y+=0.04) if(inX(s,vx,y)) pts1.push([vx,y]);
+    for(let x=vx;x<=XMAX;x+=0.04) if(inX(s,x,vy)) pts2.push([x,vy]);
+    if(pts1.length>1) out.push({kind:'path',pts:pts1}); if(pts2.length>1) out.push({kind:'path',pts:pts2});
+  } else if(s.prefType==='satiation'){
+    const r=Math.hypot(x0-s.blissX,y0-s.blissY); let seg=[];
+    for(let t=0;t<=Math.PI*2+0.05;t+=0.018){ const x=s.blissX+r*Math.cos(t), y=s.blissY+r*Math.sin(t); if(x>=0&&x<=XMAX&&y>=0&&y<=YMAX&&inX(s,x,y)) seg.push([x,y]); else if(seg.length>1){ out.push({kind:'path',pts:seg.slice()}); seg=[]; } }
+    if(seg.length>1) out.push({kind:'path',pts:seg});
+  }
+  return out;
+}
+function colorMix(hexOrRgba, alpha){
+  const c=document.createElement('canvas').getContext('2d'); c.fillStyle=hexOrRgba; const s=c.fillStyle;
+  if(s.startsWith('#')){ const n=parseInt(s.slice(1),16), r=(n>>16)&255,g=(n>>8)&255,b=n&255; return `rgba(${r},${g},${b},${alpha})`; }
+  return s.replace(/rgba?\(([^)]+)\)/,(m,p)=>{const parts=p.split(',').map(v=>parseFloat(v)); return `rgba(${parts[0]},${parts[1]},${parts[2]},${alpha})`;});
+}
+function drawCanvasInterpolated(cur, prev=null, fade=1){
+  const rect=canvas.getBoundingClientRect(), dpr=window.devicePixelRatio||1;
+  canvas.width=rect.width*dpr; canvas.height=rect.height*dpr;
+  ctx.setTransform(dpr*rect.width/W,0,0,dpr*rect.height/H,0,0); ctx.clearRect(0,0,W,H); ctx.fillStyle=css('--panel2'); ctx.fillRect(0,0,W,H);
+  const grid=112, cellX=XMAX/grid, cellY=YMAX/grid, accent=css('--accent'), warn=css('--warn'), border=css('--border');
+  for(let i=0;i<grid;i++) for(let j=0;j<grid;j++){
+    const x=(i+.5)*cellX, y=(j+.5)*cellY, px=sx(i*cellX), py=sy((j+1)*cellY), pw=sx((i+1)*cellX)-sx(i*cellX)+.8, ph=sy(j*cellY)-sy((j+1)*cellY)+.8;
+    const inCur=inX(cur,x,y), inPrev=prev?inX(prev,x,y):inCur;
+    if(!(inCur||inPrev)){ ctx.fillStyle=colorMix(border,.30); ctx.fillRect(px,py,pw,ph); continue; }
+    const uCur=inCur && weakPref(cur,x,y,cur.x0,cur.y0) ? 1:0, lCur=inCur && weakPref(cur,cur.x0,cur.y0,x,y) ? 1:0;
+    const uPrev=prev && inPrev && weakPref(prev,x,y,prev.x0,prev.y0) ? 1:0, lPrev=prev && inPrev && weakPref(prev,prev.x0,prev.y0,x,y) ? 1:0;
+    const u=prev?lerp(uPrev,uCur,fade):uCur, l=prev?lerp(lPrev,lCur,fade):lCur;
+    if(cur.showUpper && u>0.04){ ctx.fillStyle=colorMix(accent,0.035+0.15*u); ctx.fillRect(px,py,pw,ph); }
+    if(cur.showLower && l>0.04){ ctx.fillStyle=colorMix(warn,0.030+0.13*l); ctx.fillRect(px,py,pw,ph); }
+    if(cur.showUpper && cur.showLower && u>.65 && l>.65){ ctx.fillStyle=colorMix(accent,0.18+0.12*Math.min(u,l)); ctx.fillRect(px,py,pw,ph); }
+  }
+}
+function el(name, attrs={}, text=''){ const e=document.createElementNS('http://www.w3.org/2000/svg',name); for(const k in attrs)e.setAttribute(k,attrs[k]); if(text)e.textContent=text; return e; }
+function drawBoundary(s, opacity=1, klass=''){
+  const frag=document.createDocumentFragment(); const stroke=klass==='target'?css('--accent2'):klass==='ghost'?css('--faint'):css('--text');
+  if(s.xset==='box') frag.appendChild(el('rect',{x:sx(0),y:sy(s.B),width:sx(s.B)-sx(0),height:sy(0)-sy(s.B),fill:'none',stroke,'stroke-width':2,'stroke-dasharray':klass?'6 6':'6 6',opacity}));
+  if(s.xset==='simplex'){ const b=Math.min(s.B,10); frag.appendChild(el('path',{d:`M ${sx(0)} ${sy(b)} L ${sx(b)} ${sy(0)}`,fill:'none',stroke,'stroke-width':2,'stroke-dasharray':klass?'6 6':'6 6',opacity})); frag.appendChild(el('text',{x:sx(b/2)+10,y:sy(b/2)-8,fill:css('--muted'),'font-size':12,opacity},'x₁+x₂≤B')); }
+  return frag;
+}
+function drawPointNode(s,x,y,label,color,isRef,r=7,opacity=1,pulse=0){
+  const g=el('g',{opacity});
+  if(pulse>0){ g.appendChild(el('circle',{class:'pulse-ring',cx:sx(x),cy:sy(y),r:r+8+10*pulse,opacity:.50*(1-pulse)})); }
+  g.appendChild(el('circle',{cx:sx(x),cy:sy(y),r:r+4,fill:color,opacity:.14}));
+  g.appendChild(el('circle',{cx:sx(x),cy:sy(y),r,fill:color,stroke:css('--panel'),'stroke-width':2,opacity:inX(s,x,y)?1:.45}));
+  g.appendChild(el('text',{x:sx(x)+12,y:sy(y)-12,fill:color,'font-size':15,'font-weight':760},label));
+  if(isRef){ g.appendChild(el('line',{x1:sx(x),y1:sy(0),x2:sx(x),y2:sy(y),stroke:color,'stroke-width':1,'stroke-dasharray':'3 5',opacity:.50})); g.appendChild(el('line',{x1:sx(0),y1:sy(y),x2:sx(x),y2:sy(y),stroke:color,'stroke-width':1,'stroke-dasharray':'3 5',opacity:.50})); }
+  return g;
+}
+function drawCurveSet(s, className, opacity=1){
+  const frag=document.createDocumentFragment();
+  if(!s.showIndiff) return frag;
+  for(const g of indiffGeometry(s)){
+    if(g.kind==='path') frag.appendChild(el('path',{class:className,d:makePath(g.pts),opacity}));
+    else frag.appendChild(el('circle',{cx:sx(g.x),cy:sy(g.y),r:4,fill:css('--indiff'),stroke:css('--panel'),'stroke-width':2,opacity}));
+  }
+  return frag;
+}
+function drawTrail(prev,target,t,xKey='x0',yKey='y0',color=css('--warn')){
+  const x0=prev[xKey], y0=prev[yKey], x1=target[xKey], y1=target[yKey];
+  const group=el('g',{});
+  if(Math.hypot(sx(x1)-sx(x0),sy(y1)-sy(y0))>4){
+    group.appendChild(el('path',{class:'morph-path',d:`M ${sx(x0)} ${sy(y0)} C ${sx((2*x0+x1)/3)} ${sy(y0)}, ${sx((x0+2*x1)/3)} ${sy(y1)}, ${sx(x1)} ${sy(y1)}`}));
+    for(let i=1;i<=4;i++){const q=i/5, x=lerp(x0,x1,q), y=lerp(y0,y1,q); group.appendChild(el('circle',{class:'motion-dot',cx:sx(x),cy:sy(y),r:2+i*.55,opacity:.22+i*.12}));}
+  }
+  return group;
+}
+function drawSvgInterpolated(cur, prev=null, fade=1, target=null){
+  svg.innerHTML=''; const gridColor=css('--grid') || css('--border');
+  if(cur.showGrid){ for(let k=0;k<=10;k++){ svg.appendChild(el('line',{x1:sx(k),y1:sy(0),x2:sx(k),y2:sy(10),stroke:gridColor,'stroke-width':.8,opacity:.55})); svg.appendChild(el('line',{x1:sx(0),y1:sy(k),x2:sx(10),y2:sy(k),stroke:gridColor,'stroke-width':.8,opacity:.55})); }}
+  svg.appendChild(el('line',{x1:sx(0),y1:sy(0),x2:sx(10.15),y2:sy(0),stroke:css('--text'),'stroke-width':1.4}));
+  svg.appendChild(el('line',{x1:sx(0),y1:sy(0),x2:sx(0),y2:sy(10.15),stroke:css('--text'),'stroke-width':1.4}));
+  svg.appendChild(el('text',{x:sx(10.12),y:sy(0)+28,fill:css('--muted'),'font-size':15,'text-anchor':'end'},'x₁'));
+  svg.appendChild(el('text',{x:sx(0)-30,y:sy(10.1),fill:css('--muted'),'font-size':15},'x₂'));
+  for(let k=0;k<=10;k+=2){ svg.appendChild(el('text',{x:sx(k),y:sy(0)+22,fill:css('--faint'),'font-size':12,'text-anchor':'middle'},String(k))); if(k>0) svg.appendChild(el('text',{x:sx(0)-12,y:sy(k)+4,fill:css('--faint'),'font-size':12,'text-anchor':'end'},String(k))); }
+  if(prev && fade<.98){ svg.appendChild(drawBoundary(prev,.34,'ghost')); svg.appendChild(drawCurveSet(prev,'ghost-curve',.58)); }
+  if(target && fade<.98 && canMorph(prev,target)){ svg.appendChild(drawBoundary(target,.55,'target')); svg.appendChild(drawCurveSet(target,'target-curve',.72)); }
+  svg.appendChild(drawBoundary(cur,1,''));
+  svg.appendChild(drawCurveSet(cur,'current-curve',1));
+  const pulse = fade<1 ? Math.sin(Math.PI*fade) : 0;
+  if(prev && target && fade<1){
+    svg.appendChild(drawTrail(prev,target,fade,'x0','y0'));
+    svg.appendChild(drawTrail(prev,target,fade,'zx','zy'));
+    svg.appendChild(drawPointNode(cur,cur.x0,cur.y0,'x̄',css('--accent'),true,7,1,pulse));
+    svg.appendChild(drawPointNode(cur,cur.zx,cur.zy,'z',css('--warn'),false,7,1,pulse*.8));
+    svg.appendChild(el('text',{x:sx(Math.min(9.2,cur.x0+.35)),y:sy(Math.max(.8,cur.y0-.65)),fill:css('--muted'),'font-size':12,'font-weight':700},'x(t)=(1−t)x₀+t x₁'));
+    svg.appendChild(el('text',{x:sx(.45),y:sy(9.35),fill:css('--faint'),'font-size':12},'dashed = previous · dotted = target · solid = current tween'));
+  } else {
+    svg.appendChild(drawPointNode(cur,cur.x0,cur.y0,'x̄',css('--accent'),true));
+    svg.appendChild(drawPointNode(cur,cur.zx,cur.zy,'z',css('--warn'),false));
+  }
+  if(cur.prefType==='satiation') svg.appendChild(drawPointNode(cur,cur.blissX,cur.blissY,'bliss',css('--accent2'),false,5,1,pulse*.6));
+}
+function updateTransitionBadge(t, active){
+  $('transitionMeter').style.width = `${Math.round(100*t)}%`;
+  $('transitionBadge').querySelector('span').textContent = active ? 'morphing / tweening' : 'object constancy';
+}
+function renderStaticUI(){
+  updateValues(); const s=readState(); formulas(s); const result=$('comparisonResult'); result.innerHTML=relationText(s); renderInline(result);
+}
+function renderScene(cur, prev=null, fade=1, target=null){
+  drawCanvasInterpolated(cur, prev, fade); drawSvgInterpolated(cur, prev, fade, target); const result=$('comparisonResult'); result.innerHTML=relationText(cur); renderInline(result); updateTransitionBadge(fade, !!(prev && fade<1));
+}
+function animateToTarget(newTarget){
+  renderStaticUI();
+  const start = visualState ? clone(visualState) : clone(newTarget); startState=clone(start); targetState=clone(newTarget);
+  if(raf) cancelAnimationFrame(raf);
+  const morphable=canMorph(start,targetState); const duration=morphable ? 1150 : 650; const t0=performance.now();
+  function frame(now){
+    const raw=Math.min(1,(now-t0)/duration), t=ease(raw);
+    const cur=interpolateState(start,targetState,t); visualState=clone(cur);
+    renderScene(cur,start,morphable?t:raw,targetState);
+    if(raw<1) raf=requestAnimationFrame(frame); else {visualState=clone(targetState); renderScene(targetState,null,1,null); raf=0;}
+  }
+  frame(t0);
+}
+function update(){ animateToTarget(readState()); }
+ids.forEach(id=>$(id).addEventListener('input', update));
+$('themeBtn').addEventListener('click',()=>{ const root=document.documentElement; root.dataset.theme=root.dataset.theme==='dark'?'light':'dark'; setTimeout(()=>{ renderStaticUI(); if(visualState) renderScene(visualState); },20); });
+window.addEventListener('resize',()=>{ if(visualState) renderScene(visualState); });
+window.addEventListener('load',()=>{ renderStaticMathOnce(); renderStaticUI(); visualState=readState(); renderScene(visualState); setTimeout(()=>{ renderStaticMathOnce(); formulas(readState()); },250); });
+setTimeout(()=>{ if(!visualState){ renderStaticMathOnce(); renderStaticUI(); visualState=readState(); renderScene(visualState); } },120);
 </script>
 </body>
 </html>
-

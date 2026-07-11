@@ -1,5 +1,5 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -9,129 +9,52 @@
 <meta name="description" content="Interactive microeconomics diagram for utility representation and monotonic transformations: ordinal utility, Debreu representation, transformations, MRS preservation, and cardinal mistakes.">
 <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
 <title>Utility Representation and Monotonic Transformations | Consumer Demand Diagrams</title>
-<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NHXHEJP1G0"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
+  function gtag(){dataLayer.push(arguments);} 
   gtag('js', new Date());
-
   gtag('config', 'G-NHXHEJP1G0');
 </script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="window.__katexReady=true; if(window.renderKatexNow) window.renderKatexNow();"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
 <style>
 :root{
-  --bg:#f6f0e6;
-  --bg2:#fbf8f1;
-  --paper:#fffdf8;
-  --paper2:#faf6ed;
-  --ink:#171713;
-  --muted:#70695c;
-  --faint:#9a9282;
-  --line:#ded3c0;
-  --grid:#e9decf;
-  --accent:#0f766e;
-  --accent2:#14b8a6;
-  --blue:#2f5f9b;
-  --gold:#b7791f;
-  --bad:#a14b16;
-  --green:#177d68;
-  --shadeA:rgba(20,184,166,.13);
-  --shadeB:rgba(47,95,155,.10);
-  --shadeBad:rgba(161,75,22,.10);
-  --shadow:0 22px 60px rgba(55,42,24,.10);
-  --softShadow:0 12px 30px rgba(55,42,24,.075);
-  --radius:22px;
-  --serif:Georgia,"Times New Roman",serif;
-  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+  --bg:#f6f0e6; --bg2:#fbf8f1; --paper:#fffdf8; --paper2:#faf6ed;
+  --ink:#171713; --muted:#70695c; --faint:#9a9282; --line:#ded3c0; --grid:#e9decf;
+  --accent:#0f766e; --accent2:#14b8a6; --blue:#2f5f9b; --gold:#b7791f; --bad:#a14b16;
+  --shadeA:rgba(20,184,166,.13); --shadeB:rgba(47,95,155,.10); --shadeBad:rgba(161,75,22,.10);
+  --shadow:0 22px 60px rgba(55,42,24,.10); --softShadow:0 12px 30px rgba(55,42,24,.075);
+  --radius:22px; --serif:Georgia,"Times New Roman",serif; --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
   --sans:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
 }
 [data-theme="dark"]{
-  --bg:#0b1118;
-  --bg2:#101822;
-  --paper:#131d28;
-  --paper2:#0f1721;
-  --ink:#eef7f4;
-  --muted:#a7b6b0;
-  --faint:#75847f;
-  --line:#263442;
-  --grid:#202b38;
-  --accent:#2dd4bf;
-  --accent2:#99f6e4;
-  --blue:#93c5fd;
-  --gold:#f6c96d;
-  --bad:#fb923c;
-  --green:#5eead4;
-  --shadeA:rgba(45,212,191,.14);
-  --shadeB:rgba(147,197,253,.10);
-  --shadeBad:rgba(251,146,60,.10);
-  --shadow:0 24px 70px rgba(0,0,0,.34);
-  --softShadow:0 12px 34px rgba(0,0,0,.22);
+  --bg:#0b1118; --bg2:#101822; --paper:#131d28; --paper2:#0f1721;
+  --ink:#eef7f4; --muted:#a7b6b0; --faint:#75847f; --line:#263442; --grid:#202b38;
+  --accent:#2dd4bf; --accent2:#99f6e4; --blue:#93c5fd; --gold:#f6c96d; --bad:#fb923c;
+  --shadeA:rgba(45,212,191,.14); --shadeB:rgba(147,197,253,.10); --shadeBad:rgba(251,146,60,.10);
+  --shadow:0 24px 70px rgba(0,0,0,.34); --softShadow:0 12px 34px rgba(0,0,0,.22);
 }
 *{box-sizing:border-box}
 html,body{min-height:100%}
-body{
-  margin:0;
-  color:var(--ink);
-  background:
-    radial-gradient(circle at 16% -8%, rgba(20,184,166,.18), transparent 28%),
-    radial-gradient(circle at 88% 4%, rgba(183,121,31,.10), transparent 24%),
-    linear-gradient(180deg,var(--bg),var(--bg2));
-  font-family:var(--sans);
-  line-height:1.36;
-}
-button,input,select{font:inherit}
-.app{display:grid;grid-template-columns:318px minmax(0,1fr);gap:18px;padding:18px;min-height:100vh}
+body{margin:0;color:var(--ink);background:radial-gradient(circle at 16% -8%, rgba(20,184,166,.18), transparent 28%),radial-gradient(circle at 88% 4%, rgba(183,121,31,.10), transparent 24%),linear-gradient(180deg,var(--bg),var(--bg2));font-family:var(--sans);line-height:1.36}
+button,input,select{font:inherit}.app{display:grid;grid-template-columns:318px minmax(0,1fr);gap:18px;padding:18px;min-height:100vh}
 .sidebar,.panel,.card,.tile,.eqBox{background:color-mix(in srgb,var(--paper) 96%,transparent);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:var(--radius)}
-.sidebar{position:sticky;top:18px;align-self:start;max-height:calc(100vh - 36px);overflow:auto;padding:18px}
-.brand{display:flex;gap:14px;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
-.kicker{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:800;margin-bottom:8px}
-h1{font-size:20px;line-height:1.05;margin:0;letter-spacing:-.045em}
-.sub{color:var(--muted);font-size:13px;margin:10px 0 0;max-width:270px}
-.theme{height:38px;min-width:42px;border-radius:999px;border:1px solid var(--line);background:var(--paper2);color:var(--ink);cursor:pointer;box-shadow:var(--softShadow)}
-.theme:hover{border-color:var(--accent)}
-.nav{display:grid;gap:8px;margin:18px 0}
-.nav button{width:100%;text-align:left;border:1px solid var(--line);background:var(--paper2);color:var(--ink);padding:11px 12px;border-radius:15px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;transition:transform .15s ease,border-color .15s ease,background .15s ease}
-.nav button span:last-child{color:var(--faint);font-size:12px;font-family:var(--serif)}
-.nav button:hover{transform:translateY(-1px);border-color:var(--accent)}
-.nav button.active{border-color:var(--accent);background:linear-gradient(135deg,var(--shadeA),transparent 70%);box-shadow:inset 3px 0 0 var(--accent)}
-.controls{display:grid;gap:13px;padding-top:16px;border-top:1px solid var(--line)}
-.control label{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:12px;margin-bottom:7px}
-.control label b{color:var(--ink);font-variant-numeric:tabular-nums}
-input[type="range"]{width:100%;accent-color:var(--accent);cursor:pointer}
-select{width:100%;background:var(--paper2);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:10px 11px;outline:none}
-select:focus{border-color:var(--accent)}
-.toggle{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:16px;background:var(--paper2);font-size:13px;color:var(--muted)}
-.main{display:grid;gap:18px;min-width:0}
-.hero{padding:22px 24px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:18px}
-.hero h2{font-size:32px;line-height:1.01;letter-spacing:-.06em;margin:0}
-.hero p{color:var(--muted);font-size:15px;margin:9px 0 0;max-width:850px}
-.pill{display:inline-flex;align-items:center;gap:7px;padding:9px 12px;border:1px solid var(--line);background:var(--paper2);border-radius:999px;color:var(--muted);font-size:12px;white-space:nowrap}
-.dot{width:8px;height:8px;border-radius:999px;background:var(--accent);display:inline-block}
-.theoryStrip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-.stripItem{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:13px 14px;box-shadow:var(--softShadow);min-height:90px}
-.stripItem b{font-size:11px;letter-spacing:.10em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:7px}
-.math{font-family:var(--serif);font-size:18px;color:var(--ink);line-height:1.42}.math.small{font-size:15px}.math .muted{color:var(--muted)}
-.layout{display:grid;grid-template-columns:minmax(0,1.48fr) minmax(330px,.78fr);gap:18px;align-items:start}
-.panel{padding:16px;min-width:0}.panel.tight{padding:14px}.panelHead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin:0 0 13px}.panelHead h3{margin:0;font-size:15px;letter-spacing:-.02em}.panelHead p{margin:3px 0 0;font-size:12px;color:var(--muted)}
+.sidebar{position:sticky;top:18px;align-self:start;max-height:calc(100vh - 36px);overflow:auto;padding:18px}.brand{display:flex;gap:14px;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
+.kicker{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:800;margin-bottom:8px}h1{font-size:20px;line-height:1.05;margin:0;letter-spacing:-.045em}.sub{color:var(--muted);font-size:13px;margin:10px 0 0;max-width:270px}
+.theme{height:38px;min-width:42px;border-radius:999px;border:1px solid var(--line);background:var(--paper2);color:var(--ink);cursor:pointer;box-shadow:var(--softShadow)}.theme:hover{border-color:var(--accent)}
+.nav{display:grid;gap:8px;margin:18px 0}.nav button{width:100%;text-align:left;border:1px solid var(--line);background:var(--paper2);color:var(--ink);padding:11px 12px;border-radius:15px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;transition:transform .15s ease,border-color .15s ease,background .15s ease}.nav button span:last-child{color:var(--faint);font-size:12px;font-family:var(--serif)}.nav button:hover{transform:translateY(-1px);border-color:var(--accent)}.nav button.active{border-color:var(--accent);background:linear-gradient(135deg,var(--shadeA),transparent 70%);box-shadow:inset 3px 0 0 var(--accent)}
+.controls{display:grid;gap:13px;padding-top:16px;border-top:1px solid var(--line)}.control label{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:12px;margin-bottom:7px}.control label b{color:var(--ink);font-variant-numeric:tabular-nums}input[type="range"]{width:100%;accent-color:var(--accent);cursor:pointer}select{width:100%;background:var(--paper2);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:10px 11px;outline:none}select:focus{border-color:var(--accent)}.toggle{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:16px;background:var(--paper2);font-size:13px;color:var(--muted)}
+.main{display:grid;gap:18px;min-width:0}.hero{padding:22px 24px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:18px}.hero h2{font-size:32px;line-height:1.01;letter-spacing:-.06em;margin:0}.hero p{color:var(--muted);font-size:15px;margin:9px 0 0;max-width:850px}.pill{display:inline-flex;align-items:center;gap:7px;padding:9px 12px;border:1px solid var(--line);background:var(--paper2);border-radius:999px;color:var(--muted);font-size:12px;white-space:nowrap}.dot{width:8px;height:8px;border-radius:999px;background:var(--accent);display:inline-block}
+.theoryStrip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.stripItem{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:13px 14px;box-shadow:var(--softShadow);min-height:90px}.stripItem b{font-size:11px;letter-spacing:.10em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:7px}
+.layout{display:grid;grid-template-columns:minmax(0,1.48fr) minmax(330px,.78fr);gap:18px;align-items:start}.panel{padding:16px;min-width:0}.panel.tight{padding:14px}.panelHead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin:0 0 13px}.panelHead h3{margin:0;font-size:15px;letter-spacing:-.02em}.panelHead p{margin:3px 0 0;font-size:12px;color:var(--muted)}
 .eqGrid{display:grid;grid-template-columns:1.05fr .95fr;gap:12px;margin-bottom:14px}.eqBox{box-shadow:none;border-radius:17px;padding:13px 14px;background:var(--paper2);min-height:104px}.eqBox .label{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:800;margin-bottom:8px}
 svg{width:100%;height:auto;display:block;background:linear-gradient(180deg,var(--paper2),color-mix(in srgb,var(--paper2) 90%,var(--bg)));border:1px solid var(--line);border-radius:20px;overflow:hidden}.svgWrap{position:relative}.caption{position:absolute;left:14px;bottom:12px;right:14px;display:flex;justify-content:space-between;gap:10px;pointer-events:none}.badge{background:color-mix(in srgb,var(--paper) 88%,transparent);border:1px solid var(--line);border-radius:999px;padding:7px 10px;font-size:11px;color:var(--muted);box-shadow:var(--softShadow)}
+.progressBar{height:8px;background:var(--line);border-radius:999px;overflow:hidden;margin-top:12px}.progressBar span{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:999px}.morphNote{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:12px;margin-top:8px}.morphNote b{color:var(--accent)}
 .sideStack{display:grid;gap:18px}.card{padding:16px}.card h3{font-size:16px;letter-spacing:-.025em;margin:0 0 9px}.card p{margin:0;color:var(--muted);font-size:14px}.notice{display:grid;gap:9px;margin-top:10px}.notice div{display:grid;grid-template-columns:22px 1fr;gap:9px;align-items:start;color:var(--muted);font-size:14px}.notice i{width:20px;height:20px;border-radius:999px;background:var(--shadeA);color:var(--accent);display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:800}.rows{display:grid}.row{display:grid;grid-template-columns:92px 1fr;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:0}.row b{font-size:11px;color:var(--muted);letter-spacing:.09em;text-transform:uppercase}.row span{font-size:14px;color:var(--ink)}
-.tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.tile{box-shadow:var(--softShadow);padding:13px;border-radius:18px;min-height:124px;cursor:pointer;transition:transform .15s ease,border-color .15s ease}.tile:hover{transform:translateY(-2px);border-color:var(--accent)}.tile.active{border-color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent), var(--softShadow)}.tile b{font-size:13px;letter-spacing:-.015em}.tile p{font-size:12px;color:var(--muted);margin:7px 0 0}.tile .sym{font-family:var(--serif);font-size:20px;color:var(--accent);margin-top:11px}
-.footer{font-size:12px;color:var(--muted);padding:0 5px 8px}.kbd{font-family:var(--mono);font-size:11px;color:var(--faint)}
-.warn{color:var(--bad);font-weight:700}.ok{color:var(--accent);font-weight:700}
-.katex{font-size:1.02em;color:var(--ink)}
-.katex-display{margin:.25rem 0 .15rem;overflow-x:auto;overflow-y:hidden;padding:.2rem 0}
-.eqBox .katex-display{font-size:1.02rem;text-align:left}
-.stripItem .katex-display{font-size:.95rem;text-align:left;margin:.1rem 0}
-.card .katex,.row .katex{font-size:1em}
-.math{font-family:var(--serif);font-size:18px;color:var(--ink);line-height:1.42}
-.math .katex{font-family:KaTeX_Main,serif}
-.math.small{font-size:15px}
-.math .muted{color:var(--muted)}
-
+.tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.tile{box-shadow:var(--softShadow);padding:13px;border-radius:18px;min-height:124px;cursor:pointer;transition:transform .15s ease,border-color .15s ease}.tile:hover{transform:translateY(-2px);border-color:var(--accent)}.tile.active{border-color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent),var(--softShadow)}.tile b{font-size:13px;letter-spacing:-.015em}.tile p{font-size:12px;color:var(--muted);margin:7px 0 0}.tile .sym{font-family:var(--serif);font-size:20px;color:var(--accent);margin-top:11px}.footer{font-size:12px;color:var(--muted);padding:0 5px 8px}.kbd{font-family:var(--mono);font-size:11px;color:var(--faint)}
+.math{font-size:1.02rem;color:var(--ink);line-height:1.42}.katex{font-size:1.02em;color:var(--ink)}.katex-display{margin:.22rem 0 .12rem;overflow-x:auto;overflow-y:hidden;padding:.18rem 0}.eqBox .katex-display{font-size:1.02rem;text-align:left}.stripItem .katex-display{font-size:.94rem;text-align:left;margin:.08rem 0}.card .katex,.row .katex{font-size:1em}
 @media(max-width:1120px){.app{grid-template-columns:1fr}.sidebar{position:relative;top:0;max-height:none}.layout{grid-template-columns:1fr}.tiles{grid-template-columns:repeat(3,minmax(0,1fr))}.theoryStrip{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:680px){.app{padding:10px}.hero{grid-template-columns:1fr;padding:18px}.hero h2{font-size:25px}.eqGrid,.theoryStrip,.tiles{grid-template-columns:1fr}.caption{display:none}.panel{padding:12px}.sidebar{padding:14px}}
 </style>
@@ -145,389 +68,99 @@ svg{width:100%;height:auto;display:block;background:linear-gradient(180deg,var(-
         <h1>Utility representation<br>and transformations</h1>
         <p class="sub">A geometric notebook for ordinal utility, Debreu representation, monotonic transformations, MRS, and cardinal mistakes.</p>
       </div>
-      <button class="theme" id="themeBtn" aria-label="Toggle dark mode">â˜¾</button>
+      <button class="theme" id="themeBtn" aria-label="Toggle dark mode">◐</button>
     </div>
     <div class="nav" id="nav"></div>
     <div class="controls">
-      <div class="control">
-        <label><span>Utility type</span></label>
-        <select id="utilityType">
-          <option value="cd">Cobb-Douglas</option>
-          <option value="ces">CES, smooth convex</option>
-          <option value="ql">Quasilinear</option>
-          <option value="subs">Perfect substitutes</option>
-          <option value="comp">Perfect complements</option>
-        </select>
-      </div>
-      <div class="control">
-        <label><span>Transformation Ï†</span></label>
-        <select id="transformType">
-          <option value="log">log(1+u)</option>
-          <option value="affine">3 + 2u</option>
-          <option value="square">uÂ²</option>
-          <option value="sqrt">âˆšu</option>
-          <option value="badneg">âˆ’u, decreasing</option>
-          <option value="badsin">sin(u), non-monotone</option>
-        </select>
-      </div>
-      <div class="control">
-        <label><span>Preference parameter Î±</span><b id="alphaVal">0.50</b></label>
-        <input id="alpha" type="range" min="0.15" max="0.85" step="0.01" value="0.50" />
-      </div>
-      <div class="control">
-        <label><span>Reference bundle xâ‚</span><b id="x1Val">4.0</b></label>
-        <input id="x1" type="range" min="1.2" max="8.8" step="0.1" value="4.0" />
-      </div>
-      <div class="control">
-        <label><span>Reference bundle xâ‚‚</span><b id="x2Val">4.0</b></label>
-        <input id="x2" type="range" min="1.2" max="8.8" step="0.1" value="4.0" />
-      </div>
+      <div class="control"><label><span>Utility type</span></label><select id="utilityType"><option value="cd">Cobb-Douglas</option><option value="ces">CES, smooth convex</option><option value="ql">Quasilinear</option><option value="subs">Perfect substitutes</option><option value="comp">Perfect complements</option></select></div>
+      <div class="control"><label><span>Transformation \(\phi\)</span></label><select id="transformType"><option value="log">log(1+u)</option><option value="affine">3 + 2u</option><option value="square">u²</option><option value="sqrt">√u</option><option value="badneg">−u, decreasing</option><option value="badsin">sin(u), non-monotone</option></select></div>
+      <div class="control"><label><span>Preference parameter \(\alpha\)</span><b id="alphaVal">0.50</b></label><input id="alpha" type="range" min="0.15" max="0.85" step="0.01" value="0.50" /></div>
+      <div class="control"><label><span>Reference bundle \(x_1\)</span><b id="x1Val">4.0</b></label><input id="x1" type="range" min="1.2" max="8.8" step="0.1" value="4.0" /></div>
+      <div class="control"><label><span>Reference bundle \(x_2\)</span><b id="x2Val">4.0</b></label><input id="x2" type="range" min="1.2" max="8.8" step="0.1" value="4.0" /></div>
       <label class="toggle"><span>Show upper contour set</span><input id="upperToggle" type="checkbox" checked /></label>
       <label class="toggle"><span>Show MRS tangent</span><input id="mrsToggle" type="checkbox" checked /></label>
     </div>
   </aside>
 
   <main class="main">
-    <section class="panel hero">
-      <div>
-        <div class="kicker">Ordinal information Â· same preferences, different utility numbers</div>
-        <h2 id="title">Ordinal utility</h2>
-        <p id="subtitle">A utility function represents a preference relation when it preserves exactly the same ranking of bundles.</p>
-      </div>
-      <div class="pill"><span class="dot"></span><span id="statusPill">Ï† increasing â‡’ same preferences</span></div>
-    </section>
-
-    <section class="theoryStrip">
-      <div class="stripItem"><b>Representation</b><div class="math">\[x\succeq y \Longleftrightarrow u(x)\ge u(y)\]</div></div>
-      <div class="stripItem"><b>Ordinal equivalence</b><div class="math">\[v=\phi\circ u,\quad \phi\text{ strictly increasing}\]</div></div>
-      <div class="stripItem"><b>MRS invariance</b><div class="math">\[MRS^{v}_{12}=\frac{\phi^{\prime}(u)MU^{u}_{1}}{\phi^{\prime}(u)MU^{u}_{2}}=MRS^{u}_{12}\]</div></div>
-      <div class="stripItem"><b>Cardinal warning</b><div class="math">\[u(B)-u(A)\not\equiv\text{preference intensity}\]</div></div>
-    </section>
+    <section class="panel hero"><div><div class="kicker">Ordinal information · same preferences, different utility numbers</div><h2 id="title">Ordinal utility</h2><p id="subtitle">A utility function represents a preference relation when it preserves exactly the same ranking of bundles.</p></div><div class="pill"><span class="dot"></span><span id="statusPill">φ increasing ⇒ same preferences</span></div></section>
+    <section class="theoryStrip"><div class="stripItem"><b>Representation</b><div class="math" id="eqRep"></div></div><div class="stripItem"><b>Ordinal equivalence</b><div class="math" id="eqOrd"></div></div><div class="stripItem"><b>MRS invariance</b><div class="math" id="eqMrs"></div></div><div class="stripItem"><b>Cardinal warning</b><div class="math" id="eqWarn"></div></div></section>
 
     <section class="layout">
       <div class="panel">
-        <div class="eqGrid">
-          <div class="eqBox">
-            <div class="label">Selected theorem / principle</div>
-            <div class="math" id="principleEq"></div>
-          </div>
-          <div class="eqBox">
-            <div class="label">Geometric reading</div>
-            <div class="math" id="geoEq"></div>
-          </div>
-        </div>
-        <div class="panelHead">
-          <div><h3>Same consumption geometry under monotone transformations</h3><p>Left: utility representation u. Right: transformed representation v=Ï†(u).</p></div>
-          <div class="pill"><span class="dot"></span><span id="bundleLabel">x=(4.0,4.0)</span></div>
-        </div>
-        <div class="svgWrap">
-          <svg id="mainSvg" viewBox="0 0 1040 522" role="img" aria-label="Utility representation and monotonic transformation diagram"></svg>
-          <div class="caption"><span class="badge">contours are preference objects</span><span class="badge">labels may change; ranking must not</span></div>
-        </div>
+        <div class="eqGrid"><div class="eqBox"><div class="label">Selected theorem / principle</div><div class="math" id="principleEq"></div></div><div class="eqBox"><div class="label">Geometric reading</div><div class="math" id="geoEq"></div></div></div>
+        <div class="panelHead"><div><h3>Same consumption geometry under monotone transformations</h3><p>Left: utility representation \(u\). Right: transformed representation \(v=\phi(u)\).</p></div><div class="pill"><span class="dot"></span><span id="bundleLabel">x=(4.0,4.0)</span></div></div>
+        <div class="svgWrap"><svg id="mainSvg" viewBox="0 0 1040 522" role="img" aria-label="Utility representation and monotonic transformation diagram"></svg><div class="caption"><span class="badge">old contour → current contour → target contour</span><span class="badge">same bundle keeps its identity while moving</span></div></div>
+        <div class="progressBar"><span id="morphProgress"></span></div><div class="morphNote"><span>Interpolation: <b>\(x(t)=(1-t)x_0+tx_1\)</b>, \(t\in[0,1]\).</span><span id="morphStateText">stable state</span></div>
       </div>
-
-      <div class="sideStack">
-        <div class="card">
-          <h3>What to notice</h3>
-          <div class="notice" id="notice"></div>
-        </div>
-        <div class="card">
-          <h3>Exam-style summary</h3>
-          <div class="rows">
-            <div class="row"><b>Object</b><span id="obj"></span></div>
-            <div class="row"><b>Invariant</b><span id="invariant"></span></div>
-            <div class="row"><b>Failure</b><span id="failure"></span></div>
-            <div class="row"><b>Formula</b><span id="formula"></span></div>
-          </div>
-        </div>
-        <div class="card">
-          <h3>Debreu representation</h3>
-          <p id="debreuText"></p>
-        </div>
-      </div>
+      <div class="sideStack"><div class="card"><h3>What to notice</h3><div class="notice" id="notice"></div></div><div class="card"><h3>Exam-style summary</h3><div class="rows"><div class="row"><b>Object</b><span id="obj"></span></div><div class="row"><b>Invariant</b><span id="invariant"></span></div><div class="row"><b>Failure</b><span id="failure"></span></div><div class="row"><b>Formula</b><span id="formula"></span></div></div></div><div class="card"><h3>Debreu representation</h3><p id="debreuText"></p></div></div>
     </section>
 
-    <section class="panel">
-      <div class="panelHead">
-        <div><h3>Cardinal mistakes: same ranking, different gaps</h3><p>Utility numbers are labels. Monotone transformations preserve order but change distances between labels.</p></div>
-        <span class="pill" id="gapPill">Î”u need not equal Î”v</span>
-      </div>
-      <svg id="scaleSvg" viewBox="0 0 1040 286" role="img" aria-label="Ordinal utility scale diagram"></svg>
-    </section>
-
-    <section class="panel tight">
-      <div class="panelHead"><div><h3>Compact atlas</h3><p>Each tile isolates one idea about utility representation.</p></div><span class="pill">click a tile</span></div>
-      <div class="tiles" id="tiles"></div>
-    </section>
-
-    <div class="footer">Original interactive study app. It uses utility functions only as representations of a preference relation; it does not assign psychological units to utility. <span class="kbd">u and Ï†âˆ˜u</span></div>
+    <section class="panel"><div class="panelHead"><div><h3>Cardinal mistakes: same ranking, different gaps</h3><p>Utility numbers are labels. Monotone transformations preserve order but change distances between labels.</p></div><span class="pill" id="gapPill">Δu need not equal Δv</span></div><svg id="scaleSvg" viewBox="0 0 1040 286" role="img" aria-label="Ordinal utility scale diagram"></svg></section>
+    <section class="panel tight"><div class="panelHead"><div><h3>Compact atlas</h3><p>Each tile isolates one idea about utility representation.</p></div><span class="pill">click a tile</span></div><div class="tiles" id="tiles"></div></section>
+    <div class="footer">Original interactive study app. It uses utility functions only as representations of a preference relation; it does not assign psychological units to utility. <span class="kbd">u and \(\phi\circ u\)</span></div>
   </main>
 </div>
 
 <script>
 'use strict';
-const MODULES={
-  ordinal:{
-    name:'Ordinal utility', short:'Ordinal', sym:'u ranks',
-    subtitle:'A utility function represents preferences by preserving order, not intensity.',
-    principle:'\\[x\\succeq y \\Longleftrightarrow u(x)\\ge u(y)\\] <div class="math small">\\(u\\) represents \\(\\succeq\\) exactly when it preserves this order.</div>',
-    geo:'The economic object is the partition into \\(\\{x:u(x)=c\\}\\) and the order of contours; the labels \\(c\\) are arbitrary.',
-    obj:'A numerical representation of the binary relation \\(\\succeq\\).',
-    invariant:'The ranking \\(x\\succeq y\\) and the contour sets \\(\\{x:u(x)\\ge c\\}\\).',
-    failure:'Treating levels \\(u(x)\\), gaps \\(u(y)-u(x)\\), or ratios as intrinsic units.',
-    formula:'\\(x\\sim y \\Longleftrightarrow u(x)=u(y)\\); \\(x\\succ y \\Longleftrightarrow u(x)>u(y)\\).',
-    notice:['A utility function \\(u\\) is not the relation \\(\\succeq\\); it is a coding of it.','If \\(u\\) and \\(v\\) rank every pair of bundles identically, they represent the same preferences.','Indifference curves carry ordinal information; their numerical labels do not.']
-  },
-  debreu:{
-    name:'Debreu representation', short:'Debreu', sym:'âˆƒu',
-    subtitle:'Under standard order and topological assumptions, preferences admit a continuous utility representation.',
-    principle:'\\[\\text{complete + transitive + continuous} \\Longrightarrow \\exists u:X\\to\\mathbb{R}\\text{ continuous}\\] <div class="math small">with \\(x\\succeq y\\iff u(x)\\ge u(y)\\).</div>',
-    geo:'Continuity makes upper and lower contour sets closed, so the contour map can be drawn without lexicographic jumps.',
-    obj:'Existence of a continuous real-valued representation \\(u:X\\to\\mathbb{R}\\).',
-    invariant:'The order \\(x\\succeq y\\); any strictly increasing relabeling remains valid.',
-    failure:'Lexicographic preferences are complete and transitive but violate continuity; no continuous utility represents them.',
-    formula:'\\(x\\succeq y \\Longleftrightarrow u(x)\\ge u(y)\\), with \\(u\\) continuous.',
-    notice:['Debreu gives existence of a representation, not uniqueness of a utility scale.','The theorem is topological: closed contour sets matter.','A continuous representation makes ordered contour maps legitimate.']
-  },
-  transformations:{
-    name:'Monotonic transformations', short:'Transform', sym:'Ï†â†‘',
-    subtitle:'Strictly increasing transformations preserve exactly the same preference ordering.',
-    principle:'\\[v(x)=\\phi(u(x)),\\quad \\phi\\uparrow \\quad\\Longrightarrow\\quad x\\succeq_u y \\Longleftrightarrow x\\succeq_v y\\]' ,
-    geo:'The same contours remain in the same order: \\(\\{x:u(x)=c\\}=\\{x:v(x)=\\phi(c)\\}\\).',
-    obj:'An equivalence class \\(\\{\\phi\\circ u:\\phi\\text{ strictly increasing}\\}\\).',
-    invariant:'Order, indifference sets, contour sets, and \\(\\arg\\max\\) choices.',
-    failure:'A decreasing or non-monotone \\(\\phi\\) reverses or scrambles rankings.',
-    formula:'\\(u(x)>u(y)\\Rightarrow\\phi(u(x))>\\phi(u(y))\\) only if \\(\\phi\\) is increasing.',
-    notice:['Positive affine transformations are not special in ordinal consumer theory; any strictly increasing \\(\\phi\\) works.','Concave transformations do not make the consumer more risk averse in deterministic ordinal choice.','Non-monotone transformations are not harmless relabelings.']
-  },
-  mrs:{
-    name:'MRS preservation', short:'MRS', sym:'ratio',
-    subtitle:'Where differentiable and Ï†â€²>0, the marginal rate of substitution is unchanged by monotone transformations.',
-    principle:'\\[MU_i^{v}=\\phi^{\\prime}(u)MU_i^{u},\\qquad MRS_{12}^{v}=\\frac{MU_1^{v}}{MU_2^{v}}=\\frac{MU_1^{u}}{MU_2^{u}}=MRS_{12}^{u}\\]' ,
-    geo:'Because the indifference curve itself is unchanged, its tangent slope \\(-MRS_{12}\\) is unchanged.',
-    obj:'The local slope of the indifference curve.',
-    invariant:'\\(MRS\\), tangency conditions, and Marshallian choices.',
-    failure:'Comparing marginal utilities \\(MU_i\\) across representations instead of comparing their ratio.',
-    formula:'\\(MRS_{12}=MU_1/MU_2=-\\text{slope of the indifference curve}\\).',
-    notice:['Marginal utilities are representation-dependent.','\\(MRS\\) is ordinal because the common factor \\(\\phi^{\\prime}(u)\\) cancels.','At kinks, \\(MRS\\) may be a set or may be undefined; the geometry still matters.']
-  },
-  cardinal:{
-    name:'Cardinal mistakes', short:'Cardinal', sym:'Î”u?',
-    subtitle:'Utility gaps, ratios, and interpersonal comparisons are not ordinal preference facts.',
-    principle:'\\[u(B)-u(A)\\quad\\text{and}\\quad \\frac{u(C)}{u(B)}\\quad\\text{are not ordinal invariants.}\\]' ,
-    geo:'The order \\(A\\prec B\\prec C\\) can stay fixed while distances between labels change completely.',
-    obj:'Misreading utility labels as measurable welfare intensity.',
-    invariant:'Only ranking statements such as \\(C\\succ B\\succ A\\) are preserved.',
-    failure:'Saying â€œ\\(B\\) is twice as preferred as \\(A\\)â€ from \\(u(B)=2u(A)\\).',
-    formula:'\\(u(C)>u(B)>u(A)\\) survives; \\(\\Delta u\\) and ratios usually do not.',
-    notice:['Ordinal theory permits ranking, not measuring psychological distance.','A utility difference can become larger or smaller after a valid transformation.','Cardinality appears in expected utility, but that is a different representation theorem with stronger structure.']
-  }
+const $ = id => document.getElementById(id);
+const NS = 'http://www.w3.org/2000/svg';
+const MODULES = {
+  ordinal:{name:'Ordinal utility',sym:'u ranks',subtitle:'A utility function represents preferences by preserving order, not intensity.',principle:String.raw`x\succeq y \Longleftrightarrow u(x)\ge u(y)`,geo:String.raw`\text{Only the order of level sets matters; labels }c\text{ in }\{x:u(x)=c\}\text{ are arbitrary.}`,obj:String.raw`\text{Numerical representation of }\succeq`,invariant:String.raw`x\succeq y\text{ and the contour sets }\{x:u(x)\ge c\}`,failure:String.raw`\text{Treating }u(y)-u(x)\text{ as a psychological unit}`,formula:String.raw`x\sim y\iff u(x)=u(y),\qquad x\succ y\iff u(x)>u(y)`,notice:['A utility function is a coding of the preference relation, not the relation itself.','If two utilities rank every pair in the same way, they represent the same preferences.','Indifference curves carry ordinal information; numerical labels do not.']},
+  debreu:{name:'Debreu representation',sym:'∃u',subtitle:'Under standard order and topological assumptions, preferences admit a continuous utility representation.',principle:String.raw`\text{complete + transitive + continuous}\Longrightarrow \exists u:X\to\mathbb{R}\text{ continuous}`,geo:String.raw`\text{Closed upper and lower contour sets allow a continuous contour map.}`,obj:String.raw`\text{Existence of a continuous real-valued representation }u:X\to\mathbb{R}`,invariant:String.raw`x\succeq y\text{ under every strictly increasing relabeling}`,failure:String.raw`\text{Lexicographic preferences violate continuity.}`,formula:String.raw`x\succeq y\Longleftrightarrow u(x)\ge u(y)`,notice:['Debreu gives existence of a representation, not uniqueness of a utility scale.','The theorem is topological: closed contour sets matter.','A continuous representation makes ordered contour maps legitimate.']},
+  transformations:{name:'Monotonic transformations',sym:'φ↑',subtitle:'Strictly increasing transformations preserve exactly the same preference ordering.',principle:String.raw`v(x)=\phi(u(x)),\quad \phi\uparrow\quad\Longrightarrow\quad x\succeq_u y\Longleftrightarrow x\succeq_v y`,geo:String.raw`\{x:u(x)=c\}=\{x:v(x)=\phi(c)\}\text{ when }\phi\text{ is one-to-one and increasing.}`,obj:String.raw`\{\phi\circ u:\phi\text{ strictly increasing}\}`,invariant:String.raw`\text{Order, indifference sets, contour sets, and }\arg\max`,failure:String.raw`\text{A decreasing or non-monotone }\phi\text{ reverses or scrambles rankings.}`,formula:String.raw`u(x)>u(y)\Rightarrow \phi(u(x))>\phi(u(y))\iff \phi\text{ is increasing}`,notice:['Positive affine transformations are not special in ordinal consumer theory; any strictly increasing transformation works.','Concave transformations do not make the consumer more risk averse in deterministic ordinal choice.','Non-monotone transformations are not harmless relabelings.']},
+  mrs:{name:'MRS preservation',sym:'ratio',subtitle:'Where differentiable and φ′>0, the marginal rate of substitution is unchanged by monotone transformations.',principle:String.raw`MU_i^v=\phi'(u)MU_i^u,\qquad MRS_{12}^v=\frac{MU_1^v}{MU_2^v}=\frac{MU_1^u}{MU_2^u}`,geo:String.raw`\text{The indifference curve is unchanged, so its tangent slope }-MRS_{12}\text{ is unchanged.}`,obj:String.raw`\text{Local slope of the indifference curve}`,invariant:String.raw`MRS,\text{ tangency conditions, and Marshallian choices}`,failure:String.raw`\text{Comparing marginal utilities across representations instead of their ratio}`,formula:String.raw`MRS_{12}=\frac{MU_1}{MU_2}=-\text{slope of the indifference curve}`,notice:['Marginal utilities are representation-dependent.','MRS is ordinal because the common factor φ′(u) cancels.','At kinks, MRS may be set-valued or undefined; the geometry still matters.']},
+  cardinal:{name:'Cardinal mistakes',sym:'Δu?',subtitle:'Utility gaps, ratios, and interpersonal comparisons are not ordinal preference facts.',principle:String.raw`u(B)-u(A)\quad\text{and}\quad \frac{u(C)}{u(B)}\quad\text{are not ordinal invariants}`,geo:String.raw`A\prec B\prec C\text{ can stay fixed while distances between labels change.}`,obj:String.raw`\text{Mistakenly reading utility labels as welfare intensity}`,invariant:String.raw`\text{Only ranking statements such as }C\succ B\succ A`,failure:String.raw`\text{Saying “}B\text{ is twice as preferred as }A\text{” from }u(B)=2u(A)`,formula:String.raw`u(C)>u(B)>u(A)\text{ survives; }\Delta u\text{ and ratios usually do not}`,notice:['Ordinal theory permits ranking, not measuring psychological distance.','A utility difference can become larger or smaller after a valid transformation.','Cardinality appears in expected utility, but that is a different representation theorem with stronger structure.']}
 };
-const state={module:'ordinal',utility:'cd',transform:'log',alpha:.5,x1:4,x2:4,showUpper:true,showMRS:true};
-const $=id=>document.getElementById(id);
-const svgNS='http://www.w3.org/2000/svg';
-function el(name,attrs={},children=[]){const node=document.createElementNS(svgNS,name);for(const [k,v] of Object.entries(attrs)){if(v!==null&&v!==undefined)node.setAttribute(k,String(v));}for(const c of children){node.appendChild(typeof c==='string'?document.createTextNode(c):c);}return node;}
-function txt(x,y,text,attrs={}){return el('text',{x,y,fill:'var(--muted)','font-size':attrs.size||12,'font-family':attrs.family||'var(--sans)','text-anchor':attrs.anchor||'start','font-weight':attrs.weight||500,...attrs},[text]);}
-function path(d,attrs={}){return el('path',{d,fill:'none',stroke:'var(--accent)','stroke-width':2.4,'stroke-linecap':'round','stroke-linejoin':'round',...attrs});}
-function line(x1,y1,x2,y2,attrs={}){return el('line',{x1,y1,x2,y2,stroke:'var(--line)','stroke-width':1.2,...attrs});}
-function circle(cx,cy,r,attrs={}){return el('circle',{cx,cy,r,fill:'var(--accent)',stroke:'var(--paper)','stroke-width':2,...attrs});}
-function rect(x,y,w,h,attrs={}){return el('rect',{x,y,width:w,height:h,rx:attrs.rx||0,ry:attrs.ry||attrs.rx||0,...attrs});}
-function clamp(z,a,b){return Math.max(a,Math.min(b,z));}
-function fmt(z,n=2){if(!Number.isFinite(z))return 'â€”';return Number(z).toFixed(n);}
-function U(x,y){x=Math.max(.001,x);y=Math.max(.001,y);const a=state.alpha;switch(state.utility){case 'cd':return Math.pow(x,a)*Math.pow(y,1-a);case 'ces':{const rho=-.65;return Math.pow(a*Math.pow(x,rho)+(1-a)*Math.pow(y,rho),1/rho);}case 'ql':return Math.log(x+.2)+(1.1+a)*y;case 'subs':return a*x+(1-a)*y;case 'comp':return Math.min(x/a,y/(1-a));default:return Math.pow(x,a)*Math.pow(y,1-a);}}
-function MU1(x,y){const h=.0008;return (U(x+h,y)-U(x-h,y))/(2*h)}
-function MU2(x,y){const h=.0008;return (U(x,y+h)-U(x,y-h))/(2*h)}
-function MRS(x,y){const b=MU2(x,y);return Math.abs(b)<1e-8?Infinity:MU1(x,y)/b;}
-function utilityName(){return {cd:'Cobb-Douglas',ces:'CES',ql:'Quasilinear',subs:'Perfect substitutes',comp:'Perfect complements'}[state.utility];}
-function transformName(){return {log:'log(1+u)',affine:'3+2u',square:'uÂ²',sqrt:'âˆšu',badneg:'âˆ’u',badsin:'sin(u)'}[state.transform];}
-function phi(u){u=Math.max(0,u);switch(state.transform){case 'log':return Math.log(1+u);case 'affine':return 3+2*u;case 'square':return u*u;case 'sqrt':return Math.sqrt(u);case 'badneg':return -u;case 'badsin':return Math.sin(u);default:return Math.log(1+u);}}
-function phiPrimeApprox(u){const h=1e-4;return (phi(u+h)-phi(u-h))/(2*h)}
-function isGoodTransform(){return ['log','affine','square','sqrt'].includes(state.transform);}
-function rankWarning(){return isGoodTransform()?'Ï† strictly increasing: same preferences':'Ï† is not a valid monotone representation of the same preference relation';}
-function panelMap(panel){const left=panel==='left';const ox=left?62:562, oy=442, w=390, h=330;return {ox,oy,w,h,x:t=>ox+t/10*w,y:t=>oy-t/10*h,invX:px=>(px-ox)/w*10,invY:py=>(oy-py)/h*10};}
-function drawGrid(g,map,title,subtitle){
-  g.appendChild(rect(map.ox-36,map.oy-map.h-48,map.w+72,map.h+88,{fill:'transparent',stroke:'var(--line)','stroke-width':1.2,rx:18}));
-  for(let i=0;i<=10;i+=2){g.appendChild(line(map.x(i),map.y(0),map.x(i),map.y(10),{stroke:'var(--grid)','stroke-width':1}));g.appendChild(line(map.x(0),map.y(i),map.x(10),map.y(i),{stroke:'var(--grid)','stroke-width':1}));}
-  g.appendChild(line(map.x(0),map.y(0),map.x(10.35),map.y(0),{stroke:'var(--muted)','stroke-width':1.5}));
-  g.appendChild(line(map.x(0),map.y(0),map.x(0),map.y(10.35),{stroke:'var(--muted)','stroke-width':1.5}));
-  g.appendChild(txt(map.x(10.38),map.y(0)+4,'xâ‚',{anchor:'start',size:13,fill:'var(--muted)'}));
-  g.appendChild(txt(map.x(0)-5,map.y(10.4),'xâ‚‚',{anchor:'end',size:13,fill:'var(--muted)'}));
-  g.appendChild(txt(map.ox,map.oy-map.h-68,title,{size:18,weight:800,fill:'var(--ink)'}));
-  g.appendChild(txt(map.ox,map.oy-map.h-47,subtitle,{size:12,fill:'var(--muted)'}));
-}
-function curvePoints(level){
-  const pts=[]; const a=state.alpha; const eps=.12;
-  if(state.utility==='comp'){
-    const k=level; const vx=a*k; const vy=(1-a)*k;
-    for(let y=vy;y<=10;y+=.08) if(vx<=10) pts.push([vx,y]);
-    for(let x=vx;x<=10;x+=.08) if(vy<=10) pts.push([x,vy]);
-    return pts;
-  }
-  for(let x=eps;x<=10;x+=.045){
-    let y=null;
-    if(state.utility==='cd') y=Math.pow(level/Math.pow(x,a),1/(1-a));
-    else if(state.utility==='ces'){
-      const rho=-.65; const inner=(Math.pow(level,rho)-a*Math.pow(x,rho))/(1-a); if(inner>0)y=Math.pow(inner,1/rho);
-    }
-    else if(state.utility==='ql') y=(level-Math.log(x+.2))/(1.1+a);
-    else if(state.utility==='subs') y=(level-a*x)/(1-a);
-    if(Number.isFinite(y)&&y>=eps&&y<=10)pts.push([x,y]);
-  }
-  return pts;
-}
-function ptsToD(pts,map){return pts.map((p,i)=>(i?'L':'M')+map.x(p[0]).toFixed(1)+','+map.y(p[1]).toFixed(1)).join(' ');}
-function drawContours(g,map,transformed=false){
-  const u0=U(state.x1,state.x2); const levels=[u0*.55,u0*.75,u0,u0*1.25,u0*1.55].filter(v=>v>0.03);
-  levels.forEach((lv,i)=>{
-    const pts=curvePoints(lv); if(pts.length<2)return;
-    const isMain=Math.abs(lv-u0)<1e-8;
-    g.appendChild(path(ptsToD(pts,map),{stroke:isMain?'var(--accent)':'var(--faint)','stroke-width':isMain?3:1.5,'opacity':isMain?1:.55,'stroke-dasharray':isMain?'':'5 5'}));
-    if(pts.length>8){const p=pts[Math.floor(pts.length*.62)]; const label=transformed?'v='+fmt(phi(lv),2):'u='+fmt(lv,2);g.appendChild(txt(map.x(p[0])+5,map.y(p[1])-5,label,{size:11,fill:isMain?'var(--accent)':'var(--faint)'}));}
-  });
-}
-function upperContourPolygon(map,level){
-  if(state.utility==='comp'){
-    const k=level; const vx=state.alpha*k; const vy=(1-state.alpha)*k;
-    if(vx>10||vy>10)return '';
-    return `M ${map.x(vx)} ${map.y(vy)} L ${map.x(10)} ${map.y(vy)} L ${map.x(10)} ${map.y(10)} L ${map.x(vx)} ${map.y(10)} Z`;
-  }
-  const pts=curvePoints(level).filter(p=>p[0]>=0&&p[0]<=10&&p[1]>=0&&p[1]<=10);
-  if(pts.length<2)return '';
-  let d=`M ${map.x(pts[0][0])} ${map.y(10)} L ${map.x(10)} ${map.y(10)} L ${map.x(10)} ${map.y(pts[pts.length-1][1])} `;
-  for(let i=pts.length-1;i>=0;i--)d+=`L ${map.x(pts[i][0])} ${map.y(pts[i][1])} `;
-  d+='Z'; return d;
-}
-function drawUpper(g,map){
-  if(!state.showUpper)return;
-  const d=upperContourPolygon(map,U(state.x1,state.x2)); if(!d)return;
-  g.appendChild(path(d,{fill:'var(--shadeA)',stroke:'none',opacity:.85}));
-  g.appendChild(txt(map.x(7.2),map.y(9.25),'U(x)={y:yâª°x}',{size:12,fill:'var(--accent)',weight:700}));
-}
-function drawTangent(g,map){
-  if(!state.showMRS)return;
-  const m=MRS(state.x1,state.x2); if(!Number.isFinite(m))return;
-  const len=1.7; const dx=len/Math.sqrt(1+m*m); const dy=-m*dx;
-  const xA=clamp(state.x1-dx,0,10), yA=clamp(state.x2-dy,0,10), xB=clamp(state.x1+dx,0,10), yB=clamp(state.x2+dy,0,10);
-  g.appendChild(line(map.x(xA),map.y(yA),map.x(xB),map.y(yB),{stroke:'var(--gold)','stroke-width':2.2,'stroke-dasharray':'7 5'}));
-  g.appendChild(txt(map.x(state.x1)+12,map.y(state.x2)+32,'slope = âˆ’MRS',{size:12,fill:'var(--gold)',weight:700}));
-}
-function drawPanel(g,panel){
-  const map=panelMap(panel); const right=panel==='right';
-  drawGrid(g,map,right?'Transformed utility v=Ï†(u)':'Utility representation u',right?`${transformName()} Â· ${rankWarning()}`:`${utilityName()} Â· original labels`);
-  drawUpper(g,map);
-  drawContours(g,map,right);
-  drawTangent(g,map);
-  const px=map.x(state.x1), py=map.y(state.x2);
-  g.appendChild(circle(px,py,6,{fill:right?(isGoodTransform()?'var(--blue)':'var(--bad)'):'var(--accent)'}));
-  const u0=U(state.x1,state.x2); const label=right?`v(x)=${fmt(phi(u0),2)}`:`u(x)=${fmt(u0,2)}`;
-  g.appendChild(txt(px+10,py-10,label,{size:12,fill:right?(isGoodTransform()?'var(--blue)':'var(--bad)'):'var(--accent)',weight:800}));
-  if(right&&!isGoodTransform()){
-    g.appendChild(rect(map.ox+210,map.oy-map.h+8,158,46,{fill:'var(--shadeBad)',stroke:'var(--bad)','stroke-width':1,rx:14}));
-    g.appendChild(txt(map.ox+226,map.oy-map.h+27,'not ordinally equivalent',{size:12,fill:'var(--bad)',weight:800}));
-    g.appendChild(txt(map.ox+226,map.oy-map.h+43,'ranking is not preserved',{size:11,fill:'var(--bad)'}));
-  }
-}
-function drawArrow(g,x1,y1,x2,y2,color='var(--muted)'){
-  const id='arrow'+Math.random().toString(36).slice(2);
-  const defs=el('defs'); const marker=el('marker',{id,viewBox:'0 0 10 10',refX:8,refY:5,markerWidth:5,markerHeight:5,orient:'auto-start-reverse'});
-  marker.appendChild(path('M 0 0 L 10 5 L 0 10 z',{fill:color,stroke:'none'})); defs.appendChild(marker); g.appendChild(defs);
-  g.appendChild(line(x1,y1,x2,y2,{stroke:color,'stroke-width':1.8,'marker-end':`url(#${id})`}));
-}
-function drawMain(){
-  const svg=$('mainSvg'); svg.innerHTML='';
-  const bg=rect(0,0,1040,522,{fill:'transparent'}); svg.appendChild(bg);
-  svg.appendChild(line(520,58,520,474,{stroke:'var(--line)','stroke-width':1.2,'stroke-dasharray':'4 7'}));
-  const g=el('g'); svg.appendChild(g);
-  drawPanel(g,'left'); drawPanel(g,'right');
-  if(isGoodTransform()){
-    drawArrow(g,456,128,584,128,'var(--accent)');
-    g.appendChild(txt(520,111,'same order',{anchor:'middle',size:12,fill:'var(--accent)',weight:800}));
-  }else{
-    drawArrow(g,456,128,584,128,'var(--bad)');
-    g.appendChild(txt(520,111,'order not preserved',{anchor:'middle',size:12,fill:'var(--bad)',weight:800}));
-  }
-}
-function bundleSet(){
-  return [{name:'A',x:2,y:2},{name:'B',x:4.8,y:4},{name:'C',x:8,y:6.6}].map(b=>({...b,u:U(b.x,b.y),v:phi(U(b.x,b.y))}));
-}
-function scaleMap(vals,left=86,right=956){
-  let mn=Math.min(...vals), mx=Math.max(...vals); if(Math.abs(mx-mn)<1e-7){mx=mn+1;mn=mn-1;} const pad=(mx-mn)*.12; mn-=pad; mx+=pad;
-  return z=>left+(z-mn)/(mx-mn)*(right-left);
-}
-function drawScale(){
-  const svg=$('scaleSvg'); svg.innerHTML=''; const g=el('g'); svg.appendChild(g);
-  const bundles=bundleSet(); const uMap=scaleMap(bundles.map(b=>b.u)); const vMap=scaleMap(bundles.map(b=>b.v));
-  g.appendChild(txt(42,62,'u scale',{size:15,weight:800,fill:'var(--ink)'}));
-  g.appendChild(txt(42,179,'v=Ï†(u) scale',{size:15,weight:800,fill:'var(--ink)'}));
-  g.appendChild(line(86,82,956,82,{stroke:'var(--muted)','stroke-width':1.5}));
-  g.appendChild(line(86,198,956,198,{stroke:'var(--muted)','stroke-width':1.5}));
-  bundles.forEach((b,i)=>{
-    const xu=uMap(b.u), xv=vMap(b.v); const color=i===0?'var(--faint)':i===1?'var(--accent)':'var(--blue)';
-    g.appendChild(circle(xu,82,7,{fill:color}));g.appendChild(txt(xu,58,b.name,{anchor:'middle',size:15,fill:color,weight:900}));g.appendChild(txt(xu,108,`u=${fmt(b.u,2)}`,{anchor:'middle',size:12,fill:'var(--muted)'}));
-    g.appendChild(circle(xv,198,7,{fill:color}));g.appendChild(txt(xv,174,b.name,{anchor:'middle',size:15,fill:color,weight:900}));g.appendChild(txt(xv,224,`v=${fmt(b.v,2)}`,{anchor:'middle',size:12,fill:'var(--muted)'}));
-    drawArrow(g,xu,92,xv,188,color);
-  });
-  const duAB=bundles[1].u-bundles[0].u, duBC=bundles[2].u-bundles[1].u;
-  const dvAB=bundles[1].v-bundles[0].v, dvBC=bundles[2].v-bundles[1].v;
-  const msg=isGoodTransform()?`Order preserved, but gaps change: Î”u_AB=${fmt(duAB,2)}, Î”u_BC=${fmt(duBC,2)}; Î”v_AB=${fmt(dvAB,2)}, Î”v_BC=${fmt(dvBC,2)}.`:`The transformation may reverse or scramble order: it is not a representation of the same preferences.`;
-  g.appendChild(rect(88,244,864,30,{fill:isGoodTransform()?'var(--shadeA)':'var(--shadeBad)',stroke:isGoodTransform()?'var(--accent)':'var(--bad)','stroke-width':1,rx:15}));
-  g.appendChild(txt(520,264,msg,{anchor:'middle',size:13,fill:isGoodTransform()?'var(--accent)':'var(--bad)',weight:800}));
-  if(isGoodTransform()){
-    g.appendChild(txt(520,22,'A â‰º B â‰º C remains true. â€œHow much moreâ€ is not ordinal information.',{anchor:'middle',size:13,fill:'var(--muted)'}));
-  }else{
-    g.appendChild(txt(520,22,'A transformation must be strictly increasing to preserve the original preference order.',{anchor:'middle',size:13,fill:'var(--bad)',weight:800}));
-  }
-}
-function renderNav(){
-  const nav=$('nav'); nav.innerHTML='';
-  Object.entries(MODULES).forEach(([key,m])=>{const b=document.createElement('button');b.type='button';b.className=key===state.module?'active':'';b.innerHTML=`<span>${m.name}</span><span>${m.sym}</span>`;b.onclick=()=>{state.module=key;renderAll();};nav.appendChild(b);});
-}
-function renderTiles(){
-  const tiles=$('tiles'); tiles.innerHTML='';
-  Object.entries(MODULES).forEach(([key,m])=>{const d=document.createElement('div');d.className='tile'+(key===state.module?' active':'');d.innerHTML=`<b>${m.name}</b><p>${m.subtitle}</p><div class="sym">${m.sym}</div>`;d.onclick=()=>{state.module=key;renderAll();};tiles.appendChild(d);});
-}
-function renderText(){
-  const m=MODULES[state.module];
-  $('title').textContent=m.name; $('subtitle').textContent=m.subtitle; $('principleEq').innerHTML=m.principle; $('geoEq').innerHTML=m.geo;
-  $('obj').innerHTML=m.obj; $('invariant').innerHTML=m.invariant; $('failure').innerHTML=m.failure; $('formula').innerHTML=m.formula;
-  $('debreuText').innerHTML='On a standard consumer space, \\(\\succeq\\) being complete, transitive, and continuous gives a continuous representation \\(u:X\\to\\mathbb{R}\\). This representation is unique only up to strictly increasing transformations \\(v=\\phi\\circ u\\).';
-  $('notice').innerHTML=m.notice.map((s,i)=>`<div><i>${i+1}</i><span>${s}</span></div>`).join('');
-  $('alphaVal').textContent=fmt(state.alpha,2); $('x1Val').textContent=fmt(state.x1,1); $('x2Val').textContent=fmt(state.x2,1);
-  $('bundleLabel').textContent=`x=(${fmt(state.x1,1)},${fmt(state.x2,1)})`;
-  const good=isGoodTransform();
-  $('statusPill').textContent=good?'Ï† increasing â‡’ same preferences':'warning: not ordinally equivalent';
-  $('gapPill').textContent=good?'same order, different gaps':'invalid transformation';
-  document.querySelector('#statusPill').parentElement.querySelector('.dot').style.background=good?'var(--accent)':'var(--bad)';
-}
-function renderKatexNow(){
-  if(!window.renderMathInElement) return;
-  renderMathInElement(document.body,{
-    delimiters:[
-      {left:'$$',right:'$$',display:true},
-      {left:'\\[',right:'\\]',display:true},
-      {left:'\\(',right:'\\)',display:false},
-      {left:'$',right:'$',display:false}
-    ],
-    throwOnError:false,
-    ignoredTags:['script','noscript','style','textarea','pre','code','svg']
-  });
-}
-window.renderKatexNow=renderKatexNow;
-function renderAll(){renderNav();renderTiles();renderText();drawMain();drawScale();setTimeout(renderKatexNow,0);}
-function setup(){
-  $('themeBtn').onclick=()=>{const dark=document.documentElement.getAttribute('data-theme')==='dark';document.documentElement.setAttribute('data-theme',dark?'light':'dark');$('themeBtn').textContent=dark?'â˜¾':'â˜¼';setTimeout(renderAll,10);};
-  $('utilityType').onchange=e=>{state.utility=e.target.value;renderAll();};
-  $('transformType').onchange=e=>{state.transform=e.target.value;renderAll();};
-  $('alpha').oninput=e=>{state.alpha=Number(e.target.value);renderAll();};
-  $('x1').oninput=e=>{state.x1=Number(e.target.value);renderAll();};
-  $('x2').oninput=e=>{state.x2=Number(e.target.value);renderAll();};
-  $('upperToggle').onchange=e=>{state.showUpper=e.target.checked;renderAll();};
-  $('mrsToggle').onchange=e=>{state.showMRS=e.target.checked;renderAll();};
-  renderAll();
-}
-setup();
-window.addEventListener('load',()=>setTimeout(renderKatexNow,0));
+const state = {module:'ordinal',utility:'cd',transform:'log',alpha:.5,x1:4,x2:4,showUpper:true,showMRS:true};
+let previous = {...state};
+let target = {...state};
+let progress = 1;
+let raf = 0;
+function svgEl(name, attrs={}, parent=null){const e=document.createElementNS(NS,name);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,String(v)));if(parent)parent.appendChild(e);return e;}
+function text(parent,x,y,content,attrs={}){const e=svgEl('text',{x,y,fill:attrs.fill||'var(--muted)','font-size':attrs.size||12,'font-family':'var(--sans)','font-weight':attrs.weight||500,'text-anchor':attrs.anchor||'start'},parent);e.textContent=content;return e;}
+function line(parent,x1,y1,x2,y2,attrs={}){return svgEl('line',{x1,y1,x2,y2,stroke:attrs.stroke||'var(--line)','stroke-width':attrs.width||1.2,'stroke-dasharray':attrs.dash||'',opacity:attrs.opacity??1},parent)}
+function path(parent,d,attrs={}){return svgEl('path',{d,fill:attrs.fill||'none',stroke:attrs.stroke||'var(--accent)','stroke-width':attrs.width||2.4,'stroke-dasharray':attrs.dash||'','stroke-linecap':'round','stroke-linejoin':'round',opacity:attrs.opacity??1},parent)}
+function circle(parent,cx,cy,r,attrs={}){return svgEl('circle',{cx,cy,r,fill:attrs.fill||'var(--accent)',stroke:attrs.stroke||'var(--paper)','stroke-width':attrs.sw||2,opacity:attrs.opacity??1},parent)}
+function rect(parent,x,y,w,h,attrs={}){return svgEl('rect',{x,y,width:w,height:h,rx:attrs.rx||0,ry:attrs.rx||0,fill:attrs.fill||'none',stroke:attrs.stroke||'none','stroke-width':attrs.width||1,opacity:attrs.opacity??1},parent)}
+function fmt(x,n=2){return Number.isFinite(x)?Number(x).toFixed(n):'—'}
+function lerp(a,b,t){return a+(b-a)*t}
+function ease(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2}
+function clone(s){return JSON.parse(JSON.stringify(s))}
+function interpState(a,b,t){return {...b,alpha:lerp(a.alpha,b.alpha,t),x1:lerp(a.x1,b.x1,t),x2:lerp(a.x2,b.x2,t)}}
+function utility(s,x,y){x=Math.max(.001,x);y=Math.max(.001,y);const a=s.alpha;if(s.utility==='cd')return Math.pow(x,a)*Math.pow(y,1-a);if(s.utility==='ces'){const rho=-.65;return Math.pow(a*Math.pow(x,rho)+(1-a)*Math.pow(y,rho),1/rho)}if(s.utility==='ql')return Math.log(x+.2)+(1.1+a)*y;if(s.utility==='subs')return a*x+(1-a)*y;if(s.utility==='comp')return Math.min(x/a,y/(1-a));return Math.pow(x,a)*Math.pow(y,1-a)}
+function mrs(s,x,y){const h=.0008;const mu1=(utility(s,x+h,y)-utility(s,x-h,y))/(2*h);const mu2=(utility(s,x,y+h)-utility(s,x,y-h))/(2*h);return Math.abs(mu2)<1e-8?Infinity:mu1/mu2}
+function phi(s,u){u=Math.max(0,u);if(s.transform==='log')return Math.log(1+u);if(s.transform==='affine')return 3+2*u;if(s.transform==='square')return u*u;if(s.transform==='sqrt')return Math.sqrt(u);if(s.transform==='badneg')return -u;if(s.transform==='badsin')return Math.sin(u);return Math.log(1+u)}
+function isGood(s){return ['log','affine','square','sqrt'].includes(s.transform)}
+function utilityName(u){return {cd:'Cobb-Douglas',ces:'CES',ql:'Quasilinear',subs:'Perfect substitutes',comp:'Perfect complements'}[u]}
+function transformName(t){return {log:'log(1+u)',affine:'3+2u',square:'u²',sqrt:'√u',badneg:'−u',badsin:'sin(u)'}[t]}
+function mapFor(side){const ox=side==='left'?62:562,oy=442,w=390,h=330;return {ox,oy,w,h,x:v=>ox+v/10*w,y:v=>oy-v/10*h}}
+function contourPoints(s,level){const pts=[];const a=s.alpha;if(level<=0)return pts;if(s.utility==='comp'){const vx=a*level,vy=(1-a)*level;if(vx>10||vy>10)return pts;for(let y=10;y>=vy;y-=.08)pts.push([vx,y]);for(let x=vx;x<=10;x+=.08)pts.push([x,vy]);return pts}for(let i=0;i<=300;i++){const x=.08+(9.92*i/300);let y=NaN;if(s.utility==='cd')y=Math.pow(level/Math.pow(x,a),1/(1-a));else if(s.utility==='ces'){const rho=-.65;const inside=(Math.pow(level,rho)-a*Math.pow(x,rho))/(1-a);if(inside>0)y=Math.pow(inside,1/rho)}else if(s.utility==='ql')y=(level-Math.log(x+.2))/(1.1+a);else if(s.utility==='subs')y=(level-a*x)/(1-a);if(Number.isFinite(y)&&y>=0&&y<=10)pts.push([x,y])}return pts}
+function upperPoly(s,level){if(s.utility==='comp'){const vx=s.alpha*level,vy=(1-s.alpha)*level;if(vx>10||vy>10)return [];return [[vx,10],[10,10],[10,vy],[vx,vy]]}const pts=contourPoints(s,level);if(pts.length<2)return [];return [[pts[0][0],10],[10,10],[10,pts[pts.length-1][1]],...pts.slice().reverse()]}
+function pathD(pts,m,close=false){if(!pts.length)return '';let d=`M ${m.x(pts[0][0]).toFixed(1)} ${m.y(pts[0][1]).toFixed(1)}`;for(let i=1;i<pts.length;i++)d+=` L ${m.x(pts[i][0]).toFixed(1)} ${m.y(pts[i][1]).toFixed(1)}`;return close?d+' Z':d}
+function resample(pts,n,closed=false){if(!pts.length)return Array.from({length:n},()=>[0,0]);if(pts.length===1)return Array.from({length:n},()=>pts[0]);const p=pts.map(q=>q.slice());if(closed)p.push(pts[0].slice());const dist=[0];for(let i=1;i<p.length;i++)dist[i]=dist[i-1]+Math.hypot(p[i][0]-p[i-1][0],p[i][1]-p[i-1][1]);const total=dist[dist.length-1]||1;const out=[];for(let k=0;k<n;k++){const d=total*k/(n-1);let i=1;while(i<dist.length&&dist[i]<d)i++;i=Math.min(i,dist.length-1);const t=(d-dist[i-1])/((dist[i]-dist[i-1])||1);out.push([lerp(p[i-1][0],p[i][0],t),lerp(p[i-1][1],p[i][1],t)])}return out}
+function morphPts(a,b,t,n=180,closed=false){const aa=resample(a,n,closed),bb=resample(b,n,closed);return aa.map((p,i)=>[lerp(p[0],bb[i][0],t),lerp(p[1],bb[i][1],t)])}
+function drawGrid(g,m,title,sub){rect(g,m.ox-36,m.oy-m.h-48,m.w+72,m.h+88,{stroke:'var(--line)',width:1.2,rx:18});for(let i=0;i<=10;i+=2){line(g,m.x(i),m.y(0),m.x(i),m.y(10),{stroke:'var(--grid)',width:1});line(g,m.x(0),m.y(i),m.x(10),m.y(i),{stroke:'var(--grid)',width:1})}line(g,m.x(0),m.y(0),m.x(10.35),m.y(0),{stroke:'var(--muted)',width:1.5});line(g,m.x(0),m.y(0),m.x(0),m.y(10.35),{stroke:'var(--muted)',width:1.5});text(g,m.x(10.38),m.y(0)+4,'x₁',{size:13});text(g,m.x(0)-5,m.y(10.4),'x₂',{anchor:'end',size:13});text(g,m.ox,m.oy-m.h-68,title,{size:18,weight:800,fill:'var(--ink)'});text(g,m.ox,m.oy-m.h-47,sub,{size:12})}
+function drawPanel(g,side,from,to,t){const m=mapFor(side),right=side==='right';drawGrid(g,m,right?'Transformed representation v=φ(u)':'Original representation u',right?`${transformName(to.transform)} · ${isGood(to)?'same order':'not equivalent'}`:`${utilityName(to.utility)} · original labels`);const u0=utility(from,from.x1,from.x2),u1=utility(to,to.x1,to.x2);if(to.showUpper){const p0=upperPoly(from,u0),p1=upperPoly(to,u1);if(p0.length)path(g,pathD(p0,m,true),{fill:'var(--shadeA)',stroke:'var(--accent)',dash:'8 7',width:1.1,opacity:.24});if(p1.length)path(g,pathD(p1,m,true),{fill:'var(--shadeA)',stroke:'var(--accent2)',dash:'3 6',width:1.1,opacity:.26});if(p0.length&&p1.length)path(g,pathD(morphPts(p0,p1,t,160,true),m,true),{fill:'var(--shadeA)',stroke:'none',opacity:.82})}
+  const multipliers=[.62,.82,1,1.24,1.52];multipliers.forEach((q,idx)=>{const oldPts=contourPoints(from,u0*q),newPts=contourPoints(to,u1*q);const main=idx===2;if(oldPts.length)path(g,pathD(oldPts,m),{stroke:main?'var(--accent)':'var(--faint)',dash:'8 7',width:main?2.2:1.2,opacity:.42});if(newPts.length)path(g,pathD(newPts,m),{stroke:main?(right?(isGood(to)?'var(--blue)':'var(--bad)'):'var(--accent2)'):'var(--accent2)',dash:'3 6',width:main?1.8:1.1,opacity:.42});const cur=oldPts.length&&newPts.length?morphPts(oldPts,newPts,t,190):newPts;if(cur.length)path(g,pathD(cur,m),{stroke:main?(right?(isGood(to)?'var(--blue)':'var(--bad)'):'var(--accent)'):'var(--blue)',width:main?3:1.5,opacity:main?1:.46})});
+  if(to.showMRS&&to.utility!=='comp'){const sCur=interpState(from,to,t);const mr=mrs(sCur,sCur.x1,sCur.x2);if(Number.isFinite(mr)){const len=1.8,dx=len/Math.sqrt(1+mr*mr),dy=-mr*dx;line(g,m.x(Math.max(0,sCur.x1-dx)),m.y(Math.max(0,Math.min(10,sCur.x2-dy))),m.x(Math.min(10,sCur.x1+dx)),m.y(Math.max(0,Math.min(10,sCur.x2+dy))),{stroke:'var(--gold)',width:2.2,dash:'7 5'});text(g,m.x(sCur.x1)+12,m.y(sCur.x2)+30,'slope = −MRS',{size:12,fill:'var(--gold)',weight:700})}}
+  const x=lerp(from.x1,to.x1,t),y=lerp(from.x2,to.x2,t),px=m.x(x),py=m.y(y),color=right?(isGood(to)?'var(--blue)':'var(--bad)'):'var(--accent)';if(t<1){circle(g,m.x(from.x1),m.y(from.x2),4.8,{fill:'var(--faint)',opacity:.35});circle(g,m.x(to.x1),m.y(to.x2),4.8,{fill:color,opacity:.35});line(g,m.x(from.x1),m.y(from.x2),m.x(to.x1),m.y(to.x2),{stroke:'var(--accent)',width:1.4,dash:'4 6',opacity:.55})}circle(g,px,py,6.5,{fill:color});circle(g,px,py,12,{fill:'none',stroke:color,sw:1.4,opacity:.26});const label=right?`v(x)=${fmt(phi(to,u1),2)}`:`u(x)=${fmt(u1,2)}`;text(g,px+10,py-10,label,{size:12,fill:color,weight:800});if(right&&!isGood(to)){rect(g,m.ox+204,m.oy-m.h+8,166,48,{fill:'var(--shadeBad)',stroke:'var(--bad)',width:1,rx:14});text(g,m.ox+218,m.oy-m.h+28,'not ordinally equivalent',{size:12,fill:'var(--bad)',weight:800});text(g,m.ox+218,m.oy-m.h+44,'ranking may fail',{size:11,fill:'var(--bad)'})}}
+function arrow(g,x1,y1,x2,y2,color){const id='a'+Math.random().toString(36).slice(2);const defs=svgEl('defs',{},g),mk=svgEl('marker',{id,viewBox:'0 0 10 10',refX:8,refY:5,markerWidth:5,markerHeight:5,orient:'auto'},defs);svgEl('path',{d:'M 0 0 L 10 5 L 0 10 z',fill:color},mk);line(g,x1,y1,x2,y2,{stroke:color,width:1.8});g.lastChild.setAttribute('marker-end',`url(#${id})`)}
+function drawMain(from,to,t){const svg=$('mainSvg');svg.innerHTML='';rect(svg,0,0,1040,522,{fill:'transparent'});line(svg,520,58,520,474,{stroke:'var(--line)',width:1.2,dash:'4 7'});const g=svgEl('g',{},svg);drawPanel(g,'left',from,to,t);drawPanel(g,'right',from,to,t);const color=isGood(to)?'var(--accent)':'var(--bad)';arrow(g,456,128,584,128,color);text(g,520,111,isGood(to)?'same order preserved':'order not preserved',{anchor:'middle',size:12,fill:color,weight:800})}
+function bundleSet(s){return [{name:'A',x:2,y:2},{name:'B',x:4.8,y:4},{name:'C',x:8,y:6.6}].map(b=>({...b,u:utility(s,b.x,b.y),v:phi(s,utility(s,b.x,b.y))}))}
+function scaleMap(vals,left=86,right=956){let mn=Math.min(...vals),mx=Math.max(...vals);if(Math.abs(mx-mn)<1e-7){mn-=1;mx+=1}const pad=(mx-mn)*.12;mn-=pad;mx+=pad;return z=>left+(z-mn)/(mx-mn)*(right-left)}
+function drawScale(from,to,t){const svg=$('scaleSvg');svg.innerHTML='';const g=svgEl('g',{},svg);const b0=bundleSet(from),b1=bundleSet(to);const uMap=scaleMap([...b0.map(b=>b.u),...b1.map(b=>b.u)]),vMap=scaleMap([...b0.map(b=>b.v),...b1.map(b=>b.v)]);text(g,42,62,'u scale',{size:15,weight:800,fill:'var(--ink)'});text(g,42,179,'v = φ(u) scale',{size:15,weight:800,fill:'var(--ink)'});line(g,86,82,956,82,{stroke:'var(--muted)',width:1.5});line(g,86,198,956,198,{stroke:'var(--muted)',width:1.5});['var(--faint)','var(--accent)','var(--blue)'].forEach((color,i)=>{const bu=lerp(b0[i].u,b1[i].u,t),bv=lerp(b0[i].v,b1[i].v,t),xu=uMap(bu),xv=vMap(bv);circle(g,xu,82,7,{fill:color});text(g,xu,58,b1[i].name,{anchor:'middle',size:15,fill:color,weight:900});text(g,xu,108,`u=${fmt(bu,2)}`,{anchor:'middle',size:12});circle(g,xv,198,7,{fill:color});text(g,xv,174,b1[i].name,{anchor:'middle',size:15,fill:color,weight:900});text(g,xv,224,`v=${fmt(bv,2)}`,{anchor:'middle',size:12});arrow(g,xu,92,xv,188,color)});const good=isGood(to);const duAB=b1[1].u-b1[0].u,duBC=b1[2].u-b1[1].u,dvAB=b1[1].v-b1[0].v,dvBC=b1[2].v-b1[1].v;const msg=good?`Order preserved, but gaps change: Δu_AB=${fmt(duAB,2)}, Δu_BC=${fmt(duBC,2)}; Δv_AB=${fmt(dvAB,2)}, Δv_BC=${fmt(dvBC,2)}.`:'The transformation may reverse or scramble order: it is not a representation of the same preferences.';rect(g,88,244,864,30,{fill:good?'var(--shadeA)':'var(--shadeBad)',stroke:good?'var(--accent)':'var(--bad)',width:1,rx:15});text(g,520,264,msg,{anchor:'middle',size:13,fill:good?'var(--accent)':'var(--bad)',weight:800})}
+function putTex(id,tex,display=true){const node=$(id);if(!node)return;node.innerHTML='';if(window.katex){try{katex.render(tex,node,{displayMode:display,throwOnError:false,strict:false});return}catch(e){}}node.textContent=display?'\\['+tex+'\\]':'\\('+tex+'\\)'}
+function renderStaticMath(){putTex('eqRep',String.raw`x\succeq y \Longleftrightarrow u(x)\ge u(y)`);putTex('eqOrd',String.raw`v=\phi\circ u,\quad \phi\text{ strictly increasing}`);putTex('eqMrs',String.raw`MRS^{v}_{12}=\frac{\phi'(u)MU^{u}_{1}}{\phi'(u)MU^{u}_{2}}=MRS^{u}_{12}`);putTex('eqWarn',String.raw`u(B)-u(A)\not\equiv \text{preference intensity}`);document.querySelectorAll('.morphNote,.footer,.panelHead p,.control label,.pill').forEach(el=>{if(window.renderMathInElement)renderMathInElement(el,{delimiters:[{left:'\\(',right:'\\)',display:false}],throwOnError:false})})}
+function renderText(){const m=MODULES[target.module];$('title').textContent=m.name;$('subtitle').textContent=m.subtitle;putTex('principleEq',m.principle);putTex('geoEq',m.geo);putTex('obj',m.obj,false);putTex('invariant',m.invariant,false);putTex('failure',m.failure,false);putTex('formula',m.formula,false);$('debreuText').innerHTML='On a standard consumer space, completeness, transitivity, and continuity give a continuous representation. The representation is unique only up to strictly increasing transformations.';$('notice').innerHTML=m.notice.map((s,i)=>`<div><i>${i+1}</i><span>${s}</span></div>`).join('');$('bundleLabel').textContent=`x̄=(${fmt(target.x1,1)}, ${fmt(target.x2,1)})`;$('statusPill').textContent=isGood(target)?'φ increasing ⇒ same preferences':'warning: not ordinally equivalent';$('gapPill').textContent=isGood(target)?'same order, different gaps':'invalid transformation';$('alphaVal').textContent=fmt(target.alpha,2);$('x1Val').textContent=fmt(target.x1,1);$('x2Val').textContent=fmt(target.x2,1);document.querySelector('#statusPill').parentElement.querySelector('.dot').style.background=isGood(target)?'var(--accent)':'var(--bad)'}
+function renderNav(){const nav=$('nav');nav.innerHTML='';Object.entries(MODULES).forEach(([key,m])=>{const b=document.createElement('button');b.type='button';b.className=key===target.module?'active':'';b.innerHTML=`<span>${m.name}</span><span>${m.sym}</span>`;b.onclick=()=>{state.module=key;animate({...state})};nav.appendChild(b)})}
+function renderTiles(){const tiles=$('tiles');tiles.innerHTML='';Object.entries(MODULES).forEach(([key,m])=>{const d=document.createElement('div');d.className='tile'+(key===target.module?' active':'');d.innerHTML=`<b>${m.name}</b><p>${m.subtitle}</p><div class="sym">${m.sym}</div>`;d.onclick=()=>{state.module=key;animate({...state})};tiles.appendChild(d)})}
+function renderFrame(t){const current=interpState(previous,target,t);renderNav();renderTiles();renderText();drawMain(previous,current,t);drawScale(previous,current,t);$('morphProgress').style.width=`${(t*100).toFixed(1)}%`;$('morphStateText').textContent=t<1?`morphing... t=${fmt(t,2)}`:'stable state';setTimeout(renderStaticMath,0)}
+function animate(next){if(raf)cancelAnimationFrame(raf);previous=clone(target);target=clone(next);const start=performance.now(),duration=720;function tick(now){const raw=Math.min(1,(now-start)/duration),t=ease(raw);progress=t;renderFrame(t);if(raw<1)raf=requestAnimationFrame(tick);else{previous=clone(target);renderFrame(1);raf=0}}requestAnimationFrame(tick)}
+function syncState(){state.utility=$('utilityType').value;state.transform=$('transformType').value;state.alpha=Number($('alpha').value);state.x1=Number($('x1').value);state.x2=Number($('x2').value);state.showUpper=$('upperToggle').checked;state.showMRS=$('mrsToggle').checked}
+function setup(){['utilityType','transformType','alpha','x1','x2','upperToggle','mrsToggle'].forEach(id=>$(id).addEventListener(id==='alpha'||id==='x1'||id==='x2'?'input':'change',()=>{syncState();animate({...state})}));$('themeBtn').onclick=()=>{const root=document.documentElement;const dark=root.getAttribute('data-theme')==='dark';root.setAttribute('data-theme',dark?'light':'dark');$('themeBtn').textContent=dark?'◐':'◑';renderFrame(progress)};syncState();previous=clone(state);target=clone(state);renderFrame(1)}
+window.addEventListener('load',setup);
 </script>
 </body>
 </html>
-

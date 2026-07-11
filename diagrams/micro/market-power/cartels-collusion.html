@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -82,6 +82,50 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
 .point{fill:var(--surface); stroke:var(--text); stroke-width:2}.point-a{fill:var(--accent); stroke:var(--surface); stroke-width:2.2}.point-b{fill:var(--orange); stroke:var(--surface); stroke-width:2.2}.point-c{fill:var(--purple); stroke:var(--surface); stroke-width:2.2}.point-d{fill:var(--danger); stroke:var(--surface); stroke-width:2.2}.point-ok{fill:var(--ok); stroke:var(--surface); stroke-width:2.2}
 .label{fill:var(--text); font-size:13px}.muted-label{fill:var(--muted); font-size:12px}.fill-cs{fill:var(--accentSoft2)}.fill-pi{fill:rgba(45,139,129,.22)}.fill-quota{fill:rgba(201,130,98,.20)}.fill-dwl{fill:var(--dangerSoft)}.fill-enforce{fill:var(--okSoft)}.fill-no{fill:var(--dangerSoft)}.fill-zone{fill:var(--purpleSoft)}
 .bar-a{fill:var(--accent)}.bar-b{fill:var(--orange)}.bar-c{fill:var(--purple)}.bar-d{fill:var(--muted); opacity:.55}.bar-e{fill:var(--danger)}.bar-ok{fill:var(--ok)}.bar-label{fill:var(--text); font-size:12px}
+
+.morph-hud{
+  display:grid;
+  gap:7px;
+  margin:10px 0 12px;
+}
+.morph-copy{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:7px 10px;
+  color:var(--muted);
+  background:color-mix(in srgb,var(--surface2) 76%,transparent);
+  box-shadow:var(--shadow);
+  font-size:13px;
+}
+.morph-copy b{color:var(--accent);font-weight:850}
+.morph-bar{
+  height:8px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  overflow:hidden;
+  background:var(--surface2);
+}
+.morph-bar span{
+  display:block;
+  width:100%;
+  height:100%;
+  transform:scaleX(1);
+  transform-origin:left center;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--accent),var(--purple),var(--orange),var(--danger));
+}
+.morph-old-path{fill:none;stroke:var(--muted);stroke-width:2.15;stroke-dasharray:8 7;opacity:.42;pointer-events:none}
+.morph-new-path{fill:none;stroke:var(--danger);stroke-width:2.15;stroke-dasharray:2 7;opacity:.55;pointer-events:none}
+.morph-old-line{stroke:var(--muted);stroke-width:1.9;stroke-dasharray:8 7;opacity:.42;pointer-events:none}
+.morph-new-line{stroke:var(--orange);stroke-width:1.9;stroke-dasharray:2 7;opacity:.58;pointer-events:none}
+.morph-trail{stroke:var(--danger);stroke-width:2;stroke-dasharray:4 6;opacity:.84;pointer-events:none}
+.morph-start{fill:var(--muted);stroke:var(--surface);stroke-width:2.6;opacity:.58;pointer-events:none}
+.morph-target{fill:var(--danger);stroke:var(--surface);stroke-width:2.6;opacity:.78;pointer-events:none}
+.morph-pulse{fill:none;stroke:var(--accent);stroke-width:1.75;opacity:.30;pointer-events:none}
 @media (max-width:1120px){.main-pair{grid-template-columns:1fr}}
 @media (max-width:1200px){.layout{grid-template-columns:1fr}.controls{position:relative; top:auto}.formula-row,.secondary-row,.two-col{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media (max-width:700px){.app{width:min(100% - 14px,1540px); padding-top:16px}header{flex-direction:column}.theme-btn{width:100%}.formula-row{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -91,7 +135,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
 <div class="app">
 <header>
   <div>
-    <div class="eyebrow"><span class="dot"></span> Microeconomics Â· Oligopoly</div>
+    <div class="eyebrow"><span class="dot"></span> Microeconomics · Oligopoly</div>
     <h1>Cartels and collusion</h1>
     <p class="subtitle">Joint-profit maximization, quota allocation, deviation incentives, and repeated-game enforcement. Monopoly is the benchmark: a cartel acts like one monopolist, then divides the monopoly output among firms.</p>
   </div>
@@ -113,13 +157,17 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
     <div class="toggle-row"><div><div style="font-size:14px;">Equal quota allocation</div><div class="small">set s = 1/N</div></div><label class="switch"><input id="equalQuota" type="checkbox" checked><span class="slider-switch"></span></label></div>
 
     <div class="section-label">Repeated-game enforcement</div>
-    <div class="control"><div class="label-row"><label for="delta">Discount factor Î´</label><span class="value" id="deltaVal"></span></div><input id="delta" type="range" min="0" max="0.99" step="0.01" value="0.72"></div>
-    <div class="control"><div class="label-row"><label for="detect">Detection probability Ï</label><span class="value" id="detectVal"></span></div><input id="detect" type="range" min="0" max="1" step="0.01" value="1"></div>
+    <div class="control"><div class="label-row"><label for="delta">Discount factor δ</label><span class="value" id="deltaVal"></span></div><input id="delta" type="range" min="0" max="0.99" step="0.01" value="0.72"></div>
+    <div class="control"><div class="label-row"><label for="detect">Detection probability ρ</label><span class="value" id="detectVal"></span></div><input id="detect" type="range" min="0" max="1" step="0.01" value="1"></div>
     <div class="control"><div class="label-row"><label for="severity">Punishment severity</label><span class="value" id="severityVal"></span></div><input id="severity" type="range" min="0" max="1" step="0.01" value="0.25"></div>
 
     <div class="toggle-row"><div><div style="font-size:14px;">Show Cournot / efficient</div><div class="small">benchmarks on market diagram</div></div><label class="switch"><input id="bench" type="checkbox" checked><span class="slider-switch"></span></label></div>
 
     <div class="pill" id="statusPill">Cartel imitates monopoly</div>
+    <div class="morph-hud" aria-hidden="true">
+      <div class="morph-copy"><span><b>Morphing:</b> estado antigo → novo cartel</span><span id="morphLabel">stable state</span></div>
+      <div class="morph-bar"><span id="morphBar"></span></div>
+    </div>
   </aside>
 
   <main class="main">
@@ -137,7 +185,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
             <h2>Main diagram: cartel as monopoly benchmark</h2>
             <p>The cartel chooses monopoly output, then allocates quotas. The deviation point shows what one firm wants to do if rivals keep their quotas fixed.</p>
           </div>
-          <span class="small">Q horizontal Â· price vertical</span>
+          <span class="small">Q horizontal · price vertical</span>
         </div>
         <svg id="marketSvg" viewBox="0 0 1120 620"></svg>
         <div class="legend">
@@ -150,13 +198,13 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
           <span class="legend-item"><span class="swatch fill" style="background:rgba(209,143,127,.18)"></span> DWL</span>
         </div>
         <div class="metrics">
-          <div class="metric"><div class="k">Qá´¹</div><div class="v" id="mQM"></div></div>
-          <div class="metric"><div class="k">Pá´¹</div><div class="v" id="mPM"></div></div>
-          <div class="metric"><div class="k">qáµ¢ quota</div><div class="v" id="mqiC"></div></div>
-          <div class="metric"><div class="k">qáµ¢ dev.</div><div class="v" id="mqiD"></div></div>
-          <div class="metric"><div class="k">Ï€áµ¢á´„</div><div class="v" id="mpiC"></div></div>
-          <div class="metric"><div class="k">Ï€áµ¢á´…</div><div class="v" id="mpiD"></div></div>
-          <div class="metric"><div class="k">Î´*</div><div class="v" id="mdeltaCrit"></div></div>
+          <div class="metric"><div class="k">Qᴹ</div><div class="v" id="mQM"></div></div>
+          <div class="metric"><div class="k">Pᴹ</div><div class="v" id="mPM"></div></div>
+          <div class="metric"><div class="k">qᵢ quota</div><div class="v" id="mqiC"></div></div>
+          <div class="metric"><div class="k">qᵢ dev.</div><div class="v" id="mqiD"></div></div>
+          <div class="metric"><div class="k">πᵢᴄ</div><div class="v" id="mpiC"></div></div>
+          <div class="metric"><div class="k">πᵢᴅ</div><div class="v" id="mpiD"></div></div>
+          <div class="metric"><div class="k">δ*</div><div class="v" id="mdeltaCrit"></div></div>
           <div class="metric"><div class="k">Enforced?</div><div class="v" id="menforced"></div></div>
         </div>
       </section>
@@ -167,7 +215,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
             <h2>Deviation incentive</h2>
             <p>Holding rivals to their cartel quotas, the selected firm faces residual demand. The cartel quota is not its one-shot best response.</p>
           </div>
-          <span class="small">qáµ¢ horizontal Â· price / MR vertical</span>
+          <span class="small">qᵢ horizontal · price / MR vertical</span>
         </div>
         <svg id="deviationSvg" viewBox="0 0 980 620"></svg>
         <div class="legend">
@@ -237,8 +285,80 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
     mQM:$("mQM"),mPM:$("mPM"),mqiC:$("mqiC"),mqiD:$("mqiD"),mpiC:$("mpiC"),mpiD:$("mpiD"),mdeltaCrit:$("mdeltaCrit"),menforced:$("menforced")
   };
 
-  function fmt(x,d=2){ if(!Number.isFinite(x)) return 'â€”'; if(Math.abs(x)>=100) return x.toFixed(1); return x.toFixed(d); }
-  function pct(x){ if(!Number.isFinite(x)) return 'â€”'; return (100*x).toFixed(0)+'%'; }
+  const numericControls=['a','b','c','N','share','delta','detect','severity'];
+  let visualOverride=null;
+  let visualSnapshot=null;
+  let animationStartSnapshot=null;
+  let animationEndSnapshot=null;
+  let animationProgress=1;
+  let animationActive=false;
+  let animationFrame=0;
+  let mathRenderedOnce=false;
+
+  function controlSnapshot(){
+    return {
+      a:+els.a.value,b:+els.b.value,c:+els.c.value,N:+els.N.value,share:+els.share.value,
+      equalQuota:els.equalQuota.checked,delta:+els.delta.value,detect:+els.detect.value,severity:+els.severity.value,
+      bench:els.bench.checked
+    };
+  }
+  function interpolateSnapshot(a,b,t){
+    const out={...b};
+    for(const key of numericControls) out[key]=a[key]+(b[key]-a[key])*t;
+    out.N=Math.round(out.N);
+    out.equalQuota=b.equalQuota; out.bench=b.bench;
+    return out;
+  }
+  function easeInOutCubic(t){ return t<.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2; }
+  function withVisualSnapshot(s,fn){
+    const old=visualOverride;
+    visualOverride=s;
+    let result;
+    try{ result=fn(); }
+    finally{ visualOverride=old; }
+    return result;
+  }
+  function animateToCurrent(duration=760){
+    const target=controlSnapshot();
+    const start=visualSnapshot ? {...visualSnapshot} : target;
+    if(animationFrame) cancelAnimationFrame(animationFrame);
+    animationStartSnapshot=start;
+    animationEndSnapshot=target;
+    animationActive=true;
+    const t0=performance.now();
+
+    function step(now){
+      const raw=Math.min(1,(now-t0)/duration);
+      const t=easeInOutCubic(raw);
+      animationProgress=t;
+      visualOverride=interpolateSnapshot(start,target,t);
+      update({skipMath:true});
+      visualSnapshot={...visualOverride};
+
+      if(raw<1){
+        animationFrame=requestAnimationFrame(step);
+      }else{
+        visualOverride=null;
+        animationProgress=1;
+        animationActive=false;
+        update({skipMath:false});
+        visualSnapshot=controlSnapshot();
+        animationFrame=0;
+      }
+    }
+    animationFrame=requestAnimationFrame(step);
+  }
+  function updateMorphUI(){
+    const bar=$('morphBar'), label=$('morphLabel');
+    if(!bar || !label) return;
+    const t=Number.isFinite(animationProgress) ? Math.max(0,Math.min(1,animationProgress)) : 1;
+    bar.style.transform=`scaleX(${t})`;
+    label.textContent=t>=.995?'stable state':`t = ${fmt(t,2)}`;
+  }
+  function benchOn(){ return visualOverride ? visualOverride.bench : els.bench.checked; }
+
+  function fmt(x,d=2){ if(!Number.isFinite(x)) return '—'; if(Math.abs(x)>=100) return x.toFixed(1); return x.toFixed(d); }
+  function pct(x){ if(!Number.isFinite(x)) return '—'; return (100*x).toFixed(0)+'%'; }
   function clamp(x,lo,hi){ return Math.max(lo,Math.min(hi,x)); }
   function S(tag,a={}){ const e=document.createElementNS('http://www.w3.org/2000/svg',tag); for(const[k,v] of Object.entries(a)) e.setAttribute(k,v); return e; }
   function line(svg,x1,y1,x2,y2,cls){ svg.appendChild(S('line',{x1,y1,x2,y2,class:cls})); }
@@ -258,11 +378,12 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
   }
 
   function model(){
-    const a=+els.a.value,b=+els.b.value,c=+els.c.value,N=+els.N.value;
-    if(els.equalQuota.checked){ els.share.value=(1/N).toFixed(2); }
-    let s=clamp(+els.share.value,0.02,0.80);
+    const src=visualOverride || controlSnapshot();
+    const a=+src.a,b=+src.b,c=+src.c,N=Math.max(2,Math.round(+src.N));
+    if(src.equalQuota && !visualOverride){ els.share.value=(1/N).toFixed(2); }
+    let s=clamp(src.equalQuota ? 1/N : +src.share,0.02,0.80);
     if(N===2) s=clamp(s,0.02,0.98);
-    const delta=+els.delta.value, rho=+els.detect.value, severity=+els.severity.value;
+    const delta=+src.delta, rho=+src.detect, severity=+src.severity;
     const gap=Math.max(0,a-c);
     const QM=gap/(2*b), PM=a-b*QM;
     const Qe=gap/b, Pe=c;
@@ -288,12 +409,66 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
     return {a,b,c,N,s,delta,rho,severity,gap,QM,PM,Qe,Pe,profitM,Wm,We,qc,qOther,Qminus,piC,qD,QD,PD,piD,QC,PC,piCournot,piPunish,deltaCrit,enforced,CS,DWL};
   }
 
+  function drawMarketMorphGuides(svg,X,Y,qMax,current){
+    if(!animationActive || !animationStartSnapshot || !animationEndSnapshot) return;
+
+    const oldM=withVisualSnapshot(animationStartSnapshot,model);
+    const newM=withVisualSnapshot(animationEndSnapshot,model);
+    const oldDemand=[], newDemand=[];
+    for(let i=0;i<=180;i++){
+      const Q=qMax*i/180;
+      oldDemand.push([X(Q),Y(price(Q,oldM))]);
+      newDemand.push([X(Q),Y(price(Q,newM))]);
+    }
+    path(svg,oldDemand,'morph-old-path');
+    path(svg,newDemand,'morph-new-path');
+
+    line(svg,X(0),Y(oldM.PM),X(oldM.QM),Y(oldM.PM),'morph-old-line');
+    line(svg,X(oldM.QM),Y(0),X(oldM.QM),Y(oldM.PM),'morph-old-line');
+    line(svg,X(0),Y(newM.PM),X(newM.QM),Y(newM.PM),'morph-new-line');
+    line(svg,X(newM.QM),Y(0),X(newM.QM),Y(newM.PM),'morph-new-line');
+
+    line(svg,X(oldM.QD),Y(oldM.PD),X(newM.QD),Y(newM.PD),'morph-trail');
+    line(svg,X(oldM.QM),Y(oldM.PM),X(newM.QM),Y(newM.PM),'morph-trail');
+    circle(svg,X(oldM.QD),Y(oldM.PD),5.6,'morph-start');
+    circle(svg,X(newM.QD),Y(newM.PD),6.4,'morph-target');
+    circle(svg,X(current.QD),Y(current.PD),15+4*Math.sin(Math.PI*animationProgress),'morph-pulse');
+    text(svg,(X(oldM.QD)+X(newM.QD))/2,(Y(oldM.PD)+Y(newM.PD))/2-14,'x(t)=(1−t)x₀+tx₁','muted-label');
+  }
+
+  function drawDeviationMorphGuides(svg,X,Y,qMax,current){
+    if(!animationActive || !animationStartSnapshot || !animationEndSnapshot) return;
+
+    const oldM=withVisualSnapshot(animationStartSnapshot,model);
+    const newM=withVisualSnapshot(animationEndSnapshot,model);
+    const oldRD=[], newRD=[], oldMR=[], newMR=[];
+    for(let i=0;i<=160;i++){
+      const q=qMax*i/160;
+      oldRD.push([X(q),Y(Math.max(0,price(oldM.Qminus+q,oldM)))]);
+      newRD.push([X(q),Y(Math.max(0,price(newM.Qminus+q,newM)))]);
+      oldMR.push([X(q),Y(Math.max(0,oldM.a-oldM.b*oldM.Qminus-2*oldM.b*q))]);
+      newMR.push([X(q),Y(Math.max(0,newM.a-newM.b*newM.Qminus-2*newM.b*q))]);
+    }
+    path(svg,oldRD,'morph-old-path');
+    path(svg,newRD,'morph-new-path');
+    path(svg,oldMR,'morph-old-path');
+    path(svg,newMR,'morph-new-path');
+
+    line(svg,X(oldM.qc),Y(oldM.PM),X(newM.qc),Y(newM.PM),'morph-trail');
+    line(svg,X(oldM.qD),Y(oldM.PD),X(newM.qD),Y(newM.PD),'morph-trail');
+    circle(svg,X(oldM.qD),Y(oldM.PD),5.6,'morph-start');
+    circle(svg,X(newM.qD),Y(newM.PD),6.4,'morph-target');
+    circle(svg,X(current.qD),Y(current.PD),15+4*Math.sin(Math.PI*animationProgress),'morph-pulse');
+    text(svg,(X(oldM.qD)+X(newM.qD))/2,(Y(oldM.PD)+Y(newM.PD))/2-14,'qᵢ(t)=(1−t)qᵢ₀+tqᵢ₁','muted-label');
+  }
+
   function drawMarket(m){
     const svg=els.marketSvg; svg.innerHTML='';
     const vb=svg.viewBox.baseVal,W=vb.width||1120,H=vb.height||620,mar={l:78,r:34,t:32,b:68};
     const qMax=Math.max(m.Qe,m.QD,m.QC,m.QM,1)*1.14, yMax=Math.max(m.a,m.PM,m.PD,m.PC,m.c,10)*1.10;
     const {X,Y}=axes(svg,W,H,mar,qMax,yMax,'price / value',5,4,'Q');
     const demand=[]; for(let i=0;i<=320;i++){ const Q=qMax*i/320; demand.push([X(Q),Y(price(Q,m))]); }
+    drawMarketMorphGuides(svg,X,Y,qMax,m);
 
     if(m.QM>0){
       const cs=[[X(0),Y(m.a)]]; for(let i=0;i<=180;i++){ const Q=m.QM*i/180; cs.push([X(Q),Y(price(Q,m))]); } cs.push([X(m.QM),Y(m.PM)],[X(0),Y(m.PM)]); poly(svg,cs,'fill-cs');
@@ -305,17 +480,17 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
     line(svg,X(0),Y(m.PM),X(m.QM),Y(m.PM),'helper'); line(svg,X(m.QM),Y(0),X(m.QM),Y(m.PM),'helper-a');
     line(svg,X(m.qc),Y(0),X(m.qc),Y(m.PM),'helper-b');
     line(svg,X(m.QD),Y(0),X(m.QD),Y(m.PD),'helper-d'); line(svg,X(0),Y(m.PD),X(m.QD),Y(m.PD),'helper-d');
-    if(els.bench.checked){ line(svg,X(m.QC),Y(0),X(m.QC),Y(m.PC),'helper-p'); line(svg,X(m.Qe),Y(0),X(m.Qe),Y(m.c),'helper'); }
+    if(benchOn()){ line(svg,X(m.QC),Y(0),X(m.QC),Y(m.PC),'helper-p'); line(svg,X(m.Qe),Y(0),X(m.Qe),Y(m.c),'helper'); }
 
     circle(svg,X(m.QM),Y(m.PM),7,'point-a'); circle(svg,X(m.QD),Y(m.PD),7,'point-d');
-    if(els.bench.checked){ circle(svg,X(m.QC),Y(m.PC),5.8,'point-c'); circle(svg,X(m.Qe),Y(m.c),5.8,'point'); }
+    if(benchOn()){ circle(svg,X(m.QC),Y(m.PC),5.8,'point-c'); circle(svg,X(m.Qe),Y(m.c),5.8,'point'); }
     circle(svg,X(m.qc),Y(m.PM),5.8,'point-b');
 
-    text(svg,X(m.QM),Y(0)+28,'Qá´¹','label'); text(svg,X(m.qc),Y(0)+50,'qáµ¢á¶œ','muted-label');
-    text(svg,X(m.QD),Y(0)+28,'Qá´°','label'); if(els.bench.checked){ text(svg,X(m.QC),Y(0)+50,'Qá´º','muted-label'); text(svg,X(m.Qe),Y(0)+28,'Qáµ‰','muted-label'); }
-    text(svg,X(0)-12,Y(m.PM)+4,'Pá´¹','label','end'); text(svg,X(0)-12,Y(m.c)+4,'c','muted-label','end');
+    text(svg,X(m.QM),Y(0)+28,'Qᴹ','label'); text(svg,X(m.qc),Y(0)+50,'qᵢᶜ','muted-label');
+    text(svg,X(m.QD),Y(0)+28,'Qᴰ','label'); if(benchOn()){ text(svg,X(m.QC),Y(0)+50,'Qᴺ','muted-label'); text(svg,X(m.Qe),Y(0)+28,'Qᵉ','muted-label'); }
+    text(svg,X(0)-12,Y(m.PM)+4,'Pᴹ','label','end'); text(svg,X(0)-12,Y(m.c)+4,'c','muted-label','end');
     text(svg,X(m.QM)+10,Y(m.PM)-12,'cartel / monopoly','label','start'); text(svg,X(m.QD)+10,Y(m.PD)-12,'one-firm deviation','muted-label','start');
-    if(els.bench.checked) text(svg,X(m.QC)+10,Y(m.PC)+18,'Cournot punishment','muted-label','start');
+    if(benchOn()) text(svg,X(m.QC)+10,Y(m.PC)+18,'Cournot punishment','muted-label','start');
     if(m.QM>0){ text(svg,X(m.QM*.42),Y((m.a+m.PM)/2),'CS','label'); text(svg,X(m.QM*.52),Y((m.PM+m.c)/2)+4,'cartel profit','label'); text(svg,(X(m.QM)+X(m.Qe))/2,Y((m.PM+m.c)/2)+4,'DWL','label'); }
     text(svg,X(qMax*.78),Y(price(qMax*.78,m))-10,'Demand','label'); text(svg,X(qMax*.72),Y(m.c)-12,'MC','muted-label');
   }
@@ -324,14 +499,15 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
     const svg=els.deviationSvg; svg.innerHTML='';
     const vb=svg.viewBox.baseVal,W=vb.width||980,H=vb.height||620,mar={l:78,r:28,t:28,b:64};
     const qMax=Math.max(m.qD,m.qc,1)*1.65, yMax=Math.max(m.a-m.b*m.Qminus,m.PM,m.PD,m.c,10)*1.08;
-    const {X,Y}=axes(svg,W,H,mar,qMax,yMax,'price / MR',5,5,'selected firm output qáµ¢');
+    const {X,Y}=axes(svg,W,H,mar,qMax,yMax,'price / MR',5,5,'selected firm output qᵢ');
+    drawDeviationMorphGuides(svg,X,Y,qMax,m);
     const rd=[], mr=[];
     for(let i=0;i<=300;i++){ const q=qMax*i/300; const p=price(m.Qminus+q,m); const r=m.a-m.b*m.Qminus-2*m.b*q; rd.push([X(q),Y(Math.max(0,p))]); mr.push([X(q),Y(Math.max(0,r))]); }
     path(svg,rd,'curve-demand'); path(svg,mr,'curve-mr'); line(svg,X(0),Y(m.c),X(qMax),Y(m.c),'curve-cost');
     line(svg,X(m.qc),Y(0),X(m.qc),Y(m.PM),'helper-b'); line(svg,X(m.qD),Y(0),X(m.qD),Y(m.PD),'helper-d');
     line(svg,X(0),Y(m.PM),X(m.qc),Y(m.PM),'helper-b'); line(svg,X(0),Y(m.PD),X(m.qD),Y(m.PD),'helper-d');
     circle(svg,X(m.qc),Y(m.PM),7,'point-b'); circle(svg,X(m.qD),Y(m.PD),7,'point-d'); circle(svg,X(m.qD),Y(m.c),5.8,'point-c');
-    text(svg,X(m.qc),Y(0)+28,'quota qáµ¢á¶œ','label'); text(svg,X(m.qD),Y(0)+48,'deviation qáµ¢á´°','label');
+    text(svg,X(m.qc),Y(0)+28,'quota qᵢᶜ','label'); text(svg,X(m.qD),Y(0)+48,'deviation qᵢᴰ','label');
     text(svg,X(m.qc)+10,Y(m.PM)-12,'obey cartel','muted-label','start'); text(svg,X(m.qD)+10,Y(m.PD)-12,'best deviation','label','start');
     text(svg,X(qMax*.72),Y(price(m.Qminus+qMax*.72,m))-10,'residual demand','label');
     text(svg,X(qMax*.46),Y(Math.max(0,m.a-m.b*m.Qminus-2*m.b*qMax*.46))+18,'residual MR','muted-label');
@@ -343,7 +519,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
     const vb=svg.viewBox.baseVal,W=vb.width||760,H=vb.height||360,mar={l:70,r:26,t:24,b:56};
     const qMax=Math.max(m.qD,m.qc,1)*1.75; let yMax=1; const pts=[];
     for(let i=0;i<=260;i++){ const q=qMax*i/260, p=price(m.Qminus+q,m), pi=(p-m.c)*q; yMax=Math.max(yMax,pi); pts.push([q,Math.max(0,pi)]); }
-    const {X,Y}=axes(svg,W,H,mar,qMax,yMax*1.12,'profit',5,4,'qáµ¢');
+    const {X,Y}=axes(svg,W,H,mar,qMax,yMax*1.12,'profit',5,4,'qᵢ');
     path(svg,pts.map(p=>[X(p[0]),Y(p[1])]),'curve-profit');
     const yC=Math.max(0,m.piC), yD=Math.max(0,m.piD);
     line(svg,X(m.qc),mar.t,X(m.qc),H-mar.b,'helper-b'); line(svg,X(m.qD),mar.t,X(m.qD),H-mar.b,'helper-d');
@@ -359,26 +535,26 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
     const mar={l:56,r:32,t:34,b:62}, iw=W-mar.l-mar.r, ih=H-mar.t-mar.b;
     const X=x=>mar.l+x*iw, Y=y=>mar.t+ih-(y)*ih;
     for(let i=0;i<=5;i++){ const x=i/5; line(svg,X(x),mar.t,X(x),mar.t+ih,'grid'); text(svg,X(x),mar.t+ih+22,x.toFixed(1),'muted-label'); }
-    line(svg,mar.l,mar.t+ih,mar.l+iw,mar.t+ih,'axis'); line(svg,mar.l,mar.t,mar.l,mar.t+ih,'axis'); text(svg,mar.l+iw,mar.t+ih+42,'discount factor Î´','label');
+    line(svg,mar.l,mar.t+ih,mar.l+iw,mar.t+ih,'axis'); line(svg,mar.l,mar.t,mar.l,mar.t+ih,'axis'); text(svg,mar.l+iw,mar.t+ih+42,'discount factor δ','label');
     const dc=Number.isFinite(m.deltaCrit)?clamp(m.deltaCrit,0,1):1;
     if(dc<1) rect(svg,X(dc),mar.t,X(1)-X(dc),ih,'fill-enforce',10); rect(svg,X(0),mar.t,Math.max(0,X(dc)-X(0)),ih,'fill-no',10);
     line(svg,X(dc),mar.t,X(dc),mar.t+ih,'helper-d'); line(svg,X(m.delta),mar.t,X(m.delta),mar.t+ih,'curve-ok');
     circle(svg,X(m.delta),Y(.50),7,m.enforced?'point-ok':'point-d');
-    text(svg,X(dc),mar.t-10,'Î´* = '+(Number.isFinite(m.deltaCrit)?fmt(m.deltaCrit,2):'> 1'),'label');
-    text(svg,X(m.delta),Y(.50)-14,'current Î´ = '+fmt(m.delta,2),m.enforced?'label':'label');
+    text(svg,X(dc),mar.t-10,'δ* = '+(Number.isFinite(m.deltaCrit)?fmt(m.deltaCrit,2):'> 1'),'label');
+    text(svg,X(m.delta),Y(.50)-14,'current δ = '+fmt(m.delta,2),m.enforced?'label':'label');
     text(svg,X(.18),Y(.80),'deviation attractive','muted-label'); text(svg,X(.78),Y(.80),'collusion enforceable','muted-label');
 
     const boxX=mar.l+18, boxY=mar.t+ih-84;
     rect(svg,boxX,boxY,iw-36,62,'fill-zone',14);
-    text(svg,boxX+18,boxY+24,'gain today: Ï€á´° âˆ’ Ï€á¶œ = '+fmt(Math.max(0,m.piD-m.piC)),'label','start');
-    text(svg,boxX+18,boxY+46,'future loss after detection: Ï€á¶œ âˆ’ Ï€á´¾ = '+fmt(Math.max(0,m.piC-m.piPunish)),'muted-label','start');
+    text(svg,boxX+18,boxY+24,'gain today: πᴰ − πᶜ = '+fmt(Math.max(0,m.piD-m.piC)),'label','start');
+    text(svg,boxX+18,boxY+46,'future loss after detection: πᶜ − πᴾ = '+fmt(Math.max(0,m.piC-m.piPunish)),'muted-label','start');
   }
 
   function drawBars(m){
     const svg=els.barsSvg; svg.innerHTML='';
     const vb=svg.viewBox.baseVal,W=vb.width||760,H=vb.height||360,mar={l:64,r:24,t:24,b:64};
     const vals=[1,m.QC/(m.QM||1),m.Qe/(m.QM||1),1,m.PC/(m.PM||1),m.c/(m.PM||1),1,((m.PC-m.c)*m.QC)/(m.profitM||1),m.We/(m.Wm||1)];
-    const labs=['Qá´¹','Qá´º','Qáµ‰','Pá´¹','Pá´º','c','Î á´¹','Î á´º','Wáµ‰/Wá´¹'];
+    const labs=['Qᴹ','Qᴺ','Qᵉ','Pᴹ','Pᴺ','c','Πᴹ','Πᴺ','Wᵉ/Wᴹ'];
     const cls=['bar-a','bar-d','bar-ok','bar-a','bar-d','bar-c','bar-a','bar-d','bar-ok'];
     const yMax=Math.max(1.1,...vals.filter(Number.isFinite))*1.12, iw=W-mar.l-mar.r, ih=H-mar.t-mar.b, Y=v=>mar.t+ih-(v/yMax)*ih;
     for(let i=0;i<=4;i++){ const y=yMax*i/4; line(svg,mar.l,Y(y),mar.l+iw,Y(y),'grid'); text(svg,mar.l-10,Y(y)+4,fmt(y,1),'muted-label','end'); }
@@ -410,16 +586,45 @@ svg{display:block; width:100%; height:auto; overflow:hidden}.axis{stroke:var(--t
     els.deltaVal.textContent=fmt(m.delta,2); els.detectVal.textContent=pct(m.rho); els.severityVal.textContent=pct(m.severity);
     els.mQM.textContent=fmt(m.QM); els.mPM.textContent=fmt(m.PM); els.mqiC.textContent=fmt(m.qc); els.mqiD.textContent=fmt(m.qD); els.mpiC.textContent=fmt(m.piC); els.mpiD.textContent=fmt(m.piD);
     els.mdeltaCrit.textContent=Number.isFinite(m.deltaCrit)?fmt(m.deltaCrit,2):'>1'; els.menforced.textContent=m.enforced?'yes':'no';
-    els.statusPill.textContent=m.enforced?'collusion is enforceable at current Î´':'deviation is too tempting at current Î´';
+    els.statusPill.textContent=m.enforced?'collusion is enforceable at current δ':'deviation is too tempting at current δ';
     const gain=Math.max(0,m.piD-m.piC), loss=Math.max(0,m.piC-m.piPunish);
-    els.interpretation.innerHTML = `The cartel chooses the monopoly total output Qá´¹=${fmt(m.QM)} and price Pá´¹=${fmt(m.PM)}. The selected firm receives quota qáµ¢á¶œ=${fmt(m.qc)}, which gives cartel payoff Ï€áµ¢á¶œ=${fmt(m.piC)}. If rivals keep their quotas fixed, the selected firmâ€™s one-shot best deviation is qáµ¢á´°=${fmt(m.qD)}, giving Ï€áµ¢á´°=${fmt(m.piD)}. The immediate gain from cheating is ${fmt(gain)}. Under the selected monitoring and punishment assumptions, the critical discount factor is Î´*=${Number.isFinite(m.deltaCrit)?fmt(m.deltaCrit,2):'> 1'}, so the current Î´=${fmt(m.delta,2)} ${m.enforced?'can sustain':'cannot sustain'} collusion. The punishment payoff is Ï€áµ¢á´¾=${fmt(m.piPunish)}, so the future loss from being caught is Ï€áµ¢á¶œâˆ’Ï€áµ¢á´¾=${fmt(loss)}.`;
+    els.interpretation.innerHTML = `The cartel chooses the monopoly total output Qᴹ=${fmt(m.QM)} and price Pᴹ=${fmt(m.PM)}. The selected firm receives quota qᵢᶜ=${fmt(m.qc)}, which gives cartel payoff πᵢᶜ=${fmt(m.piC)}. If rivals keep their quotas fixed, the selected firm’s one-shot best deviation is qᵢᴰ=${fmt(m.qD)}, giving πᵢᴰ=${fmt(m.piD)}. The immediate gain from cheating is ${fmt(gain)}. Under the selected monitoring and punishment assumptions, the critical discount factor is δ*=${Number.isFinite(m.deltaCrit)?fmt(m.deltaCrit,2):'> 1'}, so the current δ=${fmt(m.delta,2)} ${m.enforced?'can sustain':'cannot sustain'} collusion. The punishment payoff is πᵢᴾ=${fmt(m.piPunish)}, so the future loss from being caught is πᵢᶜ−πᵢᴾ=${fmt(loss)}.`;
   }
 
-  function renderAllMath(){ if(!window.renderMathInElement) return; renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false}); }
-  function update(){ const m=model(); updateText(m); drawMarket(m); drawDeviation(m); drawProfit(m); drawEnforce(m); drawBars(m); drawQuota(m); renderAllMath(); }
-  ['a','b','c','N','share','equalQuota','delta','detect','severity','bench'].forEach(id=>{ els[id].addEventListener('input',update); els[id].addEventListener('change',update); });
-  els.themeBtn.addEventListener('click',()=>{ const dark=document.body.getAttribute('data-theme')==='dark'; document.body.setAttribute('data-theme',dark?'light':'dark'); els.themeBtn.textContent=dark?'Dark mode':'Light mode'; update(); });
+  function renderAllMath(){
+    if(!window.renderMathInElement) return;
+    if(mathRenderedOnce) return;
+    renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});
+    mathRenderedOnce=true;
+  }
+  function update(options={}){
+    const m=model();
+    updateText(m);
+    drawMarket(m);
+    drawDeviation(m);
+    drawProfit(m);
+    drawEnforce(m);
+    drawBars(m);
+    drawQuota(m);
+    updateMorphUI();
+    if(!options.skipMath) renderAllMath();
+  }
+  ['a','b','c','N','share','equalQuota','delta','detect','severity','bench'].forEach(id=>{
+    els[id].addEventListener('input',animateToCurrent);
+    els[id].addEventListener('change',animateToCurrent);
+  });
+  els.themeBtn.addEventListener('click',()=>{
+    const dark=document.body.getAttribute('data-theme')==='dark';
+    document.body.setAttribute('data-theme',dark?'light':'dark');
+    els.themeBtn.textContent=dark?'Dark mode':'Light mode';
+    update({skipMath:true});
+    visualSnapshot=controlSnapshot();
+  });
   update();
+  visualSnapshot=controlSnapshot();
+  animationStartSnapshot=controlSnapshot();
+  animationEndSnapshot=controlSnapshot();
+  updateMorphUI();
   if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',renderAllMath); } else { window.addEventListener('load',renderAllMath); setTimeout(renderAllMath,250); }
 })();
 </script>

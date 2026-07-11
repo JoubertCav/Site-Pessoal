@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -124,9 +124,49 @@
     .sidebar {
       border-radius: var(--radius);
       padding: 16px;
+      position: sticky;
+      top: 16px;
+      align-self: start;
+      height: calc(100vh - 32px);
       max-height: calc(100vh - 32px);
-      overflow: auto;
+      overflow-y: auto;
+      overflow-x: hidden;
+      overscroll-behavior: contain;
       scrollbar-width: thin;
+      scrollbar-color: color-mix(in srgb, var(--accent) 45%, transparent) transparent;
+      background:
+        linear-gradient(180deg, color-mix(in srgb, var(--panel) 98%, transparent), color-mix(in srgb, var(--panel2) 28%, var(--panel))),
+        var(--panel);
+    }
+
+    .sidebar::-webkit-scrollbar { width: 10px; }
+    .sidebar::-webkit-scrollbar-track { background: transparent; }
+    .sidebar::-webkit-scrollbar-thumb {
+      background: color-mix(in srgb, var(--muted) 32%, transparent);
+      border: 3px solid transparent;
+      border-radius: 999px;
+      background-clip: padding-box;
+    }
+    .sidebar::-webkit-scrollbar-thumb:hover {
+      background: color-mix(in srgb, var(--accent) 50%, transparent);
+      border: 3px solid transparent;
+      background-clip: padding-box;
+    }
+
+    .sidebar > .eyebrow,
+    .sidebar > h2,
+    .sidebar > .note {
+      position: relative;
+      z-index: 1;
+    }
+
+    .sidebar h3 {
+      padding-top: 2px;
+      border-top: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+    }
+
+    .sidebar h3:first-of-type {
+      border-top: 0;
     }
 
     .main {
@@ -413,6 +453,126 @@
     .status-warn { color: var(--gold); }
     .status-bad { color: var(--red); }
 
+
+    .morph-hud {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      top: 14px;
+      display: grid;
+      gap: 7px;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .morph-copy {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 7px 10px;
+      color: var(--muted);
+      background: color-mix(in srgb, var(--panel-solid) 84%, transparent);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow2);
+      font-size: 0.74rem;
+    }
+
+    .morph-copy b {
+      color: var(--accent);
+      font-weight: 850;
+    }
+
+    .morph-bar {
+      height: 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--panel2) 72%, transparent);
+      overflow: hidden;
+      box-shadow: var(--shadow2);
+    }
+
+    .morph-bar span {
+      display: block;
+      height: 100%;
+      width: 100%;
+      transform: scaleX(1);
+      transform-origin: left center;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--blue), var(--gold), var(--red));
+    }
+
+    .morph-old-path {
+      stroke: var(--muted);
+      stroke-width: 2.2;
+      stroke-dasharray: 8 7;
+      fill: none;
+      opacity: .42;
+      pointer-events: none;
+    }
+
+    .morph-new-path {
+      stroke: var(--red);
+      stroke-width: 2.2;
+      stroke-dasharray: 2 7;
+      fill: none;
+      opacity: .55;
+      pointer-events: none;
+    }
+
+    .morph-old-budget {
+      stroke: var(--muted);
+      stroke-width: 1.8;
+      stroke-dasharray: 8 7;
+      fill: none;
+      opacity: .42;
+      pointer-events: none;
+    }
+
+    .morph-new-budget {
+      stroke: var(--gold);
+      stroke-width: 1.8;
+      stroke-dasharray: 2 7;
+      fill: none;
+      opacity: .55;
+      pointer-events: none;
+    }
+
+    .morph-trail {
+      stroke: var(--red);
+      stroke-width: 2;
+      stroke-dasharray: 4 6;
+      opacity: .84;
+      pointer-events: none;
+    }
+
+    .morph-start {
+      fill: var(--muted);
+      stroke: var(--panel-solid);
+      stroke-width: 2.7;
+      opacity: .55;
+      pointer-events: none;
+    }
+
+    .morph-target {
+      fill: var(--red);
+      stroke: var(--panel-solid);
+      stroke-width: 2.7;
+      opacity: .78;
+      pointer-events: none;
+    }
+
+    .morph-pulse {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 1.8;
+      opacity: .30;
+      pointer-events: none;
+    }
+
+
     .svg-label { fill: var(--muted); font-size: 12px; user-select: none; }
     .svg-title { fill: var(--ink); font-size: 13px; font-weight: 740; user-select: none; }
     .svg-small { fill: var(--muted); font-size: 11px; user-select: none; }
@@ -535,7 +695,14 @@
 
     @media (max-width: 1220px) {
       .app { grid-template-columns: 1fr; }
-      .sidebar { max-height: none; }
+      .sidebar {
+        position: relative;
+        top: auto;
+        height: auto;
+        max-height: none;
+        overflow: visible;
+        overscroll-behavior: auto;
+      }
       .main { max-width: none; }
       .diagrams { grid-template-columns: 1fr; }
       .cards { grid-template-columns: 1fr; }
@@ -627,7 +794,7 @@
   <main class="main">
     <header class="topbar">
       <div>
-        <div class="eyebrow">Microeconomic theory Â· pure exchange</div>
+        <div class="eyebrow">Microeconomic theory · pure exchange</div>
         <h1>First and Second Welfare Theorems</h1>
         <p class="subtitle">The First Welfare Theorem says that a Walrasian equilibrium is Pareto efficient. The Second Welfare Theorem says that, under convexity and complete markets, efficient allocations can be decentralized by redistributing endowments and then letting prices do the rest.</p>
       </div>
@@ -644,6 +811,14 @@
           <span class="pill"><span class="dot red"></span>Contract curve</span>
         </div>
         <div class="svg-frame">
+
+          <div class="morph-hud" aria-hidden="true">
+            <div class="morph-copy">
+              <span><b>Morphing:</b> contrato, orçamento e alocação mantêm identidade visual</span>
+              <span id="morphLabel">stable state</span>
+            </div>
+            <div class="morph-bar"><span id="morphBar"></span></div>
+          </div>
           <svg id="boxSvg" viewBox="0 0 900 720" preserveAspectRatio="xMidYMid meet"></svg>
           <div class="legend">
             <span class="pill"><span class="dot"></span>A indifference</span>
@@ -710,36 +885,145 @@
     tau: 0.55
   };
 
+  const numericStateKeys = ["X", "Y", "wX", "wY", "aA", "rA", "aB", "rB", "p", "tau"];
+  let visualSnapshot = null;
+  let animationStartSnapshot = null;
+  let animationEndSnapshot = null;
+  let animationProgress = 1;
+  let animationFrame = 0;
+  let animationActive = false;
+  let katexRenderedOnce = false;
+
+  function snapshotState() {
+    return {
+      dark: state.dark,
+      complete: state.complete,
+      convex: state.convex,
+      X: state.X,
+      Y: state.Y,
+      wX: state.wX,
+      wY: state.wY,
+      aA: state.aA,
+      rA: state.rA,
+      aB: state.aB,
+      rB: state.rB,
+      p: state.p,
+      tau: state.tau
+    };
+  }
+
+  function restoreSnapshot(s) {
+    state.dark = s.dark;
+    state.complete = s.complete;
+    state.convex = s.convex;
+    state.X = s.X;
+    state.Y = s.Y;
+    state.wX = s.wX;
+    state.wY = s.wY;
+    state.aA = s.aA;
+    state.rA = s.rA;
+    state.aB = s.aB;
+    state.rB = s.rB;
+    state.p = s.p;
+    state.tau = s.tau;
+  }
+
+  function interpolateSnapshot(a, b, t) {
+    const out = {...b};
+    for (const key of numericStateKeys) {
+      out[key] = a[key] + (b[key] - a[key]) * t;
+    }
+    out.dark = b.dark;
+    out.complete = b.complete;
+    out.convex = b.convex;
+    return out;
+  }
+
+  function easeInOutCubic(t) {
+    return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+  }
+
+  function withSnapshot(s, fn) {
+    const backup = snapshotState();
+    restoreSnapshot(s);
+    let result;
+    try { result = fn(); }
+    finally { restoreSnapshot(backup); }
+    return result;
+  }
+
+  function animateToCurrent(duration = 760) {
+    const target = snapshotState();
+    const start = visualSnapshot ? {...visualSnapshot} : target;
+    if (animationFrame) cancelAnimationFrame(animationFrame);
+    animationStartSnapshot = start;
+    animationEndSnapshot = target;
+    animationActive = true;
+    const t0 = performance.now();
+
+    function step(now) {
+      const raw = Math.min(1, (now - t0) / duration);
+      const t = easeInOutCubic(raw);
+      animationProgress = t;
+      restoreSnapshot(interpolateSnapshot(start, target, t));
+      render({ skipKatex: true });
+      visualSnapshot = snapshotState();
+
+      if (raw < 1) {
+        animationFrame = requestAnimationFrame(step);
+      } else {
+        restoreSnapshot(target);
+        animationProgress = 1;
+        animationActive = false;
+        render({ skipKatex: false });
+        visualSnapshot = snapshotState();
+        animationFrame = 0;
+      }
+    }
+
+    animationFrame = requestAnimationFrame(step);
+  }
+
+  function updateMorphUI() {
+    const bar = $("morphBar");
+    const label = $("morphLabel");
+    if (!bar || !label) return;
+    const t = Number.isFinite(animationProgress) ? Math.max(0, Math.min(1, animationProgress)) : 1;
+    bar.style.transform = `scaleX(${t})`;
+    label.textContent = t >= .995 ? "stable state" : `t = ${fmt(t, 2)}`;
+  }
+
   const ids = ["X", "Y", "wX", "wY", "aA", "rA", "aB", "rB", "p", "tau"];
   ids.forEach(id => $(id).addEventListener("input", () => {
     state[id] = parseFloat($(id).value);
     sanitize();
-    render();
+    animateToCurrent();
   }));
 
   $("themeBtn").addEventListener("click", () => {
     state.dark = !state.dark;
     $("app").setAttribute("data-theme", state.dark ? "dark" : "light");
     $("themeBtn").textContent = state.dark ? "Light mode" : "Dark mode";
-    render();
+    render({ skipKatex: true });
+    visualSnapshot = snapshotState();
   });
 
   $("completeBtn").addEventListener("click", () => {
     state.complete = !state.complete;
     $("completeBtn").classList.toggle("active", state.complete);
-    render();
+    animateToCurrent();
   });
 
   $("convexBtn").addEventListener("click", () => {
     state.convex = !state.convex;
     $("convexBtn").classList.toggle("active", state.convex);
-    render();
+    animateToCurrent();
   });
 
   $("eqPriceBtn").addEventListener("click", () => {
     state.p = marketPrice();
     syncInputs();
-    render();
+    animateToCurrent();
   });
 
   $("decentralizeBtn").addEventListener("click", () => {
@@ -749,7 +1033,7 @@
     state.wY = om.y;
     state.p = t.p;
     syncInputs();
-    render();
+    animateToCurrent();
   });
 
   $("resetBtn").addEventListener("click", () => {
@@ -760,7 +1044,7 @@
     $("completeBtn").classList.add("active");
     $("convexBtn").classList.add("active");
     syncInputs();
-    render();
+    animateToCurrent();
   });
 
   function sanitize() {
@@ -790,7 +1074,7 @@
   }
 
   function fmt(x, d=2) {
-    if (!Number.isFinite(x)) return "â€”";
+    if (!Number.isFinite(x)) return "—";
     if (Math.abs(x) < 0.0005) x = 0;
     return Number(x).toFixed(d);
   }
@@ -941,7 +1225,7 @@
       }
     });
 
-    if (window.renderMathInElement) {
+    if (!katexRenderedOnce && window.renderMathInElement) {
       renderMathInElement($("app"), {
         delimiters: [
           { left: "\\(", right: "\\)", display: false },
@@ -950,14 +1234,16 @@
         ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code"],
         throwOnError: false
       });
+      katexRenderedOnce = true;
     }
   }
 
-  function render() {
+  function render(options = {}) {
     sanitize();
     updateReadouts();
     drawEdgeworth();
-    renderKatex();
+    updateMorphUI();
+    if (!options.skipKatex) renderKatex();
   }
 
   function updateReadouts() {
@@ -1036,6 +1322,30 @@
     return points.map((p, i) => `${i ? "L" : "M"}${p[0].toFixed(2)},${p[1].toFixed(2)}`).join(" ");
   }
 
+  function dataPath(points, sx, sy) {
+    if (!points || points.length < 2) return "";
+    return pathFrom(points.map(p => [sx(p.x), sy(p.y)]));
+  }
+
+  function budgetSegmentData(p, wx, wy) {
+    const k = p * wx + wy;
+    const pts = [];
+    function push(x, y) {
+      if (x >= -1e-8 && x <= state.X + 1e-8 && y >= -1e-8 && y <= state.Y + 1e-8) {
+        pts.push({ x: clamp(x, 0, state.X), y: clamp(y, 0, state.Y) });
+      }
+    }
+    push(0, k);
+    push(state.X, k - p * state.X);
+    push(k / p, 0);
+    push((k - state.Y) / p, state.Y);
+    const unique = [];
+    pts.forEach(q => {
+      if (!unique.some(r => Math.hypot(r.x - q.x, r.y - q.y) < 1e-6)) unique.push(q);
+    });
+    return unique.slice(0, 2);
+  }
+
   function drawEdgeworth() {
     const svg = $("boxSvg");
     svg.innerHTML = "";
@@ -1055,15 +1365,17 @@
     const sx = x => m.l + (x / state.X) * bw;
     const sy = y => m.t + bh - (y / state.Y) * bh;
 
+    drawMorphGuides(svg, sx, sy, panel);
+
     add(svg, "rect", { x: m.l, y: m.t, width: bw, height: bh, rx: 2, fill: "none", stroke: ink, "stroke-width": 1.7 });
     for (let i = 1; i < Math.floor(state.X); i++) add(svg, "line", { x1: sx(i), y1: m.t, x2: sx(i), y2: m.t + bh, class: "grid-line" });
     for (let j = 1; j < Math.floor(state.Y); j++) add(svg, "line", { x1: m.l, y1: sy(j), x2: m.l + bw, y2: sy(j), class: "grid-line" });
 
-    text(svg, m.l - 10, m.t + bh + 28, "Oá´¬", "svg-title", "end");
-    text(svg, m.l + bw + 10, m.t - 14, "Oá´®", "svg-title", "start");
-    text(svg, m.l + bw / 2, m.t + bh + 50, "good 1 for A  â†’", "svg-label", "middle");
+    text(svg, m.l - 10, m.t + bh + 28, "Oᴬ", "svg-title", "end");
+    text(svg, m.l + bw + 10, m.t - 14, "Oᴮ", "svg-title", "start");
+    text(svg, m.l + bw / 2, m.t + bh + 50, "good 1 for A  →", "svg-label", "middle");
     text(svg, m.l - 42, m.t + bh / 2, "good 2 for A", "svg-label", "middle", -90);
-    text(svg, m.l + bw / 2, m.t - 32, "â†  good 1 for B", "svg-label", "middle");
+    text(svg, m.l + bw / 2, m.t - 32, "←  good 1 for B", "svg-label", "middle");
 
     const contract = sampleContract(250);
     add(svg, "path", { d: pathFrom(contract.map(q => [sx(q.x), sy(q.y)])), class: "contract" });
@@ -1089,12 +1401,12 @@
     drawIndiff(svg, sx, sy, target.x, target.y, "B", gold, true);
 
     point(svg, sx(state.wX), sy(state.wY), 7.2, red, panel);
-    text(svg, sx(state.wX) + 11, sy(state.wY) + 22, "Ï‰", "svg-title");
+    text(svg, sx(state.wX) + 11, sy(state.wY) + 22, "ω", "svg-title");
 
     point(svg, sx(trial.A.x), sy(trial.A.y), 5.3, accent, panel);
-    text(svg, sx(trial.A.x) + 10, sy(trial.A.y) - 10, "xá´¬(p)", "svg-small");
+    text(svg, sx(trial.A.x) + 10, sy(trial.A.y) - 10, "xᴬ(p)", "svg-small");
     point(svg, sx(trial.BfromA.x), sy(trial.BfromA.y), 5.3, gold, panel);
-    text(svg, sx(trial.BfromA.x) + 10, sy(trial.BfromA.y) + 20, "eâˆ’xá´®(p)", "svg-small");
+    text(svg, sx(trial.BfromA.x) + 10, sy(trial.BfromA.y) + 20, "e−xᴮ(p)", "svg-small");
 
     if (Math.hypot(trial.A.x - trial.BfromA.x, trial.A.y - trial.BfromA.y) > 0.14) {
       add(svg, "line", { x1: sx(trial.A.x), y1: sy(trial.A.y), x2: sx(trial.BfromA.x), y2: sy(trial.BfromA.y), stroke: red, "stroke-width": 2, "stroke-dasharray": "3 5", opacity: 0.9 });
@@ -1105,15 +1417,43 @@
     text(svg, sx(eq.A.x) + 12, sy(eq.A.y) - 13, "x*", "svg-title");
 
     point(svg, sx(target.x), sy(target.y), 7.2, ink, panel);
-    text(svg, sx(target.x) + 12, sy(target.y) - 13, "xáµ€", "svg-title");
+    text(svg, sx(target.x) + 12, sy(target.y) - 13, "xᵀ", "svg-title");
 
     point(svg, sx(omegaTilde.x), sy(omegaTilde.y), 6.5, gold, panel);
-    text(svg, sx(omegaTilde.x) + 11, sy(omegaTilde.y) + 20, "Ï‰Ìƒ", "svg-title");
+    text(svg, sx(omegaTilde.x) + 11, sy(omegaTilde.y) + 20, "ω̃", "svg-title");
 
     add(svg, "line", { x1: sx(omegaTilde.x), y1: sy(omegaTilde.y), x2: sx(target.x), y2: sy(target.y), stroke: gold, "stroke-width": 1.7, "stroke-dasharray": "2 6", opacity: 0.9 });
 
     text(svg, sx(state.X * 0.06), sy(state.Y * 0.96), `p = ${fmt(state.p,2)}`, "svg-label");
     text(svg, sx(state.X * 0.06), sy(state.Y * 0.90), `p* = ${fmt(pEq,2)}`, "svg-label");
+
+    function drawMorphGuides(svg, sx, sy, panel) {
+      if (!animationActive || !animationStartSnapshot || !animationEndSnapshot) return;
+
+      const oldContract = withSnapshot(animationStartSnapshot, () => sampleContract(250));
+      const newContract = withSnapshot(animationEndSnapshot, () => sampleContract(250));
+      const oldBudget = withSnapshot(animationStartSnapshot, () => budgetSegmentData(state.p, state.wX, state.wY));
+      const newBudget = withSnapshot(animationEndSnapshot, () => budgetSegmentData(state.p, state.wX, state.wY));
+      const oldTarget = withSnapshot(animationStartSnapshot, () => targetPoint());
+      const newTarget = withSnapshot(animationEndSnapshot, () => targetPoint());
+      const oldOmega = { x: animationStartSnapshot.wX, y: animationStartSnapshot.wY };
+      const newOmega = { x: animationEndSnapshot.wX, y: animationEndSnapshot.wY };
+
+      if (oldContract.length > 2) add(svg, "path", { d: dataPath(oldContract, sx, sy), class: "morph-old-path" });
+      if (newContract.length > 2) add(svg, "path", { d: dataPath(newContract, sx, sy), class: "morph-new-path" });
+      if (oldBudget.length >= 2) add(svg, "path", { d: dataPath(oldBudget, sx, sy), class: "morph-old-budget" });
+      if (newBudget.length >= 2) add(svg, "path", { d: dataPath(newBudget, sx, sy), class: "morph-new-budget" });
+
+      add(svg, "line", { x1: sx(oldTarget.x), y1: sy(oldTarget.y), x2: sx(newTarget.x), y2: sy(newTarget.y), class: "morph-trail" });
+      add(svg, "line", { x1: sx(oldOmega.x), y1: sy(oldOmega.y), x2: sx(newOmega.x), y2: sy(newOmega.y), class: "morph-trail", opacity: 0.46 });
+
+      add(svg, "circle", { cx: sx(oldTarget.x), cy: sy(oldTarget.y), r: 5.7, class: "morph-start" });
+      add(svg, "circle", { cx: sx(newTarget.x), cy: sy(newTarget.y), r: 6.6, class: "morph-target" });
+      add(svg, "circle", { cx: sx(state.tau * state.X), cy: sy(contractY(state.tau * state.X)), r: 15 + 4*Math.sin(Math.PI*animationProgress), class: "morph-pulse" });
+
+      text(svg, (sx(oldTarget.x)+sx(newTarget.x))/2, (sy(oldTarget.y)+sy(newTarget.y))/2 - 14, "x(t)=(1−t)x₀+tx₁", "svg-small", "middle");
+      text(svg, sx(newTarget.x)+10, sy(newTarget.y)+20, "alvo", "svg-small", "start");
+    }
 
     function point(svg, cx, cy, r, fill, stroke) {
       add(svg, "circle", { cx, cy, r, fill, stroke, "stroke-width": 2.5, class: "point" });
@@ -1236,6 +1576,10 @@
   window.addEventListener("load", () => {
     syncInputs();
     render();
+    visualSnapshot = snapshotState();
+    animationStartSnapshot = snapshotState();
+    animationEndSnapshot = snapshotState();
+    updateMorphUI();
     setTimeout(renderKatex, 250);
   });
 })();

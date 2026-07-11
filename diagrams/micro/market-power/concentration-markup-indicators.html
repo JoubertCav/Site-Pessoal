@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -138,6 +138,11 @@
   .eq{padding:14px;border:1px solid var(--line);border-radius:18px;background:var(--panel2)}
   .eq .label{font-size:.76rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:850;margin-bottom:8px}
   .eq .math{font-size:1.02rem;overflow-x:auto;white-space:nowrap;padding-bottom:2px}
+  .tex-rendered .katex { color: var(--ink); }
+  .formula-strip .katex { font-size: .98em; }
+  .metric .desc .katex { font-size: .98em; }
+  .eq .katex-display { margin: .15rem 0; }
+  .eq .math .katex { font-size: 1.02em; }
   .diagnostic{display:grid;gap:10px}
   .diag-row{display:grid;grid-template-columns:35px 1fr auto;gap:10px;align-items:center;background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:11px}
   .badge{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb, var(--accent) 16%, transparent);color:var(--accent);font-weight:900}
@@ -165,9 +170,9 @@
 <div class="wrap">
   <header>
     <section class="hero">
-      <div class="eyebrow">Microeconomics Â· market power indicators</div>
+      <div class="eyebrow">Microeconomics · market power indicators</div>
       <h1>Concentration and markup indicators</h1>
-      <p class="subtitle">Use the sliders to see why concentration is not the same thing as market power. HHI summarizes market structure; the Lerner index measures the priceâ€“cost wedge; the bridge between them needs conduct, elasticity, and cost assumptions.</p>
+      <p class="subtitle">Use the sliders to see why concentration is not the same thing as market power. HHI summarizes market structure; the Lerner index measures the price–cost wedge; the bridge between them needs conduct, elasticity, and cost assumptions.</p>
       <div class="formula-strip">
         <span class="pill tex">\(HHI=\sum_i s_i^2\)</span>
         <span class="pill tex">\(L=\frac{p-MC}{p}\)</span>
@@ -179,7 +184,7 @@
       <button class="mode-toggle" id="themeBtn">Toggle dark mode</button>
       <div class="mini-card">
         <h3>Core intuition</h3>
-        <div class="big-number" id="headline">â€”</div>
+        <div class="big-number" id="headline">—</div>
         <div class="mini-note" id="headlineNote">Move the controls to compare structure, conduct, demand, and cost accounting.</div>
       </div>
     </section>
@@ -242,10 +247,10 @@
 
     <section class="content">
       <section class="metrics" aria-label="main metrics">
-        <div class="metric"><div class="name">HHI</div><div class="num" id="hhiMetric">â€”</div><div class="desc">0â€“10,000 scale</div></div>
-        <div class="metric"><div class="name">Effective firms</div><div class="num" id="effMetric">â€”</div><div class="desc tex">\(N_e=1/HHI\)</div></div>
-        <div class="metric"><div class="name">Lerner</div><div class="num" id="lernerMetric">â€”</div><div class="desc">price share above MC</div></div>
-        <div class="metric"><div class="name">Price</div><div class="num" id="priceMetric">â€”</div><div class="desc">from the Lerner wedge</div></div>
+        <div class="metric"><div class="name">HHI</div><div class="num" id="hhiMetric">—</div><div class="desc">0–10,000 scale</div></div>
+        <div class="metric"><div class="name">Effective firms</div><div class="num" id="effMetric">—</div><div class="desc tex">\(N_e=1/HHI\)</div></div>
+        <div class="metric"><div class="name">Lerner</div><div class="num" id="lernerMetric">—</div><div class="desc">price share above MC</div></div>
+        <div class="metric"><div class="name">Price</div><div class="num" id="priceMetric">—</div><div class="desc">from the Lerner wedge</div></div>
       </section>
 
       <section class="grid">
@@ -261,7 +266,7 @@
         <div class="card tall">
           <div class="card-head">
             <div>
-              <h2>2. The HHIâ€“Lerner bridge</h2>
+              <h2>2. The HHI–Lerner bridge</h2>
               <p>The textbook relation is useful but conditional: with homogeneous goods and Cournot conduct, average Lerner is approximately HHI divided by demand elasticity.</p>
             </div>
           </div>
@@ -274,7 +279,7 @@
           <div class="card-head">
             <div>
               <h2>3. Price wedge and welfare geometry</h2>
-              <p>The Lerner index is a marginal-cost wedge. Higher concentration increases this wedge only through the conductâ€“elasticity channel.</p>
+              <p>The Lerner index is a marginal-cost wedge. Higher concentration increases this wedge only through the conduct–elasticity channel.</p>
             </div>
           </div>
           <canvas id="welfareCanvas"></canvas>
@@ -480,7 +485,7 @@
       }
       ctx.stroke(); ctx.restore();
       const lx=.78;
-      drawText(ctx,'Îº='+kappa.toFixed(1),X(lx)+5,Y(Math.min(maxL,kappa*lx/s.elas))-4,{color:idx===1?css('--accent'):css('--muted'),size:11,weight:800});
+      drawText(ctx,'κ='+kappa.toFixed(1),X(lx)+5,Y(Math.min(maxL,kappa*lx/s.elas))-4,{color:idx===1?css('--accent'):css('--muted'),size:11,weight:800});
     });
     const cx=X(s.hhi), cy=Y(s.L);
     ctx.save(); ctx.fillStyle=css('--accent3'); ctx.beginPath(); ctx.arc(cx,cy,7,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=css('--canvas'); ctx.lineWidth=3; ctx.stroke(); ctx.restore();
@@ -488,7 +493,7 @@
     line(ctx,cx,cy,plot.x,cy,css('--accent3'),1,[3,4]);
     drawText(ctx,'current market',cx+12,cy-12,{color:css('--accent3'),size:12,weight:850});
     drawText(ctx,'L = '+pct(s.L,1),cx+12,cy+6,{color:css('--muted'),size:11});
-    const caption='Bridge: L â‰ˆ Îº Ã— HHI / |Îµ|  Â·  Îµ = '+s.elas.toFixed(1);
+    const caption='Bridge: L ≈ κ × HHI / |ε|  ·  ε = '+s.elas.toFixed(1);
     drawText(ctx,caption,plot.x,18,{color:css('--muted'),size:12,weight:700});
   }
 
@@ -521,10 +526,10 @@
     drawText(ctx,'D',X(maxQ*.82),Y(Math.max(0,a-b*maxQ*.82))-8,{color:css('--accent'),weight:850});
     drawText(ctx,'MC',X(maxQ*.78),Y(s.mc)-8,{color:css('--accent2'),weight:850});
     drawText(ctx,'p',X(0)+5,Y(P)-6,{color:css('--accent3'),weight:850});
-    drawText(ctx,'pâˆ’MC',X(Q*.45),Y((P+s.mc)/2)+4,{align:'center',color:css('--accent'),weight:850});
+    drawText(ctx,'p−MC',X(Q*.45),Y((P+s.mc)/2)+4,{align:'center',color:css('--accent'),weight:850});
     drawText(ctx,'DWL',X((Q+Qc)/2),Y((P+s.mc)/2)-4,{align:'center',color:css('--danger'),weight:850});
     drawText(ctx,'Q',X(Q),plot.y+plot.h+18,{align:'center',color:css('--accent3'),size:10});
-    drawText(ctx,'Qá¶œ',X(Qc),plot.y+plot.h+18,{align:'center',color:css('--accent2'),size:10});
+    drawText(ctx,'Qᶜ',X(Qc),plot.y+plot.h+18,{align:'center',color:css('--accent2'),size:10});
     const dwl=.5*(P-s.mc)*(Qc-Q);
     drawText(ctx,'Approx. DWL = '+money(Math.max(0,dwl)),plot.x+10,plot.y+20,{color:css('--muted'),size:12,weight:750});
   }
@@ -567,8 +572,8 @@
     const rows=[];
     rows.push({num:'1',title:'Concentration signal',sub: s.hhiClass==='low'?'Unconcentrated by common screening language.':'Moderate/high concentration: structure deserves attention.',status:s.hhiClass==='low'?'low':s.hhiClass==='moderate'?'medium':'high',cls:s.hhiClass==='high'?'bad':s.hhiClass==='moderate'?'warn':'ok'});
     rows.push({num:'2',title:'Pricing-power signal',sub:`Lerner wedge is ${pct(s.L,1)}; markup over MC is ${(100*s.marginOverMC).toFixed(1)}%.`,status:s.L<.1?'weak':s.L<.25?'moderate':'strong',cls:s.L<.1?'ok':s.L<.25?'warn':'bad'});
-    rows.push({num:'3',title:'Elasticity discipline',sub:s.elas>4?'Elastic demand strongly limits feasible markups.':s.elas<2?'Inelastic demand magnifies a given concentration level.':'Elasticity gives partial discipline.',status:'Îµ = '+s.elas.toFixed(1),cls:s.elas<2?'bad':s.elas>4?'ok':'warn'});
-    rows.push({num:'4',title:'Conduct assumption',sub:s.conduct<.75?'Firms behave more competitively than Cournot in this scenario.':s.conduct>1.25?'Conduct is more coordinated than Cournot; HHI alone understates danger.':'Near the Cournot benchmark.',status:'Îº = '+s.conduct.toFixed(2),cls:s.conduct>.125 && s.conduct<.75?'ok':s.conduct>1.25?'bad':'warn'});
+    rows.push({num:'3',title:'Elasticity discipline',sub:s.elas>4?'Elastic demand strongly limits feasible markups.':s.elas<2?'Inelastic demand magnifies a given concentration level.':'Elasticity gives partial discipline.',status:'ε = '+s.elas.toFixed(1),cls:s.elas<2?'bad':s.elas>4?'ok':'warn'});
+    rows.push({num:'4',title:'Conduct assumption',sub:s.conduct<.75?'Firms behave more competitively than Cournot in this scenario.':s.conduct>1.25?'Conduct is more coordinated than Cournot; HHI alone understates danger.':'Near the Cournot benchmark.',status:'κ = '+s.conduct.toFixed(2),cls:s.conduct>.125 && s.conduct<.75?'ok':s.conduct>1.25?'bad':'warn'});
     rows.push({num:'5',title:'Accounting markup caveat',sub:`Full-cost price is ${money(s.pFull)}; it embeds overhead and a markup over average cost.`,status:pct(s.impliedLFull,0),cls:s.impliedLFull>.35?'warn':'ok'});
     return rows;
   }
@@ -586,9 +591,9 @@
     $('effMetric').textContent=s.eff.toFixed(2);
     $('lernerMetric').textContent=pct(s.L,1);
     $('priceMetric').textContent=money(s.p);
-    const msg = s.L<.1 ? 'Concentration is not creating much pricing power here.' : s.L<.25 ? 'Structure creates a meaningful priceâ€“cost wedge.' : 'Market power is large under these assumptions.';
+    const msg = s.L<.1 ? 'Concentration is not creating much pricing power here.' : s.L<.25 ? 'Structure creates a meaningful price–cost wedge.' : 'Market power is large under these assumptions.';
     $('headline').textContent=msg;
-    $('headlineNote').textContent=`HHI ${Math.round(s.hhi10k)}, elasticity ${s.elas.toFixed(1)}, conduct Îº=${s.conduct.toFixed(2)} â†’ Lerner ${pct(s.L,1)}.`;
+    $('headlineNote').textContent=`HHI ${Math.round(s.hhi10k)}, elasticity ${s.elas.toFixed(1)}, conduct κ=${s.conduct.toFixed(2)} → Lerner ${pct(s.L,1)}.`;
     const diag = diagnosticStatus(s).map(r=>`
       <div class="diag-row">
         <div class="badge">${r.num}</div>
@@ -598,27 +603,51 @@
     $('diagnostic').innerHTML=diag;
   }
 
+  let mathRendered = false;
+
   function renderMath(){
-    if(window.renderMathInElement){
-      renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});
-    }
+    if(mathRendered) return;
+    if(!window.katex || !window.renderMathInElement) return;
+
+    renderMathInElement(document.body,{
+      delimiters:[
+        {left:'\\(',right:'\\)',display:false},
+        {left:'\\[',right:'\\]',display:true}
+      ],
+      ignoredTags:['script','noscript','style','textarea','pre','code','canvas'],
+      throwOnError:false,
+      strict:false
+    });
+
+    document.querySelectorAll('.tex, .eq .math, .pill').forEach(el => el.classList.add('tex-rendered'));
+    mathRendered = true;
   }
 
-  function update(){
+  function scheduleMathRender(){
+    if(mathRendered) return;
+    const tryRender = () => {
+      renderMath();
+      if(!mathRendered) setTimeout(tryRender, 80);
+    };
+    tryRender();
+  }
+
+  function update(options={}){
     const s=getState();
     updateText(s);
     drawShares(s); drawBridge(s); drawWelfare(s); drawCost(s);
-    renderMath();
+    if(!options.skipMath) scheduleMathRender();
   }
 
-  inputs.forEach(inp=>inp.addEventListener('input',update));
-  window.addEventListener('resize',()=>requestAnimationFrame(update));
+  inputs.forEach(inp=>inp.addEventListener('input',()=>update({skipMath:true})));
+  window.addEventListener('resize',()=>requestAnimationFrame(()=>update({skipMath:true})));
   $('themeBtn').addEventListener('click',()=>{
     document.body.dataset.theme = document.body.dataset.theme==='dark'?'light':'dark';
-    update();
+    update({skipMath:true});
   });
-  window.addEventListener('load',update);
-  setTimeout(update,120);
+  window.addEventListener('load',()=>{ update(); scheduleMathRender(); });
+  update();
+  setTimeout(()=>{ update(); scheduleMathRender(); },120);
 })();
 </script>
 </body>

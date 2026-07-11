@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -419,6 +419,121 @@
     ul { margin: 0; padding-left: 17px; color: var(--muted); }
     li { margin: 6px 0; }
 
+
+    .morph-hud {
+      position: absolute;
+      left: 13px;
+      right: 13px;
+      top: 13px;
+      display: grid;
+      gap: 7px;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .morph-copy {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 9px;
+      color: var(--muted);
+      background: color-mix(in srgb, var(--panel-solid) 84%, transparent);
+      box-shadow: var(--shadow2);
+      backdrop-filter: blur(12px);
+      font-size: 0.73rem;
+    }
+
+    .morph-copy b {
+      color: var(--accent);
+      font-weight: 850;
+    }
+
+    .morph-bar {
+      height: 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      background: color-mix(in srgb, var(--soft2) 74%, transparent);
+      box-shadow: var(--shadow2);
+    }
+
+    .morph-bar span {
+      display: block;
+      width: 100%;
+      height: 100%;
+      transform: scaleX(1);
+      transform-origin: left center;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--blue), var(--gold), var(--red));
+    }
+
+    .morph-old-path {
+      stroke: var(--muted);
+      stroke-width: 2.15;
+      stroke-dasharray: 8 7;
+      fill: none;
+      opacity: .42;
+      pointer-events: none;
+    }
+
+    .morph-new-path {
+      stroke: var(--red);
+      stroke-width: 2.15;
+      stroke-dasharray: 2 7;
+      fill: none;
+      opacity: .56;
+      pointer-events: none;
+    }
+
+    .morph-old-fill {
+      fill: var(--faint);
+      opacity: .08;
+      pointer-events: none;
+    }
+
+    .morph-new-fill {
+      fill: var(--red-soft);
+      opacity: .25;
+      pointer-events: none;
+    }
+
+    .morph-trail {
+      stroke: var(--blue);
+      stroke-width: 2;
+      stroke-dasharray: 4 6;
+      fill: none;
+      opacity: .86;
+      pointer-events: none;
+    }
+
+    .morph-start {
+      fill: var(--muted);
+      stroke: var(--panel-solid);
+      stroke-width: 2.7;
+      opacity: .58;
+      pointer-events: none;
+    }
+
+    .morph-target {
+      fill: var(--red);
+      stroke: var(--panel-solid);
+      stroke-width: 2.7;
+      opacity: .78;
+      pointer-events: none;
+    }
+
+    .morph-pulse {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 1.8;
+      opacity: .30;
+      pointer-events: none;
+    }
+
+
     .svg-label { fill: var(--muted); font-size: 13px; }
     .svg-small { fill: var(--muted); font-size: 12px; }
     .svg-title { fill: var(--ink); font-size: 14px; font-weight: 800; }
@@ -541,7 +656,7 @@
 
     <section class="mapping">
       <div><strong>Map:</strong> contract curve in the Edgeworth box</div>
-      <div class="arrow">\(x \in \mathcal P\)  &nbsp;â†’&nbsp;  \((u^A(x),u^B(x)) \in \mathrm{UPF}\)</div>
+      <div class="arrow">\(x \in \mathcal P\)  &nbsp;→&nbsp;  \((u^A(x),u^B(x)) \in \mathrm{UPF}\)</div>
       <div class="note">Blue point in goods space and blue point in utility space represent the same efficient allocation.</div>
     </section>
 
@@ -555,6 +670,10 @@
           <p id="criterionLabel">Utilitarian optimum</p>
         </div>
         <div class="svg-frame">
+          <div class="morph-hud" aria-hidden="true">
+            <div class="morph-copy"><span><b>Morphing:</b> feasible utility set → new frontier</span><span class="morphLabel">stable state</span></div>
+            <div class="morph-bar"><span class="morphBarFill"></span></div>
+          </div>
           <svg id="upfSvg" viewBox="0 0 840 600" preserveAspectRatio="xMidYMid meet"></svg>
           <div class="legend">
             <span class="pill"><span class="dot"></span>UPF</span>
@@ -574,6 +693,10 @@
           <p>same blue allocation</p>
         </div>
         <div class="svg-frame">
+          <div class="morph-hud" aria-hidden="true">
+            <div class="morph-copy"><span><b>Object constancy:</b> same allocation in goods space</span><span class="morphLabel">stable state</span></div>
+            <div class="morph-bar"><span class="morphBarFill"></span></div>
+          </div>
           <svg id="boxSvg" viewBox="0 0 540 600" preserveAspectRatio="xMidYMid meet"></svg>
           <div class="legend">
             <span class="pill"><span class="dot red"></span>contract curve</span>
@@ -593,12 +716,12 @@
       </div>
       <div class="card">
         <h2>Readout</h2>
-        <div class="metric"><span>Disagreement utility</span><span id="disUtil">â€”</span></div>
-        <div class="metric"><span>Chosen utility</span><span id="optUtil">â€”</span></div>
-        <div class="metric"><span>Chosen allocation \(x^A\)</span><span id="optAlloc">â€”</span></div>
-        <div class="metric"><span>Criterion value</span><span id="critVal">â€”</span></div>
-        <div class="metric"><span>At \(x^*\): \(MRS_A\)</span><span id="mrsA">â€”</span></div>
-        <div class="metric"><span>At \(x^*\): \(MRS_B\)</span><span id="mrsB">â€”</span></div>
+        <div class="metric"><span>Disagreement utility</span><span id="disUtil">—</span></div>
+        <div class="metric"><span>Chosen utility</span><span id="optUtil">—</span></div>
+        <div class="metric"><span>Chosen allocation \(x^A\)</span><span id="optAlloc">—</span></div>
+        <div class="metric"><span>Criterion value</span><span id="critVal">—</span></div>
+        <div class="metric"><span>At \(x^*\): \(MRS_A\)</span><span id="mrsA">—</span></div>
+        <div class="metric"><span>At \(x^*\): \(MRS_B\)</span><span id="mrsB">—</span></div>
       </div>
       <div class="card">
         <h2>What to notice</h2>
@@ -628,15 +751,104 @@
   };
 
   const controls = ["X","Y","wX","wY","aA","rA","aB","rB","lambda"];
+  const numericStateKeys = ["X","Y","wX","wY","aA","rA","aB","rB","lambda"];
+  let visualSnapshot = null;
+  let animationStartSnapshot = null;
+  let animationEndSnapshot = null;
+  let animationProgress = 1;
+  let animationActive = false;
+  let animationFrame = 0;
+  let katexRenderedOnce = false;
+
+  function snapshotState() {
+    return {
+      X: state.X, Y: state.Y, wX: state.wX, wY: state.wY,
+      aA: state.aA, rA: state.rA, aB: state.aB, rB: state.rB,
+      criterion: state.criterion, lambda: state.lambda,
+      showFeasible: state.showFeasible, showIso: state.showIso, showEdge: state.showEdge,
+      dark: state.dark
+    };
+  }
+
+  function restoreSnapshot(s) {
+    state.X = s.X; state.Y = s.Y; state.wX = s.wX; state.wY = s.wY;
+    state.aA = s.aA; state.rA = s.rA; state.aB = s.aB; state.rB = s.rB;
+    state.criterion = s.criterion; state.lambda = s.lambda;
+    state.showFeasible = s.showFeasible; state.showIso = s.showIso; state.showEdge = s.showEdge;
+    state.dark = s.dark;
+  }
+
+  function interpolateSnapshot(a, b, t) {
+    const out = {...b};
+    for (const key of numericStateKeys) out[key] = a[key] + (b[key] - a[key]) * t;
+    out.criterion = b.criterion;
+    out.showFeasible = b.showFeasible;
+    out.showIso = b.showIso;
+    out.showEdge = b.showEdge;
+    out.dark = b.dark;
+    return out;
+  }
+
+  function easeInOutCubic(t) {
+    return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+  }
+
+  function withSnapshot(s, fn) {
+    const backup = snapshotState();
+    restoreSnapshot(s);
+    let result;
+    try { result = fn(); }
+    finally { restoreSnapshot(backup); }
+    return result;
+  }
+
+  function animateToCurrent(duration = 760) {
+    const target = snapshotState();
+    const start = visualSnapshot ? {...visualSnapshot} : target;
+    if (animationFrame) cancelAnimationFrame(animationFrame);
+    animationStartSnapshot = start;
+    animationEndSnapshot = target;
+    animationActive = true;
+    const t0 = performance.now();
+
+    function step(now) {
+      const raw = Math.min(1, (now - t0) / duration);
+      const t = easeInOutCubic(raw);
+      animationProgress = t;
+      restoreSnapshot(interpolateSnapshot(start, target, t));
+      render({skipKatex:true});
+      visualSnapshot = snapshotState();
+
+      if (raw < 1) {
+        animationFrame = requestAnimationFrame(step);
+      } else {
+        restoreSnapshot(target);
+        animationProgress = 1;
+        animationActive = false;
+        render({skipKatex:false});
+        visualSnapshot = snapshotState();
+        animationFrame = 0;
+      }
+    }
+
+    animationFrame = requestAnimationFrame(step);
+  }
+
+  function updateMorphUI() {
+    const t = Number.isFinite(animationProgress) ? Math.max(0, Math.min(1, animationProgress)) : 1;
+    document.querySelectorAll(".morphBarFill").forEach(el => el.style.transform = `scaleX(${t})`);
+    document.querySelectorAll(".morphLabel").forEach(el => el.textContent = t >= .995 ? "stable state" : `t = ${fmt(t,2)}`);
+  }
+
   controls.forEach(id => $(id).addEventListener("input", e => {
     state[id] = parseFloat(e.target.value);
     sanitize();
-    render();
+    animateToCurrent();
   }));
 
   $("criterion").addEventListener("change", e => {
     state.criterion = e.target.value;
-    render();
+    animateToCurrent();
   });
 
   ["showFeasible","showIso","showEdge"].forEach(id => {
@@ -644,7 +856,7 @@
       state[id] = !state[id];
       $(id).classList.toggle("active", state[id]);
       $(id).querySelector("span:last-child").textContent = state[id] ? "on" : "off";
-      render();
+      animateToCurrent();
     });
   });
 
@@ -652,24 +864,25 @@
     state.dark = !state.dark;
     $("app").setAttribute("data-theme", state.dark ? "dark" : "light");
     $("theme").textContent = state.dark ? "Light mode" : "Dark mode";
-    renderKatex();
+    render({skipKatex:true});
+    visualSnapshot = snapshotState();
   });
 
   $("balanced").addEventListener("click", () => {
     Object.assign(state, { X:10, Y:10, wX:5, wY:5, aA:0.5, aB:0.5, rA:0, rB:0, lambda:0.5, criterion:"utilitarian" });
     sync();
-    render();
+    animateToCurrent();
   });
 
   $("skewed").addEventListener("click", () => {
     Object.assign(state, { X:10, Y:10, wX:2.2, wY:7.4, aA:0.62, aB:0.42, rA:-0.55, rB:0.12, lambda:0.5, criterion:"nash" });
     sync();
-    render();
+    animateToCurrent();
   });
 
   function css(v) { return getComputedStyle($("app")).getPropertyValue(v).trim(); }
   function clamp(x,a,b){ return Math.max(a, Math.min(b, x)); }
-  function fmt(x,d=2){ return Number.isFinite(x) ? x.toFixed(d) : "â€”"; }
+  function fmt(x,d=2){ return Number.isFinite(x) ? x.toFixed(d) : "—"; }
 
   function sanitize() {
     const eps = 0.06;
@@ -786,6 +999,28 @@
     return pts.map((p,i) => `${i ? "L" : "M"}${p[0]},${p[1]}`).join("");
   }
 
+  function dataPath(svg, pts, sx, sy, cls) {
+    if (!pts || pts.length < 2) return null;
+    return add(svg, "path", { d: pathFrom(pts.map(q => [sx(q.x), sy(q.y)])), class: cls });
+  }
+
+  function utilityPath(svg, pts, sx, sy, cls) {
+    if (!pts || pts.length < 2) return null;
+    return add(svg, "path", { d: pathFrom(pts.map(q => [sx(q.uA), sy(q.uB)])), class: cls });
+  }
+
+  function lineClass(svg, x1, y1, x2, y2, cls) {
+    return add(svg, "line", { x1, y1, x2, y2, class: cls });
+  }
+
+  function currentData() {
+    const frontier = sampleContract();
+    const cloud = feasibleCloud();
+    const d = disagreement();
+    const opt = optimum(frontier);
+    return { frontier, cloud, d, opt };
+  }
+
   function drawPoint(svg, x, y, r, fill, label, dx=10, dy=-10) {
     add(svg, "circle", { cx: x, cy: y, r, fill, stroke: css("--panel-solid"), "stroke-width": 3, class: "point" });
     if (label) text(svg, x + dx, y + dy, label, "svg-title");
@@ -800,6 +1035,8 @@
     const maxUB = Math.max(...frontier.map(q=>q.uB), ...cloud.map(q=>q.uB), opt.uB, d.uB) * 1.08;
     const sx = u => m.l + (u/maxUA)*gw;
     const sy = v => m.t + gh - (v/maxUB)*gh;
+
+    drawMorphUPFGuides(svg, sx, sy, maxUA, maxUB);
 
     for (let i=1; i<=5; i++) {
       add(svg, "line", { x1: m.l+(i/5)*gw, y1: m.t, x2: m.l+(i/5)*gw, y2: m.t+gh, class: "grid-line" });
@@ -835,6 +1072,46 @@
 
     text(svg, sx(maxUA*0.98), sy(0)+24, fmt(maxUA,1), "svg-small", "end");
     text(svg, m.l-10, sy(maxUB*0.96), fmt(maxUB,1), "svg-small", "end");
+  }
+
+  function drawMorphUPFGuides(svg, sx, sy, maxUA, maxUB) {
+    if (!animationActive || !animationStartSnapshot || !animationEndSnapshot) return;
+
+    const normalizeFrontier = (snap) => withSnapshot(snap, () => {
+      const data = currentData();
+      return {
+        frontier: data.frontier,
+        d: data.d,
+        opt: data.opt,
+        maxUA: Math.max(...data.frontier.map(q=>q.uA), data.opt.uA, data.d.uA) * 1.08,
+        maxUB: Math.max(...data.frontier.map(q=>q.uB), data.opt.uB, data.d.uB) * 1.08
+      };
+    });
+
+    const oldData = normalizeFrontier(animationStartSnapshot);
+    const newData = normalizeFrontier(animationEndSnapshot);
+
+    const remap = (q, src) => ({
+      uA: q.uA / src.maxUA * maxUA,
+      uB: q.uB / src.maxUB * maxUB
+    });
+
+    const oldFrontier = oldData.frontier.map(q => remap(q, oldData));
+    const newFrontier = newData.frontier.map(q => remap(q, newData));
+    const oldOpt = remap(oldData.opt, oldData);
+    const newOpt = remap(newData.opt, newData);
+    const oldD = remap(oldData.d, oldData);
+    const newD = remap(newData.d, newData);
+
+    if (oldFrontier.length > 2) utilityPath(svg, oldFrontier, sx, sy, "morph-old-path");
+    if (newFrontier.length > 2) utilityPath(svg, newFrontier, sx, sy, "morph-new-path");
+
+    lineClass(svg, sx(oldOpt.uA), sy(oldOpt.uB), sx(newOpt.uA), sy(newOpt.uB), "morph-trail");
+    lineClass(svg, sx(oldD.uA), sy(oldD.uB), sx(newD.uA), sy(newD.uB), "morph-trail");
+    add(svg, "circle", { cx: sx(oldOpt.uA), cy: sy(oldOpt.uB), r: 5.7, class: "morph-start" });
+    add(svg, "circle", { cx: sx(newOpt.uA), cy: sy(newOpt.uB), r: 6.6, class: "morph-target" });
+    add(svg, "circle", { cx: sx(oldOpt.uA + (newOpt.uA-oldOpt.uA)*animationProgress), cy: sy(oldOpt.uB + (newOpt.uB-oldOpt.uB)*animationProgress), r: 15 + 4*Math.sin(Math.PI*animationProgress), class: "morph-pulse" });
+    text(svg, (sx(oldOpt.uA)+sx(newOpt.uA))/2, (sy(oldOpt.uB)+sy(newOpt.uB))/2 - 12, "U(t)=(1−t)U₀+tU₁", "svg-small", "middle");
   }
 
   function drawIso(svg, sx, sy, maxUA, maxUB, opt, d) {
@@ -880,12 +1157,14 @@
     const sy = y => m.t + bh - (y/state.Y)*bh;
     const opt = data.opt, frontier = data.frontier, d = data.d;
 
+    drawMorphBoxGuides(svg, sx, sy);
+
     add(svg, "rect", { x: m.l, y: m.t, width: bw, height: bh, fill: "none", stroke: css("--ink"), "stroke-width": 1.4 });
     for (let i=1; i<Math.floor(state.X); i++) add(svg, "line", { x1: sx(i), y1: m.t, x2: sx(i), y2: m.t+bh, class: "grid-line" });
     for (let j=1; j<Math.floor(state.Y); j++) add(svg, "line", { x1: m.l, y1: sy(j), x2: m.l+bw, y2: sy(j), class: "grid-line" });
 
-    text(svg, m.l-8, m.t+bh+25, "Oá´¬", "svg-title", "end");
-    text(svg, m.l+bw+8, m.t-12, "Oá´®", "svg-title");
+    text(svg, m.l-8, m.t+bh+25, "Oᴬ", "svg-title", "end");
+    text(svg, m.l+bw+8, m.t-12, "Oᴮ", "svg-title");
     text(svg, m.l+bw/2, m.t+bh+45, "good 1 for A", "svg-label", "middle");
     text(svg, m.l-38, m.t+bh/2, "good 2 for A", "svg-label", "middle", -90);
 
@@ -911,8 +1190,34 @@
     add(svg, "line", { x1: sx(x1), y1: sy(y1), x2: sx(x2), y2: sy(y2), class: "tangent" });
     text(svg, sx(opt.x)+12, sy(opt.y)+22, "common tangent", "svg-small");
 
-    drawPoint(svg, sx(d.x), sy(d.y), 6.8, css("--gold"), "Ï‰");
+    drawPoint(svg, sx(d.x), sy(d.y), 6.8, css("--gold"), "ω");
     drawPoint(svg, sx(opt.x), sy(opt.y), 7.8, css("--blue"), "x*");
+  }
+
+  function drawMorphBoxGuides(svg, sx, sy) {
+    if (!animationActive || !animationStartSnapshot || !animationEndSnapshot) return;
+
+    const normalizeBox = (snap) => withSnapshot(snap, () => {
+      const data = currentData();
+      return {
+        frontier: data.frontier.map(q => ({ x: q.x / state.X * animationEndSnapshot.X, y: q.y / state.Y * animationEndSnapshot.Y })),
+        opt: { x: data.opt.x / state.X * animationEndSnapshot.X, y: data.opt.y / state.Y * animationEndSnapshot.Y },
+        d: { x: data.d.x / state.X * animationEndSnapshot.X, y: data.d.y / state.Y * animationEndSnapshot.Y }
+      };
+    });
+
+    const oldData = normalizeBox(animationStartSnapshot);
+    const newData = normalizeBox(animationEndSnapshot);
+
+    if (oldData.frontier.length > 2) dataPath(svg, oldData.frontier, sx, sy, "morph-old-path");
+    if (newData.frontier.length > 2) dataPath(svg, newData.frontier, sx, sy, "morph-new-path");
+
+    lineClass(svg, sx(oldData.opt.x), sy(oldData.opt.y), sx(newData.opt.x), sy(newData.opt.y), "morph-trail");
+    lineClass(svg, sx(oldData.d.x), sy(oldData.d.y), sx(newData.d.x), sy(newData.d.y), "morph-trail");
+    add(svg, "circle", { cx: sx(oldData.opt.x), cy: sy(oldData.opt.y), r: 5.6, class: "morph-start" });
+    add(svg, "circle", { cx: sx(newData.opt.x), cy: sy(newData.opt.y), r: 6.5, class: "morph-target" });
+    add(svg, "circle", { cx: sx(oldData.opt.x + (newData.opt.x-oldData.opt.x)*animationProgress), cy: sy(oldData.opt.y + (newData.opt.y-oldData.opt.y)*animationProgress), r: 14 + 4*Math.sin(Math.PI*animationProgress), class: "morph-pulse" });
+    text(svg, (sx(oldData.opt.x)+sx(newData.opt.x))/2, (sy(oldData.opt.y)+sy(newData.opt.y))/2 - 12, "x(t)=(1−t)x₀+tx₁", "svg-small", "middle");
   }
 
   function drawIndiff(svg, sx, sy, ax, ay, who, dashed) {
@@ -966,7 +1271,7 @@
 
     $("criterionLabel").textContent = {
       utilitarian: "Utilitarian optimum",
-      weighted: `Weighted utilitarian, Î»=${fmt(state.lambda,2)}`,
+      weighted: `Weighted utilitarian, λ=${fmt(state.lambda,2)}`,
       rawls: "Rawlsian max-min point",
       nash: "Nash bargaining point"
     }[state.criterion];
@@ -980,7 +1285,7 @@
         catch { el.textContent = tex; }
       }
     });
-    if (window.renderMathInElement) {
+    if (!katexRenderedOnce && window.renderMathInElement) {
       renderMathInElement($("app"), {
         delimiters: [
           {left: "\\(", right: "\\)", display: false},
@@ -989,10 +1294,11 @@
         ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code"],
         throwOnError: false
       });
+      katexRenderedOnce = true;
     }
   }
 
-  function render() {
+  function render(options = {}) {
     sanitize();
     const frontier = sampleContract();
     const cloud = feasibleCloud();
@@ -1002,12 +1308,23 @@
     updateReadouts(data);
     drawUPF(data);
     drawBox(data);
-    renderKatex();
+    updateMorphUI();
+    if (!options.skipKatex) renderKatex();
   }
 
-  window.addEventListener("load", render);
+  window.addEventListener("load", () => {
+    render();
+    visualSnapshot = snapshotState();
+    animationStartSnapshot = snapshotState();
+    animationEndSnapshot = snapshotState();
+    updateMorphUI();
+  });
   sync();
   render();
+  visualSnapshot = snapshotState();
+  animationStartSnapshot = snapshotState();
+  animationEndSnapshot = snapshotState();
+  updateMorphUI();
 </script>
 </body>
 </html>

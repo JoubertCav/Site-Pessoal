@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -449,6 +449,126 @@
     .arrowLine { stroke: var(--accent-3); stroke-width: 2.2; stroke-dasharray: 4 5; fill: none; }
     .budgetShade { fill: color-mix(in srgb, var(--accent) 10%, transparent); opacity: 0.35; }
 
+    .morph-hud {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      top: 14px;
+      display: grid;
+      gap: 7px;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .morph-copy {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 7px 10px;
+      color: var(--muted);
+      background: color-mix(in srgb, var(--card-solid) 84%, transparent);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      font-size: 0.75rem;
+    }
+
+    .morph-copy b {
+      color: var(--accent);
+      font-weight: 850;
+    }
+
+    .morph-bar {
+      height: 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--panel) 75%, transparent);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .morph-bar span {
+      display: block;
+      height: 100%;
+      width: 100%;
+      transform: scaleX(1);
+      transform-origin: left center;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent-3));
+    }
+
+    .morph-old-path {
+      stroke: var(--muted);
+      stroke-width: 2.2;
+      stroke-dasharray: 8 7;
+      fill: none;
+      opacity: .42;
+      pointer-events: none;
+    }
+
+    .morph-new-path {
+      stroke: var(--accent-3);
+      stroke-width: 2.2;
+      stroke-dasharray: 2 7;
+      fill: none;
+      opacity: .56;
+      pointer-events: none;
+    }
+
+    .morph-old-budget {
+      stroke: var(--muted);
+      stroke-width: 1.95;
+      stroke-dasharray: 8 7;
+      fill: none;
+      opacity: .44;
+      pointer-events: none;
+    }
+
+    .morph-new-budget {
+      stroke: var(--accent-2);
+      stroke-width: 1.95;
+      stroke-dasharray: 2 7;
+      fill: none;
+      opacity: .58;
+      pointer-events: none;
+    }
+
+    .morph-trail {
+      stroke: var(--accent-3);
+      stroke-width: 2;
+      stroke-dasharray: 4 6;
+      fill: none;
+      opacity: .84;
+      pointer-events: none;
+    }
+
+    .morph-start {
+      fill: var(--muted);
+      stroke: var(--card-solid);
+      stroke-width: 2.8;
+      opacity: .56;
+      pointer-events: none;
+    }
+
+    .morph-target {
+      fill: var(--accent-3);
+      stroke: var(--card-solid);
+      stroke-width: 2.8;
+      opacity: .78;
+      pointer-events: none;
+    }
+
+    .morph-pulse {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 1.8;
+      opacity: .30;
+      pointer-events: none;
+    }
+
+
     @media (max-width: 1180px) {
       .shell { grid-template-columns: 1fr; }
       aside { position: static; max-height: none; }
@@ -500,7 +620,7 @@
     <main class="main">
       <header class="hero">
         <div>
-          <div class="eyebrow">Common budget line Â· supporting prices Â· market clearing</div>
+          <div class="eyebrow">Common budget line · supporting prices · market clearing</div>
           <h1>Walrasian equilibrium</h1>
           <p class="subtitle">A price ratio supports a competitive allocation when both consumers maximize utility on their own budget sets and their chosen bundles are mutually feasible.</p>
         </div>
@@ -510,6 +630,14 @@
       <section class="stage">
         <div class="box-card">
           <div class="svg-wrap">
+
+              <div class="morph-hud" aria-hidden="true">
+                <div class="morph-copy">
+                  <span><b>Morphing:</b> orçamento, demandas e contrato mantêm identidade visual</span>
+                  <span id="morphLabel">stable state</span>
+                </div>
+                <div class="morph-bar"><span id="morphBar"></span></div>
+              </div>
             <svg id="svg" viewBox="0 0 900 640" preserveAspectRatio="xMidYMid meet"></svg>
             <div class="legend">
               <span class="pill"><span class="dot red"></span>Endowment \(\omega\)</span>
@@ -585,11 +713,107 @@
     };
 
     const ids = ["Xbar", "Ybar", "wX", "wY", "aA", "rA", "aB", "rB", "p"];
+    const numericStateKeys = ["Xbar", "Ybar", "wX", "wY", "aA", "rA", "aB", "rB", "p"];
+    let visualSnapshot = null;
+    let animationStartSnapshot = null;
+    let animationEndSnapshot = null;
+    let animationProgress = 1;
+    let animationActive = false;
+    let animationFrame = 0;
+
+    function snapshotState() {
+      return {
+        dark: state.dark,
+        Xbar: state.Xbar,
+        Ybar: state.Ybar,
+        wX: state.wX,
+        wY: state.wY,
+        aA: state.aA,
+        rA: state.rA,
+        aB: state.aB,
+        rB: state.rB,
+        p: state.p
+      };
+    }
+
+    function restoreSnapshot(s) {
+      state.dark = s.dark;
+      state.Xbar = s.Xbar;
+      state.Ybar = s.Ybar;
+      state.wX = s.wX;
+      state.wY = s.wY;
+      state.aA = s.aA;
+      state.rA = s.rA;
+      state.aB = s.aB;
+      state.rB = s.rB;
+      state.p = s.p;
+    }
+
+    function interpolateSnapshot(a, b, t) {
+      const out = {...b};
+      for (const key of numericStateKeys) out[key] = a[key] + (b[key] - a[key]) * t;
+      out.dark = b.dark;
+      return out;
+    }
+
+    function easeInOutCubic(t) {
+      return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+    }
+
+    function withSnapshot(s, fn) {
+      const backup = snapshotState();
+      restoreSnapshot(s);
+      let result;
+      try { result = fn(); }
+      finally { restoreSnapshot(backup); }
+      return result;
+    }
+
+    function animateToCurrent(duration = 760) {
+      const target = snapshotState();
+      const start = visualSnapshot ? {...visualSnapshot} : target;
+      if (animationFrame) cancelAnimationFrame(animationFrame);
+      animationStartSnapshot = start;
+      animationEndSnapshot = target;
+      animationActive = true;
+      const t0 = performance.now();
+
+      function step(now) {
+        const raw = Math.min(1, (now - t0) / duration);
+        const t = easeInOutCubic(raw);
+        animationProgress = t;
+        restoreSnapshot(interpolateSnapshot(start, target, t));
+        render({skipMath:true});
+        visualSnapshot = snapshotState();
+
+        if (raw < 1) {
+          animationFrame = requestAnimationFrame(step);
+        } else {
+          restoreSnapshot(target);
+          animationProgress = 1;
+          animationActive = false;
+          render({skipMath:false});
+          visualSnapshot = snapshotState();
+          animationFrame = 0;
+        }
+      }
+
+      animationFrame = requestAnimationFrame(step);
+    }
+
+    function updateMorphUI() {
+      const bar = $("morphBar");
+      const label = $("morphLabel");
+      if (!bar || !label) return;
+      const t = Number.isFinite(animationProgress) ? Math.max(0, Math.min(1, animationProgress)) : 1;
+      bar.style.transform = `scaleX(${t})`;
+      label.textContent = t >= .995 ? "stable state" : `t = ${fmt(t, 2)}`;
+    }
 
     ids.forEach(id => $(id).addEventListener("input", e => {
       state[id] = parseFloat(e.target.value);
       sanitize();
-      render();
+      animateToCurrent();
     }));
 
     $("themeBtn").addEventListener("click", () => {
@@ -599,24 +823,25 @@
       document.body.dataset.theme = theme;
       $("app").dataset.theme = theme;
       $("themeBtn").textContent = state.dark ? "Light mode" : "Dark mode";
-      render();
+      render({skipMath:true});
+      visualSnapshot = snapshotState();
     });
 
     $("eqBtn").addEventListener("click", () => {
       state.p = equilibriumPrice();
       syncInputs();
-      render();
+      animateToCurrent();
     });
 
     $("resetBtn").addEventListener("click", () => {
       Object.assign(state, {Xbar:10,Ybar:10,wX:3.4,wY:6.8,aA:0.58,rA:-0.25,aB:0.36,rB:-0.25,p:1});
       syncInputs();
-      render();
+      animateToCurrent();
     });
 
     function css(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
     function clamp(x, lo, hi) { return Math.max(lo, Math.min(hi, x)); }
-    function fmt(x, d=2) { return Number.isFinite(x) ? x.toFixed(d) : "â€”"; }
+    function fmt(x, d=2) { return Number.isFinite(x) ? x.toFixed(d) : "—"; }
 
     function math(id, latex, display = true) {
       const el = typeof id === "string" ? $(id) : id;
@@ -769,7 +994,61 @@
       return unique.slice(0,2);
     }
 
-    function render() {
+    function budgetSegmentDataScaled(p, scaleX = state.Xbar, scaleY = state.Ybar) {
+      const wealth = p * state.wX + state.wY;
+      const candidates = [];
+      const y0 = wealth;
+      const yX = wealth - p * state.Xbar;
+      const x0 = wealth / p;
+      const xY = (wealth - state.Ybar) / p;
+      function push(x, y) {
+        if (x >= 0 && x <= state.Xbar && y >= 0 && y <= state.Ybar) {
+          candidates.push({x: x / state.Xbar * scaleX, y: y / state.Ybar * scaleY});
+        }
+      }
+      push(0, y0);
+      push(state.Xbar, yX);
+      push(x0, 0);
+      push(xY, state.Ybar);
+      const unique = [];
+      candidates.forEach(c => {
+        if (!unique.some(u => Math.hypot(u.x-c.x, u.y-c.y) < 1e-5)) unique.push(c);
+      });
+      return unique.slice(0, 2);
+    }
+
+    function contractDataScaled(scaleX = state.Xbar, scaleY = state.Ybar, n = 220) {
+      const pts = [];
+      for (let i = 1; i < n; i++) {
+        const x = i / n * state.Xbar;
+        const y = contractPoint(x);
+        if (y !== null && y > 0 && y < state.Ybar) {
+          pts.push({x: x / state.Xbar * scaleX, y: y / state.Ybar * scaleY});
+        }
+      }
+      return pts;
+    }
+
+    function demandGeometryScaled(scaleX = state.Xbar, scaleY = state.Ybar) {
+      const D = demandsAt(state.p);
+      const eqP = equilibriumPrice();
+      const eqD = demandsAt(eqP);
+      const scale = q => ({x: q.x / state.Xbar * scaleX, y: q.y / state.Ybar * scaleY});
+      const scaleXY = (x, y) => ({x: x / state.Xbar * scaleX, y: y / state.Ybar * scaleY});
+      return {
+        A: scale({x: D.A.x1, y: D.A.x2}),
+        BAsA: scaleXY(state.Xbar - D.B.x1, state.Ybar - D.B.x2),
+        omega: scaleXY(state.wX, state.wY),
+        eq: scale({x: eqD.A.x1, y: eqD.A.x2})
+      };
+    }
+
+    function pixelPathFromData(points, sx, sy) {
+      if (!points || points.length < 2) return null;
+      return points.map(q => [sx(q.x), sy(q.y)]);
+    }
+
+    function render(options = {}) {
       sanitize();
       const eqP = equilibriumPrice();
       const D = demandsAt(state.p);
@@ -804,11 +1083,14 @@
       else if (gap < 0.35) { status.classList.add("near"); status.textContent = "near clearing"; }
       else { status.textContent = "not clearing"; }
 
-      math("utilityFormula", String.raw`u_i(x_1,x_2)=\left[\alpha_i x_1^{\rho_i}+(1-\alpha_i)x_2^{\rho_i}\right]^{1/\rho_i},\qquad \rho_i<1`, true);
-      math("eqFormula", String.raw`x^i(p)\in\arg\max_{x\ge 0}u_i(x)\quad \text{s.t.}\quad p\cdot x\le p\cdot\omega^i`, true);
-      math("summaryFormula", String.raw`\bigl(p^*,x^{A*},x^{B*}\bigr):\quad x^{i*}=x^i(p^*,p^*\!\cdot\omega^i),\qquad x^{A*}+x^{B*}=\bar\omega`, true);
+      if (!options.skipMath) {
+        math("utilityFormula", String.raw`u_i(x_1,x_2)=\left[\alpha_i x_1^{\rho_i}+(1-\alpha_i)x_2^{\rho_i}\right]^{1/\rho_i},\qquad \rho_i<1`, true);
+        math("eqFormula", String.raw`x^i(p)\in\arg\max_{x\ge 0}u_i(x)\quad \text{s.t.}\quad p\cdot x\le p\cdot\omega^i`, true);
+        math("summaryFormula", String.raw`\bigl(p^*,x^{A*},x^{B*}\bigr):\quad x^{i*}=x^i(p^*,p^*\!\cdot\omega^i),\qquad x^{A*}+x^{B*}=\bar\omega`, true);
+      }
 
       renderSvg(eqP, D, eqD, gap);
+      updateMorphUI();
     }
 
     function renderSvg(eqP, D, eqD, gap) {
@@ -822,6 +1104,8 @@
       const sy = y => margin.top + bh - (y / state.Ybar) * bh;
       const invX = px => clamp((px - margin.left) / bw * state.Xbar, 0.05, state.Xbar - 0.05);
       const invY = py => clamp((margin.top + bh - py) / bh * state.Ybar, 0.05, state.Ybar - 0.05);
+
+      drawMorphGuides();
 
       const contractPts = [];
       for (let i = 1; i < 360; i++) {
@@ -864,7 +1148,8 @@
           pt.x = ev.clientX; pt.y = ev.clientY;
           const p = pt.matrixTransform(svg.getScreenCTM().inverse());
           state.wX = invX(p.x); state.wY = invY(p.y);
-          syncInputs(); render();
+          syncInputs(); render({skipMath:true});
+          visualSnapshot = snapshotState();
         };
         const up = ev => {
           svg.releasePointerCapture(e.pointerId);
@@ -874,21 +1159,55 @@
         svg.addEventListener("pointermove", move);
         svg.addEventListener("pointerup", up);
       });
-      text(svg, sx(state.wX)+12, sy(state.wY)+23, "Ï‰", "titleText");
+      text(svg, sx(state.wX)+12, sy(state.wY)+23, "ω", "titleText");
 
       circle(svg, sx(D.A.x1), sy(D.A.x2), 8, "demandA");
-      text(svg, sx(D.A.x1)+12, sy(D.A.x2)-12, "xá´¬(p)", "titleText");
+      text(svg, sx(D.A.x1)+12, sy(D.A.x2)-12, "xᴬ(p)", "titleText");
       circle(svg, sx(bAsA.x), sy(bAsA.y), 8, "demandB");
-      text(svg, sx(bAsA.x)+12, sy(bAsA.y)+24, "eâˆ’xá´®(p)", "titleText");
+      text(svg, sx(bAsA.x)+12, sy(bAsA.y)+24, "e−xᴮ(p)", "titleText");
       circle(svg, sx(eqAsA.x), sy(eqAsA.y), 8.8, "eqPoint");
       text(svg, sx(eqAsA.x)+13, sy(eqAsA.y)-16, "x*", "titleText");
 
-      text(svg, margin.left-16, margin.top+bh+30, "Oá´¬", "titleText", "end");
-      text(svg, margin.left+bw+14, margin.top-16, "Oá´®", "titleText", "start");
-      text(svg, margin.left+bw/2, margin.top+bh+48, "good 1 for A  â†’", "axisText", "middle");
+      text(svg, margin.left-16, margin.top+bh+30, "Oᴬ", "titleText", "end");
+      text(svg, margin.left+bw+14, margin.top-16, "Oᴮ", "titleText", "start");
+      text(svg, margin.left+bw/2, margin.top+bh+48, "good 1 for A  →", "axisText", "middle");
       text(svg, margin.left-48, margin.top+bh/2, "good 2 for A", "axisText", "middle", -90);
-      text(svg, margin.left+bw/2, margin.top-34, "â†  good 1 for B", "axisText", "middle");
+      text(svg, margin.left+bw/2, margin.top-34, "←  good 1 for B", "axisText", "middle");
       text(svg, margin.left+bw+50, margin.top+bh/2, "good 2 for B", "axisText", "middle", 90);
+
+      function drawMorphGuides() {
+        if (!animationActive || !animationStartSnapshot || !animationEndSnapshot) return;
+
+        const currentX = state.Xbar, currentY = state.Ybar;
+        const oldContract = withSnapshot(animationStartSnapshot, () => contractDataScaled(currentX, currentY));
+        const newContract = withSnapshot(animationEndSnapshot, () => contractDataScaled(currentX, currentY));
+        const oldBudget = withSnapshot(animationStartSnapshot, () => budgetSegmentDataScaled(state.p, currentX, currentY));
+        const newBudget = withSnapshot(animationEndSnapshot, () => budgetSegmentDataScaled(state.p, currentX, currentY));
+        const oldGeo = withSnapshot(animationStartSnapshot, () => demandGeometryScaled(currentX, currentY));
+        const newGeo = withSnapshot(animationEndSnapshot, () => demandGeometryScaled(currentX, currentY));
+
+        const oldContractPixels = pixelPathFromData(oldContract, sx, sy);
+        const newContractPixels = pixelPathFromData(newContract, sx, sy);
+        if (oldContractPixels) path(svg, oldContractPixels, "morph-old-path");
+        if (newContractPixels) path(svg, newContractPixels, "morph-new-path");
+
+        const oldBudgetPixels = pixelPathFromData(oldBudget, sx, sy);
+        const newBudgetPixels = pixelPathFromData(newBudget, sx, sy);
+        if (oldBudgetPixels) path(svg, oldBudgetPixels, "morph-old-budget");
+        if (newBudgetPixels) path(svg, newBudgetPixels, "morph-new-budget");
+
+        line(svg, sx(oldGeo.A.x), sy(oldGeo.A.y), sx(newGeo.A.x), sy(newGeo.A.y), "morph-trail");
+        line(svg, sx(oldGeo.BAsA.x), sy(oldGeo.BAsA.y), sx(newGeo.BAsA.x), sy(newGeo.BAsA.y), "morph-trail");
+        line(svg, sx(oldGeo.omega.x), sy(oldGeo.omega.y), sx(newGeo.omega.x), sy(newGeo.omega.y), "morph-trail");
+        line(svg, sx(oldGeo.eq.x), sy(oldGeo.eq.y), sx(newGeo.eq.x), sy(newGeo.eq.y), "morph-trail");
+
+        circle(svg, sx(oldGeo.A.x), sy(oldGeo.A.y), 5.8, "morph-start");
+        circle(svg, sx(newGeo.A.x), sy(newGeo.A.y), 6.8, "morph-target");
+        circle(svg, sx(state.wX), sy(state.wY), 16 + 4*Math.sin(Math.PI*animationProgress), "morph-pulse");
+
+        text(svg, (sx(oldGeo.A.x)+sx(newGeo.A.x))/2, (sy(oldGeo.A.y)+sy(newGeo.A.y))/2 - 14, "x(t)=(1−t)x₀+tx₁", "tinyText", "middle");
+        text(svg, sx(newGeo.A.x)+10, sy(newGeo.A.y)+22, "target", "tinyText");
+      }
 
       function arrow(svg, x1, y1, x2, y2) {
         const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
@@ -936,6 +1255,10 @@
     renderInlineMath(document.body);
     syncInputs();
     render();
+    visualSnapshot = snapshotState();
+    animationStartSnapshot = snapshotState();
+    animationEndSnapshot = snapshotState();
+    updateMorphUI();
   </script>
 </body>
 </html>

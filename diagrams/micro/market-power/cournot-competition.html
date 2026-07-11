@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -180,6 +180,50 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
 .bar-d{fill:var(--muted); opacity:.58}
 .bar-label{fill:var(--text); font-size:12px}
 .n-tick{fill:var(--surface); stroke:var(--border); stroke-width:1.2}
+
+.morph-hud{
+  display:grid;
+  gap:7px;
+  margin:10px 0 12px;
+}
+.morph-copy{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:7px 10px;
+  color:var(--muted);
+  background:color-mix(in srgb,var(--surface2) 76%,transparent);
+  box-shadow:var(--shadow);
+  font-size:13px;
+}
+.morph-copy b{color:var(--accent);font-weight:850}
+.morph-bar{
+  height:8px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  overflow:hidden;
+  background:var(--surface2);
+}
+.morph-bar span{
+  display:block;
+  width:100%;
+  height:100%;
+  transform:scaleX(1);
+  transform-origin:left center;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--accent),var(--comp),var(--monopoly),var(--danger));
+}
+.morph-old-path{fill:none;stroke:var(--muted);stroke-width:2.15;stroke-dasharray:8 7;opacity:.42;pointer-events:none}
+.morph-new-path{fill:none;stroke:var(--comp);stroke-width:2.15;stroke-dasharray:2 7;opacity:.58;pointer-events:none}
+.morph-old-line{stroke:var(--muted);stroke-width:1.9;stroke-dasharray:8 7;opacity:.42;pointer-events:none}
+.morph-new-line{stroke:var(--monopoly);stroke-width:1.9;stroke-dasharray:2 7;opacity:.58;pointer-events:none}
+.morph-trail{stroke:var(--danger);stroke-width:2;stroke-dasharray:4 6;opacity:.84;pointer-events:none}
+.morph-start{fill:var(--muted);stroke:var(--surface);stroke-width:2.6;opacity:.58;pointer-events:none}
+.morph-target{fill:var(--danger);stroke:var(--surface);stroke-width:2.6;opacity:.78;pointer-events:none}
+.morph-pulse{fill:none;stroke:var(--accent);stroke-width:1.75;opacity:.32;pointer-events:none}
 @media (max-width:1230px){
   .layout{grid-template-columns:1fr}
   .controls{position:relative; top:auto}
@@ -200,7 +244,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
 <div class="app">
   <header>
     <div>
-      <div class="eyebrow"><span class="dot"></span> Microeconomics Â· Oligopoly</div>
+      <div class="eyebrow"><span class="dot"></span> Microeconomics · Oligopoly</div>
       <h1>Cournot competition with n firms</h1>
       <p class="subtitle">Control the number of firms and watch the Cournot market move between monopoly and perfect competition. The diagrams connect strategic best responses, market power, welfare, and the monopoly benchmark.</p>
     </div>
@@ -220,29 +264,33 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
       <div class="control"><div class="label-row"><label for="n">Number of firms n</label><span class="value" id="nVal"></span></div><input id="n" type="range" min="1" max="50" step="1" value="4"></div>
 
       <div class="section-label">Visual focus</div>
-      <div class="toggle-row"><div><div style="font-size:14px;">Show monopoly benchmark</div><div class="small">Qá´¹, Pá´¹, monopoly profit</div></div><label class="switch"><input id="showMonopoly" type="checkbox" checked><span class="slider-switch"></span></label></div>
-      <div class="toggle-row"><div><div style="font-size:14px;">Show competition limit</div><div class="small">P = c and Qá¶œ</div></div><label class="switch"><input id="showComp" type="checkbox" checked><span class="slider-switch"></span></label></div>
+      <div class="toggle-row"><div><div style="font-size:14px;">Show monopoly benchmark</div><div class="small">Qᴹ, Pᴹ, monopoly profit</div></div><label class="switch"><input id="showMonopoly" type="checkbox" checked><span class="slider-switch"></span></label></div>
+      <div class="toggle-row"><div><div style="font-size:14px;">Show competition limit</div><div class="small">P = c and Qᶜ</div></div><label class="switch"><input id="showComp" type="checkbox" checked><span class="slider-switch"></span></label></div>
       <div class="toggle-row"><div><div style="font-size:14px;">Show residual MR</div><div class="small">representative firm FOC</div></div><label class="switch"><input id="showMR" type="checkbox" checked><span class="slider-switch"></span></label></div>
 
-      <div class="pill" id="statusPill"><b>n = 4</b> Â· Cournot is between monopoly and competition</div>
+      <div class="pill" id="statusPill"><b>n = 4</b> · Cournot is between monopoly and competition</div>
+      <div class="morph-hud" aria-hidden="true">
+        <div class="morph-copy"><span><b>Morphing:</b> Cournot antigo → novo Cournot</span><span id="morphLabel">stable state</span></div>
+        <div class="morph-bar"><span id="morphBar"></span></div>
+      </div>
     </aside>
 
     <main class="main">
       <section class="formula-row">
         <div class="card formula">
-          <div><div class="name">Inverse demand</div><div class="math">P(Q) = a âˆ’ bQ</div></div>
+          <div><div class="name">Inverse demand</div><div class="math">P(Q) = a − bQ</div></div>
           <div class="soft-eq">market price reacts to total industry output</div>
         </div>
         <div class="card formula">
-          <div><div class="name">Representative firm</div><div class="math">Ï€<sub>i</sub>(q<sub>i</sub>,q<sub>âˆ’i</sub>) = [a âˆ’ b(q<sub>i</sub> + Q<sub>âˆ’i</sub>) âˆ’ c]q<sub>i</sub></div></div>
-          <div class="soft-eq">each firm treats rivalsâ€™ quantities as fixed</div>
+          <div><div class="name">Representative firm</div><div class="math">π<sub>i</sub>(q<sub>i</sub>,q<sub>−i</sub>) = [a − b(q<sub>i</sub> + Q<sub>−i</sub>) − c]q<sub>i</sub></div></div>
+          <div class="soft-eq">each firm treats rivals’ quantities as fixed</div>
         </div>
         <div class="card formula">
-          <div><div class="name">Symmetric Cournot</div><div class="math">q<sub>i</sub><sup>N</sup> = <span class="frac"><span class="num">a âˆ’ c</span><span class="den">b(N + 1)</span></span>, &nbsp; Q<sup>N</sup> = <span class="frac"><span class="num">N(a âˆ’ c)</span><span class="den">b(N + 1)</span></span></div></div>
+          <div><div class="name">Symmetric Cournot</div><div class="math">q<sub>i</sub><sup>N</sup> = <span class="frac"><span class="num">a − c</span><span class="den">b(N + 1)</span></span>, &nbsp; Q<sup>N</sup> = <span class="frac"><span class="num">N(a − c)</span><span class="den">b(N + 1)</span></span></div></div>
           <div class="soft-eq">more firms means smaller individual output but larger total output</div>
         </div>
         <div class="card formula">
-          <div><div class="name">Market power</div><div class="math">L<sup>N</sup> = <span class="frac"><span class="num">P<sup>N</sup> âˆ’ c</span><span class="den">P<sup>N</sup></span></span> = <span class="frac"><span class="num">HHI</span><span class="den">|Îµ(P<sup>N</sup>)|</span></span></div></div>
+          <div><div class="name">Market power</div><div class="math">L<sup>N</sup> = <span class="frac"><span class="num">P<sup>N</sup> − c</span><span class="den">P<sup>N</sup></span></span> = <span class="frac"><span class="num">HHI</span><span class="den">|ε(P<sup>N</sup>)|</span></span></div></div>
           <div class="soft-eq">as N rises, HHI and the Lerner index fall</div>
         </div>
       </section>
@@ -254,7 +302,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
               <h2>Main diagram: Cournot versus monopoly</h2>
               <p>Demand, marginal cost, Cournot outcome, monopoly benchmark, competitive limit, consumer surplus, profit, and deadweight loss in one market picture.</p>
             </div>
-            <span class="small">Q horizontal Â· price vertical</span>
+            <span class="small">Q horizontal · price vertical</span>
           </div>
           <svg id="marketSvg" viewBox="0 0 1120 650"></svg>
           <div class="legend">
@@ -266,14 +314,14 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
             <span class="legend-item"><span class="swatch fill" style="background:var(--dangerSoft)"></span> Cournot DWL</span>
           </div>
           <div class="metrics">
-            <div class="metric"><div class="k">qáµ¢á´º</div><div class="v" id="mq"></div><div class="sub">per firm</div></div>
-            <div class="metric"><div class="k">Qá´º</div><div class="v" id="mQ"></div><div class="sub">industry</div></div>
-            <div class="metric"><div class="k">Pá´º</div><div class="v" id="mP"></div><div class="sub">price</div></div>
-            <div class="metric"><div class="k">Ï€áµ¢á´º</div><div class="v" id="mpi"></div><div class="sub">per firm</div></div>
-            <div class="metric"><div class="k">Î£Ï€áµ¢á´º</div><div class="v" id="mPiTot"></div><div class="sub">industry profit</div></div>
-            <div class="metric"><div class="k">Lá´º</div><div class="v" id="mL"></div><div class="sub">Lerner</div></div>
+            <div class="metric"><div class="k">qᵢᴺ</div><div class="v" id="mq"></div><div class="sub">per firm</div></div>
+            <div class="metric"><div class="k">Qᴺ</div><div class="v" id="mQ"></div><div class="sub">industry</div></div>
+            <div class="metric"><div class="k">Pᴺ</div><div class="v" id="mP"></div><div class="sub">price</div></div>
+            <div class="metric"><div class="k">πᵢᴺ</div><div class="v" id="mpi"></div><div class="sub">per firm</div></div>
+            <div class="metric"><div class="k">Σπᵢᴺ</div><div class="v" id="mPiTot"></div><div class="sub">industry profit</div></div>
+            <div class="metric"><div class="k">Lᴺ</div><div class="v" id="mL"></div><div class="sub">Lerner</div></div>
             <div class="metric"><div class="k">HHI</div><div class="v" id="mHHI"></div><div class="sub">symmetric</div></div>
-            <div class="metric"><div class="k">DWLá´º</div><div class="v" id="mDWL"></div><div class="sub">vs efficient</div></div>
+            <div class="metric"><div class="k">DWLᴺ</div><div class="v" id="mDWL"></div><div class="sub">vs efficient</div></div>
           </div>
         </section>
 
@@ -281,9 +329,9 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
           <div class="diagram-head">
             <div>
               <h2>Representative firm logic</h2>
-              <p>Holding rivals fixed at their symmetric Cournot output, the representative firm chooses qáµ¢ where residual marginal revenue equals marginal cost.</p>
+              <p>Holding rivals fixed at their symmetric Cournot output, the representative firm chooses qᵢ where residual marginal revenue equals marginal cost.</p>
             </div>
-            <span class="small">qáµ¢ horizontal Â· price/revenue vertical</span>
+            <span class="small">qᵢ horizontal · price/revenue vertical</span>
           </div>
           <svg id="residualSvg" viewBox="0 0 860 650"></svg>
           <div class="legend">
@@ -317,7 +365,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
         <div class="benchmark-strip">
           <div class="bench-card"><div class="top"><span>Monopoly</span><span>n = 1</span></div><div class="big" id="benchM"></div><div class="tiny" id="benchMSub"></div></div>
           <div class="bench-card"><div class="top"><span>Current Cournot</span><span id="benchNTag"></span></div><div class="big" id="benchN"></div><div class="tiny" id="benchNSub"></div></div>
-          <div class="bench-card"><div class="top"><span>Competition limit</span><span>n â†’ âˆž</span></div><div class="big" id="benchC"></div><div class="tiny" id="benchCSub"></div></div>
+          <div class="bench-card"><div class="top"><span>Competition limit</span><span>n → ∞</span></div><div class="big" id="benchC"></div><div class="tiny" id="benchCSub"></div></div>
         </div>
       </section>
 
@@ -328,17 +376,17 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
           <div class="notice-list">
             <div class="notice"><strong>Monopoly is the lower-output benchmark.</strong> With one firm, the firm internalizes the full price effect of output and restricts quantity.</div>
             <div class="notice"><strong>Cournot is partially competitive.</strong> Each firm internalizes only its own output effect on price, so total output rises with N.</div>
-            <div class="notice"><strong>Competition is the limit.</strong> As N grows, each firm becomes small, Pá´º approaches c, and the deadweight-loss wedge shrinks.</div>
+            <div class="notice"><strong>Competition is the limit.</strong> As N grows, each firm becomes small, Pᴺ approaches c, and the deadweight-loss wedge shrinks.</div>
           </div>
         </section>
         <section class="card panel">
           <h2>Exam-style summary</h2>
           <div class="summary">
             <div class="summary-line"><span>1</span><div>Start from inverse demand <span class="math-inline">P(Q)=a-bQ</span> and constant marginal cost <span class="math-inline">c</span>.</div></div>
-            <div class="summary-line"><span>2</span><div>For firm <span class="math-inline">i</span>, write <span class="math-inline">Ï€áµ¢=[a-b(qáµ¢+Qâ‚‹áµ¢)-c]qáµ¢</span>.</div></div>
-            <div class="summary-line"><span>3</span><div>The FOC is <span class="math-inline">a-c-bQâ‚‹áµ¢-2bqáµ¢=0</span>.</div></div>
-            <div class="summary-line"><span>4</span><div>Impose symmetry: <span class="math-inline">qáµ¢=q</span> and <span class="math-inline">Qâ‚‹áµ¢=(N-1)q</span>.</div></div>
-            <div class="summary-line"><span>5</span><div>Then <span class="math-inline">qá´º=(a-c)/[b(N+1)]</span>, <span class="math-inline">Qá´º=N(a-c)/[b(N+1)]</span>, and <span class="math-inline">Pá´º=(a+Nc)/(N+1)</span>.</div></div>
+            <div class="summary-line"><span>2</span><div>For firm <span class="math-inline">i</span>, write <span class="math-inline">πᵢ=[a-b(qᵢ+Q₋ᵢ)-c]qᵢ</span>.</div></div>
+            <div class="summary-line"><span>3</span><div>The FOC is <span class="math-inline">a-c-bQ₋ᵢ-2bqᵢ=0</span>.</div></div>
+            <div class="summary-line"><span>4</span><div>Impose symmetry: <span class="math-inline">qᵢ=q</span> and <span class="math-inline">Q₋ᵢ=(N-1)q</span>.</div></div>
+            <div class="summary-line"><span>5</span><div>Then <span class="math-inline">qᴺ=(a-c)/[b(N+1)]</span>, <span class="math-inline">Qᴺ=N(a-c)/[b(N+1)]</span>, and <span class="math-inline">Pᴺ=(a+Nc)/(N+1)</span>.</div></div>
           </div>
         </section>
       </section>
@@ -356,8 +404,87 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
     mq:$('mq'), mQ:$('mQ'), mP:$('mP'), mpi:$('mpi'), mPiTot:$('mPiTot'), mL:$('mL'), mHHI:$('mHHI'), mDWL:$('mDWL'),
     benchM:$('benchM'), benchMSub:$('benchMSub'), benchN:$('benchN'), benchNSub:$('benchNSub'), benchC:$('benchC'), benchCSub:$('benchCSub'), benchNTag:$('benchNTag')
   };
-  function fmt(x,d=2){ if(!Number.isFinite(x)) return 'â€”'; if(Math.abs(x)>=1000) return x.toFixed(0); if(Math.abs(x)>=100) return x.toFixed(1); return x.toFixed(d); }
-  function pct(x){ if(!Number.isFinite(x)) return 'â€”'; return (100*x).toFixed(1)+'%'; }
+
+  const numericControls=['a','b','c','n'];
+  let visualOverride=null;
+  let visualSnapshot=null;
+  let animationStartSnapshot=null;
+  let animationEndSnapshot=null;
+  let animationProgress=1;
+  let animationActive=false;
+  let animationFrame=0;
+
+  function controlSnapshot(){
+    return {
+      a:+els.a.value,
+      b:+els.b.value,
+      c:+els.c.value,
+      n:+els.n.value,
+      showMonopoly:els.showMonopoly.checked,
+      showComp:els.showComp.checked,
+      showMR:els.showMR.checked
+    };
+  }
+  function interpolateSnapshot(a,b,t){
+    const out={...b};
+    for(const key of numericControls) out[key]=a[key]+(b[key]-a[key])*t;
+    out.n=Math.round(out.n);
+    out.showMonopoly=b.showMonopoly;
+    out.showComp=b.showComp;
+    out.showMR=b.showMR;
+    return out;
+  }
+  function easeInOutCubic(t){ return t<.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2; }
+  function withVisualSnapshot(s,fn){
+    const old=visualOverride;
+    visualOverride=s;
+    let result;
+    try{ result=fn(); }
+    finally{ visualOverride=old; }
+    return result;
+  }
+  function animateToCurrent(duration=760){
+    const target=controlSnapshot();
+    const start=visualSnapshot ? {...visualSnapshot} : target;
+    if(animationFrame) cancelAnimationFrame(animationFrame);
+    animationStartSnapshot=start;
+    animationEndSnapshot=target;
+    animationActive=true;
+    const t0=performance.now();
+
+    function step(now){
+      const raw=Math.min(1,(now-t0)/duration);
+      const t=easeInOutCubic(raw);
+      animationProgress=t;
+      visualOverride=interpolateSnapshot(start,target,t);
+      update();
+      visualSnapshot={...visualOverride};
+
+      if(raw<1){
+        animationFrame=requestAnimationFrame(step);
+      }else{
+        visualOverride=null;
+        animationProgress=1;
+        animationActive=false;
+        update();
+        visualSnapshot=controlSnapshot();
+        animationFrame=0;
+      }
+    }
+    animationFrame=requestAnimationFrame(step);
+  }
+  function updateMorphUI(){
+    const bar=$('morphBar'), label=$('morphLabel');
+    if(!bar || !label) return;
+    const t=Number.isFinite(animationProgress) ? Math.max(0,Math.min(1,animationProgress)) : 1;
+    bar.style.transform=`scaleX(${t})`;
+    label.textContent=t>=.995?'stable state':`t = ${fmt(t,2)}`;
+  }
+  function showMonopolyOn(){ return visualOverride ? visualOverride.showMonopoly : els.showMonopoly.checked; }
+  function showCompOn(){ return visualOverride ? visualOverride.showComp : els.showComp.checked; }
+  function showMROn(){ return visualOverride ? visualOverride.showMR : els.showMR.checked; }
+  function fmt(x,d=2){ if(!Number.isFinite(x)) return '—'; if(Math.abs(x)>=1000) return x.toFixed(0); if(Math.abs(x)>=100) return x.toFixed(1); return x.toFixed(d); }
+  function pct(x){ if(!Number.isFinite(x)) return '—'; return (100*x).toFixed(1)+'%'; }
   function clamp(x,lo,hi){ return Math.max(lo, Math.min(hi, x)); }
   function S(tag,a={}){ const e=document.createElementNS('http://www.w3.org/2000/svg',tag); for(const [k,v] of Object.entries(a)) e.setAttribute(k,v); return e; }
   function line(svg,x1,y1,x2,y2,cls){ svg.appendChild(S('line',{x1,y1,x2,y2,class:cls})); }
@@ -377,7 +504,8 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
     return {X,Y,iw,ih};
   }
   function model(){
-    const a=+els.a.value, b=+els.b.value, c=+els.c.value, n=+els.n.value;
+    const src=visualOverride || controlSnapshot();
+    const a=+src.a, b=+src.b, c=+src.c, n=Math.max(1,Math.round(+src.n));
     const gap=Math.max(0,a-c);
     const q=gap/(b*(n+1));
     const Q=n*q;
@@ -402,12 +530,68 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
   function cournotForN(a,b,c,n){
     const gap=Math.max(0,a-c); const q=gap/(b*(n+1)); const Q=n*q; const P=a-b*Q; const markup=Math.max(0,P-c); const pi=markup*q; const piTot=n*pi; const L=P>0?markup/P:0; const DWL=0.5*markup*Math.max(0,gap/b-Q); const W=0.5*Math.max(0,a-P)*Q + piTot; return {q,Q,P,pi,piTot,L,DWL,W};
   }
+  function drawMarketMorphGuides(svg,X,Y,qMax,current){
+    if(!animationActive || !animationStartSnapshot || !animationEndSnapshot) return;
+
+    const oldM=withVisualSnapshot(animationStartSnapshot,model);
+    const newM=withVisualSnapshot(animationEndSnapshot,model);
+    const oldDemand=[], newDemand=[];
+    for(let i=0;i<=180;i++){
+      const Q=qMax*i/180;
+      oldDemand.push([X(Q),Y(Math.max(0,oldM.a-oldM.b*Q))]);
+      newDemand.push([X(Q),Y(Math.max(0,newM.a-newM.b*Q))]);
+    }
+
+    path(svg,oldDemand,'morph-old-path');
+    path(svg,newDemand,'morph-new-path');
+    line(svg,X(0),Y(oldM.P),X(oldM.Q),Y(oldM.P),'morph-old-line');
+    line(svg,X(oldM.Q),Y(0),X(oldM.Q),Y(oldM.P),'morph-old-line');
+    line(svg,X(0),Y(newM.P),X(newM.Q),Y(newM.P),'morph-new-line');
+    line(svg,X(newM.Q),Y(0),X(newM.Q),Y(newM.P),'morph-new-line');
+
+    line(svg,X(oldM.Q),Y(oldM.P),X(newM.Q),Y(newM.P),'morph-trail');
+    line(svg,X(oldM.Qm),Y(oldM.Pm),X(newM.Qm),Y(newM.Pm),'morph-trail');
+    circle(svg,X(oldM.Q),Y(oldM.P),5.6,'morph-start');
+    circle(svg,X(newM.Q),Y(newM.P),6.5,'morph-target');
+    circle(svg,X(current.Q),Y(current.P),15+4*Math.sin(Math.PI*animationProgress),'morph-pulse');
+    text(svg,(X(oldM.Q)+X(newM.Q))/2,(Y(oldM.P)+Y(newM.P))/2-14,'x(t)=(1−t)x₀+tx₁','muted-label');
+  }
+  function drawResidualMorphGuides(svg,X,Y,qResMax,current){
+    if(!animationActive || !animationStartSnapshot || !animationEndSnapshot) return;
+
+    const oldM=withVisualSnapshot(animationStartSnapshot,model);
+    const newM=withVisualSnapshot(animationEndSnapshot,model);
+    const oldIntercept=Math.max(0,oldM.a-oldM.b*(oldM.n-1)*oldM.q);
+    const newIntercept=Math.max(0,newM.a-newM.b*(newM.n-1)*newM.q);
+    const oldRes=[], newRes=[], oldMR=[], newMR=[];
+    for(let i=0;i<=160;i++){
+      const q=qResMax*i/160;
+      oldRes.push([X(q),Y(Math.max(0,oldIntercept-oldM.b*q))]);
+      newRes.push([X(q),Y(Math.max(0,newIntercept-newM.b*q))]);
+      oldMR.push([X(q),Y(Math.max(0,oldIntercept-2*oldM.b*q))]);
+      newMR.push([X(q),Y(Math.max(0,newIntercept-2*newM.b*q))]);
+    }
+
+    path(svg,oldRes,'morph-old-path');
+    path(svg,newRes,'morph-new-path');
+    if(showMROn()){
+      path(svg,oldMR,'morph-old-path');
+      path(svg,newMR,'morph-new-path');
+    }
+
+    line(svg,X(oldM.q),Y(oldM.P),X(newM.q),Y(newM.P),'morph-trail');
+    circle(svg,X(oldM.q),Y(oldM.P),5.6,'morph-start');
+    circle(svg,X(newM.q),Y(newM.P),6.5,'morph-target');
+    circle(svg,X(current.q),Y(current.P),15+4*Math.sin(Math.PI*animationProgress),'morph-pulse');
+    text(svg,(X(oldM.q)+X(newM.q))/2,(Y(oldM.P)+Y(newM.P))/2-14,'qᵢ(t)=(1−t)qᵢ₀+tqᵢ₁','muted-label');
+  }
   function drawMarket(m){
     const svg=els.marketSvg; svg.innerHTML=''; const W=1120,H=650, mar={l:78,r:36,t:34,b:72};
     const qMax=Math.max(m.Qc,m.Q,m.Qm,1)*1.13; const yMax=Math.max(m.a,m.P,m.Pm,m.c,5)*1.10;
     const {X,Y}=axes(svg,W,H,mar,qMax,yMax,'price',5,5,'Q');
     const demandPts=[], mrPts=[];
     for(let i=0;i<=360;i++){ const Q=qMax*i/360; demandPts.push([X(Q),Y(Math.max(0,m.a-m.b*Q))]); mrPts.push([X(Q),Y(Math.max(0,m.a-2*m.b*Q))]); }
+    drawMarketMorphGuides(svg,X,Y,qMax,m);
     if(m.Q>0){
       const csPts=[[X(0),Y(m.a)]];
       for(let i=0;i<=180;i++){ const Q=m.Q*i/180; csPts.push([X(Q),Y(Math.max(0,m.a-m.b*Q))]); }
@@ -425,39 +609,40 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
       if(m.Qc>m.Q) poly(svg,[[X(m.Q),Y(m.P)],[X(m.Qc),Y(m.c)],[X(m.Q),Y(m.c)]],'fill-dwl');
     }
     path(svg,demandPts,'curve-demand');
-    if(els.showMonopoly.checked) path(svg,mrPts,'curve-mr');
+    if(showMonopolyOn()) path(svg,mrPts,'curve-mr');
     line(svg,X(0),Y(m.c),X(qMax),Y(m.c),'curve-mc');
-    if(els.showMonopoly.checked){
+    if(showMonopolyOn()){
       line(svg,X(m.Qm),Y(0),X(m.Qm),Y(m.Pm),'helper-m'); line(svg,X(0),Y(m.Pm),X(m.Qm),Y(m.Pm),'helper-m'); circle(svg,X(m.Qm),Y(m.Pm),7,'point-m');
-      text(svg,X(m.Qm),Y(0)+28,'Qá´¹','label'); text(svg,X(0)-12,Y(m.Pm)+4,'Pá´¹','muted-label','end'); text(svg,X(m.Qm)+12,Y(m.Pm)-12,'monopoly','muted-label','start');
+      text(svg,X(m.Qm),Y(0)+28,'Qᴹ','label'); text(svg,X(0)-12,Y(m.Pm)+4,'Pᴹ','muted-label','end'); text(svg,X(m.Qm)+12,Y(m.Pm)-12,'monopoly','muted-label','start');
     }
-    if(els.showComp.checked){
-      line(svg,X(m.Qc),Y(0),X(m.Qc),Y(m.c),'helper-c'); circle(svg,X(m.Qc),Y(m.c),6,'point-c'); text(svg,X(m.Qc),Y(0)+28,'Qá¶œ','label'); text(svg,X(m.Qc)+12,Y(m.c)-10,'competition limit','muted-label','start');
+    if(showCompOn()){
+      line(svg,X(m.Qc),Y(0),X(m.Qc),Y(m.c),'helper-c'); circle(svg,X(m.Qc),Y(m.c),6,'point-c'); text(svg,X(m.Qc),Y(0)+28,'Qᶜ','label'); text(svg,X(m.Qc)+12,Y(m.c)-10,'competition limit','muted-label','start');
     }
     line(svg,X(m.Q),Y(0),X(m.Q),Y(m.P),'helper-a'); line(svg,X(0),Y(m.P),X(m.Q),Y(m.P),'helper-a'); circle(svg,X(m.Q),Y(m.P),8,'point-a');
-    text(svg,X(m.Q),Y(0)+50,'Qá´º','label'); text(svg,X(0)-12,Y(m.P)+4,'Pá´º','label','end'); text(svg,X(m.Q)+12,Y(m.P)-14,'current Cournot','label','start');
+    text(svg,X(m.Q),Y(0)+50,'Qᴺ','label'); text(svg,X(0)-12,Y(m.P)+4,'Pᴺ','label','end'); text(svg,X(m.Q)+12,Y(m.P)-14,'current Cournot','label','start');
     text(svg,X(qMax*.74),Y(Math.max(0,m.a-m.b*qMax*.74))-12,'Demand','label');
-    if(els.showMonopoly.checked) text(svg,X(qMax*.35),Y(Math.max(0,m.a-2*m.b*qMax*.35))+20,'Monopoly MR','muted-label');
+    if(showMonopolyOn()) text(svg,X(qMax*.35),Y(Math.max(0,m.a-2*m.b*qMax*.35))+20,'Monopoly MR','muted-label');
     text(svg,X(qMax*.78),Y(m.c)-12,'MC = c','muted-label');
-    if(m.Q>0){ text(svg,X(m.Q*.42),Y((m.a+m.P)/2),'CSá´º','label'); if(m.P>m.c) text(svg,X(m.Q*.48),Y((m.P+m.c)/2)+4,'Î£Ï€áµ¢á´º','label'); if(m.Qc>m.Q) text(svg,(X(m.Q)+X(m.Qc))/2,Y((m.P+m.c)/2)+4,'DWLá´º','label'); }
+    if(m.Q>0){ text(svg,X(m.Q*.42),Y((m.a+m.P)/2),'CSᴺ','label'); if(m.P>m.c) text(svg,X(m.Q*.48),Y((m.P+m.c)/2)+4,'Σπᵢᴺ','label'); if(m.Qc>m.Q) text(svg,(X(m.Q)+X(m.Qc))/2,Y((m.P+m.c)/2)+4,'DWLᴺ','label'); }
   }
   function drawResidual(m){
     const svg=els.residualSvg; svg.innerHTML=''; const W=860,H=650, mar={l:74,r:28,t:34,b:72};
     const Qminus=(m.n-1)*m.q; const intercept=Math.max(0,m.a-m.b*Qminus); const qResMax=Math.max(intercept/m.b,m.q,1)*1.12; const yMax=Math.max(intercept,m.P,m.c,5)*1.12;
-    const {X,Y}=axes(svg,W,H,mar,qResMax,yMax,'price / revenue',5,5,'qáµ¢');
+    const {X,Y}=axes(svg,W,H,mar,qResMax,yMax,'price / revenue',5,5,'qᵢ');
     const resPts=[], mrPts=[];
     for(let i=0;i<=320;i++){ const q=qResMax*i/320; resPts.push([X(q),Y(Math.max(0,intercept-m.b*q))]); mrPts.push([X(q),Y(Math.max(0,intercept-2*m.b*q))]); }
+    drawResidualMorphGuides(svg,X,Y,qResMax,m);
     if(m.q>0 && m.P>m.c) poly(svg,[[X(0),Y(m.P)],[X(m.q),Y(m.P)],[X(m.q),Y(m.c)],[X(0),Y(m.c)]],'fill-monopoly');
     path(svg,resPts,'curve-demand');
-    if(els.showMR.checked) path(svg,mrPts,'curve-mr');
+    if(showMROn()) path(svg,mrPts,'curve-mr');
     line(svg,X(0),Y(m.c),X(qResMax),Y(m.c),'curve-mc');
     line(svg,X(m.q),Y(0),X(m.q),Y(m.P),'helper-a'); line(svg,X(0),Y(m.P),X(m.q),Y(m.P),'helper-a');
     circle(svg,X(m.q),Y(m.P),7,'point-a'); circle(svg,X(m.q),Y(m.c),6,'point-c');
-    text(svg,X(m.q),Y(0)+30,'qáµ¢á´º','label'); text(svg,X(0)-12,Y(m.P)+4,'Pá´º','label','end'); text(svg,X(m.q)+12,Y(m.P)-12,'chosen by firm i','label','start');
+    text(svg,X(m.q),Y(0)+30,'qᵢᴺ','label'); text(svg,X(0)-12,Y(m.P)+4,'Pᴺ','label','end'); text(svg,X(m.q)+12,Y(m.P)-12,'chosen by firm i','label','start');
     text(svg,X(qResMax*.62),Y(Math.max(0,intercept-m.b*qResMax*.62))-12,'residual demand','label');
-    if(els.showMR.checked) text(svg,X(qResMax*.38),Y(Math.max(0,intercept-2*m.b*qResMax*.38))+20,'residual MR','muted-label');
+    if(showMROn()) text(svg,X(qResMax*.38),Y(Math.max(0,intercept-2*m.b*qResMax*.38))+20,'residual MR','muted-label');
     text(svg,X(qResMax*.76),Y(m.c)-12,'MC','muted-label');
-    const info=`rivals produce Qâ‚‹áµ¢ = ${fmt(Qminus)}; residual intercept = ${fmt(intercept)}`;
+    const info=`rivals produce Q₋ᵢ = ${fmt(Qminus)}; residual intercept = ${fmt(intercept)}`;
     text(svg,X(qResMax*.50),Y(yMax*.92),info,'muted-label');
   }
   function drawConvergence(m){
@@ -471,7 +656,7 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
     path(svg,qPts,'curve-cournot'); path(svg,pPts,'curve-monopoly'); path(svg,lPts,'curve-comp');
     const current=cournotForN(m.a,m.b,m.c,m.n);
     circle(svg,X(m.n),Y(m.Qc>0?current.Q/m.Qc:0),6,'point-a'); circle(svg,X(m.n),Y(m.a!==m.c ? (m.Pm-current.P)/(m.Pm-m.c || 1) : 0),6,'point-m'); circle(svg,X(m.n),Y(current.L),6,'point-c');
-    text(svg,X(Math.min(45,Math.max(8,m.n+4))),Y(m.Qc>0?current.Q/m.Qc:0)-10,'Qá´º/Qá¶œ','label');
+    text(svg,X(Math.min(45,Math.max(8,m.n+4))),Y(m.Qc>0?current.Q/m.Qc:0)-10,'Qᴺ/Qᶜ','label');
     text(svg,X(28),Y(.38),'price convergence','muted-label'); text(svg,X(36),Y(.08),'Lerner index','muted-label');
   }
   function drawBars(m){
@@ -498,18 +683,39 @@ svg{display:block; width:100%; height:auto; overflow:hidden}
     els.aVal.textContent=fmt(m.a,0); els.bVal.textContent=fmt(m.b,1); els.cVal.textContent=fmt(m.c,0); els.nVal.textContent=m.n;
     els.mq.textContent=fmt(m.q); els.mQ.textContent=fmt(m.Q); els.mP.textContent=fmt(m.P); els.mpi.textContent=fmt(m.pi); els.mPiTot.textContent=fmt(m.piTot); els.mL.textContent=pct(m.L); els.mHHI.textContent=pct(m.HHI); els.mDWL.textContent=fmt(m.DWL);
     const relation = m.n===1 ? 'exactly the monopoly outcome' : (m.n<8 ? 'still visibly above marginal cost' : 'close to the competitive limit');
-    els.statusPill.innerHTML=`<b>n = ${m.n}</b> Â· Cournot is ${relation}`;
-    els.benchM.textContent=`Qá´¹ ${fmt(m.Qm)} Â· Pá´¹ ${fmt(m.Pm)}`; els.benchMSub.textContent=`profit ${fmt(m.pim)} Â· welfare ${fmt(m.Wm)}`;
-    els.benchNTag.textContent=`n = ${m.n}`; els.benchN.textContent=`Qá´º ${fmt(m.Q)} Â· Pá´º ${fmt(m.P)}`; els.benchNSub.textContent=`industry profit ${fmt(m.piTot)} Â· DWL ${fmt(m.DWL)}`;
-    els.benchC.textContent=`Qá¶œ ${fmt(m.Qc)} Â· Pá¶œ ${fmt(m.Pc)}`; els.benchCSub.textContent=`profit 0 Â· welfare ${fmt(m.Wcomp)}`;
+    els.statusPill.innerHTML=`<b>n = ${m.n}</b> · Cournot is ${relation}`;
+    els.benchM.textContent=`Qᴹ ${fmt(m.Qm)} · Pᴹ ${fmt(m.Pm)}`; els.benchMSub.textContent=`profit ${fmt(m.pim)} · welfare ${fmt(m.Wm)}`;
+    els.benchNTag.textContent=`n = ${m.n}`; els.benchN.textContent=`Qᴺ ${fmt(m.Q)} · Pᴺ ${fmt(m.P)}`; els.benchNSub.textContent=`industry profit ${fmt(m.piTot)} · DWL ${fmt(m.DWL)}`;
+    els.benchC.textContent=`Qᶜ ${fmt(m.Qc)} · Pᶜ ${fmt(m.Pc)}`; els.benchCSub.textContent=`profit 0 · welfare ${fmt(m.Wcomp)}`;
     const outputShare=m.Qc>0?m.Q/m.Qc:0;
     const priceGap=m.P-m.c;
     els.interpretation.innerHTML=`With <strong>${m.n}</strong> symmetric firms, each firm produces <strong>${fmt(m.q)}</strong>, so total output is <strong>${fmt(m.Q)}</strong>. This is <strong>${pct(outputShare)}</strong> of the competitive quantity. Price is <strong>${fmt(m.P)}</strong>, leaving a per-unit markup of <strong>${fmt(priceGap)}</strong>. Compared with monopoly, Cournot expands output and reduces the deadweight-loss wedge; as the number of firms rises, the outcome moves toward <strong>P = c</strong>.`;
   }
-  function update(){ const m=model(); updateText(m); drawMarket(m); drawResidual(m); drawConvergence(m); drawBars(m); }
-  ['a','b','c','n','showMonopoly','showComp','showMR'].forEach(id=>{ els[id].addEventListener('input',update); els[id].addEventListener('change',update); });
-  els.themeBtn.addEventListener('click',()=>{ const dark=document.body.getAttribute('data-theme')==='dark'; document.body.setAttribute('data-theme',dark?'light':'dark'); els.themeBtn.textContent=dark?'Dark mode':'Light mode'; update(); });
+  function update(){
+    const m=model();
+    updateText(m);
+    drawMarket(m);
+    drawResidual(m);
+    drawConvergence(m);
+    drawBars(m);
+    updateMorphUI();
+  }
+  ['a','b','c','n','showMonopoly','showComp','showMR'].forEach(id=>{
+    els[id].addEventListener('input',animateToCurrent);
+    els[id].addEventListener('change',animateToCurrent);
+  });
+  els.themeBtn.addEventListener('click',()=>{
+    const dark=document.body.getAttribute('data-theme')==='dark';
+    document.body.setAttribute('data-theme',dark?'light':'dark');
+    els.themeBtn.textContent=dark?'Dark mode':'Light mode';
+    update();
+    visualSnapshot=controlSnapshot();
+  });
   update();
+  visualSnapshot=controlSnapshot();
+  animationStartSnapshot=controlSnapshot();
+  animationEndSnapshot=controlSnapshot();
+  updateMorphUI();
 })();
 </script>
 </body>
