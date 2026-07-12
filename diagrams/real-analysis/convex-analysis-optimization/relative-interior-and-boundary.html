@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Interactive laboratory for relative interior, relative boundary, affine dimension, faces, exposed faces, and supporting hyperplanes." />
+  <title>Relative Interior and Boundary — Interactive Convex Geometry Laboratory</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+
+  <style>
+    :root{
+      --bg:#f7f9f8;--surface:rgba(255,255,255,.97);--surface-2:#eef5f5;--surface-3:#e4edef;
+      --text:#172126;--muted:#617178;--line:#d4dfe1;--cyan:#00a8c6;--cyan-deep:#087f98;
+      --teal:#168f88;--violet:#7567c7;--amber:#b57a20;--danger:#b74c4c;--success:#147d64;
+      --shadow:0 18px 52px rgba(37,56,64,.09);--radius:22px;--canvas:#fff;--axis:#65787e;
+      --grid:#dce6e8;--focus:rgba(0,168,198,.23)
+    }
+    html[data-theme="dark"]{
+      --bg:#121a20;--surface:rgba(27,38,46,.97);--surface-2:#213039;--surface-3:#273942;
+      --text:#edf5f6;--muted:#a8b8bd;--line:#344750;--cyan:#44c9e1;--cyan-deep:#7ed9e8;
+      --teal:#58c4b9;--violet:#aaa0e6;--amber:#e3b35d;--danger:#ef8989;--success:#68d0ad;
+      --shadow:0 18px 52px rgba(0,0,0,.25);--canvas:#17232a;--axis:#9bb0b7;--grid:#30424a;
+      --focus:rgba(68,201,225,.22)
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;color:var(--text);
+      background:
+        radial-gradient(circle at 7% 0%,rgba(0,168,198,.085),transparent 29rem),
+        radial-gradient(circle at 100% 17%,rgba(117,103,199,.065),transparent 32rem),
+        var(--bg);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.65;transition:background .25s ease,color .25s ease
+    }
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    .shell{width:min(1480px,calc(100% - 32px));margin:0 auto}
+    .topbar{
+      position:sticky;top:0;z-index:50;border-bottom:1px solid color-mix(in srgb,var(--line) 84%,transparent);
+      backdrop-filter:blur(18px);background:color-mix(in srgb,var(--bg) 82%,transparent)
+    }
+    .topbar-inner{min-height:68px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:-.02em}
+    .brand-mark{
+      width:34px;height:34px;border:1px solid var(--cyan);border-radius:11px;display:grid;place-items:center;
+      box-shadow:inset 0 0 0 6px color-mix(in srgb,var(--cyan) 10%,transparent)
+    }
+    .brand-mark::before{content:"ri";color:var(--cyan-deep);font-family:"Libre Baskerville",serif;font-weight:700;font-size:.86rem}
+    .top-actions{display:flex;gap:9px;align-items:center}
+    .icon-button,.ghost-button,.primary-button,.segmented button,.proof-option,.counter-tab,.map-node{
+      border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:12px;
+      min-height:40px;padding:9px 13px;transition:transform .18s ease,border-color .18s ease,background .18s ease
+    }
+    .icon-button:hover,.ghost-button:hover,.segmented button:hover,.proof-option:hover,.counter-tab:hover,.map-node:hover{
+      transform:translateY(-1px);border-color:var(--cyan)
+    }
+    .primary-button{background:var(--cyan);color:#062e37;font-weight:700;border-color:transparent}
+    .primary-button:hover{transform:translateY(-1px);filter:brightness(1.03)}
+    h1,h2,h3,.serif{font-family:"Libre Baskerville",Georgia,serif;letter-spacing:-.025em}
+    h1{font-size:clamp(2.65rem,5.8vw,5.15rem);line-height:1.03;margin:12px 0 20px}
+    h2{font-size:clamp(2rem,4vw,3.15rem);line-height:1.14;margin:0}
+    h3{font-size:1.2rem;margin:0}
+    p{margin:0}
+    .hero{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(360px,.92fr);gap:30px;padding:70px 0 46px;align-items:center}
+    .eyebrow{color:var(--cyan-deep);font-weight:700;text-transform:uppercase;letter-spacing:.14em;font-size:.78rem}
+    .hero p{color:var(--muted);max-width:850px;font-size:clamp(1.02rem,1.8vw,1.24rem)}
+    .hero-chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:28px}
+    .chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);padding:8px 11px;border-radius:999px;color:var(--muted);font-size:.9rem}
+    .chip::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--cyan)}
+    .hero-map{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:28px;padding:22px;min-height:420px;overflow:hidden}
+    .hero-svg{width:100%;height:370px;display:block}
+    .section{padding:72px 0}
+    .section-head{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:27px}
+    .section-head p{color:var(--muted);max-width:780px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+    .grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+    .lab-grid{display:grid;grid-template-columns:minmax(265px,.72fr) minmax(0,1.38fr) minmax(285px,.9fr);gap:20px;align-items:start}
+    .proof-grid{display:grid;grid-template-columns:minmax(0,1.22fr) minmax(300px,.78fr);gap:20px}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;min-width:0}
+    .card.soft{background:var(--surface-2);box-shadow:none}
+    .card h3+p{margin-top:9px;color:var(--muted)}
+    .card-label{color:var(--cyan-deep);font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;font-weight:700;margin-bottom:10px}
+    .muted{color:var(--muted)}.small{font-size:.9rem}
+    .definition-card{padding:30px;border-left:4px solid var(--cyan)}
+    .math-display{margin:18px 0;overflow-x:auto;overflow-y:hidden;padding:8px 2px}
+    .katex-display{margin:.72em 0!important}
+    .katex{max-width:100%}
+    .notation-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}
+    .notation-item{border:1px solid var(--line);background:var(--surface-2);border-radius:14px;padding:13px}
+    .notation-item strong{display:block;margin-bottom:6px;color:var(--cyan-deep)}
+    .flow-map{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;margin-top:18px}
+    .flow-node{border:1px solid var(--line);background:var(--surface-2);border-radius:14px;padding:12px 14px;min-width:150px;text-align:center}
+    .flow-node.clickable{cursor:pointer}
+    .flow-node.clickable:hover{border-color:var(--cyan)}
+    .flow-arrow{color:var(--cyan-deep);font-size:1.4rem}
+    .control-stack{display:grid;gap:17px}
+    .control label{display:flex;justify-content:space-between;gap:12px;align-items:baseline;font-weight:600;margin-bottom:7px}
+    .control label span:last-child{color:var(--cyan-deep);font-variant-numeric:tabular-nums}
+    input[type="range"]{width:100%;accent-color:var(--cyan)}
+    select{width:100%;min-height:43px;border-radius:11px;border:1px solid var(--line);background:var(--surface);color:var(--text);padding:8px 10px}
+    .control-note{color:var(--muted);font-size:.82rem;margin-top:5px}
+    .segmented{display:flex;gap:8px;flex-wrap:wrap}
+    .segmented button.active{border-color:var(--cyan);background:color-mix(in srgb,var(--cyan) 12%,var(--surface))}
+    .metric-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
+    .metric-strip.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .metric-cell{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:13px;text-align:center}
+    .metric-name{color:var(--muted);font-size:.79rem;text-transform:uppercase;letter-spacing:.06em}
+    .metric-value{font-size:1.18rem;font-weight:700;color:var(--cyan-deep);font-variant-numeric:tabular-nums}
+    .status{border-radius:14px;padding:14px;border:1px solid var(--line);background:var(--surface-2)}
+    .status.good{border-color:color-mix(in srgb,var(--success) 55%,var(--line));background:color-mix(in srgb,var(--success) 9%,var(--surface))}
+    .status.warning{border-color:color-mix(in srgb,var(--amber) 55%,var(--line));background:color-mix(in srgb,var(--amber) 8%,var(--surface))}
+    .status.bad{border-color:color-mix(in srgb,var(--danger) 55%,var(--line));background:color-mix(in srgb,var(--danger) 8%,var(--surface))}
+    .diagram-shell{background:var(--canvas);border:1px solid var(--line);border-radius:18px;overflow:hidden;min-height:470px}
+    .diagram-shell svg{display:block;width:100%;height:auto;min-height:470px;touch-action:none}
+    .legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;color:var(--muted);font-size:.86rem}
+    .legend span{display:flex;align-items:center;gap:7px}
+    .legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+    .proof-steps{display:grid;gap:10px}
+    .proof-step{border:1px solid var(--line);background:var(--surface);border-radius:15px;overflow:hidden}
+    .proof-step>button{width:100%;border:0;background:transparent;color:var(--text);display:flex;justify-content:space-between;gap:14px;padding:15px;text-align:left;font-weight:700}
+    .proof-body{display:none;border-top:1px solid var(--line);padding:0 16px 17px;color:var(--muted)}
+    .proof-step.open .proof-body{display:block}
+    .proof-number{display:inline-grid;place-items:center;width:26px;height:26px;margin-right:10px;border-radius:8px;background:var(--surface-2);color:var(--cyan-deep)}
+    .quiz-options{display:grid;gap:10px;margin-top:14px}
+    .proof-option{text-align:left}
+    .proof-option.correct{border-color:var(--success);background:color-mix(in srgb,var(--success) 10%,var(--surface))}
+    .proof-option.wrong{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 9%,var(--surface))}
+    .counter-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+    .counter-tab.active{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 9%,var(--surface))}
+    .counter-content{display:none}.counter-content.active{display:block}
+    .mistake{border-top:1px solid var(--line);padding:16px 0}.mistake:first-child{border-top:0;padding-top:0}
+    .mistake strong{color:var(--danger)}
+    .footer{padding:38px 0 54px;color:var(--muted);border-top:1px solid var(--line)}
+    .two-col-note{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .face-card{border:1px solid var(--line);border-radius:15px;padding:15px;background:var(--surface-2)}
+    @media(max-width:1120px){
+      .hero,.lab-grid,.proof-grid{grid-template-columns:1fr}
+      .hero-map{min-height:360px}.hero-svg{height:320px}
+      .grid-4,.notation-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media(max-width:760px){
+      .shell{width:min(100% - 20px,1480px)}
+      .topbar-inner{min-height:60px}.brand span:last-child{display:none}
+      .hero{padding-top:46px}.section{padding:52px 0}
+      .grid-2,.grid-3,.grid-4,.notation-grid,.metric-strip,.metric-strip.four,.two-col-note{grid-template-columns:1fr}
+      .section-head{align-items:start;flex-direction:column}
+      .card{padding:18px}.definition-card{padding:22px}
+      .diagram-shell,.diagram-shell svg{min-height:390px}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>Relative Geometry Laboratory</span></div>
+      <div class="top-actions">
+        <button class="ghost-button" id="scrollToLab">Open laboratory</button>
+        <button class="icon-button" id="themeToggle" aria-label="Toggle light and dark mode">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="shell hero">
+      <div>
+        <div class="eyebrow">Interactive real analysis · convex geometry</div>
+        <h1>Relative interior and boundary</h1>
+        <p>A segment in the plane has empty ordinary interior, yet it has a perfectly meaningful interior along its own line. Relative topology repairs the ambient mismatch and leads naturally to faces, supporting hyperplanes, and exposed boundary geometry.</p>
+        <div class="hero-chips">
+          <span class="chip">affine dimension</span><span class="chip">relative topology</span><span class="chip">relative boundary</span><span class="chip">faces</span><span class="chip">exposed faces</span>
+        </div>
+      </div>
+      <div class="hero-map" aria-label="Relative interior and supporting face illustration">
+        <svg class="hero-svg" viewBox="0 0 540 370" role="img">
+          <defs><pattern id="heroGrid" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M 36 0 L 0 0 0 36" fill="none" stroke="var(--grid)" stroke-width="1"/></pattern></defs>
+          <rect x="0" y="0" width="540" height="370" rx="18" fill="var(--canvas)"/>
+          <rect x="0" y="0" width="540" height="370" rx="18" fill="url(#heroGrid)"/>
+          <line x1="55" y1="270" x2="485" y2="95" stroke="var(--amber)" stroke-width="3" stroke-dasharray="10 8"/>
+          <line x1="135" y1="238" x2="410" y2="126" stroke="var(--cyan)" stroke-width="10" stroke-linecap="round"/>
+          <circle cx="135" cy="238" r="9" fill="var(--danger)"/><circle cx="410" cy="126" r="9" fill="var(--danger)"/>
+          <circle cx="276" cy="181" r="10" fill="var(--teal)"/>
+          <ellipse cx="276" cy="181" rx="78" ry="31" transform="rotate(-22 276 181)" fill="none" stroke="var(--teal)" stroke-width="3" stroke-dasharray="8 7"/>
+          <line x1="420" y1="298" x2="420" y2="70" stroke="var(--violet)" stroke-width="3"/>
+          <circle cx="420" cy="122" r="8" fill="var(--violet)"/>
+          <text x="278" y="345" text-anchor="middle" fill="var(--muted)" font-family="Inter" font-size="15">interior is measured inside aff(C), not necessarily inside the ambient plane</text>
+        </svg>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">1 · Mathematical question</div><h2>What counts as “inside” a lower-dimensional set?</h2></div>
+          <p>The relevant neighborhoods must live in the smallest affine space containing the set. Otherwise every segment, face, and singleton would appear to have no interior at all.</p>
+        </div>
+        <div class="grid-3">
+          <article class="card"><div class="card-label">Ambient view</div><h3>Too much space</h3><p>A two-dimensional open ball around a point of a segment immediately leaves the segment.</p></article>
+          <article class="card"><div class="card-label">Relative view</div><h3>Correct intrinsic space</h3><p>Intersect the ambient ball with the affine hull. Along that line, interior points of the segment have genuine neighborhoods.</p></article>
+          <article class="card"><div class="card-label">Boundary geometry</div><h3>Where support occurs</h3><p>Faces are pieces of the boundary that convex combinations cannot enter without bringing their endpoints with them.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">2 · Formal definitions</div><h2>Relative topology and boundary structure</h2></div><p>Every definition is taken inside the affine hull of the set.</p></div>
+        <article class="card definition-card">
+          <div class="card-label">Relative interior</div>
+          <div class="math-display" data-math="\operatorname{ri}(C)=\left\{x\in C:\exists\varepsilon>0,\ B(x,\varepsilon)\cap\operatorname{aff}(C)\subseteq C\right\}" data-display="true"></div>
+          <p>The open ball is ambient, but only its slice through <span data-math="\operatorname{aff}(C)"></span> matters.</p>
+        </article>
+        <div class="grid-2" style="margin-top:20px">
+          <article class="card">
+            <div class="card-label">Relative closure and boundary</div>
+            <div class="math-display" data-math="\operatorname{rcl}(C)=\overline{C}^{\,\operatorname{aff}(C)},\qquad \operatorname{rbd}(C)=\operatorname{rcl}(C)\setminus\operatorname{ri}(C)" data-display="true"></div>
+            <p class="muted">For convex sets in finite dimensions, ordinary closure and relative closure agree as sets because <span data-math="\operatorname{aff}(C)"></span> is closed.</p>
+          </article>
+          <article class="card">
+            <div class="card-label">Face</div>
+            <div class="math-display" data-math="F\unlhd C\iff \left[x=(1-t)y+tz\in F,\ 0<t<1,\ y,z\in C\right]\Rightarrow y,z\in F" data-display="true"></div>
+            <p class="muted">A face cannot be entered from the interior of a segment whose endpoints lie outside it.</p>
+          </article>
+          <article class="card">
+            <div class="card-label">Exposed face</div>
+            <div class="math-display" data-math="F=\operatorname*{arg\,max}_{x\in C}\langle u,x\rangle" data-display="true"></div>
+            <p class="muted">An exposed face is selected by a supporting hyperplane normal to <span data-math="u"></span>.</p>
+          </article>
+          <article class="card">
+            <div class="card-label">Affine dimension</div>
+            <div class="math-display" data-math="\dim_{\mathrm{aff}}C=\dim\operatorname{span}(C-x_0)" data-display="true"></div>
+            <p class="muted">The dimension is intrinsic: zero for a point, one for a nontrivial segment, and two for a planar body.</p>
+          </article>
+        </div>
+        <div class="notation-grid">
+          <div class="notation-item"><strong><span data-math="\operatorname{ri}(C)"></span></strong>relative interior</div>
+          <div class="notation-item"><strong><span data-math="\operatorname{rbd}(C)"></span></strong>relative boundary</div>
+          <div class="notation-item"><strong><span data-math="F\unlhd C"></span></strong>face of <span data-math="C"></span></div>
+          <div class="notation-item"><strong><span data-math="\operatorname{aff}(C)"></span></strong>affine hull</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="relativeLab">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">3 · Relative-topology laboratory</div><h2>Ambient interior versus relative interior</h2></div><p>Select a set, move the test point, and compare full ambient balls with neighborhoods sliced by the affine hull.</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Set and neighborhood controls</div>
+            <div class="control-stack">
+              <div class="control">
+                <label for="setPreset">Convex set</label>
+                <select id="setPreset">
+                  <option value="segment">Line segment in R²</option>
+                  <option value="triangle">Filled triangle</option>
+                  <option value="singleton">Singleton</option>
+                  <option value="ray">Closed ray</option>
+                  <option value="disk">Closed disk</option>
+                </select>
+              </div>
+              <div class="control"><label for="pointParam"><span data-math="s"></span><span id="pointParamVal">0.50</span></label><input id="pointParam" type="range" min="0" max="1" step=".01" value=".5"><div class="control-note">Moves the test point through a natural path in the selected set.</div></div>
+              <div class="control"><label for="epsilon"><span data-math="\varepsilon"></span><span id="epsilonVal">0.65</span></label><input id="epsilon" type="range" min=".15" max="1.6" step=".05" value=".65"></div>
+              <label class="toggle-line"><input id="showAmbientBall" type="checkbox" checked>show ambient ball</label>
+              <label class="toggle-line"><input id="showRelativeBall" type="checkbox" checked>show relative neighborhood</label>
+              <button id="animatePoint" class="ghost-button">Animate test point</button>
+            </div>
+          </aside>
+          <article class="card">
+            <div class="diagram-shell"><svg id="relativeSvg" viewBox="0 0 760 500" aria-label="Ambient and relative neighborhoods"></svg></div>
+            <div class="legend"><span><i style="background:var(--cyan)"></i>convex set</span><span><i style="background:var(--amber)"></i>affine hull</span><span><i style="background:var(--violet)"></i>ambient ball</span><span><i style="background:var(--teal)"></i>relative neighborhood</span></div>
+          </article>
+          <aside class="card">
+            <div class="card-label">Classification</div>
+            <div id="relativeFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">affine dimension</div><div class="metric-value" id="relDim">—</div></div>
+              <div class="metric-cell"><div class="metric-name">ordinary interior?</div><div class="metric-value" id="ordinaryInterior">—</div></div>
+              <div class="metric-cell"><div class="metric-name">relative interior?</div><div class="metric-value" id="relativeInterior">—</div></div>
+              <div class="metric-cell"><div class="metric-name">relative boundary?</div><div class="metric-value" id="relativeBoundary">—</div></div>
+            </div>
+            <div id="relativeStatus" class="status good" style="margin-top:14px"></div>
+          </aside>
+        </div>
+        <div class="grid-2" style="margin-top:20px">
+          <article class="card">
+            <div class="card-label">Read the diagram</div>
+            <p class="muted">The violet disk is the full ambient ball. The teal object is its intersection with the affine hull. Relative interior only asks whether this teal slice remains inside the set.</p>
+          </article>
+          <article class="card">
+            <div class="card-label">Key correction</div>
+            <p class="muted">For a segment in <span data-math="\mathbb R^2"></span>, the ordinary interior is empty, but the relative interior is the open segment. For a singleton, the relative interior is the singleton itself.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faceLab">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">4 · Supporting-hyperplane laboratory</div><h2>Rotate a linear functional and expose a face</h2></div><p>The maximizers of <span data-math="x\mapsto\langle u,x\rangle"></span> form an exposed face. On a polygon this may be one vertex or a whole edge.</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Support controls</div>
+            <div class="control-stack">
+              <div class="control">
+                <label for="shapePreset">Convex body</label>
+                <select id="shapePreset">
+                  <option value="square">Square</option>
+                  <option value="pentagon">Irregular pentagon</option>
+                  <option value="triangle">Triangle</option>
+                  <option value="disk">Disk</option>
+                </select>
+              </div>
+              <div class="control"><label for="supportAngle"><span data-math="\theta"></span><span id="supportAngleVal">25°</span></label><input id="supportAngle" type="range" min="0" max="359" step="1" value="25"><div class="control-note">The normal vector is <span data-math="u=(\cos\theta,\sin\theta)"></span>.</div></div>
+              <label class="toggle-line"><input id="showNormal" type="checkbox" checked>show normal direction</label>
+              <label class="toggle-line"><input id="showAllFaces" type="checkbox">show all proper faces</label>
+              <button id="snapToEdge" class="ghost-button">Snap to an edge normal</button>
+              <button id="rotateSupport" class="ghost-button">Rotate continuously</button>
+            </div>
+          </aside>
+          <article class="card">
+            <div class="diagram-shell"><svg id="faceSvg" viewBox="0 0 760 500" aria-label="Supporting line and exposed face"></svg></div>
+            <div class="legend"><span><i style="background:var(--cyan)"></i>convex set</span><span><i style="background:var(--violet)"></i>supporting hyperplane</span><span><i style="background:var(--teal)"></i>exposed face</span><span><i style="background:var(--amber)"></i>normal direction</span></div>
+          </article>
+          <aside class="card">
+            <div class="card-label">Support calculation</div>
+            <div id="supportFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">support value</div><div class="metric-value" id="supportValue">—</div></div>
+              <div class="metric-cell"><div class="metric-name">face dimension</div><div class="metric-value" id="faceDimension">—</div></div>
+              <div class="metric-cell"><div class="metric-name">face type</div><div class="metric-value" id="faceType">—</div></div>
+              <div class="metric-cell"><div class="metric-name">exposed?</div><div class="metric-value" id="isExposed">yes</div></div>
+            </div>
+            <div id="faceStatus" class="status good" style="margin-top:14px"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">5 · Faces and relative interiors</div><h2>Every point belongs to one smallest face</h2></div><p>For a polytope, moving from the interior to an edge and then to a vertex lowers the dimension of the minimal face.</p></div>
+        <div class="grid-3">
+          <article class="card face-card"><div class="card-label">Interior point</div><div class="math-display" data-math="x\in\operatorname{ri}(C)" data-display="true"></div><p class="muted">The smallest face containing <span data-math="x"></span> is <span data-math="C"></span> itself.</p></article>
+          <article class="card face-card"><div class="card-label">Edge point</div><div class="math-display" data-math="x\in\operatorname{ri}(F),\qquad \dim F=1" data-display="true"></div><p class="muted">The smallest face is the entire edge, not merely the point.</p></article>
+          <article class="card face-card"><div class="card-label">Vertex</div><div class="math-display" data-math="x\in\operatorname{ext}(C),\qquad \{x\}\unlhd C" data-display="true"></div><p class="muted">A vertex is a zero-dimensional face.</p></article>
+        </div>
+        <article class="card definition-card" style="margin-top:20px">
+          <div class="card-label">Face partition principle</div>
+          <div class="math-display" data-math="C=\bigsqcup_{F\unlhd C}\operatorname{ri}(F)" data-display="true"></div>
+          <p>For a polytope, the relative interiors of all faces form a disjoint partition: interior, open edges, and vertices.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">6 · Main theorem</div><h2>Nonempty finite-dimensional convex sets have relative interior</h2></div><p>Ordinary interior may vanish, but relative interior does not.</p></div>
+        <article class="card definition-card">
+          <div class="card-label">Theorem</div>
+          <div class="math-display" data-math="C\subset\mathbb R^n,\quad C\neq\varnothing,\quad C\text{ convex}\qquad\Longrightarrow\qquad \operatorname{ri}(C)\neq\varnothing." data-display="true"></div>
+          <p>Moreover,</p>
+          <div class="math-display" data-math="\overline{\operatorname{ri}(C)}=\overline C,\qquad \operatorname{ri}(\overline C)=\operatorname{ri}(C)." data-display="true"></div>
+          <div class="flow-map">
+            <button class="flow-node clickable map-node" data-map="maximal">maximal affine independence</button><span class="flow-arrow">→</span>
+            <button class="flow-node clickable map-node" data-map="simplex">simplex inside C</button><span class="flow-arrow">→</span>
+            <button class="flow-node clickable map-node" data-map="barycenter">barycenter</button><span class="flow-arrow">→</span>
+            <button class="flow-node clickable map-node" data-map="relativeball">relative ball</button><span class="flow-arrow">→</span>
+            <button class="flow-node clickable map-node" data-map="nonempty">ri(C) nonempty</button>
+          </div>
+          <div id="mapExplanation" class="status" style="margin-top:16px">Select a node to see its exact role.</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">7 · Proof architecture</div><h2>A simplex creates intrinsic room</h2></div><p>The proof finds enough affinely independent points to span the affine hull, then uses their barycenter.</p></div>
+        <div class="proof-grid">
+          <article class="card">
+            <div class="proof-steps">
+              <div class="proof-step open"><button type="button"><span><span class="proof-number">1</span>Choose a maximal affinely independent family</span><span>−</span></button><div class="proof-body"><p>Take <span data-math="a_0,\dots,a_d\in C"></span> affinely independent with <span data-math="d=\dim_{\mathrm{aff}}C"></span>. Maximality implies</p><div class="math-display" data-math="\operatorname{aff}\{a_0,\dots,a_d\}=\operatorname{aff}(C)." data-display="true"></div></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">2</span>Form the simplex</span><span>+</span></button><div class="proof-body"><p>By convexity,</p><div class="math-display" data-math="\Delta=\operatorname{conv}\{a_0,\dots,a_d\}\subseteq C." data-display="true"></div><p>This simplex has full dimension inside <span data-math="\operatorname{aff}(C)"></span>.</p></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">3</span>Use positive barycentric coordinates</span><span>+</span></button><div class="proof-body"><p>The barycenter</p><div class="math-display" data-math="\bar a=\frac1{d+1}\sum_{i=0}^d a_i" data-display="true"></div><p>has all barycentric coefficients strictly positive. Small perturbations inside the affine hull preserve positivity.</p></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">4</span>Obtain a relative neighborhood</span><span>+</span></button><div class="proof-body"><p>Therefore some <span data-math="\varepsilon>0"></span> satisfies</p><div class="math-display" data-math="B(\bar a,\varepsilon)\cap\operatorname{aff}(C)\subseteq\Delta\subseteq C." data-display="true"></div><p>Hence <span data-math="\bar a\in\operatorname{ri}(C)"></span>.</p></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">5</span>Recover the closure from relative interior</span><span>+</span></button><div class="proof-body"><p>Fix <span data-math="x\in\operatorname{ri}(C)"></span> and <span data-math="y\in C"></span>. For every <span data-math="0\le t<1"></span>,</p><div class="math-display" data-math="(1-t)x+ty\in\operatorname{ri}(C)." data-display="true"></div><p>Letting <span data-math="t\uparrow1"></span> shows <span data-math="y\in\overline{\operatorname{ri}(C)}"></span>.</p></div></div>
+            </div>
+          </article>
+          <aside class="card">
+            <div class="card-label">Proof strategy</div>
+            <h3>Reduce to full dimension</h3>
+            <p class="muted">Relative topology converts the problem into an ordinary interior problem inside <span data-math="\operatorname{aff}(C)"></span>. A full-dimensional simplex supplies a concrete interior point.</p>
+            <div class="status good" style="margin-top:16px"><strong>Geometric engine.</strong> Strictly positive barycentric coordinates are stable under small affine perturbations.</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">8 · Extreme versus exposed</div><h2>Every exposed point is extreme, but not conversely</h2></div><p>A supporting functional may identify a whole edge, and some extreme points cannot be isolated by any support direction.</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Non-exposed example</div>
+            <p class="muted">Consider the convex hull of the unit disk and the apex <span data-math="a=(0,2.2)"></span>. The tangent-join points are extreme, but the unique supporting line at each also contains an entire boundary segment to the apex.</p>
+            <div class="control-stack" style="margin-top:16px">
+              <div class="control"><label for="apexHeight">apex height<span id="apexHeightVal">2.20</span></label><input id="apexHeight" type="range" min="1.3" max="3.2" step=".05" value="2.2"></div>
+              <label class="toggle-line"><input id="showTangency" type="checkbox" checked>highlight tangent-join points</label>
+            </div>
+          </aside>
+          <article class="card"><div class="diagram-shell"><svg id="nonExposedSvg" viewBox="0 0 760 500" aria-label="Extreme but non-exposed points"></svg></div></article>
+          <aside class="card">
+            <div class="card-label">Diagnosis</div>
+            <div class="math-display" data-math="\text{exposed}\Longrightarrow\text{extreme},\qquad \text{extreme}\nRightarrow\text{exposed}" data-display="true"></div>
+            <div class="status warning"><strong>Why non-exposed?</strong> At a tangent-join point, the only supporting line also contains the entire segment joining that point to the apex. Hence no linear functional has that point as its unique maximizer.</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">9 · Guided theorem proving</div><h2>Choose the valid inference</h2></div><p>The key distinction is between ordinary balls and affine slices of balls.</p></div>
+        <div class="proof-grid">
+          <article class="card">
+            <div class="card-label">Challenge</div>
+            <p>Let <span data-math="C=[a,b]\subset\mathbb R^2"></span> be a nontrivial line segment and <span data-math="x=(1-t)a+tb"></span> with <span data-math="0<t<1"></span>. Why is <span data-math="x\in\operatorname{ri}(C)"></span>?</p>
+            <div class="quiz-options">
+              <button class="proof-option" data-answer="wrong1">Because some ordinary two-dimensional ball around x is contained in C.</button>
+              <button class="proof-option" data-answer="correct">Because a sufficiently short interval around x inside aff(C) is contained in the segment.</button>
+              <button class="proof-option" data-answer="wrong2">Because every point of every convex set is relatively interior.</button>
+              <button class="proof-option" data-answer="wrong3">Because x is an extreme point.</button>
+            </div>
+          </article>
+          <aside class="card">
+            <div class="card-label">Feedback</div>
+            <div id="quizFeedback" class="status">Choose a proof step.</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">10 · What can go wrong?</div><h2>Boundary statements that need qualification</h2></div><p>Relative notions fix lower-dimensional pathologies, but faces and exposure still require careful distinctions.</p></div>
+        <article class="card">
+          <div class="counter-tabs">
+            <button class="counter-tab active" data-counter="ambient">Ambient interior</button>
+            <button class="counter-tab" data-counter="extreme">Extreme vs exposed</button>
+            <button class="counter-tab" data-counter="boundary">Boundary vs face</button>
+            <button class="counter-tab" data-counter="closure">Closure</button>
+          </div>
+          <div class="counter-content active" id="counter-ambient">
+            <div class="grid-2"><div><h3>Ordinary interior can be empty for structural reasons</h3><p class="muted">A segment in <span data-math="\mathbb R^2"></span> has empty ordinary interior even though it is full-dimensional in its own affine hull.</p></div><div class="status bad"><strong>Repair.</strong> Replace interior by relative interior and ambient balls by affine slices of balls.</div></div>
+          </div>
+          <div class="counter-content" id="counter-extreme">
+            <div class="grid-2"><div><h3>An extreme point need not be exposed</h3><p class="muted">The tangent-join points in the disk-plus-apex example are extreme but cannot be isolated by a supporting line.</p></div><div class="status bad"><strong>Correct implication.</strong> Exposed points are extreme; the converse fails in general.</div></div>
+          </div>
+          <div class="counter-content" id="counter-boundary">
+            <div class="grid-2"><div><h3>A boundary subset need not be a face</h3><p class="muted">A curved arc of a disk boundary is not generally a face: a segment can have an interior point on the arc while its endpoints leave the arc.</p></div><div class="status bad"><strong>Face test.</strong> If a relative interior point of a segment lies in the subset, both endpoints must lie there too.</div></div>
+          </div>
+          <div class="counter-content" id="counter-closure">
+            <div class="grid-2"><div><h3>Relative boundary depends on relative closure</h3><p class="muted">For an open segment, the relative boundary consists of the two missing endpoints after closure is taken in the affine hull.</p></div><div class="status bad"><strong>Do not use.</strong> <span data-math="C\setminus\operatorname{ri}(C)"></span> alone is not the boundary when <span data-math="C"></span> is not relatively closed.</div></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">11 · Common mistakes</div><h2>Precision traps</h2></div><p>Most errors come from forgetting the affine hull or confusing different types of boundary pieces.</p></div>
+        <article class="card">
+          <div class="mistake"><strong>Incorrect:</strong> “A set with empty interior has no interior points.” <span class="muted">Correct: it may have a large relative interior inside its affine hull.</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “Relative interior is computed using any smaller subspace containing the point.” <span class="muted">Correct: it is computed specifically in <span data-math="\operatorname{aff}(C)"></span>.</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “Every face is exposed.” <span class="muted">Correct: every exposed face is a face, but non-exposed faces occur in general convex sets.</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “Every boundary point is extreme.” <span class="muted">Correct: points in the relative interior of an edge are boundary points but are not extreme.</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “The relative boundary is always <span data-math="C\setminus\operatorname{ri}(C)"></span>.” <span class="muted">Correct only when <span data-math="C"></span> is relatively closed; generally use <span data-math="\operatorname{rcl}(C)\setminus\operatorname{ri}(C)"></span>.</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">12 · Final synthesis</div><h2>Intrinsic dimension organizes boundary geometry</h2></div><p>The affine hull determines the right topology; supporting functionals then organize the relative boundary into faces.</p></div>
+        <div class="flow-map">
+          <div class="flow-node">affine hull</div><span class="flow-arrow">→</span>
+          <div class="flow-node">relative neighborhoods</div><span class="flow-arrow">→</span>
+          <div class="flow-node">relative interior</div><span class="flow-arrow">→</span>
+          <div class="flow-node">relative boundary</div><span class="flow-arrow">→</span>
+          <div class="flow-node">faces and support</div>
+        </div>
+        <div class="grid-2" style="margin-top:20px">
+          <article class="card"><div class="card-label">Topological layer</div><div class="math-display" data-math="\operatorname{ri}(C)=\operatorname{int}_{\operatorname{aff}(C)}C" data-display="true"></div><p class="muted">Interior is intrinsic to the dimension actually occupied by the set.</p></article>
+          <article class="card"><div class="card-label">Geometric layer</div><div class="math-display" data-math="F_u=\operatorname*{arg\,max}_{x\in C}\langle u,x\rangle" data-display="true"></div><p class="muted">Support directions reveal exposed pieces of the boundary.</p></article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="shell">Interactive laboratory · relative interior, relative boundary, affine dimension, faces, and exposed faces.</div></footer>
+
+  <script>
+    "use strict";
+
+    const $=(s,r=document)=>r.querySelector(s);
+    const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+    const css=name=>getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+    const fmt=(v,d=2)=>{const n=Math.abs(v)<1e-10?0:v;return n.toFixed(d).replace("-","−");};
+
+    function renderMath(root=document){
+      if(!window.katex)return;
+      $$("[data-math]",root).forEach(el=>{
+        if(el.dataset.rendered==="1")return;
+        try{katex.render(el.dataset.math,el,{throwOnError:false,displayMode:el.dataset.display==="true"});el.dataset.rendered="1";}
+        catch(e){el.textContent=el.dataset.math;}
+      });
+    }
+    function renderInto(el,tex,display=true){
+      if(!window.katex){el.textContent=tex;return;}
+      katex.render(tex,el,{throwOnError:false,displayMode:display});
+    }
+
+    function setTheme(theme){
+      document.documentElement.dataset.theme=theme;
+      localStorage.setItem("relativeGeometryTheme",theme);
+      drawAll();
+    }
+    document.documentElement.dataset.theme=localStorage.getItem("relativeGeometryTheme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+    $("#themeToggle").addEventListener("click",()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark"));
+    $("#scrollToLab").addEventListener("click",()=>$("#relativeLab").scrollIntoView({behavior:"smooth"}));
+
+    function svgEl(tag,attrs={}){
+      const el=document.createElementNS("http://www.w3.org/2000/svg",tag);
+      Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));
+      return el;
+    }
+    function clearSvg(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+    function drawGrid(svg,w,h,step=50){
+      svg.appendChild(svgEl("rect",{x:0,y:0,width:w,height:h,fill:css("--canvas")}));
+      for(let x=step;x<w;x+=step)svg.appendChild(svgEl("line",{x1:x,y1:0,x2:x,y2:h,stroke:css("--grid"),"stroke-width":1}));
+      for(let y=step;y<h;y+=step)svg.appendChild(svgEl("line",{x1:0,y1:y,x2:w,y2:y,stroke:css("--grid"),"stroke-width":1}));
+      svg.appendChild(svgEl("line",{x1:0,y1:h/2,x2:w,y2:h/2,stroke:css("--axis"),"stroke-width":1.4}));
+      svg.appendChild(svgEl("line",{x1:w/2,y1:0,x2:w/2,y2:h,stroke:css("--axis"),"stroke-width":1.4}));
+    }
+    const worldToScreen=(p,w,h,range=5)=>({x:w/2+p.x*w/(2*range),y:h/2-p.y*h/(2*range)});
+    const screenRadius=(r,w,range=5)=>r*w/(2*range);
+
+    // Relative topology laboratory
+    let relativeTimer=null;
+    const setData={
+      segment:{dim:1,name:"segment"},
+      triangle:{dim:2,name:"triangle"},
+      singleton:{dim:0,name:"singleton"},
+      ray:{dim:1,name:"ray"},
+      disk:{dim:2,name:"disk"}
+    };
+    ["setPreset","pointParam","epsilon","showAmbientBall","showRelativeBall"].forEach(id=>$("#"+id).addEventListener("input",drawRelative));
+    $("#animatePoint").addEventListener("click",()=>{
+      clearInterval(relativeTimer);
+      let s=+$("#pointParam").value,dir=1;
+      relativeTimer=setInterval(()=>{
+        s+=.012*dir;if(s>=1){s=1;dir=-1;}if(s<=0){s=0;dir=1;}
+        $("#pointParam").value=s;drawRelative();
+      },45);
+    });
+
+    function relativePoint(type,s){
+      if(type==="segment")return{x:-3.1+6.2*s,y:-1.55+3.1*s};
+      if(type==="triangle"){
+        if(s<.5){
+          const q=s*2;return{x:(1-q)*(-2.6)+q*.2,y:(1-q)*(-1.9)+q*.25};
+        }
+        const q=(s-.5)*2;return{x:(1-q)*.2+q*2.7,y:(1-q)*.25+q*(-1.6)};
+      }
+      if(type==="singleton")return{x:.3,y:.45};
+      if(type==="ray")return{x:-2.7+5.4*s,y:-1.5+3*s};
+      return{x:4.4*(s-.5),y:0};
+    }
+
+    function classifyRelative(type,s,eps){
+      if(type==="segment"){
+        const rel=s>1e-6&&s<1-1e-6;
+        const margin=rel?Math.min(s,1-s)*Math.hypot(6.2,3.1):0;
+        return{dim:1,ordinary:false,relative:rel,boundary:!rel,ballFits:rel&&eps<margin};
+      }
+      if(type==="triangle"){
+        const boundary=s<1e-6||s>1-1e-6;
+        return{dim:2,ordinary:!boundary,relative:!boundary,boundary,boundary,ballFits:!boundary&&eps<.55};
+      }
+      if(type==="singleton")return{dim:0,ordinary:false,relative:true,boundary:false,ballFits:true};
+      if(type==="ray"){
+        const rel=s>1e-6;
+        return{dim:1,ordinary:false,relative:rel,boundary:!rel,ballFits:rel&&eps<s*6.2};
+      }
+      const r=Math.abs(4.4*(s-.5));
+      const rel=r<2.2-1e-6;
+      return{dim:2,ordinary:rel,relative:rel,boundary:!rel,ballFits:rel&&eps<2.2-r};
+    }
+
+    function drawRelative(){
+      const svg=$("#relativeSvg"),w=760,h=500;clearSvg(svg);drawGrid(svg,w,h);
+      const type=$("#setPreset").value,s=+$("#pointParam").value,eps=+$("#epsilon").value,p=relativePoint(type,s),P=worldToScreen(p,w,h);
+      const info=classifyRelative(type,s,eps);
+      // affine hull
+      if(type==="segment"||type==="ray"){
+        const a=type==="segment"?{x:-3.1,y:-1.55}:{x:-2.7,y:-1.5};
+        const b=type==="segment"?{x:3.1,y:1.55}:{x:2.7,y:1.5};
+        const dx=b.x-a.x,dy=b.y-a.y;
+        const A=worldToScreen({x:a.x-4*dx,y:a.y-4*dy},w,h),B=worldToScreen({x:a.x+4*dx,y:a.y+4*dy},w,h);
+        svg.appendChild(svgEl("line",{x1:A.x,y1:A.y,x2:B.x,y2:B.y,stroke:css("--amber"),"stroke-width":3,"stroke-dasharray":"10 8"}));
+      }else if(type==="singleton"){
+        svg.appendChild(svgEl("circle",{cx:P.x,cy:P.y,r:22,fill:"none",stroke:css("--amber"),"stroke-width":3,"stroke-dasharray":"7 6"}));
+      }else{
+        svg.appendChild(svgEl("rect",{x:7,y:7,width:w-14,height:h-14,rx:16,fill:"none",stroke:css("--amber"),"stroke-width":2,"stroke-dasharray":"10 8",opacity:.55}));
+      }
+
+      // set
+      if(type==="segment"){
+        const A=worldToScreen({x:-3.1,y:-1.55},w,h),B=worldToScreen({x:3.1,y:1.55},w,h);
+        svg.appendChild(svgEl("line",{x1:A.x,y1:A.y,x2:B.x,y2:B.y,stroke:css("--cyan"),"stroke-width":11,"stroke-linecap":"round"}));
+      }else if(type==="triangle"){
+        const pts=[{x:-2.6,y:-1.9},{x:2.8,y:-1.7},{x:.5,y:2.8}].map(q=>worldToScreen(q,w,h));
+        svg.appendChild(svgEl("polygon",{points:pts.map(q=>`${q.x},${q.y}`).join(" "),fill:`color-mix(in srgb,${css("--cyan")} 18%,transparent)`,stroke:css("--cyan"),"stroke-width":4}));
+      }else if(type==="singleton"){
+        svg.appendChild(svgEl("circle",{cx:P.x,cy:P.y,r:10,fill:css("--cyan"),stroke:css("--canvas"),"stroke-width":3}));
+      }else if(type==="ray"){
+        const A=worldToScreen({x:-2.7,y:-1.5},w,h),B=worldToScreen({x:4.3,y:2.39},w,h);
+        svg.appendChild(svgEl("line",{x1:A.x,y1:A.y,x2:B.x,y2:B.y,stroke:css("--cyan"),"stroke-width":11,"stroke-linecap":"round"}));
+        const ang=Math.atan2(B.y-A.y,B.x-A.x);
+        const arrow=svgEl("polygon",{points:`${B.x},${B.y} ${B.x-18*Math.cos(ang-.5)},${B.y-18*Math.sin(ang-.5)} ${B.x-18*Math.cos(ang+.5)},${B.y-18*Math.sin(ang+.5)}`,fill:css("--cyan")});
+        svg.appendChild(arrow);
+      }else{
+        const C=worldToScreen({x:0,y:0},w,h),r=screenRadius(2.2,w);
+        svg.appendChild(svgEl("circle",{cx:C.x,cy:C.y,r,fill:`color-mix(in srgb,${css("--cyan")} 16%,transparent)`,stroke:css("--cyan"),"stroke-width":4}));
+      }
+
+      if($("#showAmbientBall").checked){
+        svg.appendChild(svgEl("circle",{cx:P.x,cy:P.y,r:screenRadius(eps,w),fill:`color-mix(in srgb,${css("--violet")} 8%,transparent)`,stroke:css("--violet"),"stroke-width":3,"stroke-dasharray":"7 6"}));
+      }
+      if($("#showRelativeBall").checked){
+        if(info.dim===2){
+          svg.appendChild(svgEl("circle",{cx:P.x,cy:P.y,r:screenRadius(eps,w),fill:"none",stroke:css("--teal"),"stroke-width":6,opacity:.85}));
+        }else if(info.dim===1){
+          let v=type==="segment"?{x:6.2,y:3.1}:{x:5.4,y:3};
+          const L=Math.hypot(v.x,v.y);v={x:v.x/L,y:v.y/L};
+          const a=worldToScreen({x:p.x-eps*v.x,y:p.y-eps*v.y},w,h),b=worldToScreen({x:p.x+eps*v.x,y:p.y+eps*v.y},w,h);
+          svg.appendChild(svgEl("line",{x1:a.x,y1:a.y,x2:b.x,y2:b.y,stroke:css("--teal"),"stroke-width":8,"stroke-linecap":"round"}));
+        }else{
+          svg.appendChild(svgEl("circle",{cx:P.x,cy:P.y,r:14,fill:"none",stroke:css("--teal"),"stroke-width":5}));
+        }
+      }
+      svg.appendChild(svgEl("circle",{cx:P.x,cy:P.y,r:10,fill:info.relative?css("--teal"):css("--danger"),stroke:css("--canvas"),"stroke-width":3}));
+
+      $("#pointParamVal").textContent=fmt(s,2);$("#epsilonVal").textContent=fmt(eps,2);
+      $("#relDim").textContent=info.dim;$("#ordinaryInterior").textContent=info.ordinary?"yes":"no";$("#relativeInterior").textContent=info.relative?"yes":"no";$("#relativeBoundary").textContent=info.boundary?"yes":"no";
+      renderInto($("#relativeFormula"),String.raw`B(x,${fmt(eps,2)})\cap\operatorname{aff}(C)${info.ballFits?"\subseteq":"\nsubseteq"}C`);
+      const st=$("#relativeStatus");
+      if(info.relative){
+        st.className=info.ballFits?"status good":"status warning";
+        st.innerHTML=info.ballFits?"<strong>Verified at this radius.</strong> The displayed relative neighborhood stays inside the set.":"<strong>Relative interior point.</strong> This chosen radius is too large, but a smaller positive radius works.";
+      }else if(info.boundary){
+        st.className="status bad";st.innerHTML="<strong>Relative boundary point.</strong> Every relative neighborhood meets both the set and its relative complement.";
+      }else{
+        st.className="status bad";st.innerHTML="<strong>Outside the relative interior.</strong>";
+      }
+    }
+
+    // Supporting face laboratory
+    const shapes={
+      square:[{x:-2.4,y:-2.4},{x:2.4,y:-2.4},{x:2.4,y:2.4},{x:-2.4,y:2.4}],
+      pentagon:[{x:-3,y:-1.4},{x:-1.6,y:2.5},{x:1.2,y:3},{x:3.1,y:.5},{x:1.5,y:-2.5}],
+      triangle:[{x:-2.8,y:-2},{x:3,y:-1.7},{x:.4,y:2.9}]
+    };
+    let faceTimer=null;
+    ["shapePreset","supportAngle","showNormal","showAllFaces"].forEach(id=>$("#"+id).addEventListener("input",drawFaceLab));
+    $("#snapToEdge").addEventListener("click",()=>{
+      const shape=$("#shapePreset").value;
+      if(shape==="disk"){ $("#supportAngle").value=0; }
+      else{
+        const pts=shapes[shape],a=pts[0],b=pts[1],edge={x:b.x-a.x,y:b.y-a.y};
+        let theta=Math.atan2(edge.x,-edge.y)*180/Math.PI;theta=(theta+360)%360;$("#supportAngle").value=Math.round(theta);
+      }
+      drawFaceLab();
+    });
+    $("#rotateSupport").addEventListener("click",()=>{
+      clearInterval(faceTimer);
+      faceTimer=setInterval(()=>{$("#supportAngle").value=(+$("#supportAngle").value+1)%360;drawFaceLab();},45);
+    });
+
+    function supportFacePolygon(pts,u){
+      const values=pts.map(p=>p.x*u.x+p.y*u.y),h=Math.max(...values),tol=1e-6;
+      return{h,indices:values.map((v,i)=>Math.abs(v-h)<tol?i:-1).filter(i=>i>=0),values};
+    }
+
+    function drawFaceLab(){
+      const svg=$("#faceSvg"),w=760,h=500;clearSvg(svg);drawGrid(svg,w,h);
+      const shape=$("#shapePreset").value,theta=+$("#supportAngle").value*Math.PI/180,u={x:Math.cos(theta),y:Math.sin(theta)};
+      let hVal=0,faceDim=0,faceType="point";
+      if(shape==="disk"){
+        const C=worldToScreen({x:0,y:0},w,h),R=screenRadius(2.45,w);
+        svg.appendChild(svgEl("circle",{cx:C.x,cy:C.y,r:R,fill:`color-mix(in srgb,${css("--cyan")} 16%,transparent)`,stroke:css("--cyan"),"stroke-width":4}));
+        hVal=2.45;const p={x:2.45*u.x,y:2.45*u.y},P=worldToScreen(p,w,h);
+        svg.appendChild(svgEl("circle",{cx:P.x,cy:P.y,r:11,fill:css("--teal"),stroke:css("--canvas"),"stroke-width":3}));
+        const t={x:-u.y,y:u.x},a=worldToScreen({x:p.x-7*t.x,y:p.y-7*t.y},w,h),b=worldToScreen({x:p.x+7*t.x,y:p.y+7*t.y},w,h);
+        svg.appendChild(svgEl("line",{x1:a.x,y1:a.y,x2:b.x,y2:b.y,stroke:css("--violet"),"stroke-width":4}));
+      }else{
+        const pts=shapes[shape],S=pts.map(p=>worldToScreen(p,w,h));
+        svg.appendChild(svgEl("polygon",{points:S.map(p=>`${p.x},${p.y}`).join(" "),fill:`color-mix(in srgb,${css("--cyan")} 16%,transparent)`,stroke:css("--cyan"),"stroke-width":4,"stroke-linejoin":"round"}));
+        if($("#showAllFaces").checked){
+          S.forEach((p,i)=>{
+            const q=S[(i+1)%S.length];
+            svg.appendChild(svgEl("line",{x1:p.x,y1:p.y,x2:q.x,y2:q.y,stroke:css("--amber"),"stroke-width":8,opacity:.28}));
+            svg.appendChild(svgEl("circle",{cx:p.x,cy:p.y,r:8,fill:css("--amber"),opacity:.65}));
+          });
+        }
+        const sf=supportFacePolygon(pts,u);hVal=sf.h;
+        // support line
+        const p0={x:hVal*u.x,y:hVal*u.y},t={x:-u.y,y:u.x},a=worldToScreen({x:p0.x-8*t.x,y:p0.y-8*t.y},w,h),b=worldToScreen({x:p0.x+8*t.x,y:p0.y+8*t.y},w,h);
+        svg.appendChild(svgEl("line",{x1:a.x,y1:a.y,x2:b.x,y2:b.y,stroke:css("--violet"),"stroke-width":4}));
+        if(sf.indices.length===1){
+          const P=S[sf.indices[0]];svg.appendChild(svgEl("circle",{cx:P.x,cy:P.y,r:13,fill:css("--teal"),stroke:css("--canvas"),"stroke-width":3}));
+        }else{
+          const P=S[sf.indices[0]],Q=S[sf.indices[1]];
+          svg.appendChild(svgEl("line",{x1:P.x,y1:P.y,x2:Q.x,y2:Q.y,stroke:css("--teal"),"stroke-width":12,"stroke-linecap":"round"}));
+          faceDim=1;faceType="edge";
+        }
+      }
+      if($("#showNormal").checked){
+        const O=worldToScreen({x:0,y:0},w,h),N=worldToScreen({x:1.6*u.x,y:1.6*u.y},w,h);
+        svg.appendChild(svgEl("line",{x1:O.x,y1:O.y,x2:N.x,y2:N.y,stroke:css("--amber"),"stroke-width":4}));
+        svg.appendChild(svgEl("circle",{cx:N.x,cy:N.y,r:7,fill:css("--amber")}));
+      }
+      $("#supportAngleVal").textContent=`${Math.round(theta*180/Math.PI)}°`;$("#supportValue").textContent=fmt(hVal,2);$("#faceDimension").textContent=faceDim;$("#faceType").textContent=faceType;
+      renderInto($("#supportFormula"),String.raw`F_u=\operatorname*{arg\,max}_{x\in C}\langle u,x\rangle,\qquad u=(${fmt(u.x,2)},${fmt(u.y,2)})`);
+      const st=$("#faceStatus");
+      st.className="status good";
+      st.innerHTML=faceDim===1?"<strong>Exposed edge.</strong> The support direction is normal to a flat boundary piece, so every point of that edge maximizes the functional.":"<strong>Exposed point.</strong> This support direction has a unique maximizer.";
+    }
+
+    // Non-exposed example
+    ["apexHeight","showTangency"].forEach(id=>$("#"+id).addEventListener("input",drawNonExposed));
+    function drawNonExposed(){
+      const svg=$("#nonExposedSvg"),w=760,h=500;clearSvg(svg);drawGrid(svg,w,h);
+      const H=+$("#apexHeight").value,R=1.55,apex={x:0,y:H};
+      const C=worldToScreen({x:0,y:0},w,h),r=screenRadius(R,w);
+      svg.appendChild(svgEl("circle",{cx:C.x,cy:C.y,r,fill:`color-mix(in srgb,${css("--cyan")} 13%,transparent)`,stroke:css("--cyan"),"stroke-width":4}));
+      const y=R*R/H,x=Math.sqrt(Math.max(0,R*R-y*y));
+      const left={x:-x,y},right={x,y},A=worldToScreen(apex,w,h),L=worldToScreen(left,w,h),Rr=worldToScreen(right,w,h);
+      // mask upper circular cap inside triangle by filling convex hull triangle-ish region
+      svg.appendChild(svgEl("polygon",{points:`${L.x},${L.y} ${A.x},${A.y} ${Rr.x},${Rr.y}`,fill:`color-mix(in srgb,${css("--cyan")} 14%,transparent)`,stroke:"none"}));
+      svg.appendChild(svgEl("line",{x1:L.x,y1:L.y,x2:A.x,y2:A.y,stroke:css("--cyan"),"stroke-width":5}));
+      svg.appendChild(svgEl("line",{x1:Rr.x,y1:Rr.y,x2:A.x,y2:A.y,stroke:css("--cyan"),"stroke-width":5}));
+      svg.appendChild(svgEl("circle",{cx:A.x,cy:A.y,r:10,fill:css("--violet"),stroke:css("--canvas"),"stroke-width":3}));
+      if($("#showTangency").checked){
+        [L,Rr].forEach(P=>{
+          svg.appendChild(svgEl("circle",{cx:P.x,cy:P.y,r:12,fill:css("--teal"),stroke:css("--canvas"),"stroke-width":3}));
+        });
+        // unique supporting lines, which coincide with boundary segments
+        svg.appendChild(svgEl("line",{x1:L.x-80,y1:L.y+(L.y-A.y)/(L.x-A.x)*(-80),x2:A.x,y2:A.y,stroke:css("--violet"),"stroke-width":3,"stroke-dasharray":"8 7"}));
+        svg.appendChild(svgEl("line",{x1:Rr.x+80,y1:Rr.y+(Rr.y-A.y)/(Rr.x-A.x)*(80),x2:A.x,y2:A.y,stroke:css("--violet"),"stroke-width":3,"stroke-dasharray":"8 7"}));
+      }
+      $("#apexHeightVal").textContent=fmt(H,2);
+    }
+
+    // Map explanations
+    const mapText={
+      maximal:"Choose d+1 affinely independent points, where d is the affine dimension of C.",
+      simplex:"Their convex hull lies in C and has full dimension inside aff(C).",
+      barycenter:"The barycenter has strictly positive barycentric coordinates.",
+      relativeball:"Small perturbations inside aff(C) preserve positivity of those coordinates.",
+      nonempty:"Therefore the barycenter has a relative neighborhood contained in C."
+    };
+    $$(".map-node").forEach(btn=>btn.addEventListener("click",()=>$("#mapExplanation").textContent=mapText[btn.dataset.map]));
+
+    // Accordion
+    $$(".proof-step>button").forEach(btn=>btn.addEventListener("click",()=>{
+      const step=btn.parentElement;step.classList.toggle("open");btn.lastElementChild.textContent=step.classList.contains("open")?"−":"+";
+    }));
+
+    // Quiz
+    $$(".proof-option").forEach(btn=>btn.addEventListener("click",()=>{
+      $$(".proof-option").forEach(b=>b.classList.remove("correct","wrong"));
+      const f=$("#quizFeedback");
+      if(btn.dataset.answer==="correct"){
+        btn.classList.add("correct");f.className="status good";f.innerHTML="<strong>Correct.</strong> Since 0<t<1, the point is separated by positive distances from both endpoints along the line aff(C). A sufficiently small line segment around x therefore remains inside C.";
+      }else if(btn.dataset.answer==="wrong1"){
+        btn.classList.add("wrong");f.className="status bad";f.innerHTML="<strong>Ambient-dimension error.</strong> No two-dimensional ball can fit inside a one-dimensional segment.";
+      }else if(btn.dataset.answer==="wrong2"){
+        btn.classList.add("wrong");f.className="status bad";f.innerHTML="<strong>False statement.</strong> Relative boundary points of a convex set are not relatively interior.";
+      }else{
+        btn.classList.add("wrong");f.className="status bad";f.innerHTML="<strong>Reversed geometry.</strong> Interior points of a nontrivial segment are not extreme; they are nontrivial convex combinations of the endpoints.";
+      }
+    }));
+
+    // Counter tabs
+    $$(".counter-tab").forEach(tab=>tab.addEventListener("click",()=>{
+      $$(".counter-tab").forEach(t=>t.classList.toggle("active",t===tab));
+      $$(".counter-content").forEach(c=>c.classList.toggle("active",c.id==="counter-"+tab.dataset.counter));
+    }));
+
+    function drawAll(){drawRelative();drawFaceLab();drawNonExposed();}
+    window.addEventListener("load",()=>{renderMath();drawAll();});
+    setTimeout(()=>{renderMath();drawAll();},300);
+  </script>
+</body>
+</html>

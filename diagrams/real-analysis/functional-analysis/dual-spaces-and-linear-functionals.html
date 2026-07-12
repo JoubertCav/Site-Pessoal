@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Interactive laboratory for dual spaces, continuous linear functionals, dual norms, annihilators, kernels, and geometric interpretation." />
+  <title>Dual Spaces and Linear Functionals — Interactive Laboratory</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #f7f9f8;
+      --surface: rgba(255,255,255,.97);
+      --surface-2: #eef5f5;
+      --surface-3: #e4edef;
+      --text: #172126;
+      --muted: #617178;
+      --line: #d5e0e2;
+      --cyan: #00a8c6;
+      --cyan-deep: #087f98;
+      --teal: #168f88;
+      --violet: #7567c7;
+      --amber: #b57a20;
+      --danger: #b74c4c;
+      --success: #147d64;
+      --shadow: 0 18px 52px rgba(37,56,64,.09);
+      --radius: 22px;
+      --canvas: #ffffff;
+      --axis: #61747b;
+      --grid: #dce5e7;
+      --focus: rgba(0,168,198,.23);
+    }
+
+    html[data-theme="dark"] {
+      --bg: #121a20;
+      --surface: rgba(27,38,46,.97);
+      --surface-2: #213039;
+      --surface-3: #273942;
+      --text: #edf5f6;
+      --muted: #a8b8bd;
+      --line: #344750;
+      --cyan: #44c9e1;
+      --cyan-deep: #7ed9e8;
+      --teal: #58c4b9;
+      --violet: #aaa0e6;
+      --amber: #e3b35d;
+      --danger: #ef8989;
+      --success: #68d0ad;
+      --shadow: 0 18px 52px rgba(0,0,0,.25);
+      --canvas: #17232a;
+      --axis: #9bb0b7;
+      --grid: #30424a;
+      --focus: rgba(68,201,225,.22);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 8% 0%, rgba(0,168,198,.08), transparent 29rem),
+        radial-gradient(circle at 100% 18%, rgba(117,103,199,.06), transparent 31rem),
+        var(--bg);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.65;
+      transition: background .25s ease, color .25s ease;
+    }
+
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; }
+    .shell { width: min(1480px, calc(100% - 32px)); margin: 0 auto; }
+
+    .topbar {
+      position: sticky; top: 0; z-index: 40;
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 84%, transparent);
+      backdrop-filter: blur(18px);
+      background: color-mix(in srgb, var(--bg) 82%, transparent);
+    }
+    .topbar-inner { min-height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: -.02em; }
+    .brand-mark {
+      width: 34px; height: 34px; border: 1px solid var(--cyan); border-radius: 11px;
+      display: grid; place-items: center; box-shadow: inset 0 0 0 6px color-mix(in srgb, var(--cyan) 10%, transparent);
+    }
+    .brand-mark::before { content: "φ"; color: var(--cyan-deep); font-family: "Libre Baskerville", serif; font-weight: 700; }
+    .top-actions { display: flex; gap: 9px; align-items: center; }
+
+    .icon-button, .ghost-button, .primary-button, .segmented button, .proof-option, .counter-tab {
+      border: 1px solid var(--line); background: var(--surface); color: var(--text);
+      border-radius: 12px; min-height: 40px; padding: 9px 13px;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .icon-button:hover, .ghost-button:hover, .segmented button:hover, .proof-option:hover, .counter-tab:hover {
+      transform: translateY(-1px); border-color: var(--cyan);
+    }
+    .primary-button { background: var(--cyan); color: #062e37; font-weight: 700; border-color: transparent; }
+    .primary-button:hover { transform: translateY(-1px); filter: brightness(1.03); }
+
+    h1, h2, h3, .serif { font-family: "Libre Baskerville", Georgia, serif; letter-spacing: -.025em; }
+    h1 { font-size: clamp(2.65rem, 5.8vw, 5.15rem); line-height: 1.03; margin: 12px 0 20px; }
+    h2 { font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.14; margin: 0; }
+    h3 { font-size: 1.2rem; margin: 0; }
+    p { margin: 0; }
+
+    .hero { display: grid; grid-template-columns: minmax(0,1.12fr) minmax(360px,.88fr); gap: 30px; padding: 70px 0 46px; align-items: center; }
+    .eyebrow { color: var(--cyan-deep); font-weight: 700; text-transform: uppercase; letter-spacing: .14em; font-size: .78rem; }
+    .hero p { color: var(--muted); max-width: 850px; font-size: clamp(1.02rem,1.8vw,1.24rem); }
+    .hero-chips { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 28px; }
+    .chip { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--line); background: var(--surface); padding: 8px 11px; border-radius: 999px; color: var(--muted); font-size: .9rem; }
+    .chip::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); }
+
+    .hero-map { background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); border-radius: 28px; padding: 24px; min-height: 410px; overflow: hidden; }
+    .functional-visual { position: relative; height: 360px; }
+    .level-line { position: absolute; left: 48px; right: 48px; height: 2px; background: var(--line); transform: rotate(-25deg); transform-origin: center; }
+    .level-line.l1 { top: 92px; }
+    .level-line.l2 { top: 145px; background: var(--cyan); height: 3px; }
+    .level-line.l3 { top: 198px; }
+    .level-line.l4 { top: 251px; }
+    .kernel-label { position: absolute; right: 52px; top: 124px; color: var(--cyan-deep); font-size: .86rem; font-weight: 700; }
+    .normal-arrow { position: absolute; left: 50%; top: 182px; width: 122px; height: 3px; background: var(--violet); transform: rotate(65deg); transform-origin: left center; color: var(--violet); }
+    .normal-arrow::after { content: ""; position: absolute; right: -1px; top: -5px; border-left: 11px solid currentColor; border-top: 6px solid transparent; border-bottom: 6px solid transparent; }
+    .point-dot { position: absolute; width: 14px; height: 14px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 0 7px color-mix(in srgb, var(--teal) 15%, transparent); left: 73%; top: 33%; }
+    .point-label { position: absolute; left: calc(73% + 18px); top: calc(33% - 12px); color: var(--teal); font-weight: 700; }
+    .height-brace { position: absolute; left: 64%; top: 122px; height: 80px; border-left: 2px dashed var(--amber); }
+    .height-brace::before, .height-brace::after { content: ""; position: absolute; left: -5px; width: 10px; height: 2px; background: var(--amber); }
+    .height-brace::before { top: 0; } .height-brace::after { bottom: 0; }
+    .height-label { position: absolute; left: calc(64% + 10px); top: 150px; color: var(--amber); font-size: .84rem; }
+    .hero-equation { position: absolute; left: 0; right: 0; bottom: 4px; text-align: center; }
+
+    .section { padding: 72px 0; }
+    .section-head { display: flex; justify-content: space-between; gap: 24px; align-items: end; margin-bottom: 27px; }
+    .section-head p { color: var(--muted); max-width: 760px; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 16px; }
+    .lab-grid { display: grid; grid-template-columns: minmax(260px,.72fr) minmax(0,1.38fr) minmax(280px,.9fr); gap: 20px; align-items: start; }
+    .proof-grid { display: grid; grid-template-columns: minmax(0,1.22fr) minmax(300px,.78fr); gap: 20px; }
+    .plot-pair { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; }
+
+    .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px; min-width: 0; }
+    .card.soft { background: var(--surface-2); box-shadow: none; }
+    .card h3 + p { margin-top: 9px; color: var(--muted); }
+    .card-label { color: var(--cyan-deep); font-size: .78rem; text-transform: uppercase; letter-spacing: .12em; font-weight: 700; margin-bottom: 10px; }
+    .muted { color: var(--muted); }
+    .small { font-size: .9rem; }
+
+    .definition-card { padding: 30px; border-left: 4px solid var(--cyan); }
+    .math-display { margin: 18px 0; overflow-x: auto; overflow-y: hidden; padding: 8px 2px; }
+    .katex-display { margin: .72em 0 !important; }
+    .katex { max-width: 100%; }
+
+    .notation-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px; margin-top: 18px; }
+    .notation-item { border: 1px solid var(--line); background: var(--surface-2); border-radius: 14px; padding: 13px; }
+    .notation-item strong { display: block; margin-bottom: 6px; color: var(--cyan-deep); }
+
+    .quantifier-row { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 10px; margin-top: 22px; }
+    .quantifier-piece { padding: 14px; border: 1px solid var(--line); border-radius: 15px; background: var(--surface-2); text-align: center; }
+    .quantifier-piece strong { display: block; color: var(--cyan-deep); font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 7px; }
+
+    .flow-map { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; margin-top: 18px; }
+    .flow-node { border: 1px solid var(--line); background: var(--surface-2); border-radius: 14px; padding: 12px 14px; min-width: 150px; text-align: center; }
+    .flow-node.clickable { cursor: pointer; }
+    .flow-node.clickable:hover { border-color: var(--cyan); }
+    .flow-arrow { color: var(--cyan-deep); font-size: 1.4rem; }
+
+    .control-stack { display: grid; gap: 17px; }
+    .control label { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; font-weight: 600; margin-bottom: 7px; }
+    .control label span:last-child { color: var(--cyan-deep); font-variant-numeric: tabular-nums; }
+    input[type="range"] { width: 100%; accent-color: var(--cyan); }
+    select { width: 100%; min-height: 43px; border-radius: 11px; border: 1px solid var(--line); background: var(--surface); color: var(--text); padding: 8px 10px; }
+    .control-note { color: var(--muted); font-size: .82rem; margin-top: 5px; }
+
+    .plot { width: 100%; min-height: 430px; border-radius: 16px; overflow: hidden; }
+    .plot.compact { min-height: 360px; }
+    .metric-strip { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; margin-top: 14px; }
+    .metric-cell { background: var(--surface-2); border: 1px solid var(--line); border-radius: 14px; padding: 13px; text-align: center; }
+    .metric-name { color: var(--muted); font-size: .79rem; text-transform: uppercase; letter-spacing: .06em; }
+    .metric-value { font-size: 1.18rem; font-weight: 700; color: var(--cyan-deep); font-variant-numeric: tabular-nums; }
+
+    .status { border-radius: 14px; padding: 14px; border: 1px solid var(--line); background: var(--surface-2); }
+    .status.good { border-color: color-mix(in srgb, var(--success) 55%, var(--line)); background: color-mix(in srgb, var(--success) 9%, var(--surface)); }
+    .status.bad { border-color: color-mix(in srgb, var(--danger) 55%, var(--line)); background: color-mix(in srgb, var(--danger) 9%, var(--surface)); }
+    .status.warning { border-color: color-mix(in srgb, var(--amber) 55%, var(--line)); background: color-mix(in srgb, var(--amber) 9%, var(--surface)); }
+
+    .segmented { display: flex; flex-wrap: wrap; gap: 8px; }
+    .segmented button.active { background: var(--cyan); color: #062e37; border-color: var(--cyan); font-weight: 700; }
+
+    .proof-steps { display: grid; gap: 11px; }
+    .proof-step { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--surface); }
+    .proof-step button { width: 100%; border: 0; background: transparent; color: var(--text); padding: 15px 17px; display: flex; justify-content: space-between; gap: 16px; text-align: left; font-weight: 700; }
+    .proof-step .proof-body { display: none; padding: 0 17px 17px; color: var(--muted); }
+    .proof-step.open { border-color: var(--cyan); }
+    .proof-step.open .proof-body { display: block; }
+    .proof-number { display: inline-grid; place-items: center; min-width: 25px; height: 25px; border-radius: 50%; background: var(--surface-2); color: var(--cyan-deep); margin-right: 8px; font-size: .82rem; }
+
+    .example-card { position: relative; overflow: hidden; min-height: 300px; }
+    .example-card::after { content: ""; position: absolute; width: 120px; height: 120px; border-radius: 50%; right: -48px; bottom: -48px; border: 1px solid color-mix(in srgb, var(--cyan) 38%, var(--line)); }
+    .badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 5px 9px; font-size: .76rem; font-weight: 700; background: var(--surface-2); color: var(--cyan-deep); border: 1px solid var(--line); margin-bottom: 12px; }
+    .fact-list { display: grid; gap: 9px; margin-top: 15px; }
+    .fact { display: flex; gap: 9px; align-items: flex-start; color: var(--muted); font-size: .92rem; }
+    .fact::before { content: ""; width: 8px; height: 8px; flex: 0 0 8px; margin-top: .52em; border-radius: 50%; background: var(--teal); }
+
+    .counter-tabs { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 18px; }
+    .counter-tab.active { background: var(--danger); border-color: var(--danger); color: #fff; }
+    .counter-panel { display: none; }
+    .counter-panel.active { display: block; }
+
+    .mistake { border-top: 1px solid var(--line); padding: 17px 0; }
+    .mistake:first-child { border-top: 0; padding-top: 0; }
+    .wrong { color: var(--danger); font-weight: 700; }
+    .correct { color: var(--success); font-weight: 700; }
+
+    .prover-options { display: grid; gap: 9px; margin-top: 14px; }
+    .proof-option { text-align: left; }
+    .proof-option.correct-choice { border-color: var(--success); background: color-mix(in srgb, var(--success) 10%, var(--surface)); }
+    .proof-option.wrong-choice { border-color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, var(--surface)); }
+
+    .footer { padding: 45px 0 70px; color: var(--muted); text-align: center; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    @media (max-width: 1120px) {
+      .hero, .lab-grid, .proof-grid { grid-template-columns: 1fr; }
+      .hero-map { min-height: 380px; }
+      .grid-4 { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .notation-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .quantifier-row { grid-template-columns: repeat(2,minmax(0,1fr)); }
+    }
+    @media (max-width: 760px) {
+      .shell { width: min(100% - 20px, 1480px); }
+      .topbar-inner { min-height: 62px; }
+      .brand span:last-child { display: none; }
+      .hero { padding-top: 48px; }
+      .hero-map { min-height: 345px; padding: 14px; }
+      .functional-visual { transform: scale(.86); transform-origin: center top; }
+      .grid-2, .grid-3, .grid-4, .plot-pair, .notation-grid, .quantifier-row, .metric-strip { grid-template-columns: 1fr; }
+      .section { padding: 52px 0; }
+      .section-head { align-items: start; flex-direction: column; }
+      .card, .definition-card { padding: 18px; }
+      .plot { min-height: 350px; }
+      .katex-display { font-size: .92em; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"></div>
+        <span>Functional Analysis Laboratory</span>
+      </div>
+      <div class="top-actions">
+        <button class="ghost-button" id="resetButton" type="button">Reset laboratory</button>
+        <button class="icon-button" id="themeButton" type="button" aria-label="Toggle light and dark mode">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="shell hero">
+      <div>
+        <div class="eyebrow">Duality as measurement</div>
+        <h1>Dual spaces and linear functionals</h1>
+        <p>
+          A vector is an object; a functional is a linear way of measuring it. This laboratory turns
+          \(\varphi(x)\) into geometry: kernels become hyperplanes, level sets become parallel slices,
+          and the dual norm becomes the largest measurement permitted by the primal unit ball.
+        </p>
+        <div class="hero-chips">
+          <span class="chip">continuous functionals</span>
+          <span class="chip">dual norms</span>
+          <span class="chip">annihilators</span>
+          <span class="chip">supporting hyperplanes</span>
+          <span class="chip">matrix row analogy</span>
+        </div>
+      </div>
+      <div class="hero-map" aria-label="Geometric representation of a linear functional">
+        <div class="functional-visual">
+          <div class="level-line l1"></div>
+          <div class="level-line l2"></div>
+          <div class="level-line l3"></div>
+          <div class="level-line l4"></div>
+          <div class="kernel-label">kernel</div>
+          <div class="normal-arrow"></div>
+          <div class="point-dot"></div>
+          <div class="point-label">x</div>
+          <div class="height-brace"></div>
+          <div class="height-label">φ(x)</div>
+          <div class="hero-equation">\[\varphi(x)=a\cdot x,\qquad \ker\varphi=\{x:a\cdot x=0\}.\]</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Formal objects</div>
+            <h2>From a vector space to its space of measurements</h2>
+          </div>
+          <p>The dual space contains only continuous linear functionals. In finite dimensions every linear functional is continuous; in infinite dimensions the distinction is essential.</p>
+        </div>
+
+        <div class="grid-2">
+          <article class="card definition-card">
+            <div class="card-label">Definition — continuous dual</div>
+            <p>Let \((X,\|\cdot\|)\) be a normed space over \(\mathbb F\in\{\mathbb R,\mathbb C\}\). Its continuous dual is</p>
+            <div class="math-display">\[X^*=\mathcal L(X,\mathbb F)=\{\varphi:X\to\mathbb F:\varphi\text{ is linear and continuous}\}.\]</div>
+            <p>The dual norm is the operator norm of the scalar-valued map:</p>
+            <div class="math-display">\[\|\varphi\|_* = \sup_{\|x\|\le 1}|\varphi(x)| = \sup_{x\ne 0}\frac{|\varphi(x)|}{\|x\|}.\]</div>
+          </article>
+
+          <article class="card">
+            <div class="card-label">The quantifier structure of boundedness</div>
+            <div class="math-display">\[\exists C\ge 0\;\forall x\in X,\qquad |\varphi(x)|\le C\|x\|.\]</div>
+            <div class="quantifier-row">
+              <div class="quantifier-piece"><strong>Choose once</strong>\(C\)</div>
+              <div class="quantifier-piece"><strong>Then test</strong>every \(x\)</div>
+              <div class="quantifier-piece"><strong>Compare</strong>\(|\varphi(x)|\)</div>
+              <div class="quantifier-piece"><strong>Against</strong>\(C\|x\|\)</div>
+              <div class="quantifier-piece"><strong>Best constant</strong>\(C=\|\varphi\|_*\)</div>
+            </div>
+          </article>
+        </div>
+
+        <article class="card" style="margin-top:20px">
+          <div class="card-label">Notation panel</div>
+          <div class="notation-grid">
+            <div class="notation-item"><strong>\(X^*\)</strong><span class="muted">continuous dual space</span></div>
+            <div class="notation-item"><strong>\(\varphi\in X^*\)</strong><span class="muted">continuous linear functional</span></div>
+            <div class="notation-item"><strong>\(\ker\varphi\)</strong><span class="muted">vectors invisible to \(\varphi\)</span></div>
+            <div class="notation-item"><strong>\(M^\perp\)</strong><span class="muted">annihilator of a subset \(M\subset X\)</span></div>
+          </div>
+          <div class="flow-map">
+            <div class="flow-node">primal vector \(x\)</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node">measurement \(\varphi(x)\)</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node">level hyperplane</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node">dual norm</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="geometry-lab">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Interactive geometry</div>
+            <h2>A functional is a family of parallel slices</h2>
+          </div>
+          <p>Change the coefficients, the vector, and the primal norm. The kernel, maximizing direction, dual ball, and norm inequality update together.</p>
+        </div>
+
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Controls</div>
+            <div class="control-stack">
+              <div class="control">
+                <label for="normSelect"><span>Primal norm</span></label>
+                <select id="normSelect">
+                  <option value="l2">Euclidean \(\ell^2\)</option>
+                  <option value="l1">Taxicab \(\ell^1\)</option>
+                  <option value="linf">Maximum \(\ell^\infty\)</option>
+                  <option value="lp">General \(\ell^p\)</option>
+                </select>
+                <div class="control-note">The dual ball changes with the primal norm.</div>
+              </div>
+              <div class="control" id="pControl" hidden>
+                <label for="pSlider"><span>Exponent \(p\)</span><span id="pValue">3.0</span></label>
+                <input id="pSlider" type="range" min="1.2" max="8" step="0.1" value="3" />
+                <div class="control-note">The conjugate exponent satisfies \(1/p+1/q=1\).</div>
+              </div>
+              <div class="control">
+                <label for="a1Slider"><span>Coefficient \(a_1\)</span><span id="a1Value">1.20</span></label>
+                <input id="a1Slider" type="range" min="-3" max="3" step="0.05" value="1.2" />
+              </div>
+              <div class="control">
+                <label for="a2Slider"><span>Coefficient \(a_2\)</span><span id="a2Value">0.80</span></label>
+                <input id="a2Slider" type="range" min="-3" max="3" step="0.05" value="0.8" />
+              </div>
+              <div class="control">
+                <label for="x1Slider"><span>Vector coordinate \(x_1\)</span><span id="x1Value">0.65</span></label>
+                <input id="x1Slider" type="range" min="-2" max="2" step="0.05" value="0.65" />
+              </div>
+              <div class="control">
+                <label for="x2Slider"><span>Vector coordinate \(x_2\)</span><span id="x2Value">-0.35</span></label>
+                <input id="x2Slider" type="range" min="-2" max="2" step="0.05" value="-0.35" />
+              </div>
+              <button class="primary-button" id="useMaximizer" type="button">Move x to a maximizing vector</button>
+            </div>
+          </aside>
+
+          <div class="card">
+            <div class="plot-pair">
+              <div>
+                <div class="card-label">Primal space \(X\)</div>
+                <div id="primalPlot" class="plot compact"></div>
+              </div>
+              <div>
+                <div class="card-label">Dual coefficient space \(X^*\)</div>
+                <div id="dualPlot" class="plot compact"></div>
+              </div>
+            </div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">measurement</div><div class="metric-value" id="phiMetric">0.500</div></div>
+              <div class="metric-cell"><div class="metric-name">dual norm</div><div class="metric-value" id="dualNormMetric">1.442</div></div>
+            </div>
+          </div>
+
+          <aside class="card">
+            <div class="card-label">Live interpretation</div>
+            <div id="functionalFormula" class="math-display"></div>
+            <div id="dualFormula" class="math-display"></div>
+            <div id="holderFormula" class="math-display"></div>
+            <div id="holderStatus" class="status good"></div>
+            <div style="height:12px"></div>
+            <div class="status">
+              <strong>Read the diagram.</strong>
+              <p class="small muted" style="margin-top:6px">Cyan is the primal unit ball. The cyan line is the kernel. Violet is the functional's normal direction. Teal marks a unit vector attaining the dual norm. The right plot is the dual unit ball.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="duality-lab">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Polar geometry</div>
+            <h2>Why the dual norm has the conjugate exponent</h2>
+          </div>
+          <p>The dual unit ball consists of all coefficient vectors whose supporting hyperplanes do not cut through the primal unit ball.</p>
+        </div>
+
+        <div class="grid-3">
+          <article class="card">
+            <div class="card-label">Primal \(\ell^1\)</div>
+            <div class="math-display">\[\|x\|_1=|x_1|+|x_2|,\qquad \|\varphi_a\|_*=\|a\|_\infty.\]</div>
+            <p class="muted">A diamond has a square polar. The largest coordinate of \(a\) decides the maximal measurement.</p>
+          </article>
+          <article class="card">
+            <div class="card-label">Primal \(\ell^2\)</div>
+            <div class="math-display">\[\|x\|_2=(|x_1|^2+|x_2|^2)^{1/2},\qquad \|\varphi_a\|_*=\|a\|_2.\]</div>
+            <p class="muted">The Euclidean ball is self-dual. Cauchy–Schwarz identifies the norming vector.</p>
+          </article>
+          <article class="card">
+            <div class="card-label">Primal \(\ell^\infty\)</div>
+            <div class="math-display">\[\|x\|_\infty=\max_i|x_i|,\qquad \|\varphi_a\|_*=\|a\|_1.\]</div>
+            <p class="muted">A square has a diamond polar. Every sign can be chosen independently to maximize \(a\cdot x\).</p>
+          </article>
+        </div>
+
+        <article class="card" style="margin-top:20px">
+          <div class="card-label">Finite-dimensional Hölder duality</div>
+          <div class="math-display">\[1<p<\infty,\qquad \frac1p+\frac1q=1,\qquad (\ell^p_n)^*\cong \ell^q_n,\qquad \varphi_a(x)=\sum_{i=1}^n a_ix_i.\]</div>
+          <div class="flow-map">
+            <div class="flow-node">Hölder inequality</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node">\(|a\cdot x|\le \|a\|_q\|x\|_p\)</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node">construct equality vector</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node">\(\|\varphi_a\|_*=\|a\|_q\)</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="annihilator-lab">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Annihilator laboratory</div>
+            <h2>Which measurements are blind to a subspace?</h2>
+          </div>
+          <p>The annihilator is not a subset of the primal space. It lives in the dual and consists of all continuous functionals vanishing on the selected subspace.</p>
+        </div>
+
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Choose a line \(W\subset\mathbb R^2\)</div>
+            <div class="control-stack">
+              <div class="control">
+                <label for="thetaSlider"><span>Direction angle \(\theta\)</span><span id="thetaValue">30°</span></label>
+                <input id="thetaSlider" type="range" min="0" max="179" step="1" value="30" />
+                <div class="control-note">\(W=\operatorname{span}(\cos\theta,\sin\theta)\).</div>
+              </div>
+              <button class="primary-button" id="projectAnnihilator" type="button">Project φ into \(W^\perp\)</button>
+              <button class="ghost-button" id="rotateSubspace" type="button">Rotate W by 90°</button>
+            </div>
+          </aside>
+
+          <div class="card">
+            <div id="annihilatorPlot" class="plot"></div>
+          </div>
+
+          <aside class="card">
+            <div class="card-label">Annihilator test</div>
+            <div id="subspaceFormula" class="math-display"></div>
+            <div id="annihilatorFormula" class="math-display"></div>
+            <div id="annihilatorStatus" class="status"></div>
+            <div style="height:12px"></div>
+            <div class="status">
+              <strong>Finite-dimensional dimension formula.</strong>
+              <div class="math-display">\[\dim W^\perp=\dim X-\dim W.\]</div>
+              <p class="small muted">For a line in \(\mathbb R^2\), the annihilator is a one-dimensional line in \((\mathbb R^2)^*\).</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="theorems">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Proof architecture</div>
+            <h2>The theorems that organize the dual</h2>
+          </div>
+          <p>Each proof is decomposed into the exact estimate, hypothesis, and geometric idea that moves the argument forward.</p>
+        </div>
+
+        <div class="proof-grid">
+          <article class="card">
+            <div class="card-label">Theorem — continuity and boundedness</div>
+            <div class="math-display">\[\varphi:X\to\mathbb F\text{ linear}\quad\Longrightarrow\quad \varphi\text{ continuous}\iff \exists C\ge0:\ |\varphi(x)|\le C\|x\|.\]</div>
+            <div class="proof-steps">
+              <div class="proof-step open">
+                <button type="button"><span><span class="proof-number">1</span>Boundedness gives continuity at every point</span><span>−</span></button>
+                <div class="proof-body">
+                  <div class="math-display">\[|\varphi(x)-\varphi(y)|=|\varphi(x-y)|\le C\|x-y\|.\]</div>
+                  <p><strong>Reason:</strong> linearity converts increments into one vector; the bound makes \(\varphi\) Lipschitz.</p>
+                </div>
+              </div>
+              <div class="proof-step">
+                <button type="button"><span><span class="proof-number">2</span>Continuity at zero supplies a controlled neighborhood</span><span>+</span></button>
+                <div class="proof-body">
+                  <div class="math-display">\[\exists\delta>0:\ \|x\|<\delta\Longrightarrow |\varphi(x)|<1.\]</div>
+                  <p><strong>Hypothesis used:</strong> continuity at \(0\). For a linear map, continuity at one point is enough.</p>
+                </div>
+              </div>
+              <div class="proof-step">
+                <button type="button"><span><span class="proof-number">3</span>Scale an arbitrary nonzero vector into that neighborhood</span><span>+</span></button>
+                <div class="proof-body">
+                  <div class="math-display">\[u=\frac{\delta}{2\|x\|}x,\qquad \|u\|=\frac\delta2<\delta.\]</div>
+                  <p><strong>Technique:</strong> homogeneity. The local estimate at zero is transported to every scale.</p>
+                </div>
+              </div>
+              <div class="proof-step">
+                <button type="button"><span><span class="proof-number">4</span>Undo the scaling</span><span>+</span></button>
+                <div class="proof-body">
+                  <div class="math-display">\[\frac{\delta}{2\|x\|}|\varphi(x)|=|\varphi(u)|<1\quad\Longrightarrow\quad |\varphi(x)|<\frac{2}{\delta}\|x\|.\]</div>
+                  <p><strong>Conclusion:</strong> the functional is bounded with \(C=2/\delta\).</p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <aside class="card">
+            <div class="card-label">Kernel theorem</div>
+            <div class="math-display">\[\varphi\in X^*,\ \varphi\ne0\quad\Longrightarrow\quad \ker\varphi\text{ is a closed hyperplane}.\]</div>
+            <div class="flow-map" style="flex-direction:column">
+              <div class="flow-node">\(\{0\}\subset\mathbb F\) is closed</div>
+              <div class="flow-arrow">↓</div>
+              <div class="flow-node">\(\ker\varphi=\varphi^{-1}(\{0\})\)</div>
+              <div class="flow-arrow">↓</div>
+              <div class="flow-node">kernel is closed</div>
+              <div class="flow-arrow">↓</div>
+              <div class="flow-node">\(X/\ker\varphi\cong\mathbb F\)</div>
+              <div class="flow-arrow">↓</div>
+              <div class="flow-node">codimension one</div>
+            </div>
+            <div class="status warning" style="margin-top:16px">
+              <strong>Geometric content.</strong>
+              <p class="small muted" style="margin-top:6px">A nonzero scalar measurement destroys exactly one degree of freedom: all vectors with the same value lie in one affine translate of the kernel.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="prover">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Guided theorem prover</div>
+            <h2>Choose the valid inference</h2>
+          </div>
+          <p>Incorrect choices are diagnosed by the exact logical or norm-theoretic failure.</p>
+        </div>
+        <div class="grid-2">
+          <article class="card">
+            <div class="card-label">Problem</div>
+            <p>Suppose \(\varphi:X\to\mathbb F\) is linear and continuous at \(0\). Which step correctly starts the proof that \(\varphi\) is bounded?</p>
+            <div class="prover-options" data-question="continuity">
+              <button class="proof-option" type="button" data-correct="false">Choose \(\delta\) separately for every vector \(x\).</button>
+              <button class="proof-option" type="button" data-correct="true">Use continuity with output tolerance \(1\) to obtain one radius \(\delta>0\).</button>
+              <button class="proof-option" type="button" data-correct="false">Assume the unit sphere is compact, even when \(X\) may be infinite-dimensional.</button>
+            </div>
+            <div class="status" id="proverFeedback1" style="margin-top:14px">Select an inference.</div>
+          </article>
+          <article class="card">
+            <div class="card-label">Problem</div>
+            <p>Let \(W\subset X\). Which statement correctly defines the annihilator?</p>
+            <div class="prover-options" data-question="annihilator">
+              <button class="proof-option" type="button" data-correct="false">\(W^\perp=\{x\in X:\|x-w\|=0\text{ for all }w\in W\}\).</button>
+              <button class="proof-option" type="button" data-correct="true">\(W^\perp=\{\varphi\in X^*:\varphi(w)=0\text{ for every }w\in W\}\).</button>
+              <button class="proof-option" type="button" data-correct="false">\(W^\perp\) is always the Euclidean orthogonal complement inside \(X\).</button>
+            </div>
+            <div class="status" id="proverFeedback2" style="margin-top:14px">Select a definition.</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="examples">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Canonical examples</div>
+            <h2>Functionals across familiar spaces</h2>
+          </div>
+          <p>The same abstract definition appears as a row vector, a point measurement, an integral, or a weighted series.</p>
+        </div>
+
+        <div class="grid-4">
+          <article class="card example-card">
+            <span class="badge">Matrix analogy</span>
+            <h3>Row vectors on \(\mathbb R^n\)</h3>
+            <div class="math-display">\[\varphi_a(x)=a^\top x.\]</div>
+            <div class="fact-list">
+              <div class="fact">Every linear functional has this form.</div>
+              <div class="fact">The kernel is a hyperplane normal to \(a\).</div>
+              <div class="fact">Under \(\ell^p\), the dual norm is \(\|a\|_q\).</div>
+            </div>
+          </article>
+
+          <article class="card example-card">
+            <span class="badge">Evaluation</span>
+            <h3>Point evaluation on \(C(K)\)</h3>
+            <div class="math-display">\[\delta_t(f)=f(t),\qquad \|\delta_t\|=1.\]</div>
+            <div class="fact-list">
+              <div class="fact">Bound: \(|f(t)|\le\|f\|_\infty\).</div>
+              <div class="fact">Equality is attained by the constant function \(1\).</div>
+              <div class="fact">The kernel consists of functions vanishing at \(t\).</div>
+            </div>
+          </article>
+
+          <article class="card example-card">
+            <span class="badge">Integration</span>
+            <h3>Integral functional</h3>
+            <div class="math-display">\[I(f)=\int_a^b f(t)\,dt,\qquad \|I\|=b-a.\]</div>
+            <div class="fact-list">
+              <div class="fact">Bound: \(|I(f)|\le(b-a)\|f\|_\infty\).</div>
+              <div class="fact">The constant sign function attains equality.</div>
+              <div class="fact">Its kernel contains all continuous functions of zero mean.</div>
+            </div>
+          </article>
+
+          <article class="card example-card">
+            <span class="badge">Sequence spaces</span>
+            <h3>Pairing \(\ell^p\) with \(\ell^q\)</h3>
+            <div class="math-display">\[\varphi_a(x)=\sum_{n=1}^\infty a_nx_n.\]</div>
+            <div class="fact-list">
+              <div class="fact">Hölder gives \(|\varphi_a(x)|\le\|a\|_q\|x\|_p\).</div>
+              <div class="fact">For \(1\le p<\infty\), \((\ell^p)^*\cong\ell^q\).</div>
+              <div class="fact">The case \((\ell^\infty)^*\) is much larger than \(\ell^1\).</div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="counterexamples">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">What can go wrong?</div>
+            <h2>Boundaries of the theory</h2>
+          </div>
+          <p>Infinite-dimensional spaces separate algebraic linearity from analytic continuity and make some familiar finite-dimensional identifications fail.</p>
+        </div>
+
+        <article class="card">
+          <div class="counter-tabs">
+            <button class="counter-tab active" type="button" data-panel="derivative-panel">Unbounded derivative</button>
+            <button class="counter-tab" type="button" data-panel="lp-panel">Point evaluation on \(L^p\)</button>
+            <button class="counter-tab" type="button" data-panel="algebraic-panel">Algebraic versus continuous dual</button>
+            <button class="counter-tab" type="button" data-panel="attainment-panel">Supremum need not be attained</button>
+          </div>
+
+          <div class="counter-panel active" id="derivative-panel">
+            <div class="grid-2">
+              <div>
+                <div class="card-label">Omitted hypothesis</div>
+                <p>Linearity alone does not imply continuity in infinite dimensions.</p>
+                <div class="math-display">\[D_1(p)=p'(1)\quad\text{on polynomials in }C[0,1]\text{ with }\|\cdot\|_\infty.\]</div>
+              </div>
+              <div class="status bad">
+                <strong>Failure.</strong>
+                <div class="math-display">\[p_n(x)=x^n,\qquad \|p_n\|_\infty=1,\qquad |D_1(p_n)|=n\to\infty.\]</div>
+                <p class="small muted">No constant \(C\) can satisfy \(|p'(1)|\le C\|p\|_\infty\) for all polynomials.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="counter-panel" id="lp-panel">
+            <div class="grid-2">
+              <div>
+                <div class="card-label">Tempting statement</div>
+                <p>“Evaluation at a point should define a functional on every function space.”</p>
+                <div class="math-display">\[\delta_t(f)=f(t).\]</div>
+              </div>
+              <div class="status bad">
+                <strong>Failure on \(L^p\).</strong>
+                <p class="small muted">Elements of \(L^p\) are equivalence classes modulo equality almost everywhere. Changing one point does not change the class, so \(f(t)\) is not well-defined. Even after choosing representatives, point evaluation is not controlled by the \(L^p\)-norm.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="counter-panel" id="algebraic-panel">
+            <div class="grid-2">
+              <div>
+                <div class="card-label">Two duals</div>
+                <div class="math-display">\[X^\#=\{\text{all algebraic linear functionals}\},\qquad X^*=\{\text{continuous linear functionals}\}.\]</div>
+              </div>
+              <div class="status warning">
+                <strong>Infinite-dimensional distinction.</strong>
+                <p class="small muted">In finite dimensions, \(X^\#=X^*\). In infinite dimensions, discontinuous algebraic functionals exist under standard choice principles, so generally \(X^*\subsetneq X^\#\).</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="counter-panel" id="attainment-panel">
+            <div class="grid-2">
+              <div>
+                <div class="card-label">False inference</div>
+                <p>“Because \(\|\varphi\|_*\) is a supremum, some unit vector must attain it.”</p>
+              </div>
+              <div class="status bad">
+                <strong>Why the proof breaks.</strong>
+                <p class="small muted">The unit sphere need not be compact in infinite-dimensional normed spaces. A continuous functional always has a supremum over the unit ball, but norm attainment may fail. Compactness restores attainment in finite dimensions.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="mistakes">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Common mistakes</div>
+            <h2>Diagnostic corrections</h2>
+          </div>
+          <p>Each correction separates the algebraic object from its topological or geometric representation.</p>
+        </div>
+        <div class="card">
+          <div class="mistake">
+            <div class="wrong">Incorrect: \(X^*\) is the same set as \(X\).</div>
+            <p class="muted">There may be a natural identification in a Hilbert space through the Riesz representation theorem, but it depends on the inner product and is not the definition of the dual.</p>
+            <div class="correct">Correct: \(X^*\) consists of continuous scalar-valued linear maps on \(X\).</div>
+          </div>
+          <div class="mistake">
+            <div class="wrong">Incorrect: the annihilator \(W^\perp\) is automatically a subset of \(X\).</div>
+            <p class="muted">That notation resembles orthogonal complements, but the annihilator lives in \(X^*\).</p>
+            <div class="correct">Correct: \(W^\perp=\{\varphi\in X^*: \varphi|_W=0\}\).</div>
+          </div>
+          <div class="mistake">
+            <div class="wrong">Incorrect: every linear functional on any normed space is continuous.</div>
+            <p class="muted">This is true only in finite dimensions.</p>
+            <div class="correct">Correct: continuity is equivalent to a global bound \(|\varphi(x)|\le C\|x\|\).</div>
+          </div>
+          <div class="mistake">
+            <div class="wrong">Incorrect: the norm of \(\varphi_a(x)=a\cdot x\) is always \(\|a\|_2\).</div>
+            <p class="muted">The answer depends on the norm chosen on the primal space.</p>
+            <div class="correct">Correct: under \(\ell^p\), \(\|\varphi_a\|_*=\|a\|_q\), where \(1/p+1/q=1\).</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <article class="card definition-card">
+          <div class="card-label">Final synthesis</div>
+          <div class="math-display">\[\boxed{\text{linear measurement}\ \longrightarrow\ \text{boundedness}\ \longrightarrow\ \text{dual norm}\ \longrightarrow\ \text{kernel and level sets}\ \longrightarrow\ \text{annihilator}}\]</div>
+          <p class="muted">The dual space packages every continuous linear observation available on \(X\). Its norm records maximal sensitivity, its kernels encode invisible directions, and annihilators describe which observations survive after a subspace is declared irrelevant.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="shell">Dual Spaces and Linear Functionals — an interactive real analysis laboratory.</div>
+  </footer>
+
+  <script>
+    'use strict';
+
+    const state = {
+      norm: 'l2',
+      p: 3,
+      a1: 1.2,
+      a2: 0.8,
+      x1: 0.65,
+      x2: -0.35,
+      theta: 30
+    };
+
+    const defaultState = { ...state };
+
+    function css(name) {
+      return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    }
+
+    function setMath(id, expression, displayMode = true) {
+      const element = document.getElementById(id);
+      if (!element || !window.katex) return;
+      katex.render(expression, element, { displayMode, throwOnError: false, strict: 'ignore' });
+    }
+
+    function renderAllStaticMath() {
+      renderMathInElement(document.body, {
+        delimiters: [
+          { left: '$$', right: '$$', display: true },
+          { left: '\\[', right: '\\]', display: true },
+          { left: '\\(', right: '\\)', display: false }
+        ],
+        throwOnError: false,
+        strict: 'ignore'
+      });
+    }
+
+    function format(value, digits = 3) {
+      const v = Math.abs(value) < 1e-10 ? 0 : value;
+      return Number(v).toFixed(digits);
+    }
+
+    function signPower(value, exponent) {
+      if (Math.abs(value) < 1e-12) return 0;
+      return Math.sign(value) * Math.pow(Math.abs(value), exponent);
+    }
+
+    function conjugateExponent() {
+      if (state.norm === 'l1') return Infinity;
+      if (state.norm === 'linf') return 1;
+      if (state.norm === 'l2') return 2;
+      return state.p / (state.p - 1);
+    }
+
+    function normOfVector(x, y, primal = true) {
+      let type = state.norm;
+      if (!primal) {
+        if (type === 'l1') type = 'linf';
+        else if (type === 'linf') type = 'l1';
+        else if (type === 'lp') type = 'lq';
+      }
+      if (type === 'l1') return Math.abs(x) + Math.abs(y);
+      if (type === 'linf') return Math.max(Math.abs(x), Math.abs(y));
+      if (type === 'l2') return Math.hypot(x, y);
+      const exponent = type === 'lp' ? state.p : conjugateExponent();
+      if (!Number.isFinite(exponent)) return Math.max(Math.abs(x), Math.abs(y));
+      return Math.pow(Math.pow(Math.abs(x), exponent) + Math.pow(Math.abs(y), exponent), 1 / exponent);
+    }
+
+    function dualNorm() {
+      return normOfVector(state.a1, state.a2, false);
+    }
+
+    function primalNorm() {
+      return normOfVector(state.x1, state.x2, true);
+    }
+
+    function maximizingVector() {
+      const a1 = state.a1;
+      const a2 = state.a2;
+      const dn = dualNorm();
+      if (dn < 1e-12) return [0, 0];
+
+      if (state.norm === 'l2') return [a1 / dn, a2 / dn];
+      if (state.norm === 'l1') {
+        if (Math.abs(a1) >= Math.abs(a2)) return [Math.sign(a1) || 1, 0];
+        return [0, Math.sign(a2) || 1];
+      }
+      if (state.norm === 'linf') return [Math.sign(a1), Math.sign(a2)];
+
+      const q = conjugateExponent();
+      const denominator = Math.pow(dn, q - 1);
+      return [signPower(a1, q - 1) / denominator, signPower(a2, q - 1) / denominator];
+    }
+
+    function unitBallBoundary(exponent, samples = 360) {
+      const xs = [];
+      const ys = [];
+      for (let i = 0; i <= samples; i += 1) {
+        const t = 2 * Math.PI * i / samples;
+        const c = Math.cos(t);
+        const s = Math.sin(t);
+        let r;
+        if (exponent === Infinity) r = 1 / Math.max(Math.abs(c), Math.abs(s));
+        else r = Math.pow(Math.pow(Math.abs(c), exponent) + Math.pow(Math.abs(s), exponent), -1 / exponent);
+        xs.push(r * c);
+        ys.push(r * s);
+      }
+      return { x: xs, y: ys };
+    }
+
+    function primalExponent() {
+      if (state.norm === 'l1') return 1;
+      if (state.norm === 'linf') return Infinity;
+      if (state.norm === 'l2') return 2;
+      return state.p;
+    }
+
+    function plotLayout(title) {
+      return {
+        title: { text: title, font: { family: 'Inter, sans-serif', size: 14, color: css('--muted') } },
+        margin: { l: 42, r: 18, t: 42, b: 38 },
+        paper_bgcolor: css('--canvas'),
+        plot_bgcolor: css('--canvas'),
+        font: { family: 'Inter, sans-serif', color: css('--text') },
+        xaxis: { range: [-2.25, 2.25], zerolinecolor: css('--axis'), gridcolor: css('--grid'), color: css('--axis'), scaleanchor: 'y', scaleratio: 1 },
+        yaxis: { range: [-2.25, 2.25], zerolinecolor: css('--axis'), gridcolor: css('--grid'), color: css('--axis') },
+        showlegend: false,
+        hovermode: 'closest'
+      };
+    }
+
+    function lineThroughOrigin(direction, length = 2.2) {
+      const mag = Math.hypot(direction[0], direction[1]);
+      if (mag < 1e-12) return { x: [0, 0], y: [0, 0] };
+      const dx = direction[0] / mag;
+      const dy = direction[1] / mag;
+      return { x: [-length * dx, length * dx], y: [-length * dy, length * dy] };
+    }
+
+    function renderGeometryPlots() {
+      const primalBall = unitBallBoundary(primalExponent());
+      const dualBall = unitBallBoundary(conjugateExponent());
+      const [mx, my] = maximizingVector();
+      const kernel = lineThroughOrigin([-state.a2, state.a1]);
+      const normalMag = Math.hypot(state.a1, state.a2);
+      const nx = normalMag > 1e-12 ? state.a1 / normalMag : 0;
+      const ny = normalMag > 1e-12 ? state.a2 / normalMag : 0;
+      const phi = state.a1 * state.x1 + state.a2 * state.x2;
+
+      const levelDirection = [-state.a2, state.a1];
+      let levelX = [0, 0];
+      let levelY = [0, 0];
+      if (normalMag > 1e-12) {
+        const baseScale = phi / (normalMag * normalMag);
+        const bx = baseScale * state.a1;
+        const by = baseScale * state.a2;
+        const dm = Math.hypot(levelDirection[0], levelDirection[1]);
+        const dx = levelDirection[0] / dm;
+        const dy = levelDirection[1] / dm;
+        levelX = [bx - 2.2 * dx, bx + 2.2 * dx];
+        levelY = [by - 2.2 * dy, by + 2.2 * dy];
+      }
+
+      const primalData = [
+        { x: primalBall.x, y: primalBall.y, type: 'scatter', mode: 'lines', fill: 'toself', fillcolor: 'rgba(0,168,198,.12)', line: { color: css('--cyan'), width: 2 }, hoverinfo: 'skip' },
+        { x: kernel.x, y: kernel.y, type: 'scatter', mode: 'lines', line: { color: css('--cyan-deep'), width: 3 }, hovertemplate: 'kernel<extra></extra>' },
+        { x: levelX, y: levelY, type: 'scatter', mode: 'lines', line: { color: css('--amber'), width: 2, dash: 'dash' }, hovertemplate: 'level set through x<extra></extra>' },
+        { x: [0, nx * 1.35], y: [0, ny * 1.35], type: 'scatter', mode: 'lines+markers', line: { color: css('--violet'), width: 4 }, marker: { color: css('--violet'), size: [4, 9] }, hovertemplate: 'functional normal<extra></extra>' },
+        { x: [state.x1], y: [state.x2], type: 'scatter', mode: 'markers+text', marker: { color: css('--teal'), size: 12 }, text: ['x'], textposition: 'top right', hovertemplate: 'x=(%{x:.2f}, %{y:.2f})<extra></extra>' },
+        { x: [mx], y: [my], type: 'scatter', mode: 'markers+text', marker: { color: css('--danger'), size: 11, symbol: 'diamond' }, text: ['x*'], textposition: 'bottom right', hovertemplate: 'norming vector<extra></extra>' }
+      ];
+
+      const dn = dualNorm();
+      const scale = dn > 1e-12 ? 1 / dn : 0;
+      const dualData = [
+        { x: dualBall.x, y: dualBall.y, type: 'scatter', mode: 'lines', fill: 'toself', fillcolor: 'rgba(117,103,199,.12)', line: { color: css('--violet'), width: 2 }, hoverinfo: 'skip' },
+        { x: [0, state.a1], y: [0, state.a2], type: 'scatter', mode: 'lines+markers', line: { color: css('--teal'), width: 4 }, marker: { color: css('--teal'), size: [4, 10] }, hovertemplate: 'a=(%{x:.2f}, %{y:.2f})<extra></extra>' },
+        { x: [state.a1 * scale], y: [state.a2 * scale], type: 'scatter', mode: 'markers+text', marker: { color: css('--danger'), size: 10, symbol: 'diamond' }, text: ['a/||a||*'], textposition: 'top right', hovertemplate: 'normalized functional<extra></extra>' }
+      ];
+
+      Plotly.react('primalPlot', primalData, plotLayout('unit ball, kernel, and level sets'), { responsive: true, displayModeBar: false });
+      Plotly.react('dualPlot', dualData, plotLayout('dual unit ball and coefficient vector'), { responsive: true, displayModeBar: false });
+    }
+
+    function renderMetricsAndFormulas() {
+      const phi = state.a1 * state.x1 + state.a2 * state.x2;
+      const dn = dualNorm();
+      const pn = primalNorm();
+      const bound = dn * pn;
+      const q = conjugateExponent();
+      const qLabel = q === Infinity ? '\\infty' : format(q, 2);
+      const pLabel = primalExponent() === Infinity ? '\\infty' : format(primalExponent(), 2);
+
+      document.getElementById('phiMetric').textContent = format(phi);
+      document.getElementById('dualNormMetric').textContent = format(dn);
+      setMath('functionalFormula', String.raw`\varphi_a(x)=(${format(state.a1,2)})x_1+(${format(state.a2,2)})x_2,\qquad \varphi_a(x)=${format(phi)}.`);
+      setMath('dualFormula', String.raw`p=${pLabel},\qquad q=${qLabel},\qquad \|\varphi_a\|_*=\|a\|_q=${format(dn)}.`);
+      setMath('holderFormula', String.raw`|\varphi_a(x)|=${format(Math.abs(phi))}\le \|\varphi_a\|_*\|x\|_p=${format(bound)}.`);
+
+      const status = document.getElementById('holderStatus');
+      const slack = bound - Math.abs(phi);
+      const equality = Math.abs(slack) < 1e-6 && bound > 0;
+      status.className = equality ? 'status good' : 'status';
+      status.innerHTML = equality
+        ? '<strong>Equality case.</strong><p class="small muted" style="margin-top:6px">The selected vector is a norming vector for this functional.</p>'
+        : `<strong>Hölder slack: ${format(slack)}.</strong><p class="small muted" style="margin-top:6px">Move x to the maximizing vector to attain the dual norm.</p>`;
+    }
+
+    function renderAnnihilator() {
+      const theta = state.theta * Math.PI / 180;
+      const w = [Math.cos(theta), Math.sin(theta)];
+      const n = [-Math.sin(theta), Math.cos(theta)];
+      const W = lineThroughOrigin(w);
+      const ann = lineThroughOrigin(n);
+      const kernel = lineThroughOrigin([-state.a2, state.a1]);
+      const valueOnW = state.a1 * w[0] + state.a2 * w[1];
+      const aMag = Math.hypot(state.a1, state.a2);
+
+      const data = [
+        { x: W.x, y: W.y, type: 'scatter', mode: 'lines', line: { color: css('--cyan'), width: 5 }, hovertemplate: 'W<extra></extra>' },
+        { x: ann.x, y: ann.y, type: 'scatter', mode: 'lines', line: { color: css('--teal'), width: 3, dash: 'dash' }, hovertemplate: 'generator direction for W⊥<extra></extra>' },
+        { x: kernel.x, y: kernel.y, type: 'scatter', mode: 'lines', line: { color: css('--violet'), width: 3 }, hovertemplate: 'ker φ<extra></extra>' },
+        { x: [0, state.a1], y: [0, state.a2], type: 'scatter', mode: 'lines+markers', line: { color: css('--danger'), width: 4 }, marker: { color: css('--danger'), size: [4, 10] }, hovertemplate: 'a=(%{x:.2f}, %{y:.2f})<extra></extra>' }
+      ];
+
+      const layout = plotLayout('W, ker φ, and the annihilator direction');
+      layout.annotations = [
+        { x: 1.55 * w[0], y: 1.55 * w[1], text: 'W', showarrow: false, font: { color: css('--cyan'), size: 14 } },
+        { x: 1.55 * n[0], y: 1.55 * n[1], text: 'W⊥ in the dual', showarrow: false, font: { color: css('--teal'), size: 13 } }
+      ];
+      Plotly.react('annihilatorPlot', data, layout, { responsive: true, displayModeBar: false });
+
+      setMath('subspaceFormula', String.raw`W=\operatorname{span}\bigl((${format(w[0],2)},${format(w[1],2)})\bigr).`);
+      setMath('annihilatorFormula', String.raw`W^\perp=\operatorname{span}\bigl((${format(n[0],2)},${format(n[1],2)})\bigr)\subset X^*.`);
+      const status = document.getElementById('annihilatorStatus');
+      const annihilates = Math.abs(valueOnW) < 0.025 || aMag < 1e-12;
+      status.className = annihilates ? 'status good' : 'status bad';
+      status.innerHTML = annihilates
+        ? `<strong>φ annihilates W.</strong><p class="small muted" style="margin-top:6px">Its value on the unit direction of W is ${format(valueOnW)}.</p>`
+        : `<strong>φ does not annihilate W.</strong><p class="small muted" style="margin-top:6px">φ(w)=${format(valueOnW)}. The kernel and W are different lines.</p>`;
+    }
+
+    function updateLabels() {
+      document.getElementById('a1Value').textContent = format(state.a1, 2);
+      document.getElementById('a2Value').textContent = format(state.a2, 2);
+      document.getElementById('x1Value').textContent = format(state.x1, 2);
+      document.getElementById('x2Value').textContent = format(state.x2, 2);
+      document.getElementById('pValue').textContent = format(state.p, 1);
+      document.getElementById('thetaValue').textContent = `${Math.round(state.theta)}°`;
+      document.getElementById('pControl').hidden = state.norm !== 'lp';
+    }
+
+    function updateAll() {
+      updateLabels();
+      renderGeometryPlots();
+      renderMetricsAndFormulas();
+      renderAnnihilator();
+    }
+
+    function bindRange(id, stateKey) {
+      const input = document.getElementById(id);
+      input.addEventListener('input', () => {
+        state[stateKey] = Number(input.value);
+        updateAll();
+      });
+    }
+
+    function initializeControls() {
+      bindRange('a1Slider', 'a1');
+      bindRange('a2Slider', 'a2');
+      bindRange('x1Slider', 'x1');
+      bindRange('x2Slider', 'x2');
+      bindRange('pSlider', 'p');
+      bindRange('thetaSlider', 'theta');
+
+      document.getElementById('normSelect').addEventListener('change', (event) => {
+        state.norm = event.target.value;
+        updateAll();
+      });
+
+      document.getElementById('useMaximizer').addEventListener('click', () => {
+        const [x1, x2] = maximizingVector();
+        state.x1 = x1;
+        state.x2 = x2;
+        document.getElementById('x1Slider').value = x1;
+        document.getElementById('x2Slider').value = x2;
+        updateAll();
+      });
+
+      document.getElementById('projectAnnihilator').addEventListener('click', () => {
+        const theta = state.theta * Math.PI / 180;
+        const n = [-Math.sin(theta), Math.cos(theta)];
+        const magnitude = Math.min(Math.max(Math.hypot(state.a1, state.a2), 1.4), 2.5);
+        state.a1 = magnitude * n[0];
+        state.a2 = magnitude * n[1];
+        document.getElementById('a1Slider').value = state.a1;
+        document.getElementById('a2Slider').value = state.a2;
+        updateAll();
+      });
+
+      document.getElementById('rotateSubspace').addEventListener('click', () => {
+        state.theta = (state.theta + 90) % 180;
+        document.getElementById('thetaSlider').value = state.theta;
+        updateAll();
+      });
+
+      document.getElementById('resetButton').addEventListener('click', () => {
+        Object.assign(state, defaultState);
+        document.getElementById('normSelect').value = state.norm;
+        document.getElementById('pSlider').value = state.p;
+        document.getElementById('a1Slider').value = state.a1;
+        document.getElementById('a2Slider').value = state.a2;
+        document.getElementById('x1Slider').value = state.x1;
+        document.getElementById('x2Slider').value = state.x2;
+        document.getElementById('thetaSlider').value = state.theta;
+        updateAll();
+      });
+    }
+
+    function initializeAccordions() {
+      document.querySelectorAll('.proof-step > button').forEach((button) => {
+        button.addEventListener('click', () => {
+          const step = button.parentElement;
+          step.classList.toggle('open');
+          button.lastElementChild.textContent = step.classList.contains('open') ? '−' : '+';
+        });
+      });
+    }
+
+    function initializeCounterTabs() {
+      document.querySelectorAll('.counter-tab').forEach((tab) => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.counter-tab').forEach((item) => item.classList.remove('active'));
+          document.querySelectorAll('.counter-panel').forEach((panel) => panel.classList.remove('active'));
+          tab.classList.add('active');
+          document.getElementById(tab.dataset.panel).classList.add('active');
+        });
+      });
+    }
+
+    function initializeProver() {
+      document.querySelectorAll('.prover-options').forEach((group, groupIndex) => {
+        const feedback = document.getElementById(groupIndex === 0 ? 'proverFeedback1' : 'proverFeedback2');
+        group.querySelectorAll('.proof-option').forEach((button) => {
+          button.addEventListener('click', () => {
+            group.querySelectorAll('.proof-option').forEach((option) => option.classList.remove('correct-choice', 'wrong-choice'));
+            const correct = button.dataset.correct === 'true';
+            button.classList.add(correct ? 'correct-choice' : 'wrong-choice');
+            feedback.className = correct ? 'status good' : 'status bad';
+            if (group.dataset.question === 'continuity') {
+              feedback.innerHTML = correct
+                ? '<strong>Correct.</strong><p class="small muted" style="margin-top:6px">One radius from continuity at zero can be used after rescaling every vector.</p>'
+                : '<strong>Invalid start.</strong><p class="small muted" style="margin-top:6px">The bound requires one global constant. Vector-dependent radii do not produce it, and compactness of the unit sphere is unavailable in general.</p>';
+            } else {
+              feedback.innerHTML = correct
+                ? '<strong>Correct.</strong><p class="small muted" style="margin-top:6px">The annihilator is a subspace of the continuous dual.</p>'
+                : '<strong>Incorrect ambient space.</strong><p class="small muted" style="margin-top:6px">An annihilator consists of functionals, not primal vectors. Euclidean orthogonality appears only after an additional identification.</p>';
+            }
+          });
+        });
+      });
+    }
+
+    function initializeTheme() {
+      const saved = localStorage.getItem('dual-lab-theme');
+      const preferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.dataset.theme = saved || preferred;
+      document.getElementById('themeButton').addEventListener('click', () => {
+        const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+        document.documentElement.dataset.theme = next;
+        localStorage.setItem('dual-lab-theme', next);
+        updateAll();
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderAllStaticMath();
+      initializeTheme();
+      initializeControls();
+      initializeAccordions();
+      initializeCounterTabs();
+      initializeProver();
+      updateAll();
+    });
+  </script>
+</body>
+</html>

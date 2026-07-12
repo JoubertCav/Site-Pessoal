@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Interactive laboratory for subgradients, subdifferentials, supporting slopes, nondifferentiability, and convex optimality." />
+  <title>Subgradients and Subdifferentials — Interactive Convex Analysis Laboratory</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    :root{
+      --bg:#f7f9f8;--surface:rgba(255,255,255,.97);--surface-2:#eef5f5;--surface-3:#e4edef;
+      --text:#172126;--muted:#617178;--line:#d4dfe1;--cyan:#00a8c6;--cyan-deep:#087f98;
+      --teal:#168f88;--violet:#7567c7;--amber:#b57a20;--danger:#b74c4c;--success:#147d64;
+      --shadow:0 18px 52px rgba(37,56,64,.09);--radius:22px;--canvas:#fff;--axis:#65787e;
+      --grid:#dce6e8;--focus:rgba(0,168,198,.23)
+    }
+    html[data-theme="dark"]{
+      --bg:#121a20;--surface:rgba(27,38,46,.97);--surface-2:#213039;--surface-3:#273942;
+      --text:#edf5f6;--muted:#a8b8bd;--line:#344750;--cyan:#44c9e1;--cyan-deep:#7ed9e8;
+      --teal:#58c4b9;--violet:#aaa0e6;--amber:#e3b35d;--danger:#ef8989;--success:#68d0ad;
+      --shadow:0 18px 52px rgba(0,0,0,.25);--canvas:#17232a;--axis:#9bb0b7;--grid:#30424a;
+      --focus:rgba(68,201,225,.22)
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;color:var(--text);
+      background:
+        radial-gradient(circle at 7% 0%,rgba(0,168,198,.085),transparent 29rem),
+        radial-gradient(circle at 100% 17%,rgba(117,103,199,.065),transparent 32rem),
+        var(--bg);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.65;transition:background .25s ease,color .25s ease
+    }
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    .shell{width:min(1480px,calc(100% - 32px));margin:0 auto}
+    .topbar{
+      position:sticky;top:0;z-index:50;border-bottom:1px solid color-mix(in srgb,var(--line) 84%,transparent);
+      backdrop-filter:blur(18px);background:color-mix(in srgb,var(--bg) 82%,transparent)
+    }
+    .topbar-inner{min-height:68px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:-.02em}
+    .brand-mark{
+      width:34px;height:34px;border:1px solid var(--cyan);border-radius:11px;display:grid;place-items:center;
+      box-shadow:inset 0 0 0 6px color-mix(in srgb,var(--cyan) 10%,transparent)
+    }
+    .brand-mark::before{content:"∂";color:var(--cyan-deep);font-family:"Libre Baskerville",serif;font-weight:700;font-size:1.1rem}
+    .top-actions{display:flex;gap:9px;align-items:center}
+    .icon-button,.ghost-button,.primary-button,.segmented button,.proof-option,.counter-tab,.map-node{
+      border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:12px;
+      min-height:40px;padding:9px 13px;transition:transform .18s ease,border-color .18s ease,background .18s ease
+    }
+    .icon-button:hover,.ghost-button:hover,.segmented button:hover,.proof-option:hover,.counter-tab:hover,.map-node:hover{
+      transform:translateY(-1px);border-color:var(--cyan)
+    }
+    .primary-button{background:var(--cyan);color:#062e37;font-weight:700;border-color:transparent}
+    .primary-button:hover{transform:translateY(-1px);filter:brightness(1.03)}
+    h1,h2,h3,.serif{font-family:"Libre Baskerville",Georgia,serif;letter-spacing:-.025em}
+    h1{font-size:clamp(2.65rem,5.8vw,5.15rem);line-height:1.03;margin:12px 0 20px}
+    h2{font-size:clamp(2rem,4vw,3.15rem);line-height:1.14;margin:0}
+    h3{font-size:1.2rem;margin:0}
+    p{margin:0}
+    .hero{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(360px,.92fr);gap:30px;padding:70px 0 46px;align-items:center}
+    .eyebrow{color:var(--cyan-deep);font-weight:700;text-transform:uppercase;letter-spacing:.14em;font-size:.78rem}
+    .hero p{color:var(--muted);max-width:850px;font-size:clamp(1.02rem,1.8vw,1.24rem)}
+    .hero-chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:28px}
+    .chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);padding:8px 11px;border-radius:999px;color:var(--muted);font-size:.9rem}
+    .chip::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--cyan)}
+    .hero-map{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:28px;padding:22px;min-height:420px;overflow:hidden}
+    .hero-svg{width:100%;height:370px;display:block}
+    .section{padding:72px 0}
+    .section-head{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:27px}
+    .section-head p{color:var(--muted);max-width:780px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+    .grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+    .lab-grid{display:grid;grid-template-columns:minmax(285px,.78fr) minmax(0,1.42fr) minmax(300px,.92fr);gap:20px;align-items:start}
+    .proof-grid{display:grid;grid-template-columns:minmax(0,1.22fr) minmax(300px,.78fr);gap:20px}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;min-width:0}
+    .card.soft{background:var(--surface-2);box-shadow:none}
+    .card h3+p{margin-top:9px;color:var(--muted)}
+    .card-label{color:var(--cyan-deep);font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;font-weight:700;margin-bottom:10px}
+    .muted{color:var(--muted)}.small{font-size:.9rem}
+    .definition-card{padding:30px;border-left:4px solid var(--cyan)}
+    .math-display{margin:18px 0;overflow-x:auto;overflow-y:hidden;padding:8px 2px}
+    .katex-display{margin:.72em 0!important}
+    .katex{max-width:100%}
+    .notation-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}
+    .notation-item{border:1px solid var(--line);background:var(--surface-2);border-radius:14px;padding:13px}
+    .notation-item strong{display:block;margin-bottom:6px;color:var(--cyan-deep)}
+    .flow-map{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;margin-top:18px}
+    .flow-node{border:1px solid var(--line);background:var(--surface-2);border-radius:14px;padding:12px 14px;min-width:150px;text-align:center}
+    .flow-arrow{color:var(--cyan-deep);font-size:1.4rem}
+    .control-stack{display:grid;gap:16px}
+    .control label{display:flex;justify-content:space-between;gap:12px;align-items:baseline;font-weight:600;margin-bottom:7px}
+    .control label span:last-child{color:var(--cyan-deep);font-variant-numeric:tabular-nums}
+    input[type="range"]{width:100%;accent-color:var(--cyan)}
+    select{width:100%;min-height:43px;border-radius:11px;border:1px solid var(--line);background:var(--surface);color:var(--text);padding:8px 10px}
+    .control-note{color:var(--muted);font-size:.82rem;margin-top:5px}
+    .metric-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
+    .metric-strip.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .metric-cell{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:13px;text-align:center}
+    .metric-name{color:var(--muted);font-size:.79rem;text-transform:uppercase;letter-spacing:.06em}
+    .metric-value{font-size:1.16rem;font-weight:700;color:var(--cyan-deep);font-variant-numeric:tabular-nums}
+    .status{border-radius:14px;padding:14px;border:1px solid var(--line);background:var(--surface-2)}
+    .status.good{border-color:color-mix(in srgb,var(--success) 55%,var(--line));background:color-mix(in srgb,var(--success) 9%,var(--surface))}
+    .status.warning{border-color:color-mix(in srgb,var(--amber) 55%,var(--line));background:color-mix(in srgb,var(--amber) 8%,var(--surface))}
+    .status.bad{border-color:color-mix(in srgb,var(--danger) 55%,var(--line));background:color-mix(in srgb,var(--danger) 8%,var(--surface))}
+    .diagram-shell{background:var(--canvas);border:1px solid var(--line);border-radius:18px;overflow:hidden;min-height:500px}
+    .diagram-shell svg{display:block;width:100%;height:auto;min-height:500px;touch-action:none}
+    .legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;color:var(--muted);font-size:.86rem}
+    .legend span{display:flex;align-items:center;gap:7px}
+    .legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+    .proof-steps{display:grid;gap:10px}
+    .proof-step{border:1px solid var(--line);background:var(--surface);border-radius:15px;overflow:hidden}
+    .proof-step>button{width:100%;border:0;background:transparent;color:var(--text);display:flex;justify-content:space-between;gap:14px;padding:15px;text-align:left;font-weight:700}
+    .proof-body{display:none;border-top:1px solid var(--line);padding:0 16px 17px;color:var(--muted)}
+    .proof-step.open .proof-body{display:block}
+    .proof-number{display:inline-grid;place-items:center;width:26px;height:26px;margin-right:10px;border-radius:8px;background:var(--surface-2);color:var(--cyan-deep)}
+    .quiz-options{display:grid;gap:10px;margin-top:14px}
+    .proof-option{text-align:left}
+    .proof-option.correct{border-color:var(--success);background:color-mix(in srgb,var(--success) 10%,var(--surface))}
+    .proof-option.wrong{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 9%,var(--surface))}
+    .counter-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+    .counter-tab.active{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 9%,var(--surface))}
+    .counter-content{display:none}.counter-content.active{display:block}
+    .mistake{border-top:1px solid var(--line);padding:16px 0}.mistake:first-child{border-top:0;padding-top:0}
+    .mistake strong{color:var(--danger)}
+    .interval-track{height:16px;border-radius:999px;background:var(--surface-3);position:relative;margin:18px 0}
+    .interval-fill{position:absolute;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--violet),var(--teal))}
+    .interval-marker{position:absolute;top:50%;width:18px;height:18px;border-radius:50%;background:var(--amber);transform:translate(-50%,-50%);border:3px solid var(--surface)}
+    .footer{padding:38px 0 54px;color:var(--muted);border-top:1px solid var(--line)}
+    @media(max-width:1120px){
+      .hero,.lab-grid,.proof-grid{grid-template-columns:1fr}
+      .hero-map{min-height:360px}.hero-svg{height:320px}
+      .grid-4,.notation-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media(max-width:760px){
+      .shell{width:min(100% - 20px,1480px)}
+      .topbar-inner{min-height:60px}.brand span:last-child{display:none}
+      .hero{padding-top:46px}.section{padding:52px 0}
+      .grid-2,.grid-3,.grid-4,.notation-grid,.metric-strip,.metric-strip.four{grid-template-columns:1fr}
+      .section-head{align-items:start;flex-direction:column}
+      .card{padding:18px}.definition-card{padding:22px}
+      .diagram-shell,.diagram-shell svg{min-height:420px}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>Subgradient Laboratory</span></div>
+      <div class="top-actions">
+        <button class="ghost-button" id="scrollToLab">Open slope lab</button>
+        <button class="icon-button" id="themeToggle" aria-label="Toggle light and dark mode">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="shell hero">
+      <div>
+        <div class="eyebrow">Interactive convex analysis</div>
+        <h1>Subgradients and subdifferentials</h1>
+        <p>Differentiability selects one supporting slope. Convexity survives corners by allowing every global supporting slope at the point. Their collection is the subdifferential.</p>
+        <div class="hero-chips">
+          <span class="chip">supporting slopes</span><span class="chip">nondifferentiable points</span><span class="chip">subgradient inequality</span><span class="chip">subdifferentials</span><span class="chip">optimality</span>
+        </div>
+      </div>
+      <div class="hero-map" aria-label="Subgradient illustration at a corner">
+        <svg class="hero-svg" viewBox="0 0 540 370" role="img">
+          <defs><pattern id="heroGrid" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M 36 0 L 0 0 0 36" fill="none" stroke="var(--grid)" stroke-width="1"/></pattern></defs>
+          <rect x="0" y="0" width="540" height="370" rx="18" fill="var(--canvas)"/>
+          <rect x="0" y="0" width="540" height="370" rx="18" fill="url(#heroGrid)"/>
+          <path d="M65 70 L270 286 L480 76" fill="none" stroke="var(--cyan)" stroke-width="6" stroke-linejoin="round"/>
+          <line x1="80" y1="318" x2="468" y2="254" stroke="var(--violet)" stroke-width="3"/>
+          <line x1="96" y1="332" x2="448" y2="196" stroke="var(--teal)" stroke-width="3"/>
+          <line x1="130" y1="342" x2="408" y2="126" stroke="var(--amber)" stroke-width="3"/>
+          <circle cx="270" cy="286" r="11" fill="var(--cyan-deep)" stroke="var(--canvas)" stroke-width="3"/>
+          <text x="270" y="352" text-anchor="middle" fill="var(--muted)" font-family="Inter" font-size="15">many supporting slopes may touch the same nondifferentiable point</text>
+        </svg>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">1 · Formal definitions</div><h2>A global affine lower support</h2></div>
+          <p>A subgradient is not merely a local tangent approximation. Its affine function must lie below the convex function on the entire domain.</p>
+        </div>
+        <div class="grid-3">
+          <article class="card">
+            <div class="card-label">Subgradient</div>
+            <div class="math-display" data-math="g\in\partial f(x_0)\iff f(x)\ge f(x_0)+\langle g,x-x_0\rangle\quad\forall x" data-display="true"></div>
+            <p class="muted">The right-hand side is a global affine minorant touching \(f\) at \(x_0\).</p>
+          </article>
+          <article class="card">
+            <div class="card-label">Subdifferential</div>
+            <div class="math-display" data-math="\partial f(x_0)=\{g:g\text{ satisfies the subgradient inequality at }x_0\}" data-display="true"></div>
+            <p class="muted">For convex \(f\), this is a closed convex set of slopes or vectors.</p>
+          </article>
+          <article class="card">
+            <div class="card-label">Convex Fermat rule</div>
+            <div class="math-display" data-math="x^\star\in\operatorname*{arg\,min}f\iff 0\in\partial f(x^\star)" data-display="true"></div>
+            <p class="muted">Zero slope is both necessary and sufficient for global optimality.</p>
+          </article>
+        </div>
+        <div class="notation-grid">
+          <div class="notation-item"><strong><span data-math="g\in\partial f(x)"></span></strong>subgradient</div>
+          <div class="notation-item"><strong><span data-math="\partial f(x)"></span></strong>subdifferential</div>
+          <div class="notation-item"><strong><span data-math="f'_-(x),f'_+(x)"></span></strong>one-sided derivatives</div>
+          <div class="notation-item"><strong><span data-math="\operatorname{epi}f"></span></strong>epigraph</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="slopeLab">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">2 · Supporting-slope laboratory</div><h2>Rotate a line through the graph point</h2></div><p>A candidate slope is valid precisely when its line never rises above the graph.</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Function and slope controls</div>
+            <div class="control-stack">
+              <div class="control">
+                <label for="functionPreset">Convex function</label>
+                <select id="functionPreset">
+                  <option value="absolute">f(x)=|x|</option>
+                  <option value="quadratic">f(x)=x²/2</option>
+                  <option value="hinge">f(x)=max(0,x)</option>
+                  <option value="shiftedabs">f(x)=|x−1|+0.3x</option>
+                  <option value="maxquadratics">f(x)=max((x+1)²/3,(x−1)²/3)</option>
+                </select>
+              </div>
+              <div class="control"><label for="basePoint"><span data-math="x_0"></span><span id="basePointVal">0.00</span></label><input id="basePoint" type="range" min="-3" max="3" step=".02" value="0"></div>
+              <div class="control"><label for="candidateSlope"><span data-math="g"></span><span id="candidateSlopeVal">0.20</span></label><input id="candidateSlope" type="range" min="-4" max="4" step=".02" value=".2"></div>
+              <label class="toggle-line"><input id="showViolation" type="checkbox" checked>mark worst violation</label>
+              <label class="toggle-line"><input id="showEpigraph" type="checkbox" checked>shade epigraph</label>
+              <button id="snapLeftDerivative" class="ghost-button">Snap to left derivative</button>
+              <button id="snapRightDerivative" class="ghost-button">Snap to right derivative</button>
+              <button id="snapZeroSlope" class="ghost-button">Test zero slope</button>
+            </div>
+          </aside>
+
+          <article class="card">
+            <div class="diagram-shell"><svg id="slopeSvg" viewBox="0 0 820 520" aria-label="Candidate subgradient and supporting line"></svg></div>
+            <div class="legend">
+              <span><i style="background:var(--cyan)"></i>convex function</span>
+              <span><i style="background:var(--violet)"></i>candidate affine support</span>
+              <span><i style="background:var(--teal)"></i>contact point</span>
+              <span><i style="background:var(--danger)"></i>violation</span>
+            </div>
+          </article>
+
+          <aside class="card">
+            <div class="card-label">Subgradient diagnosis</div>
+            <div id="slopeFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">left derivative</div><div class="metric-value" id="leftDerivative">—</div></div>
+              <div class="metric-cell"><div class="metric-name">right derivative</div><div class="metric-value" id="rightDerivative">—</div></div>
+              <div class="metric-cell"><div class="metric-name">candidate valid?</div><div class="metric-value" id="candidateValid">—</div></div>
+              <div class="metric-cell"><div class="metric-name">max violation</div><div class="metric-value" id="maxViolation">—</div></div>
+            </div>
+            <div id="slopeStatus" class="status good" style="margin-top:14px"></div>
+            <div class="interval-track" id="subdiffTrack">
+              <div class="interval-fill" id="subdiffFill"></div>
+              <div class="interval-marker" id="slopeMarker"></div>
+            </div>
+            <p class="muted small" id="intervalLabel"></p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">3 · Nondifferentiability</div><h2>A corner enlarges the derivative into an interval</h2></div><p>For a one-dimensional convex function, the subdifferential is exactly the interval between the one-sided derivatives.</p></div>
+        <article class="card definition-card">
+          <div class="math-display" data-math="\partial f(x_0)=[f'_-(x_0),f'_+(x_0)]" data-display="true"></div>
+          <div class="grid-3" style="margin-top:18px">
+            <div class="card soft"><div class="card-label">Smooth point</div><div class="math-display" data-math="f'_-(x_0)=f'_+(x_0)=f'(x_0)" data-display="true"></div><p class="muted">The subdifferential is the singleton \(\{f'(x_0)\}\).</p></div>
+            <div class="card soft"><div class="card-label">Corner</div><div class="math-display" data-math="f'_-(x_0)<f'_+(x_0)" data-display="true"></div><p class="muted">Every intermediate slope supports the graph.</p></div>
+            <div class="card soft"><div class="card-label">Differentiability test</div><div class="math-display" data-math="f\text{ differentiable at }x_0\iff \partial f(x_0)\text{ is a singleton}" data-display="true"></div></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="epiLab">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">4 · Epigraph viewpoint</div><h2>A subgradient is a supporting hyperplane normal</h2></div><p>The slope \(g\) becomes the normal vector \((g,-1)\) to a supporting line of the epigraph at \((x_0,f(x_0))\).</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Epigraph controls</div>
+            <div class="control-stack">
+              <div class="control">
+                <label for="epiFunction">Function</label>
+                <select id="epiFunction">
+                  <option value="absolute">|x|</option>
+                  <option value="hinge">max(0,x)</option>
+                  <option value="quadratic">x²/2</option>
+                </select>
+              </div>
+              <div class="control"><label for="epiPoint"><span data-math="x_0"></span><span id="epiPointVal">0.00</span></label><input id="epiPoint" type="range" min="-2.5" max="2.5" step=".02" value="0"></div>
+              <div class="control"><label for="epiSlope"><span data-math="g"></span><span id="epiSlopeVal">0.00</span></label><input id="epiSlope" type="range" min="-3" max="3" step=".02" value="0"></div>
+              <label class="toggle-line"><input id="showNormalVector" type="checkbox" checked>show normal (g,−1)</label>
+              <label class="toggle-line"><input id="showEpiHalfspace" type="checkbox" checked>shade epigraph</label>
+            </div>
+          </aside>
+
+          <article class="card">
+            <div class="diagram-shell"><svg id="epiSvg" viewBox="0 0 820 520" aria-label="Subgradient as epigraph support"></svg></div>
+            <div class="legend">
+              <span><i style="background:var(--cyan)"></i>epigraph</span>
+              <span><i style="background:var(--violet)"></i>supporting line</span>
+              <span><i style="background:var(--amber)"></i>normal (g,−1)</span>
+            </div>
+          </article>
+
+          <aside class="card">
+            <div class="card-label">Geometric equivalence</div>
+            <div id="epiFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">line supports epi?</div><div class="metric-value" id="epiSupports">—</div></div>
+              <div class="metric-cell"><div class="metric-name">normal x-part</div><div class="metric-value" id="normalX">—</div></div>
+              <div class="metric-cell"><div class="metric-name">normal r-part</div><div class="metric-value">−1</div></div>
+              <div class="metric-cell"><div class="metric-name">subgradient?</div><div class="metric-value" id="epiSubgradient">—</div></div>
+            </div>
+            <div id="epiStatus" class="status good" style="margin-top:14px"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="optimalityLab">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">5 · Optimality laboratory</div><h2>Tilt the function and watch zero enter the subdifferential</h2></div><p>Minimizing \(f(x)-px\) is equivalent to finding a point where \(p\in\partial f(x)\).</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Objective controls</div>
+            <div class="control-stack">
+              <div class="control">
+                <label for="optFunction">Base function</label>
+                <select id="optFunction">
+                  <option value="absolute">f(x)=|x|</option>
+                  <option value="quadratic">f(x)=x²/2</option>
+                  <option value="hinge">f(x)=max(0,x)</option>
+                  <option value="shiftedabs">f(x)=|x−1|+0.3x</option>
+                </select>
+              </div>
+              <div class="control"><label for="tiltParameter"><span data-math="p"></span><span id="tiltParameterVal">0.40</span></label><input id="tiltParameter" type="range" min="-2.5" max="2.5" step=".02" value=".4"></div>
+              <label class="toggle-line"><input id="showOriginalFunction" type="checkbox" checked>show original f</label>
+              <label class="toggle-line"><input id="showOptimalSupport" type="checkbox" checked>show optimal supporting slope p</label>
+              <button id="animateTilt" class="ghost-button">Animate tilt</button>
+            </div>
+          </aside>
+
+          <article class="card">
+            <div class="diagram-shell"><svg id="optSvg" viewBox="0 0 820 520" aria-label="Convex optimality and tilted function"></svg></div>
+            <div class="legend">
+              <span><i style="background:var(--cyan)"></i>tilted objective f(x)−px</span>
+              <span><i style="background:var(--line)"></i>original f</span>
+              <span><i style="background:var(--teal)"></i>global minimizers</span>
+              <span><i style="background:var(--amber)"></i>slope p support</span>
+            </div>
+          </article>
+
+          <aside class="card">
+            <div class="card-label">Fermat certificate</div>
+            <div id="optFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">minimizer set</div><div class="metric-value" id="minimizerSet">—</div></div>
+              <div class="metric-cell"><div class="metric-name">minimum value</div><div class="metric-value" id="minimumValue">—</div></div>
+              <div class="metric-cell"><div class="metric-name">p in ∂f(x*)?</div><div class="metric-value" id="pInSubdiff">—</div></div>
+              <div class="metric-cell"><div class="metric-name">0 in ∂(f−p·)(x*)?</div><div class="metric-value" id="zeroInTilted">—</div></div>
+            </div>
+            <div id="optStatus" class="status good" style="margin-top:14px"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">6 · Core theorems</div><h2>Subdifferentials as first-order geometry</h2></div><p>The derivative rules of smooth convex analysis survive in set-valued form.</p></div>
+        <div class="grid-2">
+          <article class="card definition-card">
+            <div class="card-label">Existence on the relative interior</div>
+            <div class="math-display" data-math="f\text{ proper convex},\quad x\in\operatorname{ri}(\operatorname{dom}f)\quad\Longrightarrow\quad \partial f(x)\neq\varnothing" data-display="true"></div>
+            <p>A supporting hyperplane to the epigraph with last component \(-1\) produces a subgradient.</p>
+          </article>
+          <article class="card definition-card">
+            <div class="card-label">Differentiable case</div>
+            <div class="math-display" data-math="f\text{ convex and differentiable at }x\quad\Longrightarrow\quad \partial f(x)=\{\nabla f(x)\}" data-display="true"></div>
+            <p>The usual tangent plane is the unique affine support.</p>
+          </article>
+          <article class="card">
+            <div class="card-label">Monotonicity</div>
+            <div class="math-display" data-math="g\in\partial f(x),\ h\in\partial f(y)\quad\Longrightarrow\quad \langle g-h,x-y\rangle\ge0" data-display="true"></div>
+            <p class="muted">The subdifferential mapping of a convex function is monotone.</p>
+          </article>
+          <article class="card">
+            <div class="card-label">Sum rule</div>
+            <div class="math-display" data-math="\partial(f+g)(x)=\partial f(x)+\partial g(x)" data-display="true"></div>
+            <p class="muted">Under the standard qualification condition, subgradients add by Minkowski sum.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">7 · Proof architecture</div><h2>Why zero subgradient means global minimum</h2></div><p>The proof is a direct reading of the subgradient inequality.</p></div>
+        <div class="proof-grid">
+          <article class="card">
+            <div class="proof-steps">
+              <div class="proof-step open"><button type="button"><span><span class="proof-number">1</span>Assume zero is a subgradient</span><span>−</span></button><div class="proof-body"><p>If \(0\in\partial f(x^\star)\), then for every \(x\),</p><div class="math-display" data-math="f(x)\ge f(x^\star)+\langle0,x-x^\star\rangle=f(x^\star)." data-display="true"></div><p>Hence \(x^\star\) is a global minimizer.</p></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">2</span>Assume global minimality</span><span>+</span></button><div class="proof-body"><p>If \(f(x)\ge f(x^\star)\) for all \(x\), then</p><div class="math-display" data-math="f(x)\ge f(x^\star)+\langle0,x-x^\star\rangle." data-display="true"></div><p>Therefore \(0\in\partial f(x^\star)\).</p></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">3</span>Add constraints through an indicator</span><span>+</span></button><div class="proof-body"><p>For a closed convex set \(C\), minimize \(f\) over \(C\) by minimizing \(f+\delta_C\). Then</p><div class="math-display" data-math="0\in\partial f(x^\star)+N_C(x^\star)." data-display="true"></div><p>This is the nonsmooth convex analogue of KKT stationarity.</p></div></div>
+            </div>
+          </article>
+          <aside class="card">
+            <div class="card-label">Proof strategy</div>
+            <h3>Choose the horizontal support</h3>
+            <p class="muted">A zero subgradient means the horizontal affine function \(x\mapsto f(x^\star)\) supports the graph globally. No point can lie below it.</p>
+            <div class="status good" style="margin-top:16px"><strong>Optimization interpretation.</strong> At a minimizer, the epigraph admits a horizontal supporting hyperplane.</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">8 · Canonical examples</div><h2>Subdifferentials to remember</h2></div><p>These examples reappear throughout optimization, statistics, and machine learning.</p></div>
+        <div class="grid-3">
+          <article class="card"><div class="card-label">Absolute value</div><div class="math-display" data-math="\partial|x|=\begin{cases}\{-1\},&x<0,\\[-2pt][-1,1],&x=0,\\[-2pt]\{1\},&x>0.\end{cases}" data-display="true"></div></article>
+          <article class="card"><div class="card-label">Hinge loss</div><div class="math-display" data-math="\partial\max\{0,x\}=
+\begin{cases}
+\{0\}, & x<0,\\
+\left[0,1\right], & x=0,\\
+\{1\}, & x>0.
+\end{cases}" data-display="true"></div></article>
+          <article class="card"><div class="card-label">Norm at the origin</div><div class="math-display" data-math="\partial\|\cdot\|(0)=\{g:\|g\|_*\le1\}" data-display="true"></div><p class="muted">The dual unit ball is the subdifferential of a norm at zero.</p></article>
+          <article class="card"><div class="card-label">Maximum of smooth functions</div><div class="math-display" data-math="\partial\max_i f_i(x)=\operatorname{conv}\{\nabla f_i(x):i\in I(x)\}" data-display="true"></div><p class="muted">Take the convex hull of gradients of the active branches.</p></article>
+          <article class="card"><div class="card-label">Indicator function</div><div class="math-display" data-math="\partial\delta_C(x)=N_C(x)" data-display="true"></div><p class="muted">Normal cones are subdifferentials of convex indicators.</p></article>
+          <article class="card"><div class="card-label">Linear perturbation</div><div class="math-display" data-math="\partial(f-\langle p,\cdot\rangle)(x)=\partial f(x)-p" data-display="true"></div><p class="muted">Thus \(x\) minimizes the tilted function exactly when \(p\in\partial f(x)\).</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">9 · Guided theorem proving</div><h2>Choose the valid inference</h2></div><p>The distinction between local tangency and global support is essential.</p></div>
+        <div class="proof-grid">
+          <article class="card">
+            <div class="card-label">Challenge</div>
+            <p>Suppose \(g\in\partial f(x_0)\). Which statement must hold?</p>
+            <div class="quiz-options">
+              <button class="proof-option" data-answer="correct">The affine function \(x\mapsto f(x_0)+\langle g,x-x_0\rangle\) lies below \(f\) everywhere.</button>
+              <button class="proof-option" data-answer="wrong1">The affine function agrees with \(f\) in a whole neighborhood of \(x_0\).</button>
+              <button class="proof-option" data-answer="wrong2">The function is differentiable at \(x_0\).</button>
+              <button class="proof-option" data-answer="wrong3">The vector \(g\) is necessarily zero.</button>
+            </div>
+          </article>
+          <aside class="card">
+            <div class="card-label">Feedback</div>
+            <div id="quizFeedback" class="status">Choose a proof step.</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">10 · What can go wrong?</div><h2>Convexity makes the inequality global</h2></div><p>Without convexity, tangent slopes and stationary points lose their global meaning.</p></div>
+        <article class="card">
+          <div class="counter-tabs">
+            <button class="counter-tab active" data-counter="local">Local tangent</button>
+            <button class="counter-tab" data-counter="stationary">Zero derivative</button>
+            <button class="counter-tab" data-counter="boundary">Boundary domain</button>
+            <button class="counter-tab" data-counter="sumrule">Sum rule</button>
+          </div>
+          <div class="counter-content active" id="counter-local">
+            <div class="grid-2"><div><h3>A tangent line need not be a subgradient</h3><p class="muted">For a nonconvex function, the derivative line may cross above the graph elsewhere.</p></div><div class="status bad"><strong>Correction.</strong> The subgradient inequality is global, not merely first-order local contact.</div></div>
+          </div>
+          <div class="counter-content" id="counter-stationary">
+            <div class="grid-2"><div><h3>Zero derivative need not imply a minimum without convexity</h3><p class="muted">For \(f(x)=x^3\), \(f'(0)=0\), but \(0\) is not a minimizer.</p></div><div class="status bad"><strong>Missing hypothesis.</strong> The convex Fermat rule depends on convexity.</div></div>
+          </div>
+          <div class="counter-content" id="counter-boundary">
+            <div class="grid-2"><div><h3>The subdifferential may be empty at a domain boundary</h3><p class="muted">A proper convex function always has subgradients on the relative interior of its domain, but boundary points may require extra closedness or regularity.</p></div><div class="status bad"><strong>Correct existence region.</strong> Use \(\operatorname{ri}(\operatorname{dom}f)\).</div></div>
+          </div>
+          <div class="counter-content" id="counter-sumrule">
+            <div class="grid-2"><div><h3>The exact sum rule needs qualification</h3><p class="muted">Without a relative-interior intersection condition, only one inclusion may be immediate.</p></div><div class="status bad"><strong>Regularity condition.</strong> A standard assumption is \(\operatorname{ri}(\operatorname{dom}f)\cap\operatorname{ri}(\operatorname{dom}g)\neq\varnothing\).</div></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">11 · Common mistakes</div><h2>Precision traps</h2></div><p>The most common errors replace a set-valued object by an ordinary derivative too early.</p></div>
+        <article class="card">
+          <div class="mistake"><strong>Incorrect:</strong> “The subgradient is the slope of the tangent line.” <span class="muted">Correct only at differentiable points; at a corner there may be an interval of valid supporting slopes.</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “Any line through \((x_0,f(x_0))\) lying locally below the graph is a subgradient.” <span class="muted">Correct: it must lie below the graph globally.</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “\(\partial f(x)\) denotes a partial derivative.” <span class="muted">Here it denotes the convex subdifferential, a set of vectors.</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “\(0\in\partial f(x)\) gives only a local minimum.” <span class="muted">For convex \(f\), it gives a global minimum.</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “A singleton subdifferential always implies differentiability with no assumptions.” <span class="muted">For proper convex functions on the relative interior of the domain, this is the relevant differentiability criterion.</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">12 · Final synthesis</div><h2>One inequality unifies support and optimality</h2></div><p>Subgradients connect the graph, epigraph, dual slopes, and global minimizers.</p></div>
+        <div class="flow-map">
+          <div class="flow-node">affine minorant</div><span class="flow-arrow">↔</span>
+          <div class="flow-node">subgradient inequality</div><span class="flow-arrow">↔</span>
+          <div class="flow-node">epigraph support</div><span class="flow-arrow">→</span>
+          <div class="flow-node">subdifferential</div><span class="flow-arrow">→</span>
+          <div class="flow-node">global optimality</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="shell">Interactive laboratory · subgradients, subdifferentials, supporting slopes, and convex optimality.</div></footer>
+
+  <script>
+    "use strict";
+
+    const $=(s,r=document)=>r.querySelector(s);
+    const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+    const css=name=>getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+    const fmt=(v,d=3)=>{const n=Math.abs(v)<1e-10?0:v;return n.toFixed(d).replace("-","−");};
+
+    function renderMath(root=document){
+      if(window.katex){
+        $$("[data-math]",root).forEach(el=>{
+          if(el.dataset.rendered==="1")return;
+          try{katex.render(el.dataset.math,el,{throwOnError:false,displayMode:el.dataset.display==="true"});el.dataset.rendered="1";}
+          catch(e){el.textContent=el.dataset.math;}
+        });
+      }
+      if(window.renderMathInElement){
+        renderMathInElement(root,{
+          throwOnError:false,
+          delimiters:[
+            {left:"\\(",right:"\\)",display:false},
+            {left:"\\[",right:"\\]",display:true}
+          ]
+        });
+      }
+    }
+    function renderInto(el,tex,display=true){
+      if(!window.katex){el.textContent=tex;return;}
+      katex.render(tex,el,{throwOnError:false,displayMode:display});
+    }
+
+    function setTheme(theme){
+      document.documentElement.dataset.theme=theme;
+      localStorage.setItem("subgradientLabTheme",theme);
+      drawAll();
+    }
+    document.documentElement.dataset.theme=localStorage.getItem("subgradientLabTheme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+    $("#themeToggle").addEventListener("click",()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark"));
+    $("#scrollToLab").addEventListener("click",()=>$("#slopeLab").scrollIntoView({behavior:"smooth"}));
+
+    function svgEl(tag,attrs={}){
+      const el=document.createElementNS("http://www.w3.org/2000/svg",tag);
+      Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));
+      return el;
+    }
+    function clearSvg(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+    function drawAxes(svg,w,h,xmin=-4,xmax=4,ymin=-2,ymax=7){
+      svg.appendChild(svgEl("rect",{x:0,y:0,width:w,height:h,fill:css("--canvas")}));
+      const X=x=>40+(x-xmin)/(xmax-xmin)*(w-80);
+      const Y=y=>h-40-(y-ymin)/(ymax-ymin)*(h-80);
+      for(let x=Math.ceil(xmin);x<=xmax;x++)svg.appendChild(svgEl("line",{x1:X(x),y1:40,x2:X(x),y2:h-40,stroke:css("--grid"),"stroke-width":1}));
+      for(let y=Math.ceil(ymin);y<=ymax;y++)svg.appendChild(svgEl("line",{x1:40,y1:Y(y),x2:w-40,y2:Y(y),stroke:css("--grid"),"stroke-width":1}));
+      if(xmin<=0&&xmax>=0)svg.appendChild(svgEl("line",{x1:X(0),y1:40,x2:X(0),y2:h-40,stroke:css("--axis"),"stroke-width":1.5}));
+      if(ymin<=0&&ymax>=0)svg.appendChild(svgEl("line",{x1:40,y1:Y(0),x2:w-40,y2:Y(0),stroke:css("--axis"),"stroke-width":1.5}));
+      return{X,Y,xmin,xmax,ymin,ymax};
+    }
+    function samplePath(f,X,Y,xmin,xmax,n=500){
+      let d="";
+      for(let i=0;i<=n;i++){
+        const x=xmin+(xmax-xmin)*i/n,y=f(x);
+        if(!Number.isFinite(y))continue;
+        d+=(d?" L ":"M ")+`${X(x)} ${Y(y)}`;
+      }
+      return d;
+    }
+
+    const defs={
+      absolute:{
+        f:x=>Math.abs(x),
+        tex:"|x|",
+        subdiff:x=>Math.abs(x)<1e-7?[-1,1]:x<0?[-1,-1]:[1,1]
+      },
+      quadratic:{
+        f:x=>.5*x*x,
+        tex:"\\frac{x^2}{2}",
+        subdiff:x=>[x,x]
+      },
+      hinge:{
+        f:x=>Math.max(0,x),
+        tex:"\\max\\{0,x\\}",
+        subdiff:x=>Math.abs(x)<1e-7?[0,1]:x<0?[0,0]:[1,1]
+      },
+      shiftedabs:{
+        f:x=>Math.abs(x-1)+.3*x,
+        tex:"|x-1|+0.3x",
+        subdiff:x=>Math.abs(x-1)<1e-7?[-.7,1.3]:x<1?[-.7,-.7]:[1.3,1.3]
+      },
+      maxquadratics:{
+        f:x=>Math.max((x+1)*(x+1)/3,(x-1)*(x-1)/3),
+        tex:"\\max\\left\\{\\frac{(x+1)^2}{3},\\frac{(x-1)^2}{3}\\right\\}",
+        subdiff:x=>{
+          const a=(x+1)*(x+1)/3,b=(x-1)*(x-1)/3;
+          if(Math.abs(a-b)<1e-7)return[-2/3,2/3];
+          return a>b?[2*(x+1)/3,2*(x+1)/3]:[2*(x-1)/3,2*(x-1)/3];
+        }
+      }
+    };
+
+    function supportViolation(def,x0,g,xmin=-4,xmax=4,n=1000){
+      const f0=def.f(x0);let maxV=-Infinity,arg=xmin;
+      for(let i=0;i<=n;i++){
+        const x=xmin+(xmax-xmin)*i/n;
+        const line=f0+g*(x-x0),v=line-def.f(x);
+        if(v>maxV){maxV=v;arg=x;}
+      }
+      return{maxV,arg};
+    }
+
+    ["functionPreset","basePoint","candidateSlope","showViolation","showEpigraph"].forEach(id=>$("#"+id).addEventListener("input",drawSlopeLab));
+    $("#snapLeftDerivative").addEventListener("click",()=>{
+      const def=defs[$("#functionPreset").value],x=+$("#basePoint").value;
+      $("#candidateSlope").value=def.subdiff(x)[0];drawSlopeLab();
+    });
+    $("#snapRightDerivative").addEventListener("click",()=>{
+      const def=defs[$("#functionPreset").value],x=+$("#basePoint").value;
+      $("#candidateSlope").value=def.subdiff(x)[1];drawSlopeLab();
+    });
+    $("#snapZeroSlope").addEventListener("click",()=>{$("#candidateSlope").value=0;drawSlopeLab();});
+
+    function drawSlopeLab(){
+      const svg=$("#slopeSvg"),w=820,h=520,plot=drawAxes(svg,w,h,-4,4,-2,7);
+      const def=defs[$("#functionPreset").value],x0=+$("#basePoint").value,g=+$("#candidateSlope").value,f0=def.f(x0),[lo,hi]=def.subdiff(x0);
+      const valid=g>=lo-1e-7&&g<=hi+1e-7,violation=supportViolation(def,x0,g);
+
+      if($("#showEpigraph").checked){
+        const pts=[];
+        for(let i=0;i<=300;i++){
+          const x=-4+8*i/300;
+          pts.push(`${plot.X(x)},${plot.Y(Math.min(7,def.f(x)))}`);
+        }
+        pts.push(`${plot.X(4)},${plot.Y(7)}`,`${plot.X(-4)},${plot.Y(7)}`);
+        svg.appendChild(svgEl("polygon",{points:pts.join(" "),fill:css("--cyan"),opacity:.08}));
+      }
+      svg.appendChild(svgEl("path",{d:samplePath(def.f,plot.X,plot.Y,-4,4),fill:"none",stroke:css("--cyan"),"stroke-width":4}));
+      const line=x=>f0+g*(x-x0);
+      svg.appendChild(svgEl("line",{x1:plot.X(-4),y1:plot.Y(line(-4)),x2:plot.X(4),y2:plot.Y(line(4)),stroke:valid?css("--violet"):css("--danger"),"stroke-width":4}));
+      const P={x:plot.X(x0),y:plot.Y(f0)};
+      svg.appendChild(svgEl("circle",{cx:P.x,cy:P.y,r:11,fill:css("--teal"),stroke:css("--canvas"),"stroke-width":3}));
+      if($("#showViolation").checked&&!valid&&violation.maxV>1e-6){
+        const x=violation.arg,A={x:plot.X(x),y:plot.Y(def.f(x))},B={x:plot.X(x),y:plot.Y(line(x))};
+        svg.appendChild(svgEl("line",{x1:A.x,y1:A.y,x2:B.x,y2:B.y,stroke:css("--danger"),"stroke-width":6,"stroke-dasharray":"7 6"}));
+        svg.appendChild(svgEl("circle",{cx:A.x,cy:A.y,r:7,fill:css("--danger")}));
+      }
+
+      $("#basePointVal").textContent=fmt(x0,2);$("#candidateSlopeVal").textContent=fmt(g,2);
+      $("#leftDerivative").textContent=fmt(lo,3);$("#rightDerivative").textContent=fmt(hi,3);
+      $("#candidateValid").textContent=valid?"yes":"no";$("#maxViolation").textContent=fmt(Math.max(0,violation.maxV),4);
+      renderInto($("#slopeFormula"),String.raw`f(x)\ge f(${fmt(x0,2)})+${fmt(g,2)}(x-${fmt(x0,2)})\qquad\forall x`);
+      const st=$("#slopeStatus");
+      if(valid){
+        st.className="status good";
+        st.innerHTML="<strong>Valid subgradient.</strong> The affine function touches the graph at \(x_0\) and stays below it globally.";
+      }else{
+        st.className="status bad";
+        st.innerHTML="<strong>Not a subgradient.</strong> The candidate line rises above the function somewhere in the displayed domain.";
+      }
+
+      const scaleMin=-4,scaleMax=4,toPct=v=>100*(clamp(v,scaleMin,scaleMax)-scaleMin)/(scaleMax-scaleMin);
+      $("#subdiffFill").style.left=`${toPct(lo)}%`;
+      $("#subdiffFill").style.width=`${Math.max(0,toPct(hi)-toPct(lo))}%`;
+      $("#slopeMarker").style.left=`${toPct(g)}%`;
+      $("#intervalLabel").textContent=`Subdifferential: [${fmt(lo,3)}, ${fmt(hi,3)}]. Candidate slope: ${fmt(g,3)}.`;
+    }
+
+    ["epiFunction","epiPoint","epiSlope","showNormalVector","showEpiHalfspace"].forEach(id=>$("#"+id).addEventListener("input",drawEpiLab));
+
+    function drawEpiLab(){
+      const svg=$("#epiSvg"),w=820,h=520,plot=drawAxes(svg,w,h,-4,4,-2,7);
+      const def=defs[$("#epiFunction").value],x0=+$("#epiPoint").value,g=+$("#epiSlope").value,f0=def.f(x0),[lo,hi]=def.subdiff(x0);
+      const valid=g>=lo-1e-7&&g<=hi+1e-7;
+      if($("#showEpiHalfspace").checked){
+        const pts=[];
+        for(let i=0;i<=300;i++){
+          const x=-4+8*i/300;pts.push(`${plot.X(x)},${plot.Y(Math.min(7,def.f(x)))}`);
+        }
+        pts.push(`${plot.X(4)},${plot.Y(7)}`,`${plot.X(-4)},${plot.Y(7)}`);
+        svg.appendChild(svgEl("polygon",{points:pts.join(" "),fill:css("--cyan"),opacity:.12}));
+      }
+      svg.appendChild(svgEl("path",{d:samplePath(def.f,plot.X,plot.Y,-4,4),fill:"none",stroke:css("--cyan"),"stroke-width":4}));
+      const line=x=>f0+g*(x-x0);
+      svg.appendChild(svgEl("line",{x1:plot.X(-4),y1:plot.Y(line(-4)),x2:plot.X(4),y2:plot.Y(line(4)),stroke:valid?css("--violet"):css("--danger"),"stroke-width":4}));
+      const P={x:plot.X(x0),y:plot.Y(f0)};
+      svg.appendChild(svgEl("circle",{cx:P.x,cy:P.y,r:11,fill:css("--teal"),stroke:css("--canvas"),"stroke-width":3}));
+      if($("#showNormalVector").checked){
+        const n={x:g,y:-1},L=Math.hypot(n.x,n.y),unit={x:n.x/L,y:n.y/L};
+        const Q={x:plot.X(x0+unit.x),y:plot.Y(f0+unit.y)};
+        svg.appendChild(svgEl("line",{x1:P.x,y1:P.y,x2:Q.x,y2:Q.y,stroke:css("--amber"),"stroke-width":4}));
+        svg.appendChild(svgEl("circle",{cx:Q.x,cy:Q.y,r:7,fill:css("--amber")}));
+      }
+
+      $("#epiPointVal").textContent=fmt(x0,2);$("#epiSlopeVal").textContent=fmt(g,2);
+      $("#epiSupports").textContent=valid?"yes":"no";$("#normalX").textContent=fmt(g,2);$("#epiSubgradient").textContent=valid?"yes":"no";
+      renderInto($("#epiFormula"),String.raw`g\in\partial f(x_0)\iff (g,-1)\in N_{\operatorname{epi}f}(x_0,f(x_0))`);
+      const st=$("#epiStatus");
+      if(valid){
+        st.className="status good";st.innerHTML="<strong>Supporting epigraph normal.</strong> The vector \((g,-1)\) defines a hyperplane touching the epigraph at the graph point.";
+      }else{
+        st.className="status bad";st.innerHTML="<strong>Support failure.</strong> The line cuts through the epigraph, so \((g,-1)\) is not a normal there.";
+      }
+    }
+
+    let tiltTimer=null;
+    ["optFunction","tiltParameter","showOriginalFunction","showOptimalSupport"].forEach(id=>$("#"+id).addEventListener("input",drawOptimalityLab));
+    $("#animateTilt").addEventListener("click",()=>{
+      clearInterval(tiltTimer);let p=+$("#tiltParameter").value,dir=1;
+      tiltTimer=setInterval(()=>{
+        p+=.02*dir;if(p>=2.5){p=2.5;dir=-1;}if(p<=-2.5){p=-2.5;dir=1;}
+        $("#tiltParameter").value=p;drawOptimalityLab();
+      },45);
+    });
+
+    function findMinimizers(def,p,xmin=-4,xmax=4,n=2400){
+      let min=Infinity,vals=[];
+      for(let i=0;i<=n;i++){
+        const x=xmin+(xmax-xmin)*i/n,v=def.f(x)-p*x;
+        if(v<min-1e-6){min=v;vals=[x];}
+        else if(Math.abs(v-min)<=1e-4)vals.push(x);
+      }
+      if(!vals.length)return{minimizers:[],value:Infinity};
+      return{minimizers:[Math.min(...vals),Math.max(...vals)],value:min};
+    }
+
+    function drawOptimalityLab(){
+      const svg=$("#optSvg"),w=820,h=520,plot=drawAxes(svg,w,h,-4,4,-4,7);
+      const def=defs[$("#optFunction").value],p=+$("#tiltParameter").value,tilted=x=>def.f(x)-p*x,res=findMinimizers(def,p);
+      if($("#showOriginalFunction").checked){
+        svg.appendChild(svgEl("path",{d:samplePath(def.f,plot.X,plot.Y,-4,4),fill:"none",stroke:css("--line"),"stroke-width":3,"stroke-dasharray":"8 7"}));
+      }
+      svg.appendChild(svgEl("path",{d:samplePath(tilted,plot.X,plot.Y,-4,4),fill:"none",stroke:css("--cyan"),"stroke-width":4}));
+      res.minimizers.forEach(x=>{
+        const P={x:plot.X(x),y:plot.Y(tilted(x))};
+        svg.appendChild(svgEl("circle",{cx:P.x,cy:P.y,r:11,fill:css("--teal"),stroke:css("--canvas"),"stroke-width":3}));
+      });
+      if($("#showOptimalSupport").checked&&res.minimizers.length){
+        const x=res.minimizers[0],f0=def.f(x),line=z=>f0+p*(z-x);
+        svg.appendChild(svgEl("line",{x1:plot.X(-4),y1:plot.Y(line(-4)),x2:plot.X(4),y2:plot.Y(line(4)),stroke:css("--amber"),"stroke-width":3}));
+      }
+
+      const setText=res.minimizers.length===0?"none":Math.abs(res.minimizers[1]-res.minimizers[0])<.02?fmt((res.minimizers[0]+res.minimizers[1])/2,2):`[${fmt(res.minimizers[0],2)}, ${fmt(res.minimizers[1],2)}]`;
+      let certificate=false;
+      if(res.minimizers.length){
+        const mid=(res.minimizers[0]+res.minimizers[1])/2,[lo,hi]=def.subdiff(mid);
+        certificate=p>=lo-2e-2&&p<=hi+2e-2;
+      }
+      $("#tiltParameterVal").textContent=fmt(p,2);$("#minimizerSet").textContent=setText;$("#minimumValue").textContent=Number.isFinite(res.value)?fmt(res.value,3):"−∞";
+      $("#pInSubdiff").textContent=certificate?"yes":"no";$("#zeroInTilted").textContent=certificate?"yes":"no";
+      renderInto($("#optFormula"),String.raw`x^\star\in\arg\min_x\{f(x)-${fmt(p,2)}x\}\iff ${fmt(p,2)}\in\partial f(x^\star)\iff0\in\partial(f-${fmt(p,2)}\,\mathrm{id})(x^\star)`);
+      const st=$("#optStatus");
+      if(certificate){
+        st.className="status good";st.innerHTML="<strong>Optimality certified.</strong> The tilt \(p\) belongs to the base-function subdifferential at every displayed minimizer.";
+      }else{
+        st.className="status warning";st.innerHTML="<strong>No finite minimizer in the displayed region.</strong> The linear tilt may dominate the function in one direction.";
+      }
+    }
+
+    $$(".proof-step>button").forEach(btn=>btn.addEventListener("click",()=>{
+      const step=btn.parentElement;step.classList.toggle("open");btn.lastElementChild.textContent=step.classList.contains("open")?"−":"+";
+    }));
+
+    $$(".proof-option").forEach(btn=>btn.addEventListener("click",()=>{
+      $$(".proof-option").forEach(b=>b.classList.remove("correct","wrong"));
+      const f=$("#quizFeedback");
+      if(btn.dataset.answer==="correct"){
+        btn.classList.add("correct");f.className="status good";
+        f.innerHTML="<strong>Correct.</strong> This is exactly the subgradient inequality: global affine support with equality at the base point.";
+      }else if(btn.dataset.answer==="wrong1"){
+        btn.classList.add("wrong");f.className="status bad";
+        f.innerHTML="<strong>Too strong.</strong> A support line may touch only at one point and need not coincide with the function nearby.";
+      }else if(btn.dataset.answer==="wrong2"){
+        btn.classList.add("wrong");f.className="status bad";
+        f.innerHTML="<strong>False implication.</strong> A corner can have many subgradients while the function is nondifferentiable.";
+      }else{
+        btn.classList.add("wrong");f.className="status bad";
+        f.innerHTML="<strong>Special case only.</strong> The zero vector is a subgradient precisely at global minimizers.";
+      }
+    }));
+
+    $$(".counter-tab").forEach(tab=>tab.addEventListener("click",()=>{
+      $$(".counter-tab").forEach(t=>t.classList.toggle("active",t===tab));
+      $$(".counter-content").forEach(c=>c.classList.toggle("active",c.id==="counter-"+tab.dataset.counter));
+    }));
+
+    function drawAll(){drawSlopeLab();drawEpiLab();drawOptimalityLab();}
+    window.addEventListener("load",()=>{renderMath();drawAll();});
+    setTimeout(()=>{renderMath();drawAll();},300);
+  </script>
+</body>
+</html>

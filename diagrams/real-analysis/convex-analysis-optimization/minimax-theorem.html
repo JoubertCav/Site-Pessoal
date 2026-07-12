@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Interactive laboratory for minimax theorems, convex-concave functions, saddle values, zero-sum games, and failures without hypotheses." />
+  <title>Minimax Theorem — Interactive Convex Analysis Laboratory</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    :root{
+      --bg:#f7f9f8;--surface:rgba(255,255,255,.97);--surface-2:#eef5f5;--surface-3:#e4edef;
+      --text:#172126;--muted:#617178;--line:#d4dfe1;--cyan:#00a8c6;--cyan-deep:#087f98;
+      --teal:#168f88;--violet:#7567c7;--amber:#b57a20;--danger:#b74c4c;--success:#147d64;
+      --shadow:0 18px 52px rgba(37,56,64,.09);--radius:22px;--canvas:#fff;--axis:#65787e;
+      --grid:#dce6e8
+    }
+    html[data-theme="dark"]{
+      --bg:#121a20;--surface:rgba(27,38,46,.97);--surface-2:#213039;--surface-3:#273942;
+      --text:#edf5f6;--muted:#a8b8bd;--line:#344750;--cyan:#44c9e1;--cyan-deep:#7ed9e8;
+      --teal:#58c4b9;--violet:#aaa0e6;--amber:#e3b35d;--danger:#ef8989;--success:#68d0ad;
+      --shadow:0 18px 52px rgba(0,0,0,.25);--canvas:#17232a;--axis:#9bb0b7;--grid:#30424a
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;color:var(--text);
+      background:
+        radial-gradient(circle at 7% 0%,rgba(0,168,198,.085),transparent 29rem),
+        radial-gradient(circle at 100% 17%,rgba(117,103,199,.065),transparent 32rem),
+        var(--bg);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.65;transition:background .25s ease,color .25s ease
+    }
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    .shell{width:min(1480px,calc(100% - 32px));margin:0 auto}
+    .topbar{
+      position:sticky;top:0;z-index:50;border-bottom:1px solid color-mix(in srgb,var(--line) 84%,transparent);
+      backdrop-filter:blur(18px);background:color-mix(in srgb,var(--bg) 82%,transparent)
+    }
+    .topbar-inner{min-height:68px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:-.02em}
+    .brand-mark{
+      width:34px;height:34px;border:1px solid var(--cyan);border-radius:11px;display:grid;place-items:center;
+      box-shadow:inset 0 0 0 6px color-mix(in srgb,var(--cyan) 10%,transparent)
+    }
+    .brand-mark::before{content:"⇄";color:var(--cyan-deep);font-weight:700}
+    .top-actions{display:flex;gap:9px;align-items:center}
+    .icon-button,.ghost-button,.primary-button,.proof-option,.counter-tab{
+      border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:12px;
+      min-height:40px;padding:9px 13px;transition:transform .18s ease,border-color .18s ease,background .18s ease
+    }
+    .icon-button:hover,.ghost-button:hover,.proof-option:hover,.counter-tab:hover{
+      transform:translateY(-1px);border-color:var(--cyan)
+    }
+    .primary-button{background:var(--cyan);color:#062e37;font-weight:700;border-color:transparent}
+    .primary-button:hover{transform:translateY(-1px);filter:brightness(1.03)}
+    h1,h2,h3,.serif{font-family:"Libre Baskerville",Georgia,serif;letter-spacing:-.025em}
+    h1{font-size:clamp(2.65rem,5.8vw,5.15rem);line-height:1.03;margin:12px 0 20px}
+    h2{font-size:clamp(2rem,4vw,3.15rem);line-height:1.14;margin:0}
+    h3{font-size:1.2rem;margin:0}
+    p{margin:0}
+    .hero{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(360px,.92fr);gap:30px;padding:70px 0 46px;align-items:center}
+    .eyebrow{color:var(--cyan-deep);font-weight:700;text-transform:uppercase;letter-spacing:.14em;font-size:.78rem}
+    .hero p{color:var(--muted);max-width:850px;font-size:clamp(1.02rem,1.8vw,1.24rem)}
+    .hero-chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:28px}
+    .chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);padding:8px 11px;border-radius:999px;color:var(--muted);font-size:.9rem}
+    .chip::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--cyan)}
+    .hero-map{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:28px;padding:22px;min-height:420px;overflow:hidden}
+    .hero-svg{width:100%;height:370px;display:block}
+    .section{padding:72px 0}
+    .section-head{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:27px}
+    .section-head p{color:var(--muted);max-width:780px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+    .grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+    .lab-grid{display:grid;grid-template-columns:minmax(285px,.78fr) minmax(0,1.42fr) minmax(300px,.92fr);gap:20px;align-items:start}
+    .proof-grid{display:grid;grid-template-columns:minmax(0,1.22fr) minmax(300px,.78fr);gap:20px}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;min-width:0}
+    .card.soft{background:var(--surface-2);box-shadow:none}
+    .card h3+p{margin-top:9px;color:var(--muted)}
+    .card-label{color:var(--cyan-deep);font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;font-weight:700;margin-bottom:10px}
+    .muted{color:var(--muted)}.small{font-size:.9rem}
+    .definition-card{padding:30px;border-left:4px solid var(--cyan)}
+    .math-display{margin:18px 0;overflow-x:auto;overflow-y:hidden;padding:8px 2px}
+    .katex-display{margin:.72em 0!important}
+    .katex{max-width:100%}
+    .notation-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}
+    .notation-item{border:1px solid var(--line);background:var(--surface-2);border-radius:14px;padding:13px}
+    .notation-item strong{display:block;margin-bottom:6px;color:var(--cyan-deep)}
+    .flow-map{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;margin-top:18px}
+    .flow-node{border:1px solid var(--line);background:var(--surface-2);border-radius:14px;padding:12px 14px;min-width:150px;text-align:center}
+    .flow-arrow{color:var(--cyan-deep);font-size:1.4rem}
+    .control-stack{display:grid;gap:16px}
+    .control label{display:flex;justify-content:space-between;gap:12px;align-items:baseline;font-weight:600;margin-bottom:7px}
+    .control label span:last-child{color:var(--cyan-deep);font-variant-numeric:tabular-nums}
+    input[type="range"]{width:100%;accent-color:var(--cyan)}
+    select{width:100%;min-height:43px;border-radius:11px;border:1px solid var(--line);background:var(--surface);color:var(--text);padding:8px 10px}
+    .control-note{color:var(--muted);font-size:.82rem;margin-top:5px}
+    .metric-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
+    .metric-cell{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:13px;text-align:center}
+    .metric-name{color:var(--muted);font-size:.79rem;text-transform:uppercase;letter-spacing:.06em}
+    .metric-value{font-size:1.16rem;font-weight:700;color:var(--cyan-deep);font-variant-numeric:tabular-nums}
+    .status{border-radius:14px;padding:14px;border:1px solid var(--line);background:var(--surface-2)}
+    .status.good{border-color:color-mix(in srgb,var(--success) 55%,var(--line));background:color-mix(in srgb,var(--success) 9%,var(--surface))}
+    .status.warning{border-color:color-mix(in srgb,var(--amber) 55%,var(--line));background:color-mix(in srgb,var(--amber) 8%,var(--surface))}
+    .status.bad{border-color:color-mix(in srgb,var(--danger) 55%,var(--line));background:color-mix(in srgb,var(--danger) 8%,var(--surface))}
+    .diagram-shell{background:var(--canvas);border:1px solid var(--line);border-radius:18px;overflow:hidden;min-height:500px}
+    .diagram-shell svg{display:block;width:100%;height:auto;min-height:500px;touch-action:none}
+    .legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;color:var(--muted);font-size:.86rem}
+    .legend span{display:flex;align-items:center;gap:7px}
+    .legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+    .proof-steps{display:grid;gap:10px}
+    .proof-step{border:1px solid var(--line);background:var(--surface);border-radius:15px;overflow:hidden}
+    .proof-step>button{width:100%;border:0;background:transparent;color:var(--text);display:flex;justify-content:space-between;gap:14px;padding:15px;text-align:left;font-weight:700}
+    .proof-body{display:none;border-top:1px solid var(--line);padding:0 16px 17px;color:var(--muted)}
+    .proof-step.open .proof-body{display:block}
+    .proof-number{display:inline-grid;place-items:center;width:26px;height:26px;margin-right:10px;border-radius:8px;background:var(--surface-2);color:var(--cyan-deep)}
+    .quiz-options{display:grid;gap:10px;margin-top:14px}
+    .proof-option{text-align:left}
+    .proof-option.correct{border-color:var(--success);background:color-mix(in srgb,var(--success) 10%,var(--surface))}
+    .proof-option.wrong{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 9%,var(--surface))}
+    .counter-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+    .counter-tab.active{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 9%,var(--surface))}
+    .counter-content{display:none}.counter-content.active{display:block}
+    .matrix{border-collapse:collapse;margin:14px auto;width:100%;max-width:420px}
+    .matrix td,.matrix th{border:1px solid var(--line);padding:10px;text-align:center}
+    .matrix th{background:var(--surface-2);color:var(--muted)}
+    .mistake{border-top:1px solid var(--line);padding:16px 0}.mistake:first-child{border-top:0;padding-top:0}
+    .mistake strong{color:var(--danger)}
+    .footer{padding:38px 0 54px;color:var(--muted);border-top:1px solid var(--line)}
+    @media(max-width:1120px){
+      .hero,.lab-grid,.proof-grid{grid-template-columns:1fr}
+      .hero-map{min-height:360px}.hero-svg{height:320px}
+      .grid-4,.notation-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media(max-width:760px){
+      .shell{width:min(100% - 20px,1480px)}
+      .topbar-inner{min-height:60px}.brand span:last-child{display:none}
+      .hero{padding-top:46px}.section{padding:52px 0}
+      .grid-2,.grid-3,.grid-4,.notation-grid,.metric-strip{grid-template-columns:1fr}
+      .section-head{align-items:start;flex-direction:column}
+      .card{padding:18px}.definition-card{padding:22px}
+      .diagram-shell,.diagram-shell svg{min-height:420px}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>Minimax Theorem Laboratory</span></div>
+      <div class="top-actions">
+        <button class="ghost-button" id="scrollToLab">Open saddle lab</button>
+        <button class="icon-button" id="themeToggle" aria-label="Toggle light and dark mode">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="shell hero">
+      <div>
+        <div class="eyebrow">Interactive convex analysis and game theory</div>
+        <h1>Minimax theorem</h1>
+        <p>One player minimizes after anticipating the maximizer; the other maximizes after anticipating the minimizer. The minimax theorem identifies hypotheses under which these two sequential values coincide and a saddle value emerges.</p>
+        <div class="hero-chips">
+          <span class="chip">convex–concave structure</span><span class="chip">saddle values</span><span class="chip">order of optimization</span><span class="chip">zero-sum games</span><span class="chip">failure without hypotheses</span>
+        </div>
+      </div>
+      <div class="hero-map" aria-label="Minimax saddle illustration">
+        <svg class="hero-svg" viewBox="0 0 540 370" role="img">
+          <defs><pattern id="heroGrid" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M 36 0 L 0 0 0 36" fill="none" stroke="var(--grid)" stroke-width="1"/></pattern></defs>
+          <rect x="0" y="0" width="540" height="370" rx="18" fill="var(--canvas)"/>
+          <rect x="0" y="0" width="540" height="370" rx="18" fill="url(#heroGrid)"/>
+          <path d="M70 290 C145 205, 210 125, 270 106 C332 87, 402 177, 470 292" fill="none" stroke="var(--cyan)" stroke-width="5"/>
+          <path d="M70 82 C145 167, 210 247, 270 266 C332 285, 402 195, 470 80" fill="none" stroke="var(--violet)" stroke-width="5"/>
+          <circle cx="270" cy="186" r="11" fill="var(--teal)" stroke="var(--canvas)" stroke-width="3"/>
+          <line x1="270" y1="106" x2="270" y2="266" stroke="var(--amber)" stroke-width="3" stroke-dasharray="8 7"/>
+          <text x="270" y="350" text-anchor="middle" fill="var(--muted)" font-family="Inter" font-size="15">convex in one variable, concave in the other</text>
+        </svg>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">1 · Two sequential values</div><h2>Why the order matters</h2></div>
+          <p>The player who moves second can react to the first mover. Therefore the max–min value never exceeds the min–max value.</p>
+        </div>
+        <article class="card definition-card">
+          <div class="math-display" data-math="\underline v=\sup_{y\in Y}\inf_{x\in X}\Phi(x,y)\le \inf_{x\in X}\sup_{y\in Y}\Phi(x,y)=\overline v." data-display="true"></div>
+          <p>The minimax theorem gives conditions under which \(\underline v=\overline v\).</p>
+        </article>
+        <div class="notation-grid">
+          <div class="notation-item"><strong><span data-math="\underline v"></span></strong>max–min value</div>
+          <div class="notation-item"><strong><span data-math="\overline v"></span></strong>min–max value</div>
+          <div class="notation-item"><strong><span data-math="(x^\star,y^\star)"></span></strong>saddle point</div>
+          <div class="notation-item"><strong><span data-math="v"></span></strong>common saddle value</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="saddleLab">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">2 · Convex–concave saddle laboratory</div><h2>Compare both optimization orders</h2></div><p>Use
+          \[
+          \Phi(x,y)=\frac{\mu}{2}(x-a)^2+cxy-\frac{\nu}{2}(y-b)^2
+          \]
+          on compact intervals. The function is convex in \(x\) and concave in \(y\).</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Function controls</div>
+            <div class="control-stack">
+              <div class="control"><label for="muControl"><span data-math="\mu"></span><span id="muVal">1.20</span></label><input id="muControl" type="range" min=".2" max="3" step=".05" value="1.2"></div>
+              <div class="control"><label for="nuControl"><span data-math="\nu"></span><span id="nuVal">1.00</span></label><input id="nuControl" type="range" min=".2" max="3" step=".05" value="1"></div>
+              <div class="control"><label for="couplingControl"><span data-math="c"></span><span id="couplingVal">0.70</span></label><input id="couplingControl" type="range" min="-2" max="2" step=".05" value=".7"></div>
+              <div class="control"><label for="aControl"><span data-math="a"></span><span id="aVal">0.60</span></label><input id="aControl" type="range" min="-2" max="2" step=".05" value=".6"></div>
+              <div class="control"><label for="bControl"><span data-math="b"></span><span id="bVal">−0.40</span></label><input id="bControl" type="range" min="-2" max="2" step=".05" value="-.4"></div>
+              <label class="toggle-line"><input id="showBestResponses" type="checkbox" checked>show best-response curves</label>
+              <label class="toggle-line"><input id="showSlices" type="checkbox" checked>show saddle slices</label>
+              <button id="resetSaddle" class="ghost-button">Reset example</button>
+            </div>
+          </aside>
+
+          <article class="card">
+            <div class="diagram-shell"><svg id="saddleSvg" viewBox="0 0 900 520" aria-label="Convex-concave payoff surface and saddle point"></svg></div>
+            <div class="legend">
+              <span><i style="background:var(--cyan)"></i>payoff heat map</span>
+              <span><i style="background:var(--violet)"></i>minimizer best response</span>
+              <span><i style="background:var(--amber)"></i>maximizer best response</span>
+              <span><i style="background:var(--teal)"></i>saddle point</span>
+            </div>
+          </article>
+
+          <aside class="card">
+            <div class="card-label">Minimax diagnosis</div>
+            <div id="saddleFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">max–min</div><div class="metric-value" id="maxminValue">—</div></div>
+              <div class="metric-cell"><div class="metric-name">min–max</div><div class="metric-value" id="minmaxValue">—</div></div>
+              <div class="metric-cell"><div class="metric-name">gap</div><div class="metric-value" id="saddleGap">—</div></div>
+              <div class="metric-cell"><div class="metric-name">saddle point</div><div class="metric-value" id="saddlePointValue">—</div></div>
+            </div>
+            <div id="saddleStatus" class="status good" style="margin-top:14px"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">3 · Saddle-point characterization</div><h2>A point stable against unilateral deviations</h2></div><p>A saddle point simultaneously solves the inner problems for both players.</p></div>
+        <article class="card definition-card">
+          <div class="math-display" data-math="\Phi(x^\star,y)\le\Phi(x^\star,y^\star)\le\Phi(x,y^\star)\qquad\forall x\in X,\ \forall y\in Y." data-display="true"></div>
+          <p>The left inequality says \(y^\star\) maximizes against \(x^\star\); the right says \(x^\star\) minimizes against \(y^\star\). Consequently,</p>
+          <div class="math-display" data-math="\sup_y\inf_x\Phi(x,y)=\Phi(x^\star,y^\star)=\inf_x\sup_y\Phi(x,y)." data-display="true"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="gameLab">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">4 · Zero-sum game laboratory</div><h2>Mixed strategies convexify the players’ choices</h2></div><p>For a \(2\times2\) payoff matrix, pure strategies may have a gap, while mixed strategies restore the minimax equality.</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Payoff matrix</div>
+            <div class="control-stack">
+              <div class="control"><label for="m11"><span data-math="a_{11}"></span><span id="m11Val">1.00</span></label><input id="m11" type="range" min="-4" max="4" step=".25" value="1"></div>
+              <div class="control"><label for="m12"><span data-math="a_{12}"></span><span id="m12Val">−1.00</span></label><input id="m12" type="range" min="-4" max="4" step=".25" value="-1"></div>
+              <div class="control"><label for="m21"><span data-math="a_{21}"></span><span id="m21Val">−1.00</span></label><input id="m21" type="range" min="-4" max="4" step=".25" value="-1"></div>
+              <div class="control"><label for="m22"><span data-math="a_{22}"></span><span id="m22Val">1.00</span></label><input id="m22" type="range" min="-4" max="4" step=".25" value="1"></div>
+              <div class="control"><label for="rowMix">row-1 probability<span id="rowMixVal">0.50</span></label><input id="rowMix" type="range" min="0" max="1" step=".01" value=".5"></div>
+              <div class="control"><label for="colMix">column-1 probability<span id="colMixVal">0.50</span></label><input id="colMix" type="range" min="0" max="1" step=".01" value=".5"></div>
+              <button id="setGameEquilibrium" class="primary-button">Set equilibrium mix</button>
+              <button id="matchingPennies" class="ghost-button">Matching pennies</button>
+            </div>
+          </aside>
+
+          <article class="card">
+            <div class="diagram-shell"><svg id="gameSvg" viewBox="0 0 900 520" aria-label="Mixed-strategy zero-sum game minimax"></svg></div>
+            <table class="matrix">
+              <thead><tr><th></th><th>Column 1</th><th>Column 2</th></tr></thead>
+              <tbody>
+                <tr><th>Row 1</th><td id="cell11">1</td><td id="cell12">−1</td></tr>
+                <tr><th>Row 2</th><td id="cell21">−1</td><td id="cell22">1</td></tr>
+              </tbody>
+            </table>
+          </article>
+
+          <aside class="card">
+            <div class="card-label">Game diagnosis</div>
+            <div id="gameFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">pure max–min</div><div class="metric-value" id="pureMaxmin">—</div></div>
+              <div class="metric-cell"><div class="metric-name">pure min–max</div><div class="metric-value" id="pureMinmax">—</div></div>
+              <div class="metric-cell"><div class="metric-name">mixed value</div><div class="metric-value" id="mixedValue">—</div></div>
+              <div class="metric-cell"><div class="metric-name">current payoff</div><div class="metric-value" id="currentPayoff">—</div></div>
+            </div>
+            <div id="gameStatus" class="status good" style="margin-top:14px"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">5 · von Neumann minimax theorem</div><h2>Finite games always have a mixed saddle value</h2></div><p>The probability simplices are compact and convex, and the expected payoff is bilinear.</p></div>
+        <article class="card definition-card">
+          <div class="math-display" data-math="\max_{q\in\Delta_n}\min_{p\in\Delta_m}p^\top Aq=\min_{p\in\Delta_m}\max_{q\in\Delta_n}p^\top Aq." data-display="true"></div>
+          <p>With the convention used here, the row player minimizes and the column player maximizes.</p>
+        </article>
+        <div class="grid-3" style="margin-top:20px">
+          <article class="card"><div class="card-label">Convex strategy sets</div><h3>Probability simplices</h3><p>Randomization replaces a finite nonconvex choice set by its convex hull.</p></article>
+          <article class="card"><div class="card-label">Bilinearity</div><h3>Convex and concave</h3><p>The expected payoff is affine in each player’s mixed strategy.</p></article>
+          <article class="card"><div class="card-label">Equilibrium</div><h3>No profitable unilateral deviation</h3><p>Optimal mixed strategies form a saddle point of the expected payoff.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="failureLab">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">6 · Failure laboratory</div><h2>Remove concavity and the order gap appears</h2></div><p>For
+          \[
+          \Phi(x,y)=(x-y)^2,\qquad x,y\in[-1,1],
+          \]
+          the function is convex in both variables, not concave in \(y\).</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Order controls</div>
+            <div class="control-stack">
+              <div class="control">
+                <label for="failurePreset">Failure mode</label>
+                <select id="failurePreset">
+                  <option value="squareDistance">No concavity: (x−y)²</option>
+                  <option value="discrete">Nonconvex strategy sets</option>
+                  <option value="open">Noncompact/open domain</option>
+                </select>
+              </div>
+              <div class="control"><label for="failureY"><span data-math="y"></span><span id="failureYVal">0.30</span></label><input id="failureY" type="range" min="-1" max="1" step=".01" value=".3"></div>
+              <div class="control"><label for="failureX"><span data-math="x"></span><span id="failureXVal">−0.20</span></label><input id="failureX" type="range" min="-1" max="1" step=".01" value="-.2"></div>
+              <label class="toggle-line"><input id="showInnerProblems" type="checkbox" checked>show inner optimizations</label>
+              <button id="setFailureExtrema" class="ghost-button">Show optimal first moves</button>
+            </div>
+          </aside>
+
+          <article class="card">
+            <div class="diagram-shell"><svg id="failureSvg" viewBox="0 0 900 520" aria-label="Failure of minimax equality without hypotheses"></svg></div>
+            <div class="legend">
+              <span><i style="background:var(--cyan)"></i>payoff surface</span>
+              <span><i style="background:var(--violet)"></i>inner minimum</span>
+              <span><i style="background:var(--amber)"></i>inner maximum</span>
+              <span><i style="background:var(--danger)"></i>order gap</span>
+            </div>
+          </article>
+
+          <aside class="card">
+            <div class="card-label">Failure diagnosis</div>
+            <div id="failureFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">max–min</div><div class="metric-value" id="failureMaxmin">—</div></div>
+              <div class="metric-cell"><div class="metric-name">min–max</div><div class="metric-value" id="failureMinmax">—</div></div>
+              <div class="metric-cell"><div class="metric-name">gap</div><div class="metric-value" id="failureGap">—</div></div>
+              <div class="metric-cell"><div class="metric-name">missing hypothesis</div><div class="metric-value" id="missingHypothesis">—</div></div>
+            </div>
+            <div id="failureStatus" class="status bad" style="margin-top:14px"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">7 · Sion’s minimax theorem</div><h2>A flexible convex–concave theorem</h2></div><p>One compact strategy set, convexity–concavity, and suitable semicontinuity are enough.</p></div>
+        <article class="card definition-card">
+          <div class="math-display" data-math="\sup_{y\in Y}\inf_{x\in X}\Phi(x,y)=\inf_{x\in X}\sup_{y\in Y}\Phi(x,y)." data-display="true"></div>
+          <p>A standard version assumes:</p>
+          <div class="grid-4" style="margin-top:18px">
+            <div class="card soft"><div class="card-label">X</div><p>compact and convex</p></div>
+            <div class="card soft"><div class="card-label">Y</div><p>convex</p></div>
+            <div class="card soft"><div class="card-label">in x</div><p>lower semicontinuous and quasiconvex</p></div>
+            <div class="card soft"><div class="card-label">in y</div><p>upper semicontinuous and quasiconcave</p></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">8 · Why the universal inequality holds</div><h2>Max–min is always below min–max</h2></div><p>No convexity or compactness is needed for this direction.</p></div>
+        <div class="proof-grid">
+          <article class="card">
+            <div class="proof-steps">
+              <div class="proof-step open"><button type="button"><span><span class="proof-number">1</span>Fix arbitrary x and y</span><span>−</span></button><div class="proof-body"><p>For every pair \((x,y)\),</p><div class="math-display" data-math="\inf_{\xi\in X}\Phi(\xi,y)\le\Phi(x,y)\le\sup_{\eta\in Y}\Phi(x,\eta)." data-display="true"></div></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">2</span>Take the supremum on the left</span><span>+</span></button><div class="proof-body"><p>For fixed \(x\),</p><div class="math-display" data-math="\sup_{y\in Y}\inf_{\xi\in X}\Phi(\xi,y)\le\sup_{y\in Y}\Phi(x,y)." data-display="true"></div></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">3</span>Take the infimum over x</span><span>+</span></button><div class="proof-body"><div class="math-display" data-math="\sup_{y\in Y}\inf_{x\in X}\Phi(x,y)\le\inf_{x\in X}\sup_{y\in Y}\Phi(x,y)." data-display="true"></div><p>The possible strict inequality is the minimax gap.</p></div></div>
+            </div>
+          </article>
+          <aside class="card">
+            <div class="card-label">Game interpretation</div>
+            <h3>Moving second has informational value</h3>
+            <p class="muted">The reacting player can condition its choice on the first mover’s action. Equality means the convex–concave structure eliminates this advantage at the value level.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">9 · Connection with duality</div><h2>Lagrangian duality is a minimax problem</h2></div><p>The duality gap is a minimax gap for the Lagrangian.</p></div>
+        <article class="card definition-card">
+          <div class="math-display" data-math="d^\star=\sup_{\lambda\ge0,\nu}\inf_x L(x,\lambda,\nu)\le\inf_x\sup_{\lambda\ge0,\nu}L(x,\lambda,\nu)=p^\star." data-display="true"></div>
+          <p>Strong duality is precisely the equality of these two optimization orders. A primal–dual optimum is a saddle point of \(L\).</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">10 · Guided theorem proving</div><h2>Choose the valid inference</h2></div><p>The minimax theorem concerns equality; the inequality direction is automatic.</p></div>
+        <div class="proof-grid">
+          <article class="card">
+            <div class="card-label">Challenge</div>
+            <p>Which statement is always valid for an arbitrary function \(\Phi:X\times Y\to\mathbb R\)?</p>
+            <div class="quiz-options">
+              <button class="proof-option" data-answer="correct">\(\sup_y\inf_x\Phi(x,y)\le\inf_x\sup_y\Phi(x,y)\).</button>
+              <button class="proof-option" data-answer="wrong1">\(\sup_y\inf_x\Phi(x,y)=\inf_x\sup_y\Phi(x,y)\).</button>
+              <button class="proof-option" data-answer="wrong2">\(\sup_y\inf_x\Phi(x,y)\ge\inf_x\sup_y\Phi(x,y)\).</button>
+              <button class="proof-option" data-answer="wrong3">Both values must be attained.</button>
+            </div>
+          </article>
+          <aside class="card">
+            <div class="card-label">Feedback</div>
+            <div id="quizFeedback" class="status">Choose a proof step.</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">11 · What can go wrong?</div><h2>Each hypothesis controls a distinct failure</h2></div><p>Convexity, concavity, compactness, and semicontinuity are not interchangeable.</p></div>
+        <article class="card">
+          <div class="counter-tabs">
+            <button class="counter-tab active" data-counter="concavity">No concavity</button>
+            <button class="counter-tab" data-counter="convexity">No convex strategy set</button>
+            <button class="counter-tab" data-counter="compactness">No compactness</button>
+            <button class="counter-tab" data-counter="continuity">No semicontinuity</button>
+          </div>
+          <div class="counter-content active" id="counter-concavity">
+            <div class="grid-2"><div><h3>The squared-distance example has gap one</h3><p class="muted">For \((x-y)^2\) on \([-1,1]^2\), the maximizer’s sections are convex, not concave.</p></div><div class="status bad"><strong>Result.</strong> Max–min \(=0\), while min–max \(=1\).</div></div>
+          </div>
+          <div class="counter-content" id="counter-convexity">
+            <div class="grid-2"><div><h3>Pure strategies may fail to have a value</h3><p class="muted">Matching pennies has pure max–min \(-1\) and pure min–max \(1\).</p></div><div class="status bad"><strong>Repair.</strong> Passing to mixed strategies convexifies the sets and yields value \(0\).</div></div>
+          </div>
+          <div class="counter-content" id="counter-compactness">
+            <div class="grid-2"><div><h3>Values may fail to be attained</h3><p class="muted">On open or unbounded strategy sets, the equality of extended values may coexist with no saddle point.</p></div><div class="status bad"><strong>Role of compactness.</strong> It supplies convergent maximizing or minimizing subsequences.</div></div>
+          </div>
+          <div class="counter-content" id="counter-continuity">
+            <div class="grid-2"><div><h3>Jumps can destroy closure of best-response values</h3><p class="muted">Without lower semicontinuity in the minimizing variable or upper semicontinuity in the maximizing variable, limiting strategies may lose optimality.</p></div><div class="status bad"><strong>Role of semicontinuity.</strong> It preserves the required inequality under limits.</div></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">12 · Common mistakes</div><h2>Precision traps</h2></div><p>Most errors come from reversing the universal inequality or confusing equality of values with existence of a saddle point.</p></div>
+        <article class="card">
+          <div class="mistake"><strong>Incorrect:</strong> “\(\inf\sup\le\sup\inf\) always.” <span class="muted">Correct: \(\sup\inf\le\inf\sup\).</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “Convexity in both variables is enough.” <span class="muted">Correct: the minimizing variable should be convex; the maximizing variable should be concave.</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “Equality of values automatically implies a saddle point.” <span class="muted">Correct only when the extrema are attained by compatible strategies.</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “Pure and mixed minimax values are the same.” <span class="muted">Mixed strategies may close a pure-strategy gap.</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “Sion’s theorem always requires both sets compact.” <span class="muted">A standard version requires one set compact, with the appropriate convexity and semicontinuity assumptions.</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">13 · Final synthesis</div><h2>Order equality is a geometric theorem</h2></div><p>Convexity, concavity, and compactness transform two sequential optimization problems into one saddle-value problem.</p></div>
+        <div class="flow-map">
+          <div class="flow-node">max–min lower value</div><span class="flow-arrow">≤</span>
+          <div class="flow-node">min–max upper value</div><span class="flow-arrow">+</span>
+          <div class="flow-node">convex–concave hypotheses</div><span class="flow-arrow">→</span>
+          <div class="flow-node">equality of values</div><span class="flow-arrow">→</span>
+          <div class="flow-node">saddle point</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="shell">Interactive laboratory · minimax equality, convex–concave structure, zero-sum games, saddle points, and failure modes.</div></footer>
+
+  <script>
+    "use strict";
+
+    const $=(s,r=document)=>r.querySelector(s);
+    const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+    const css=name=>getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+    const fmt=(v,d=3)=>{
+      if(v===Infinity)return "+∞";
+      if(v===-Infinity)return "−∞";
+      const n=Math.abs(v)<1e-10?0:v;
+      return n.toFixed(d).replace("-","−");
+    };
+
+    function renderMath(root=document){
+      if(window.katex){
+        $$("[data-math]",root).forEach(el=>{
+          if(el.dataset.rendered==="1")return;
+          try{katex.render(el.dataset.math,el,{throwOnError:false,displayMode:el.dataset.display==="true"});el.dataset.rendered="1";}
+          catch(e){el.textContent=el.dataset.math;}
+        });
+      }
+      if(window.renderMathInElement){
+        renderMathInElement(root,{
+          throwOnError:false,
+          delimiters:[
+            {left:"\\(",right:"\\)",display:false},
+            {left:"\\[",right:"\\]",display:true}
+          ]
+        });
+      }
+    }
+    function renderInto(el,tex,display=true){
+      if(!window.katex){el.textContent=tex;return;}
+      katex.render(tex,el,{throwOnError:false,displayMode:display});
+    }
+
+    function setTheme(theme){
+      document.documentElement.dataset.theme=theme;
+      localStorage.setItem("minimaxTheme",theme);
+      drawAll();
+    }
+    document.documentElement.dataset.theme=localStorage.getItem("minimaxTheme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+    $("#themeToggle").addEventListener("click",()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark"));
+    $("#scrollToLab").addEventListener("click",()=>$("#saddleLab").scrollIntoView({behavior:"smooth"}));
+
+    function svgEl(tag,attrs={}){
+      const el=document.createElementNS("http://www.w3.org/2000/svg",tag);
+      Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));
+      return el;
+    }
+    function clearSvg(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+    function drawSquareAxes(svg,x0,y0,w,h,xmin=-2.5,xmax=2.5,ymin=-2.5,ymax=2.5){
+      const X=x=>x0+36+(x-xmin)/(xmax-xmin)*(w-72);
+      const Y=y=>y0+h-36-(y-ymin)/(ymax-ymin)*(h-72);
+      svg.appendChild(svgEl("rect",{x:x0,y:y0,width:w,height:h,fill:css("--canvas")}));
+      for(let x=Math.ceil(xmin);x<=xmax;x++)svg.appendChild(svgEl("line",{x1:X(x),y1:y0+24,x2:X(x),y2:y0+h-24,stroke:css("--grid"),"stroke-width":1}));
+      for(let y=Math.ceil(ymin);y<=ymax;y++)svg.appendChild(svgEl("line",{x1:x0+24,y1:Y(y),x2:x0+w-24,y2:Y(y),stroke:css("--grid"),"stroke-width":1}));
+      if(xmin<=0&&xmax>=0)svg.appendChild(svgEl("line",{x1:X(0),y1:y0+24,x2:X(0),y2:y0+h-24,stroke:css("--axis"),"stroke-width":1.3}));
+      if(ymin<=0&&ymax>=0)svg.appendChild(svgEl("line",{x1:x0+24,y1:Y(0),x2:x0+w-24,y2:Y(0),stroke:css("--axis"),"stroke-width":1.3}));
+      return{X,Y,x0,y0,w,h,xmin,xmax,ymin,ymax};
+    }
+    function drawCurve(svg,plot,f,xmin,xmax,color,width=4,dash=""){
+      let d="",pen=false;
+      for(let i=0;i<=500;i++){
+        const x=xmin+(xmax-xmin)*i/500,y=f(x);
+        if(!Number.isFinite(y)||y<plot.ymin-2||y>plot.ymax+2){pen=false;continue;}
+        d+=(pen?" L ":"M ")+`${plot.X(x)} ${plot.Y(y)}`;pen=true;
+      }
+      svg.appendChild(svgEl("path",{d,fill:"none",stroke:color,"stroke-width":width,"stroke-dasharray":dash}));
+    }
+
+    function payoff(x,y,mu,nu,c,a,b){
+      return .5*mu*(x-a)*(x-a)+c*x*y-.5*nu*(y-b)*(y-b);
+    }
+    function gridMinimax(mu,nu,c,a,b,R=2.5,n=180){
+      const xs=Array.from({length:n+1},(_,i)=>-R+2*R*i/n);
+      const ys=xs.slice();
+      let minmax=Infinity,minmaxX=0;
+      xs.forEach(x=>{
+        let inner=-Infinity;
+        ys.forEach(y=>{inner=Math.max(inner,payoff(x,y,mu,nu,c,a,b));});
+        if(inner<minmax){minmax=inner;minmaxX=x;}
+      });
+      let maxmin=-Infinity,maxminY=0;
+      ys.forEach(y=>{
+        let inner=Infinity;
+        xs.forEach(x=>{inner=Math.min(inner,payoff(x,y,mu,nu,c,a,b));});
+        if(inner>maxmin){maxmin=inner;maxminY=y;}
+      });
+      return{minmax,maxmin,minmaxX,maxminY};
+    }
+    function analyticSaddle(mu,nu,c,a,b){
+      const D=mu*nu+c*c;
+      return{
+        x:nu*(mu*a-c*b)/D,
+        y:mu*(nu*b+c*a)/D
+      };
+    }
+
+    ["muControl","nuControl","couplingControl","aControl","bControl","showBestResponses","showSlices"].forEach(id=>$("#"+id).addEventListener("input",drawSaddleLab));
+    $("#resetSaddle").addEventListener("click",()=>{
+      $("#muControl").value=1.2;$("#nuControl").value=1;$("#couplingControl").value=.7;$("#aControl").value=.6;$("#bControl").value=-.4;drawSaddleLab();
+    });
+
+    function drawSaddleLab(){
+      const svg=$("#saddleSvg");clearSvg(svg);
+      const mu=+$("#muControl").value,nu=+$("#nuControl").value,c=+$("#couplingControl").value,a=+$("#aControl").value,b=+$("#bControl").value,R=2.5;
+      const plot=drawSquareAxes(svg,0,0,570,520,-R,R,-R,R);
+      const result=gridMinimax(mu,nu,c,a,b,R,150),s=analyticSaddle(mu,nu,c,a,b);
+      const inside=Math.abs(s.x)<=R&&Math.abs(s.y)<=R;
+
+      // Heat map
+      const N=34,vals=[];
+      for(let i=0;i<N;i++)for(let j=0;j<N;j++){
+        const x=-R+2*R*(i+.5)/N,y=-R+2*R*(j+.5)/N;
+        vals.push(payoff(x,y,mu,nu,c,a,b));
+      }
+      const minV=Math.min(...vals),maxV=Math.max(...vals),den=Math.max(1e-9,maxV-minV);
+      let k=0;
+      for(let i=0;i<N;i++)for(let j=0;j<N;j++){
+        const x1=-R+2*R*i/N,x2=-R+2*R*(i+1)/N,y1=-R+2*R*j/N,y2=-R+2*R*(j+1)/N;
+        const t=(vals[k++]-minV)/den;
+        const opacity=.04+.16*Math.abs(t-.5)*2;
+        const color=t>.5?css("--amber"):css("--cyan");
+        svg.appendChild(svgEl("rect",{x:plot.X(x1),y:plot.Y(y2),width:plot.X(x2)-plot.X(x1)+.5,height:plot.Y(y1)-plot.Y(y2)+.5,fill:color,opacity}));
+      }
+
+      if($("#showBestResponses").checked){
+        // minimizer BR: x=a-cy/mu, maximizer BR: y=b+cx/nu
+        drawCurve(svg,plot,y=>a-c*y/mu,-R,R,css("--violet"),4);
+        // draw y as function of x directly
+        const ybr=x=>b+c*x/nu;
+        drawCurve(svg,plot,ybr,-R,R,css("--amber"),4);
+      }
+      const S={x:plot.X(clamp(s.x,-R,R)),y:plot.Y(clamp(s.y,-R,R))};
+      svg.appendChild(svgEl("circle",{cx:S.x,cy:S.y,r:11,fill:css("--teal"),stroke:css("--canvas"),"stroke-width":3}));
+
+      // right panel: inner value curves
+      const right=drawSquareAxes(svg,570,0,330,520,-R,R,Math.min(result.maxmin,result.minmax)-2,Math.max(result.maxmin,result.minmax)+2);
+      const upper=x=>{
+        let m=-Infinity;
+        for(let i=0;i<=180;i++){const y=-R+2*R*i/180;m=Math.max(m,payoff(x,y,mu,nu,c,a,b));}
+        return m;
+      };
+      const lower=y=>{
+        let m=Infinity;
+        for(let i=0;i<=180;i++){const x=-R+2*R*i/180;m=Math.min(m,payoff(x,y,mu,nu,c,a,b));}
+        return m;
+      };
+      if($("#showSlices").checked){
+        drawCurve(svg,right,upper,-R,R,css("--violet"),4);
+        drawCurve(svg,right,lower,-R,R,css("--amber"),4);
+      }
+      svg.appendChild(svgEl("line",{x1:right.x0+24,y1:right.Y(result.minmax),x2:right.x0+right.w-24,y2:right.Y(result.minmax),stroke:css("--violet"),"stroke-width":2,"stroke-dasharray":"7 6"}));
+      svg.appendChild(svgEl("line",{x1:right.x0+24,y1:right.Y(result.maxmin),x2:right.x0+right.w-24,y2:right.Y(result.maxmin),stroke:css("--amber"),"stroke-width":2,"stroke-dasharray":"7 6"}));
+
+      $("#muVal").textContent=fmt(mu,2);$("#nuVal").textContent=fmt(nu,2);$("#couplingVal").textContent=fmt(c,2);$("#aVal").textContent=fmt(a,2);$("#bVal").textContent=fmt(b,2);
+      $("#maxminValue").textContent=fmt(result.maxmin,3);$("#minmaxValue").textContent=fmt(result.minmax,3);$("#saddleGap").textContent=fmt(result.minmax-result.maxmin,4);
+      $("#saddlePointValue").textContent=inside?`(${fmt(s.x,2)}, ${fmt(s.y,2)})`:"boundary";
+      renderInto($("#saddleFormula"),String.raw`\sup_y\inf_x\Phi(x,y)=${fmt(result.maxmin,3)}\le ${fmt(result.minmax,3)}=\inf_x\sup_y\Phi(x,y)`);
+      const st=$("#saddleStatus");
+      if(result.minmax-result.maxmin<.025){
+        st.className="status good";st.innerHTML="<strong>Minimax equality.</strong> Convexity in \(x\), concavity in \(y\), compactness, and continuity produce a common saddle value.";
+      }else{
+        st.className="status warning";st.innerHTML="<strong>Numerical boundary effect.</strong> The unconstrained saddle lies near or outside the displayed box; the grid approximation may show a small residual gap.";
+      }
+    }
+
+    function solve2x2(A){
+      const [a,b,c,d]=A;
+      let upper=Infinity,pBest=0;
+      let lower=-Infinity,qBest=0;
+      const n=1600;
+
+      // Row player minimizes the worst column response.
+      for(let i=0;i<=n;i++){
+        const p=i/n;
+        const againstCol1=p*a+(1-p)*c;
+        const againstCol2=p*b+(1-p)*d;
+        const worst=Math.max(againstCol1,againstCol2);
+        if(worst<upper){
+          upper=worst;
+          pBest=p;
+        }
+      }
+
+      // Column player maximizes the worst row response.
+      for(let i=0;i<=n;i++){
+        const q=i/n;
+        const againstRow1=q*a+(1-q)*b;
+        const againstRow2=q*c+(1-q)*d;
+        const guaranteed=Math.min(againstRow1,againstRow2);
+        if(guaranteed>lower){
+          lower=guaranteed;
+          qBest=q;
+        }
+      }
+
+      return{
+        p:pBest,
+        q:qBest,
+        value:(upper+lower)/2,
+        upper,
+        lower
+      };
+    }
+    function matrixPayoff(A,p,q){
+      const [a,b,c,d]=A;
+      return p*q*a+p*(1-q)*b+(1-p)*q*c+(1-p)*(1-q)*d;
+    }
+
+    ["m11","m12","m21","m22","rowMix","colMix"].forEach(id=>$("#"+id).addEventListener("input",drawGameLab));
+    $("#setGameEquilibrium").addEventListener("click",()=>{
+      const A=[+$("#m11").value,+$("#m12").value,+$("#m21").value,+$("#m22").value],eq=solve2x2(A);
+      $("#rowMix").value=eq.p;$("#colMix").value=eq.q;drawGameLab();
+    });
+    $("#matchingPennies").addEventListener("click",()=>{
+      $("#m11").value=1;$("#m12").value=-1;$("#m21").value=-1;$("#m22").value=1;$("#rowMix").value=.5;$("#colMix").value=.5;drawGameLab();
+    });
+
+    function drawGameLab(){
+      const svg=$("#gameSvg");clearSvg(svg);
+      const A=[+$("#m11").value,+$("#m12").value,+$("#m21").value,+$("#m22").value],p=+$("#rowMix").value,q=+$("#colMix").value,eq=solve2x2(A);
+      const [a,b,c,d]=A;
+      const plot=drawSquareAxes(svg,0,0,900,520,0,1,Math.min(...A)-1,Math.max(...A)+1);
+
+      const rowAgainstQ=qv=>Math.min(qv*a+(1-qv)*b,qv*c+(1-qv)*d);
+      const colAgainstP=pv=>Math.max(pv*a+(1-pv)*c,pv*b+(1-pv)*d);
+      drawCurve(svg,plot,rowAgainstQ,0,1,css("--amber"),4);
+      drawCurve(svg,plot,colAgainstP,0,1,css("--violet"),4);
+      svg.appendChild(svgEl("circle",{cx:plot.X(eq.q),cy:plot.Y(eq.value),r:11,fill:css("--teal"),stroke:css("--canvas"),"stroke-width":3}));
+      svg.appendChild(svgEl("circle",{cx:plot.X(q),cy:plot.Y(rowAgainstQ(q)),r:8,fill:css("--amber")}));
+      svg.appendChild(svgEl("circle",{cx:plot.X(p),cy:plot.Y(colAgainstP(p)),r:8,fill:css("--violet")}));
+
+      const pureMaxmin=Math.max(Math.min(a,c),Math.min(b,d));
+      const pureMinmax=Math.min(Math.max(a,b),Math.max(c,d));
+      const current=matrixPayoff(A,p,q);
+
+      ["m11","m12","m21","m22"].forEach((id,i)=>$("#"+id+"Val").textContent=fmt(A[i],2));
+      $("#rowMixVal").textContent=fmt(p,2);$("#colMixVal").textContent=fmt(q,2);
+      $("#cell11").textContent=fmt(a,2);$("#cell12").textContent=fmt(b,2);$("#cell21").textContent=fmt(c,2);$("#cell22").textContent=fmt(d,2);
+      $("#pureMaxmin").textContent=fmt(pureMaxmin,3);$("#pureMinmax").textContent=fmt(pureMinmax,3);$("#mixedValue").textContent=fmt(eq.value,3);$("#currentPayoff").textContent=fmt(current,3);
+      renderInto($("#gameFormula"),String.raw`\max_{q\in[0,1]}\min_{p\in[0,1]}u(p,q)=${fmt(eq.value,3)}=\min_{p\in[0,1]}\max_{q\in[0,1]}u(p,q)`);
+      const st=$("#gameStatus");
+      const near=Math.abs(p-eq.p)<.025&&Math.abs(q-eq.q)<.025;
+      if(near){
+        st.className="status good";st.innerHTML=`<strong>Mixed saddle point.</strong> The current strategies are near equilibrium: row-1 probability ${fmt(eq.p,2)}, column-1 probability ${fmt(eq.q,2)}.`;
+      }else{
+        st.className="status warning";st.innerHTML=`<strong>Not at equilibrium.</strong> The minimizer or maximizer can improve by changing its mixture.`;
+      }
+    }
+
+    ["failurePreset","failureY","failureX","showInnerProblems"].forEach(id=>$("#"+id).addEventListener("input",drawFailureLab));
+    $("#setFailureExtrema").addEventListener("click",()=>{
+      const key=$("#failurePreset").value;
+      if(key==="squareDistance"){$("#failureX").value=0;$("#failureY").value=0;}
+      else if(key==="discrete"){$("#failureX").value=-1;$("#failureY").value=1;}
+      else{$("#failureX").value=.99;$("#failureY").value=.99;}
+      drawFailureLab();
+    });
+
+    function failureData(key){
+      if(key==="squareDistance"){
+        return{
+          f:(x,y)=>(x-y)*(x-y),
+          maxmin:0,minmax:1,
+          missing:"concavity",
+          description:"The maximizer's sections are convex rather than concave."
+        };
+      }
+      if(key==="discrete"){
+        return{
+          f:(x,y)=>x*y,
+          maxmin:-1,minmax:1,
+          missing:"convex sets",
+          description:"With pure actions X=Y={−1,1}, the strategy sets are not convex."
+        };
+      }
+      return{
+        f:(x,y)=>x-y,
+        maxmin:0,minmax:0,
+        missing:"compactness",
+        description:"On the open interval (0,1), the values agree but neither extremum is attained."
+      };
+    }
+
+    function drawFailureLab(){
+      const svg=$("#failureSvg");clearSvg(svg);
+      const key=$("#failurePreset").value,data=failureData(key),x0=+$("#failureX").value,y0=+$("#failureY").value;
+      const plot=drawSquareAxes(svg,0,0,570,520,-1,1,-1,1);
+      const N=34,vals=[];
+      for(let i=0;i<N;i++)for(let j=0;j<N;j++){
+        const x=-1+2*(i+.5)/N,y=-1+2*(j+.5)/N;
+        vals.push(data.f(x,y));
+      }
+      const minV=Math.min(...vals),maxV=Math.max(...vals),den=Math.max(1e-9,maxV-minV);
+      let k=0;
+      for(let i=0;i<N;i++)for(let j=0;j<N;j++){
+        const x1=-1+2*i/N,x2=-1+2*(i+1)/N,y1=-1+2*j/N,y2=-1+2*(j+1)/N;
+        const t=(vals[k++]-minV)/den;
+        svg.appendChild(svgEl("rect",{x:plot.X(x1),y:plot.Y(y2),width:plot.X(x2)-plot.X(x1)+.5,height:plot.Y(y1)-plot.Y(y2)+.5,fill:t>.5?css("--amber"):css("--cyan"),opacity:.05+.18*Math.abs(t-.5)*2}));
+      }
+      svg.appendChild(svgEl("circle",{cx:plot.X(x0),cy:plot.Y(y0),r:10,fill:css("--danger"),stroke:css("--canvas"),"stroke-width":3}));
+
+      const right=drawSquareAxes(svg,570,0,330,520,-1,1,Math.min(data.maxmin,data.minmax)-.5,Math.max(data.maxmin,data.minmax)+.5);
+      if($("#showInnerProblems").checked&&key==="squareDistance"){
+        drawCurve(svg,right,y=>0,-1,1,css("--violet"),4);
+        drawCurve(svg,right,x=>(1+Math.abs(x))**2,-1,1,css("--amber"),4);
+      }else if($("#showInnerProblems").checked&&key==="discrete"){
+        svg.appendChild(svgEl("line",{x1:right.X(-1),y1:right.Y(-1),x2:right.X(1),y2:right.Y(-1),stroke:css("--violet"),"stroke-width":4}));
+        svg.appendChild(svgEl("line",{x1:right.X(-1),y1:right.Y(1),x2:right.X(1),y2:right.Y(1),stroke:css("--amber"),"stroke-width":4}));
+      }
+      svg.appendChild(svgEl("line",{x1:right.x0+24,y1:right.Y(data.maxmin),x2:right.x0+right.w-24,y2:right.Y(data.maxmin),stroke:css("--violet"),"stroke-width":3,"stroke-dasharray":"7 6"}));
+      svg.appendChild(svgEl("line",{x1:right.x0+24,y1:right.Y(data.minmax),x2:right.x0+right.w-24,y2:right.Y(data.minmax),stroke:css("--amber"),"stroke-width":3,"stroke-dasharray":"7 6"}));
+
+      $("#failureXVal").textContent=fmt(x0,2);$("#failureYVal").textContent=fmt(y0,2);
+      $("#failureMaxmin").textContent=fmt(data.maxmin,3);$("#failureMinmax").textContent=fmt(data.minmax,3);$("#failureGap").textContent=fmt(data.minmax-data.maxmin,3);$("#missingHypothesis").textContent=data.missing;
+      renderInto($("#failureFormula"),String.raw`\sup_y\inf_x\Phi(x,y)=${fmt(data.maxmin,3)}\le ${fmt(data.minmax,3)}=\inf_x\sup_y\Phi(x,y)`);
+      const st=$("#failureStatus");
+      if(data.minmax-data.maxmin>1e-6){
+        st.className="status bad";st.innerHTML=`<strong>Strict minimax gap.</strong> ${data.description}`;
+      }else{
+        st.className="status warning";st.innerHTML=`<strong>Equal values without a saddle point.</strong> ${data.description}`;
+      }
+    }
+
+    $$(".proof-step>button").forEach(btn=>btn.addEventListener("click",()=>{
+      const step=btn.parentElement;step.classList.toggle("open");
+      btn.lastElementChild.textContent=step.classList.contains("open")?"−":"+";
+    }));
+
+    $$(".proof-option").forEach(btn=>btn.addEventListener("click",()=>{
+      $$(".proof-option").forEach(b=>b.classList.remove("correct","wrong"));
+      const feedback=$("#quizFeedback");
+      if(btn.dataset.answer==="correct"){
+        btn.classList.add("correct");feedback.className="status good";
+        feedback.innerHTML="<strong>Correct.</strong> For every fixed pair, the inner infimum lies below the payoff and the inner supremum lies above it. Taking the outer extrema preserves this order.";
+      }else if(btn.dataset.answer==="wrong1"){
+        btn.classList.add("wrong");feedback.className="status bad";
+        feedback.innerHTML="<strong>Equality requires hypotheses.</strong> Convexity, concavity, compactness, and semicontinuity are typical sufficient assumptions.";
+      }else if(btn.dataset.answer==="wrong2"){
+        btn.classList.add("wrong");feedback.className="status bad";
+        feedback.innerHTML="<strong>Wrong direction.</strong> The second mover's ability to react makes max–min no larger than min–max.";
+      }else{
+        btn.classList.add("wrong");feedback.className="status bad";
+        feedback.innerHTML="<strong>Attainment is separate.</strong> Suprema and infima may exist as values without being achieved.";
+      }
+    }));
+
+    $$(".counter-tab").forEach(tab=>tab.addEventListener("click",()=>{
+      $$(".counter-tab").forEach(t=>t.classList.toggle("active",t===tab));
+      $$(".counter-content").forEach(c=>c.classList.toggle("active",c.id==="counter-"+tab.dataset.counter));
+    }));
+
+    function drawAll(){drawSaddleLab();drawGameLab();drawFailureLab();}
+    window.addEventListener("load",()=>{renderMath();drawAll();});
+    setTimeout(()=>{renderMath();drawAll();},300);
+  </script>
+</body>
+</html>

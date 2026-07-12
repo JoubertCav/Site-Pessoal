@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Interactive laboratory for Fenchel conjugates, supporting affine functions, Fenchel–Young inequality, biconjugation, and epigraph geometry." />
+  <title>Fenchel Conjugates — Interactive Convex Analysis Laboratory</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    :root{
+      --bg:#f7f9f8;--surface:rgba(255,255,255,.97);--surface-2:#eef5f5;--surface-3:#e4edef;
+      --text:#172126;--muted:#617178;--line:#d4dfe1;--cyan:#00a8c6;--cyan-deep:#087f98;
+      --teal:#168f88;--violet:#7567c7;--amber:#b57a20;--danger:#b74c4c;--success:#147d64;
+      --shadow:0 18px 52px rgba(37,56,64,.09);--radius:22px;--canvas:#fff;--axis:#65787e;
+      --grid:#dce6e8;--focus:rgba(0,168,198,.23)
+    }
+    html[data-theme="dark"]{
+      --bg:#121a20;--surface:rgba(27,38,46,.97);--surface-2:#213039;--surface-3:#273942;
+      --text:#edf5f6;--muted:#a8b8bd;--line:#344750;--cyan:#44c9e1;--cyan-deep:#7ed9e8;
+      --teal:#58c4b9;--violet:#aaa0e6;--amber:#e3b35d;--danger:#ef8989;--success:#68d0ad;
+      --shadow:0 18px 52px rgba(0,0,0,.25);--canvas:#17232a;--axis:#9bb0b7;--grid:#30424a;
+      --focus:rgba(68,201,225,.22)
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;color:var(--text);
+      background:
+        radial-gradient(circle at 7% 0%,rgba(0,168,198,.085),transparent 29rem),
+        radial-gradient(circle at 100% 17%,rgba(117,103,199,.065),transparent 32rem),
+        var(--bg);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.65;transition:background .25s ease,color .25s ease
+    }
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    .shell{width:min(1480px,calc(100% - 32px));margin:0 auto}
+    .topbar{
+      position:sticky;top:0;z-index:50;border-bottom:1px solid color-mix(in srgb,var(--line) 84%,transparent);
+      backdrop-filter:blur(18px);background:color-mix(in srgb,var(--bg) 82%,transparent)
+    }
+    .topbar-inner{min-height:68px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:-.02em}
+    .brand-mark{
+      width:34px;height:34px;border:1px solid var(--cyan);border-radius:11px;display:grid;place-items:center;
+      box-shadow:inset 0 0 0 6px color-mix(in srgb,var(--cyan) 10%,transparent)
+    }
+    .brand-mark::before{content:"f*";color:var(--cyan-deep);font-family:"Libre Baskerville",serif;font-weight:700;font-size:.8rem}
+    .top-actions{display:flex;gap:9px;align-items:center}
+    .icon-button,.ghost-button,.primary-button,.proof-option,.counter-tab{
+      border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:12px;
+      min-height:40px;padding:9px 13px;transition:transform .18s ease,border-color .18s ease,background .18s ease
+    }
+    .icon-button:hover,.ghost-button:hover,.proof-option:hover,.counter-tab:hover{
+      transform:translateY(-1px);border-color:var(--cyan)
+    }
+    .primary-button{background:var(--cyan);color:#062e37;font-weight:700;border-color:transparent}
+    .primary-button:hover{transform:translateY(-1px);filter:brightness(1.03)}
+    h1,h2,h3,.serif{font-family:"Libre Baskerville",Georgia,serif;letter-spacing:-.025em}
+    h1{font-size:clamp(2.65rem,5.8vw,5.15rem);line-height:1.03;margin:12px 0 20px}
+    h2{font-size:clamp(2rem,4vw,3.15rem);line-height:1.14;margin:0}
+    h3{font-size:1.2rem;margin:0}
+    p{margin:0}
+    .hero{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(360px,.92fr);gap:30px;padding:70px 0 46px;align-items:center}
+    .eyebrow{color:var(--cyan-deep);font-weight:700;text-transform:uppercase;letter-spacing:.14em;font-size:.78rem}
+    .hero p{color:var(--muted);max-width:850px;font-size:clamp(1.02rem,1.8vw,1.24rem)}
+    .hero-chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:28px}
+    .chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);padding:8px 11px;border-radius:999px;color:var(--muted);font-size:.9rem}
+    .chip::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--cyan)}
+    .hero-map{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:28px;padding:22px;min-height:420px;overflow:hidden}
+    .hero-svg{width:100%;height:370px;display:block}
+    .section{padding:72px 0}
+    .section-head{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:27px}
+    .section-head p{color:var(--muted);max-width:780px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+    .grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+    .lab-grid{display:grid;grid-template-columns:minmax(285px,.78fr) minmax(0,1.42fr) minmax(300px,.92fr);gap:20px;align-items:start}
+    .proof-grid{display:grid;grid-template-columns:minmax(0,1.22fr) minmax(300px,.78fr);gap:20px}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;min-width:0}
+    .card.soft{background:var(--surface-2);box-shadow:none}
+    .card h3+p{margin-top:9px;color:var(--muted)}
+    .card-label{color:var(--cyan-deep);font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;font-weight:700;margin-bottom:10px}
+    .muted{color:var(--muted)}.small{font-size:.9rem}
+    .definition-card{padding:30px;border-left:4px solid var(--cyan)}
+    .math-display{margin:18px 0;overflow-x:auto;overflow-y:hidden;padding:8px 2px}
+    .katex-display{margin:.72em 0!important}
+    .katex{max-width:100%}
+    .notation-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}
+    .notation-item{border:1px solid var(--line);background:var(--surface-2);border-radius:14px;padding:13px}
+    .notation-item strong{display:block;margin-bottom:6px;color:var(--cyan-deep)}
+    .flow-map{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;margin-top:18px}
+    .flow-node{border:1px solid var(--line);background:var(--surface-2);border-radius:14px;padding:12px 14px;min-width:150px;text-align:center}
+    .flow-arrow{color:var(--cyan-deep);font-size:1.4rem}
+    .control-stack{display:grid;gap:16px}
+    .control label{display:flex;justify-content:space-between;gap:12px;align-items:baseline;font-weight:600;margin-bottom:7px}
+    .control label span:last-child{color:var(--cyan-deep);font-variant-numeric:tabular-nums}
+    input[type="range"]{width:100%;accent-color:var(--cyan)}
+    select{width:100%;min-height:43px;border-radius:11px;border:1px solid var(--line);background:var(--surface);color:var(--text);padding:8px 10px}
+    .control-note{color:var(--muted);font-size:.82rem;margin-top:5px}
+    .metric-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
+    .metric-strip.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .metric-cell{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:13px;text-align:center}
+    .metric-name{color:var(--muted);font-size:.79rem;text-transform:uppercase;letter-spacing:.06em}
+    .metric-value{font-size:1.16rem;font-weight:700;color:var(--cyan-deep);font-variant-numeric:tabular-nums}
+    .status{border-radius:14px;padding:14px;border:1px solid var(--line);background:var(--surface-2)}
+    .status.good{border-color:color-mix(in srgb,var(--success) 55%,var(--line));background:color-mix(in srgb,var(--success) 9%,var(--surface))}
+    .status.warning{border-color:color-mix(in srgb,var(--amber) 55%,var(--line));background:color-mix(in srgb,var(--amber) 8%,var(--surface))}
+    .status.bad{border-color:color-mix(in srgb,var(--danger) 55%,var(--line));background:color-mix(in srgb,var(--danger) 8%,var(--surface))}
+    .diagram-shell{background:var(--canvas);border:1px solid var(--line);border-radius:18px;overflow:hidden;min-height:500px}
+    .diagram-shell svg{display:block;width:100%;height:auto;min-height:500px;touch-action:none}
+    .legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;color:var(--muted);font-size:.86rem}
+    .legend span{display:flex;align-items:center;gap:7px}
+    .legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+    .proof-steps{display:grid;gap:10px}
+    .proof-step{border:1px solid var(--line);background:var(--surface);border-radius:15px;overflow:hidden}
+    .proof-step>button{width:100%;border:0;background:transparent;color:var(--text);display:flex;justify-content:space-between;gap:14px;padding:15px;text-align:left;font-weight:700}
+    .proof-body{display:none;border-top:1px solid var(--line);padding:0 16px 17px;color:var(--muted)}
+    .proof-step.open .proof-body{display:block}
+    .proof-number{display:inline-grid;place-items:center;width:26px;height:26px;margin-right:10px;border-radius:8px;background:var(--surface-2);color:var(--cyan-deep)}
+    .quiz-options{display:grid;gap:10px;margin-top:14px}
+    .proof-option{text-align:left}
+    .proof-option.correct{border-color:var(--success);background:color-mix(in srgb,var(--success) 10%,var(--surface))}
+    .proof-option.wrong{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 9%,var(--surface))}
+    .counter-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+    .counter-tab.active{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 9%,var(--surface))}
+    .counter-content{display:none}.counter-content.active{display:block}
+    .mistake{border-top:1px solid var(--line);padding:16px 0}.mistake:first-child{border-top:0;padding-top:0}
+    .mistake strong{color:var(--danger)}
+    .footer{padding:38px 0 54px;color:var(--muted);border-top:1px solid var(--line)}
+    @media(max-width:1120px){
+      .hero,.lab-grid,.proof-grid{grid-template-columns:1fr}
+      .hero-map{min-height:360px}.hero-svg{height:320px}
+      .grid-4,.notation-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media(max-width:760px){
+      .shell{width:min(100% - 20px,1480px)}
+      .topbar-inner{min-height:60px}.brand span:last-child{display:none}
+      .hero{padding-top:46px}.section{padding:52px 0}
+      .grid-2,.grid-3,.grid-4,.notation-grid,.metric-strip,.metric-strip.four{grid-template-columns:1fr}
+      .section-head{align-items:start;flex-direction:column}
+      .card{padding:18px}.definition-card{padding:22px}
+      .diagram-shell,.diagram-shell svg{min-height:420px}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>Fenchel Conjugate Laboratory</span></div>
+      <div class="top-actions">
+        <button class="ghost-button" id="scrollToLab">Open conjugate lab</button>
+        <button class="icon-button" id="themeToggle" aria-label="Toggle light and dark mode">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="shell hero">
+      <div>
+        <div class="eyebrow">Interactive convex analysis</div>
+        <h1>Fenchel conjugates</h1>
+        <p>The conjugate replaces a point \(x\) by a slope \(p\). For each slope, it records the highest affine function \(x\mapsto px-f^*(p)\) that remains below \(f\). Biconjugation reconstructs the closed convex envelope from all such supports.</p>
+        <div class="hero-chips">
+          <span class="chip">dual functions</span><span class="chip">supporting lines</span><span class="chip">Fenchel–Young inequality</span><span class="chip">biconjugation</span><span class="chip">epigraph geometry</span>
+        </div>
+      </div>
+      <div class="hero-map" aria-label="Fenchel conjugate supporting-line illustration">
+        <svg class="hero-svg" viewBox="0 0 540 370" role="img">
+          <defs><pattern id="heroGrid" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M 36 0 L 0 0 0 36" fill="none" stroke="var(--grid)" stroke-width="1"/></pattern></defs>
+          <rect x="0" y="0" width="540" height="370" rx="18" fill="var(--canvas)"/>
+          <rect x="0" y="0" width="540" height="370" rx="18" fill="url(#heroGrid)"/>
+          <path d="M55 320 C130 172, 208 86, 270 72 C340 55, 417 158, 486 322" fill="none" stroke="var(--cyan)" stroke-width="5"/>
+          <line x1="76" y1="334" x2="468" y2="176" stroke="var(--violet)" stroke-width="4"/>
+          <circle cx="317" cy="237" r="10" fill="var(--teal)" stroke="var(--canvas)" stroke-width="3"/>
+          <line x1="317" y1="237" x2="317" y2="72" stroke="var(--amber)" stroke-width="3" stroke-dasharray="7 6"/>
+          <text x="270" y="350" text-anchor="middle" fill="var(--muted)" font-family="Inter" font-size="15">the slope is dual; the intercept is encoded by f*(p)</text>
+        </svg>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">1 · Definition</div><h2>Optimize over primal points</h2></div>
+          <p>The conjugate is a supremum of affine functions of the dual variable. Therefore it is always convex and lower semicontinuous, even when the original function is not.</p>
+        </div>
+        <article class="card definition-card">
+          <div class="math-display" data-math="f^*(p)=\sup_{x\in\mathbb R^n}\{\langle p,x\rangle-f(x)\}" data-display="true"></div>
+          <p>The quantity \(\langle p,x\rangle-f(x)\) measures how far the linear functional of slope \(p\) rises above \(f\) at \(x\). Its supremum determines the supporting affine minorant</p>
+          <div class="math-display" data-math="x\longmapsto \langle p,x\rangle-f^*(p)." data-display="true"></div>
+        </article>
+        <div class="notation-grid">
+          <div class="notation-item"><strong><span data-math="x"></span></strong>primal variable</div>
+          <div class="notation-item"><strong><span data-math="p"></span></strong>dual slope</div>
+          <div class="notation-item"><strong><span data-math="f^*"></span></strong>Fenchel conjugate</div>
+          <div class="notation-item"><strong><span data-math="f^{**}"></span></strong>biconjugate</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="conjugateLab">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">2 · Conjugate laboratory</div><h2>Choose a slope and find the highest supporting line</h2></div><p>The maximizing primal point satisfies \(p\in\partial f(x_p)\) whenever the supremum is attained.</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Function and slope controls</div>
+            <div class="control-stack">
+              <div class="control">
+                <label for="conjugateFunction">Primal function</label>
+                <select id="conjugateFunction">
+                  <option value="quadratic">f(x)=x²/2</option>
+                  <option value="scaledQuadratic">f(x)=x²/4</option>
+                  <option value="absolute">f(x)=|x|</option>
+                  <option value="hinge">f(x)=max(0,x)</option>
+                  <option value="exponential">f(x)=eˣ</option>
+                  <option value="shiftedQuadratic">f(x)=(x−1)²/2+1</option>
+                </select>
+              </div>
+              <div class="control"><label for="dualSlope"><span data-math="p"></span><span id="dualSlopeVal">0.80</span></label><input id="dualSlope" type="range" min="-3" max="3" step=".02" value=".8"></div>
+              <label class="toggle-line"><input id="showGapFunction" type="checkbox" checked>show px−f(x) maximization</label>
+              <label class="toggle-line"><input id="showSupportLine" type="checkbox" checked>show affine support</label>
+              <label class="toggle-line"><input id="showDualPoint" type="checkbox" checked>mark (p,f*(p))</label>
+              <button id="animateSlope" class="ghost-button">Animate slope</button>
+              <button id="snapZero" class="ghost-button">Set p=0</button>
+            </div>
+          </aside>
+
+          <article class="card">
+            <div class="diagram-shell"><svg id="conjugateSvg" viewBox="0 0 860 520" aria-label="Primal function and Fenchel conjugate supporting line"></svg></div>
+            <div class="legend">
+              <span><i style="background:var(--cyan)"></i>primal function f</span>
+              <span><i style="background:var(--violet)"></i>supporting line px−f*(p)</span>
+              <span><i style="background:var(--teal)"></i>maximizing primal point</span>
+              <span><i style="background:var(--amber)"></i>dual point on f*</span>
+            </div>
+          </article>
+
+          <aside class="card">
+            <div class="card-label">Dual diagnosis</div>
+            <div id="conjugateFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">f*(p)</div><div class="metric-value" id="conjugateValue">—</div></div>
+              <div class="metric-cell"><div class="metric-name">argmax x</div><div class="metric-value" id="argmaxValue">—</div></div>
+              <div class="metric-cell"><div class="metric-name">supremum attained?</div><div class="metric-value" id="attainedValue">—</div></div>
+              <div class="metric-cell"><div class="metric-name">support valid?</div><div class="metric-value" id="supportValid">—</div></div>
+            </div>
+            <div id="conjugateStatus" class="status good" style="margin-top:14px"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="fenchelYoungLab">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">3 · Fenchel–Young laboratory</div><h2>Equality detects matching primal and dual variables</h2></div><p>The universal inequality becomes equality exactly when \(p\) is a subgradient of \(f\) at \(x\).</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Primal–dual controls</div>
+            <div class="control-stack">
+              <div class="control">
+                <label for="fyFunction">Function</label>
+                <select id="fyFunction">
+                  <option value="quadratic">x²/2</option>
+                  <option value="absolute">|x|</option>
+                  <option value="hinge">max(0,x)</option>
+                  <option value="shiftedQuadratic">(x−1)²/2+1</option>
+                </select>
+              </div>
+              <div class="control"><label for="fyX"><span data-math="x"></span><span id="fyXVal">1.20</span></label><input id="fyX" type="range" min="-3" max="3" step=".02" value="1.2"></div>
+              <div class="control"><label for="fyP"><span data-math="p"></span><span id="fyPVal">0.60</span></label><input id="fyP" type="range" min="-3" max="3" step=".02" value=".6"></div>
+              <button id="matchSubgradient" class="ghost-button">Choose p∈∂f(x)</button>
+              <button id="matchPrimal" class="ghost-button">Choose x∈∂f*(p)</button>
+            </div>
+          </aside>
+
+          <article class="card">
+            <div class="diagram-shell"><svg id="fySvg" viewBox="0 0 860 520" aria-label="Fenchel Young inequality gap"></svg></div>
+            <div class="legend">
+              <span><i style="background:var(--cyan)"></i>f(x)</span>
+              <span><i style="background:var(--violet)"></i>affine line px−f*(p)</span>
+              <span><i style="background:var(--amber)"></i>Fenchel–Young gap</span>
+            </div>
+          </article>
+
+          <aside class="card">
+            <div class="card-label">Equality test</div>
+            <div id="fyFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">f(x)</div><div class="metric-value" id="fyF">—</div></div>
+              <div class="metric-cell"><div class="metric-name">f*(p)</div><div class="metric-value" id="fyFStar">—</div></div>
+              <div class="metric-cell"><div class="metric-name">px</div><div class="metric-value" id="fyPX">—</div></div>
+              <div class="metric-cell"><div class="metric-name">duality gap</div><div class="metric-value" id="fyGap">—</div></div>
+            </div>
+            <div id="fyStatus" class="status good" style="margin-top:14px"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="biconjugateLab">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">4 · Biconjugation laboratory</div><h2>Reconstruct f from all affine minorants</h2></div><p>The biconjugate is the supremum of the supporting affine functions indexed by dual slopes.</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Envelope controls</div>
+            <div class="control-stack">
+              <div class="control">
+                <label for="biconjugateFunction">Original function</label>
+                <select id="biconjugateFunction">
+                  <option value="quadratic">closed convex quadratic</option>
+                  <option value="absolute">closed convex absolute value</option>
+                  <option value="doublewell">nonconvex double well</option>
+                  <option value="upwardBoundaryJump">convex but not l.s.c. at boundary</option>
+                </select>
+              </div>
+              <div class="control"><label for="slopeCount">number of slopes<span id="slopeCountVal">21</span></label><input id="slopeCount" type="range" min="3" max="81" step="2" value="21"></div>
+              <div class="control"><label for="slopeRange">dual range<span id="slopeRangeVal">3.0</span></label><input id="slopeRange" type="range" min=".5" max="6" step=".25" value="3"></div>
+              <label class="toggle-line"><input id="showAllSupports" type="checkbox" checked>show affine minorants</label>
+              <label class="toggle-line"><input id="showEnvelope" type="checkbox" checked>show numerical biconjugate</label>
+              <button id="animateEnvelope" class="ghost-button">Increase slope density</button>
+            </div>
+          </aside>
+
+          <article class="card">
+            <div class="diagram-shell"><svg id="biconjugateSvg" viewBox="0 0 860 520" aria-label="Biconjugate as supremum of affine minorants"></svg></div>
+            <div class="legend">
+              <span><i style="background:var(--cyan)"></i>original function f</span>
+              <span><i style="background:var(--violet)"></i>affine minorants</span>
+              <span><i style="background:var(--teal)"></i>biconjugate envelope f**</span>
+              <span><i style="background:var(--danger)"></i>nonconvex / nonclosed gap</span>
+            </div>
+          </article>
+
+          <aside class="card">
+            <div class="card-label">Biconjugation diagnosis</div>
+            <div id="biconjugateFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">f=f**?</div><div class="metric-value" id="equalsBiconjugate">—</div></div>
+              <div class="metric-cell"><div class="metric-name">max gap f−f**</div><div class="metric-value" id="maxBiconjugateGap">—</div></div>
+              <div class="metric-cell"><div class="metric-name">f convex?</div><div class="metric-value" id="originalConvex">—</div></div>
+              <div class="metric-cell"><div class="metric-name">f l.s.c.?</div><div class="metric-value" id="originalLsc">—</div></div>
+            </div>
+            <div id="biconjugateStatus" class="status good" style="margin-top:14px"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">5 · Fenchel–Moreau theorem</div><h2>Closed convex functions are exactly their biconjugates</h2></div><p>Biconjugation removes nonconvex bumps and fills lower-semicontinuity defects.</p></div>
+        <article class="card definition-card">
+          <div class="math-display" data-math="f^{**}=f\quad\Longleftrightarrow\quad f\text{ is proper, convex, and lower semicontinuous}" data-display="true"></div>
+          <p>For an arbitrary extended-real function, \(f^{**}\) is the greatest lower-semicontinuous convex function majorized by \(f\):</p>
+          <div class="math-display" data-math="f^{**}\le f." data-display="true"></div>
+          <div class="flow-map">
+            <div class="flow-node">all affine minorants</div><span class="flow-arrow">→</span>
+            <div class="flow-node">pointwise supremum</div><span class="flow-arrow">→</span>
+            <div class="flow-node">convex and l.s.c.</div><span class="flow-arrow">→</span>
+            <div class="flow-node">largest such minorant</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">6 · Epigraph geometry</div><h2>Conjugation transforms support data</h2></div><p>Each dual point \((p,f^*(p))\) encodes a supporting hyperplane of the primal epigraph.</p></div>
+        <div class="grid-3">
+          <article class="card">
+            <div class="card-label">Affine support</div>
+            <div class="math-display" data-math="r\ge \langle p,x\rangle-f^*(p)" data-display="true"></div>
+            <p class="muted">This half-space contains \(\operatorname{epi}f\).</p>
+          </article>
+          <article class="card">
+            <div class="card-label">Contact condition</div>
+            <div class="math-display" data-math="f(x)+f^*(p)=\langle p,x\rangle" data-display="true"></div>
+            <p class="muted">Equality means the support hyperplane touches the epigraph at \((x,f(x))\).</p>
+          </article>
+          <article class="card">
+            <div class="card-label">Subgradient reciprocity</div>
+            <div class="math-display" data-math="p\in\partial f(x)\iff x\in\partial f^*(p)" data-display="true"></div>
+            <p class="muted">Primal points and dual slopes exchange roles.</p>
+          </article>
+        </div>
+        <article class="card definition-card" style="margin-top:20px">
+          <div class="math-display" data-math="\operatorname{epi}f^{**}=\overline{\operatorname{conv}}(\operatorname{epi}f)" data-display="true"></div>
+          <p>More precisely, the epigraph of the biconjugate is the closed convex hull of the original epigraph in the extended-real setting.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">7 · Proof architecture</div><h2>Why f** never exceeds f</h2></div><p>The fundamental estimate is Fenchel–Young applied before taking the supremum over slopes.</p></div>
+        <div class="proof-grid">
+          <article class="card">
+            <div class="proof-steps">
+              <div class="proof-step open"><button type="button"><span><span class="proof-number">1</span>Start from the conjugate definition</span><span>−</span></button><div class="proof-body"><p>For every \(x\) and \(p\),</p><div class="math-display" data-math="f^*(p)=\sup_y\{\langle p,y\rangle-f(y)\}\ge\langle p,x\rangle-f(x)." data-display="true"></div></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">2</span>Rearrange</span><span>+</span></button><div class="proof-body"><div class="math-display" data-math="\langle p,x\rangle-f^*(p)\le f(x)." data-display="true"></div><p>Every affine function used in the biconjugate is a minorant of \(f\).</p></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">3</span>Take the supremum over p</span><span>+</span></button><div class="proof-body"><div class="math-display" data-math="f^{**}(x)=\sup_p\{\langle p,x\rangle-f^*(p)\}\le f(x)." data-display="true"></div></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">4</span>Recover equality using support</span><span>+</span></button><div class="proof-body"><p>If \(f\) is proper, convex, and lower semicontinuous, a supporting hyperplane to \(\operatorname{epi}f\) at \((x,f(x))\) provides a slope \(p\) with</p><div class="math-display" data-math="f(x)=\langle p,x\rangle-f^*(p)\le f^{**}(x)." data-display="true"></div><p>Combined with the previous inequality, this gives \(f=f^{**}\).</p></div></div>
+            </div>
+          </article>
+          <aside class="card">
+            <div class="card-label">Proof strategy</div>
+            <h3>Minorants + supporting hyperplanes</h3>
+            <p class="muted">The easy inequality comes from the definition. Equality requires enough affine supports, which is exactly what closed convex epigraph geometry supplies.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">8 · Conjugates to remember</div><h2>Canonical dual pairs</h2></div><p>These examples reveal how curvature, norms, constraints, and entropy transform under conjugation.</p></div>
+        <div class="grid-3">
+          <article class="card"><div class="card-label">Quadratic</div><div class="math-display" data-math="f(x)=\frac12\|x\|^2\quad\Longrightarrow\quad f^*(p)=\frac12\|p\|^2" data-display="true"></div></article>
+          <article class="card"><div class="card-label">Scaled quadratic</div><div class="math-display" data-math="f(x)=\frac{1}{2a}\|x\|^2\quad\Longrightarrow\quad f^*(p)=\frac a2\|p\|^2" data-display="true"></div></article>
+          <article class="card"><div class="card-label">Norm</div><div class="math-display" data-math="f(x)=\|x\|\quad\Longrightarrow\quad f^*(p)=\delta_{\{p:\|p\|_*\le1\}}(p)" data-display="true"></div></article>
+          <article class="card"><div class="card-label">Indicator and support</div><div class="math-display" data-math="\delta_C^*(p)=\sigma_C(p)=\sup_{x\in C}\langle p,x\rangle" data-display="true"></div></article>
+          <article class="card"><div class="card-label">Exponential</div><div class="math-display" data-math="f(x)=e^x\quad\Longrightarrow\quad f^*(p)=\begin{cases}p\log p-p,&p>0,\\0,&p=0,\\+\infty,&p<0.\end{cases}" data-display="true"></div></article>
+          <article class="card"><div class="card-label">Entropy pair</div><div class="math-display" data-math="f(x)=x\log x-x\quad(x\ge0)\quad\Longrightarrow\quad f^*(p)=e^p" data-display="true"></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">9 · Algebraic rules</div><h2>How transformations behave under conjugation</h2></div><p>Translations, linear perturbations, and scaling become simple dual operations.</p></div>
+        <div class="grid-3">
+          <article class="card"><div class="card-label">Vertical shift</div><div class="math-display" data-math="(f+c)^*(p)=f^*(p)-c" data-display="true"></div></article>
+          <article class="card"><div class="card-label">Linear tilt</div><div class="math-display" data-math="(f+\langle a,\cdot\rangle)^*(p)=f^*(p-a)" data-display="true"></div></article>
+          <article class="card"><div class="card-label">Primal translation</div><div class="math-display" data-math="f(\cdot-a)^*(p)=f^*(p)+\langle p,a\rangle" data-display="true"></div></article>
+          <article class="card"><div class="card-label">Positive scaling</div><div class="math-display" data-math="(\lambda f)^*(p)=\lambda f^*\!\left(\frac p\lambda\right),\qquad \lambda>0" data-display="true"></div></article>
+          <article class="card"><div class="card-label">Order reversal</div><div class="math-display" data-math="f\le g\quad\Longrightarrow\quad f^*\ge g^*" data-display="true"></div></article>
+          <article class="card"><div class="card-label">Infimal convolution</div><div class="math-display" data-math="(f+g)^*=f^*\square g^*" data-display="true"></div><p class="muted">Under the appropriate closedness and qualification hypotheses.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">10 · Guided theorem proving</div><h2>Choose the valid inference</h2></div><p>The sign in the affine support is the main source of errors.</p></div>
+        <div class="proof-grid">
+          <article class="card">
+            <div class="card-label">Challenge</div>
+            <p>From the definition of \(f^*(p)\), which inequality is always valid?</p>
+            <div class="quiz-options">
+              <button class="proof-option" data-answer="correct">\(\langle p,x\rangle-f^*(p)\le f(x)\) for every \(x,p\).</button>
+              <button class="proof-option" data-answer="wrong1">\(\langle p,x\rangle+f^*(p)\le f(x)\) for every \(x,p\).</button>
+              <button class="proof-option" data-answer="wrong2">\(f^*(p)\le\langle p,x\rangle-f(x)\) for every \(x\).</button>
+              <button class="proof-option" data-answer="wrong3">Equality holds for every pair \((x,p)\).</button>
+            </div>
+          </article>
+          <aside class="card">
+            <div class="card-label">Feedback</div>
+            <div id="quizFeedback" class="status">Choose a proof step.</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">11 · What can go wrong?</div><h2>Conjugation closes and convexifies</h2></div><p>The conjugate remembers support information, not arbitrary nonconvex detail.</p></div>
+        <article class="card">
+          <div class="counter-tabs">
+            <button class="counter-tab active" data-counter="invertible">Not an ordinary inverse</button>
+            <button class="counter-tab" data-counter="nonconvex">Nonconvex f</button>
+            <button class="counter-tab" data-counter="attainment">Supremum not attained</button>
+            <button class="counter-tab" data-counter="domain">Extended values</button>
+          </div>
+          <div class="counter-content active" id="counter-invertible">
+            <div class="grid-2"><div><h3>The conjugate is not the inverse function</h3><p class="muted">The variables have different meanings: \(x\) is primal position, while \(p\) is a slope or dual vector.</p></div><div class="status bad"><strong>Correct relation.</strong> For smooth strictly convex \(f\), \(\nabla f^*=(\nabla f)^{-1}\), not \(f^*=f^{-1}\).</div></div>
+          </div>
+          <div class="counter-content" id="counter-nonconvex">
+            <div class="grid-2"><div><h3>Biconjugation does not recover nonconvex bumps</h3><p class="muted">The double-well function is replaced by its closed convex envelope.</p></div><div class="status bad"><strong>Correct statement.</strong> \(f^{**}=f\) requires properness, convexity, and lower semicontinuity.</div></div>
+          </div>
+          <div class="counter-content" id="counter-attainment">
+            <div class="grid-2"><div><h3>A finite supremum need not be attained</h3><p class="muted">For \(f(x)=e^x\) and \(p=0\), \(f^*(0)=0\), but \(0\cdot x-e^x\to0\) only as \(x\to-\infty\).</p></div><div class="status bad"><strong>Distinction.</strong> Finite conjugate value does not guarantee an argmax.</div></div>
+          </div>
+          <div class="counter-content" id="counter-domain">
+            <div class="grid-2"><div><h3>Extended values are essential</h3><p class="muted">The conjugate of \(|x|\) equals \(0\) on \([-1,1]\) and \(+\infty\) outside.</p></div><div class="status bad"><strong>Interpretation.</strong> \(+\infty\) records slopes for which no global affine minorant with finite intercept exists.</div></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">12 · Common mistakes</div><h2>Precision traps</h2></div><p>Most mistakes involve signs, domains, or confusing equality with universal validity.</p></div>
+        <article class="card">
+          <div class="mistake"><strong>Incorrect:</strong> “\(f^*(p)=\inf_x\{f(x)-px\}\).” <span class="muted">Correct: \(f^*(p)=\sup_x\{px-f(x)\}\).</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “The supporting line is \(px+f^*(p)\).” <span class="muted">Correct: it is \(px-f^*(p)\).</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “Fenchel–Young equality holds for all \(x,p\).” <span class="muted">Correct: equality holds exactly when \(p\in\partial f(x)\).</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “The conjugate of a convex function is always finite.” <span class="muted">Correct: it may take the value \(+\infty\).</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “\(f^{**}=f\) for every function.” <span class="muted">Correct: \(f^{**}\) is the closed convex envelope below \(f\).</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">13 · Final synthesis</div><h2>Slopes become coordinates of a dual function</h2></div><p>Conjugation converts support geometry into a new convex function, and biconjugation rebuilds the primal object from all dual supports.</p></div>
+        <div class="flow-map">
+          <div class="flow-node">primal function f</div><span class="flow-arrow">→</span>
+          <div class="flow-node">support slopes p</div><span class="flow-arrow">→</span>
+          <div class="flow-node">conjugate f*</div><span class="flow-arrow">→</span>
+          <div class="flow-node">affine minorants</div><span class="flow-arrow">→</span>
+          <div class="flow-node">biconjugate f**</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="shell">Interactive laboratory · Fenchel conjugates, supporting lines, biconjugation, and epigraph geometry.</div></footer>
+
+  <script>
+    "use strict";
+
+    const $=(s,r=document)=>r.querySelector(s);
+    const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+    const css=name=>getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+    const fmt=(v,d=3)=>{
+      if(v===Infinity)return "+∞";
+      if(v===-Infinity)return "−∞";
+      const n=Math.abs(v)<1e-10?0:v;
+      return n.toFixed(d).replace("-","−");
+    };
+
+    function renderMath(root=document){
+      if(window.katex){
+        $$("[data-math]",root).forEach(el=>{
+          if(el.dataset.rendered==="1")return;
+          try{katex.render(el.dataset.math,el,{throwOnError:false,displayMode:el.dataset.display==="true"});el.dataset.rendered="1";}
+          catch(e){el.textContent=el.dataset.math;}
+        });
+      }
+      if(window.renderMathInElement){
+        renderMathInElement(root,{
+          throwOnError:false,
+          delimiters:[
+            {left:"\\(",right:"\\)",display:false},
+            {left:"\\[",right:"\\]",display:true}
+          ]
+        });
+      }
+    }
+    function renderInto(el,tex,display=true){
+      if(!window.katex){el.textContent=tex;return;}
+      katex.render(tex,el,{throwOnError:false,displayMode:display});
+    }
+
+    function setTheme(theme){
+      document.documentElement.dataset.theme=theme;
+      localStorage.setItem("fenchelLabTheme",theme);
+      drawAll();
+    }
+    document.documentElement.dataset.theme=localStorage.getItem("fenchelLabTheme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+    $("#themeToggle").addEventListener("click",()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark"));
+    $("#scrollToLab").addEventListener("click",()=>$("#conjugateLab").scrollIntoView({behavior:"smooth"}));
+
+    function svgEl(tag,attrs={}){
+      const el=document.createElementNS("http://www.w3.org/2000/svg",tag);
+      Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));
+      return el;
+    }
+    function clearSvg(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+    function drawAxes(svg,w,h,xmin,xmax,ymin,ymax){
+      svg.appendChild(svgEl("rect",{x:0,y:0,width:w,height:h,fill:css("--canvas")}));
+      const X=x=>40+(x-xmin)/(xmax-xmin)*(w-80);
+      const Y=y=>h-40-(y-ymin)/(ymax-ymin)*(h-80);
+      for(let x=Math.ceil(xmin);x<=xmax;x++)svg.appendChild(svgEl("line",{x1:X(x),y1:40,x2:X(x),y2:h-40,stroke:css("--grid"),"stroke-width":1}));
+      for(let y=Math.ceil(ymin);y<=ymax;y++)svg.appendChild(svgEl("line",{x1:40,y1:Y(y),x2:w-40,y2:Y(y),stroke:css("--grid"),"stroke-width":1}));
+      if(xmin<=0&&xmax>=0)svg.appendChild(svgEl("line",{x1:X(0),y1:40,x2:X(0),y2:h-40,stroke:css("--axis"),"stroke-width":1.5}));
+      if(ymin<=0&&ymax>=0)svg.appendChild(svgEl("line",{x1:40,y1:Y(0),x2:w-40,y2:Y(0),stroke:css("--axis"),"stroke-width":1.5}));
+      return{X,Y,xmin,xmax,ymin,ymax};
+    }
+    function pathFor(f,X,Y,xmin,xmax,n=500,ymin=-10,ymax=10){
+      let d="",pen=false;
+      for(let i=0;i<=n;i++){
+        const x=xmin+(xmax-xmin)*i/n,y=f(x);
+        if(!Number.isFinite(y)||y<ymin-2||y>ymax+2){pen=false;continue;}
+        d+=(pen?" L ":"M ")+`${X(x)} ${Y(y)}`;pen=true;
+      }
+      return d;
+    }
+
+    const defs={
+      quadratic:{
+        f:x=>.5*x*x,
+        tex:"\\frac{x^2}{2}",
+        conjugate:p=>({value:.5*p*p,argmax:[p,p],attained:true}),
+        convex:true,lsc:true
+      },
+      scaledQuadratic:{
+        f:x=>.25*x*x,
+        tex:"\\frac{x^2}{4}",
+        conjugate:p=>({value:p*p,argmax:[2*p,2*p],attained:true}),
+        convex:true,lsc:true
+      },
+      absolute:{
+        f:x=>Math.abs(x),
+        tex:"|x|",
+        conjugate:p=>{
+          if(Math.abs(p)<1-1e-9)return{value:0,argmax:[0,0],attained:true};
+          if(Math.abs(p)<=1+1e-9)return{value:0,argmax:p>0?[0,4]:[-4,0],attained:true,ray:true};
+          return{value:Infinity,argmax:[],attained:false};
+        },
+        convex:true,lsc:true
+      },
+      hinge:{
+        f:x=>Math.max(0,x),
+        tex:"\\max\\{0,x\\}",
+        conjugate:p=>{
+          if(p>0&&p<1)return{value:0,argmax:[0,0],attained:true};
+          if(Math.abs(p)<1e-9)return{value:0,argmax:[-4,0],attained:true,ray:true};
+          if(Math.abs(p-1)<1e-9)return{value:0,argmax:[0,4],attained:true,ray:true};
+          return{value:Infinity,argmax:[],attained:false};
+        },
+        convex:true,lsc:true
+      },
+      exponential:{
+        f:x=>Math.exp(x),
+        tex:"e^x",
+        conjugate:p=>{
+          if(p>0)return{value:p*Math.log(p)-p,argmax:[Math.log(p),Math.log(p)],attained:true};
+          if(Math.abs(p)<1e-9)return{value:0,argmax:[],attained:false,limit:"x\\to-\\infty"};
+          return{value:Infinity,argmax:[],attained:false};
+        },
+        convex:true,lsc:true
+      },
+      shiftedQuadratic:{
+        f:x=>.5*(x-1)*(x-1)+1,
+        tex:"\\frac{(x-1)^2}{2}+1",
+        conjugate:p=>({value:.5*p*p+p-1,argmax:[p+1,p+1],attained:true}),
+        convex:true,lsc:true
+      }
+    };
+
+    function numericConjugate(f,p,xmin=-6,xmax=6,n=2500){
+      let best=-Infinity,arg=xmin;
+      for(let i=0;i<=n;i++){
+        const x=xmin+(xmax-xmin)*i/n,v=p*x-f(x);
+        if(v>best){best=v;arg=x;}
+      }
+      return{value:best,arg};
+    }
+
+    let slopeTimer=null;
+    ["conjugateFunction","dualSlope","showGapFunction","showSupportLine","showDualPoint"].forEach(id=>$("#"+id).addEventListener("input",drawConjugateLab));
+    $("#animateSlope").addEventListener("click",()=>{
+      clearInterval(slopeTimer);let p=+$("#dualSlope").value,dir=1;
+      slopeTimer=setInterval(()=>{p+=.02*dir;if(p>=3){p=3;dir=-1;}if(p<=-3){p=-3;dir=1;}$("#dualSlope").value=p;drawConjugateLab();},45);
+    });
+    $("#snapZero").addEventListener("click",()=>{$("#dualSlope").value=0;drawConjugateLab();});
+
+    function drawConjugateLab(){
+      const svg=$("#conjugateSvg"),w=860,h=520;
+      clearSvg(svg);
+      const left={x:0,y:0,width:560,height:520},right={x:560,y:0,width:300,height:520};
+      const plot=drawAxes(svg,left.width,left.height,-4,4,-3,8);
+      const def=defs[$("#conjugateFunction").value],p=+$("#dualSlope").value,c=def.conjugate(p);
+      svg.appendChild(svgEl("path",{d:pathFor(def.f,plot.X,plot.Y,-4,4,600,-3,8),fill:"none",stroke:css("--cyan"),"stroke-width":4}));
+
+      if(Number.isFinite(c.value)&&$("#showSupportLine").checked){
+        const line=x=>p*x-c.value;
+        svg.appendChild(svgEl("line",{x1:plot.X(-4),y1:plot.Y(line(-4)),x2:plot.X(4),y2:plot.Y(line(4)),stroke:css("--violet"),"stroke-width":4}));
+      }
+      if(c.attained&&c.argmax.length){
+        c.argmax.forEach(x=>{
+          if(x>=-4&&x<=4){
+            const P={x:plot.X(x),y:plot.Y(def.f(x))};
+            svg.appendChild(svgEl("circle",{cx:P.x,cy:P.y,r:10,fill:css("--teal"),stroke:css("--canvas"),"stroke-width":3}));
+          }
+        });
+        if(c.ray){
+          const a=clamp(c.argmax[0],-4,4),b=clamp(c.argmax[1],-4,4);
+          svg.appendChild(svgEl("line",{x1:plot.X(a),y1:plot.Y(def.f(a)),x2:plot.X(b),y2:plot.Y(def.f(b)),stroke:css("--teal"),"stroke-width":8,"stroke-linecap":"round",opacity:.5}));
+        }
+      }
+
+      // divider and dual axes
+      svg.appendChild(svgEl("line",{x1:560,y1:20,x2:560,y2:500,stroke:css("--line"),"stroke-width":2}));
+      const dX=q=>600+(q+3)/6*220,dY=v=>460-(v+2)/8*380;
+      for(let q=-3;q<=3;q++)svg.appendChild(svgEl("line",{x1:dX(q),y1:60,x2:dX(q),y2:460,stroke:css("--grid"),"stroke-width":1}));
+      for(let y=-2;y<=6;y++)svg.appendChild(svgEl("line",{x1:600,y1:dY(y),x2:820,y2:dY(y),stroke:css("--grid"),"stroke-width":1}));
+      svg.appendChild(svgEl("line",{x1:600,y1:dY(0),x2:820,y2:dY(0),stroke:css("--axis"),"stroke-width":1.5}));
+      svg.appendChild(svgEl("line",{x1:dX(0),y1:60,x2:dX(0),y2:460,stroke:css("--axis"),"stroke-width":1.5}));
+
+      let dualPath="",pen=false;
+      for(let i=0;i<=300;i++){
+        const q=-3+6*i/300,v=def.conjugate(q).value;
+        if(!Number.isFinite(v)||v<-2||v>6){pen=false;continue;}
+        dualPath+=(pen?" L ":"M ")+`${dX(q)} ${dY(v)}`;pen=true;
+      }
+      svg.appendChild(svgEl("path",{d:dualPath,fill:"none",stroke:css("--amber"),"stroke-width":4}));
+      if($("#showDualPoint").checked&&Number.isFinite(c.value)&&c.value>=-2&&c.value<=6){
+        svg.appendChild(svgEl("circle",{cx:dX(p),cy:dY(c.value),r:9,fill:css("--amber"),stroke:css("--canvas"),"stroke-width":3}));
+      }
+
+      if($("#showGapFunction").checked&&Number.isFinite(c.value)){
+        const xStar=c.argmax.length?(c.argmax[0]+c.argmax[c.argmax.length-1])/2:null;
+        if(xStar!==null&&xStar>=-4&&xStar<=4){
+          const fx=def.f(xStar),linear=p*xStar;
+          svg.appendChild(svgEl("line",{x1:plot.X(xStar),y1:plot.Y(fx),x2:plot.X(xStar),y2:plot.Y(linear),stroke:css("--amber"),"stroke-width":4,"stroke-dasharray":"7 6"}));
+        }
+      }
+
+      $("#dualSlopeVal").textContent=fmt(p,2);
+      $("#conjugateValue").textContent=fmt(c.value,3);
+      $("#argmaxValue").textContent=c.argmax.length?(c.ray?`[${fmt(c.argmax[0],1)}, ${fmt(c.argmax[1],1)}]`:fmt(c.argmax[0],3)):"—";
+      $("#attainedValue").textContent=c.attained?"yes":"no";
+      $("#supportValid").textContent=Number.isFinite(c.value)?"yes":"no";
+      const valueTex=Number.isFinite(c.value)?fmt(c.value,3):"+\\infty";
+      renderInto($("#conjugateFormula"),String.raw`f^*(${fmt(p,2)})=\sup_x\{${fmt(p,2)}x-f(x)\}=${valueTex}`);
+      const st=$("#conjugateStatus");
+      if(c.value===Infinity){
+        st.className="status bad";st.innerHTML="<strong>Infinite conjugate value.</strong> With this slope, \(px-f(x)\) is unbounded above, so no finite supporting intercept exists.";
+      }else if(!c.attained){
+        st.className="status warning";st.innerHTML="<strong>Finite supremum, no maximizer.</strong> The optimal value is approached only asymptotically.";
+      }else if(c.ray){
+        st.className="status warning";st.innerHTML="<strong>Multiple primal maximizers.</strong> The selected slope supports the function along an entire ray.";
+      }else{
+        st.className="status good";st.innerHTML="<strong>Unique contact.</strong> The maximizing \(x_p\) satisfies \(p\in\partial f(x_p)\), and the affine line \(px-f^*(p)\) supports \(f\).";
+      }
+    }
+
+    ["fyFunction","fyX","fyP"].forEach(id=>$("#"+id).addEventListener("input",drawFenchelYoungLab));
+    $("#matchSubgradient").addEventListener("click",()=>{
+      const key=$("#fyFunction").value,x=+$("#fyX").value;
+      let p=0;
+      if(key==="quadratic")p=x;
+      else if(key==="absolute")p=x<0?-1:x>0?1:0;
+      else if(key==="hinge")p=x<0?0:x>0?1:.5;
+      else p=x-1;
+      $("#fyP").value=clamp(p,-3,3);drawFenchelYoungLab();
+    });
+    $("#matchPrimal").addEventListener("click",()=>{
+      const key=$("#fyFunction").value,p=+$("#fyP").value,def=defs[key],c=def.conjugate(p);
+      if(c.argmax.length)$("#fyX").value=clamp((c.argmax[0]+c.argmax[c.argmax.length-1])/2,-3,3);
+      drawFenchelYoungLab();
+    });
+
+    function drawFenchelYoungLab(){
+      const svg=$("#fySvg"),w=860,h=520,plot=drawAxes(svg,w,h,-4,4,-3,8);
+      const def=defs[$("#fyFunction").value],x=+$("#fyX").value,p=+$("#fyP").value,c=def.conjugate(p),fx=def.f(x);
+      const finite=Number.isFinite(c.value),px=p*x,gap=finite?fx+c.value-px:Infinity;
+      svg.appendChild(svgEl("path",{d:pathFor(def.f,plot.X,plot.Y,-4,4,500,-3,8),fill:"none",stroke:css("--cyan"),"stroke-width":4}));
+      if(finite){
+        const line=z=>p*z-c.value;
+        svg.appendChild(svgEl("line",{x1:plot.X(-4),y1:plot.Y(line(-4)),x2:plot.X(4),y2:plot.Y(line(4)),stroke:css("--violet"),"stroke-width":4}));
+        const A={x:plot.X(x),y:plot.Y(fx)},B={x:plot.X(x),y:plot.Y(line(x))};
+        svg.appendChild(svgEl("line",{x1:A.x,y1:A.y,x2:B.x,y2:B.y,stroke:gap<1e-5?css("--teal"):css("--amber"),"stroke-width":6,"stroke-dasharray":"7 6"}));
+        svg.appendChild(svgEl("circle",{cx:A.x,cy:A.y,r:10,fill:css("--cyan-deep"),stroke:css("--canvas"),"stroke-width":3}));
+      }
+      $("#fyXVal").textContent=fmt(x,2);$("#fyPVal").textContent=fmt(p,2);
+      $("#fyF").textContent=fmt(fx,3);$("#fyFStar").textContent=fmt(c.value,3);$("#fyPX").textContent=fmt(px,3);$("#fyGap").textContent=fmt(gap,3);
+      renderInto($("#fyFormula"),String.raw`f(x)+f^*(p)-px=${Number.isFinite(gap)?fmt(gap,4):"+\\infty"}\ge0`);
+      const st=$("#fyStatus");
+      if(!finite){
+        st.className="status bad";st.innerHTML="<strong>Infinite dual penalty.</strong> This slope lies outside the effective domain of the conjugate.";
+      }else if(gap<1e-5){
+        st.className="status good";st.innerHTML="<strong>Fenchel–Young equality.</strong> Here \(p\in\partial f(x)\), equivalently \(x\in\partial f^*(p)\).";
+      }else{
+        st.className="status warning";st.innerHTML="<strong>Strict Fenchel–Young inequality.</strong> The chosen primal point is not a contact point for the support of slope \(p\).";
+      }
+    }
+
+    const biconjDefs={
+      quadratic:{f:x=>.5*x*x,convex:true,lsc:true,label:"\\frac{x^2}{2}"},
+      absolute:{f:x=>Math.abs(x),convex:true,lsc:true,label:"|x|"},
+      doublewell:{f:x=>(Math.abs(x)-1)**2,convex:false,lsc:true,label:"(|x|-1)^2"},
+      upwardBoundaryJump:{
+        f:x=>{
+          if(x<0||x>2)return Infinity;
+          if(Math.abs(x)<1e-8)return 1;
+          return 0;
+        },
+        convex:true,lsc:false,label:"f(0)=1,\ f(x)=0\text{ on }(0,2]"
+      }
+    };
+
+    let envelopeTimer=null;
+    ["biconjugateFunction","slopeCount","slopeRange","showAllSupports","showEnvelope"].forEach(id=>$("#"+id).addEventListener("input",drawBiconjugateLab));
+    $("#animateEnvelope").addEventListener("click",()=>{
+      clearInterval(envelopeTimer);let n=+$("#slopeCount").value;
+      envelopeTimer=setInterval(()=>{n+=2;if(n>81){clearInterval(envelopeTimer);return;}$("#slopeCount").value=n;drawBiconjugateLab();},100);
+    });
+
+    function computeNumericConjugateGrid(f,slopes,xmin=-4,xmax=4,nx=1200){
+      return slopes.map(p=>{
+        let best=-Infinity;
+        for(let i=0;i<=nx;i++){
+          const x=xmin+(xmax-xmin)*i/nx,v=p*x-f(x);
+          if(Number.isFinite(v)&&v>best)best=v;
+        }
+        return best;
+      });
+    }
+
+    function drawBiconjugateLab(){
+      const svg=$("#biconjugateSvg"),w=860,h=520,plot=drawAxes(svg,w,h,-4,4,-1.5,6);
+      const def=biconjDefs[$("#biconjugateFunction").value],count=+$("#slopeCount").value,range=+$("#slopeRange").value;
+      const slopes=Array.from({length:count},(_,i)=>-range+2*range*i/(count-1));
+      const stars=computeNumericConjugateGrid(def.f,slopes);
+      const xs=Array.from({length:500},(_,i)=>-4+8*i/499);
+      const env=xs.map(x=>{
+        let v=-Infinity;
+        slopes.forEach((p,i)=>{if(Number.isFinite(stars[i]))v=Math.max(v,p*x-stars[i]);});
+        return v;
+      });
+
+      if($("#showAllSupports").checked){
+        slopes.forEach((p,i)=>{
+          if(!Number.isFinite(stars[i]))return;
+          const line=x=>p*x-stars[i];
+          svg.appendChild(svgEl("line",{x1:plot.X(-4),y1:plot.Y(line(-4)),x2:plot.X(4),y2:plot.Y(line(4)),stroke:css("--violet"),"stroke-width":1,opacity:.18}));
+        });
+      }
+
+      let originalPath="",pen=false;
+      xs.forEach(x=>{
+        const y=def.f(x);
+        if(!Number.isFinite(y)||y<-1.5||y>6){pen=false;return;}
+        originalPath+=(pen?" L ":"M ")+`${plot.X(x)} ${plot.Y(y)}`;pen=true;
+      });
+      svg.appendChild(svgEl("path",{d:originalPath,fill:"none",stroke:css("--cyan"),"stroke-width":4}));
+
+      if($("#showEnvelope").checked){
+        let envPath="",started=false;
+        xs.forEach((x,i)=>{
+          const y=env[i];
+          if(!Number.isFinite(y)||y<-1.5||y>6){started=false;return;}
+          envPath+=(started?" L ":"M ")+`${plot.X(x)} ${plot.Y(y)}`;started=true;
+        });
+        svg.appendChild(svgEl("path",{d:envPath,fill:"none",stroke:css("--teal"),"stroke-width":5}));
+      }
+
+      // shade gap where finite
+      let maxGap=0;
+      for(let i=0;i<xs.length-1;i++){
+        const f1=def.f(xs[i]),f2=def.f(xs[i+1]),e1=env[i],e2=env[i+1];
+        if([f1,f2,e1,e2].every(Number.isFinite)){
+          maxGap=Math.max(maxGap,f1-e1,f2-e2);
+          if(f1-e1>.03||f2-e2>.03){
+            svg.appendChild(svgEl("polygon",{points:`${plot.X(xs[i])},${plot.Y(f1)} ${plot.X(xs[i+1])},${plot.Y(f2)} ${plot.X(xs[i+1])},${plot.Y(e2)} ${plot.X(xs[i])},${plot.Y(e1)}`,fill:css("--danger"),opacity:.10}));
+          }
+        }
+      }
+
+      $("#slopeCountVal").textContent=count;$("#slopeRangeVal").textContent=fmt(range,1);
+      $("#equalsBiconjugate").textContent=def.convex&&def.lsc?"yes":"no";
+      $("#maxBiconjugateGap").textContent=fmt(maxGap,3);
+      $("#originalConvex").textContent=def.convex?"yes":"no";$("#originalLsc").textContent=def.lsc?"yes":"no";
+      renderInto($("#biconjugateFormula"),String.raw`f^{**}(x)=\sup_p\{px-f^*(p)\}\le f(x)`);
+      const st=$("#biconjugateStatus");
+      if(def.convex&&def.lsc){
+        st.className="status good";st.innerHTML="<strong>Fenchel–Moreau case.</strong> Increasing the slope density makes the affine envelope converge to the original function.";
+      }else if(!def.convex){
+        st.className="status bad";st.innerHTML="<strong>Convexification.</strong> The biconjugate bridges the nonconvex well by the largest closed convex function lying below \(f\).";
+      }else{
+        st.className="status warning";st.innerHTML="<strong>Lower-semicontinuous closure.</strong> The biconjugate fills the downward epigraph limit point and removes the upward boundary jump.";
+      }
+    }
+
+    $$(".proof-step>button").forEach(btn=>btn.addEventListener("click",()=>{
+      const step=btn.parentElement;step.classList.toggle("open");btn.lastElementChild.textContent=step.classList.contains("open")?"−":"+";
+    }));
+
+    $$(".proof-option").forEach(btn=>btn.addEventListener("click",()=>{
+      $$(".proof-option").forEach(b=>b.classList.remove("correct","wrong"));
+      const f=$("#quizFeedback");
+      if(btn.dataset.answer==="correct"){
+        btn.classList.add("correct");f.className="status good";
+        f.innerHTML="<strong>Correct.</strong> The definition gives \(f^*(p)\ge px-f(x)\); rearranging yields the affine minorant inequality.";
+      }else if(btn.dataset.answer==="wrong1"){
+        btn.classList.add("wrong");f.className="status bad";
+        f.innerHTML="<strong>Sign error.</strong> The conjugate enters the supporting affine function with a minus sign.";
+      }else if(btn.dataset.answer==="wrong2"){
+        btn.classList.add("wrong");f.className="status bad";
+        f.innerHTML="<strong>Supremum direction reversed.</strong> A supremum is at least each candidate value, not at most.";
+      }else{
+        btn.classList.add("wrong");f.className="status bad";
+        f.innerHTML="<strong>Equality is exceptional.</strong> It holds exactly for matching pairs with \(p\in\partial f(x)\).";
+      }
+    }));
+
+    $$(".counter-tab").forEach(tab=>tab.addEventListener("click",()=>{
+      $$(".counter-tab").forEach(t=>t.classList.toggle("active",t===tab));
+      $$(".counter-content").forEach(c=>c.classList.toggle("active",c.id==="counter-"+tab.dataset.counter));
+    }));
+
+    function drawAll(){drawConjugateLab();drawFenchelYoungLab();drawBiconjugateLab();}
+    window.addEventListener("load",()=>{renderMath();drawAll();});
+    setTimeout(()=>{renderMath();drawAll();},300);
+  </script>
+</body>
+</html>

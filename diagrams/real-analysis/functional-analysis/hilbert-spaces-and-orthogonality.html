@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Interactive laboratory for Hilbert spaces, inner products, orthogonal projections, orthonormal systems, Pythagorean identities, and closed subspaces." />
+  <title>Hilbert Spaces and Orthogonality — Interactive Laboratory</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+
+  <style>
+    :root {
+      --bg:#f7f9f8; --surface:rgba(255,255,255,.97); --surface-2:#eef5f5; --surface-3:#e5edef;
+      --text:#172126; --muted:#617178; --line:#d5e0e2; --cyan:#00a8c6; --cyan-deep:#087f98;
+      --teal:#168f88; --violet:#7567c7; --amber:#b57a20; --danger:#b74c4c; --success:#147d64;
+      --shadow:0 18px 52px rgba(37,56,64,.09); --radius:22px; --canvas:#fff; --axis:#61747b;
+      --grid:#dce5e7; --focus:rgba(0,168,198,.23);
+    }
+    html[data-theme="dark"] {
+      --bg:#121a20; --surface:rgba(27,38,46,.97); --surface-2:#213039; --surface-3:#273942;
+      --text:#edf5f6; --muted:#a8b8bd; --line:#344750; --cyan:#44c9e1; --cyan-deep:#7ed9e8;
+      --teal:#58c4b9; --violet:#aaa0e6; --amber:#e3b35d; --danger:#ef8989; --success:#68d0ad;
+      --shadow:0 18px 52px rgba(0,0,0,.25); --canvas:#17232a; --axis:#9bb0b7; --grid:#30424a;
+      --focus:rgba(68,201,225,.22);
+    }
+    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;color:var(--text);background:
+      radial-gradient(circle at 7% 0%,rgba(0,168,198,.085),transparent 29rem),
+      radial-gradient(circle at 100% 17%,rgba(117,103,199,.065),transparent 32rem),var(--bg);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.65;
+      transition:background .25s ease,color .25s ease}
+    button,input,select{font:inherit} button{cursor:pointer} a{color:inherit}.shell{width:min(1480px,calc(100% - 32px));margin:0 auto}
+    .topbar{position:sticky;top:0;z-index:50;border-bottom:1px solid color-mix(in srgb,var(--line) 84%,transparent);backdrop-filter:blur(18px);background:color-mix(in srgb,var(--bg) 82%,transparent)}
+    .topbar-inner{min-height:68px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:-.02em}
+    .brand-mark{width:34px;height:34px;border:1px solid var(--cyan);border-radius:11px;display:grid;place-items:center;box-shadow:inset 0 0 0 6px color-mix(in srgb,var(--cyan) 10%,transparent)}
+    .brand-mark::before{content:"H";color:var(--cyan-deep);font-family:"Libre Baskerville",serif;font-weight:700}.top-actions{display:flex;gap:9px;align-items:center}
+    .icon-button,.ghost-button,.primary-button,.segmented button,.proof-option,.counter-tab,.map-node{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:12px;min-height:40px;padding:9px 13px;transition:transform .18s ease,border-color .18s ease,background .18s ease}
+    .icon-button:hover,.ghost-button:hover,.segmented button:hover,.proof-option:hover,.counter-tab:hover,.map-node:hover{transform:translateY(-1px);border-color:var(--cyan)}
+    .primary-button{background:var(--cyan);color:#062e37;font-weight:700;border-color:transparent}.primary-button:hover{transform:translateY(-1px);filter:brightness(1.03)}
+    h1,h2,h3,.serif{font-family:"Libre Baskerville",Georgia,serif;letter-spacing:-.025em}h1{font-size:clamp(2.65rem,5.8vw,5.1rem);line-height:1.03;margin:12px 0 20px}h2{font-size:clamp(2rem,4vw,3.15rem);line-height:1.14;margin:0}h3{font-size:1.2rem;margin:0}p{margin:0}
+    .hero{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(360px,.92fr);gap:30px;padding:70px 0 46px;align-items:center}.eyebrow{color:var(--cyan-deep);font-weight:700;text-transform:uppercase;letter-spacing:.14em;font-size:.78rem}.hero p{color:var(--muted);max-width:850px;font-size:clamp(1.02rem,1.8vw,1.24rem)}
+    .hero-chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:28px}.chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);padding:8px 11px;border-radius:999px;color:var(--muted);font-size:.9rem}.chip::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--cyan)}
+    .hero-map{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:28px;padding:22px;min-height:420px;overflow:hidden}.hero-geometry{position:relative;height:365px}.hero-plane{position:absolute;left:7%;right:7%;top:58%;height:3px;background:var(--cyan);transform:rotate(-15deg);transform-origin:center}.hero-plane::after{content:"M";position:absolute;right:4px;top:-30px;color:var(--cyan-deep);font-family:"Libre Baskerville",serif;font-weight:700}
+    .hero-point{position:absolute;left:70%;top:23%;width:13px;height:13px;border-radius:50%;background:var(--violet);box-shadow:0 0 0 7px color-mix(in srgb,var(--violet) 14%,transparent)}.hero-point::after{content:"x";position:absolute;left:17px;top:-14px;color:var(--violet);font-family:"Libre Baskerville",serif;font-weight:700}
+    .hero-proj{position:absolute;left:57%;top:55%;width:13px;height:13px;border-radius:50%;background:var(--teal)}.hero-proj::after{content:"P_Mx";position:absolute;left:16px;top:4px;white-space:nowrap;color:var(--teal);font-family:"Libre Baskerville",serif;font-weight:700}
+    .hero-residual{position:absolute;left:57.5%;top:27%;width:3px;height:118px;background:var(--amber);transform:rotate(-15deg);transform-origin:bottom}.hero-right-angle{position:absolute;left:55.2%;top:49%;width:22px;height:22px;border-left:2px solid var(--amber);border-top:2px solid var(--amber);transform:rotate(-15deg)}.hero-equation{position:absolute;left:0;right:0;bottom:0;text-align:center}
+    .section{padding:72px 0}.section-head{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:27px}.section-head p{color:var(--muted);max-width:780px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.lab-grid{display:grid;grid-template-columns:minmax(265px,.72fr) minmax(0,1.38fr) minmax(285px,.9fr);gap:20px;align-items:start}.proof-grid{display:grid;grid-template-columns:minmax(0,1.22fr) minmax(300px,.78fr);gap:20px}.plot-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;min-width:0}.card.soft{background:var(--surface-2);box-shadow:none}.card h3+p{margin-top:9px;color:var(--muted)}.card-label{color:var(--cyan-deep);font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;font-weight:700;margin-bottom:10px}.muted{color:var(--muted)}.small{font-size:.9rem}
+    .definition-card{padding:30px;border-left:4px solid var(--cyan)}.math-display{margin:18px 0;overflow-x:auto;overflow-y:hidden;padding:8px 2px}.katex-display{margin:.72em 0!important}.katex{max-width:100%}
+    .notation-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}.notation-item{border:1px solid var(--line);background:var(--surface-2);border-radius:14px;padding:13px}.notation-item strong{display:block;margin-bottom:6px;color:var(--cyan-deep)}
+    .quantifier-row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:22px}.quantifier-piece{padding:14px;border:1px solid var(--line);border-radius:15px;background:var(--surface-2);text-align:center}.quantifier-piece strong{display:block;color:var(--cyan-deep);font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px}
+    .flow-map{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;margin-top:18px}.flow-node{border:1px solid var(--line);background:var(--surface-2);border-radius:14px;padding:12px 14px;min-width:150px;text-align:center}.flow-node.clickable{cursor:pointer}.flow-node.clickable:hover{border-color:var(--cyan)}.flow-arrow{color:var(--cyan-deep);font-size:1.4rem}
+    .control-stack{display:grid;gap:17px}.control label{display:flex;justify-content:space-between;gap:12px;align-items:baseline;font-weight:600;margin-bottom:7px}.control label span:last-child{color:var(--cyan-deep);font-variant-numeric:tabular-nums}input[type="range"]{width:100%;accent-color:var(--cyan)}select{width:100%;min-height:43px;border-radius:11px;border:1px solid var(--line);background:var(--surface);color:var(--text);padding:8px 10px}.control-note{color:var(--muted);font-size:.82rem;margin-top:5px}
+    .plot{width:100%;min-height:430px;border-radius:16px;overflow:hidden}.plot.compact{min-height:350px}.metric-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}.metric-strip.four{grid-template-columns:repeat(4,minmax(0,1fr))}.metric-cell{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:13px;text-align:center}.metric-name{color:var(--muted);font-size:.79rem;text-transform:uppercase;letter-spacing:.06em}.metric-value{font-size:1.18rem;font-weight:700;color:var(--cyan-deep);font-variant-numeric:tabular-nums}
+    .status{border-radius:14px;padding:14px;border:1px solid var(--line);background:var(--surface-2)}.status.good{border-color:color-mix(in srgb,var(--success) 55%,var(--line));background:color-mix(in srgb,var(--success) 9%,var(--surface))}.status.bad{border-color:color-mix(in srgb,var(--danger) 55%,var(--line));background:color-mix(in srgb,var(--danger) 9%,var(--surface))}.status.warning{border-color:color-mix(in srgb,var(--amber) 55%,var(--line));background:color-mix(in srgb,var(--amber) 9%,var(--surface))}
+    .segmented{display:flex;flex-wrap:wrap;gap:8px}.segmented button.active{background:var(--cyan);color:#062e37;border-color:var(--cyan);font-weight:700}.proof-steps{display:grid;gap:11px}.proof-step{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--surface)}.proof-step button{width:100%;border:0;background:transparent;color:var(--text);padding:15px 17px;display:flex;justify-content:space-between;gap:16px;text-align:left;font-weight:700}.proof-step .proof-body{display:none;padding:0 17px 17px;color:var(--muted)}.proof-step.open{border-color:var(--cyan)}.proof-step.open .proof-body{display:block}.proof-number{display:inline-grid;place-items:center;min-width:25px;height:25px;border-radius:50%;background:var(--surface-2);color:var(--cyan-deep);margin-right:8px;font-size:.82rem}
+    .example-card{position:relative;overflow:hidden;min-height:310px}.example-card::after{content:"";position:absolute;width:120px;height:120px;border-radius:50%;right:-48px;bottom:-48px;border:1px solid color-mix(in srgb,var(--cyan) 38%,var(--line))}.badge{display:inline-flex;align-items:center;border-radius:999px;padding:5px 9px;font-size:.76rem;font-weight:700;background:var(--surface-2);color:var(--cyan-deep);border:1px solid var(--line);margin-bottom:12px}.fact-list{display:grid;gap:9px;margin-top:15px}.fact{display:flex;gap:9px;align-items:flex-start;color:var(--muted);font-size:.92rem}.fact::before{content:"";width:8px;height:8px;flex:0 0 8px;margin-top:.52em;border-radius:50%;background:var(--teal)}
+    .counter-tabs{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:18px}.counter-tab.active{background:var(--danger);border-color:var(--danger);color:#fff}.counter-panel{display:none}.counter-panel.active{display:block}.mistake{border-top:1px solid var(--line);padding:17px 0}.mistake:first-child{border-top:0;padding-top:0}.wrong{color:var(--danger);font-weight:700}.correct{color:var(--success);font-weight:700}.prover-options{display:grid;gap:9px;margin-top:14px}.proof-option{text-align:left}.proof-option.correct-choice{border-color:var(--success);background:color-mix(in srgb,var(--success) 10%,var(--surface))}.proof-option.wrong-choice{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 10%,var(--surface))}
+    .footer{padding:45px 0 70px;color:var(--muted);text-align:center}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media(max-width:1120px){.hero,.lab-grid,.proof-grid{grid-template-columns:1fr}.hero-map{min-height:390px}.grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}.notation-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.quantifier-row{grid-template-columns:repeat(2,minmax(0,1fr))}.metric-strip.four{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:760px){.shell{width:min(100% - 20px,1480px)}.topbar-inner{min-height:62px}.brand span:last-child{display:none}.hero{padding-top:48px}.section{padding:54px 0}.section-head{display:block}.section-head p{margin-top:12px}.grid-2,.grid-3,.grid-4,.plot-pair,.notation-grid,.quantifier-row,.metric-strip,.metric-strip.four{grid-template-columns:1fr}.card,.definition-card{padding:18px}.plot{min-height:360px}.hero-map{min-height:340px;padding:14px}.hero-geometry{height:315px}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>Hilbert Space Laboratory</span></div>
+      <div class="top-actions"><button class="ghost-button" id="resetAll" type="button">Reset</button><button class="icon-button" id="themeToggle" type="button" aria-label="Toggle light and dark mode">◐</button></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="shell hero">
+      <div>
+        <div class="eyebrow">Geometry made analytic</div>
+        <h1>Hilbert spaces<br>and orthogonality</h1>
+        <p>Inner products turn length into angle, and completeness turns orthogonal geometry into a global existence theorem. Manipulate projections, Pythagorean decompositions, orthonormal expansions, and limits that fail when a subspace is not closed.</p>
+        <div class="hero-chips"><span class="chip">inner products</span><span class="chip">orthogonal projection</span><span class="chip">Pythagorean identity</span><span class="chip">orthonormal systems</span><span class="chip">closed subspaces</span></div>
+      </div>
+      <div class="hero-map" aria-label="Geometric decomposition into a projection and an orthogonal residual">
+        <div class="hero-geometry"><div class="hero-plane"></div><div class="hero-point"></div><div class="hero-proj"></div><div class="hero-residual"></div><div class="hero-right-angle"></div><div class="hero-equation" data-math="x=P_Mx+(x-P_Mx),\qquad x-P_Mx\in M^\perp" data-display="true"></div></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">1 · The mathematical question</div><h2>When does a norm carry Euclidean geometry?</h2></div><p>A norm measures size. An inner product does more: it produces angles, orthogonality, coefficients, and nearest-point decompositions.</p></div>
+        <div class="grid-3">
+          <article class="card"><div class="card-label">Length</div><h3>The norm is induced</h3><div class="math-display" data-math="\|x\|=\sqrt{\langle x,x\rangle}" data-display="true"></div><p class="muted">The norm is not an independent primitive; it is the diagonal of a two-variable geometric form.</p></article>
+          <article class="card"><div class="card-label">Angle</div><h3>Orthogonality is algebraic</h3><div class="math-display" data-math="x\perp y\iff \langle x,y\rangle=0" data-display="true"></div><p class="muted">Zero inner product replaces the visual notion of a right angle in abstract spaces.</p></article>
+          <article class="card"><div class="card-label">Nearest point</div><h3>Projection solves optimization</h3><div class="math-display" data-math="\|x-P_Mx\|=\inf_{m\in M}\|x-m\|" data-display="true"></div><p class="muted">Closedness and completeness ensure that the infimum is attained inside the subspace.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">2 · Formal objects</div><h2>Inner product, Hilbert space, orthogonal complement</h2></div><p>The definitions separate algebra, geometry, and topology. Each component is used at a different point of the projection theorem.</p></div>
+        <article class="card definition-card">
+          <div class="card-label">Definition · real case</div>
+          <p>An <strong>inner product</strong> on a real vector space <span data-math="H"></span> is a map <span data-math="\langle\cdot,\cdot\rangle:H\times H\to\mathbb R"></span> such that, for all <span data-math="x,y,z\in H"></span> and <span data-math="\alpha,\beta\in\mathbb R"></span>,</p>
+          <div class="math-display" data-math="\langle \alpha x+\beta y,z\rangle=\alpha\langle x,z\rangle+\beta\langle y,z\rangle,\quad \langle x,y\rangle=\langle y,x\rangle,\quad \langle x,x\rangle\ge0,\quad \langle x,x\rangle=0\iff x=0" data-display="true"></div>
+          <p>A <strong>Hilbert space</strong> is an inner-product space complete under the induced norm. For <span data-math="M\subset H"></span>,</p>
+          <div class="math-display" data-math="M^\perp=\{x\in H:\langle x,m\rangle=0\ \text{for every }m\in M\}." data-display="true"></div>
+          <div class="notation-grid">
+            <div class="notation-item"><strong data-math="\langle x,y\rangle"></strong><span class="small muted">inner product</span></div>
+            <div class="notation-item"><strong data-math="\|x\|"></strong><span class="small muted">induced norm</span></div>
+            <div class="notation-item"><strong data-math="P_Mx"></strong><span class="small muted">orthogonal projection</span></div>
+            <div class="notation-item"><strong data-math="M^\perp"></strong><span class="small muted">orthogonal complement</span></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">3 · Quantifier laboratory</div><h2>Read the projection theorem logically</h2></div><p>The nearest point must work against every competitor in the subspace, and it must be unique.</p></div>
+        <article class="card">
+          <div class="math-display" data-math="\forall x\in H\;\exists!\,m\in M\;\forall y\in M:\quad \|x-m\|\le \|x-y\|,\qquad x-m\in M^\perp." data-display="true"></div>
+          <div class="quantifier-row">
+            <div class="quantifier-piece"><strong>Ambient choice</strong><span data-math="\forall x\in H"></span></div>
+            <div class="quantifier-piece"><strong>Existence</strong><span data-math="\exists m\in M"></span></div>
+            <div class="quantifier-piece"><strong>Uniqueness</strong><span data-math="\exists!\,m"></span></div>
+            <div class="quantifier-piece"><strong>Adversary</strong><span data-math="\forall y\in M"></span></div>
+            <div class="quantifier-piece"><strong>Certificate</strong><span data-math="x-m\perp M"></span></div>
+          </div>
+          <div class="status warning" style="margin-top:18px"><strong>Dependency rule.</strong> The projection <span data-math="P_Mx"></span> may depend on <span data-math="x"></span> and on the subspace <span data-math="M"></span>, but not on the later competitor <span data-math="y"></span>.</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="projectionLabSection">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">4 · Projection laboratory</div><h2>Projection, distance, and Pythagoras in one diagram</h2></div><p>Move the vector and rotate the subspace. The projection, residual, closest-point property, and energy identity update together.</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Controls</div>
+            <div class="control-stack">
+              <div class="control"><label for="x1Slider"><span data-math="x_1"></span><span id="x1Value">2.40</span></label><input id="x1Slider" type="range" min="-3" max="3" step="0.05" value="2.4"><div class="control-note">Horizontal coordinate of the ambient vector.</div></div>
+              <div class="control"><label for="x2Slider"><span data-math="x_2"></span><span id="x2Value">1.80</span></label><input id="x2Slider" type="range" min="-3" max="3" step="0.05" value="1.8"><div class="control-note">Vertical coordinate of the ambient vector.</div></div>
+              <div class="control"><label for="angleSlider"><span data-math="\theta"></span><span id="angleValue">28°</span></label><input id="angleSlider" type="range" min="-85" max="85" step="1" value="28"><div class="control-note">Direction of the one-dimensional closed subspace.</div></div>
+              <div class="control"><label for="candidateSlider"><span data-math="t"></span><span id="candidateValue">0.00</span></label><input id="candidateSlider" type="range" min="-5" max="5" step="0.05" value="0"><div class="control-note">Competing point <span data-math="tu\in M"></span>.</div></div>
+              <button class="primary-button" id="chooseProjection" type="button">Choose the minimizing coefficient</button><button class="ghost-button" id="animateProjection" type="button">Animate the orthogonal descent</button>
+            </div>
+          </aside>
+          <article class="card"><div id="projectionPlot" class="plot" aria-label="Orthogonal projection geometry"></div><div class="status" id="projectionStatus"></div></article>
+          <aside class="card">
+            <div class="card-label">Live identities</div>
+            <div id="projectionFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">projection coefficient</div><div class="metric-value" id="projectionCoeff">—</div></div>
+              <div class="metric-cell"><div class="metric-name">distance to M</div><div class="metric-value" id="projectionDistance">—</div></div>
+              <div class="metric-cell"><div class="metric-name">candidate error</div><div class="metric-value" id="candidateError">—</div></div>
+              <div class="metric-cell"><div class="metric-name">inner product residual</div><div class="metric-value" id="orthogonalityError">—</div></div>
+            </div>
+            <div class="status good" style="margin-top:14px"><strong>Formal meaning.</strong> Orthogonality removes the cross term, so every competitor pays an additional nonnegative squared distance along the subspace.</div>
+          </aside>
+        </div>
+        <div class="grid-2" style="margin-top:20px">
+          <article class="card"><div id="distancePlot" class="plot compact" aria-label="Squared distance to points on the subspace"></div></article>
+          <article class="card">
+            <div class="card-label">Read the diagrams</div>
+            <p class="muted"><strong>Cyan:</strong> the fixed subspace <span data-math="M=\operatorname{span}\{u\}"></span>. <strong>Violet:</strong> the ambient vector <span data-math="x"></span>. <strong>Teal:</strong> the projection <span data-math="P_Mx"></span>. <strong>Amber:</strong> the orthogonal residual. The lower graph plots <span data-math="t\mapsto\|x-tu\|^2"></span>; its vertex occurs at <span data-math="t=\langle x,u\rangle"></span>.</p>
+            <div class="math-display" data-math="\|x-tu\|^2=\|x-P_Mx\|^2+|t-\langle x,u\rangle|^2" data-display="true"></div>
+            <div class="status warning"><strong>What changes?</strong> The vector, angle, and competitor. <strong>What remains invariant?</strong> The minimizing point is exactly the one whose residual is orthogonal to the entire subspace.</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">5 · Orthonormal systems</div><h2>Coordinates become energy</h2></div><p>For an orthonormal family, coefficients are inner products. Bessel's inequality and Parseval's identity compare captured energy with total energy.</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Vector and system</div>
+            <div class="control-stack">
+              <div class="control"><label for="onX"><span data-math="x_1"></span><span id="onXValue">1.60</span></label><input id="onX" type="range" min="-2.5" max="2.5" step="0.05" value="1.6"></div>
+              <div class="control"><label for="onY"><span data-math="x_2"></span><span id="onYValue">-0.80</span></label><input id="onY" type="range" min="-2.5" max="2.5" step="0.05" value="-0.8"></div>
+              <div class="control"><label for="onZ"><span data-math="x_3"></span><span id="onZValue">1.25</span></label><input id="onZ" type="range" min="-2.5" max="2.5" step="0.05" value="1.25"></div>
+              <div class="control"><label for="basisCount"><span>Number of basis vectors</span><span id="basisCountValue">2</span></label><input id="basisCount" type="range" min="1" max="3" step="1" value="2"><div class="control-note">Use <span data-math="e_1"></span>, then <span data-math="e_1,e_2"></span>, then the full basis.</div></div>
+            </div>
+          </aside>
+          <article class="card"><div id="orthonormalPlot" class="plot" aria-label="Three-dimensional orthogonal decomposition"></div></article>
+          <aside class="card">
+            <div class="card-label">Bessel / Parseval</div>
+            <div id="orthonormalFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">total energy</div><div class="metric-value" id="totalEnergy">—</div></div>
+              <div class="metric-cell"><div class="metric-name">captured energy</div><div class="metric-value" id="capturedEnergy">—</div></div>
+              <div class="metric-cell"><div class="metric-name">residual energy</div><div class="metric-value" id="residualEnergy">—</div></div>
+              <div class="metric-cell"><div class="metric-name">identity</div><div class="metric-value" id="energyVerdict">—</div></div>
+            </div>
+            <div class="status good" id="orthonormalStatus" style="margin-top:14px"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">6 · Function-space mode</div><h2>Orthogonal projection in <span data-math="L^2[0,1]"></span></h2></div><p>A function is now a vector. Its approximation by a finite orthonormal system is the nearest point in a finite-dimensional subspace.</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Approximation controls</div>
+            <div class="control-stack">
+              <div class="control"><label for="functionSelect"><span>Function</span><span id="functionLabel">x²</span></label><select id="functionSelect"><option value="x2">x²</option><option value="exp">eˣ</option><option value="sin">sin(2πx)</option><option value="abs">|x−1/2|</option></select></div>
+              <div class="control"><label for="degreeSlider"><span data-math="n"></span><span id="degreeValue">2</span></label><input id="degreeSlider" type="range" min="0" max="3" step="1" value="2"><div class="control-note">Project onto the first <span data-math="n+1"></span> shifted Legendre functions.</div></div>
+            </div>
+            <div class="status warning"><strong>Ambient geometry.</strong> The inner product is <span data-math="\langle f,g\rangle=\int_0^1 f(x)g(x)\,dx"></span>, not pointwise multiplication.</div>
+          </aside>
+          <article class="card"><div id="functionPlot" class="plot" aria-label="Function and its orthogonal polynomial approximation"></div></article>
+          <aside class="card">
+            <div class="card-label">Projection coefficients</div>
+            <div id="functionFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">L² norm²</div><div class="metric-value" id="functionNorm">—</div></div>
+              <div class="metric-cell"><div class="metric-name">projection energy</div><div class="metric-value" id="functionCaptured">—</div></div>
+              <div class="metric-cell"><div class="metric-name">error²</div><div class="metric-value" id="functionError">—</div></div>
+              <div class="metric-cell"><div class="metric-name">orthogonality test</div><div class="metric-value" id="functionOrth">—</div></div>
+            </div>
+            <div class="status good" style="margin-top:14px"><strong>Best approximation.</strong> Among all polynomials in the selected subspace, the displayed projection uniquely minimizes the <span data-math="L^2"></span> error.</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">7 · Main theorem</div><h2>The projection theorem for closed subspaces</h2></div><p>The proof is a synthesis of minimization, the parallelogram identity, completeness, closedness, and orthogonality.</p></div>
+        <article class="card definition-card">
+          <div class="card-label">Theorem</div>
+          <p>Let <span data-math="H"></span> be a Hilbert space and <span data-math="M\subset H"></span> a closed linear subspace. Then every <span data-math="x\in H"></span> admits a unique decomposition</p>
+          <div class="math-display" data-math="x=m+n,\qquad m\in M,\quad n\in M^\perp." data-display="true"></div>
+          <p>Equivalently, <span data-math="H=M\oplus M^\perp"></span>, and <span data-math="m=P_Mx"></span> is the unique nearest point to <span data-math="x"></span> in <span data-math="M"></span>.</p>
+          <div class="flow-map">
+            <button class="flow-node clickable map-node" data-map="infimum">distance infimum</button><span class="flow-arrow">→</span>
+            <button class="flow-node clickable map-node" data-map="parallelogram">parallelogram identity</button><span class="flow-arrow">→</span>
+            <button class="flow-node clickable map-node" data-map="complete">Cauchy + complete</button><span class="flow-arrow">→</span>
+            <button class="flow-node clickable map-node" data-map="closed">closedness</button><span class="flow-arrow">→</span>
+            <button class="flow-node clickable map-node" data-map="orthogonal">orthogonality</button><span class="flow-arrow">→</span>
+            <button class="flow-node clickable map-node" data-map="unique">unique projection</button>
+          </div>
+          <div id="mapExplanation" class="status" style="margin-top:16px">Select a node to see where it enters the proof.</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">8 · Proof architecture</div><h2>From an infimum to an orthogonal decomposition</h2></div><p>Open each step. Every transition identifies the exact hypothesis and the geometric reason it is natural.</p></div>
+        <div class="proof-grid">
+          <article class="card">
+            <div class="proof-steps">
+              <div class="proof-step open"><button type="button"><span><span class="proof-number">1</span>Choose a minimizing sequence</span><span>−</span></button><div class="proof-body"><div class="math-display" data-math="d=\inf_{m\in M}\|x-m\|,\qquad \|x-m_n\|\longrightarrow d." data-display="true"></div><p><strong>Technique:</strong> approximation of an infimum. At this stage no minimizer is assumed to exist.</p></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">2</span>Use the midpoint and parallelogram identity</span><span>+</span></button><div class="proof-body"><div class="math-display" data-math="\|m_n-m_k\|^2=2\|x-m_n\|^2+2\|x-m_k\|^2-4\left\|x-\frac{m_n+m_k}{2}\right\|^2." data-display="true"></div><p>Because <span data-math="(m_n+m_k)/2\in M"></span>, the last norm is at least <span data-math="d"></span>. Hence the right side tends to zero and <span data-math="(m_n)"></span> is Cauchy.</p></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">3</span>Use completeness and closedness</span><span>+</span></button><div class="proof-body"><div class="math-display" data-math="m_n\to m\in H,\qquad M\ \text{closed}\Longrightarrow m\in M." data-display="true"></div><p><strong>Completeness</strong> produces a limit in <span data-math="H"></span>. <strong>Closedness</strong> keeps the limit inside the feasible subspace.</p></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">4</span>Attain the minimum</span><span>+</span></button><div class="proof-body"><div class="math-display" data-math="\|x-m\|=\lim_{n\to\infty}\|x-m_n\|=d." data-display="true"></div><p>Continuity of the norm turns convergence of the minimizing sequence into attainment of the distance.</p></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">5</span>Derive orthogonality</span><span>+</span></button><div class="proof-body"><p>For any <span data-math="z\in M"></span> and real <span data-math="t"></span>, the point <span data-math="m+tz"></span> belongs to <span data-math="M"></span>. Minimality gives</p><div class="math-display" data-math="0\le \|x-m-tz\|^2-\|x-m\|^2=t^2\|z\|^2-2t\langle x-m,z\rangle." data-display="true"></div><p>Using both signs of <span data-math="t"></span> forces <span data-math="\langle x-m,z\rangle=0"></span>. In a complex Hilbert space, apply the argument to <span data-math="z"></span> and <span data-math="iz"></span>.</p></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">6</span>Prove uniqueness by Pythagoras</span><span>+</span></button><div class="proof-body"><p>If <span data-math="y\in M"></span>, then <span data-math="x-y=(x-m)+(m-y)"></span> with orthogonal summands. Therefore</p><div class="math-display" data-math="\|x-y\|^2=\|x-m\|^2+\|m-y\|^2\ge \|x-m\|^2," data-display="true"></div><p>and equality holds only for <span data-math="y=m"></span>.</p></div></div>
+            </div>
+          </article>
+          <aside class="card">
+            <div class="card-label">Proof strategy</div><h3>Minimizing sequence + geometric identity</h3><p class="muted">The parallelogram law converts near-minimality into the Cauchy property. That is the crucial Hilbert-space move.</p>
+            <div class="math-display" data-math="\|a+b\|^2+\|a-b\|^2=2\|a\|^2+2\|b\|^2" data-display="true"></div>
+            <div class="status warning"><strong>Why not just invoke compactness?</strong> Closed bounded sets need not be compact in infinite-dimensional Hilbert spaces. The proof must use completeness rather than finite-dimensional compactness.</div>
+            <div class="card-label" style="margin-top:22px">Guided theorem prover</div><p class="small muted">After constructing a minimizing sequence, what is the decisive next move?</p>
+            <div id="proverOptions" class="prover-options">
+              <button class="proof-option" data-answer="wrong" type="button">Extract a convergent subsequence from boundedness.</button>
+              <button class="proof-option" data-answer="correct" type="button">Apply the parallelogram identity to prove the sequence is Cauchy.</button>
+              <button class="proof-option" data-answer="wrong" type="button">Assume the infimum is already attained.</button>
+              <button class="proof-option" data-answer="wrong" type="button">Use Hahn–Banach to create the nearest point.</button>
+            </div><div id="proverFeedback" class="status" style="margin-top:12px">Choose a proof step.</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">9 · Closedness laboratory</div><h2>What fails when the subspace is not closed?</h2></div><p>The distance can have infimum zero without any nearest point. The limit exists in the Hilbert space but escapes the chosen subspace.</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">The example</div>
+            <div class="math-display" data-math="H=\ell^2,\qquad M=c_{00},\qquad x=\left(1,\frac12,\frac13,\ldots\right)." data-display="true"></div>
+            <p class="muted"><span data-math="c_{00}"></span> consists of finitely supported sequences. It is dense in <span data-math="\ell^2"></span> but is not closed.</p>
+            <div class="control" style="margin-top:18px"><label for="truncationSlider"><span data-math="N"></span><span id="truncationValue">8</span></label><input id="truncationSlider" type="range" min="1" max="40" step="1" value="8"><div class="control-note">Display the truncation <span data-math="x^{(N)}=(1,1/2,\ldots,1/N,0,\ldots)"></span>.</div></div>
+          </aside>
+          <article class="card"><div id="nonclosedPlot" class="plot" aria-label="Truncations converging to a sequence outside c00"></div></article>
+          <aside class="card">
+            <div class="card-label">Escaping limit</div><div id="nonclosedFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">tail distance</div><div class="metric-value" id="tailDistance">—</div></div>
+              <div class="metric-cell"><div class="metric-name">infimum distance</div><div class="metric-value">0</div></div>
+              <div class="metric-cell"><div class="metric-name">nearest point in c₀₀</div><div class="metric-value" style="color:var(--danger)">none</div></div>
+              <div class="metric-cell"><div class="metric-name">limit belongs to</div><div class="metric-value">ℓ²∖c₀₀</div></div>
+            </div>
+            <div class="status bad" style="margin-top:14px"><strong>Exact failure.</strong> Completeness gives a limit in <span data-math="\ell^2"></span>, but without closedness there is no reason for that limit to remain in <span data-math="c_{00}"></span>.</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">10 · Examples</div><h2>Three canonical Hilbert spaces</h2></div><p>The same definitions appear as dot products, series, and integrals.</p></div>
+        <div class="grid-3">
+          <article class="card example-card"><span class="badge">Finite-dimensional</span><h3><span data-math="\mathbb R^n"></span></h3><div class="math-display" data-math="\langle x,y\rangle=\sum_{j=1}^n x_jy_j" data-display="true"></div><div class="fact-list"><div class="fact">Every subspace is closed.</div><div class="fact">Projection is computed by orthonormal coordinates.</div><div class="fact">Matrices represent orthogonal projectors.</div></div></article>
+          <article class="card example-card"><span class="badge">Sequence space</span><h3><span data-math="\ell^2"></span></h3><div class="math-display" data-math="\langle x,y\rangle=\sum_{j=1}^{\infty}x_j\overline{y_j}" data-display="true"></div><div class="fact-list"><div class="fact">The standard vectors form a complete orthonormal system.</div><div class="fact">Parseval becomes the square-summability identity.</div><div class="fact">The dense subspace <span data-math="c_{00}"></span> is not closed.</div></div></article>
+          <article class="card example-card"><span class="badge">Function space</span><h3><span data-math="L^2(\Omega)"></span></h3><div class="math-display" data-math="\langle f,g\rangle=\int_\Omega f\overline g\,d\mu" data-display="true"></div><div class="fact-list"><div class="fact">Functions equal almost everywhere represent the same vector.</div><div class="fact">Fourier coefficients are orthogonal coordinates.</div><div class="fact">Conditional expectation is an orthogonal projection in probability.</div></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">11 · What can go wrong?</div><h2>Remove a hypothesis and inspect the failure</h2></div><p>Each counterexample marks the exact logical point at which Hilbert geometry breaks.</p></div>
+        <article class="card">
+          <div class="counter-tabs"><button class="counter-tab active" data-panel="counterClosed" type="button">Subspace not closed</button><button class="counter-tab" data-panel="counterHilbert" type="button">Banach but not Hilbert</button><button class="counter-tab" data-panel="counterComplete" type="button">Orthonormal but incomplete</button><button class="counter-tab" data-panel="counterConvex" type="button">Nonconvex target</button></div>
+          <div id="counterClosed" class="counter-panel active"><div class="grid-2"><div><h3><span data-math="c_{00}\subset\ell^2"></span></h3><p class="muted">The truncations of <span data-math="(1/n)"></span> approach the vector in <span data-math="\ell^2"></span>, so the distance to <span data-math="c_{00}"></span> is zero. Yet the vector is not finitely supported.</p></div><div class="status bad"><strong>Failed conclusion:</strong> the infimum distance is not attained. <strong>Broken step:</strong> the limit of the minimizing sequence need not lie in the subspace.</div></div></div>
+          <div id="counterHilbert" class="counter-panel"><div class="grid-2"><div><h3><span data-math="C[0,1]"></span> with <span data-math="\|\cdot\|_\infty"></span></h3><p class="muted">This is a Banach space, but its norm is not induced by an inner product. Take <span data-math="f(x)=1"></span> and <span data-math="g(x)=x"></span>.</p><div class="math-display" data-math="\|f+g\|_\infty^2+\|f-g\|_\infty^2=4+1=5\ne4=2\|f\|_\infty^2+2\|g\|_\infty^2." data-display="true"></div></div><div class="status bad"><strong>Failed identity:</strong> the parallelogram law. Without it, the minimizing-sequence proof has no Hilbert-space engine.</div></div></div>
+          <div id="counterComplete" class="counter-panel"><div class="grid-2"><div><h3>An incomplete orthonormal system</h3><p class="muted">In <span data-math="\mathbb R^2"></span>, the one-element family <span data-math="\{e_1\}"></span> is orthonormal but does not span the space. For <span data-math="x=e_2"></span>, every displayed coefficient is zero.</p><div class="math-display" data-math="\sum |\langle x,e_j\rangle|^2=0<1=\|x\|^2." data-display="true"></div></div><div class="status warning"><strong>Bessel survives; Parseval fails.</strong> Equality requires completeness of the orthonormal system, not merely pairwise orthogonality and normalization.</div></div></div>
+          <div id="counterConvex" class="counter-panel"><div class="grid-2"><div><h3>Nearest points need not be unique</h3><p class="muted">Let the target set be the unit circle in <span data-math="\mathbb R^2"></span> and take <span data-math="x=0"></span>. Every point on the circle is at distance one.</p></div><div class="status bad"><strong>Failed conclusion:</strong> uniqueness. A closed set is not enough; convexity is essential for the general nearest-point theorem. For subspaces, convexity is automatic.</div></div></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">12 · Common mistakes</div><h2>Statements that look Euclidean but are false</h2></div><p>Each correction identifies the missing condition.</p></div>
+        <article class="card">
+          <div class="mistake"><div class="wrong">Incorrect: every Banach space has orthogonal projections.</div><p class="muted">Completeness alone does not supply an inner product or a notion of orthogonality.</p><div class="correct">Correct: the projection theorem is a Hilbert-space result; Banach-space nearest points require separate hypotheses.</div></div>
+          <div class="mistake"><div class="wrong">Incorrect: every closed subset of a Hilbert space has a unique nearest point.</div><p class="muted">A closed nonconvex set may have several nearest points.</p><div class="correct">Correct: every nonempty closed convex subset has a unique nearest point; a closed subspace is a special case.</div></div>
+          <div class="mistake"><div class="wrong">Incorrect: an orthonormal family automatically gives Parseval's identity.</div><p class="muted">It may miss an entire orthogonal direction.</p><div class="correct">Correct: Bessel's inequality holds for every orthonormal family; Parseval requires completeness.</div></div>
+          <div class="mistake"><div class="wrong">Incorrect: <span data-math="M^\perp"></span> is always a complement of <span data-math="M"></span>.</div><p class="muted">For a nonclosed subspace, one obtains <span data-math="H=\overline M\oplus M^\perp"></span>, not necessarily <span data-math="H=M\oplus M^\perp"></span>.</p><div class="correct">Correct: <span data-math="(M^\perp)^\perp=\overline M"></span> for every linear subspace.</div></div>
+          <div class="mistake"><div class="wrong">Incorrect: pointwise orthogonality of functions means their graphs meet at right angles.</div><p class="muted">Orthogonality in <span data-math="L^2"></span> is an integral cancellation property.</p><div class="correct">Correct: <span data-math="f\perp g"></span> means <span data-math="\int f\overline g=0"></span>.</div></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">13 · Final synthesis</div><h2>One decomposition organizes the theory</h2></div><p>Inner products provide orthogonality; completeness and closedness make the geometry attainable.</p></div>
+        <article class="card definition-card">
+          <div class="flow-map"><div class="flow-node"><span data-math="\langle\cdot,\cdot\rangle"></span><br><span class="small muted">angle and norm</span></div><span class="flow-arrow">→</span><div class="flow-node"><span data-math="x\perp y"></span><br><span class="small muted">zero cross term</span></div><span class="flow-arrow">→</span><div class="flow-node"><span data-math="\|x+y\|^2"></span><br><span class="small muted">Pythagoras</span></div><span class="flow-arrow">→</span><div class="flow-node"><span data-math="P_Mx"></span><br><span class="small muted">best approximation</span></div><span class="flow-arrow">→</span><div class="flow-node"><span data-math="H=M\oplus M^\perp"></span><br><span class="small muted">closed-subspace decomposition</span></div></div>
+          <div class="math-display" data-math="\boxed{\text{inner product}+\text{completeness}+\text{closed subspace}\Longrightarrow\text{orthogonal projection}}" data-display="true"></div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer shell">Interactive Real Analysis Laboratory · Hilbert spaces and orthogonality</footer>
+
+  <script>
+  (() => {
+    'use strict';
+    const $ = id => document.getElementById(id);
+    const clamp = (x,a,b) => Math.max(a,Math.min(b,x));
+    const fmt = (x,d=3) => Number.isFinite(x) ? x.toFixed(d).replace('-0.000','0.000') : '—';
+    const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    const state = { x:[2.4,1.8], angle:28, candidate:0, on:[1.6,-.8,1.25], basisCount:2, fn:'x2', degree:2, truncation:8 };
+    let animationFrame = null;
+
+    function renderStaticMath(){document.querySelectorAll('[data-math]').forEach(el=>{if(!window.katex)return;katex.render(el.dataset.math,el,{throwOnError:false,displayMode:el.dataset.display==='true',strict:'ignore'});});}
+    function setMath(id,tex,display=true){const el=$(id);if(!el||!window.katex)return;katex.render(tex,el,{throwOnError:false,displayMode:display,strict:'ignore'});}
+    function plotTheme(){return{paper_bgcolor:css('--canvas'),plot_bgcolor:css('--canvas'),font:{color:css('--text'),family:'Inter, sans-serif'},xaxis:{gridcolor:css('--grid'),zerolinecolor:css('--axis'),linecolor:css('--axis')},yaxis:{gridcolor:css('--grid'),zerolinecolor:css('--axis'),linecolor:css('--axis')}};}
+    function baseLayout(title,range=[-3.4,3.4],height=430){const t=plotTheme();return{title:{text:title,font:{size:15},x:.02,xanchor:'left'},height,margin:{l:52,r:24,t:52,b:48},paper_bgcolor:t.paper_bgcolor,plot_bgcolor:t.plot_bgcolor,font:t.font,showlegend:true,legend:{orientation:'h',y:1.08,x:1,xanchor:'right'},xaxis:{...t.xaxis,range,scaleanchor:'y',scaleratio:1,title:'first coordinate'},yaxis:{...t.yaxis,range,title:'second coordinate'},hovermode:'closest'};}
+
+    function arrowTrace(a,b,name,color,width=4,dash='solid'){return{x:[a[0],b[0]],y:[a[1],b[1]],mode:'lines+markers',name,line:{color,width,dash},marker:{size:[5,10],color},hovertemplate:`${name}<extra></extra>`};}
+    function projectionData(){state.x=[parseFloat($('x1Slider').value),parseFloat($('x2Slider').value)];state.angle=parseFloat($('angleSlider').value);state.candidate=parseFloat($('candidateSlider').value);const th=state.angle*Math.PI/180,u=[Math.cos(th),Math.sin(th)],a=state.x[0]*u[0]+state.x[1]*u[1],p=[a*u[0],a*u[1]],r=[state.x[0]-p[0],state.x[1]-p[1]],c=[state.candidate*u[0],state.candidate*u[1]];return{u,a,p,r,c};}
+    function renderProjection(){const {u,a,p,r,c}=projectionData();$('x1Value').textContent=fmt(state.x[0],2);$('x2Value').textContent=fmt(state.x[1],2);$('angleValue').textContent=`${Math.round(state.angle)}°`;$('candidateValue').textContent=fmt(state.candidate,2);const span=5;const traces=[{x:[-span*u[0],span*u[0]],y:[-span*u[1],span*u[1]],mode:'lines',name:'M',line:{color:css('--cyan'),width:4}},arrowTrace([0,0],state.x,'x',css('--violet')),arrowTrace([0,0],p,'P_M x',css('--teal')),arrowTrace(p,state.x,'orthogonal residual',css('--amber'),4,'dot'),{x:[c[0]],y:[c[1]],mode:'markers+text',name:'candidate tu',text:['tu'],textposition:'bottom right',marker:{size:12,color:css('--danger')}}];
+      Plotly.react('projectionPlot',traces,baseLayout('Projection onto a one-dimensional subspace'),{responsive:true,displaylogo:false,modeBarButtonsToRemove:['lasso2d','select2d']});
+      const norm2=state.x[0]**2+state.x[1]**2,p2=p[0]**2+p[1]**2,r2=r[0]**2+r[1]**2,cerr=(state.x[0]-c[0])**2+(state.x[1]-c[1])**2,orth=r[0]*u[0]+r[1]*u[1];
+      $('projectionCoeff').textContent=fmt(a);$('projectionDistance').textContent=fmt(Math.sqrt(r2));$('candidateError').textContent=fmt(Math.sqrt(cerr));$('orthogonalityError').textContent=fmt(orth,5);
+      setMath('projectionFormula',String.raw`u=(${fmt(u[0],3)},${fmt(u[1],3)}),\quad P_Mx=\langle x,u\rangle u=(${fmt(p[0],3)},${fmt(p[1],3)}),\\[4pt]\|x\|^2=${fmt(norm2,3)}=${fmt(p2,3)}+${fmt(r2,3)}=\|P_Mx\|^2+\|x-P_Mx\|^2.`);
+      const st=$('projectionStatus'),gap=cerr-r2;st.className='status '+(Math.abs(state.candidate-a)<.03?'good':'warning');st.innerHTML=Math.abs(state.candidate-a)<.03?'<strong>Minimum attained.</strong> The chosen competitor coincides with the orthogonal projection.':`<strong>Not minimal.</strong> This competitor adds squared cost ${fmt(gap,3)} along the subspace.`;
+      const ts=Array.from({length:251},(_,i)=>-5+10*i/250),ys=ts.map(t=>r2+(t-a)**2);const tTheme=plotTheme();Plotly.react('distancePlot',[{x:ts,y:ys,mode:'lines',name:'||x-tu||²',line:{color:css('--violet'),width:3}},{x:[a],y:[r2],mode:'markers',name:'minimum',marker:{size:12,color:css('--teal')}},{x:[state.candidate],y:[cerr],mode:'markers',name:'chosen t',marker:{size:11,color:css('--danger')}}],{title:{text:'Squared distance along the subspace',font:{size:15},x:.02},height:350,margin:{l:58,r:20,t:52,b:50},paper_bgcolor:tTheme.paper_bgcolor,plot_bgcolor:tTheme.plot_bgcolor,font:tTheme.font,xaxis:{...tTheme.xaxis,title:'t'},yaxis:{...tTheme.yaxis,title:'||x-tu||²'},legend:{orientation:'h',y:1.08,x:1,xanchor:'right'}},{responsive:true,displaylogo:false});}
+
+    function renderOrthonormal(){state.on=[parseFloat($('onX').value),parseFloat($('onY').value),parseFloat($('onZ').value)];state.basisCount=parseInt($('basisCount').value,10);['onX','onY','onZ'].forEach((id,i)=>$(id+'Value').textContent=fmt(state.on[i],2));$('basisCountValue').textContent=state.basisCount;const proj=state.on.map((v,i)=>i<state.basisCount?v:0),res=state.on.map((v,i)=>v-proj[i]),total=state.on.reduce((s,v)=>s+v*v,0),captured=proj.reduce((s,v)=>s+v*v,0),residual=res.reduce((s,v)=>s+v*v,0);const colors=[css('--cyan'),css('--teal'),css('--amber')];const traces=[];for(let i=0;i<state.basisCount;i++){const end=[0,0,0];end[i]=state.on[i];traces.push({type:'scatter3d',x:[0,end[0]],y:[0,end[1]],z:[0,end[2]],mode:'lines+markers',name:`<x,e${i+1}>e${i+1}`,line:{color:colors[i],width:8},marker:{size:4,color:colors[i]}});}traces.push({type:'scatter3d',x:[0,state.on[0]],y:[0,state.on[1]],z:[0,state.on[2]],mode:'lines+markers',name:'x',line:{color:css('--violet'),width:8},marker:{size:5,color:css('--violet')}});traces.push({type:'scatter3d',x:[proj[0],state.on[0]],y:[proj[1],state.on[1]],z:[proj[2],state.on[2]],mode:'lines+markers',name:'residual',line:{color:css('--danger'),width:7,dash:'dash'},marker:{size:4,color:css('--danger')}});const t=plotTheme();Plotly.react('orthonormalPlot',traces,{title:{text:'Orthogonal coordinate decomposition',font:{size:15},x:.02},height:430,margin:{l:0,r:0,t:50,b:0},paper_bgcolor:t.paper_bgcolor,font:t.font,scene:{bgcolor:t.plot_bgcolor,aspectmode:'cube',xaxis:{range:[-2.7,2.7],gridcolor:css('--grid'),zerolinecolor:css('--axis'),title:'e₁'},yaxis:{range:[-2.7,2.7],gridcolor:css('--grid'),zerolinecolor:css('--axis'),title:'e₂'},zaxis:{range:[-2.7,2.7],gridcolor:css('--grid'),zerolinecolor:css('--axis'),title:'e₃'}},legend:{orientation:'h',y:1.04,x:1,xanchor:'right'}},{responsive:true,displaylogo:false});
+      $('totalEnergy').textContent=fmt(total);$('capturedEnergy').textContent=fmt(captured);$('residualEnergy').textContent=fmt(residual);$('energyVerdict').textContent=state.basisCount===3?'Parseval':'Bessel';setMath('orthonormalFormula',String.raw`P_nx=\sum_{j=1}^{${state.basisCount}}\langle x,e_j\rangle e_j,\qquad \sum_{j=1}^{${state.basisCount}}|\langle x,e_j\rangle|^2=${fmt(captured,3)}\le ${fmt(total,3)}=\|x\|^2.`);const st=$('orthonormalStatus');st.innerHTML=state.basisCount===3?'<strong>Parseval equality.</strong> The full orthonormal basis captures every component of the vector.':'<strong>Bessel inequality.</strong> The missing orthogonal component is exactly the residual energy.';}
+
+    const phi=[x=>1,x=>Math.sqrt(3)*(2*x-1),x=>Math.sqrt(5)*(6*x*x-6*x+1),x=>Math.sqrt(7)*(20*x**3-30*x*x+12*x-1)];
+    const fnMap={x2:{label:'x²',f:x=>x*x},exp:{label:'eˣ',f:x=>Math.exp(x)},sin:{label:'sin(2πx)',f:x=>Math.sin(2*Math.PI*x)},abs:{label:'|x−1/2|',f:x=>Math.abs(x-.5)}};
+    function integrate(values,h){let s=values[0]+values[values.length-1];for(let i=1;i<values.length-1;i++)s+=(i%2?4:2)*values[i];return s*h/3;}
+    function renderFunction(){state.fn=$('functionSelect').value;state.degree=parseInt($('degreeSlider').value,10);$('functionLabel').textContent=fnMap[state.fn].label;$('degreeValue').textContent=state.degree;const N=400,xs=Array.from({length:N+1},(_,i)=>i/N),f=fnMap[state.fn].f,ys=xs.map(f),coeff=[];for(let j=0;j<=3;j++)coeff.push(integrate(xs.map((x,i)=>ys[i]*phi[j](x)),1/N));const approx=xs.map(x=>{let s=0;for(let j=0;j<=state.degree;j++)s+=coeff[j]*phi[j](x);return s;}),res=ys.map((y,i)=>y-approx[i]);const norm2=integrate(ys.map(y=>y*y),1/N),capt=coeff.slice(0,state.degree+1).reduce((s,c)=>s+c*c,0),err=integrate(res.map(y=>y*y),1/N);let maxOrth=0;for(let j=0;j<=state.degree;j++){const val=Math.abs(integrate(xs.map((x,i)=>res[i]*phi[j](x)),1/N));maxOrth=Math.max(maxOrth,val);}const traces=[{x:xs,y:ys,mode:'lines',name:'f',line:{color:css('--violet'),width:3}},{x:xs,y:approx,mode:'lines',name:'Pₙf',line:{color:css('--cyan'),width:3}},{x:xs,y:res,mode:'lines',name:'residual',line:{color:css('--amber'),width:2,dash:'dot'}}];const t=plotTheme();Plotly.react('functionPlot',traces,{title:{text:'Function, orthogonal projection, and residual',font:{size:15},x:.02},height:430,margin:{l:55,r:20,t:52,b:48},paper_bgcolor:t.paper_bgcolor,plot_bgcolor:t.plot_bgcolor,font:t.font,xaxis:{...t.xaxis,title:'x ∈ [0,1]'},yaxis:{...t.yaxis,title:'value'},legend:{orientation:'h',y:1.08,x:1,xanchor:'right'}},{responsive:true,displaylogo:false});$('functionNorm').textContent=fmt(norm2);$('functionCaptured').textContent=fmt(capt);$('functionError').textContent=fmt(err);$('functionOrth').textContent=fmt(maxOrth,5);const coeffTex=coeff.slice(0,state.degree+1).map((c,j)=>String.raw`${fmt(c,4)}\,\varphi_${j}`).join('+').replace(/\+\-/g,'-');setMath('functionFormula',String.raw`P_${state.degree}f=${coeffTex},\\[4pt]\|f\|_2^2=${fmt(norm2,4)}=${fmt(capt,4)}+${fmt(err,4)}=\|P_${state.degree}f\|_2^2+\|f-P_${state.degree}f\|_2^2.`);}
+
+    function renderNonclosed(){state.truncation=parseInt($('truncationSlider').value,10);$('truncationValue').textContent=state.truncation;const K=45,idx=Array.from({length:K},(_,i)=>i+1),full=idx.map(k=>1/k),trunc=idx.map(k=>k<=state.truncation?1/k:0);let tail=0;for(let k=state.truncation+1;k<200000;k++)tail+=1/(k*k);const dist=Math.sqrt(tail);const traces=[{x:idx,y:full,type:'bar',name:'x_k=1/k',marker:{color:'rgba(117,103,199,.52)'}},{x:idx,y:trunc,type:'bar',name:'truncation x⁽ᴺ⁾',marker:{color:'rgba(0,168,198,.82)'}}];const t=plotTheme();Plotly.react('nonclosedPlot',traces,{barmode:'overlay',title:{text:'Finite-support approximants in c₀₀',font:{size:15},x:.02},height:430,margin:{l:55,r:20,t:52,b:48},paper_bgcolor:t.paper_bgcolor,plot_bgcolor:t.plot_bgcolor,font:t.font,xaxis:{...t.xaxis,title:'coordinate k'},yaxis:{...t.yaxis,title:'coordinate value'},legend:{orientation:'h',y:1.08,x:1,xanchor:'right'}},{responsive:true,displaylogo:false});$('tailDistance').textContent=fmt(dist,5);setMath('nonclosedFormula',String.raw`\|x-x^{(${state.truncation})}\|_2=\left(\sum_{k>${state.truncation}}\frac1{k^2}\right)^{1/2}\approx ${fmt(dist,5)}\longrightarrow0.`);}
+
+    function wireProofSteps(){document.querySelectorAll('.proof-step > button').forEach(btn=>btn.addEventListener('click',()=>{const step=btn.parentElement;step.classList.toggle('open');btn.lastElementChild.textContent=step.classList.contains('open')?'−':'+';}));}
+    function wireProver(){$('proverOptions').addEventListener('click',e=>{const btn=e.target.closest('.proof-option');if(!btn)return;document.querySelectorAll('.proof-option').forEach(b=>b.classList.remove('correct-choice','wrong-choice'));const ok=btn.dataset.answer==='correct';btn.classList.add(ok?'correct-choice':'wrong-choice');const fb=$('proverFeedback');fb.className='status '+(ok?'good':'bad');fb.textContent=ok?'Correct. The parallelogram identity converts near-minimality into pairwise closeness, proving the minimizing sequence is Cauchy.':'Not this step. Boundedness does not yield a convergent subsequence in an arbitrary infinite-dimensional Hilbert space, and the minimizer cannot be assumed.';});}
+    const mapText={infimum:'The distance d is only an infimum, so the proof begins with approximate minimizers rather than an assumed nearest point.',parallelogram:'The parallelogram identity is the Hilbert-specific estimate that forces any minimizing sequence to be Cauchy.',complete:'Completeness ensures the Cauchy minimizing sequence converges to some vector of the ambient space H.',closed:'Closedness is the feasibility condition: it keeps the ambient limit inside the subspace M.',orthogonal:'Perturbing the minimizer along every direction of M shows that the residual has zero inner product with M.',unique:'Pythagoras shows every other point in M has strictly larger distance unless it equals the projection.'};
+    function wireMap(){document.querySelectorAll('[data-map]').forEach(btn=>btn.addEventListener('click',()=>{$('mapExplanation').textContent=mapText[btn.dataset.map];}));}
+    function wireCounters(){document.querySelectorAll('.counter-tab').forEach(tab=>tab.addEventListener('click',()=>{document.querySelectorAll('.counter-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.counter-panel').forEach(p=>p.classList.remove('active'));tab.classList.add('active');$(tab.dataset.panel).classList.add('active');}));}
+    function safeStorageGet(k){try{return localStorage.getItem(k)}catch(_){return null}}function safeStorageSet(k,v){try{localStorage.setItem(k,v)}catch(_){}}
+    function setTheme(theme){document.documentElement.dataset.theme=theme;safeStorageSet('hilbert-theme',theme);$('themeToggle').textContent=theme==='dark'?'☀':'◐';renderProjection();renderOrthonormal();renderFunction();renderNonclosed();}
+    function reset(){if(animationFrame)cancelAnimationFrame(animationFrame);animationFrame=null;$('x1Slider').value=2.4;$('x2Slider').value=1.8;$('angleSlider').value=28;$('candidateSlider').value=0;$('onX').value=1.6;$('onY').value=-.8;$('onZ').value=1.25;$('basisCount').value=2;$('functionSelect').value='x2';$('degreeSlider').value=2;$('truncationSlider').value=8;renderProjection();renderOrthonormal();renderFunction();renderNonclosed();}
+    function animateToProjection(){if(animationFrame)cancelAnimationFrame(animationFrame);const start=parseFloat($('candidateSlider').value),target=clamp(projectionData().a,-5,5),t0=performance.now(),duration=900;const step=now=>{const q=clamp((now-t0)/duration,0,1),eased=1-Math.pow(1-q,3);$('candidateSlider').value=start+(target-start)*eased;renderProjection();if(q<1)animationFrame=requestAnimationFrame(step);else animationFrame=null;};animationFrame=requestAnimationFrame(step);}
+    function wireControls(){['x1Slider','x2Slider','angleSlider','candidateSlider'].forEach(id=>$(id).addEventListener('input',renderProjection));$('chooseProjection').addEventListener('click',()=>{const d=projectionData();$('candidateSlider').value=clamp(d.a,-5,5);renderProjection();});$('animateProjection').addEventListener('click',animateToProjection);['onX','onY','onZ','basisCount'].forEach(id=>$(id).addEventListener('input',renderOrthonormal));$('functionSelect').addEventListener('change',renderFunction);$('degreeSlider').addEventListener('input',renderFunction);$('truncationSlider').addEventListener('input',renderNonclosed);$('themeToggle').addEventListener('click',()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));$('resetAll').addEventListener('click',reset);}
+    function init(){renderStaticMath();wireProofSteps();wireProver();wireMap();wireCounters();wireControls();const stored=safeStorageGet('hilbert-theme'),preferred=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.dataset.theme=stored||preferred;$('themeToggle').textContent=document.documentElement.dataset.theme==='dark'?'☀':'◐';renderProjection();renderOrthonormal();renderFunction();renderNonclosed();}
+    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(init,0));else setTimeout(init,0);
+  })();
+  </script>
+</body>
+</html>

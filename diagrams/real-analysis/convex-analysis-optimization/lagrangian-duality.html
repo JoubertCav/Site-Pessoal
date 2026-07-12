@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Interactive laboratory for Lagrangian duality, primal and dual problems, weak and strong duality, KKT conditions, and saddle points." />
+  <title>Lagrangian Duality — Interactive Convex Optimization Laboratory</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    :root{
+      --bg:#f7f9f8;--surface:rgba(255,255,255,.97);--surface-2:#eef5f5;--surface-3:#e4edef;
+      --text:#172126;--muted:#617178;--line:#d4dfe1;--cyan:#00a8c6;--cyan-deep:#087f98;
+      --teal:#168f88;--violet:#7567c7;--amber:#b57a20;--danger:#b74c4c;--success:#147d64;
+      --shadow:0 18px 52px rgba(37,56,64,.09);--radius:22px;--canvas:#fff;--axis:#65787e;
+      --grid:#dce6e8
+    }
+    html[data-theme="dark"]{
+      --bg:#121a20;--surface:rgba(27,38,46,.97);--surface-2:#213039;--surface-3:#273942;
+      --text:#edf5f6;--muted:#a8b8bd;--line:#344750;--cyan:#44c9e1;--cyan-deep:#7ed9e8;
+      --teal:#58c4b9;--violet:#aaa0e6;--amber:#e3b35d;--danger:#ef8989;--success:#68d0ad;
+      --shadow:0 18px 52px rgba(0,0,0,.25);--canvas:#17232a;--axis:#9bb0b7;--grid:#30424a
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;color:var(--text);
+      background:
+        radial-gradient(circle at 7% 0%,rgba(0,168,198,.085),transparent 29rem),
+        radial-gradient(circle at 100% 17%,rgba(117,103,199,.065),transparent 32rem),
+        var(--bg);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.65;transition:background .25s ease,color .25s ease
+    }
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    .shell{width:min(1480px,calc(100% - 32px));margin:0 auto}
+    .topbar{
+      position:sticky;top:0;z-index:50;border-bottom:1px solid color-mix(in srgb,var(--line) 84%,transparent);
+      backdrop-filter:blur(18px);background:color-mix(in srgb,var(--bg) 82%,transparent)
+    }
+    .topbar-inner{min-height:68px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:-.02em}
+    .brand-mark{
+      width:34px;height:34px;border:1px solid var(--cyan);border-radius:11px;display:grid;place-items:center;
+      box-shadow:inset 0 0 0 6px color-mix(in srgb,var(--cyan) 10%,transparent)
+    }
+    .brand-mark::before{content:"L";color:var(--cyan-deep);font-family:"Libre Baskerville",serif;font-weight:700}
+    .top-actions{display:flex;gap:9px;align-items:center}
+    .icon-button,.ghost-button,.primary-button,.proof-option,.counter-tab{
+      border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:12px;
+      min-height:40px;padding:9px 13px;transition:transform .18s ease,border-color .18s ease,background .18s ease
+    }
+    .icon-button:hover,.ghost-button:hover,.proof-option:hover,.counter-tab:hover{
+      transform:translateY(-1px);border-color:var(--cyan)
+    }
+    .primary-button{background:var(--cyan);color:#062e37;font-weight:700;border-color:transparent}
+    .primary-button:hover{transform:translateY(-1px);filter:brightness(1.03)}
+    h1,h2,h3,.serif{font-family:"Libre Baskerville",Georgia,serif;letter-spacing:-.025em}
+    h1{font-size:clamp(2.65rem,5.8vw,5.15rem);line-height:1.03;margin:12px 0 20px}
+    h2{font-size:clamp(2rem,4vw,3.15rem);line-height:1.14;margin:0}
+    h3{font-size:1.2rem;margin:0}
+    p{margin:0}
+    .hero{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(360px,.92fr);gap:30px;padding:70px 0 46px;align-items:center}
+    .eyebrow{color:var(--cyan-deep);font-weight:700;text-transform:uppercase;letter-spacing:.14em;font-size:.78rem}
+    .hero p{color:var(--muted);max-width:850px;font-size:clamp(1.02rem,1.8vw,1.24rem)}
+    .hero-chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:28px}
+    .chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);padding:8px 11px;border-radius:999px;color:var(--muted);font-size:.9rem}
+    .chip::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--cyan)}
+    .hero-map{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:28px;padding:22px;min-height:420px;overflow:hidden}
+    .hero-svg{width:100%;height:370px;display:block}
+    .section{padding:72px 0}
+    .section-head{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:27px}
+    .section-head p{color:var(--muted);max-width:780px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+    .grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+    .lab-grid{display:grid;grid-template-columns:minmax(285px,.78fr) minmax(0,1.42fr) minmax(300px,.92fr);gap:20px;align-items:start}
+    .proof-grid{display:grid;grid-template-columns:minmax(0,1.22fr) minmax(300px,.78fr);gap:20px}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;min-width:0}
+    .card.soft{background:var(--surface-2);box-shadow:none}
+    .card h3+p{margin-top:9px;color:var(--muted)}
+    .card-label{color:var(--cyan-deep);font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;font-weight:700;margin-bottom:10px}
+    .muted{color:var(--muted)}.small{font-size:.9rem}
+    .definition-card{padding:30px;border-left:4px solid var(--cyan)}
+    .math-display{margin:18px 0;overflow-x:auto;overflow-y:hidden;padding:8px 2px}
+    .katex-display{margin:.72em 0!important}
+    .katex{max-width:100%}
+    .notation-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}
+    .notation-item{border:1px solid var(--line);background:var(--surface-2);border-radius:14px;padding:13px}
+    .notation-item strong{display:block;margin-bottom:6px;color:var(--cyan-deep)}
+    .flow-map{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;margin-top:18px}
+    .flow-node{border:1px solid var(--line);background:var(--surface-2);border-radius:14px;padding:12px 14px;min-width:150px;text-align:center}
+    .flow-arrow{color:var(--cyan-deep);font-size:1.4rem}
+    .control-stack{display:grid;gap:16px}
+    .control label{display:flex;justify-content:space-between;gap:12px;align-items:baseline;font-weight:600;margin-bottom:7px}
+    .control label span:last-child{color:var(--cyan-deep);font-variant-numeric:tabular-nums}
+    input[type="range"]{width:100%;accent-color:var(--cyan)}
+    select{width:100%;min-height:43px;border-radius:11px;border:1px solid var(--line);background:var(--surface);color:var(--text);padding:8px 10px}
+    .control-note{color:var(--muted);font-size:.82rem;margin-top:5px}
+    .metric-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
+    .metric-cell{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:13px;text-align:center}
+    .metric-name{color:var(--muted);font-size:.79rem;text-transform:uppercase;letter-spacing:.06em}
+    .metric-value{font-size:1.16rem;font-weight:700;color:var(--cyan-deep);font-variant-numeric:tabular-nums}
+    .status{border-radius:14px;padding:14px;border:1px solid var(--line);background:var(--surface-2)}
+    .status.good{border-color:color-mix(in srgb,var(--success) 55%,var(--line));background:color-mix(in srgb,var(--success) 9%,var(--surface))}
+    .status.warning{border-color:color-mix(in srgb,var(--amber) 55%,var(--line));background:color-mix(in srgb,var(--amber) 8%,var(--surface))}
+    .status.bad{border-color:color-mix(in srgb,var(--danger) 55%,var(--line));background:color-mix(in srgb,var(--danger) 8%,var(--surface))}
+    .diagram-shell{background:var(--canvas);border:1px solid var(--line);border-radius:18px;overflow:hidden;min-height:500px}
+    .diagram-shell svg{display:block;width:100%;height:auto;min-height:500px;touch-action:none}
+    .legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;color:var(--muted);font-size:.86rem}
+    .legend span{display:flex;align-items:center;gap:7px}
+    .legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+    .proof-steps{display:grid;gap:10px}
+    .proof-step{border:1px solid var(--line);background:var(--surface);border-radius:15px;overflow:hidden}
+    .proof-step>button{width:100%;border:0;background:transparent;color:var(--text);display:flex;justify-content:space-between;gap:14px;padding:15px;text-align:left;font-weight:700}
+    .proof-body{display:none;border-top:1px solid var(--line);padding:0 16px 17px;color:var(--muted)}
+    .proof-step.open .proof-body{display:block}
+    .proof-number{display:inline-grid;place-items:center;width:26px;height:26px;margin-right:10px;border-radius:8px;background:var(--surface-2);color:var(--cyan-deep)}
+    .quiz-options{display:grid;gap:10px;margin-top:14px}
+    .proof-option{text-align:left}
+    .proof-option.correct{border-color:var(--success);background:color-mix(in srgb,var(--success) 10%,var(--surface))}
+    .proof-option.wrong{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 9%,var(--surface))}
+    .counter-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+    .counter-tab.active{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 9%,var(--surface))}
+    .counter-content{display:none}.counter-content.active{display:block}
+    .mistake{border-top:1px solid var(--line);padding:16px 0}.mistake:first-child{border-top:0;padding-top:0}
+    .mistake strong{color:var(--danger)}
+    .kkt-table{width:100%;border-collapse:collapse;margin-top:14px}
+    .kkt-table th,.kkt-table td{border:1px solid var(--line);padding:10px;text-align:left}
+    .kkt-table th{background:var(--surface-2);color:var(--muted)}
+    .footer{padding:38px 0 54px;color:var(--muted);border-top:1px solid var(--line)}
+    @media(max-width:1120px){
+      .hero,.lab-grid,.proof-grid{grid-template-columns:1fr}
+      .hero-map{min-height:360px}.hero-svg{height:320px}
+      .grid-4,.notation-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media(max-width:760px){
+      .shell{width:min(100% - 20px,1480px)}
+      .topbar-inner{min-height:60px}.brand span:last-child{display:none}
+      .hero{padding-top:46px}.section{padding:52px 0}
+      .grid-2,.grid-3,.grid-4,.notation-grid,.metric-strip{grid-template-columns:1fr}
+      .section-head{align-items:start;flex-direction:column}
+      .card{padding:18px}.definition-card{padding:22px}
+      .diagram-shell,.diagram-shell svg{min-height:420px}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>Lagrangian Duality Laboratory</span></div>
+      <div class="top-actions">
+        <button class="ghost-button" id="scrollToLab">Open primal–dual lab</button>
+        <button class="icon-button" id="themeToggle" aria-label="Toggle light and dark mode">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="shell hero">
+      <div>
+        <div class="eyebrow">Interactive convex optimization</div>
+        <h1>Lagrangian duality</h1>
+        <p>The primal problem optimizes over decisions. The dual problem optimizes over certificates. Every nonnegative multiplier creates a lower bound on the primal value; strong duality asks when the best certificate reaches the primal optimum exactly.</p>
+        <div class="hero-chips">
+          <span class="chip">primal problems</span><span class="chip">dual functions</span><span class="chip">weak duality</span><span class="chip">strong duality</span><span class="chip">saddle points</span>
+        </div>
+      </div>
+      <div class="hero-map" aria-label="Primal and dual value illustration">
+        <svg class="hero-svg" viewBox="0 0 540 370" role="img">
+          <defs><pattern id="heroGrid" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M 36 0 L 0 0 0 36" fill="none" stroke="var(--grid)" stroke-width="1"/></pattern></defs>
+          <rect x="0" y="0" width="540" height="370" rx="18" fill="var(--canvas)"/>
+          <rect x="0" y="0" width="540" height="370" rx="18" fill="url(#heroGrid)"/>
+          <path d="M60 305 C145 255, 205 115, 286 82 C370 49, 424 182, 482 310" fill="none" stroke="var(--cyan)" stroke-width="5"/>
+          <line x1="70" y1="255" x2="475" y2="255" stroke="var(--violet)" stroke-width="4"/>
+          <line x1="286" y1="82" x2="286" y2="255" stroke="var(--amber)" stroke-width="4" stroke-dasharray="8 7"/>
+          <circle cx="286" cy="82" r="10" fill="var(--teal)" stroke="var(--canvas)" stroke-width="3"/>
+          <text x="270" y="350" text-anchor="middle" fill="var(--muted)" font-family="Inter" font-size="15">the dual seeks the highest valid lower bound</text>
+        </svg>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">1 · General construction</div><h2>From constraints to a dual certificate</h2></div>
+          <p>Inequality constraints receive nonnegative multipliers; equality constraints receive unrestricted multipliers.</p>
+        </div>
+        <article class="card definition-card">
+          <div class="math-display" data-math="\begin{aligned}\text{minimize}\quad & f_0(x)\\ \text{subject to}\quad & f_i(x)\le0,\quad i=1,\dots,m,\\ & h_j(x)=0,\quad j=1,\dots,r.\end{aligned}" data-display="true"></div>
+          <div class="math-display" data-math="L(x,\lambda,\nu)=f_0(x)+\sum_{i=1}^{m}\lambda_i f_i(x)+\sum_{j=1}^{r}\nu_j h_j(x),\qquad \lambda\ge0." data-display="true"></div>
+          <div class="math-display" data-math="q(\lambda,\nu)=\inf_x L(x,\lambda,\nu),\qquad d^\star=\sup_{\lambda\ge0,\nu}q(\lambda,\nu)." data-display="true"></div>
+        </article>
+        <div class="notation-grid">
+          <div class="notation-item"><strong><span data-math="p^\star"></span></strong>primal optimal value</div>
+          <div class="notation-item"><strong><span data-math="q(\lambda,\nu)"></span></strong>dual function</div>
+          <div class="notation-item"><strong><span data-math="d^\star"></span></strong>dual optimal value</div>
+          <div class="notation-item"><strong><span data-math="p^\star-d^\star"></span></strong>duality gap</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="primalDualLab">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">2 · Primal–dual laboratory</div><h2>A complete inequality-constrained problem</h2></div><p>Study
+          \(\min_x \frac12(x-a)^2\) subject to \(x\le b\). The multiplier changes the unconstrained minimizer and generates a lower bound.</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Problem controls</div>
+            <div class="control-stack">
+              <div class="control"><label for="centerA"><span data-math="a"></span><span id="centerAVal">2.20</span></label><input id="centerA" type="range" min="-2" max="4" step=".05" value="2.2"></div>
+              <div class="control"><label for="boundB"><span data-math="b"></span><span id="boundBVal">0.60</span></label><input id="boundB" type="range" min="-3" max="3" step=".05" value=".6"></div>
+              <div class="control"><label for="lambdaControl"><span data-math="\lambda"></span><span id="lambdaVal">0.80</span></label><input id="lambdaControl" type="range" min="0" max="6" step=".02" value=".8"></div>
+              <label class="toggle-line"><input id="showLagrangianCurve" type="checkbox" checked>show L(x,λ)</label>
+              <label class="toggle-line"><input id="showFeasibleRegion" type="checkbox" checked>shade feasible region</label>
+              <label class="toggle-line"><input id="showLowerBound" type="checkbox" checked>show q(λ)</label>
+              <button id="snapDualOptimum" class="primary-button">Set λ=λ*</button>
+              <button id="animateLambda" class="ghost-button">Animate multiplier</button>
+            </div>
+          </aside>
+
+          <article class="card">
+            <div class="diagram-shell"><svg id="primalDualSvg" viewBox="0 0 900 520" aria-label="Primal objective, Lagrangian, and dual function"></svg></div>
+            <div class="legend">
+              <span><i style="background:var(--cyan)"></i>primal objective</span>
+              <span><i style="background:var(--violet)"></i>Lagrangian for current λ</span>
+              <span><i style="background:var(--teal)"></i>primal optimum</span>
+              <span><i style="background:var(--amber)"></i>dual lower bound</span>
+            </div>
+          </article>
+
+          <aside class="card">
+            <div class="card-label">Current values</div>
+            <div id="primalDualFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">primal optimum x*</div><div class="metric-value" id="primalXStar">—</div></div>
+              <div class="metric-cell"><div class="metric-name">p*</div><div class="metric-value" id="primalValue">—</div></div>
+              <div class="metric-cell"><div class="metric-name">q(λ)</div><div class="metric-value" id="dualBoundValue">—</div></div>
+              <div class="metric-cell"><div class="metric-name">gap p*−q(λ)</div><div class="metric-value" id="currentGap">—</div></div>
+            </div>
+            <div id="primalDualStatus" class="status good" style="margin-top:14px"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">3 · Weak duality</div><h2>Every feasible multiplier gives a lower bound</h2></div><p>Weak duality is purely algebraic and does not require convexity.</p></div>
+        <article class="card definition-card">
+          <div class="math-display" data-math="q(\lambda,\nu)\le p^\star\qquad\text{for every }\lambda\ge0,\ \nu." data-display="true"></div>
+          <div class="proof-grid" style="margin-top:18px">
+            <article class="card soft">
+              <div class="card-label">One-line proof</div>
+              <p>If \(x\) is primal feasible, then</p>
+              <div class="math-display" data-math="L(x,\lambda,\nu)=f_0(x)+\sum_i\lambda_i f_i(x)+\sum_j\nu_j h_j(x)\le f_0(x)." data-display="true"></div>
+              <p class="muted">Taking the infimum over \(x\), then the infimum over primal feasible points, gives \(q(\lambda,\nu)\le p^\star\).</p>
+            </article>
+            <aside class="card soft">
+              <div class="card-label">Why λ≥0?</div>
+              <p class="muted">For a feasible inequality \(f_i(x)\le0\), multiplying by \(\lambda_i\ge0\) preserves \(\lambda_i f_i(x)\le0\). A negative multiplier would reverse the sign and destroy the lower-bound guarantee.</p>
+            </aside>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="gapLab">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">4 · Duality-gap laboratory</div><h2>Convexity and regularity determine whether the bound is exact</h2></div><p>Compare a convex Slater problem with a nonconvex problem whose Lagrangian relaxation has a genuine gap.</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Problem family</div>
+            <div class="control-stack">
+              <div class="control">
+                <label for="gapPreset">Preset</label>
+                <select id="gapPreset">
+                  <option value="convex">Convex with Slater</option>
+                  <option value="boundary">Convex, no strict feasibility</option>
+                  <option value="nonconvex">Nonconvex with duality gap</option>
+                </select>
+              </div>
+              <div class="control"><label for="gapLambda"><span data-math="\lambda"></span><span id="gapLambdaVal">0.50</span></label><input id="gapLambda" type="range" min="0" max="6" step=".02" value=".5"></div>
+              <label class="toggle-line"><input id="showPrimalLevel" type="checkbox" checked>show primal optimum level</label>
+              <label class="toggle-line"><input id="showDualCurve" type="checkbox" checked>show dual curve</label>
+              <button id="snapGapDual" class="primary-button">Set λ to dual optimizer</button>
+            </div>
+          </aside>
+
+          <article class="card">
+            <div class="diagram-shell"><svg id="gapSvg" viewBox="0 0 900 520" aria-label="Primal and dual optimal values with possible gap"></svg></div>
+            <div class="legend">
+              <span><i style="background:var(--cyan)"></i>primal feasible objective values</span>
+              <span><i style="background:var(--violet)"></i>dual function</span>
+              <span><i style="background:var(--teal)"></i>p*</span>
+              <span><i style="background:var(--amber)"></i>d*</span>
+            </div>
+          </article>
+
+          <aside class="card">
+            <div class="card-label">Gap diagnosis</div>
+            <div id="gapFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">p*</div><div class="metric-value" id="gapPrimalValue">—</div></div>
+              <div class="metric-cell"><div class="metric-name">d*</div><div class="metric-value" id="gapDualValue">—</div></div>
+              <div class="metric-cell"><div class="metric-name">duality gap</div><div class="metric-value" id="optimalGap">—</div></div>
+              <div class="metric-cell"><div class="metric-name">strong duality?</div><div class="metric-value" id="strongDualityValue">—</div></div>
+            </div>
+            <div id="gapStatus" class="status good" style="margin-top:14px"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">5 · Strong duality</div><h2>When the best lower bound reaches the primal optimum</h2></div><p>Strong duality is a theorem with hypotheses, not a consequence of the definitions.</p></div>
+        <article class="card definition-card">
+          <div class="math-display" data-math="d^\star=p^\star." data-display="true"></div>
+          <p>For a convex problem, a standard sufficient condition is Slater’s condition:</p>
+          <div class="math-display" data-math="\exists \bar x\in\operatorname{relint}(\operatorname{dom}f_0)\quad\text{such that}\quad f_i(\bar x)<0,\qquad h_j(\bar x)=0." data-display="true"></div>
+        </article>
+        <div class="grid-3" style="margin-top:20px">
+          <article class="card"><div class="card-label">Convexity</div><h3>Global geometry</h3><p>The objective and inequality functions are convex; equality constraints are affine.</p></article>
+          <article class="card"><div class="card-label">Slater point</div><h3>Interior feasibility</h3><p>A strictly feasible point prevents pathological separation of the perturbation epigraph.</p></article>
+          <article class="card"><div class="card-label">Conclusion</div><h3>Exact certificate</h3><p>The dual optimum is attained under standard closedness assumptions, and \(d^\star=p^\star\).</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="saddleLab">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">6 · Saddle-point laboratory</div><h2>Minimize in x, maximize in λ</h2></div><p>At a saddle point, neither the primal player nor the dual player can improve unilaterally.</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Saddle controls</div>
+            <div class="control-stack">
+              <div class="control"><label for="saddleA"><span data-math="a"></span><span id="saddleAVal">2.00</span></label><input id="saddleA" type="range" min="-1" max="4" step=".05" value="2"></div>
+              <div class="control"><label for="saddleB"><span data-math="b"></span><span id="saddleBVal">0.50</span></label><input id="saddleB" type="range" min="-2" max="2.5" step=".05" value=".5"></div>
+              <div class="control"><label for="saddleX"><span data-math="x"></span><span id="saddleXVal">0.50</span></label><input id="saddleX" type="range" min="-3" max="4" step=".02" value=".5"></div>
+              <div class="control"><label for="saddleLambda"><span data-math="\lambda"></span><span id="saddleLambdaVal">1.50</span></label><input id="saddleLambda" type="range" min="0" max="5" step=".02" value="1.5"></div>
+              <button id="setSaddlePoint" class="primary-button">Set (x,λ)=(x*,λ*)</button>
+              <button id="bestRespondX" class="ghost-button">Primal best response</button>
+              <button id="bestRespondLambda" class="ghost-button">Dual response</button>
+            </div>
+          </aside>
+
+          <article class="card">
+            <div class="diagram-shell"><svg id="saddleSvg" viewBox="0 0 900 520" aria-label="Lagrangian saddle geometry"></svg></div>
+            <div class="legend">
+              <span><i style="background:var(--cyan)"></i>L(x, current λ)</span>
+              <span><i style="background:var(--violet)"></i>L(current x, λ)</span>
+              <span><i style="background:var(--teal)"></i>saddle point</span>
+              <span><i style="background:var(--amber)"></i>current strategy pair</span>
+            </div>
+          </article>
+
+          <aside class="card">
+            <div class="card-label">Saddle inequalities</div>
+            <div id="saddleFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">L(x,λ)</div><div class="metric-value" id="saddleLValue">—</div></div>
+              <div class="metric-cell"><div class="metric-name">x best response?</div><div class="metric-value" id="xBestResponseValue">—</div></div>
+              <div class="metric-cell"><div class="metric-name">λ best response?</div><div class="metric-value" id="lambdaBestResponseValue">—</div></div>
+              <div class="metric-cell"><div class="metric-name">saddle?</div><div class="metric-value" id="isSaddleValue">—</div></div>
+            </div>
+            <div id="saddleStatus" class="status good" style="margin-top:14px"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">7 · Saddle-point theorem</div><h2>Strong duality as minimax equality</h2></div><p>A primal–dual optimal pair is a saddle point of the Lagrangian under the standard convex regularity assumptions.</p></div>
+        <article class="card definition-card">
+          <div class="math-display" data-math="L(x^\star,\lambda,\nu)\le L(x^\star,\lambda^\star,\nu^\star)\le L(x,\lambda^\star,\nu^\star)" data-display="true"></div>
+          <p>for every primal variable \(x\), every \(\lambda\ge0\), and every \(\nu\). Consequently,</p>
+          <div class="math-display" data-math="\sup_{\lambda\ge0,\nu}\inf_x L(x,\lambda,\nu)=\inf_x\sup_{\lambda\ge0,\nu}L(x,\lambda,\nu)." data-display="true"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">8 · KKT conditions</div><h2>The local algebra of a saddle point</h2></div><p>Under convexity and a suitable constraint qualification, the KKT conditions are necessary and sufficient for primal–dual optimality.</p></div>
+        <article class="card">
+          <table class="kkt-table">
+            <thead><tr><th>Condition</th><th>Formula</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td>Primal feasibility</td><td><span data-math="f_i(x^\star)\le0,\ h_j(x^\star)=0"></span></td><td>The decision satisfies the constraints.</td></tr>
+              <tr><td>Dual feasibility</td><td><span data-math="\lambda_i^\star\ge0"></span></td><td>Inequality multipliers preserve lower bounds.</td></tr>
+              <tr><td>Complementary slackness</td><td><span data-math="\lambda_i^\star f_i(x^\star)=0"></span></td><td>Only active constraints can carry positive shadow prices.</td></tr>
+              <tr><td>Stationarity</td><td><span data-math="0\in\partial f_0(x^\star)+\sum_i\lambda_i^\star\partial f_i(x^\star)+\sum_j\nu_j^\star\nabla h_j(x^\star)"></span></td><td>The primal variable minimizes the optimal Lagrangian.</td></tr>
+            </tbody>
+          </table>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">9 · Proof architecture</div><h2>From saddle point to primal and dual optimality</h2></div><p>The two sides of the saddle inequality encode the two optimization problems.</p></div>
+        <div class="proof-grid">
+          <article class="card">
+            <div class="proof-steps">
+              <div class="proof-step open"><button type="button"><span><span class="proof-number">1</span>Fix the optimal multipliers</span><span>−</span></button><div class="proof-body"><p>The right saddle inequality gives</p><div class="math-display" data-math="L(x^\star,\lambda^\star,\nu^\star)\le L(x,\lambda^\star,\nu^\star)\qquad\forall x." data-display="true"></div><p>Thus \(x^\star\) minimizes the Lagrangian at the optimal multipliers.</p></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">2</span>Fix the primal optimum</span><span>+</span></button><div class="proof-body"><p>The left saddle inequality gives</p><div class="math-display" data-math="L(x^\star,\lambda,\nu)\le L(x^\star,\lambda^\star,\nu^\star)\qquad\forall\lambda\ge0,\nu." data-display="true"></div><p>This produces dual feasibility and complementary slackness.</p></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">3</span>Identify the common value</span><span>+</span></button><div class="proof-body"><p>At a feasible \(x^\star\), complementary slackness gives</p><div class="math-display" data-math="L(x^\star,\lambda^\star,\nu^\star)=f_0(x^\star)=p^\star." data-display="true"></div><p>Since \(x^\star\) minimizes the optimal Lagrangian, the same number equals \(q(\lambda^\star,\nu^\star)=d^\star\).</p></div></div>
+            </div>
+          </article>
+          <aside class="card">
+            <div class="card-label">Proof strategy</div>
+            <h3>Read each direction separately</h3>
+            <p class="muted">Minimization in the primal variable gives stationarity. Maximization in the multipliers enforces feasibility and complementary slackness.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">10 · Economic and geometric interpretation</div><h2>Multipliers are shadow prices and support slopes</h2></div><p>The dual variable measures the marginal value of relaxing a constraint.</p></div>
+        <div class="grid-3">
+          <article class="card"><div class="card-label">Perturbation function</div><div class="math-display" data-math="p(u,v)=\inf\{f_0(x):f_i(x)\le u_i,\ h_j(x)=v_j\}" data-display="true"></div><p class="muted">The primal value becomes a function of constraint relaxations.</p></article>
+          <article class="card"><div class="card-label">Supporting affine lower bound</div><div class="math-display" data-math="p(u,v)\ge p(0,0)-\langle\lambda^\star,u\rangle-\langle\nu^\star,v\rangle" data-display="true"></div><p class="muted">Optimal multipliers support the value function at the origin.</p></article>
+          <article class="card"><div class="card-label">Shadow price</div><div class="math-display" data-math="\lambda_i^\star\approx-\frac{\partial p}{\partial u_i}(0,0)" data-display="true"></div><p class="muted">A positive multiplier means relaxing the corresponding constraint improves the objective locally.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">11 · Guided theorem proving</div><h2>Choose the valid inference</h2></div><p>The sign of the inequality multiplier is the essential step in weak duality.</p></div>
+        <div class="proof-grid">
+          <article class="card">
+            <div class="card-label">Challenge</div>
+            <p>Let \(x\) be primal feasible and \(\lambda\ge0\). Why is \(L(x,\lambda,\nu)\le f_0(x)\)?</p>
+            <div class="quiz-options">
+              <button class="proof-option" data-answer="correct">Because \(\lambda_i f_i(x)\le0\) and \(\nu_jh_j(x)=0\).</button>
+              <button class="proof-option" data-answer="wrong1">Because every multiplier term is nonnegative.</button>
+              <button class="proof-option" data-answer="wrong2">Because \(x\) minimizes the Lagrangian.</button>
+              <button class="proof-option" data-answer="wrong3">Because strong duality always holds.</button>
+            </div>
+          </article>
+          <aside class="card">
+            <div class="card-label">Feedback</div>
+            <div id="quizFeedback" class="status">Choose a proof step.</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">12 · What can go wrong?</div><h2>Weak duality is universal; strong duality is not</h2></div><p>Each failure mode removes a different part of the optimality certificate.</p></div>
+        <article class="card">
+          <div class="counter-tabs">
+            <button class="counter-tab active" data-counter="negative">Negative multipliers</button>
+            <button class="counter-tab" data-counter="nonconvex">Nonconvex primal</button>
+            <button class="counter-tab" data-counter="slater">No Slater point</button>
+            <button class="counter-tab" data-counter="attainment">No dual attainment</button>
+          </div>
+          <div class="counter-content active" id="counter-negative">
+            <div class="grid-2"><div><h3>A negative inequality multiplier destroys the bound</h3><p class="muted">For feasible \(f_i(x)\le0\), multiplying by \(\lambda_i<0\) gives \(\lambda_i f_i(x)\ge0\), so the Lagrangian can exceed the primal objective.</p></div><div class="status bad"><strong>Repair.</strong> Restrict inequality multipliers to \(\lambda\ge0\).</div></div>
+          </div>
+          <div class="counter-content" id="counter-nonconvex">
+            <div class="grid-2"><div><h3>Nonconvex problems may have a positive gap</h3><p class="muted">The dual sees a convex relaxation of the primal value geometry and may miss nonconvex structure.</p></div><div class="status bad"><strong>Conclusion.</strong> KKT conditions may be necessary only locally and need not certify global optimality.</div></div>
+          </div>
+          <div class="counter-content" id="counter-slater">
+            <div class="grid-2"><div><h3>Strong duality can hold without Slater—but is no longer guaranteed</h3><p class="muted">Slater’s condition is sufficient, not necessary. Its failure means the standard theorem cannot be invoked automatically.</p></div><div class="status bad"><strong>Proof discipline.</strong> Verify another constraint qualification or prove exactness directly.</div></div>
+          </div>
+          <div class="counter-content" id="counter-attainment">
+            <div class="grid-2"><div><h3>The optimal dual value may be approached but not attained</h3><p class="muted">Even when \(d^\star=p^\star\), there need not exist finite multipliers realizing the supremum without additional closedness assumptions.</p></div><div class="status bad"><strong>Distinction.</strong> Zero gap and dual attainment are separate properties.</div></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">13 · Common mistakes</div><h2>Precision traps</h2></div><p>The most common errors confuse the dual function with the Lagrangian or treat strong duality as automatic.</p></div>
+        <article class="card">
+          <div class="mistake"><strong>Incorrect:</strong> “The dual function is \(L(x,\lambda,\nu)\).” <span class="muted">Correct: \(q(\lambda,\nu)=\inf_xL(x,\lambda,\nu)\).</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “The dual problem minimizes \(q\).” <span class="muted">Correct: it maximizes the concave dual function over \(\lambda\ge0\).</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “Weak duality requires convexity.” <span class="muted">Correct: it follows directly from feasibility and multiplier signs.</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “Slater is necessary for strong duality.” <span class="muted">Correct: it is a standard sufficient condition for convex problems.</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “Complementary slackness means every constraint is active.” <span class="muted">Correct: each product \(\lambda_i^\star f_i(x^\star)\) is zero; an inactive constraint must have zero multiplier.</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">14 · Final synthesis</div><h2>Optimization becomes a search for certificates</h2></div><p>The primal chooses a feasible decision; the dual constructs the strongest lower bound; a saddle point makes the two descriptions coincide.</p></div>
+        <div class="flow-map">
+          <div class="flow-node">constrained primal</div><span class="flow-arrow">→</span>
+          <div class="flow-node">Lagrangian</div><span class="flow-arrow">→</span>
+          <div class="flow-node">dual function</div><span class="flow-arrow">→</span>
+          <div class="flow-node">weak lower bounds</div><span class="flow-arrow">→</span>
+          <div class="flow-node">strong duality / saddle point</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="shell">Interactive laboratory · primal problems, dual functions, weak and strong duality, KKT conditions, and saddle points.</div></footer>
+
+  <script>
+    "use strict";
+
+    const $=(s,r=document)=>r.querySelector(s);
+    const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+    const css=name=>getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+    const fmt=(v,d=3)=>{
+      if(v===Infinity)return "+∞";
+      if(v===-Infinity)return "−∞";
+      const n=Math.abs(v)<1e-10?0:v;
+      return n.toFixed(d).replace("-","−");
+    };
+
+    function renderMath(root=document){
+      if(window.katex){
+        $$("[data-math]",root).forEach(el=>{
+          if(el.dataset.rendered==="1")return;
+          try{katex.render(el.dataset.math,el,{throwOnError:false,displayMode:el.dataset.display==="true"});el.dataset.rendered="1";}
+          catch(e){el.textContent=el.dataset.math;}
+        });
+      }
+      if(window.renderMathInElement){
+        renderMathInElement(root,{
+          throwOnError:false,
+          delimiters:[
+            {left:"\\(",right:"\\)",display:false},
+            {left:"\\[",right:"\\]",display:true}
+          ]
+        });
+      }
+    }
+    function renderInto(el,tex,display=true){
+      if(!window.katex){el.textContent=tex;return;}
+      katex.render(tex,el,{throwOnError:false,displayMode:display});
+    }
+
+    function setTheme(theme){
+      document.documentElement.dataset.theme=theme;
+      localStorage.setItem("lagrangianDualityTheme",theme);
+      drawAll();
+    }
+    document.documentElement.dataset.theme=localStorage.getItem("lagrangianDualityTheme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+    $("#themeToggle").addEventListener("click",()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark"));
+    $("#scrollToLab").addEventListener("click",()=>$("#primalDualLab").scrollIntoView({behavior:"smooth"}));
+
+    function svgEl(tag,attrs={}){
+      const el=document.createElementNS("http://www.w3.org/2000/svg",tag);
+      Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));
+      return el;
+    }
+    function clearSvg(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+    function drawAxesRegion(svg,x0,y0,w,h,xmin,xmax,ymin,ymax){
+      const X=x=>x0+36+(x-xmin)/(xmax-xmin)*(w-72);
+      const Y=y=>y0+h-36-(y-ymin)/(ymax-ymin)*(h-72);
+      svg.appendChild(svgEl("rect",{x:x0,y:y0,width:w,height:h,fill:css("--canvas")}));
+      for(let x=Math.ceil(xmin);x<=xmax;x++)svg.appendChild(svgEl("line",{x1:X(x),y1:y0+24,x2:X(x),y2:y0+h-24,stroke:css("--grid"),"stroke-width":1}));
+      for(let y=Math.ceil(ymin);y<=ymax;y++)svg.appendChild(svgEl("line",{x1:x0+24,y1:Y(y),x2:x0+w-24,y2:Y(y),stroke:css("--grid"),"stroke-width":1}));
+      if(xmin<=0&&xmax>=0)svg.appendChild(svgEl("line",{x1:X(0),y1:y0+24,x2:X(0),y2:y0+h-24,stroke:css("--axis"),"stroke-width":1.3}));
+      if(ymin<=0&&ymax>=0)svg.appendChild(svgEl("line",{x1:x0+24,y1:Y(0),x2:x0+w-24,y2:Y(0),stroke:css("--axis"),"stroke-width":1.3}));
+      return{X,Y,x0,y0,w,h,xmin,xmax,ymin,ymax};
+    }
+    function pathFor(f,plot,n=500){
+      let d="",pen=false;
+      for(let i=0;i<=n;i++){
+        const x=plot.xmin+(plot.xmax-plot.xmin)*i/n,y=f(x);
+        if(!Number.isFinite(y)||y<plot.ymin-3||y>plot.ymax+3){pen=false;continue;}
+        d+=(pen?" L ":"M ")+`${plot.X(x)} ${plot.Y(y)}`;pen=true;
+      }
+      return d;
+    }
+
+    function oneConstraintSolution(a,b){
+      const xStar=Math.min(a,b);
+      const lambdaStar=Math.max(0,a-b);
+      const pStar=.5*(xStar-a)*(xStar-a);
+      return{xStar,lambdaStar,pStar};
+    }
+    function qValue(a,b,lambda){
+      return -.5*lambda*lambda+(a-b)*lambda;
+    }
+    function lagrangianValue(x,a,b,lambda){
+      return .5*(x-a)*(x-a)+lambda*(x-b);
+    }
+
+    let lambdaTimer=null;
+    ["centerA","boundB","lambdaControl","showLagrangianCurve","showFeasibleRegion","showLowerBound"].forEach(id=>$("#"+id).addEventListener("input",drawPrimalDualLab));
+    $("#snapDualOptimum").addEventListener("click",()=>{
+      const a=+$("#centerA").value,b=+$("#boundB").value;
+      $("#lambdaControl").value=oneConstraintSolution(a,b).lambdaStar;
+      drawPrimalDualLab();
+    });
+    $("#animateLambda").addEventListener("click",()=>{
+      clearInterval(lambdaTimer);let l=+$("#lambdaControl").value,dir=1;
+      lambdaTimer=setInterval(()=>{
+        l+=.025*dir;if(l>=6){l=6;dir=-1;}if(l<=0){l=0;dir=1;}
+        $("#lambdaControl").value=l;drawPrimalDualLab();
+      },45);
+    });
+
+    function drawPrimalDualLab(){
+      const svg=$("#primalDualSvg");clearSvg(svg);
+      const a=+$("#centerA").value,b=+$("#boundB").value,lambda=+$("#lambdaControl").value;
+      const sol=oneConstraintSolution(a,b),q=qValue(a,b,lambda),xLambda=a-lambda;
+      const left=drawAxesRegion(svg,0,0,560,520,-4,5,-2,10);
+      const right=drawAxesRegion(svg,560,0,340,520,0,6,-2,8);
+
+      if($("#showFeasibleRegion").checked){
+        const xb=clamp(b,left.xmin,left.xmax);
+        svg.appendChild(svgEl("rect",{x:left.X(left.xmin),y:left.y0+24,width:Math.max(0,left.X(xb)-left.X(left.xmin)),height:left.h-48,fill:css("--teal"),opacity:.08}));
+        svg.appendChild(svgEl("line",{x1:left.X(b),y1:left.y0+24,x2:left.X(b),y2:left.y0+left.h-24,stroke:css("--teal"),"stroke-width":3,"stroke-dasharray":"8 7"}));
+      }
+
+      const f=x=>.5*(x-a)*(x-a);
+      const L=x=>lagrangianValue(x,a,b,lambda);
+      svg.appendChild(svgEl("path",{d:pathFor(f,left),fill:"none",stroke:css("--cyan"),"stroke-width":4}));
+      if($("#showLagrangianCurve").checked){
+        svg.appendChild(svgEl("path",{d:pathFor(L,left),fill:"none",stroke:css("--violet"),"stroke-width":4}));
+      }
+      const Pstar={x:left.X(sol.xStar),y:left.Y(sol.pStar)};
+      svg.appendChild(svgEl("circle",{cx:Pstar.x,cy:Pstar.y,r:11,fill:css("--teal"),stroke:css("--canvas"),"stroke-width":3}));
+      const PL={x:left.X(xLambda),y:left.Y(q)};
+      svg.appendChild(svgEl("circle",{cx:PL.x,cy:PL.y,r:9,fill:css("--violet"),stroke:css("--canvas"),"stroke-width":3}));
+
+      const qCurve=l=>qValue(a,b,l);
+      svg.appendChild(svgEl("path",{d:pathFor(qCurve,right),fill:"none",stroke:css("--violet"),"stroke-width":4}));
+      const qCurrent={x:right.X(lambda),y:right.Y(q)};
+      svg.appendChild(svgEl("circle",{cx:qCurrent.x,cy:qCurrent.y,r:9,fill:css("--amber"),stroke:css("--canvas"),"stroke-width":3}));
+      const qOpt={x:right.X(sol.lambdaStar),y:right.Y(sol.pStar)};
+      svg.appendChild(svgEl("circle",{cx:qOpt.x,cy:qOpt.y,r:11,fill:css("--teal"),stroke:css("--canvas"),"stroke-width":3}));
+      if($("#showLowerBound").checked){
+        svg.appendChild(svgEl("line",{x1:right.x0+24,y1:right.Y(q),x2:right.x0+right.w-24,y2:right.Y(q),stroke:css("--amber"),"stroke-width":2,"stroke-dasharray":"7 6"}));
+        svg.appendChild(svgEl("line",{x1:right.x0+24,y1:right.Y(sol.pStar),x2:right.x0+right.w-24,y2:right.Y(sol.pStar),stroke:css("--teal"),"stroke-width":2,"stroke-dasharray":"7 6"}));
+      }
+
+      $("#centerAVal").textContent=fmt(a,2);$("#boundBVal").textContent=fmt(b,2);$("#lambdaVal").textContent=fmt(lambda,2);
+      $("#primalXStar").textContent=fmt(sol.xStar,3);$("#primalValue").textContent=fmt(sol.pStar,3);
+      $("#dualBoundValue").textContent=fmt(q,3);$("#currentGap").textContent=fmt(sol.pStar-q,3);
+      renderInto($("#primalDualFormula"),String.raw`L(x,\lambda)=\frac12(x-${fmt(a,2)})^2+\lambda(x-${fmt(b,2)}),\qquad q(\lambda)=-\frac12\lambda^2+(${fmt(a-b,2)})\lambda`);
+      const st=$("#primalDualStatus");
+      if(Math.abs(lambda-sol.lambdaStar)<.03){
+        st.className="status good";
+        st.innerHTML="<strong>Dual optimum reached.</strong> The lower bound equals the primal optimum, and the multiplier satisfies complementary slackness.";
+      }else{
+        st.className="status warning";
+        st.innerHTML="<strong>Valid but nonoptimal certificate.</strong> Weak duality holds, but another multiplier gives a tighter lower bound.";
+      }
+    }
+
+    const gapProblems={
+      convex:{
+        pStar:.5,
+        dStar:.5,
+        lambdaStar:1,
+        q:l=>.5-.5*(l-1)*(l-1),
+        label:"convex + Slater",
+        description:"Strong duality holds. The dual parabola reaches the primal value.",
+        strong:true,
+        convex:true,
+        slater:true
+      },
+      boundary:{
+        pStar:0,
+        dStar:0,
+        lambdaStar:0,
+        q:l=>-l*l/(1+l),
+        label:"convex, no strict feasibility",
+        description:"Strong duality still holds here, but Slater cannot be invoked. Exactness must be checked directly.",
+        strong:true,
+        convex:true,
+        slater:false
+      },
+      nonconvex:{
+        pStar:1,
+        dStar:0,
+        lambdaStar:1,
+        q:l=>-Math.abs(l-1),
+        label:"nonconvex gap",
+        description:"The dual relaxation reaches only 0 while the primal optimum is 1.",
+        strong:false,
+        convex:false,
+        slater:false
+      }
+    };
+
+    ["gapPreset","gapLambda","showPrimalLevel","showDualCurve"].forEach(id=>$("#"+id).addEventListener("input",drawGapLab));
+    $("#snapGapDual").addEventListener("click",()=>{
+      const prob=gapProblems[$("#gapPreset").value];
+      $("#gapLambda").value=prob.lambdaStar;drawGapLab();
+    });
+
+    function drawGapLab(){
+      const svg=$("#gapSvg");clearSvg(svg);
+      const prob=gapProblems[$("#gapPreset").value],lambda=+$("#gapLambda").value;
+      const plot=drawAxesRegion(svg,0,0,900,520,0,6,-2,3);
+      if($("#showDualCurve").checked){
+        svg.appendChild(svgEl("path",{d:pathFor(prob.q,plot),fill:"none",stroke:css("--violet"),"stroke-width":4}));
+      }
+      if($("#showPrimalLevel").checked){
+        svg.appendChild(svgEl("line",{x1:plot.x0+24,y1:plot.Y(prob.pStar),x2:plot.x0+plot.w-24,y2:plot.Y(prob.pStar),stroke:css("--teal"),"stroke-width":4}));
+      }
+      svg.appendChild(svgEl("line",{x1:plot.x0+24,y1:plot.Y(prob.dStar),x2:plot.x0+plot.w-24,y2:plot.Y(prob.dStar),stroke:css("--amber"),"stroke-width":3,"stroke-dasharray":"8 7"}));
+      svg.appendChild(svgEl("circle",{cx:plot.X(lambda),cy:plot.Y(prob.q(lambda)),r:10,fill:css("--violet"),stroke:css("--canvas"),"stroke-width":3}));
+      svg.appendChild(svgEl("circle",{cx:plot.X(prob.lambdaStar),cy:plot.Y(prob.dStar),r:11,fill:css("--amber"),stroke:css("--canvas"),"stroke-width":3}));
+
+      $("#gapLambdaVal").textContent=fmt(lambda,2);
+      $("#gapPrimalValue").textContent=fmt(prob.pStar,3);$("#gapDualValue").textContent=fmt(prob.dStar,3);
+      $("#optimalGap").textContent=fmt(prob.pStar-prob.dStar,3);$("#strongDualityValue").textContent=prob.strong?"yes":"no";
+      renderInto($("#gapFormula"),String.raw`q(${fmt(lambda,2)})=${fmt(prob.q(lambda),3)}\le d^\star=${fmt(prob.dStar,3)}\le p^\star=${fmt(prob.pStar,3)}`);
+      const st=$("#gapStatus");
+      st.className=prob.strong?(prob.slater?"status good":"status warning"):"status bad";
+      st.innerHTML=`<strong>${prob.label}.</strong> ${prob.description}`;
+    }
+
+    ["saddleA","saddleB","saddleX","saddleLambda"].forEach(id=>$("#"+id).addEventListener("input",drawSaddleLab));
+    $("#setSaddlePoint").addEventListener("click",()=>{
+      const a=+$("#saddleA").value,b=+$("#saddleB").value,sol=oneConstraintSolution(a,b);
+      $("#saddleX").value=sol.xStar;$("#saddleLambda").value=sol.lambdaStar;drawSaddleLab();
+    });
+    $("#bestRespondX").addEventListener("click",()=>{
+      const a=+$("#saddleA").value,lambda=+$("#saddleLambda").value;
+      $("#saddleX").value=clamp(a-lambda,-3,4);drawSaddleLab();
+    });
+    $("#bestRespondLambda").addEventListener("click",()=>{
+      const x=+$("#saddleX").value;
+      $("#saddleLambda").value=x>+$("#saddleB").value?5:0;
+      drawSaddleLab();
+    });
+
+    function drawSaddleLab(){
+      const svg=$("#saddleSvg");clearSvg(svg);
+      const a=+$("#saddleA").value,b=+$("#saddleB").value,x=+$("#saddleX").value,lambda=+$("#saddleLambda").value;
+      const sol=oneConstraintSolution(a,b);
+      const left=drawAxesRegion(svg,0,0,560,520,-3,4,-3,10);
+      const right=drawAxesRegion(svg,560,0,340,520,0,5,-3,10);
+      const lx=z=>lagrangianValue(z,a,b,lambda);
+      const ll=l=>lagrangianValue(x,a,b,l);
+      svg.appendChild(svgEl("path",{d:pathFor(lx,left),fill:"none",stroke:css("--cyan"),"stroke-width":4}));
+      svg.appendChild(svgEl("path",{d:pathFor(ll,right),fill:"none",stroke:css("--violet"),"stroke-width":4}));
+      const current={x:left.X(x),y:left.Y(lagrangianValue(x,a,b,lambda))};
+      svg.appendChild(svgEl("circle",{cx:current.x,cy:current.y,r:10,fill:css("--amber"),stroke:css("--canvas"),"stroke-width":3}));
+      const currentDual={x:right.X(lambda),y:right.Y(lagrangianValue(x,a,b,lambda))};
+      svg.appendChild(svgEl("circle",{cx:currentDual.x,cy:currentDual.y,r:10,fill:css("--amber"),stroke:css("--canvas"),"stroke-width":3}));
+      const saddleLeft={x:left.X(sol.xStar),y:left.Y(sol.pStar)};
+      svg.appendChild(svgEl("circle",{cx:saddleLeft.x,cy:saddleLeft.y,r:11,fill:css("--teal"),stroke:css("--canvas"),"stroke-width":3}));
+      const saddleRight={x:right.X(sol.lambdaStar),y:right.Y(sol.pStar)};
+      svg.appendChild(svgEl("circle",{cx:saddleRight.x,cy:saddleRight.y,r:11,fill:css("--teal"),stroke:css("--canvas"),"stroke-width":3}));
+
+      const xBest=Math.abs(x-(a-lambda))<.03;
+      const primalInfeasible=x>b+1e-6;
+      let lambdaBest=false;
+      let lambdaDiagnosis="no";
+      if(primalInfeasible){
+        lambdaDiagnosis="unbounded";
+      }else if(x<b-1e-6){
+        lambdaBest=lambda<.03;
+        lambdaDiagnosis=lambdaBest?"yes":"no";
+      }else{
+        lambdaBest=true;
+        lambdaDiagnosis="any λ";
+      }
+      const isSaddle=Math.abs(x-sol.xStar)<.03&&Math.abs(lambda-sol.lambdaStar)<.03;
+      const L=lagrangianValue(x,a,b,lambda);
+
+      $("#saddleAVal").textContent=fmt(a,2);$("#saddleBVal").textContent=fmt(b,2);
+      $("#saddleXVal").textContent=fmt(x,2);$("#saddleLambdaVal").textContent=fmt(lambda,2);
+      $("#saddleLValue").textContent=fmt(L,3);$("#xBestResponseValue").textContent=xBest?"yes":"no";
+      $("#lambdaBestResponseValue").textContent=lambdaDiagnosis;$("#isSaddleValue").textContent=isSaddle?"yes":"no";
+      renderInto($("#saddleFormula"),String.raw`L(x^\star,\lambda)\le L(x^\star,\lambda^\star)\le L(x,\lambda^\star)`);
+      const st=$("#saddleStatus");
+      if(isSaddle){
+        st.className="status good";st.innerHTML="<strong>Saddle point reached.</strong> The current pair is simultaneously a primal minimizer and a dual maximizer.";
+      }else if(primalInfeasible){
+        st.className="status bad";st.innerHTML="<strong>Dual response is unbounded.</strong> Since x>b, the coefficient of λ is positive and L(x,λ) tends to +∞ as λ tends to +∞.";
+      }else if(xBest||lambdaBest){
+        st.className="status warning";st.innerHTML="<strong>One-sided best response.</strong> One player is optimal against the current choice of the other, but the pair is not yet a saddle point.";
+      }else{
+        st.className="status bad";st.innerHTML="<strong>Neither side is optimal.</strong> Both the primal variable and multiplier can improve their respective objectives.";
+      }
+    }
+
+    $$(".proof-step>button").forEach(btn=>btn.addEventListener("click",()=>{
+      const step=btn.parentElement;step.classList.toggle("open");
+      btn.lastElementChild.textContent=step.classList.contains("open")?"−":"+";
+    }));
+
+    $$(".proof-option").forEach(btn=>btn.addEventListener("click",()=>{
+      $$(".proof-option").forEach(b=>b.classList.remove("correct","wrong"));
+      const feedback=$("#quizFeedback");
+      if(btn.dataset.answer==="correct"){
+        btn.classList.add("correct");feedback.className="status good";
+        feedback.innerHTML="<strong>Correct.</strong> Feasibility makes each inequality term nonpositive and every equality term zero, so the Lagrangian cannot exceed the primal objective.";
+      }else if(btn.dataset.answer==="wrong1"){
+        btn.classList.add("wrong");feedback.className="status bad";
+        feedback.innerHTML="<strong>Wrong sign.</strong> The inequality multiplier terms are nonpositive at feasible points.";
+      }else if(btn.dataset.answer==="wrong2"){
+        btn.classList.add("wrong");feedback.className="status bad";
+        feedback.innerHTML="<strong>Unnecessary assumption.</strong> Weak duality applies to every feasible \(x\), not only to minimizers of the Lagrangian.";
+      }else{
+        btn.classList.add("wrong");feedback.className="status bad";
+        feedback.innerHTML="<strong>Circular reasoning.</strong> Weak duality is used before strong duality and remains valid when a positive gap exists.";
+      }
+    }));
+
+    $$(".counter-tab").forEach(tab=>tab.addEventListener("click",()=>{
+      $$(".counter-tab").forEach(t=>t.classList.toggle("active",t===tab));
+      $$(".counter-content").forEach(c=>c.classList.toggle("active",c.id==="counter-"+tab.dataset.counter));
+    }));
+
+    function drawAll(){drawPrimalDualLab();drawGapLab();drawSaddleLab();}
+    window.addEventListener("load",()=>{renderMath();drawAll();});
+    setTimeout(()=>{renderMath();drawAll();},300);
+  </script>
+</body>
+</html>

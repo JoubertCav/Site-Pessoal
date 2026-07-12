@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Interactive laboratory for the Uniform Boundedness Principle, pointwise bounded operator families, Baire category, and uniform operator control." />
+  <title>Uniform Boundedness Principle — Interactive Laboratory</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #f6f8f6;
+      --surface: rgba(255,255,255,.97);
+      --surface-2: #edf4f4;
+      --surface-3: #e3edef;
+      --text: #172126;
+      --muted: #617178;
+      --line: #d5e0e2;
+      --cyan: #00a8c6;
+      --cyan-deep: #087f98;
+      --teal: #168f88;
+      --violet: #7567c7;
+      --amber: #b57a20;
+      --danger: #b74c4c;
+      --success: #147d64;
+      --shadow: 0 18px 52px rgba(37,56,64,.09);
+      --radius: 22px;
+      --canvas: #ffffff;
+      --axis: #61747b;
+      --grid: #dce5e7;
+      --focus: rgba(0,168,198,.23);
+    }
+
+    html[data-theme="dark"] {
+      --bg: #121a20;
+      --surface: rgba(27,38,46,.97);
+      --surface-2: #213039;
+      --surface-3: #273942;
+      --text: #edf5f6;
+      --muted: #a8b8bd;
+      --line: #344750;
+      --cyan: #44c9e1;
+      --cyan-deep: #7ed9e8;
+      --teal: #58c4b9;
+      --violet: #aaa0e6;
+      --amber: #e3b35d;
+      --danger: #ef8989;
+      --success: #68d0ad;
+      --shadow: 0 18px 52px rgba(0,0,0,.25);
+      --canvas: #17232a;
+      --axis: #9bb0b7;
+      --grid: #30424a;
+      --focus: rgba(68,201,225,.22);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 8% 0%, rgba(0,168,198,.08), transparent 28rem),
+        radial-gradient(circle at 100% 18%, rgba(117,103,199,.06), transparent 30rem),
+        var(--bg);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.65;
+      transition: background .25s ease, color .25s ease;
+    }
+
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    .shell { width: min(1480px, calc(100% - 32px)); margin: 0 auto; }
+
+    .topbar {
+      position: sticky; top: 0; z-index: 50;
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 84%, transparent);
+      backdrop-filter: blur(18px);
+      background: color-mix(in srgb, var(--bg) 82%, transparent);
+    }
+    .topbar-inner { min-height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: -.02em; }
+    .brand-mark {
+      width: 36px; height: 36px; border: 1px solid var(--cyan); border-radius: 12px;
+      display: grid; place-items: center; box-shadow: inset 0 0 0 6px color-mix(in srgb, var(--cyan) 10%, transparent);
+      color: var(--cyan-deep); font-family: "Libre Baskerville", serif; font-weight: 700; font-size: .84rem;
+    }
+    .top-actions { display: flex; gap: 9px; align-items: center; }
+
+    .icon-button, .ghost-button, .primary-button, .segmented button, .proof-option, .counter-tab {
+      border: 1px solid var(--line); background: var(--surface); color: var(--text);
+      border-radius: 12px; min-height: 40px; padding: 9px 13px;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .icon-button:hover, .ghost-button:hover, .segmented button:hover, .proof-option:hover, .counter-tab:hover {
+      transform: translateY(-1px); border-color: var(--cyan);
+    }
+    .primary-button { background: var(--cyan); color: #062e37; font-weight: 700; border-color: transparent; }
+    .primary-button:hover { transform: translateY(-1px); filter: brightness(1.03); }
+
+    h1, h2, h3, .serif { font-family: "Libre Baskerville", Georgia, serif; letter-spacing: -.025em; }
+    h1 { font-size: clamp(2.7rem, 5.8vw, 5.2rem); line-height: 1.03; margin: 12px 0 20px; }
+    h2 { font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.14; margin: 0; }
+    h3 { font-size: 1.2rem; margin: 0; }
+    p { margin: 0; }
+
+    .hero { display: grid; grid-template-columns: minmax(0,1.1fr) minmax(370px,.9fr); gap: 30px; padding: 72px 0 48px; align-items: center; }
+    .eyebrow { color: var(--cyan-deep); font-weight: 700; text-transform: uppercase; letter-spacing: .14em; font-size: .78rem; }
+    .hero p { color: var(--muted); max-width: 850px; font-size: clamp(1.02rem,1.8vw,1.24rem); }
+    .hero-chips { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 28px; }
+    .chip { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--line); background: var(--surface); padding: 8px 11px; border-radius: 999px; color: var(--muted); font-size: .9rem; }
+    .chip::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); }
+
+    .hero-map { background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); border-radius: 28px; padding: 24px; min-height: 410px; overflow: hidden; }
+    .sudden-map { position: relative; height: 350px; }
+    .column-cluster { position: absolute; left: 10px; top: 46px; width: 145px; height: 230px; display: flex; align-items: end; justify-content: space-around; gap: 8px; }
+    .column { width: 18px; border-radius: 9px 9px 3px 3px; background: linear-gradient(180deg, var(--violet), color-mix(in srgb, var(--violet) 25%, transparent)); border: 1px solid color-mix(in srgb, var(--violet) 60%, var(--line)); }
+    .column:nth-child(1){height:78px}.column:nth-child(2){height:118px}.column:nth-child(3){height:96px}.column:nth-child(4){height:153px}.column:nth-child(5){height:128px}
+    .local-ball { position: absolute; left: 190px; top: 78px; width: 118px; height: 118px; border-radius: 50%; border: 2px solid var(--teal); background: color-mix(in srgb, var(--teal) 11%, transparent); box-shadow: inset 0 0 0 18px color-mix(in srgb, var(--teal) 5%, transparent); }
+    .local-ball::before { content: ""; position: absolute; width: 8px; height: 8px; border-radius: 50%; background: var(--teal); left: 55px; top: 55px; }
+    .ceiling { position: absolute; right: 6px; top: 56px; width: 100px; height: 208px; border-left: 2px solid var(--cyan); border-right: 2px solid var(--cyan); border-top: 2px solid var(--cyan); }
+    .ceiling::after { content: "uniform ceiling"; position: absolute; top: -30px; left: -10px; width: 120px; color: var(--cyan-deep); text-align: center; font-size: .78rem; font-weight: 700; }
+    .ceiling-lines { position: absolute; inset: 20px 10px 12px; display: grid; gap: 10px; align-content: end; }
+    .ceiling-lines span { display:block; height: 4px; background: var(--cyan); border-radius: 9px; opacity: .45; }
+    .ceiling-lines span:nth-child(2){width:82%}.ceiling-lines span:nth-child(3){width:65%}.ceiling-lines span:nth-child(4){width:90%}.ceiling-lines span:nth-child(5){width:74%}
+    .map-arrow { position: absolute; height: 2px; background: var(--cyan); }
+    .map-arrow.a { left: 145px; top: 136px; width: 52px; }
+    .map-arrow.b { left: 305px; top: 136px; width: 55px; }
+    .map-arrow::after { content:""; position:absolute; right:-1px; top:-5px; border-left:10px solid var(--cyan); border-top:6px solid transparent; border-bottom:6px solid transparent; }
+    .map-caption { position: absolute; bottom: 5px; left: 0; right: 0; text-align: center; color: var(--muted); }
+    .map-label { position:absolute; color:var(--muted); font-size:.8rem; text-align:center; }
+    .map-label.l1{left:8px;top:286px;width:150px}.map-label.l2{left:180px;top:215px;width:140px}.map-label.l3{right:0;top:286px;width:120px}
+
+    .section { padding: 72px 0; }
+    .section-head { display: flex; justify-content: space-between; gap: 24px; align-items: end; margin-bottom: 27px; }
+    .section-head p { color: var(--muted); max-width: 760px; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; }
+    .lab-grid { display: grid; grid-template-columns: minmax(270px,.72fr) minmax(0,1.38fr) minmax(285px,.9fr); gap: 20px; align-items: start; }
+    .proof-grid { display: grid; grid-template-columns: minmax(0,1.25fr) minmax(310px,.75fr); gap: 20px; }
+    .plot-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+
+    .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px; min-width: 0; }
+    .card.soft { background: var(--surface-2); box-shadow: none; }
+    .card h3 + p { margin-top: 9px; color: var(--muted); }
+    .card-label { color: var(--cyan-deep); font-size: .78rem; text-transform: uppercase; letter-spacing: .12em; font-weight: 700; margin-bottom: 10px; }
+    .muted { color: var(--muted); }
+    .small { font-size: .9rem; }
+    .definition-card { padding: 30px; border-left: 4px solid var(--cyan); }
+    .math-display { margin: 18px 0; overflow-x: auto; overflow-y: hidden; padding: 8px 2px; }
+    .katex-display { margin: .72em 0 !important; }
+    .katex { max-width: 100%; }
+
+    .notation-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px; margin-top: 18px; }
+    .notation-item { border: 1px solid var(--line); background: var(--surface-2); border-radius: 14px; padding: 13px; }
+    .notation-item strong { display: block; margin-bottom: 6px; color: var(--cyan-deep); }
+
+    .quantifier-row { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 10px; margin-top: 22px; }
+    .quantifier-piece { padding: 14px; border: 1px solid var(--line); border-radius: 15px; background: var(--surface-2); text-align: center; }
+    .quantifier-piece strong { display: block; color: var(--cyan-deep); font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 7px; }
+    .quantifier-piece.pointwise { border-top: 3px solid var(--violet); }
+    .quantifier-piece.uniform { border-top: 3px solid var(--cyan); }
+
+    .flow-map { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; margin-top: 18px; }
+    .flow-node { border: 1px solid var(--line); background: var(--surface-2); border-radius: 14px; padding: 12px 14px; min-width: 145px; text-align: center; }
+    .flow-node.clickable { cursor: pointer; }
+    .flow-node.clickable:hover { border-color: var(--cyan); }
+    .flow-arrow { color: var(--cyan-deep); font-size: 1.4rem; }
+
+    .control-stack { display: grid; gap: 17px; }
+    .control label { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; font-weight: 600; margin-bottom: 7px; }
+    .control label span:last-child { color: var(--cyan-deep); font-variant-numeric: tabular-nums; }
+    input[type="range"] { width: 100%; accent-color: var(--cyan); }
+    select { width: 100%; min-height: 43px; border-radius: 11px; border: 1px solid var(--line); background: var(--surface); color: var(--text); padding: 8px 10px; }
+    .control-note { color: var(--muted); font-size: .82rem; margin-top: 5px; }
+
+    .plot { width: 100%; min-height: 400px; border-radius: 16px; overflow: hidden; }
+    .plot.small-plot { min-height: 340px; }
+    .metric-strip { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px; margin-top: 14px; }
+    .metric-cell { background: var(--surface-2); border: 1px solid var(--line); border-radius: 14px; padding: 13px; text-align: center; }
+    .metric-name { color: var(--muted); font-size: .76rem; text-transform: uppercase; letter-spacing: .06em; }
+    .metric-value { font-size: 1.16rem; font-weight: 700; color: var(--cyan-deep); font-variant-numeric: tabular-nums; overflow-wrap:anywhere; }
+
+    .status { border-radius: 14px; padding: 14px; border: 1px solid var(--line); background: var(--surface-2); }
+    .status.good { border-color: color-mix(in srgb, var(--success) 55%, var(--line)); background: color-mix(in srgb, var(--success) 9%, var(--surface)); }
+    .status.bad { border-color: color-mix(in srgb, var(--danger) 55%, var(--line)); background: color-mix(in srgb, var(--danger) 9%, var(--surface)); }
+    .status.warning { border-color: color-mix(in srgb, var(--amber) 55%, var(--line)); background: color-mix(in srgb, var(--amber) 9%, var(--surface)); }
+
+    .segmented { display: flex; flex-wrap: wrap; gap: 8px; }
+    .segmented button.active { background: var(--cyan); color: #062e37; border-color: var(--cyan); font-weight: 700; }
+
+    .proof-steps { display: grid; gap: 11px; }
+    .proof-step { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--surface); }
+    .proof-step button { width: 100%; border: 0; background: transparent; color: var(--text); padding: 15px 17px; display: flex; justify-content: space-between; gap: 16px; text-align: left; font-weight: 700; }
+    .proof-step .proof-body { display: none; padding: 0 17px 17px; color: var(--muted); }
+    .proof-step.open { border-color: var(--cyan); }
+    .proof-step.open .proof-body { display: block; }
+    .proof-number { display: inline-grid; place-items: center; min-width: 25px; height: 25px; border-radius: 50%; background: var(--surface-2); color: var(--cyan-deep); margin-right: 8px; font-size: .82rem; }
+
+    .proof-options { display:grid; gap:9px; margin-top:14px; }
+    .proof-option { width:100%; text-align:left; }
+    .proof-option.correct { border-color:var(--success); background:color-mix(in srgb,var(--success) 10%,var(--surface)); }
+    .proof-option.incorrect { border-color:var(--danger); background:color-mix(in srgb,var(--danger) 10%,var(--surface)); }
+
+    .example-card { position: relative; overflow: hidden; min-height: 290px; }
+    .example-card::after { content: ""; position: absolute; width: 120px; height: 120px; border-radius: 50%; right: -48px; bottom: -48px; border: 1px solid color-mix(in srgb, var(--cyan) 38%, var(--line)); }
+    .badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 5px 9px; font-size: .76rem; font-weight: 700; background: var(--surface-2); color: var(--cyan-deep); border: 1px solid var(--line); margin-bottom: 12px; }
+    .fact-list { display: grid; gap: 9px; margin-top: 15px; }
+    .fact { display: flex; gap: 9px; align-items: flex-start; color: var(--muted); font-size: .92rem; }
+    .fact::before { content: ""; width: 8px; height: 8px; flex: 0 0 8px; margin-top: .52em; border-radius: 50%; background: var(--teal); }
+
+    .counter-tabs { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 18px; }
+    .counter-tab.active { background: var(--danger); border-color: var(--danger); color: #fff; }
+    .counter-panel { display: none; }
+    .counter-panel.active { display: block; }
+    .mistake { border-top: 1px solid var(--line); padding: 17px 0; }
+    .mistake:first-child { border-top: 0; padding-top: 0; }
+    .wrong { color: var(--danger); font-weight: 700; }
+    .correct { color: var(--success); font-weight: 700; }
+
+    .category-stack { display:grid; gap:8px; margin-top:15px; }
+    .category-layer { min-height:44px; border:1px solid var(--line); border-radius:13px; display:flex; align-items:center; justify-content:space-between; padding:8px 12px; background:var(--surface-2); }
+    .category-layer .bar { height:8px; border-radius:99px; background:var(--violet); opacity:.65; }
+    .category-layer.active { border-color:var(--teal); box-shadow:0 0 0 3px color-mix(in srgb,var(--teal) 12%,transparent); }
+    .category-layer.active .bar { background:var(--teal); opacity:1; }
+
+    .footer { padding: 38px 0 60px; color: var(--muted); text-align: center; }
+    .skip-link { position:fixed; left:16px; top:-60px; background:var(--cyan); color:#062e37; padding:10px 14px; border-radius:10px; z-index:100; font-weight:700; }
+    .skip-link:focus { top:12px; }
+    :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+    @media (max-width: 1120px) {
+      .hero, .lab-grid, .proof-grid { grid-template-columns: 1fr; }
+      .hero-map { min-height: 390px; }
+      .notation-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .quantifier-row { grid-template-columns: repeat(2,minmax(0,1fr)); }
+    }
+    @media (max-width: 760px) {
+      .shell { width: min(100% - 20px, 1480px); }
+      .topbar-inner { min-height: 62px; }
+      .brand span:last-child { display:none; }
+      .hero { padding-top: 44px; }
+      .hero-map { display:none; }
+      .section { padding: 52px 0; }
+      .section-head { display:block; }
+      .section-head p { margin-top:12px; }
+      .grid-2, .grid-3, .plot-grid, .metric-strip, .notation-grid, .quantifier-row { grid-template-columns: 1fr; }
+      .card { padding:18px; }
+      .definition-card { padding:22px 18px; }
+      .plot { min-height:360px; }
+      h1 { font-size: clamp(2.4rem, 13vw, 3.6rem); }
+      .top-actions .ghost-button { display:none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand"><div class="brand-mark">UB</div><span>Functional Analysis Laboratory</span></div>
+      <div class="top-actions">
+        <button class="ghost-button" id="resetButton" type="button">Reset laboratory</button>
+        <button class="icon-button" id="themeButton" type="button" aria-label="Toggle light and dark theme">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="shell hero">
+      <div>
+        <div class="eyebrow">Banach–Steinhaus theorem</div>
+        <h1>Uniform boundedness from pointwise control.</h1>
+        <p>
+          Each vector may come with its own bound. The Uniform Boundedness Principle says that, on a Banach domain, these separate local promises cannot drift independently forever: Baire category forces one common bound for the norms of the entire operator family.
+        </p>
+        <div class="hero-chips">
+          <span class="chip">pointwise boundedness</span>
+          <span class="chip">Baire category</span>
+          <span class="chip">operator norms</span>
+          <span class="chip">Banach completeness</span>
+          <span class="chip">quantifier reversal</span>
+        </div>
+      </div>
+
+      <div class="hero-map" aria-label="Concept map from pointwise bounds through Baire interior to uniform control">
+        <div class="sudden-map">
+          <div class="column-cluster" aria-hidden="true">
+            <div class="column"></div><div class="column"></div><div class="column"></div><div class="column"></div><div class="column"></div>
+          </div>
+          <div class="map-arrow a"></div>
+          <div class="local-ball"></div>
+          <div class="map-arrow b"></div>
+          <div class="ceiling"><div class="ceiling-lines"><span></span><span></span><span></span><span></span><span></span></div></div>
+          <div class="map-label l1">one bound for each fixed vector</div>
+          <div class="map-label l2">Baire finds a ball of common control</div>
+          <div class="map-label l3">scaling controls every operator norm</div>
+          <div class="map-caption"><span data-tex="\forall x\,\exists C_x\quad\Longrightarrow\quad\exists C\,\forall T"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">1. The theorem</div><h2>A quantifier miracle.</h2></div>
+          <p>The conclusion is not a restatement of the hypothesis. It replaces a bound depending on the vector by one constant controlling every operator on the whole unit ball.</p>
+        </div>
+
+        <div class="card definition-card">
+          <div class="card-label">Uniform Boundedness Principle</div>
+          <p>Let <span data-tex="X"></span> be a Banach space, let <span data-tex="Y"></span> be a normed space, and let <span data-tex="\mathcal{T}\subseteq\mathcal{L}(X,Y)"></span>. If the family is pointwise bounded, meaning</p>
+          <div class="math-display" data-tex="\forall x\in X,\qquad \sup_{T\in\mathcal T}\|Tx\|<\infty" data-display="true"></div>
+          <p>then the operator norms are uniformly bounded:</p>
+          <div class="math-display" data-tex="\sup_{T\in\mathcal T}\|T\|<\infty." data-display="true"></div>
+          <div class="status good"><strong>What changes:</strong> the hypothesis permits a different bound <span data-tex="C_x"></span> for every vector. The conclusion produces a single constant <span data-tex="C"></span> satisfying <span data-tex="\|Tx\|\le C\|x\|"></span> for every <span data-tex="x"></span> and every <span data-tex="T\in\mathcal T"></span>.</div>
+        </div>
+
+        <div class="notation-grid">
+          <div class="notation-item"><strong><span data-tex="\mathcal L(X,Y)"></span></strong><span class="muted small">continuous linear maps from <span data-tex="X"></span> to <span data-tex="Y"></span></span></div>
+          <div class="notation-item"><strong><span data-tex="\|T\|"></span></strong><span class="muted small"><span data-tex="\sup_{\|x\|\le1}\|Tx\|"></span></span></div>
+          <div class="notation-item"><strong><span data-tex="E_m"></span></strong><span class="muted small"><span data-tex="\{x:\sup_T\|Tx\|\le m\}"></span></span></div>
+          <div class="notation-item"><strong>Baire space</strong><span class="muted small">a space not expressible as a countable union of closed nowhere-dense sets</span></div>
+        </div>
+
+        <div class="quantifier-row">
+          <div class="quantifier-piece pointwise"><strong>Given</strong><span data-tex="\forall x\in X"></span></div>
+          <div class="quantifier-piece pointwise"><strong>Vector-dependent</strong><span data-tex="\exists C_x<\infty"></span></div>
+          <div class="quantifier-piece pointwise"><strong>Controls</strong><span data-tex="\forall T\in\mathcal T,\ \|Tx\|\le C_x"></span></div>
+          <div class="quantifier-piece uniform"><strong>Conclude</strong><span data-tex="\exists C<\infty"></span></div>
+          <div class="quantifier-piece uniform"><strong>Uniformly</strong><span data-tex="\forall T,\forall x,\ \|Tx\|\le C\|x\|"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="family-lab">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">2. Operator-family laboratory</div><h2>Watch pointwise values and operator norms diverge—or lock together.</h2></div>
+          <p>The same family can look harmless on each chosen vector while its operator norms grow without bound. The missing ingredient in the pathological example is completeness of the domain.</p>
+        </div>
+
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Controls</div>
+            <div class="control-stack">
+              <div class="control">
+                <label for="scenarioSelect"><span>Family</span></label>
+                <select id="scenarioSelect">
+                  <option value="coordinate">Coordinate maps on ℓ¹</option>
+                  <option value="c00">Diagonal escape on c₀₀</option>
+                  <option value="dense">Dense-subset trap in ℓ¹</option>
+                  <option value="partial">Convergent partial sums on ℓ¹</option>
+                </select>
+                <div class="control-note">Changes the domain, operators, selected vector, and theorem status.</div>
+              </div>
+              <div class="control">
+                <label for="nMax"><span>Number of operators</span><span id="nMaxValue">24</span></label>
+                <input id="nMax" type="range" min="8" max="64" step="1" value="24" />
+                <div class="control-note">Displays the first <span data-tex="N"></span> members of the family.</div>
+              </div>
+              <div class="control" id="supportControl">
+                <label for="supportSize"><span>Finite support</span><span id="supportValue">8</span></label>
+                <input id="supportSize" type="range" min="2" max="20" step="1" value="8" />
+                <div class="control-note">For <span data-tex="c_{00}"></span>, the chosen vector vanishes after this index.</div>
+              </div>
+              <div class="control">
+                <label for="selectedOperator"><span>Selected operator</span><span id="selectedOperatorValue">6</span></label>
+                <input id="selectedOperator" type="range" min="1" max="24" step="1" value="6" />
+                <div class="control-note">Highlights one operator in both plots.</div>
+              </div>
+              <button class="primary-button" id="animateButton" type="button">Animate through the family</button>
+            </div>
+          </aside>
+
+          <div class="card">
+            <div class="plot-grid">
+              <div>
+                <div class="card-label">Global size of each operator</div>
+                <div id="normPlot" class="plot small-plot" aria-label="Operator norms by index"></div>
+              </div>
+              <div>
+                <div class="card-label">Action on one fixed vector</div>
+                <div id="valuePlot" class="plot small-plot" aria-label="Pointwise operator values by index"></div>
+              </div>
+            </div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">Displayed sup norm</div><div class="metric-value" id="displayedNormSup">1.00</div></div>
+              <div class="metric-cell"><div class="metric-name">Pointwise bound</div><div class="metric-value" id="pointwiseSup">0.50</div></div>
+              <div class="metric-cell"><div class="metric-name">Selected value</div><div class="metric-value" id="selectedValue">0.02</div></div>
+              <div class="metric-cell"><div class="metric-name">Theorem status</div><div class="metric-value" id="theoremStatus">applies</div></div>
+            </div>
+          </div>
+
+          <aside class="card">
+            <div class="card-label">Formal meaning</div>
+            <h3 id="scenarioTitle">Coordinate maps on <span data-tex="\ell^1"></span></h3>
+            <div class="math-display" id="scenarioFormula"></div>
+            <p class="muted small" id="scenarioExplanation"></p>
+            <div class="status good" id="scenarioStatus" style="margin-top:16px"></div>
+            <div class="card soft" style="margin-top:16px">
+              <div class="card-label">Read the diagrams</div>
+              <p class="muted small"><strong>Left:</strong> the height at index <span data-tex="n"></span> is <span data-tex="\|T_n\|"></span>. <strong>Right:</strong> the height is <span data-tex="|T_nx|"></span> for one fixed vector. A family may be pointwise bounded even when the left plot escapes—unless the domain is Banach.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">3. Diagonal escape</div><h2>How an incomplete space hides unbounded operator norms.</h2></div>
+          <p>Each column represents one basis vector. In the incomplete space <span data-tex="c_{00}"></span>, every vector uses only finitely many columns, so a growing diagonal can escape every fixed vector.</p>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="segmented" id="heatmapMode">
+              <button type="button" data-mode="bounded" class="active">Uniformly bounded family</button>
+              <button type="button" data-mode="escape">Diagonal escape on <span data-tex="c_{00}"></span></button>
+            </div>
+            <div id="heatmapPlot" class="plot" aria-label="Heatmap of operator values on basis vectors"></div>
+          </div>
+          <div class="card">
+            <div class="card-label">The mechanism</div>
+            <div class="math-display" data-tex="T_n(e_j)=\begin{cases}n,&n=j,\\0,&n\ne j.\end{cases}" data-display="true"></div>
+            <p class="muted">For every fixed basis vector <span data-tex="e_j"></span>, the sequence <span data-tex="\{T_n(e_j)\}_n"></span> contains one finite spike and is therefore bounded. For every <span data-tex="x\in c_{00}"></span>, only finitely many coordinates are nonzero, so <span data-tex="\sup_n|n x_n|<\infty"></span>.</p>
+            <div class="status bad" style="margin-top:16px"><strong>But:</strong> <span data-tex="\|T_n\|=n\to\infty"></span>. This does not contradict the theorem because <span data-tex="c_{00}"></span> with the <span data-tex="\ell^1"></span>-norm is not complete.</div>
+            <div class="card soft" style="margin-top:16px">
+              <div class="card-label">Visual code</div>
+              <p class="muted small">Rows are operators, columns are basis vectors, and color intensity is <span data-tex="|T_n(e_j)|"></span>. The bright diagonal moves outward. A fixed finite-support vector sees only finitely many of its entries.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="baire-lab">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">4. Baire microscope</div><h2>From a countable cover to a ball of common control.</h2></div>
+          <p>The displayed finite-dimensional family is an exact geometric model of the sets <span data-tex="E_m"></span>. Baire category is the infinite-dimensional engine ensuring that some such set has interior.</p>
+        </div>
+
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Controls</div>
+            <div class="control-stack">
+              <div class="control">
+                <label for="familyScale"><span>Family scale</span><span id="familyScaleValue">2.00</span></label>
+                <input id="familyScale" type="range" min="0.5" max="4" step="0.05" value="2" />
+                <div class="control-note">Scales the norms of the functionals defining <span data-tex="E_m"></span>.</div>
+              </div>
+              <div class="control">
+                <label for="levelM"><span>Sublevel index <span data-tex="m"></span></span><span id="levelMValue">4.00</span></label>
+                <input id="levelM" type="range" min="1" max="10" step="0.1" value="4" />
+                <div class="control-note">Larger <span data-tex="m"></span> enlarges the common-control set.</div>
+              </div>
+              <div class="control">
+                <label for="centerShift"><span>Ball-center shift</span><span id="centerShiftValue">0.30</span></label>
+                <input id="centerShift" type="range" min="0" max="0.72" step="0.01" value="0.30" />
+                <div class="control-note">Moves the interior witness away from the origin while keeping it inside <span data-tex="E_m"></span>.</div>
+              </div>
+              <div class="control">
+                <label for="centerAngle"><span>Center angle</span><span id="centerAngleValue">28°</span></label>
+                <input id="centerAngle" type="range" min="0" max="360" step="1" value="28" />
+              </div>
+            </div>
+          </aside>
+
+          <div class="card">
+            <div id="bairePlot" class="plot" aria-label="Sublevel set with interior ball"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">Local-ball radius</div><div class="metric-value" id="localRadius">0.50</div></div>
+              <div class="metric-cell"><div class="metric-name">Baire estimate</div><div class="metric-value" id="baireEstimate">16.0</div></div>
+              <div class="metric-cell"><div class="metric-name">Actual family bound</div><div class="metric-value" id="actualBound">2.5</div></div>
+              <div class="metric-cell"><div class="metric-name">Interior</div><div class="metric-value" id="interiorStatus">nonempty</div></div>
+            </div>
+          </div>
+
+          <aside class="card">
+            <div class="card-label">What the picture proves locally</div>
+            <div class="math-display" data-tex="\overline{B}(x_0,r)\subseteq E_m" data-display="true"></div>
+            <p class="muted small">For <span data-tex="\|h\|\le r"></span>, both <span data-tex="x_0"></span> and <span data-tex="x_0+h"></span> lie in <span data-tex="E_m"></span>. Therefore</p>
+            <div class="math-display" data-tex="\|Th\|\le \|T(x_0+h)\|+\|Tx_0\|\le 2m." data-display="true"></div>
+            <p class="muted small">Scale <span data-tex="h"></span> from radius <span data-tex="r"></span> to the unit sphere:</p>
+            <div class="math-display" data-tex="\|T\|\le \frac{2m}{r}\qquad(T\in\mathcal T)." data-display="true"></div>
+            <div class="status warning" style="margin-top:14px">The estimate need not be sharp. Its role is to be finite and independent of <span data-tex="T"></span>.</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="proof">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">5. Proof architecture</div><h2>Closed sets, interior, translation, scaling.</h2></div>
+          <p>The proof is short only after the right sets are invented. Every step has one precise job.</p>
+        </div>
+
+        <div class="flow-map">
+          <div class="flow-node clickable" data-info="banach"><span data-tex="X\text{ Banach}"></span></div><div class="flow-arrow">+</div>
+          <div class="flow-node clickable" data-info="pointwise">pointwise boundedness</div><div class="flow-arrow">→</div>
+          <div class="flow-node clickable" data-info="cover"><span data-tex="X=\bigcup_m E_m"></span></div><div class="flow-arrow">→</div>
+          <div class="flow-node clickable" data-info="baire">some <span data-tex="E_m"></span> has interior</div><div class="flow-arrow">→</div>
+          <div class="flow-node clickable" data-info="scale">uniform operator bound</div>
+        </div>
+        <div id="flowInfo" class="status" style="margin:15px 0 22px">Click a node to see its exact role in the proof.</div>
+
+        <div class="proof-grid">
+          <div class="card">
+            <div class="proof-steps">
+              <div class="proof-step open">
+                <button type="button"><span><span class="proof-number">1</span>Build common-control sets</span><span>⌄</span></button>
+                <div class="proof-body"><div class="math-display" data-tex="E_m=\left\{x\in X:\sup_{T\in\mathcal T}\|Tx\|\le m\right\}." data-display="true"></div><p>The sets are indexed by integers so that Baire can be applied to a countable cover.</p></div>
+              </div>
+              <div class="proof-step">
+                <button type="button"><span><span class="proof-number">2</span>Verify closedness</span><span>⌄</span></button>
+                <div class="proof-body"><div class="math-display" data-tex="E_m=\bigcap_{T\in\mathcal T}\{x:\|Tx\|\le m\}." data-display="true"></div><p>Each set in the intersection is closed because <span data-tex="T"></span> is continuous. Arbitrary intersections of closed sets are closed.</p></div>
+              </div>
+              <div class="proof-step">
+                <button type="button"><span><span class="proof-number">3</span>Use pointwise boundedness to cover <span data-tex="X"></span></span><span>⌄</span></button>
+                <div class="proof-body"><div class="math-display" data-tex="X=\bigcup_{m=1}^{\infty}E_m." data-display="true"></div><p>For a fixed <span data-tex="x"></span>, the finite number <span data-tex="\sup_T\|Tx\|"></span> lies below some integer <span data-tex="m"></span>.</p></div>
+              </div>
+              <div class="proof-step">
+                <button type="button"><span><span class="proof-number">4</span>Invoke Baire category</span><span>⌄</span></button>
+                <div class="proof-body"><div class="math-display" data-tex="\exists m_0,x_0,r>0:\quad \overline{B}(x_0,r)\subseteq E_{m_0}." data-display="true"></div><p>A complete metric space cannot be a countable union of closed sets all having empty interior. After obtaining an open ball, shrink its radius so that its closed ball remains inside the same set.</p></div>
+              </div>
+              <div class="proof-step">
+                <button type="button"><span><span class="proof-number">5</span>Translate local control to the origin</span><span>⌄</span></button>
+                <div class="proof-body"><div class="math-display" data-tex="\|Th\|=\|T(x_0+h)-Tx_0\|\le2m_0\qquad(\|h\|\le r)." data-display="true"></div><p>Linearity turns the difference of two controlled points into control of a neighborhood of zero.</p></div>
+              </div>
+              <div class="proof-step">
+                <button type="button"><span><span class="proof-number">6</span>Scale the ball to the unit sphere</span><span>⌄</span></button>
+                <div class="proof-body"><div class="math-display" data-tex="\|Tx\|\le\frac{2m_0}{r}\|x\|,\qquad\text{hence}\qquad\sup_{T\in\mathcal T}\|T\|\le\frac{2m_0}{r}." data-display="true"></div><p>This is the desired constant, independent of both <span data-tex="x"></span> and <span data-tex="T"></span>.</p></div>
+              </div>
+            </div>
+          </div>
+
+          <aside class="card">
+            <div class="card-label">Guided theorem prover</div>
+            <h3 id="quizTitle">Why are the sets <span data-tex="E_m"></span> closed?</h3>
+            <div id="quizOptions" class="proof-options"></div>
+            <div id="quizFeedback" class="status" style="margin-top:14px">Choose the logically sufficient reason.</div>
+            <button id="nextQuiz" class="ghost-button" type="button" style="margin-top:12px; width:100%">Next proof decision</button>
+            <div class="card soft" style="margin-top:16px">
+              <div class="card-label">Proof strategy</div>
+              <p class="muted small"><strong>Category argument:</strong> convert pointwise information into a countable closed cover, obtain interior from completeness, then exploit linearity and homogeneity.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">6. Consequences and examples</div><h2>Where sudden uniform control appears.</h2></div>
+          <p>The theorem is often used indirectly: pointwise convergence automatically gives pointwise boundedness, and the principle supplies the missing operator-norm estimate.</p>
+        </div>
+        <div class="grid-3">
+          <article class="card example-card">
+            <div class="badge">Canonical Banach family</div>
+            <h3>Coordinate functionals on <span data-tex="\ell^1"></span></h3>
+            <div class="math-display" data-tex="T_n(x)=x_n,\qquad \|T_n\|=1." data-display="true"></div>
+            <div class="fact-list">
+              <div class="fact"><span data-tex="|x_n|\le\|x\|_1"></span> for every <span data-tex="n"></span>.</div>
+              <div class="fact">The pointwise bound is already uniform.</div>
+              <div class="fact">The family illustrates the theorem without pathology.</div>
+            </div>
+          </article>
+
+          <article class="card example-card">
+            <div class="badge">Pointwise convergence corollary</div>
+            <h3>Limits of continuous operators</h3>
+            <div class="math-display" data-tex="T_nx\to Tx\quad\text{for every }x\in X" data-display="true"></div>
+            <div class="fact-list">
+              <div class="fact">Every convergent sequence is bounded, so <span data-tex="\sup_n\|T_nx\|<\infty"></span>.</div>
+              <div class="fact">Uniform boundedness gives <span data-tex="\sup_n\|T_n\|<\infty"></span>.</div>
+              <div class="fact">Then <span data-tex="\|Tx\|\le C\|x\|"></span>, so the pointwise limit is continuous.</div>
+            </div>
+          </article>
+
+          <article class="card example-card">
+            <div class="badge">Finite-dimensional analogy</div>
+            <h3>Checking a basis is enough</h3>
+            <div class="math-display" data-tex="x=\sum_{j=1}^{d}x_je_j" data-display="true"></div>
+            <div class="fact-list">
+              <div class="fact">Pointwise bounds on finitely many basis vectors combine into one global bound.</div>
+              <div class="fact">No Baire theorem is needed in finite dimension.</div>
+              <div class="fact">Baire replaces the missing finite basis in infinite dimension.</div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="counterexamples">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">7. What Can Go Wrong?</div><h2>Every hypothesis blocks a real escape route.</h2></div>
+          <p>Remove completeness, weaken the pointwise hypothesis to a dense set, or allow discontinuous linear maps, and the conclusion can fail.</p>
+        </div>
+
+        <div class="card">
+          <div class="counter-tabs">
+            <button class="counter-tab active" type="button" data-counter="incomplete">Incomplete domain</button>
+            <button class="counter-tab" type="button" data-counter="denseonly">Bounded only on a dense set</button>
+            <button class="counter-tab" type="button" data-counter="continuity">No continuity assumption</button>
+          </div>
+
+          <div class="counter-panel active" data-panel="incomplete">
+            <div class="grid-2">
+              <div>
+                <div class="card-label">Omitted hypothesis</div>
+                <h3>The domain is not Banach</h3>
+                <div class="math-display" data-tex="X=c_{00}\text{ with }\|x\|_1,\qquad T_n(x)=n x_n." data-display="true"></div>
+              </div>
+              <div class="status bad"><strong>Failure:</strong> for every finite-support <span data-tex="x"></span>, <span data-tex="\sup_n|T_nx|<\infty"></span>, but <span data-tex="\|T_n\|=n\to\infty"></span>. The Baire step fails because <span data-tex="c_{00}"></span> is meagre in itself under this incomplete norm.</div>
+            </div>
+          </div>
+
+          <div class="counter-panel" data-panel="denseonly">
+            <div class="grid-2">
+              <div>
+                <div class="card-label">Weakened hypothesis</div>
+                <h3>Pointwise boundedness only on <span data-tex="c_{00}"></span>, dense in <span data-tex="\ell^1"></span></h3>
+                <div class="math-display" data-tex="T_n(x)=n x_n\in\mathbb R,\qquad \|T_n\|=n." data-display="true"></div>
+              </div>
+              <div class="status bad"><strong>Failure:</strong> every <span data-tex="x\in c_{00}"></span> sees only finitely many nonzero values, yet there exists <span data-tex="x\in\ell^1"></span> with <span data-tex="\sup_n n|x_n|=\infty"></span>. For example, set <span data-tex="x_{2^k}=k/2^k"></span> and all other coordinates to zero.</div>
+            </div>
+          </div>
+
+          <div class="counter-panel" data-panel="continuity">
+            <div class="grid-2">
+              <div>
+                <div class="card-label">Omitted hypothesis</div>
+                <h3>The maps are merely algebraically linear</h3>
+                <p class="muted">On any infinite-dimensional Banach space, a Hamel-basis construction (using choice) yields an everywhere-defined discontinuous linear functional <span data-tex="f:X\to\mathbb R"></span>.</p>
+              </div>
+              <div class="status bad"><strong>Failure:</strong> the singleton family <span data-tex="\{f\}"></span> is trivially pointwise bounded—each <span data-tex="f(x)"></span> is a finite scalar—but <span data-tex="f"></span> has no finite operator norm. In the proof, <span data-tex="E_m=f^{-1}([-m,m])"></span> need not be closed.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">8. Common mistakes</div><h2>Read the quantifiers before touching the proof.</h2></div>
+          <p>Most errors come from silently replacing pointwise boundedness by a stronger uniform statement or using compactness where only category is available.</p>
+        </div>
+        <div class="card">
+          <div class="mistake"><div class="wrong">Wrong: “pointwise bounded” means one constant works for every vector.</div><p class="muted">That is already close to the conclusion. The hypothesis allows <span data-tex="C_x"></span> to depend arbitrarily on <span data-tex="x"></span>.</p><div class="correct">Correct: <span data-tex="\forall x\,\exists C_x\,\forall T"></span>.</div></div>
+          <div class="mistake"><div class="wrong">Wrong: the codomain must be Banach.</div><p class="muted">The proof uses completeness only for the domain <span data-tex="X"></span>. The codomain only needs a norm.</p><div class="correct">Correct: <span data-tex="X"></span> Banach, <span data-tex="Y"></span> normed.</div></div>
+          <div class="mistake"><div class="wrong">Wrong: compactness of the unit ball proves the result.</div><p class="muted">Closed unit balls are generally not compact in infinite-dimensional Banach spaces.</p><div class="correct">Correct: Baire category replaces unavailable compactness.</div></div>
+          <div class="mistake"><div class="wrong">Wrong: it is enough to test a dense subset.</div><p class="muted">The family <span data-tex="T_n(x)=n x_n"></span> is bounded on the dense subspace <span data-tex="c_{00}\subset\ell^1"></span> but not pointwise bounded on all of <span data-tex="\ell^1"></span>.</p><div class="correct">Correct: the hypothesis is required for every <span data-tex="x\in X"></span>.</div></div>
+          <div class="mistake"><div class="wrong">Wrong: Baire identifies a particular operator attaining the supremum.</div><p class="muted">Neither the pointwise supremum nor the operator-norm supremum must be attained.</p><div class="correct">Correct: the theorem produces a finite upper bound, not necessarily a maximizer.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="card definition-card">
+          <div class="card-label">Final synthesis</div>
+          <div class="math-display" data-tex="\boxed{\text{pointwise bounds}+\text{completeness}+\text{linearity}\Longrightarrow\text{uniform operator control}}" data-display="true"></div>
+          <p class="muted">The theorem works by converting infinitely many vector-dependent estimates into a countable closed cover. Baire forces one piece of that cover to contain a ball. Linearity moves the ball to the origin; homogeneity expands the local estimate to all scales. The apparent quantifier reversal is therefore a geometric consequence of completeness.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="shell">Uniform Boundedness Principle · Interactive Functional Analysis Laboratory</div></footer>
+
+  <script>
+    'use strict';
+
+    const $ = (id) => document.getElementById(id);
+    const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    const state = {
+      scenario: 'coordinate',
+      nMax: 24,
+      support: 8,
+      selected: 6,
+      animation: null,
+      heatmapMode: 'bounded',
+      familyScale: 2,
+      levelM: 4,
+      centerShift: .30,
+      centerAngle: 28,
+      quizIndex: 0
+    };
+
+    function renderMath(root = document) {
+      if (!window.katex) return;
+      root.querySelectorAll('[data-tex]').forEach((el) => {
+        if (el.dataset.rendered === '1') return;
+        try {
+          katex.render(el.dataset.tex, el, {
+            displayMode: el.dataset.display === 'true',
+            throwOnError: false,
+            strict: false
+          });
+          el.dataset.rendered = '1';
+        } catch (err) {
+          console.error('KaTeX render error:', err, el.dataset.tex);
+        }
+      });
+    }
+
+    function renderDynamicMath(el, tex, display = true) {
+      if (!window.katex || !el) return;
+      katex.render(tex, el, { displayMode: display, throwOnError: false, strict: false });
+    }
+
+    function plotLayout(title, yTitle, height = 350) {
+      return {
+        title: { text: title, font: { family: 'Libre Baskerville, serif', size: 15, color: css('--text') } },
+        height,
+        margin: { l: 55, r: 18, t: 54, b: 48 },
+        paper_bgcolor: css('--canvas'),
+        plot_bgcolor: css('--canvas'),
+        font: { family: 'Inter, sans-serif', color: css('--text') },
+        xaxis: { title: 'operator index n', gridcolor: css('--grid'), zerolinecolor: css('--grid'), color: css('--axis'), fixedrange: true },
+        yaxis: { title: yTitle, gridcolor: css('--grid'), zerolinecolor: css('--grid'), color: css('--axis'), rangemode: 'tozero', fixedrange: true },
+        showlegend: false,
+        hovermode: 'closest'
+      };
+    }
+
+    function plotConfig() {
+      return { responsive: true, displaylogo: false, modeBarButtonsToRemove: ['lasso2d','select2d','autoScale2d'] };
+    }
+
+    const scenarios = {
+      coordinate: {
+        title: String.raw`Coordinate maps on \ell^1`,
+        formula: String.raw`X=\ell^1,\qquad T_n(x)=x_n,\qquad \|T_n\|=1.`,
+        explanation: 'The selected vector has coordinates xₙ = (−1)ⁿ2⁻ⁿ. Every pointwise value is dominated by the ℓ¹ norm, and the family is uniformly bounded.',
+        className: 'good',
+        status: String.raw`X\text{ is Banach and }\sup_n\|T_n\|=1.\ \text{The theorem applies.}`,
+        data(N) {
+          const n = Array.from({length:N}, (_,i)=>i+1);
+          return { n, norms:n.map(()=>1), values:n.map(k=>Math.pow(2,-k)), theoretical:'applies' };
+        }
+      },
+      c00: {
+        title: String.raw`Diagonal escape on c_{00}`,
+        formula: String.raw`X=c_{00}\subset\ell^1,\qquad T_n(x)=n x_n,\qquad \|T_n\|=n.`,
+        explanation: 'The selected vector has xₖ = (−1)ᵏ/k up to the chosen support and zero afterward. Thus |Tₙx| equals 1 on finitely many indices and 0 later, even though the operator norms grow.',
+        className: 'bad',
+        status: String.raw`\text{Pointwise bounded, but }X\text{ is incomplete; uniform boundedness fails.}`,
+        data(N, support) {
+          const n = Array.from({length:N}, (_,i)=>i+1);
+          return { n, norms:n.slice(), values:n.map(k=>k<=support ? 1 : 0), theoretical:'fails: incomplete' };
+        }
+      },
+      dense: {
+        title: String.raw`Dense-subset trap in \ell^1`,
+        formula: String.raw`X=\ell^1,\qquad T_n(x)=n x_n,\qquad \|T_n\|=n.`,
+        explanation: 'The maps are bounded on every finite-support vector, but not pointwise bounded on all of ℓ¹. The displayed sparse witness has x₂ᵏ = k/2ᵏ, so T₂ᵏx = k.',
+        className: 'warning',
+        status: String.raw`\text{The domain is Banach, but the pointwise hypothesis fails on all of }X.`,
+        data(N) {
+          const n = Array.from({length:N}, (_,i)=>i+1);
+          const values = n.map(k => {
+            const lg = Math.log2(k);
+            return Number.isInteger(lg) ? lg : 0;
+          });
+          return { n, norms:n.slice(), values, theoretical:'hypothesis fails' };
+        }
+      },
+      partial: {
+        title: String.raw`Partial-sum operators on \ell^1`,
+        formula: String.raw`S_n(x)=\sum_{k=1}^{n}x_k,\qquad \|S_n\|=1.`,
+        explanation: 'For xₖ = 2⁻ᵏ, the values Sₙx approach 1. Pointwise convergence implies pointwise boundedness, and the theorem predicts a common norm bound.',
+        className: 'good',
+        status: String.raw`S_nx\to\sum_{k=1}^{\infty}x_k\ \text{for every }x\in\ell^1,\quad \sup_n\|S_n\|=1.`,
+        data(N) {
+          const n = Array.from({length:N}, (_,i)=>i+1);
+          return { n, norms:n.map(()=>1), values:n.map(k=>1-Math.pow(2,-k)), theoretical:'applies' };
+        }
+      }
+    };
+
+    function updateFamilyLab() {
+      state.scenario = $('scenarioSelect').value;
+      state.nMax = Number($('nMax').value);
+      state.support = Number($('supportSize').value);
+      state.selected = Math.min(Number($('selectedOperator').value), state.nMax);
+
+      $('nMaxValue').textContent = state.nMax;
+      $('supportValue').textContent = state.support;
+      $('selectedOperator').max = state.nMax;
+      $('selectedOperator').value = state.selected;
+      $('selectedOperatorValue').textContent = state.selected;
+      $('supportControl').style.display = state.scenario === 'c00' ? 'block' : 'none';
+
+      const scenario = scenarios[state.scenario];
+      const data = scenario.data(state.nMax, state.support);
+      const selectedIndex = state.selected - 1;
+      const maxNorm = Math.max(...data.norms);
+      const maxValue = Math.max(...data.values.map(Math.abs));
+      const selectedValue = data.values[selectedIndex] ?? 0;
+
+      const normColors = data.n.map(k => k === state.selected ? css('--amber') : css('--cyan'));
+      const valueColors = data.n.map(k => k === state.selected ? css('--amber') : css('--violet'));
+
+      Plotly.react('normPlot', [{
+        x:data.n, y:data.norms, type:'bar', marker:{color:normColors},
+        hovertemplate:'n=%{x}<br>||Tₙ||=%{y:.4g}<extra></extra>'
+      }], plotLayout('Operator norms', '||Tₙ||'), plotConfig());
+
+      Plotly.react('valuePlot', [{
+        x:data.n, y:data.values.map(Math.abs), type:'bar', marker:{color:valueColors},
+        hovertemplate:'n=%{x}<br>|Tₙx|=%{y:.4g}<extra></extra>'
+      }], plotLayout('One fixed vector', '|Tₙx|'), plotConfig());
+
+      $('displayedNormSup').textContent = maxNorm.toFixed(maxNorm >= 10 ? 1 : 2);
+      $('pointwiseSup').textContent = maxValue.toFixed(maxValue >= 10 ? 1 : 3);
+      $('selectedValue').textContent = Math.abs(selectedValue).toFixed(3);
+      $('theoremStatus').textContent = data.theoretical;
+
+      renderDynamicMath($('scenarioTitle'), scenario.title, false);
+      renderDynamicMath($('scenarioFormula'), scenario.formula, true);
+      $('scenarioExplanation').textContent = scenario.explanation;
+      $('scenarioStatus').className = `status ${scenario.className}`;
+      renderDynamicMath($('scenarioStatus'), scenario.status, false);
+    }
+
+    function animateFamily() {
+      if (state.animation) {
+        clearInterval(state.animation);
+        state.animation = null;
+        $('animateButton').textContent = 'Animate through the family';
+        return;
+      }
+      $('animateButton').textContent = 'Stop animation';
+      state.animation = setInterval(() => {
+        let next = Number($('selectedOperator').value) + 1;
+        if (next > state.nMax) next = 1;
+        $('selectedOperator').value = next;
+        updateFamilyLab();
+      }, 420);
+    }
+
+    function updateHeatmap() {
+      const N = Math.min(24, state.nMax);
+      const x = Array.from({length:N},(_,i)=>`e${i+1}`);
+      const y = Array.from({length:N},(_,i)=>`T${i+1}`);
+      const z = Array.from({length:N},(_,i)=>Array.from({length:N},(_,j)=> {
+        if (i !== j) return 0;
+        return state.heatmapMode === 'bounded' ? 1 : i+1;
+      }));
+      Plotly.react('heatmapPlot', [{
+        z, x, y, type:'heatmap', colorscale:[
+          [0, css('--canvas')], [.25, css('--surface-3')], [.55, css('--violet')], [1, css('--danger')]
+        ], showscale:true,
+        colorbar:{title:'|Tₙ(eⱼ)|', tickfont:{color:css('--text')}, titlefont:{color:css('--text')}},
+        hovertemplate:'%{y}(%{x}) = %{z}<extra></extra>'
+      }], {
+        height:430, margin:{l:60,r:50,t:30,b:55},
+        paper_bgcolor:css('--canvas'), plot_bgcolor:css('--canvas'),
+        font:{family:'Inter, sans-serif',color:css('--text')},
+        xaxis:{title:'basis vector',color:css('--axis'),fixedrange:true},
+        yaxis:{title:'operator',color:css('--axis'),autorange:'reversed',fixedrange:true}
+      }, plotConfig());
+    }
+
+    function coefficientVectors(scale) {
+      const angles = [0, 43, 91, 137, 211, 276].map(d=>d*Math.PI/180);
+      const multipliers = [1, .82, 1.18, .92, 1.08, .76];
+      return angles.map((a,i)=>({x:scale*multipliers[i]*Math.cos(a), y:scale*multipliers[i]*Math.sin(a)}));
+    }
+
+    function updateBaireLab() {
+      state.familyScale = Number($('familyScale').value);
+      state.levelM = Number($('levelM').value);
+      state.centerShift = Number($('centerShift').value);
+      state.centerAngle = Number($('centerAngle').value);
+      $('familyScaleValue').textContent = state.familyScale.toFixed(2);
+      $('levelMValue').textContent = state.levelM.toFixed(2);
+      $('centerShiftValue').textContent = state.centerShift.toFixed(2);
+      $('centerAngleValue').textContent = `${state.centerAngle}°`;
+
+      const A = coefficientVectors(state.familyScale);
+      const maxNorm = Math.max(...A.map(a=>Math.hypot(a.x,a.y)));
+      const theta = Array.from({length:361},(_,i)=>2*Math.PI*i/360);
+      const boundary = theta.map(t=> {
+        const ux=Math.cos(t), uy=Math.sin(t);
+        const denom=Math.max(...A.map(a=>Math.abs(a.x*ux+a.y*uy)));
+        const r=state.levelM/Math.max(denom,1e-9);
+        return {x:r*ux,y:r*uy};
+      });
+      const originRadius = state.levelM/maxNorm;
+      const ang = state.centerAngle*Math.PI/180;
+      const center = {x:state.centerShift*originRadius*Math.cos(ang),y:state.centerShift*originRadius*Math.sin(ang)};
+      const localRadius = Math.max(0, Math.min(...A.map(a=>(state.levelM-Math.abs(a.x*center.x+a.y*center.y))/Math.hypot(a.x,a.y))));
+      const circleTheta = Array.from({length:181},(_,i)=>2*Math.PI*i/180);
+      const circle = circleTheta.map(t=>({x:center.x+localRadius*Math.cos(t),y:center.y+localRadius*Math.sin(t)}));
+      const estimate = localRadius > 1e-9 ? 2*state.levelM/localRadius : Infinity;
+      const extent = Math.max(...boundary.map(p=>Math.max(Math.abs(p.x),Math.abs(p.y))))*1.18;
+
+      const traces = [
+        {x:boundary.map(p=>p.x),y:boundary.map(p=>p.y),type:'scatter',mode:'lines',fill:'toself',line:{color:css('--cyan'),width:2},fillcolor:`${css('--cyan')}22`,name:'Eₘ',hoverinfo:'skip'},
+        {x:circle.map(p=>p.x),y:circle.map(p=>p.y),type:'scatter',mode:'lines',fill:'toself',line:{color:css('--teal'),width:2},fillcolor:`${css('--teal')}24`,name:'B(x₀,r)',hoverinfo:'skip'},
+        {x:[center.x],y:[center.y],type:'scatter',mode:'markers+text',text:['x₀'],textposition:'top right',marker:{size:9,color:css('--teal')},name:'center',hovertemplate:'x₀=(%{x:.2f}, %{y:.2f})<extra></extra>'}
+      ];
+
+      Plotly.react('bairePlot', traces, {
+        height:470, margin:{l:50,r:25,t:35,b:50},
+        paper_bgcolor:css('--canvas'), plot_bgcolor:css('--canvas'),
+        font:{family:'Inter, sans-serif',color:css('--text')},
+        xaxis:{range:[-extent,extent],scaleanchor:'y',scaleratio:1,gridcolor:css('--grid'),zerolinecolor:css('--axis'),color:css('--axis'),title:'x₁',fixedrange:true},
+        yaxis:{range:[-extent,extent],gridcolor:css('--grid'),zerolinecolor:css('--axis'),color:css('--axis'),title:'x₂',fixedrange:true},
+        showlegend:true, legend:{orientation:'h',x:.5,xanchor:'center',y:1.08}
+      }, plotConfig());
+
+      $('localRadius').textContent = localRadius.toFixed(3);
+      $('baireEstimate').textContent = Number.isFinite(estimate) ? estimate.toFixed(2) : '∞';
+      $('actualBound').textContent = maxNorm.toFixed(2);
+      $('interiorStatus').textContent = localRadius > 0 ? 'nonempty' : 'lost';
+    }
+
+    const quizItems = [
+      {
+        title: String.raw`Why are the sets E_m closed?`,
+        options: [
+          {text:'Because every bounded set in a normed space is closed.', ok:false, feedback:'Bounded sets need not be closed. Closedness comes from continuity and inverse images.'},
+          {text:'Because Eₘ is an arbitrary intersection of inverse images of closed balls under continuous maps.', ok:true, feedback:'Correct. For each T, {x: ||Tx|| ≤ m} is closed, and arbitrary intersections preserve closedness.'},
+          {text:'Because X is complete.', ok:false, feedback:'Completeness does not make arbitrary subsets closed; it is used later through Baire category.'}
+        ]
+      },
+      {
+        title: String.raw`Where is pointwise boundedness used?`,
+        options: [
+          {text:'To prove each operator is continuous.', ok:false, feedback:'Continuity of each operator is already assumed.'},
+          {text:'To show every x belongs to some Eₘ, hence X = ⋃ₘEₘ.', ok:true, feedback:'Correct. The integer m may depend on x; that dependence is exactly what the cover records.'},
+          {text:'To show the unit ball is compact.', ok:false, feedback:'The unit ball is generally not compact in infinite dimension.'}
+        ]
+      },
+      {
+        title: String.raw`What does Baire category contribute?`,
+        options: [
+          {text:'It makes one Eₘ equal to all of X.', ok:false, feedback:'Baire only guarantees nonempty interior, not equality with X.'},
+          {text:'It guarantees that some closed Eₘ contains an open ball.', ok:true, feedback:'Correct. A complete metric space cannot be covered by countably many closed sets all with empty interior.'},
+          {text:'It identifies an operator attaining the largest norm.', ok:false, feedback:'No maximizer is required or produced.'}
+        ]
+      },
+      {
+        title: String.raw`Why does a local ball imply a global operator bound?`,
+        options: [
+          {text:'Because closed balls are compact.', ok:false, feedback:'Compactness is not used.'},
+          {text:'Because linearity moves control to a ball around 0 and homogeneity rescales it to every vector.', ok:true, feedback:'Correct. Translation uses differences; scaling uses T(λx)=λTx.'},
+          {text:'Because all norms in infinite dimension are equivalent.', ok:false, feedback:'That statement is false in infinite-dimensional spaces.'}
+        ]
+      }
+    ];
+
+    function renderQuiz() {
+      const item = quizItems[state.quizIndex];
+      renderDynamicMath($('quizTitle'), item.title, false);
+      const container = $('quizOptions');
+      container.innerHTML = '';
+      item.options.forEach(opt => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'proof-option';
+        button.textContent = opt.text;
+        button.addEventListener('click', () => {
+          container.querySelectorAll('button').forEach(b=>b.disabled=true);
+          button.classList.add(opt.ok ? 'correct' : 'incorrect');
+          $('quizFeedback').className = `status ${opt.ok ? 'good' : 'bad'}`;
+          $('quizFeedback').textContent = opt.feedback;
+        });
+        container.appendChild(button);
+      });
+      $('quizFeedback').className = 'status';
+      $('quizFeedback').textContent = 'Choose the logically sufficient reason.';
+    }
+
+    function updateThemePlots() {
+      updateFamilyLab();
+      updateHeatmap();
+      updateBaireLab();
+    }
+
+    function setTheme(theme) {
+      document.documentElement.dataset.theme = theme;
+      localStorage.setItem('ubp-theme', theme);
+      $('themeButton').textContent = theme === 'dark' ? '☀' : '◐';
+      updateThemePlots();
+    }
+
+    function resetLab() {
+      if (state.animation) clearInterval(state.animation);
+      state.animation = null;
+      $('animateButton').textContent = 'Animate through the family';
+      $('scenarioSelect').value = 'coordinate';
+      $('nMax').value = 24;
+      $('supportSize').value = 8;
+      $('selectedOperator').value = 6;
+      $('familyScale').value = 2;
+      $('levelM').value = 4;
+      $('centerShift').value = .30;
+      $('centerAngle').value = 28;
+      state.heatmapMode = 'bounded';
+      document.querySelectorAll('#heatmapMode button').forEach(b=>b.classList.toggle('active',b.dataset.mode==='bounded'));
+      state.quizIndex = 0;
+      renderQuiz();
+      updateFamilyLab(); updateHeatmap(); updateBaireLab();
+    }
+
+    function initInteractions() {
+      ['scenarioSelect','nMax','supportSize','selectedOperator'].forEach(id=>$(id).addEventListener('input', updateFamilyLab));
+      ['familyScale','levelM','centerShift','centerAngle'].forEach(id=>$(id).addEventListener('input', updateBaireLab));
+      $('animateButton').addEventListener('click', animateFamily);
+      $('resetButton').addEventListener('click', resetLab);
+      $('themeButton').addEventListener('click', ()=>setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'));
+
+      document.querySelectorAll('#heatmapMode button').forEach(button=>button.addEventListener('click',()=>{
+        state.heatmapMode = button.dataset.mode;
+        document.querySelectorAll('#heatmapMode button').forEach(b=>b.classList.toggle('active',b===button));
+        updateHeatmap();
+      }));
+
+      document.querySelectorAll('.proof-step > button').forEach(button=>button.addEventListener('click',()=>button.parentElement.classList.toggle('open')));
+
+      const flowText = {
+        banach:'Completeness enters only through Baire category. The codomain need not be complete.',
+        pointwise:'For each x, the bound may depend on x. This creates the cover by the sets Eₘ.',
+        cover:'Countability is introduced by rounding each finite pointwise bound upward to an integer.',
+        baire:'Some Eₘ contains a ball. This is the nonlocal topological step.',
+        scale:'Linearity controls differences; homogeneity converts a local radius into a bound on the unit sphere.'
+      };
+      document.querySelectorAll('.flow-node.clickable').forEach(node=>node.addEventListener('click',()=>{$('flowInfo').textContent=flowText[node.dataset.info];}));
+
+      document.querySelectorAll('.counter-tab').forEach(tab=>tab.addEventListener('click',()=>{
+        document.querySelectorAll('.counter-tab').forEach(t=>t.classList.toggle('active',t===tab));
+        document.querySelectorAll('.counter-panel').forEach(panel=>panel.classList.toggle('active',panel.dataset.panel===tab.dataset.counter));
+      }));
+
+      $('nextQuiz').addEventListener('click',()=>{ state.quizIndex=(state.quizIndex+1)%quizItems.length; renderQuiz(); });
+      window.addEventListener('resize',()=>{ Plotly.Plots.resize('normPlot'); Plotly.Plots.resize('valuePlot'); Plotly.Plots.resize('heatmapPlot'); Plotly.Plots.resize('bairePlot'); });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('ubp-theme');
+      document.documentElement.dataset.theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      $('themeButton').textContent = document.documentElement.dataset.theme === 'dark' ? '☀' : '◐';
+      renderMath();
+      initInteractions();
+      renderQuiz();
+      updateFamilyLab();
+      updateHeatmap();
+      updateBaireLab();
+    });
+  </script>
+</body>
+</html>

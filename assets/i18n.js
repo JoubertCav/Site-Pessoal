@@ -131,6 +131,8 @@
     "dg.micro.p": "Demanda do consumidor, teoria do produtor, mercados competitivos, poder de mercado, teoria dos jogos, bem-estar, informação e escolha intertemporal.",
     "dg.macro": "Macroeconomia",
     "dg.macro.p": "Mensuração, moeda, IS-LM, AS-AD, curvas de Phillips, microfundamentos, crescimento, economia aberta, política fiscal e dinâmica da dívida.",
+    "dg.econometrics": "Econometria",
+    "dg.econometrics.p": "Regressão, métodos de grandes amostras, modelos de equações múltiplas, séries temporais, dados em painel, métodos não paramétricos, métodos não lineares e aprendizado de máquina.",
 
     // Contact
     "title.contact": "Contato | Joubert Cavalcante",

@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Interactive laboratory for the Open Mapping Theorem, Bounded Inverse Theorem, and Closed Graph Theorem in Banach spaces." />
+  <title>Open Mapping and Closed Graph Theorems — Interactive Laboratory</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #f7f9f8;
+      --surface: rgba(255,255,255,.97);
+      --surface-2: #edf4f4;
+      --surface-3: #e4eef0;
+      --text: #172126;
+      --muted: #627279;
+      --line: #d5e1e3;
+      --cyan: #00a9c7;
+      --cyan-deep: #087e96;
+      --teal: #168f88;
+      --violet: #7667c7;
+      --amber: #b47a22;
+      --danger: #b84e52;
+      --success: #147c64;
+      --shadow: 0 18px 52px rgba(37,56,64,.09);
+      --radius: 22px;
+      --canvas: #ffffff;
+      --axis: #62757c;
+      --grid: #dce6e8;
+      --focus: rgba(0,169,199,.22);
+    }
+
+    html[data-theme="dark"] {
+      --bg: #121a20;
+      --surface: rgba(27,38,46,.97);
+      --surface-2: #213039;
+      --surface-3: #273942;
+      --text: #edf5f6;
+      --muted: #a8b8bd;
+      --line: #344750;
+      --cyan: #45cae1;
+      --cyan-deep: #83dbe9;
+      --teal: #5bc5ba;
+      --violet: #aaa0e7;
+      --amber: #e1b25d;
+      --danger: #ef8b8e;
+      --success: #69d0ad;
+      --shadow: 0 18px 52px rgba(0,0,0,.26);
+      --canvas: #17232a;
+      --axis: #9cb1b8;
+      --grid: #30434b;
+      --focus: rgba(69,202,225,.22);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 6% 0%, rgba(0,169,199,.08), transparent 30rem),
+        radial-gradient(circle at 100% 22%, rgba(118,103,199,.06), transparent 32rem),
+        var(--bg);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.65;
+      transition: background .25s ease, color .25s ease;
+    }
+
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    .shell { width: min(1480px, calc(100% - 32px)); margin: 0 auto; }
+
+    .topbar {
+      position: sticky; top: 0; z-index: 50;
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 84%, transparent);
+      backdrop-filter: blur(18px);
+      background: color-mix(in srgb, var(--bg) 82%, transparent);
+    }
+    .topbar-inner { min-height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: -.02em; }
+    .brand-mark {
+      width: 38px; height: 38px; border: 1px solid var(--cyan); border-radius: 12px;
+      display: grid; place-items: center; box-shadow: inset 0 0 0 6px color-mix(in srgb, var(--cyan) 10%, transparent);
+      color: var(--cyan-deep); font-family: "Libre Baskerville", serif; font-size: .8rem;
+    }
+    .top-actions { display: flex; gap: 9px; align-items: center; }
+
+    .icon-button, .ghost-button, .primary-button, .segmented button, .proof-option, .counter-tab {
+      border: 1px solid var(--line); background: var(--surface); color: var(--text);
+      border-radius: 12px; min-height: 40px; padding: 9px 13px;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .icon-button:hover, .ghost-button:hover, .segmented button:hover, .proof-option:hover, .counter-tab:hover {
+      transform: translateY(-1px); border-color: var(--cyan);
+    }
+    .primary-button { background: var(--cyan); color: #062e37; font-weight: 700; border-color: transparent; }
+    .primary-button:hover { transform: translateY(-1px); filter: brightness(1.03); }
+
+    h1, h2, h3, .serif { font-family: "Libre Baskerville", Georgia, serif; letter-spacing: -.025em; }
+    h1 { font-size: clamp(2.7rem, 5.8vw, 5.2rem); line-height: 1.03; margin: 12px 0 20px; }
+    h2 { font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.14; margin: 0; }
+    h3 { font-size: 1.2rem; margin: 0; }
+    p { margin: 0; }
+
+    .hero { display: grid; grid-template-columns: minmax(0,1.08fr) minmax(390px,.92fr); gap: 30px; padding: 72px 0 48px; align-items: center; }
+    .eyebrow { color: var(--cyan-deep); font-weight: 700; text-transform: uppercase; letter-spacing: .14em; font-size: .78rem; }
+    .hero p { color: var(--muted); max-width: 850px; font-size: clamp(1.02rem,1.8vw,1.24rem); }
+    .hero-chips { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 28px; }
+    .chip { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--line); background: var(--surface); padding: 8px 11px; border-radius: 999px; color: var(--muted); font-size: .9rem; }
+    .chip::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); }
+
+    .hero-map { background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); border-radius: 28px; padding: 24px; min-height: 420px; overflow: hidden; }
+    .theorem-map { position: relative; height: 360px; }
+    .domain-ball, .range-ellipse {
+      position: absolute; top: 56px; border: 2px solid var(--cyan); background: color-mix(in srgb, var(--cyan) 10%, transparent);
+    }
+    .domain-ball { left: 18px; width: 116px; height: 116px; border-radius: 50%; }
+    .range-ellipse { right: 12px; width: 154px; height: 92px; border-radius: 50%; transform: rotate(-16deg); border-color: var(--teal); background: color-mix(in srgb, var(--teal) 10%, transparent); }
+    .inner-ball { position: absolute; right: 56px; top: 80px; width: 58px; height: 58px; border-radius: 50%; border: 2px dashed var(--cyan); }
+    .map-arrow { position: absolute; top: 108px; left: 146px; width: 105px; height: 2px; background: var(--cyan); }
+    .map-arrow::after { content:""; position:absolute; right:-1px; top:-5px; border-left:10px solid var(--cyan); border-top:6px solid transparent; border-bottom:6px solid transparent; }
+    .graph-plane { position:absolute; left:40px; right:40px; bottom:40px; height:115px; border-left:1px solid var(--axis); border-bottom:1px solid var(--axis); }
+    .graph-line { position:absolute; left:12%; bottom:18%; width:78%; height:2px; background:var(--violet); transform:rotate(-19deg); transform-origin:left center; }
+    .graph-point { position:absolute; width:10px; height:10px; border-radius:50%; background:var(--cyan); box-shadow:0 0 0 7px color-mix(in srgb,var(--cyan) 15%,transparent); }
+    .graph-point.p1{left:28%;bottom:37%}.graph-point.p2{left:50%;bottom:46%}.graph-point.p3{left:72%;bottom:56%}
+    .hero-label { position:absolute; color:var(--muted); font-size:.8rem; text-align:center; }
+    .hero-label.d{left:6px;top:180px;width:140px}.hero-label.r{right:0;top:180px;width:180px}.hero-label.g{left:90px;right:90px;bottom:0}
+    .arrow-label { position:absolute; left:160px; top:72px; color:var(--cyan-deep); font-weight:700; font-size:.82rem; }
+
+    .section { padding: 72px 0; }
+    .section-head { display: flex; justify-content: space-between; gap: 24px; align-items: end; margin-bottom: 27px; }
+    .section-head p { color: var(--muted); max-width: 760px; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; }
+    .lab-grid { display: grid; grid-template-columns: minmax(270px,.72fr) minmax(0,1.38fr) minmax(285px,.9fr); gap: 20px; align-items: start; }
+    .proof-grid { display: grid; grid-template-columns: minmax(0,1.25fr) minmax(310px,.75fr); gap: 20px; }
+    .plot-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+
+    .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px; min-width: 0; }
+    .card.soft { background: var(--surface-2); box-shadow: none; }
+    .card h3 + p { margin-top: 9px; color: var(--muted); }
+    .card-label { color: var(--cyan-deep); font-size: .78rem; text-transform: uppercase; letter-spacing: .12em; font-weight: 700; margin-bottom: 10px; }
+    .muted { color: var(--muted); }
+    .small { font-size: .9rem; }
+    .definition-card { padding: 30px; border-left: 4px solid var(--cyan); }
+    .theorem-card { padding: 28px; border-top: 4px solid var(--teal); }
+    .math-display { margin: 18px 0; overflow-x: auto; overflow-y: hidden; padding: 8px 2px; }
+    .katex-display { margin: .72em 0 !important; }
+    .katex { max-width: 100%; }
+
+    .notation-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px; margin-top: 18px; }
+    .notation-item { border: 1px solid var(--line); background: var(--surface-2); border-radius: 14px; padding: 13px; }
+    .notation-item strong { display: block; margin-bottom: 6px; color: var(--cyan-deep); }
+
+    .flow-map { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; margin-top: 18px; }
+    .flow-node { border: 1px solid var(--line); background: var(--surface-2); border-radius: 14px; padding: 12px 14px; min-width: 145px; text-align: center; }
+    .flow-node.clickable { cursor: pointer; }
+    .flow-node.clickable:hover { border-color: var(--cyan); }
+    .flow-arrow { color: var(--cyan-deep); font-size: 1.4rem; }
+
+    .control-stack { display: grid; gap: 17px; }
+    .control label { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; font-weight: 600; margin-bottom: 7px; }
+    .control label span:last-child { color: var(--cyan-deep); font-variant-numeric: tabular-nums; }
+    input[type="range"] { width: 100%; accent-color: var(--cyan); }
+    select { width: 100%; min-height: 43px; border-radius: 11px; border: 1px solid var(--line); background: var(--surface); color: var(--text); padding: 8px 10px; }
+    .control-note { color: var(--muted); font-size: .82rem; margin-top: 5px; }
+
+    .plot { width: 100%; min-height: 400px; border-radius: 16px; overflow: hidden; }
+    .plot.small-plot { min-height: 340px; }
+    .metric-strip { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px; margin-top: 14px; }
+    .metric-cell { background: var(--surface-2); border: 1px solid var(--line); border-radius: 14px; padding: 13px; text-align: center; }
+    .metric-name { color: var(--muted); font-size: .76rem; text-transform: uppercase; letter-spacing: .06em; }
+    .metric-value { font-size: 1.16rem; font-weight: 700; color: var(--cyan-deep); font-variant-numeric: tabular-nums; overflow-wrap:anywhere; }
+
+    .status { border-radius: 14px; padding: 14px; border: 1px solid var(--line); background: var(--surface-2); }
+    .status.good { border-color: color-mix(in srgb, var(--success) 55%, var(--line)); background: color-mix(in srgb, var(--success) 9%, var(--surface)); }
+    .status.bad { border-color: color-mix(in srgb, var(--danger) 55%, var(--line)); background: color-mix(in srgb, var(--danger) 9%, var(--surface)); }
+    .status.warning { border-color: color-mix(in srgb, var(--amber) 55%, var(--line)); background: color-mix(in srgb, var(--amber) 9%, var(--surface)); }
+
+    .segmented { display: flex; flex-wrap: wrap; gap: 8px; }
+    .segmented button.active { background: var(--cyan); color: #062e37; border-color: var(--cyan); font-weight: 700; }
+
+    .proof-steps { display: grid; gap: 11px; }
+    .proof-step { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--surface); }
+    .proof-step button { width: 100%; border: 0; background: transparent; color: var(--text); padding: 15px 17px; display: flex; justify-content: space-between; gap: 16px; text-align: left; font-weight: 700; }
+    .proof-step .proof-body { display: none; padding: 0 17px 17px; color: var(--muted); }
+    .proof-step.open { border-color: var(--cyan); }
+    .proof-step.open .proof-body { display: block; }
+    .proof-number { display: inline-grid; place-items: center; min-width: 25px; height: 25px; border-radius: 50%; background: var(--surface-2); color: var(--cyan-deep); margin-right: 8px; font-size: .82rem; }
+
+    .proof-options { display:grid; gap:9px; margin-top:14px; }
+    .proof-option { width:100%; text-align:left; }
+    .proof-option.correct { border-color:var(--success); background:color-mix(in srgb,var(--success) 10%,var(--surface)); }
+    .proof-option.incorrect { border-color:var(--danger); background:color-mix(in srgb,var(--danger) 10%,var(--surface)); }
+
+    .example-card { position: relative; overflow: hidden; min-height: 300px; }
+    .example-card::after { content: ""; position: absolute; width: 120px; height: 120px; border-radius: 50%; right: -48px; bottom: -48px; border: 1px solid color-mix(in srgb, var(--cyan) 38%, var(--line)); }
+    .badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 5px 9px; font-size: .76rem; font-weight: 700; background: var(--surface-2); color: var(--cyan-deep); border: 1px solid var(--line); margin-bottom: 12px; }
+    .fact-list { display: grid; gap: 9px; margin-top: 15px; }
+    .fact { display: flex; gap: 9px; align-items: flex-start; color: var(--muted); font-size: .92rem; }
+    .fact::before { content: ""; width: 8px; height: 8px; flex: 0 0 8px; margin-top: .52em; border-radius: 50%; background: var(--teal); }
+
+    .counter-tabs { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 18px; }
+    .counter-tab.active { background: var(--danger); border-color: var(--danger); color: #fff; }
+    .counter-panel { display: none; }
+    .counter-panel.active { display: block; }
+
+    .comparison-table { width:100%; border-collapse:collapse; margin-top:16px; font-size:.92rem; }
+    .comparison-table th,.comparison-table td { border-bottom:1px solid var(--line); padding:11px 9px; text-align:left; vertical-align:top; }
+    .comparison-table th { color:var(--cyan-deep); }
+
+    .diagram-note { margin-top: 14px; padding: 14px; border: 1px dashed var(--line); border-radius: 14px; color: var(--muted); background: color-mix(in srgb,var(--surface-2) 70%,transparent); }
+    .footer { padding: 45px 0 70px; color: var(--muted); text-align: center; }
+
+    @media (max-width: 1120px) {
+      .hero, .lab-grid, .proof-grid { grid-template-columns: 1fr; }
+      .hero-map { min-height: 400px; }
+      .notation-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .plot-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 760px) {
+      .shell { width: min(100% - 20px, 1480px); }
+      .topbar-inner { min-height: 62px; }
+      .brand span:last-child { display:none; }
+      .hero { padding-top: 46px; }
+      h1 { font-size: clamp(2.3rem,13vw,3.5rem); }
+      .grid-2, .grid-3, .metric-strip, .notation-grid { grid-template-columns: 1fr; }
+      .section { padding: 52px 0; }
+      .section-head { align-items:start; flex-direction:column; }
+      .card, .definition-card, .theorem-card { padding: 18px; }
+      .hero-map { padding:14px; min-height:390px; }
+      .theorem-map { transform:scale(.88); transform-origin:center top; margin-bottom:-35px; }
+      .plot { min-height: 330px; }
+      .comparison-table { display:block; overflow-x:auto; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand">
+        <div class="brand-mark">OM</div>
+        <span>Functional Analysis Laboratory</span>
+      </div>
+      <div class="top-actions">
+        <button class="icon-button" id="themeToggle" title="Toggle light and dark mode" aria-label="Toggle theme">◐</button>
+        <button class="ghost-button" id="resetAll" title="Restore all controls">Reset</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="shell hero">
+      <div>
+        <div class="eyebrow">Banach-space structure</div>
+        <h1>Open Mapping and Closed Graph Theorems</h1>
+        <p>
+          Explore why surjective bounded linear maps cannot flatten open sets, why bounded inverses appear automatically,
+          and why a closed graph forces continuity only when completeness is present on both sides.
+        </p>
+        <div class="hero-chips">
+          <span class="chip">Open images</span>
+          <span class="chip">Bounded inverses</span>
+          <span class="chip">Closed graphs</span>
+          <span class="chip">Baire category</span>
+        </div>
+      </div>
+      <div class="hero-map" aria-label="Concept map connecting open mapping and closed graph ideas">
+        <div class="theorem-map">
+          <div class="domain-ball"></div>
+          <div class="map-arrow"></div>
+          <div class="arrow-label">surjective bounded map</div>
+          <div class="range-ellipse"></div>
+          <div class="inner-ball"></div>
+          <div class="hero-label d">an open ball in the domain</div>
+          <div class="hero-label r">its image contains a genuine ball</div>
+          <div class="graph-plane">
+            <div class="graph-line"></div>
+            <div class="graph-point p1"></div>
+            <div class="graph-point p2"></div>
+            <div class="graph-point p3"></div>
+          </div>
+          <div class="hero-label g">a graph that contains every convergent limit point cannot encode an unbounded linear operator between Banach spaces</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell" id="definitions">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Formal architecture</div>
+          <h2>Three theorems, one Banach-space mechanism</h2>
+        </div>
+        <p>Completeness turns qualitative information—surjectivity or graph closedness—into quantitative norm control.</p>
+      </div>
+
+      <div class="grid-3">
+        <article class="card theorem-card">
+          <div class="card-label">Open Mapping Theorem</div>
+          <div class="math-display" data-tex="\text{If }T\in\mathcal L(X,Y)\text{ is surjective and }X,Y\text{ are Banach, then }T\text{ is open.}" data-display="true"></div>
+          <p class="muted">Every open subset of <span data-tex="X"></span> has open image in <span data-tex="Y"></span>. It is enough to prove that <span data-tex="T(B_X(0,1))"></span> contains a neighborhood of the origin.</p>
+        </article>
+        <article class="card theorem-card">
+          <div class="card-label">Bounded Inverse Theorem</div>
+          <div class="math-display" data-tex="T\in\mathcal L(X,Y),\ T\text{ bijective}\quad\Longrightarrow\quad T^{-1}\in\mathcal L(Y,X)" data-display="true"></div>
+          <p class="muted">A bounded bijection between Banach spaces is automatically a topological isomorphism. Algebraic invertibility becomes stable invertibility.</p>
+        </article>
+        <article class="card theorem-card">
+          <div class="card-label">Closed Graph Theorem</div>
+          <div class="math-display" data-tex="G(T)=\{(x,Tx):x\in X\}\text{ closed in }X\times Y\quad\Longrightarrow\quad T\in\mathcal L(X,Y)" data-display="true"></div>
+          <p class="muted">For a linear map defined everywhere between Banach spaces, graph closedness is equivalent to continuity.</p>
+        </article>
+      </div>
+
+      <div class="card definition-card" style="margin-top:20px">
+        <div class="card-label">Notation and logical roles</div>
+        <div class="notation-grid">
+          <div class="notation-item"><strong><span data-tex="\mathcal L(X,Y)"></span></strong><span class="small muted">bounded linear operators from <span data-tex="X"></span> to <span data-tex="Y"></span></span></div>
+          <div class="notation-item"><strong><span data-tex="G(T)"></span></strong><span class="small muted">the graph <span data-tex="\{(x,Tx):x\in X\}"></span></span></div>
+          <div class="notation-item"><strong><span data-tex="B_X(0,r)"></span></strong><span class="small muted">the open norm ball of radius <span data-tex="r"></span></span></div>
+          <div class="notation-item"><strong><span data-tex="\sigma_{\min}(A)"></span></strong><span class="small muted">least Euclidean stretching of a matrix</span></div>
+        </div>
+        <div class="flow-map">
+          <div class="flow-node">surjectivity</div><div class="flow-arrow">+</div>
+          <div class="flow-node">Baire category</div><div class="flow-arrow">→</div>
+          <div class="flow-node">a ball in the image</div><div class="flow-arrow">→</div>
+          <div class="flow-node">openness</div><div class="flow-arrow">→</div>
+          <div class="flow-node">bounded inverse</div>
+        </div>
+        <div class="flow-map">
+          <div class="flow-node">closed graph</div><div class="flow-arrow">+</div>
+          <div class="flow-node">Banach product</div><div class="flow-arrow">→</div>
+          <div class="flow-node">bounded inverse for the graph projection</div><div class="flow-arrow">→</div>
+          <div class="flow-node">continuity of <span data-tex="T"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell" id="openLab">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Geometric laboratory</div>
+          <h2>When does the image of a ball contain a ball?</h2>
+        </div>
+        <p>For matrices, the least singular value is the exact radius guaranteed inside the image of the Euclidean unit ball.</p>
+      </div>
+
+      <div class="lab-grid">
+        <aside class="card">
+          <div class="card-label">Matrix controls</div>
+          <div class="control-stack">
+            <div class="control"><label><span data-tex="a"></span><span id="aVal">1.20</span></label><input id="aSlider" type="range" min="-2.5" max="2.5" step="0.05" value="1.2"></div>
+            <div class="control"><label><span data-tex="b"></span><span id="bVal">0.60</span></label><input id="bSlider" type="range" min="-2.5" max="2.5" step="0.05" value="0.6"></div>
+            <div class="control"><label><span data-tex="c"></span><span id="cVal">-0.30</span></label><input id="cSlider" type="range" min="-2.5" max="2.5" step="0.05" value="-0.3"></div>
+            <div class="control"><label><span data-tex="d"></span><span id="dVal">1.50</span></label><input id="dSlider" type="range" min="-2.5" max="2.5" step="0.05" value="1.5"></div>
+            <div class="control"><label><span>Ball radius</span><span id="radiusVal">1.00</span></label><input id="radiusSlider" type="range" min="0.3" max="2" step="0.05" value="1"></div>
+          </div>
+          <div class="math-display" id="matrixFormula"></div>
+          <button class="primary-button" id="makeSingular" style="width:100%">Create a singular map</button>
+        </aside>
+
+        <div class="card">
+          <div class="plot-grid">
+            <div><div class="card-label">Domain</div><div id="domainPlot" class="plot small-plot"></div></div>
+            <div><div class="card-label">Range</div><div id="rangePlot" class="plot small-plot"></div></div>
+          </div>
+          <div class="metric-strip">
+            <div class="metric-cell"><div class="metric-name">determinant</div><div class="metric-value" id="detMetric">—</div></div>
+            <div class="metric-cell"><div class="metric-name">operator norm</div><div class="metric-value" id="sigmaMaxMetric">—</div></div>
+            <div class="metric-cell"><div class="metric-name">inner-ball radius</div><div class="metric-value" id="sigmaMinMetric">—</div></div>
+            <div class="metric-cell"><div class="metric-name">inverse norm</div><div class="metric-value" id="inverseMetric">—</div></div>
+          </div>
+        </div>
+
+        <aside class="card">
+          <div class="card-label">Interpretation</div>
+          <div id="matrixStatus" class="status good"></div>
+          <div class="diagram-note">
+            <strong>Read the diagram.</strong><br>
+            Cyan is the boundary of the domain ball. Teal is its image. The dashed cyan circle is the largest centered Euclidean ball guaranteed inside the image. When it collapses, surjectivity fails.
+          </div>
+          <div class="math-display" id="singularFormula"></div>
+          <p class="muted small">In finite dimensions, openness of a bijective linear map is visible as nonzero thickness in every direction. In Banach spaces, Baire category replaces singular-value compactness.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section shell" id="inverseLab">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Inverse-map stability</div>
+          <h2>Bijective does not mean uniformly well-conditioned</h2>
+        </div>
+        <p>The bounded inverse theorem guarantees a finite inverse norm for each bijection, but that norm can become arbitrarily large near loss of surjectivity.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="control"><label><span data-tex="\tau"></span><span id="tauVal">0.35</span></label><input id="tauSlider" type="range" min="0.02" max="1.5" step="0.01" value="0.35"></div>
+          <div class="math-display" id="tauFormula"></div>
+          <div id="conditionPlot" class="plot"></div>
+        </div>
+        <div class="card">
+          <div class="card-label">What the theorem says</div>
+          <div class="math-display" data-tex="A_\tau=\begin{pmatrix}1&0\\0&\tau\end{pmatrix},\qquad \|A_\tau^{-1}\|_2=\frac{1}{\tau}" data-display="true"></div>
+          <div id="tauStatus" class="status warning"></div>
+          <table class="comparison-table">
+            <thead><tr><th>Question</th><th>Answer</th></tr></thead>
+            <tbody>
+              <tr><td>Is <span data-tex="A_\tau"></span> open for <span data-tex="\tau>0"></span>?</td><td>Yes. Its image of the unit ball contains a ball of radius <span data-tex="\tau"></span> when <span data-tex="\tau\le 1"></span>.</td></tr>
+              <tr><td>Is the inverse bounded?</td><td>Yes, with norm <span data-tex="1/\tau"></span>.</td></tr>
+              <tr><td>What happens at <span data-tex="\tau=0"></span>?</td><td>The map loses surjectivity, the inner radius becomes zero, and no inverse exists.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell" id="baireProof">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Proof architecture</div>
+          <h2>How Baire category creates an open ball</h2>
+        </div>
+        <p>The proof first obtains a ball only in the closure of an image, then removes the closure by a convergent correction scheme.</p>
+      </div>
+
+      <div class="proof-grid">
+        <div class="card">
+          <div class="proof-steps">
+            <div class="proof-step open">
+              <button><span><span class="proof-number">1</span>Cover the codomain by closed image sets</span><span>⌄</span></button>
+              <div class="proof-body">
+                <div class="math-display" data-tex="Y=\bigcup_{n=1}^{\infty}E_n,\qquad E_n=\overline{T(nB_X)}" data-display="true"></div>
+                Surjectivity gives the cover: for every <span data-tex="y=Tx"></span>, choose <span data-tex="n>\|x\|"></span>.
+              </div>
+            </div>
+            <div class="proof-step">
+              <button><span><span class="proof-number">2</span>Apply Baire category</span><span>⌄</span></button>
+              <div class="proof-body">
+                Since <span data-tex="Y"></span> is Banach, some <span data-tex="E_N"></span> has nonempty interior. Thus there exist <span data-tex="y_0\in Y"></span> and <span data-tex="r>0"></span> with
+                <div class="math-display" data-tex="B_Y(y_0,r)\subset E_N." data-display="true"></div>
+              </div>
+            </div>
+            <div class="proof-step">
+              <button><span><span class="proof-number">3</span>Translate the local interior to the origin</span><span>⌄</span></button>
+              <div class="proof-body">
+                If <span data-tex="\|z\|<r"></span>, then <span data-tex="y_0\pm z/2\in E_N"></span>. Taking differences yields
+                <div class="math-display" data-tex="B_Y(0,r)\subset E_N-E_N\subset\overline{T(2N B_X)}." data-display="true"></div>
+                Therefore, with <span data-tex="\delta=r/(2N)"></span>,
+                <div class="math-display" data-tex="B_Y(0,\delta)\subset\overline{T(B_X)}." data-display="true"></div>
+              </div>
+            </div>
+            <div class="proof-step">
+              <button><span><span class="proof-number">4</span>Remove the closure by iterative correction</span><span>⌄</span></button>
+              <div class="proof-body">
+                For <span data-tex="\|y\|<\delta/2"></span>, choose successively <span data-tex="x_k"></span> so that
+                <div class="math-display" data-tex="\|x_k\|<2^{-k},\qquad \left\|y-T\sum_{j=1}^{k}x_j\right\|<\delta\,2^{-(k+1)}." data-display="true"></div>
+                The series <span data-tex="\sum x_k"></span> converges in <span data-tex="X"></span>, its sum has norm below one, and continuity of <span data-tex="T"></span> gives an exact preimage of <span data-tex="y"></span>.
+              </div>
+            </div>
+            <div class="proof-step">
+              <button><span><span class="proof-number">5</span>Scale and translate</span><span>⌄</span></button>
+              <div class="proof-body">
+                Since <span data-tex="B_Y(0,\delta/2)\subset T(B_X)"></span>, every image <span data-tex="T(B_X(x_0,\rho))"></span> contains
+                <div class="math-display" data-tex="B_Y\!\left(Tx_0,\frac{\delta\rho}{2}\right)." data-display="true"></div>
+                Hence <span data-tex="T"></span> is open.
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="card">
+          <div class="card-label">Correction microscope</div>
+          <div class="control"><label><span>Iteration depth</span><span id="iterVal">6</span></label><input id="iterSlider" type="range" min="1" max="12" step="1" value="6"></div>
+          <div id="correctionPlot" class="plot small-plot"></div>
+          <div class="math-display" id="correctionFormula"></div>
+          <div class="diagram-note"><strong>What changes?</strong> Each step spends half of the remaining norm budget and halves the residual. Completeness is used exactly when the partial sums are replaced by their limit in <span data-tex="X"></span>.</div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section shell" id="closedGraphLab">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Closed-graph laboratory</div>
+          <h2>Closed graph, bounded operator, or missing completeness?</h2>
+        </div>
+        <p>Compare operators whose formulas look similar but whose norms and ambient spaces change the theorem completely.</p>
+      </div>
+
+      <div class="lab-grid">
+        <aside class="card">
+          <div class="card-label">Choose an operator</div>
+          <select id="operatorSelect" title="Select an operator example">
+            <option value="matrix">A matrix on Euclidean space</option>
+            <option value="multiply">Multiplication on C[0,1]</option>
+            <option value="derivativeGraph">Derivative with graph norm</option>
+            <option value="derivativeSup">Derivative with only the sup norm</option>
+          </select>
+          <div class="control" style="margin-top:18px"><label><span>Frequency <span data-tex="n"></span></span><span id="freqVal">6</span></label><input id="freqSlider" type="range" min="1" max="35" step="1" value="6"></div>
+          <div class="control"><label><span>Amplitude exponent <span data-tex="\alpha"></span></span><span id="alphaVal">0.50</span></label><input id="alphaSlider" type="range" min="0.15" max="1.2" step="0.05" value="0.5"></div>
+          <div class="math-display" id="operatorFormula"></div>
+        </aside>
+        <div class="card">
+          <div id="operatorPlot" class="plot"></div>
+          <div class="metric-strip">
+            <div class="metric-cell"><div class="metric-name">domain Banach?</div><div class="metric-value" id="domainBanachMetric">—</div></div>
+            <div class="metric-cell"><div class="metric-name">graph closed?</div><div class="metric-value" id="graphClosedMetric">—</div></div>
+            <div class="metric-cell"><div class="metric-name">bounded?</div><div class="metric-value" id="boundedMetric">—</div></div>
+            <div class="metric-cell"><div class="metric-name">current ratio</div><div class="metric-value" id="ratioMetric">—</div></div>
+          </div>
+        </div>
+        <aside class="card">
+          <div class="card-label">Diagnosis</div>
+          <div id="operatorStatus" class="status good"></div>
+          <div class="diagram-note"><strong>Closed-graph test.</strong> If <span data-tex="x_k\to x"></span> and <span data-tex="Tx_k\to y"></span>, closedness requires <span data-tex="y=Tx"></span>. This sequential criterion is valid because normed spaces are metric.</div>
+          <div class="math-display" data-tex="G(T)\text{ closed}\quad\Longleftrightarrow\quad \bigl[x_k\to x,\ Tx_k\to y\bigr]\Rightarrow y=Tx" data-display="true"></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section shell" id="closedGraphProof">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Proof by graph projection</div>
+          <h2>Closed graph as a disguised inverse theorem</h2>
+        </div>
+        <p>The theorem becomes nearly inevitable once the graph is treated as a Banach space in its own right.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-label">Forward direction</div>
+          <div class="math-display" data-tex="T\text{ bounded}\quad\Longrightarrow\quad G(T)\text{ closed}" data-display="true"></div>
+          <p class="muted">If <span data-tex="x_n\to x"></span> and <span data-tex="Tx_n\to y"></span>, continuity also gives <span data-tex="Tx_n\to Tx"></span>. Uniqueness of limits implies <span data-tex="y=Tx"></span>.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Reverse direction</div>
+          <div class="math-display" data-tex="G(T)\text{ closed in }X\times Y\quad\Longrightarrow\quad G(T)\text{ Banach}" data-display="true"></div>
+          <p class="muted">Use the product norm <span data-tex="\|(x,y)\|=\|x\|+\|y\|"></span>. The coordinate projection</p>
+          <div class="math-display" data-tex="\pi_X:G(T)\to X,\qquad \pi_X(x,Tx)=x" data-display="true"></div>
+          <p class="muted">is bounded and bijective. Its inverse <span data-tex="Sx=(x,Tx)"></span> is bounded by the bounded inverse theorem. Then <span data-tex="T=\pi_Y\circ S"></span> is bounded.</p>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:20px">
+        <div class="card-label">Guided proof decision</div>
+        <p class="muted">Why is the projection <span data-tex="\pi_X:G(T)\to X"></span> bijective?</p>
+        <div class="proof-options" id="proofQuiz">
+          <button class="proof-option" data-correct="false">Because every closed subspace projection is automatically surjective.</button>
+          <button class="proof-option" data-correct="true">Each <span data-tex="x\in X"></span> appears in exactly one graph point, namely <span data-tex="(x,Tx)"></span>.</button>
+          <button class="proof-option" data-correct="false">Because <span data-tex="T"></span> is already assumed bounded.</button>
+        </div>
+        <div id="quizFeedback" class="status" style="margin-top:12px">Choose the logically decisive statement.</div>
+      </div>
+    </section>
+
+    <section class="section shell" id="examples">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Canonical examples</div>
+          <h2>Where the theorems do real work</h2>
+        </div>
+        <p>These examples separate finite-dimensional intuition from genuinely functional-analytic consequences.</p>
+      </div>
+      <div class="grid-3">
+        <article class="card example-card">
+          <span class="badge">Open quotient map</span>
+          <h3>Passing to a quotient</h3>
+          <div class="math-display" data-tex="Q:X\to X/M,\qquad Qx=x+M" data-display="true"></div>
+          <div class="fact-list">
+            <div class="fact">If <span data-tex="M"></span> is closed, then <span data-tex="X/M"></span> is Banach whenever <span data-tex="X"></span> is Banach.</div>
+            <div class="fact"><span data-tex="Q"></span> is bounded and surjective, hence open.</div>
+            <div class="fact">Neighborhoods in the quotient come from saturated neighborhoods upstairs.</div>
+          </div>
+        </article>
+        <article class="card example-card">
+          <span class="badge">Bounded inverse</span>
+          <h3>Equivalent Banach norms</h3>
+          <div class="math-display" data-tex="I:(X,\|\cdot\|_1)\to(X,\|\cdot\|_2)" data-display="true"></div>
+          <div class="fact-list">
+            <div class="fact">Suppose both normed structures are Banach and the identity is bounded in one direction.</div>
+            <div class="fact">The identity is bijective, so its inverse is bounded.</div>
+            <div class="fact">Therefore the two norms are equivalent.</div>
+          </div>
+        </article>
+        <article class="card example-card">
+          <span class="badge">Closed graph</span>
+          <h3>Operators defined by limits</h3>
+          <div class="math-display" data-tex="T:X\to Y,\qquad x_n\to x,\ Tx_n\to y\Rightarrow y=Tx" data-display="true"></div>
+          <div class="fact-list">
+            <div class="fact">Often a differential or integral identity makes graph closedness easy to verify.</div>
+            <div class="fact">The theorem then supplies the missing norm estimate.</div>
+            <div class="fact">No explicit computation of <span data-tex="\|T\|"></span> is required.</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section shell" id="counterexamples">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">What can go wrong?</div>
+          <h2>Each hypothesis has a precise job</h2>
+        </div>
+        <p>Remove surjectivity or completeness and the conclusions fail in sharply different ways.</p>
+      </div>
+      <div class="card">
+        <div class="counter-tabs">
+          <button class="counter-tab active" data-panel="notSurjective">No surjectivity</button>
+          <button class="counter-tab" data-panel="incompleteRange">Incomplete codomain</button>
+          <button class="counter-tab" data-panel="incompleteDomain">Incomplete domain</button>
+          <button class="counter-tab" data-panel="nonclosedRange">Nonclosed range</button>
+        </div>
+
+        <div class="counter-panel active" id="notSurjective">
+          <div class="grid-2">
+            <div>
+              <h3>A continuous injection need not be open into the ambient codomain</h3>
+              <div class="math-display" data-tex="J:\mathbb R\to\mathbb R^2,\qquad J(t)=(t,0)" data-display="true"></div>
+              <p class="muted">The interval <span data-tex="(-1,1)"></span> is open in <span data-tex="\mathbb R"></span>, but its image is a line segment, not open in <span data-tex="\mathbb R^2"></span>.</p>
+            </div>
+            <div class="status bad"><strong>Broken hypothesis:</strong> surjectivity. The image has empty interior in the full codomain, although it is open relative to its one-dimensional range.</div>
+          </div>
+        </div>
+
+        <div class="counter-panel" id="incompleteRange">
+          <div class="grid-2">
+            <div>
+              <h3>A bounded bijection can have an unbounded inverse</h3>
+              <div class="math-display" data-tex="I:(\ell^1,\|\cdot\|_1)\to(\ell^1,\|\cdot\|_\infty)" data-display="true"></div>
+              <p class="muted">The identity satisfies <span data-tex="\|x\|_\infty\le\|x\|_1"></span>, so it is bounded and bijective. Its inverse is not bounded because vectors with many equal coordinates have small sup norm but large <span data-tex="\ell^1"></span>-norm.</p>
+            </div>
+            <div class="status bad"><strong>Broken hypothesis:</strong> the codomain <span data-tex="(\ell^1,\|\cdot\|_\infty)"></span> is not complete. Hence the bounded inverse theorem does not apply.</div>
+          </div>
+        </div>
+
+        <div class="counter-panel" id="incompleteDomain">
+          <div class="grid-2">
+            <div>
+              <h3>A closed graph can coexist with unboundedness</h3>
+              <div class="math-display" data-tex="D:(C^1[0,1],\|\cdot\|_\infty)\to C[0,1],\qquad Df=f'" data-display="true"></div>
+              <p class="muted">The graph is closed: uniform convergence of <span data-tex="f_n"></span> and <span data-tex="f_n'"></span> implies <span data-tex="f'=g"></span>. Yet <span data-tex="f_n(x)=n^{-1/2}\sin(nx)"></span> satisfies <span data-tex="\|f_n\|_\infty\to0"></span> while <span data-tex="\|f_n'\|_\infty=\sqrt n"></span>.</p>
+            </div>
+            <div class="status bad"><strong>Broken hypothesis:</strong> <span data-tex="C^1[0,1]"></span> with only the sup norm is incomplete.</div>
+          </div>
+        </div>
+
+        <div class="counter-panel" id="nonclosedRange">
+          <div class="grid-2">
+            <div>
+              <h3>An injective bounded map may have an unstable inverse on its range</h3>
+              <div class="math-display" data-tex="T:\ell^2\to\ell^2,\qquad T(x_1,x_2,\ldots)=\left(x_1,\frac{x_2}{2},\frac{x_3}{3},\ldots\right)" data-display="true"></div>
+              <p class="muted">The map is bounded and injective, but its range is not closed. The inverse on <span data-tex="\operatorname{ran}T"></span> multiplies the <span data-tex="n"></span>-th coordinate by <span data-tex="n"></span> and is unbounded.</p>
+            </div>
+            <div class="status warning"><strong>Lesson:</strong> the open mapping theorem applies to surjections onto a Banach codomain. A nonclosed range is not Banach with the inherited norm.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell" id="mistakes">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Common mistakes</div>
+          <h2>Logical distinctions worth protecting</h2>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <table class="comparison-table">
+            <thead><tr><th>Tempting claim</th><th>Correct statement</th></tr></thead>
+            <tbody>
+              <tr><td>Every bounded linear map is open.</td><td>A bounded linear map is open onto the full codomain when it is surjective and both spaces are Banach.</td></tr>
+              <tr><td>Bijective linear implies continuous inverse.</td><td>Bounded bijective between Banach spaces implies bounded inverse.</td></tr>
+              <tr><td>A closed graph means the graph is bounded.</td><td>Closedness is a topological limit property, not a size bound.</td></tr>
+              <tr><td>Closed graph alone implies boundedness.</td><td>The Banach hypotheses are essential.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-label">Final synthesis</div>
+          <div class="math-display" data-tex="\boxed{\text{completeness}+\text{linearity}+\text{qualitative structure}\Longrightarrow\text{quantitative continuity}}" data-display="true"></div>
+          <p class="muted">The open mapping theorem converts surjectivity into interior. The bounded inverse theorem converts algebraic invertibility into stable invertibility. The closed graph theorem converts compatibility with limits into a global norm estimate.</p>
+          <div class="flow-map">
+            <div class="flow-node">surjective</div><div class="flow-arrow">→</div><div class="flow-node">open</div><div class="flow-arrow">→</div><div class="flow-node">inverse continuous</div>
+          </div>
+          <div class="flow-map">
+            <div class="flow-node">graph closed</div><div class="flow-arrow">→</div><div class="flow-node">graph Banach</div><div class="flow-arrow">→</div><div class="flow-node">operator continuous</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer shell">Interactive functional-analysis laboratory · Open mapping, inverse maps, and closed graphs</footer>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const $ = (id) => document.getElementById(id);
+      const qsAll = (selector) => Array.from(document.querySelectorAll(selector));
+      const state = {
+        A: [[1.2, 0.6], [-0.3, 1.5]],
+        radius: 1,
+        tau: 0.35,
+        iterations: 6,
+        operator: 'matrix',
+        frequency: 6,
+        alpha: 0.5
+      };
+
+      function css(name) {
+        return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+      }
+
+      function renderTex(target, tex, display = false) {
+        const el = typeof target === 'string' ? $(target) : target;
+        if (!el || !window.katex) return;
+        try {
+          katex.render(tex, el, { displayMode: display, throwOnError: false, strict: false });
+        } catch (error) {
+          el.textContent = tex;
+        }
+      }
+
+      function renderAllMath() {
+        qsAll('[data-tex]').forEach((el) => renderTex(el, el.dataset.tex, el.dataset.display === 'true'));
+      }
+
+      function plotLayout(title = '') {
+        return {
+          title: title ? { text: title, font: { family: 'Inter, sans-serif', size: 15, color: css('--text') } } : undefined,
+          paper_bgcolor: css('--canvas'),
+          plot_bgcolor: css('--canvas'),
+          margin: { l: 45, r: 24, t: title ? 44 : 22, b: 42 },
+          font: { family: 'Inter, sans-serif', color: css('--text') },
+          xaxis: { zeroline: true, zerolinecolor: css('--axis'), gridcolor: css('--grid'), linecolor: css('--axis'), tickfont: { color: css('--muted') } },
+          yaxis: { zeroline: true, zerolinecolor: css('--axis'), gridcolor: css('--grid'), linecolor: css('--axis'), tickfont: { color: css('--muted') } },
+          showlegend: true,
+          legend: { orientation: 'h', y: 1.12, x: 0, font: { size: 11 } },
+          hoverlabel: { bgcolor: css('--surface'), bordercolor: css('--line'), font: { color: css('--text') } }
+        };
+      }
+
+      function eigenvaluesATA(A) {
+        const [[a,b],[c,d]] = A;
+        const p = a*a + c*c;
+        const q = a*b + c*d;
+        const r = b*b + d*d;
+        const tr = p + r;
+        const disc = Math.sqrt(Math.max(0, (p-r)*(p-r) + 4*q*q));
+        return [(tr + disc)/2, (tr - disc)/2];
+      }
+
+      function matrixMetrics(A) {
+        const [[a,b],[c,d]] = A;
+        const det = a*d - b*c;
+        const eig = eigenvaluesATA(A);
+        return {
+          det,
+          sigmaMax: Math.sqrt(Math.max(0, eig[0])),
+          sigmaMin: Math.sqrt(Math.max(0, eig[1]))
+        };
+      }
+
+      function applyA(x, y) {
+        return [state.A[0][0]*x + state.A[0][1]*y, state.A[1][0]*x + state.A[1][1]*y];
+      }
+
+      function updateMatrixLab() {
+        const a = parseFloat($('aSlider').value), b = parseFloat($('bSlider').value), c = parseFloat($('cSlider').value), d = parseFloat($('dSlider').value);
+        state.A = [[a,b],[c,d]];
+        state.radius = parseFloat($('radiusSlider').value);
+        $('aVal').textContent = a.toFixed(2); $('bVal').textContent = b.toFixed(2); $('cVal').textContent = c.toFixed(2); $('dVal').textContent = d.toFixed(2); $('radiusVal').textContent = state.radius.toFixed(2);
+
+        const m = matrixMetrics(state.A);
+        $('detMetric').textContent = m.det.toFixed(3);
+        $('sigmaMaxMetric').textContent = (m.sigmaMax * state.radius).toFixed(3);
+        $('sigmaMinMetric').textContent = (m.sigmaMin * state.radius).toFixed(3);
+        $('inverseMetric').textContent = m.sigmaMin > 1e-7 ? (1/m.sigmaMin).toFixed(3) : '∞';
+        renderTex('matrixFormula', String.raw`A=\begin{pmatrix}${a.toFixed(2)}&${b.toFixed(2)}\\${c.toFixed(2)}&${d.toFixed(2)}\end{pmatrix},\qquad \det A=${m.det.toFixed(3)}`, true);
+        renderTex('singularFormula', m.sigmaMin > 1e-7
+          ? String.raw`B\!\left(0,${(m.sigmaMin*state.radius).toFixed(3)}\right)\subset A\bigl(B(0,${state.radius.toFixed(2)})\bigr)`
+          : String.raw`\operatorname{int}_{\mathbb R^2} A(B(0,r))=\varnothing`, true);
+
+        const status = $('matrixStatus');
+        if (m.sigmaMin > 1e-7) {
+          status.className = 'status good';
+          status.innerHTML = `<strong>Surjective and open.</strong><br>The image has positive thickness in every direction. The least stretching is ${m.sigmaMin.toFixed(3)}, so the inverse is bounded.`;
+        } else {
+          status.className = 'status bad';
+          status.innerHTML = `<strong>Not surjective.</strong><br>The image collapses to a line or a point. No two-dimensional ball can fit inside it, so the map is not open into the full codomain.`;
+        }
+
+        const t = Array.from({length: 241}, (_,i) => 2*Math.PI*i/240);
+        const x = t.map(v => state.radius*Math.cos(v));
+        const y = t.map(v => state.radius*Math.sin(v));
+        const image = x.map((vx,i) => applyA(vx,y[i]));
+        const ix = image.map(v => v[0]), iy = image.map(v => v[1]);
+        const axisRange = Math.max(2.5, state.radius*1.35);
+        const domainData = [
+          {x,y,type:'scatter',mode:'lines',name:'domain ball',line:{color:css('--cyan'),width:3},fill:'toself',fillcolor:'rgba(0,169,199,.09)'},
+          {x:[0,state.radius],y:[0,0],type:'scatter',mode:'lines+markers',name:'radius',line:{color:css('--violet'),width:2},marker:{size:6}}
+        ];
+        const dl = plotLayout(); dl.xaxis.range=[-axisRange,axisRange]; dl.yaxis.range=[-axisRange,axisRange]; dl.yaxis.scaleanchor='x'; dl.showlegend=false;
+        Plotly.react('domainPlot',domainData,dl,{responsive:true,displayModeBar:false});
+
+        const imageExtent = Math.max(1.5, ...ix.map(Math.abs), ...iy.map(Math.abs), m.sigmaMax*state.radius*1.15);
+        const innerR = m.sigmaMin*state.radius;
+        const cx = t.map(v => innerR*Math.cos(v)), cy = t.map(v => innerR*Math.sin(v));
+        const rangeData = [
+          {x:ix,y:iy,type:'scatter',mode:'lines',name:'image',line:{color:css('--teal'),width:3},fill:'toself',fillcolor:'rgba(22,143,136,.10)'},
+          {x:cx,y:cy,type:'scatter',mode:'lines',name:'largest centered ball',line:{color:css('--cyan'),width:2,dash:'dash'}}
+        ];
+        const rl = plotLayout(); rl.xaxis.range=[-imageExtent,imageExtent]; rl.yaxis.range=[-imageExtent,imageExtent]; rl.yaxis.scaleanchor='x';
+        Plotly.react('rangePlot',rangeData,rl,{responsive:true,displayModeBar:false});
+      }
+
+      function updateTauLab() {
+        state.tau = parseFloat($('tauSlider').value); $('tauVal').textContent = state.tau.toFixed(2);
+        const inv = 1/state.tau;
+        renderTex('tauFormula', String.raw`\sigma_{\min}(A_\tau)=${Math.min(1,state.tau).toFixed(2)},\qquad \|A_\tau^{-1}\|_2=${inv.toFixed(2)}`, true);
+        const status = $('tauStatus');
+        status.innerHTML = `<strong>Current inverse amplification: ${inv.toFixed(2)}.</strong><br>A range error of size ε may require a domain correction as large as ${inv.toFixed(2)}ε. The theorem guarantees finiteness, not a universal bound independent of the operator.`;
+        const xs = Array.from({length: 150}, (_,i) => 0.02 + i*(1.48/149));
+        const ys = xs.map(x => 1/x);
+        const data = [
+          {x:xs,y:ys,type:'scatter',mode:'lines',name:'inverse norm',line:{color:css('--violet'),width:3}},
+          {x:[state.tau],y:[inv],type:'scatter',mode:'markers',name:'current τ',marker:{color:css('--cyan'),size:11}}
+        ];
+        const l=plotLayout('Inverse norm near singularity'); l.xaxis.title='τ'; l.yaxis.title='‖Aτ⁻¹‖₂'; l.yaxis.range=[0,Math.min(25,Math.max(5,inv*1.15))];
+        Plotly.react('conditionPlot',data,l,{responsive:true,displayModeBar:false});
+      }
+
+      function updateCorrectionLab() {
+        state.iterations = parseInt($('iterSlider').value,10); $('iterVal').textContent=String(state.iterations);
+        const k = Array.from({length:state.iterations+1},(_,i)=>i);
+        const residual = k.map(i=>Math.pow(2,-(i+1)));
+        const budget = k.map(i=>1-Math.pow(2,-i));
+        const data=[
+          {x:k,y:residual,type:'scatter',mode:'lines+markers',name:'residual / δ',line:{color:css('--danger'),width:3},marker:{size:7}},
+          {x:k,y:budget,type:'scatter',mode:'lines+markers',name:'used norm budget',line:{color:css('--teal'),width:3},marker:{size:7}}
+        ];
+        const l=plotLayout('Geometric correction'); l.xaxis.title='step k'; l.yaxis.title='normalized magnitude'; l.xaxis.dtick=1; l.yaxis.range=[0,1.05];
+        Plotly.react('correctionPlot',data,l,{responsive:true,displayModeBar:false});
+        const used = 1-Math.pow(2,-state.iterations);
+        const rem = Math.pow(2,-(state.iterations+1));
+        renderTex('correctionFormula', String.raw`\left\|\sum_{j=1}^{${state.iterations}}x_j\right\|<${used.toFixed(5)},\qquad \|r_{${state.iterations}}\|<${rem.toFixed(6)}\,\delta`, true);
+      }
+
+      function updateOperatorLab() {
+        state.operator = $('operatorSelect').value;
+        state.frequency = parseInt($('freqSlider').value,10);
+        state.alpha = parseFloat($('alphaSlider').value);
+        $('freqVal').textContent=String(state.frequency); $('alphaVal').textContent=state.alpha.toFixed(2);
+        const n=state.frequency, alpha=state.alpha;
+        const x=Array.from({length:401},(_,i)=>i/400);
+        let traces=[], formula='', domainBanach='Yes', graphClosed='Yes', bounded='Yes', ratio='—', statusClass='good', statusText='';
+
+        if(state.operator==='matrix'){
+          const f=x.map(t=>t); const g=x.map(t=>1.2*t+0.4);
+          traces=[
+            {x,y:f,type:'scatter',mode:'lines',name:'input coordinate',line:{color:css('--cyan'),width:3}},
+            {x,y:g,type:'scatter',mode:'lines',name:'matrix output',line:{color:css('--teal'),width:3}}
+          ];
+          formula=String.raw`T:\mathbb R^2\to\mathbb R^2,\qquad Tz=Az`;
+          ratio=matrixMetrics(state.A).sigmaMax.toFixed(3);
+          statusText='<strong>Finite-dimensional baseline.</strong><br>Every linear map is bounded, every linear graph is closed, and a surjective matrix is automatically open.';
+        } else if(state.operator==='multiply'){
+          const phi=x.map(t=>1+t); const f=x.map(t=>Math.sin(2*Math.PI*t)); const out=x.map((t,i)=>phi[i]*f[i]);
+          traces=[
+            {x,y:f,type:'scatter',mode:'lines',name:'f',line:{color:css('--cyan'),width:3}},
+            {x,y:out,type:'scatter',mode:'lines',name:'Mφf',line:{color:css('--teal'),width:3}},
+            {x,y:phi,type:'scatter',mode:'lines',name:'φ',line:{color:css('--violet'),width:2,dash:'dot'}}
+          ];
+          formula=String.raw`M_\varphi:C[0,1]\to C[0,1],\qquad (M_\varphi f)(x)=(1+x)f(x)`;
+          ratio='2.000';
+          statusText='<strong>Bounded multiplication operator.</strong><br>Its norm is ‖φ‖∞=2. Continuity immediately implies that its graph is closed.';
+        } else {
+          const amp=Math.pow(n,-alpha);
+          const f=x.map(t=>amp*Math.sin(n*Math.PI*t));
+          const df=x.map(t=>amp*n*Math.PI*Math.cos(n*Math.PI*t));
+          traces=[
+            {x,y:f,type:'scatter',mode:'lines',name:'fₙ',line:{color:css('--cyan'),width:3}},
+            {x,y:df,type:'scatter',mode:'lines',name:"fₙ'",line:{color:css('--danger'),width:2}}
+          ];
+          const supF=amp, supDf=amp*n*Math.PI;
+          if(state.operator==='derivativeGraph'){
+            formula=String.raw`D:(C^1[0,1],\|f\|_\infty+\|f'\|_\infty)\to C[0,1],\qquad Df=f'`;
+            ratio=(supDf/(supF+supDf)).toFixed(3);
+            statusText='<strong>The right norm exposes the derivative.</strong><br>Under the graph norm, ‖Df‖∞≤‖f‖∞+‖f′‖∞, so D is bounded with norm at most one. The domain is Banach.';
+          } else {
+            formula=String.raw`D:(C^1[0,1],\|\cdot\|_\infty)\to C[0,1],\qquad Df=f'`;
+            domainBanach='No'; bounded='No'; ratio=(supDf/supF).toFixed(2); statusClass='bad';
+            statusText=`<strong>Closed graph without boundedness.</strong><br>For the displayed function, ‖fₙ′‖∞/‖fₙ‖∞ = ${(n*Math.PI).toFixed(2)}. This grows without bound, while the graph remains closed. The missing hypothesis is completeness of the domain.`;
+          }
+        }
+        renderTex('operatorFormula',formula,true);
+        $('domainBanachMetric').textContent=domainBanach; $('graphClosedMetric').textContent=graphClosed; $('boundedMetric').textContent=bounded; $('ratioMetric').textContent=ratio;
+        const s=$('operatorStatus'); s.className=`status ${statusClass}`; s.innerHTML=statusText;
+        const l=plotLayout('Input and output behavior'); l.xaxis.title='x'; l.yaxis.title='value';
+        Plotly.react('operatorPlot',traces,l,{responsive:true,displayModeBar:false});
+      }
+
+      function bindControls() {
+        ['aSlider','bSlider','cSlider','dSlider','radiusSlider'].forEach(id => $(id).addEventListener('input',updateMatrixLab));
+        $('makeSingular').addEventListener('click',()=>{
+          $('aSlider').value='1'; $('bSlider').value='2'; $('cSlider').value='0.5'; $('dSlider').value='1'; updateMatrixLab();
+        });
+        $('tauSlider').addEventListener('input',updateTauLab);
+        $('iterSlider').addEventListener('input',updateCorrectionLab);
+        ['operatorSelect','freqSlider','alphaSlider'].forEach(id => $(id).addEventListener('input',updateOperatorLab));
+
+        qsAll('.proof-step button').forEach(button=>button.addEventListener('click',()=>button.parentElement.classList.toggle('open')));
+        qsAll('#proofQuiz .proof-option').forEach(button=>button.addEventListener('click',()=>{
+          qsAll('#proofQuiz .proof-option').forEach(b=>b.classList.remove('correct','incorrect'));
+          const good=button.dataset.correct==='true'; button.classList.add(good?'correct':'incorrect');
+          const f=$('quizFeedback'); f.className=`status ${good?'good':'bad'}`;
+          f.innerHTML=good?'<strong>Correct.</strong> The graph contains exactly one point above each x because T is a single-valued map defined on all of X.':'<strong>Not quite.</strong> Bijectivity of the graph projection comes from the definition of a graph, not from closedness or boundedness.';
+        }));
+
+        qsAll('.counter-tab').forEach(tab=>tab.addEventListener('click',()=>{
+          qsAll('.counter-tab').forEach(t=>t.classList.remove('active'));
+          qsAll('.counter-panel').forEach(p=>p.classList.remove('active'));
+          tab.classList.add('active'); $(tab.dataset.panel).classList.add('active');
+        }));
+
+        $('themeToggle').addEventListener('click',()=>{
+          const next=document.documentElement.dataset.theme==='dark'?'light':'dark';
+          document.documentElement.dataset.theme=next; localStorage.setItem('omcg-theme',next); refreshPlots();
+        });
+        $('resetAll').addEventListener('click',resetAll);
+      }
+
+      function refreshPlots(){ updateMatrixLab(); updateTauLab(); updateCorrectionLab(); updateOperatorLab(); }
+
+      function resetAll(){
+        $('aSlider').value='1.2'; $('bSlider').value='0.6'; $('cSlider').value='-0.3'; $('dSlider').value='1.5'; $('radiusSlider').value='1';
+        $('tauSlider').value='0.35'; $('iterSlider').value='6'; $('operatorSelect').value='matrix'; $('freqSlider').value='6'; $('alphaSlider').value='0.5';
+        refreshPlots();
+      }
+
+      function initialize(){
+        document.documentElement.dataset.theme=localStorage.getItem('omcg-theme')||'light';
+        renderAllMath(); bindControls(); refreshPlots();
+      }
+
+      if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>setTimeout(initialize,80));
+      else setTimeout(initialize,80);
+    })();
+  </script>
+</body>
+</html>

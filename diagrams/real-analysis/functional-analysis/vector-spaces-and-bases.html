@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="An interactive laboratory for vector spaces, linear combinations, span, linear independence, bases, dimension, and quotient spaces." />
+  <title>Vector Spaces and Bases — Interactive Laboratory</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+
+  <style>
+    :root {
+      --bg: #f7f8f5;
+      --surface: rgba(255, 255, 255, 0.93);
+      --surface-2: #eef3f3;
+      --text: #172126;
+      --muted: #627078;
+      --line: #d8e1e3;
+      --cyan: #00a8c6;
+      --cyan-deep: #087f98;
+      --teal: #168f88;
+      --violet: #7567c7;
+      --amber: #b67a1d;
+      --danger: #b64949;
+      --success: #147d64;
+      --shadow: 0 18px 50px rgba(37, 56, 64, 0.09);
+      --radius: 22px;
+      --axis: #60737a;
+      --grid: #dbe4e6;
+      --canvas: #ffffff;
+      --focus: rgba(0, 168, 198, 0.25);
+    }
+
+    html[data-theme="dark"] {
+      --bg: #121a20;
+      --surface: rgba(27, 38, 46, 0.96);
+      --surface-2: #213039;
+      --text: #edf5f6;
+      --muted: #a8b8bd;
+      --line: #344750;
+      --cyan: #44c9e1;
+      --cyan-deep: #7ed9e8;
+      --teal: #58c4b9;
+      --violet: #a99ee7;
+      --amber: #e4b45e;
+      --danger: #ef8a8a;
+      --success: #68d0ad;
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.25);
+      --axis: #9bb0b7;
+      --grid: #30424a;
+      --canvas: #17232a;
+      --focus: rgba(68, 201, 225, 0.22);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 8% 0%, rgba(0,168,198,0.08), transparent 28rem),
+        radial-gradient(circle at 100% 20%, rgba(117,103,199,0.06), transparent 30rem),
+        var(--bg);
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.65;
+      transition: background .25s ease, color .25s ease;
+    }
+
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; }
+
+    .shell { width: min(1480px, calc(100% - 32px)); margin: 0 auto; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 85%, transparent);
+      backdrop-filter: blur(18px);
+      background: color-mix(in srgb, var(--bg) 82%, transparent);
+    }
+
+    .topbar-inner {
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--cyan);
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      position: relative;
+      box-shadow: inset 0 0 0 6px color-mix(in srgb, var(--cyan) 10%, transparent);
+    }
+
+    .brand-mark::before,
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 1.5px;
+      background: var(--cyan);
+      transform-origin: center;
+    }
+    .brand-mark::before { transform: rotate(25deg); }
+    .brand-mark::after { transform: rotate(115deg); }
+
+    .top-actions { display: flex; gap: 10px; align-items: center; }
+
+    .icon-button, .ghost-button, .primary-button, .segmented button, .proof-option {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--text);
+      border-radius: 12px;
+      min-height: 40px;
+      padding: 9px 13px;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+
+    .icon-button:hover, .ghost-button:hover, .segmented button:hover, .proof-option:hover {
+      transform: translateY(-1px);
+      border-color: var(--cyan);
+    }
+
+    .primary-button {
+      background: var(--cyan);
+      color: #062e37;
+      font-weight: 700;
+      border-color: transparent;
+    }
+
+    .primary-button:hover { transform: translateY(-1px); filter: brightness(1.03); }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(340px, .8fr);
+      gap: 30px;
+      padding: 70px 0 44px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      color: var(--cyan-deep);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      font-size: .78rem;
+    }
+
+    h1, h2, h3, .serif {
+      font-family: "Libre Baskerville", Georgia, serif;
+      letter-spacing: -0.025em;
+    }
+
+    h1 {
+      font-size: clamp(2.7rem, 6vw, 5.5rem);
+      line-height: 1.03;
+      margin: 12px 0 20px;
+      max-width: 940px;
+    }
+
+    .hero p {
+      font-size: clamp(1.02rem, 1.8vw, 1.24rem);
+      max-width: 800px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .hero-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      padding: 8px 11px;
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+    .chip::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); }
+
+    .hero-map {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      border-radius: 28px;
+      padding: 22px;
+      min-height: 370px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-map::after {
+      content: "";
+      position: absolute;
+      inset: auto -70px -90px auto;
+      width: 230px;
+      height: 230px;
+      border: 1px solid color-mix(in srgb, var(--cyan) 28%, transparent);
+      border-radius: 50%;
+    }
+
+    .concept-flow { display: grid; gap: 12px; position: relative; z-index: 2; }
+    .flow-node {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 13px 15px;
+      display: grid;
+      grid-template-columns: 38px 1fr;
+      gap: 12px;
+      align-items: center;
+      background: color-mix(in srgb, var(--surface) 92%, transparent);
+    }
+    .flow-node .num {
+      width: 34px; height: 34px; border-radius: 12px;
+      display: grid; place-items: center;
+      color: var(--cyan-deep);
+      background: color-mix(in srgb, var(--cyan) 12%, transparent);
+      font-weight: 800;
+    }
+    .flow-node strong { display: block; }
+    .flow-node small { color: var(--muted); display: block; margin-top: 2px; }
+
+    .section { padding: 36px 0; scroll-margin-top: 90px; }
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 20px;
+    }
+    .section-heading h2 { margin: 4px 0 0; font-size: clamp(1.85rem, 3vw, 2.7rem); }
+    .section-heading p { color: var(--muted); max-width: 680px; margin: 0; }
+
+    .grid { display: grid; gap: 20px; }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .lab-grid { grid-template-columns: 310px minmax(0, 1fr) 340px; align-items: start; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: 0 10px 30px rgba(34, 51, 58, 0.045);
+    }
+
+    .card h3 { margin: 0 0 10px; font-size: 1.28rem; }
+    .card p { color: var(--muted); }
+
+    .definition-card {
+      position: relative;
+      overflow: hidden;
+    }
+    .definition-card::before {
+      content: "";
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 4px;
+      background: var(--cyan);
+    }
+
+    .math-display {
+      padding: 15px 10px;
+      overflow-x: auto;
+      min-height: 52px;
+    }
+    .math-inline { display: inline-block; }
+
+    .katex-display { margin: .65em 0 !important; overflow-x: auto; overflow-y: hidden; }
+    .katex-display > .katex { max-width: 100%; text-align: center; }
+    .katex { font-size: 1.02em; }
+    @media (max-width: 640px) {
+      .math-display { padding-inline: 4px; }
+      .math-display .katex { font-size: .94em; }
+    }
+
+    .logic-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .logic-token {
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: .82rem;
+      border: 1px solid var(--line);
+    }
+    .logic-token.exists { background: color-mix(in srgb, var(--cyan) 10%, transparent); color: var(--cyan-deep); }
+    .logic-token.forall { background: color-mix(in srgb, var(--violet) 10%, transparent); color: var(--violet); }
+    .logic-token.implication { background: color-mix(in srgb, var(--teal) 10%, transparent); color: var(--teal); }
+
+    .control-panel { position: sticky; top: 88px; }
+    .control-group { margin-bottom: 18px; }
+    .control-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: .9rem;
+      margin-bottom: 7px;
+      color: var(--muted);
+    }
+    .control-label output { color: var(--text); font-weight: 700; }
+    input[type="range"] { width: 100%; accent-color: var(--cyan); }
+    select, input[type="number"] {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: var(--surface-2);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 10px 11px;
+      outline: none;
+    }
+    select:focus, input:focus, button:focus-visible { box-shadow: 0 0 0 4px var(--focus); outline: none; }
+
+    .segmented { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
+    .segmented button.active { border-color: var(--cyan); background: color-mix(in srgb, var(--cyan) 11%, var(--surface)); color: var(--cyan-deep); }
+
+    .viz-card { padding: 14px; }
+    .viz-header {
+      padding: 6px 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .viz-header h3 { margin: 0; }
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: .82rem;
+    }
+    .status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+    .status.good::before { background: var(--success); }
+    .status.bad::before { background: var(--danger); }
+
+    .svg-wrap {
+      min-height: 520px;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: var(--canvas);
+      overflow: hidden;
+      position: relative;
+    }
+    .svg-wrap svg { width: 100%; height: 100%; display: block; }
+
+    .read-box, .formal-box, .result-box, .warning-box {
+      border: 1px solid var(--line);
+      background: var(--surface-2);
+      border-radius: 15px;
+      padding: 14px 15px;
+      margin-top: 14px;
+    }
+    .read-box strong, .formal-box strong, .warning-box strong { display: block; margin-bottom: 5px; }
+    .read-box p, .formal-box p, .warning-box p { margin: 0; font-size: .9rem; }
+    .warning-box { border-color: color-mix(in srgb, var(--danger) 38%, var(--line)); }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .metric-row:last-child { border-bottom: 0; }
+    .metric-row span:first-child { color: var(--muted); }
+    .metric-value { font-weight: 700; text-align: right; }
+
+    .matrix {
+      display: grid;
+      gap: 4px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 12px;
+    }
+    .matrix-cell {
+      padding: 9px 6px;
+      text-align: center;
+      border-radius: 9px;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .proof-layout { grid-template-columns: minmax(260px, .72fr) minmax(0, 1.28fr); }
+    .proof-steps { display: grid; gap: 10px; }
+    .proof-step {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 13px;
+      background: var(--surface);
+      text-align: left;
+      color: var(--text);
+    }
+    .proof-step.active { border-color: var(--cyan); background: color-mix(in srgb, var(--cyan) 8%, var(--surface)); }
+    .proof-step.done { border-color: color-mix(in srgb, var(--success) 50%, var(--line)); }
+    .proof-step small { display: block; color: var(--muted); margin-top: 3px; }
+
+    .proof-stage {
+      min-height: 430px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .proof-options { display: grid; gap: 10px; margin-top: 18px; }
+    .proof-option { text-align: left; }
+    .proof-option.correct { border-color: var(--success); background: color-mix(in srgb, var(--success) 9%, var(--surface)); }
+    .proof-option.wrong { border-color: var(--danger); background: color-mix(in srgb, var(--danger) 8%, var(--surface)); }
+    .feedback { min-height: 64px; color: var(--muted); margin-top: 12px; }
+
+    .example-card { min-height: 300px; display: flex; flex-direction: column; }
+    .example-card .tag {
+      align-self: flex-start;
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--cyan-deep);
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .example-card .math-display { margin-top: auto; }
+
+    .counter-grid .card { border-top: 3px solid var(--danger); }
+    .counter-grid h3 { font-family: Inter, sans-serif; letter-spacing: -0.02em; }
+
+    details {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+      padding: 0 15px;
+    }
+    details + details { margin-top: 10px; }
+    summary { cursor: pointer; list-style: none; padding: 15px 0; font-weight: 700; }
+    summary::-webkit-details-marker { display: none; }
+    details[open] summary { color: var(--cyan-deep); }
+    details .detail-body { border-top: 1px solid var(--line); padding: 14px 0 16px; color: var(--muted); }
+
+    .summary-band {
+      margin: 36px 0 70px;
+      border-radius: 28px;
+      padding: 34px;
+      background: linear-gradient(125deg, color-mix(in srgb, var(--cyan) 12%, var(--surface)), var(--surface));
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+    .summary-chain {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 20px;
+    }
+    .summary-chain div {
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      padding: 12px 10px;
+      text-align: center;
+      background: var(--surface);
+      font-size: .85rem;
+      position: relative;
+    }
+    .summary-chain div:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      right: -13px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--cyan-deep);
+      z-index: 2;
+    }
+
+    .tooltip {
+      position: fixed;
+      z-index: 100;
+      pointer-events: none;
+      padding: 8px 10px;
+      background: var(--text);
+      color: var(--bg);
+      border-radius: 8px;
+      font-size: .78rem;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity .14s ease, transform .14s ease;
+      max-width: 240px;
+    }
+    .tooltip.show { opacity: 1; transform: translateY(0); }
+
+    .nav-dots {
+      position: fixed;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 20;
+      display: grid;
+      gap: 8px;
+    }
+    .nav-dots a {
+      width: 10px; height: 10px; border-radius: 50%;
+      border: 1px solid var(--axis);
+      background: var(--surface);
+    }
+    .nav-dots a:hover { background: var(--cyan); border-color: var(--cyan); }
+
+    .footer { padding: 30px 0 50px; color: var(--muted); text-align: center; font-size: .9rem; }
+
+    @media (max-width: 1180px) {
+      .lab-grid { grid-template-columns: 280px minmax(0, 1fr); }
+      .lab-grid > :last-child { grid-column: 1 / -1; }
+      .control-panel { position: static; }
+      .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .summary-chain { grid-template-columns: repeat(3, minmax(0,1fr)); }
+      .summary-chain div:nth-child(3)::after { display: none; }
+    }
+
+    @media (max-width: 820px) {
+      .shell { width: min(100% - 20px, 1480px); }
+      .hero, .grid-2, .grid-3, .lab-grid, .proof-layout { grid-template-columns: 1fr; }
+      .hero { padding-top: 42px; }
+      .hero-map { min-height: auto; }
+      .section-heading { align-items: start; flex-direction: column; }
+      .svg-wrap { min-height: 430px; }
+      .nav-dots { display: none; }
+      .summary-chain { grid-template-columns: 1fr 1fr; }
+      .summary-chain div::after { display: none !important; }
+      .topbar-inner { min-height: 60px; }
+      .brand span:last-child { display: none; }
+    }
+
+    @media (max-width: 520px) {
+      h1 { font-size: 2.45rem; }
+      .card { padding: 17px; border-radius: 17px; }
+      .svg-wrap { min-height: 370px; }
+      .summary-chain { grid-template-columns: 1fr; }
+      .top-actions .ghost-button { display: none; }
+      .matrix { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="tooltip" id="tooltip"></div>
+
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"></div>
+        <span>Linear Algebra Laboratory</span>
+      </div>
+      <div class="top-actions">
+        <button class="ghost-button" id="resetAll">Reset laboratory</button>
+        <button class="icon-button" id="themeToggle" aria-label="Toggle color theme">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="nav-dots" aria-label="Section navigation">
+    <a href="#definitions" data-tip="Definitions"></a>
+    <a href="#linear-combinations" data-tip="Linear combinations"></a>
+    <a href="#independence" data-tip="Independence and bases"></a>
+    <a href="#dimension" data-tip="Dimension"></a>
+    <a href="#quotient" data-tip="Quotient spaces"></a>
+    <a href="#proof" data-tip="Proof laboratory"></a>
+  </nav>
+
+  <main class="shell">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">Vector spaces and bases</div>
+        <h1>From combinations to coordinates.</h1>
+        <p>
+          Explore how vectors generate spaces, when generators become a basis, why dimension is invariant,
+          and how quotient spaces identify vectors that differ by an element of a subspace.
+        </p>
+        <div class="hero-chips">
+          <span class="chip">Interactive geometry</span>
+          <span class="chip">Formal definitions</span>
+          <span class="chip">Guided proofs</span>
+          <span class="chip">Counterexamples</span>
+        </div>
+      </div>
+
+      <aside class="hero-map" aria-label="Concept map">
+        <div class="eyebrow">Conceptual route</div>
+        <h3 class="serif" style="font-size:1.45rem;margin:8px 0 18px;">One mathematical story</h3>
+        <div class="concept-flow">
+          <div class="flow-node"><span class="num">1</span><div><strong>Combine</strong><small>Choose scalars and form linear combinations.</small></div></div>
+          <div class="flow-node"><span class="num">2</span><div><strong>Generate</strong><small>The set of all combinations is the span.</small></div></div>
+          <div class="flow-node"><span class="num">3</span><div><strong>Remove redundancy</strong><small>Linear independence forbids nontrivial zero relations.</small></div></div>
+          <div class="flow-node"><span class="num">4</span><div><strong>Coordinate</strong><small>A basis gives each vector a unique coordinate list.</small></div></div>
+          <div class="flow-node"><span class="num">5</span><div><strong>Count</strong><small>Every finite basis has the same cardinality: dimension.</small></div></div>
+          <div class="flow-node"><span class="num">6</span><div><strong>Collapse</strong><small>A quotient space treats each coset as one point.</small></div></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section" id="definitions">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">Formal layer</div>
+          <h2>Definitions as logical machines</h2>
+        </div>
+        <p>Each concept changes one part of the logical structure: existence, universality, uniqueness, or equivalence.</p>
+      </div>
+
+      <div class="grid grid-2">
+        <article class="card definition-card">
+          <h3>Linear combination and span</h3>
+          <div class="math-display" data-math="v=a_1v_1+\cdots+a_mv_m"></div>
+          <div class="math-display" data-math="\operatorname{span}(S)=\left\{\sum_{i=1}^{m}a_iv_i:m\in\mathbb N,\ a_i\in\mathbb F,\ v_i\in S\right\}"></div>
+          <div class="logic-strip">
+            <span class="logic-token exists">there exist finitely many vectors</span>
+            <span class="logic-token exists">there exist scalars</span>
+            <span class="logic-token implication">their sum equals the target</span>
+          </div>
+        </article>
+
+        <article class="card definition-card">
+          <h3>Linear independence</h3>
+          <div class="math-display" data-math="\sum_{i=1}^{m}a_iv_i=0\quad\Longrightarrow\quad a_1=\cdots=a_m=0"></div>
+          <div class="logic-strip">
+            <span class="logic-token forall">for every finite choice</span>
+            <span class="logic-token forall">for every scalar family</span>
+            <span class="logic-token implication">zero sum forces trivial coefficients</span>
+          </div>
+          <p>A single nonzero coefficient vector producing zero is enough to prove dependence.</p>
+        </article>
+
+        <article class="card definition-card">
+          <h3>Basis and dimension</h3>
+          <div class="math-display" data-math="B\text{ is a basis of }V\iff \operatorname{span}(B)=V\text{ and }B\text{ is linearly independent}"></div>
+          <div class="math-display" data-math="\dim V=|B|\qquad\text{for any finite basis }B"></div>
+          <div class="logic-strip">
+            <span class="logic-token exists">existence of coordinates</span>
+            <span class="logic-token forall">uniqueness of coordinates</span>
+          </div>
+        </article>
+
+        <article class="card definition-card">
+          <h3>Quotient space</h3>
+          <div class="math-display" data-math="V/W=\{v+W:v\in V\},\qquad v+W=\{v+w:w\in W\}"></div>
+          <div class="math-display" data-math="u+W=v+W\iff u-v\in W"></div>
+          <div class="logic-strip">
+            <span class="logic-token exists">vectors become cosets</span>
+            <span class="logic-token implication">difference in W means same quotient point</span>
+          </div>
+        </article>
+      </div>
+
+      <div class="card" style="margin-top:20px;">
+        <div class="grid grid-3">
+          <div><strong>Existence</strong><p style="margin:4px 0 0;">Spanning means every target has at least one representation.</p></div>
+          <div><strong>Uniqueness</strong><p style="margin:4px 0 0;">Independence turns an existing representation into a unique one.</p></div>
+          <div><strong>Identification</strong><p style="margin:4px 0 0;">A quotient intentionally forgets differences lying inside a chosen subspace.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="linear-combinations">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">Laboratory I</div>
+          <h2>Linear combinations and span</h2>
+        </div>
+        <p>Vary the coefficients and watch the parallelogram construction produce every point in the span.</p>
+      </div>
+
+      <div class="grid lab-grid">
+        <aside class="card control-panel">
+          <h3>Controls</h3>
+          <div class="control-group">
+            <label class="control-label" for="comboMode"><span>Generator configuration</span></label>
+            <select id="comboMode">
+              <option value="independent">Independent generators</option>
+              <option value="dependent">Dependent generators</option>
+              <option value="single">Single generator</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="coefA"><span>Coefficient a</span><output id="coefAOut">1.20</output></label>
+            <input id="coefA" type="range" min="-2.5" max="2.5" step="0.05" value="1.2" />
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="coefB"><span>Coefficient b</span><output id="coefBOut">0.80</output></label>
+            <input id="coefB" type="range" min="-2.5" max="2.5" step="0.05" value="0.8" />
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="spanExtent"><span>Displayed span extent</span><output id="spanExtentOut">3.5</output></label>
+            <input id="spanExtent" type="range" min="2" max="6" step="0.5" value="3.5" />
+          </div>
+          <div class="segmented">
+            <button id="animateCombo">Animate</button>
+            <button id="resetCombo">Reset</button>
+          </div>
+          <div class="formal-box">
+            <strong>Formal meaning</strong>
+            <p>The point shown is the vector represented by the ordered coefficient pair <span data-math="(a,b)"></span>.</p>
+          </div>
+        </aside>
+
+        <article class="card viz-card">
+          <div class="viz-header">
+            <h3>Geometric construction</h3>
+            <span class="status good" id="spanStatus">The span is the plane</span>
+          </div>
+          <div class="svg-wrap" id="comboSvgWrap"><svg id="comboSvg" role="img" aria-label="Linear combination visualization"></svg></div>
+          <div class="read-box">
+            <strong>Read the diagram</strong>
+            <p>Cyan and teal are the generators. Their scaled copies form adjacent sides of a parallelogram. Violet is the resultant vector.</p>
+          </div>
+        </article>
+
+        <aside class="card">
+          <h3>Current algebra</h3>
+          <div class="math-display" id="comboFormula"></div>
+          <div class="metric-row"><span>Generator matrix determinant</span><span class="metric-value" id="comboDet">5.00</span></div>
+          <div class="metric-row"><span>Dimension of the span</span><span class="metric-value" id="comboDim">2</span></div>
+          <div class="metric-row"><span>Resultant vector</span><span class="metric-value" id="comboResult">(1.60, 2.80)</span></div>
+          <div class="metric-row"><span>Representation unique?</span><span class="metric-value" id="comboUnique">Yes</span></div>
+          <div class="result-box">
+            <strong>Key observation</strong>
+            <p id="comboObservation">Two non-collinear vectors generate all of the plane, and each vector has a unique coefficient pair.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="independence">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">Laboratory II</div>
+          <h2>Independence, bases, and coordinates</h2>
+        </div>
+        <p>The determinant measures the signed area of the generator parallelogram. Area zero means redundancy.</p>
+      </div>
+
+      <div class="grid lab-grid">
+        <aside class="card control-panel">
+          <h3>Choose two vectors</h3>
+          <div class="control-group">
+            <label class="control-label" for="uX"><span>u₁</span><output id="uXOut">2.0</output></label>
+            <input id="uX" type="range" min="-3" max="3" step="0.1" value="2" />
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="uY"><span>u₂</span><output id="uYOut">1.0</output></label>
+            <input id="uY" type="range" min="-3" max="3" step="0.1" value="1" />
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="vX"><span>v₁</span><output id="vXOut">-1.0</output></label>
+            <input id="vX" type="range" min="-3" max="3" step="0.1" value="-1" />
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="vY"><span>v₂</span><output id="vYOut">2.0</output></label>
+            <input id="vY" type="range" min="-3" max="3" step="0.1" value="2" />
+          </div>
+          <hr style="border:0;border-top:1px solid var(--line);margin:18px 0;">
+          <div class="control-group">
+            <label class="control-label" for="targetX"><span>Target x-coordinate</span><output id="targetXOut">1.0</output></label>
+            <input id="targetX" type="range" min="-4" max="4" step="0.1" value="1" />
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="targetY"><span>Target y-coordinate</span><output id="targetYOut">2.0</output></label>
+            <input id="targetY" type="range" min="-4" max="4" step="0.1" value="2" />
+          </div>
+          <button class="ghost-button" id="forceDependence" style="width:100%;">Create dependence</button>
+        </aside>
+
+        <article class="card viz-card">
+          <div class="viz-header">
+            <h3>Area and coordinate geometry</h3>
+            <span class="status good" id="basisStatus">A basis of R²</span>
+          </div>
+          <div class="svg-wrap"><svg id="basisSvg" role="img" aria-label="Basis and determinant visualization"></svg></div>
+          <div class="read-box">
+            <strong>Read the diagram</strong>
+            <p>The shaded parallelogram has area <span data-math="|\det(u,v)|"></span>. The target vector is amber. Dashed components display its coordinates in the chosen generators.</p>
+          </div>
+        </article>
+
+        <aside class="card">
+          <h3>Coordinate diagnosis</h3>
+          <div class="math-display" id="basisMatrixFormula"></div>
+          <div class="metric-row"><span>Determinant</span><span class="metric-value" id="basisDet">5.000</span></div>
+          <div class="metric-row"><span>Parallelogram area</span><span class="metric-value" id="basisArea">5.000</span></div>
+          <div class="metric-row"><span>Rank</span><span class="metric-value" id="basisRank">2</span></div>
+          <div class="metric-row"><span>Coordinates of target</span><span class="metric-value" id="basisCoords">(0.80, 0.60)</span></div>
+          <div class="result-box">
+            <strong id="basisResultTitle">Unique coordinates</strong>
+            <p id="basisResultText">Because the determinant is nonzero, the coordinate map is invertible.</p>
+          </div>
+          <div class="warning-box" id="basisWarning" style="display:none;">
+            <strong>What fails?</strong>
+            <p>A dependent generating family may still span a line, but coefficients are not unique.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="dimension">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">Laboratory III</div>
+          <h2>Dimension as the number of independent directions</h2>
+        </div>
+        <p>Switch among generating families in <span data-math="\mathbb R^3"></span> and watch Gaussian elimination expose the rank.</p>
+      </div>
+
+      <div class="grid grid-2">
+        <article class="card">
+          <h3>Generator family</h3>
+          <div class="control-group">
+            <label class="control-label" for="dimensionCase"><span>Example</span></label>
+            <select id="dimensionCase">
+              <option value="basis">Three independent vectors</option>
+              <option value="plane">Three vectors in one plane</option>
+              <option value="line">Three vectors on one line</option>
+              <option value="redundant">Four generators, rank three</option>
+            </select>
+          </div>
+          <div class="matrix" id="dimensionMatrix"></div>
+          <div class="metric-row"><span>Number of generators</span><span class="metric-value" id="generatorCount">3</span></div>
+          <div class="metric-row"><span>Rank</span><span class="metric-value" id="dimensionRank">3</span></div>
+          <div class="metric-row"><span>Dimension of the span</span><span class="metric-value" id="dimensionValue">3</span></div>
+          <div class="metric-row"><span>Redundant generators</span><span class="metric-value" id="redundantCount">0</span></div>
+        </article>
+
+        <article class="card">
+          <h3>Row-reduction navigator</h3>
+          <div id="rowReduction"></div>
+          <div class="formal-box">
+            <strong>Invariant content</strong>
+            <p>Elementary row operations do not change the solution set of the homogeneous system, hence they preserve rank and dependence information.</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="grid grid-3" style="margin-top:20px;">
+        <article class="card">
+          <h3>Dimension theorem</h3>
+          <div class="math-display" data-math="\text{If }V\text{ has a finite basis, then every basis of }V\text{ has the same number of vectors.}"></div>
+          <p>This common number is not attached to a particular basis; it is an invariant of the vector space.</p>
+        </article>
+        <article class="card">
+          <h3>Subspace bound</h3>
+          <div class="math-display" data-math="W\le V,\ \dim V<\infty\quad\Longrightarrow\quad \dim W\le \dim V"></div>
+          <p>An independent family in a subspace remains independent in the ambient space.</p>
+        </article>
+        <article class="card">
+          <h3>Dimension formula</h3>
+          <div class="math-display" data-math="\dim(U+W)=\dim U+\dim W-\dim(U\cap W)"></div>
+          <p>The intersection records precisely the directions counted twice.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="quotient">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">Laboratory IV</div>
+          <h2>Quotient spaces: collapsing a subspace</h2>
+        </div>
+        <p>In <span data-math="\mathbb R^2/W"></span>, every affine line parallel to <span data-math="W"></span> becomes one point.</p>
+      </div>
+
+      <div class="grid lab-grid">
+        <aside class="card control-panel">
+          <h3>Subspace and representative</h3>
+          <div class="control-group">
+            <label class="control-label" for="quotientSlope"><span>Slope of W</span><output id="quotientSlopeOut">0.50</output></label>
+            <input id="quotientSlope" type="range" min="-2" max="2" step="0.05" value="0.5" />
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="pointX"><span>Representative x</span><output id="pointXOut">1.40</output></label>
+            <input id="pointX" type="range" min="-3.5" max="3.5" step="0.05" value="1.4" />
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="pointY"><span>Representative y</span><output id="pointYOut">2.20</output></label>
+            <input id="pointY" type="range" min="-3.5" max="3.5" step="0.05" value="2.2" />
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="shiftAlongW"><span>Add an element of W</span><output id="shiftAlongWOut">0.00</output></label>
+            <input id="shiftAlongW" type="range" min="-2.5" max="2.5" step="0.05" value="0" />
+          </div>
+          <button class="ghost-button" id="resetQuotient" style="width:100%;">Reset quotient lab</button>
+          <div class="formal-box">
+            <strong>Equivalence relation</strong>
+            <p><span data-math="u\sim v"></span> exactly when <span data-math="u-v\in W"></span>.</p>
+          </div>
+        </aside>
+
+        <article class="card viz-card">
+          <div class="viz-header">
+            <h3>Cosets in the ambient plane</h3>
+            <span class="status good">Equivalent representatives</span>
+          </div>
+          <div class="svg-wrap"><svg id="quotientSvg" role="img" aria-label="Quotient space visualization"></svg></div>
+          <div class="read-box">
+            <strong>Read the diagram</strong>
+            <p>Each faint parallel line is a coset. The cyan line is <span data-math="W"></span>. Violet and amber points differ by a vector in <span data-math="W"></span>, so they represent the same quotient point.</p>
+          </div>
+        </article>
+
+        <aside class="card">
+          <h3>Quotient coordinate</h3>
+          <div class="math-display" id="quotientFormula"></div>
+          <div class="metric-row"><span>Representative v</span><span class="metric-value" id="qRep">(1.40, 2.20)</span></div>
+          <div class="metric-row"><span>Equivalent representative</span><span class="metric-value" id="qShifted">(1.40, 2.20)</span></div>
+          <div class="metric-row"><span>Normal quotient coordinate</span><span class="metric-value" id="qCoord">1.342</span></div>
+          <div class="metric-row"><span>Dimension of V/W</span><span class="metric-value">1</span></div>
+          <div class="result-box">
+            <strong>What is forgotten?</strong>
+            <p>Motion parallel to <span data-math="W"></span> is invisible in the quotient. Only displacement transverse to <span data-math="W"></span> remains.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="proof">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">Guided theorem proving</div>
+          <h2>Extracting a basis from a finite spanning set</h2>
+        </div>
+        <p>At each stage, choose the logically valid next move. Incorrect steps are diagnosed rather than merely rejected.</p>
+      </div>
+
+      <div class="grid proof-layout">
+        <aside class="card">
+          <h3>Theorem</h3>
+          <div class="math-display" data-math="\text{Every finite spanning set of }V\text{ contains a basis of }V."></div>
+          <div class="proof-steps" id="proofSteps"></div>
+          <button class="ghost-button" id="restartProof" style="width:100%;margin-top:14px;">Restart proof</button>
+        </aside>
+
+        <article class="card proof-stage">
+          <div>
+            <div class="eyebrow" id="proofEyebrow">Step 1</div>
+            <h3 id="proofTitle" style="font-size:1.55rem;margin-top:7px;">Start from a finite spanning family</h3>
+            <div class="math-display" id="proofMath"></div>
+            <p id="proofReason"></p>
+            <div class="proof-options" id="proofOptions"></div>
+            <div class="feedback" id="proofFeedback"></div>
+          </div>
+          <div class="formal-box">
+            <strong>Proof strategy</strong>
+            <p>Finite deletion argument: whenever a generator is redundant, remove it without changing the span. Finiteness guarantees termination.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="examples">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">Examples</div>
+          <h2>Three spaces, three coordinate systems</h2>
+        </div>
+        <p>The definitions are identical even when the vectors are polynomials, matrices, or functions.</p>
+      </div>
+
+      <div class="grid grid-3">
+        <article class="card example-card">
+          <span class="tag">Canonical</span>
+          <h3>Standard basis of Rⁿ</h3>
+          <p>Each coordinate axis contributes one independent direction, and every vector is reconstructed from its coordinates.</p>
+          <div class="math-display" data-math="x=x_1e_1+\cdots+x_ne_n"></div>
+        </article>
+        <article class="card example-card">
+          <span class="tag">Nontrivial</span>
+          <h3>Polynomials of degree at most n</h3>
+          <p>A polynomial is a vector. Addition and scalar multiplication are performed coefficientwise.</p>
+          <div class="math-display" data-math="\mathcal P_n=\operatorname{span}\{1,x,\ldots,x^n\},\qquad \dim\mathcal P_n=n+1"></div>
+        </article>
+        <article class="card example-card">
+          <span class="tag">Structural</span>
+          <h3>Matrices</h3>
+          <p>The matrix units isolate one entry at a time and therefore form a basis.</p>
+          <div class="math-display" data-math="M_{m\times n}(\mathbb F)=\operatorname{span}\{E_{ij}\},\qquad \dim M_{m\times n}=mn"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="counterexamples">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">What can go wrong?</div>
+          <h2>Counterexamples that isolate the hypotheses</h2>
+        </div>
+        <p>Near-misses are useful because they reveal which part of a definition performs the real work.</p>
+      </div>
+
+      <div class="grid grid-2 counter-grid">
+        <article class="card">
+          <h3>Spanning does not imply basis</h3>
+          <div class="math-display" data-math="\{(1,0),(0,1),(1,1)\}\text{ spans }\mathbb R^2"></div>
+          <div class="math-display" data-math="(1,0)+(0,1)-(1,1)=0"></div>
+          <p>The family spans, but it is dependent. The third vector is redundant, so coordinate representations are not unique.</p>
+        </article>
+        <article class="card">
+          <h3>Independence does not imply spanning</h3>
+          <div class="math-display" data-math="\{(1,0,0),(0,1,0)\}\subset\mathbb R^3"></div>
+          <p>The vectors are independent, but they generate only the plane <span data-math="z=0"></span>, not all of <span data-math="\mathbb R^3"></span>.</p>
+        </article>
+        <article class="card">
+          <h3>A quotient vector is not a chosen representative</h3>
+          <div class="math-display" data-math="v+W=(v+w)+W\qquad(w\in W)"></div>
+          <p>No representative is intrinsically preferred. A quotient point is the entire coset, not one vector drawn from it.</p>
+        </article>
+        <article class="card">
+          <h3>Finite intuition can fail in infinite dimension</h3>
+          <div class="math-display" data-math="\{1,x,x^2,\ldots\}\text{ is linearly independent in }\mathbb F[x]"></div>
+          <p>No finite subfamily spans all polynomials. The space has infinite dimension, so finite termination arguments must be used carefully.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="mistakes">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">Common mistakes</div>
+          <h2>Logical distinctions worth protecting</h2>
+        </div>
+      </div>
+
+      <details>
+        <summary>“A spanning family gives unique coordinates.”</summary>
+        <div class="detail-body">False. Spanning gives existence. Uniqueness requires linear independence. A basis is exactly the combination of both properties.</div>
+      </details>
+      <details>
+        <summary>“To prove dependence, every coefficient must be nonzero.”</summary>
+        <div class="detail-body">False. One nontrivial coefficient family is enough: at least one coefficient must be nonzero, not all of them.</div>
+      </details>
+      <details>
+        <summary>“A quotient space removes the subspace from the ambient space.”</summary>
+        <div class="detail-body">False. The quotient does not delete points. It identifies vectors whose difference lies in the subspace, replacing each coset by a single abstract point.</div>
+      </details>
+      <details>
+        <summary>“Dimension is the number of vectors in any generating family.”</summary>
+        <div class="detail-body">False. Generating families may contain redundancy. Dimension is the number of vectors in a basis, equivalently the maximal size of an independent family in finite dimension.</div>
+      </details>
+    </section>
+
+    <section class="summary-band">
+      <div class="eyebrow">Final synthesis</div>
+      <h2 style="margin:6px 0 0;">The architecture of coordinates</h2>
+      <div class="summary-chain">
+        <div>Scalars</div>
+        <div>Linear combinations</div>
+        <div>Span</div>
+        <div>Independence</div>
+        <div>Basis & dimension</div>
+        <div>Quotient space</div>
+      </div>
+      <p style="color:var(--muted);margin:22px 0 0;max-width:980px;">
+        A spanning family supplies enough directions. Independence removes redundancy. A basis therefore converts geometry into unique coordinates.
+        Dimension counts the independent directions, while a quotient deliberately declares selected directions invisible.
+      </p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="shell">Interactive vector-space laboratory · built with KaTeX, D3, and plain JavaScript</div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const state = {
+        combo: { mode: 'independent', a: 1.2, b: 0.8, extent: 3.5 },
+        basis: { u: [2, 1], v: [-1, 2], target: [1, 2] },
+        dimensionCase: 'basis',
+        quotient: { slope: 0.5, point: [1.4, 2.2], shift: 0 },
+        proofIndex: 0,
+        proofCompleted: new Set()
+      };
+
+      const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+      const fmt = (x, digits = 2) => Math.abs(x) < 1e-9 ? (0).toFixed(digits) : Number(x).toFixed(digits);
+      const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+
+      function renderMath(root = document) {
+        root.querySelectorAll('[data-math]').forEach(el => {
+          if (el.dataset.rendered === '1') return;
+          try {
+            katex.render(el.dataset.math, el, { throwOnError: false, displayMode: el.classList.contains('math-display') });
+            el.dataset.rendered = '1';
+          } catch (err) {
+            el.textContent = el.dataset.math;
+          }
+        });
+      }
+
+      function setMath(el, latex, display = true) {
+        try { katex.render(latex, el, { throwOnError: false, displayMode: display }); }
+        catch (err) { el.textContent = latex; }
+      }
+
+      function setupTheme() {
+        const saved = localStorage.getItem('vs-theme');
+        if (saved) document.documentElement.dataset.theme = saved;
+        else if (window.matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.dataset.theme = 'dark';
+        updateThemeButton();
+      }
+
+      function updateThemeButton() {
+        const dark = document.documentElement.dataset.theme === 'dark';
+        document.getElementById('themeToggle').textContent = dark ? '☀' : '◐';
+      }
+
+      document.getElementById('themeToggle').addEventListener('click', () => {
+        const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+        document.documentElement.dataset.theme = next;
+        localStorage.setItem('vs-theme', next);
+        updateThemeButton();
+        renderAllVisuals();
+      });
+
+      const tooltip = document.getElementById('tooltip');
+      document.addEventListener('mouseover', e => {
+        const target = e.target.closest('[data-tip]');
+        if (!target) return;
+        tooltip.textContent = target.dataset.tip;
+        const r = target.getBoundingClientRect();
+        tooltip.style.left = `${Math.max(8, r.left - 220)}px`;
+        tooltip.style.top = `${r.top - 4}px`;
+        tooltip.classList.add('show');
+      });
+      document.addEventListener('mouseout', e => {
+        if (e.target.closest('[data-tip]')) tooltip.classList.remove('show');
+      });
+
+      function setupSvg(svgId, domain = 5) {
+        const svg = d3.select(`#${svgId}`);
+        svg.selectAll('*').remove();
+        const node = svg.node();
+        const width = Math.max(320, node.parentElement.clientWidth);
+        const height = Math.max(330, node.parentElement.clientHeight);
+        svg.attr('viewBox', `0 0 ${width} ${height}`);
+        const margin = 34;
+        const x = d3.scaleLinear().domain([-domain, domain]).range([margin, width - margin]);
+        const y = d3.scaleLinear().domain([-domain, domain]).range([height - margin, margin]);
+        return { svg, width, height, x, y, margin };
+      }
+
+      function drawCartesianBase(ctx, domain = 5) {
+        const { svg, x, y, width, height, margin } = ctx;
+        const ticks = d3.range(-Math.floor(domain), Math.floor(domain) + 1);
+
+        svg.append('g').selectAll('line.vgrid').data(ticks).join('line')
+          .attr('x1', d => x(d)).attr('x2', d => x(d))
+          .attr('y1', margin).attr('y2', height - margin)
+          .attr('stroke', css('--grid')).attr('stroke-width', .8);
+
+        svg.append('g').selectAll('line.hgrid').data(ticks).join('line')
+          .attr('y1', d => y(d)).attr('y2', d => y(d))
+          .attr('x1', margin).attr('x2', width - margin)
+          .attr('stroke', css('--grid')).attr('stroke-width', .8);
+
+        svg.append('line').attr('x1', x(-domain)).attr('x2', x(domain)).attr('y1', y(0)).attr('y2', y(0))
+          .attr('stroke', css('--axis')).attr('stroke-width', 1.4);
+        svg.append('line').attr('x1', x(0)).attr('x2', x(0)).attr('y1', y(-domain)).attr('y2', y(domain))
+          .attr('stroke', css('--axis')).attr('stroke-width', 1.4);
+
+        ticks.filter(d => d !== 0).forEach(t => {
+          svg.append('text').attr('x', x(t)).attr('y', y(0) + 16).attr('text-anchor', 'middle')
+            .attr('font-size', 10).attr('fill', css('--muted')).text(t);
+          svg.append('text').attr('x', x(0) - 9).attr('y', y(t) + 4).attr('text-anchor', 'end')
+            .attr('font-size', 10).attr('fill', css('--muted')).text(t);
+        });
+
+        const defs = svg.append('defs');
+        [['cyan', css('--cyan')], ['teal', css('--teal')], ['violet', css('--violet')], ['amber', css('--amber')], ['danger', css('--danger')]].forEach(([id, color]) => {
+          defs.append('marker').attr('id', `${svg.attr('id')}-${id}-arrow`).attr('viewBox', '0 -5 10 10')
+            .attr('refX', 8.4).attr('refY', 0).attr('markerWidth', 6).attr('markerHeight', 6).attr('orient', 'auto')
+            .append('path').attr('d', 'M0,-5L10,0L0,5').attr('fill', color);
+        });
+      }
+
+      function drawVector(ctx, vec, colorVar, label, options = {}) {
+        const { svg, x, y } = ctx;
+        const color = css(colorVar);
+        const start = options.start || [0, 0];
+        const end = [start[0] + vec[0], start[1] + vec[1]];
+        const markerName = colorVar.replace('--', '');
+        svg.append('line')
+          .attr('x1', x(start[0])).attr('y1', y(start[1]))
+          .attr('x2', x(end[0])).attr('y2', y(end[1]))
+          .attr('stroke', color).attr('stroke-width', options.width || 3)
+          .attr('stroke-dasharray', options.dash || null)
+          .attr('opacity', options.opacity ?? 1)
+          .attr('marker-end', options.noArrow ? null : `url(#${svg.attr('id')}-${markerName}-arrow)`);
+
+        if (label) {
+          svg.append('text').attr('x', x(end[0]) + (options.labelDx || 8)).attr('y', y(end[1]) + (options.labelDy || -8))
+            .attr('fill', color).attr('font-weight', 700).attr('font-size', 13).text(label);
+        }
+      }
+
+      function comboGenerators() {
+        if (state.combo.mode === 'dependent') return { u: [2, 1], v: [4, 2] };
+        if (state.combo.mode === 'single') return { u: [2, 1], v: [0, 0] };
+        return { u: [2, 1], v: [-1, 2] };
+      }
+
+      function renderCombo() {
+        const ctx = setupSvg('comboSvg', 5.2);
+        drawCartesianBase(ctx, 5.2);
+        const { svg, x, y } = ctx;
+        const { u, v } = comboGenerators();
+        const a = state.combo.a, b = state.combo.b;
+        const au = [a * u[0], a * u[1]];
+        const bv = [b * v[0], b * v[1]];
+        const w = [au[0] + bv[0], au[1] + bv[1]];
+        const det = u[0] * v[1] - u[1] * v[0];
+        const dim = state.combo.mode === 'independent' ? 2 : 1;
+
+        if (dim === 2) {
+          const e = state.combo.extent;
+          const pts = [
+            [-e * u[0] - e * v[0], -e * u[1] - e * v[1]],
+            [ e * u[0] - e * v[0],  e * u[1] - e * v[1]],
+            [ e * u[0] + e * v[0],  e * u[1] + e * v[1]],
+            [-e * u[0] + e * v[0], -e * u[1] + e * v[1]]
+          ];
+          svg.append('polygon').attr('points', pts.map(p => `${x(p[0])},${y(p[1])}`).join(' '))
+            .attr('fill', css('--cyan')).attr('opacity', .045);
+        } else {
+          const base = Math.hypot(...u) > 1e-9 ? u : v;
+          const norm = Math.hypot(...base) || 1;
+          const e = 7;
+          svg.append('line').attr('x1', x(-e * base[0] / norm)).attr('y1', y(-e * base[1] / norm))
+            .attr('x2', x(e * base[0] / norm)).attr('y2', y(e * base[1] / norm))
+            .attr('stroke', css('--cyan')).attr('stroke-width', 8).attr('opacity', .10);
+        }
+
+        drawVector(ctx, u, '--cyan', 'u', { width: 2.4, opacity: .65 });
+        if (state.combo.mode !== 'single') drawVector(ctx, v, '--teal', 'v', { width: 2.4, opacity: .65 });
+        drawVector(ctx, au, '--cyan', 'au');
+        if (state.combo.mode !== 'single') drawVector(ctx, bv, '--teal', 'bv', { start: au });
+        if (state.combo.mode !== 'single') drawVector(ctx, au, '--cyan', '', { start: bv, dash: '5 5', opacity: .55, noArrow: true, width: 1.6 });
+        if (state.combo.mode !== 'single') drawVector(ctx, bv, '--teal', '', { dash: '5 5', opacity: .55, noArrow: true, width: 1.6 });
+        drawVector(ctx, w, '--violet', 'w', { width: 4 });
+
+        svg.append('circle').attr('cx', x(w[0])).attr('cy', y(w[1])).attr('r', 5.5)
+          .attr('fill', css('--violet')).attr('stroke', css('--canvas')).attr('stroke-width', 2);
+
+        document.getElementById('coefAOut').value = fmt(a, 2);
+        document.getElementById('coefBOut').value = fmt(b, 2);
+        document.getElementById('spanExtentOut').value = fmt(state.combo.extent, 1);
+        document.getElementById('comboDet').textContent = fmt(det, 2);
+        document.getElementById('comboDim').textContent = dim;
+        document.getElementById('comboResult').textContent = `(${fmt(w[0], 2)}, ${fmt(w[1], 2)})`;
+        document.getElementById('comboUnique').textContent = dim === 2 || state.combo.mode === 'single' ? 'Yes within this generator family' : 'No';
+
+        const status = document.getElementById('spanStatus');
+        status.classList.toggle('good', dim === 2);
+        status.classList.toggle('bad', dim !== 2);
+        status.textContent = dim === 2 ? 'The span is the plane' : 'The span is a line';
+
+        const formula = `w=${fmt(a,2)}u+${fmt(b,2)}v=(${fmt(w[0],2)},${fmt(w[1],2)})`;
+        setMath(document.getElementById('comboFormula'), formula);
+        document.getElementById('comboObservation').textContent = dim === 2
+          ? 'Two non-collinear vectors generate all of the plane, and each vector has a unique coefficient pair.'
+          : state.combo.mode === 'single'
+            ? 'A single nonzero vector generates exactly one line through the origin.'
+            : 'Collinear generators produce only one direction. Because one generator is redundant, coefficient pairs are not unique.';
+      }
+
+      ['coefA', 'coefB', 'spanExtent'].forEach(id => {
+        document.getElementById(id).addEventListener('input', e => {
+          if (id === 'coefA') state.combo.a = +e.target.value;
+          if (id === 'coefB') state.combo.b = +e.target.value;
+          if (id === 'spanExtent') state.combo.extent = +e.target.value;
+          renderCombo();
+        });
+      });
+      document.getElementById('comboMode').addEventListener('change', e => { state.combo.mode = e.target.value; renderCombo(); });
+      document.getElementById('resetCombo').addEventListener('click', resetCombo);
+      document.getElementById('animateCombo').addEventListener('click', animateCombo);
+
+      function resetCombo() {
+        Object.assign(state.combo, { mode: 'independent', a: 1.2, b: .8, extent: 3.5 });
+        document.getElementById('comboMode').value = state.combo.mode;
+        document.getElementById('coefA').value = state.combo.a;
+        document.getElementById('coefB').value = state.combo.b;
+        document.getElementById('spanExtent').value = state.combo.extent;
+        renderCombo();
+      }
+
+      function animateCombo() {
+        const start = performance.now();
+        const a0 = state.combo.a, b0 = state.combo.b;
+        const duration = 2200;
+        function tick(t) {
+          const p = Math.min(1, (t - start) / duration);
+          state.combo.a = a0 * (1 - p) + 2.1 * Math.sin(p * Math.PI * 1.4);
+          state.combo.b = b0 * (1 - p) + 1.7 * Math.cos(p * Math.PI * 1.2);
+          document.getElementById('coefA').value = clamp(state.combo.a, -2.5, 2.5);
+          document.getElementById('coefB').value = clamp(state.combo.b, -2.5, 2.5);
+          renderCombo();
+          if (p < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      }
+
+      function renderBasis() {
+        const ctx = setupSvg('basisSvg', 5);
+        drawCartesianBase(ctx, 5);
+        const { svg, x, y } = ctx;
+        const u = state.basis.u, v = state.basis.v, t = state.basis.target;
+        const det = u[0] * v[1] - u[1] * v[0];
+        const independent = Math.abs(det) > 0.08;
+        const area = Math.abs(det);
+
+        const poly = [[0,0], u, [u[0] + v[0], u[1] + v[1]], v];
+        svg.append('polygon').attr('points', poly.map(p => `${x(p[0])},${y(p[1])}`).join(' '))
+          .attr('fill', independent ? css('--cyan') : css('--danger'))
+          .attr('opacity', independent ? .13 : .11)
+          .attr('stroke', independent ? css('--cyan') : css('--danger'))
+          .attr('stroke-width', 1.4);
+
+        drawVector(ctx, u, '--cyan', 'u');
+        drawVector(ctx, v, '--teal', 'v');
+        drawVector(ctx, t, '--amber', 'x', { width: 4 });
+
+        let coords = null;
+        if (independent) {
+          coords = [
+            (t[0] * v[1] - t[1] * v[0]) / det,
+            (u[0] * t[1] - u[1] * t[0]) / det
+          ];
+          const cu = [coords[0] * u[0], coords[0] * u[1]];
+          const cv = [coords[1] * v[0], coords[1] * v[1]];
+          drawVector(ctx, cu, '--cyan', `${fmt(coords[0],1)}u`, { dash: '6 5', width: 2.2 });
+          drawVector(ctx, cv, '--teal', `${fmt(coords[1],1)}v`, { start: cu, dash: '6 5', width: 2.2 });
+        } else {
+          const base = Math.hypot(...u) > .08 ? u : v;
+          const norm = Math.hypot(...base) || 1;
+          const projection = (t[0] * base[0] + t[1] * base[1]) / (norm * norm);
+          const proj = [projection * base[0], projection * base[1]];
+          drawVector(ctx, proj, '--danger', 'projection', { dash: '5 5', width: 2 });
+        }
+
+        ['uX','uY','vX','vY','targetX','targetY'].forEach(id => {
+          const valMap = { uX:u[0], uY:u[1], vX:v[0], vY:v[1], targetX:t[0], targetY:t[1] };
+          document.getElementById(id + 'Out').value = fmt(valMap[id], 1);
+        });
+
+        document.getElementById('basisDet').textContent = fmt(det, 3);
+        document.getElementById('basisArea').textContent = fmt(area, 3);
+        document.getElementById('basisRank').textContent = independent ? '2' : (Math.hypot(...u) > .08 || Math.hypot(...v) > .08 ? '1' : '0');
+        document.getElementById('basisCoords').textContent = coords ? `(${fmt(coords[0],2)}, ${fmt(coords[1],2)})` : 'Not uniquely defined';
+
+        const status = document.getElementById('basisStatus');
+        status.textContent = independent ? 'A basis of R²' : 'Linearly dependent';
+        status.classList.toggle('good', independent);
+        status.classList.toggle('bad', !independent);
+
+        setMath(document.getElementById('basisMatrixFormula'), String.raw`A=\begin{pmatrix}${fmt(u[0],1)}&${fmt(v[0],1)}\\${fmt(u[1],1)}&${fmt(v[1],1)}\end{pmatrix},\qquad \det A=${fmt(det,2)}`);
+        document.getElementById('basisResultTitle').textContent = independent ? 'Unique coordinates' : 'Coordinate failure';
+        document.getElementById('basisResultText').textContent = independent
+          ? 'Because the determinant is nonzero, the coordinate map is invertible.'
+          : 'The generator matrix is singular. A target off the common line has no representation; a target on the line has infinitely many.';
+        document.getElementById('basisWarning').style.display = independent ? 'none' : 'block';
+      }
+
+      const basisBindings = {
+        uX: ['u',0], uY:['u',1], vX:['v',0], vY:['v',1], targetX:['target',0], targetY:['target',1]
+      };
+      Object.entries(basisBindings).forEach(([id, [key, idx]]) => {
+        document.getElementById(id).addEventListener('input', e => { state.basis[key][idx] = +e.target.value; renderBasis(); });
+      });
+      document.getElementById('forceDependence').addEventListener('click', () => {
+        state.basis.v = [state.basis.u[0], state.basis.u[1]];
+        document.getElementById('vX').value = state.basis.v[0];
+        document.getElementById('vY').value = state.basis.v[1];
+        renderBasis();
+      });
+
+      const dimensionCases = {
+        basis: {
+          columns: [[1,0,0],[0,1,0],[0,0,1]],
+          steps: [
+            ['Start', [[1,0,0],[0,1,0],[0,0,1]]],
+            ['Already in reduced echelon form', [[1,0,0],[0,1,0],[0,0,1]]]
+          ]
+        },
+        plane: {
+          columns: [[1,0,1],[0,1,1],[1,1,2]],
+          steps: [
+            ['Start', [[1,0,1],[0,1,1],[1,1,2]]],
+            ['C₃ ← C₃ − C₁ − C₂', [[1,0,0],[0,1,0],[1,1,0]]]
+          ]
+        },
+        line: {
+          columns: [[1,2,3],[2,4,6],[-1,-2,-3]],
+          steps: [
+            ['Start', [[1,2,-1],[2,4,-2],[3,6,-3]]],
+            ['R₂ ← R₂ − 2R₁; R₃ ← R₃ − 3R₁', [[1,2,-1],[0,0,0],[0,0,0]]]
+          ]
+        },
+        redundant: {
+          columns: [[1,0,0],[0,1,0],[0,0,1],[1,1,1]],
+          steps: [
+            ['Start', [[1,0,0,1],[0,1,0,1],[0,0,1,1]]],
+            ['C₄ ← C₄ − C₁ − C₂ − C₃', [[1,0,0,0],[0,1,0,0],[0,0,1,0]]]
+          ]
+        }
+      };
+
+      function matrixRank(columns, tol = 1e-9) {
+        const rows = 3;
+        const cols = columns.length;
+        const A = Array.from({ length: rows }, (_, i) => Array.from({ length: cols }, (_, j) => columns[j][i]));
+        let rank = 0, r = 0;
+        for (let c = 0; c < cols && r < rows; c++) {
+          let pivot = r;
+          for (let i = r + 1; i < rows; i++) if (Math.abs(A[i][c]) > Math.abs(A[pivot][c])) pivot = i;
+          if (Math.abs(A[pivot][c]) < tol) continue;
+          [A[r], A[pivot]] = [A[pivot], A[r]];
+          const pv = A[r][c];
+          for (let j = c; j < cols; j++) A[r][j] /= pv;
+          for (let i = 0; i < rows; i++) if (i !== r) {
+            const f = A[i][c];
+            for (let j = c; j < cols; j++) A[i][j] -= f * A[r][j];
+          }
+          rank++; r++;
+        }
+        return rank;
+      }
+
+      function renderDimension() {
+        const item = dimensionCases[state.dimensionCase];
+        const rank = matrixRank(item.columns);
+        const matrixEl = document.getElementById('dimensionMatrix');
+        matrixEl.style.gridTemplateColumns = `repeat(${item.columns.length}, minmax(0, 1fr))`;
+        matrixEl.innerHTML = '';
+        for (let r = 0; r < 3; r++) {
+          item.columns.forEach(col => {
+            const cell = document.createElement('div');
+            cell.className = 'matrix-cell';
+            cell.textContent = col[r];
+            matrixEl.appendChild(cell);
+          });
+        }
+        document.getElementById('generatorCount').textContent = item.columns.length;
+        document.getElementById('dimensionRank').textContent = rank;
+        document.getElementById('dimensionValue').textContent = rank;
+        document.getElementById('redundantCount').textContent = item.columns.length - rank;
+
+        const rr = document.getElementById('rowReduction');
+        rr.innerHTML = '';
+        item.steps.forEach((step, idx) => {
+          const box = document.createElement('div');
+          box.className = 'read-box';
+          box.style.marginTop = idx ? '10px' : '0';
+          const title = document.createElement('strong');
+          title.textContent = step[0];
+          box.appendChild(title);
+          const m = document.createElement('div');
+          m.className = 'math-display';
+          const rows = step[1].map(row => row.join('&')).join(String.raw`\\`);
+          setMath(m, String.raw`\begin{pmatrix}${rows}\end{pmatrix}`);
+          box.appendChild(m);
+          rr.appendChild(box);
+        });
+        const conclusion = document.createElement('div');
+        conclusion.className = 'result-box';
+        conclusion.innerHTML = `<strong>Conclusion</strong><p>${rank} pivot${rank === 1 ? '' : 's'} means ${rank} independent direction${rank === 1 ? '' : 's'}.</p>`;
+        rr.appendChild(conclusion);
+      }
+      document.getElementById('dimensionCase').addEventListener('change', e => { state.dimensionCase = e.target.value; renderDimension(); });
+
+      function renderQuotient() {
+        const ctx = setupSvg('quotientSvg', 4.5);
+        drawCartesianBase(ctx, 4.5);
+        const { svg, x, y } = ctx;
+        const m = state.quotient.slope;
+        const dirNorm = Math.hypot(1, m);
+        const d = [1 / dirNorm, m / dirNorm];
+        const n = [-m / dirNorm, 1 / dirNorm];
+        const p = state.quotient.point;
+        const shift = state.quotient.shift;
+        const p2 = [p[0] + shift * d[0], p[1] + shift * d[1]];
+        const q = p[0] * n[0] + p[1] * n[1];
+
+        d3.range(-4, 4.01, .75).forEach(c => {
+          const base = [c * n[0], c * n[1]];
+          const A = [base[0] - 8 * d[0], base[1] - 8 * d[1]];
+          const B = [base[0] + 8 * d[0], base[1] + 8 * d[1]];
+          svg.append('line').attr('x1', x(A[0])).attr('y1', y(A[1])).attr('x2', x(B[0])).attr('y2', y(B[1]))
+            .attr('stroke', Math.abs(c) < .1 ? css('--cyan') : css('--violet'))
+            .attr('stroke-width', Math.abs(c) < .1 ? 3 : 1.1)
+            .attr('opacity', Math.abs(c) < .1 ? .95 : .18);
+        });
+
+        const qBase = [q * n[0], q * n[1]];
+        const A = [qBase[0] - 8 * d[0], qBase[1] - 8 * d[1]];
+        const B = [qBase[0] + 8 * d[0], qBase[1] + 8 * d[1]];
+        svg.append('line').attr('x1', x(A[0])).attr('y1', y(A[1])).attr('x2', x(B[0])).attr('y2', y(B[1]))
+          .attr('stroke', css('--violet')).attr('stroke-width', 5).attr('opacity', .38);
+
+        drawVector(ctx, [3.2 * d[0], 3.2 * d[1]], '--cyan', 'W', { width: 3.5 });
+        drawVector(ctx, [qBase[0], qBase[1]], '--violet', 'quotient coordinate', { dash: '6 5', width: 2.4 });
+
+        svg.append('line').attr('x1', x(p[0])).attr('y1', y(p[1])).attr('x2', x(p2[0])).attr('y2', y(p2[1]))
+          .attr('stroke', css('--teal')).attr('stroke-width', 2.4).attr('stroke-dasharray', '5 4');
+        svg.append('circle').attr('cx', x(p[0])).attr('cy', y(p[1])).attr('r', 7).attr('fill', css('--violet')).attr('stroke', css('--canvas')).attr('stroke-width', 2);
+        svg.append('circle').attr('cx', x(p2[0])).attr('cy', y(p2[1])).attr('r', 7).attr('fill', css('--amber')).attr('stroke', css('--canvas')).attr('stroke-width', 2);
+        svg.append('text').attr('x', x(p[0]) + 9).attr('y', y(p[1]) - 10).attr('fill', css('--violet')).attr('font-weight', 700).text('v');
+        svg.append('text').attr('x', x(p2[0]) + 9).attr('y', y(p2[1]) - 10).attr('fill', css('--amber')).attr('font-weight', 700).text('v+w');
+
+        document.getElementById('quotientSlopeOut').value = fmt(m, 2);
+        document.getElementById('pointXOut').value = fmt(p[0], 2);
+        document.getElementById('pointYOut').value = fmt(p[1], 2);
+        document.getElementById('shiftAlongWOut').value = fmt(shift, 2);
+        document.getElementById('qRep').textContent = `(${fmt(p[0],2)}, ${fmt(p[1],2)})`;
+        document.getElementById('qShifted').textContent = `(${fmt(p2[0],2)}, ${fmt(p2[1],2)})`;
+        document.getElementById('qCoord').textContent = fmt(q, 3);
+        setMath(document.getElementById('quotientFormula'), String.raw`\pi_W(v)=\langle v,n\rangle=${fmt(q,3)},\qquad n=\frac{(${fmt(-m,2)},1)}{\sqrt{1+${fmt(m*m,2)}}}`);
+      }
+
+      const quotientBindings = {
+        quotientSlope: () => state.quotient.slope,
+        pointX: () => state.quotient.point[0],
+        pointY: () => state.quotient.point[1],
+        shiftAlongW: () => state.quotient.shift
+      };
+      Object.keys(quotientBindings).forEach(id => {
+        document.getElementById(id).addEventListener('input', e => {
+          if (id === 'quotientSlope') state.quotient.slope = +e.target.value;
+          if (id === 'pointX') state.quotient.point[0] = +e.target.value;
+          if (id === 'pointY') state.quotient.point[1] = +e.target.value;
+          if (id === 'shiftAlongW') state.quotient.shift = +e.target.value;
+          renderQuotient();
+        });
+      });
+      document.getElementById('resetQuotient').addEventListener('click', resetQuotient);
+      function resetQuotient() {
+        Object.assign(state.quotient, { slope: .5, point: [1.4, 2.2], shift: 0 });
+        document.getElementById('quotientSlope').value = .5;
+        document.getElementById('pointX').value = 1.4;
+        document.getElementById('pointY').value = 2.2;
+        document.getElementById('shiftAlongW').value = 0;
+        renderQuotient();
+      }
+
+      const proofData = [
+        {
+          title: 'Start from a finite spanning family',
+          math: String.raw`S=\{v_1,\ldots,v_m\},\qquad \operatorname{span}(S)=V`,
+          reason: 'We must preserve the span while eliminating precisely the redundant generators.',
+          options: [
+            ['Assume immediately that S is linearly independent.', false, 'This assumes the desired conclusion. A spanning set may contain redundant vectors.'],
+            ['Check whether S is linearly independent.', true, 'Correct. If it is independent, it is already a basis; otherwise a nontrivial relation reveals redundancy.'],
+            ['Replace S by every vector in V.', false, 'That destroys finiteness and gives no mechanism for extracting a finite basis.']
+          ]
+        },
+        {
+          title: 'Use a nontrivial dependence relation',
+          math: String.raw`a_1v_1+\cdots+a_mv_m=0,\qquad \text{some }a_j\ne 0`,
+          reason: 'Dependence provides an equation from which one generator can be solved in terms of the others.',
+          options: [
+            ['Solve for v_j because a_j is nonzero.', true, 'Correct. Division by a_j is legitimate and writes v_j as a combination of the remaining vectors.'],
+            ['Conclude that every a_i is zero.', false, 'That is the definition of independence, contradicting the dependence relation now being used.'],
+            ['Delete an arbitrary vector, regardless of its coefficient.', false, 'Only a vector with nonzero coefficient is certified to lie in the span of the others.']
+          ]
+        },
+        {
+          title: 'Delete one redundant generator',
+          math: String.raw`v_j=-\sum_{i\ne j}\frac{a_i}{a_j}v_i`,
+          reason: 'Every occurrence of v_j in a linear combination can now be replaced by the remaining vectors.',
+          options: [
+            ['The span remains unchanged after deleting v_j.', true, 'Correct. The remaining set is contained in the old span, while v_j itself lies in the span of the remaining set.'],
+            ['The span necessarily becomes smaller.', false, 'Not here: the displayed formula proves that v_j contributes no new direction.'],
+            ['The remaining family is automatically independent.', false, 'Deleting one redundant vector may leave other redundancies. The argument must be repeated.']
+          ]
+        },
+        {
+          title: 'Iterate the deletion procedure',
+          math: String.raw`S\supset S_1\supset S_2\supset\cdots`,
+          reason: 'At every dependent stage, remove one certified redundant generator while preserving the span.',
+          options: [
+            ['The process terminates because the original set is finite.', true, 'Correct. Each step strictly decreases the number of vectors, so infinitely many deletions are impossible.'],
+            ['The process terminates because every vector space is finite-dimensional.', false, 'Vector spaces need not be finite-dimensional. Termination comes from the finite initial spanning set.'],
+            ['Stop after exactly one deletion.', false, 'The remaining family may still be dependent. Continue until no nontrivial relation remains.']
+          ]
+        },
+        {
+          title: 'Identify the terminal family',
+          math: String.raw`B\subseteq S,\qquad \operatorname{span}(B)=V,\qquad B\text{ linearly independent}`,
+          reason: 'The terminal family still spans and has no redundancy.',
+          options: [
+            ['Therefore B is a basis of V.', true, 'Correct. Spanning plus linear independence is exactly the definition of a basis.'],
+            ['Therefore B equals S.', false, 'Only when the original spanning set was already independent. In general B is a subset of S.'],
+            ['Therefore B is the unique basis of V.', false, 'A vector space generally has many different bases. The theorem asserts existence of one contained in S.']
+          ]
+        }
+      ];
+
+      function renderProof() {
+        const steps = document.getElementById('proofSteps');
+        steps.innerHTML = '';
+        proofData.forEach((item, idx) => {
+          const btn = document.createElement('button');
+          btn.className = 'proof-step';
+          if (idx === state.proofIndex) btn.classList.add('active');
+          if (state.proofCompleted.has(idx)) btn.classList.add('done');
+          btn.innerHTML = `<strong>${idx + 1}. ${item.title}</strong><small>${state.proofCompleted.has(idx) ? 'completed' : idx === state.proofIndex ? 'current step' : 'locked until reached'}</small>`;
+          btn.addEventListener('click', () => {
+            if (idx <= Math.max(...[...state.proofCompleted, 0]) + 1) { state.proofIndex = idx; renderProof(); }
+          });
+          steps.appendChild(btn);
+        });
+
+        const item = proofData[state.proofIndex];
+        document.getElementById('proofEyebrow').textContent = `Step ${state.proofIndex + 1} of ${proofData.length}`;
+        document.getElementById('proofTitle').textContent = item.title;
+        setMath(document.getElementById('proofMath'), item.math);
+        document.getElementById('proofReason').textContent = item.reason;
+        document.getElementById('proofFeedback').textContent = '';
+
+        const opts = document.getElementById('proofOptions');
+        opts.innerHTML = '';
+        item.options.forEach(([text, correct, feedback]) => {
+          const btn = document.createElement('button');
+          btn.className = 'proof-option';
+          btn.textContent = text;
+          btn.addEventListener('click', () => {
+            opts.querySelectorAll('button').forEach(b => b.classList.remove('correct', 'wrong'));
+            btn.classList.add(correct ? 'correct' : 'wrong');
+            document.getElementById('proofFeedback').textContent = feedback;
+            if (correct) {
+              state.proofCompleted.add(state.proofIndex);
+              setTimeout(() => {
+                if (state.proofIndex < proofData.length - 1) state.proofIndex += 1;
+                renderProof();
+              }, 850);
+            }
+          });
+          opts.appendChild(btn);
+        });
+      }
+      document.getElementById('restartProof').addEventListener('click', () => {
+        state.proofIndex = 0;
+        state.proofCompleted.clear();
+        renderProof();
+      });
+
+      function resetBasis() {
+        state.basis = { u: [2,1], v: [-1,2], target: [1,2] };
+        Object.entries(basisBindings).forEach(([id,[key,idx]]) => document.getElementById(id).value = state.basis[key][idx]);
+        renderBasis();
+      }
+
+      document.getElementById('resetAll').addEventListener('click', () => {
+        resetCombo();
+        resetBasis();
+        state.dimensionCase = 'basis';
+        document.getElementById('dimensionCase').value = 'basis';
+        renderDimension();
+        resetQuotient();
+        state.proofIndex = 0;
+        state.proofCompleted.clear();
+        renderProof();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      function renderAllVisuals() {
+        renderCombo();
+        renderBasis();
+        renderDimension();
+        renderQuotient();
+      }
+
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(renderAllVisuals, 120);
+      });
+
+      setupTheme();
+      renderMath();
+      renderAllVisuals();
+      renderProof();
+    });
+  </script>
+</body>
+</html>

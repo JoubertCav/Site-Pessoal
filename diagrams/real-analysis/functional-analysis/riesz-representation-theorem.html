@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Interactive laboratory for the Riesz representation theorem, Hilbert-space duality, representing vectors, dual norms, kernels, level hyperplanes, and L2 examples." />
+  <title>Riesz Representation Theorem — Interactive Laboratory</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+
+  <style>
+    :root{
+      --bg:#f7f9f8;--surface:rgba(255,255,255,.97);--surface-2:#eef5f5;--surface-3:#e5edef;
+      --text:#172126;--muted:#617178;--line:#d5e0e2;--cyan:#00a8c6;--cyan-deep:#087f98;
+      --teal:#168f88;--violet:#7567c7;--amber:#b57a20;--danger:#b74c4c;--success:#147d64;
+      --shadow:0 18px 52px rgba(37,56,64,.09);--radius:22px;--canvas:#fff;--axis:#61747b;
+      --grid:#dce5e7;--focus:rgba(0,168,198,.23)
+    }
+    html[data-theme="dark"]{
+      --bg:#121a20;--surface:rgba(27,38,46,.97);--surface-2:#213039;--surface-3:#273942;
+      --text:#edf5f6;--muted:#a8b8bd;--line:#344750;--cyan:#44c9e1;--cyan-deep:#7ed9e8;
+      --teal:#58c4b9;--violet:#aaa0e6;--amber:#e3b35d;--danger:#ef8989;--success:#68d0ad;
+      --shadow:0 18px 52px rgba(0,0,0,.25);--canvas:#17232a;--axis:#9bb0b7;--grid:#30424a;
+      --focus:rgba(68,201,225,.22)
+    }
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--text);background:
+      radial-gradient(circle at 7% 0%,rgba(0,168,198,.085),transparent 29rem),
+      radial-gradient(circle at 100% 17%,rgba(117,103,199,.065),transparent 32rem),var(--bg);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.65;
+      transition:background .25s ease,color .25s ease}
+    button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}.shell{width:min(1480px,calc(100% - 32px));margin:0 auto}
+    .topbar{position:sticky;top:0;z-index:50;border-bottom:1px solid color-mix(in srgb,var(--line) 84%,transparent);backdrop-filter:blur(18px);background:color-mix(in srgb,var(--bg) 82%,transparent)}
+    .topbar-inner{min-height:68px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:-.02em}
+    .brand-mark{width:34px;height:34px;border:1px solid var(--cyan);border-radius:11px;display:grid;place-items:center;box-shadow:inset 0 0 0 6px color-mix(in srgb,var(--cyan) 10%,transparent)}
+    .brand-mark::before{content:"R";color:var(--cyan-deep);font-family:"Libre Baskerville",serif;font-weight:700}.top-actions{display:flex;gap:9px;align-items:center}
+    .icon-button,.ghost-button,.primary-button,.segmented button,.proof-option,.counter-tab,.map-node{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:12px;min-height:40px;padding:9px 13px;transition:transform .18s ease,border-color .18s ease,background .18s ease}
+    .icon-button:hover,.ghost-button:hover,.segmented button:hover,.proof-option:hover,.counter-tab:hover,.map-node:hover{transform:translateY(-1px);border-color:var(--cyan)}
+    .primary-button{background:var(--cyan);color:#062e37;font-weight:700;border-color:transparent}.primary-button:hover{transform:translateY(-1px);filter:brightness(1.03)}
+    h1,h2,h3,.serif{font-family:"Libre Baskerville",Georgia,serif;letter-spacing:-.025em}h1{font-size:clamp(2.65rem,5.8vw,5.1rem);line-height:1.03;margin:12px 0 20px}h2{font-size:clamp(2rem,4vw,3.15rem);line-height:1.14;margin:0}h3{font-size:1.2rem;margin:0}p{margin:0}
+    .hero{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(360px,.92fr);gap:30px;padding:70px 0 46px;align-items:center}.eyebrow{color:var(--cyan-deep);font-weight:700;text-transform:uppercase;letter-spacing:.14em;font-size:.78rem}.hero p{color:var(--muted);max-width:850px;font-size:clamp(1.02rem,1.8vw,1.24rem)}
+    .hero-chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:28px}.chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);padding:8px 11px;border-radius:999px;color:var(--muted);font-size:.9rem}.chip::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--cyan)}
+    .hero-map{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:28px;padding:22px;min-height:420px;overflow:hidden}.hero-geometry{position:relative;height:365px}.hero-circle{position:absolute;width:230px;height:230px;border:1.5px solid var(--line);border-radius:50%;left:50%;top:47%;transform:translate(-50%,-50%);background:radial-gradient(circle,color-mix(in srgb,var(--cyan) 8%,transparent),transparent 68%)}
+    .hero-kernel{position:absolute;left:10%;right:10%;top:56%;height:3px;background:var(--teal);transform:rotate(-31deg);transform-origin:center}.hero-kernel::after{content:"ker f = y⊥";position:absolute;right:3px;top:-30px;color:var(--teal);font-family:"Libre Baskerville",serif;font-weight:700}
+    .hero-y{position:absolute;left:50%;top:48%;width:4px;height:142px;background:var(--cyan);transform:rotate(59deg);transform-origin:bottom}.hero-y::after{content:"y";position:absolute;top:-25px;left:-5px;color:var(--cyan-deep);font-family:"Libre Baskerville",serif;font-weight:700}
+    .hero-level{position:absolute;left:15%;right:15%;top:34%;height:2px;border-top:2px dashed var(--violet);transform:rotate(-31deg)}.hero-level::after{content:"f(x)=c";position:absolute;left:6px;top:-28px;color:var(--violet);font-family:"Libre Baskerville",serif;font-weight:700}
+    .hero-point{position:absolute;left:69%;top:28%;width:13px;height:13px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 7px color-mix(in srgb,var(--amber) 14%,transparent)}.hero-point::after{content:"x";position:absolute;left:17px;top:-14px;color:var(--amber);font-family:"Libre Baskerville",serif;font-weight:700}
+    .hero-equation{position:absolute;left:0;right:0;bottom:0;text-align:center}
+    .section{padding:72px 0}.section-head{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:27px}.section-head p{color:var(--muted);max-width:780px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.lab-grid{display:grid;grid-template-columns:minmax(265px,.72fr) minmax(0,1.38fr) minmax(285px,.9fr);gap:20px;align-items:start}.proof-grid{display:grid;grid-template-columns:minmax(0,1.22fr) minmax(300px,.78fr);gap:20px}.plot-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;min-width:0}.card.soft{background:var(--surface-2);box-shadow:none}.card h3+p{margin-top:9px;color:var(--muted)}.card-label{color:var(--cyan-deep);font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;font-weight:700;margin-bottom:10px}.muted{color:var(--muted)}.small{font-size:.9rem}
+    .definition-card{padding:30px;border-left:4px solid var(--cyan)}.math-display{margin:18px 0;overflow-x:auto;overflow-y:hidden;padding:8px 2px}.katex-display{margin:.72em 0!important}.katex{max-width:100%}
+    .notation-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}.notation-item{border:1px solid var(--line);background:var(--surface-2);border-radius:14px;padding:13px}.notation-item strong{display:block;margin-bottom:6px;color:var(--cyan-deep)}
+    .quantifier-row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:22px}.quantifier-piece{padding:14px;border:1px solid var(--line);border-radius:15px;background:var(--surface-2);text-align:center}.quantifier-piece strong{display:block;color:var(--cyan-deep);font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px}
+    .flow-map{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;margin-top:18px}.flow-node{border:1px solid var(--line);background:var(--surface-2);border-radius:14px;padding:12px 14px;min-width:150px;text-align:center}.flow-node.clickable{cursor:pointer}.flow-node.clickable:hover{border-color:var(--cyan)}.flow-arrow{color:var(--cyan-deep);font-size:1.4rem}
+    .control-stack{display:grid;gap:17px}.control label{display:flex;justify-content:space-between;gap:12px;align-items:baseline;font-weight:600;margin-bottom:7px}.control label span:last-child{color:var(--cyan-deep);font-variant-numeric:tabular-nums}input[type="range"]{width:100%;accent-color:var(--cyan)}select{width:100%;min-height:43px;border-radius:11px;border:1px solid var(--line);background:var(--surface);color:var(--text);padding:8px 10px}.control-note{color:var(--muted);font-size:.82rem;margin-top:5px}
+    .plot{width:100%;min-height:430px;border-radius:16px;overflow:hidden}.plot.compact{min-height:350px}.metric-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}.metric-strip.four{grid-template-columns:repeat(4,minmax(0,1fr))}.metric-cell{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:13px;text-align:center}.metric-name{color:var(--muted);font-size:.79rem;text-transform:uppercase;letter-spacing:.06em}.metric-value{font-size:1.18rem;font-weight:700;color:var(--cyan-deep);font-variant-numeric:tabular-nums}
+    .status{border-radius:14px;padding:14px;border:1px solid var(--line);background:var(--surface-2)}.status.good{border-color:color-mix(in srgb,var(--success) 46%,var(--line));background:color-mix(in srgb,var(--success) 8%,var(--surface))}.status.warning{border-color:color-mix(in srgb,var(--amber) 50%,var(--line));background:color-mix(in srgb,var(--amber) 8%,var(--surface))}.status.bad{border-color:color-mix(in srgb,var(--danger) 50%,var(--line));background:color-mix(in srgb,var(--danger) 8%,var(--surface))}
+    .segmented{display:flex;flex-wrap:wrap;gap:8px}.segmented button.active,.counter-tab.active{border-color:var(--cyan);background:color-mix(in srgb,var(--cyan) 12%,var(--surface));color:var(--cyan-deep);font-weight:700}
+    .proof-steps{display:grid;gap:11px}.proof-step{border:1px solid var(--line);border-radius:15px;background:var(--surface-2);overflow:hidden}.proof-step button{width:100%;border:0;background:transparent;color:var(--text);text-align:left;padding:15px 16px;font-weight:700;display:flex;justify-content:space-between;gap:14px}.proof-step-content{display:none;padding:0 16px 16px;color:var(--muted)}.proof-step.open .proof-step-content{display:block}.proof-step.open{border-color:var(--cyan)}
+    .proof-options{display:grid;gap:9px;margin-top:15px}.proof-option{text-align:left}.proof-option.correct{border-color:var(--success);background:color-mix(in srgb,var(--success) 9%,var(--surface))}.proof-option.incorrect{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 9%,var(--surface))}.feedback{margin-top:12px;min-height:54px}
+    .example-card{position:relative;overflow:hidden}.example-card::after{content:"";position:absolute;width:100px;height:100px;border-radius:50%;right:-35px;top:-45px;background:color-mix(in srgb,var(--cyan) 10%,transparent)}.example-card h3{position:relative;z-index:1}.counter-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}.counter-panel{display:none}.counter-panel.active{display:block}.mistake{display:grid;grid-template-columns:minmax(220px,.8fr) minmax(0,1.2fr);gap:16px;border-top:1px solid var(--line);padding:18px 0}.mistake:first-child{border-top:0;padding-top:0}.mistake strong{color:var(--danger)}
+    .summary-chain{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;margin-top:24px}.summary-node{border:1px solid var(--line);background:var(--surface);padding:13px 17px;border-radius:14px;box-shadow:var(--shadow)}footer{padding:36px 0 56px;color:var(--muted);text-align:center}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media(max-width:1120px){.hero,.lab-grid,.proof-grid{grid-template-columns:1fr}.hero-map{min-height:390px}.grid-4,.notation-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.quantifier-row{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:760px){.shell{width:min(100% - 20px,1480px)}.topbar-inner{min-height:62px}.brand span{display:none}.hero{padding-top:44px}.hero-map{min-height:350px}.hero-geometry{height:310px}.hero-circle{width:190px;height:190px}.section{padding:54px 0}.section-head{align-items:start;flex-direction:column}.grid-2,.grid-3,.grid-4,.notation-grid,.quantifier-row,.plot-pair,.metric-strip,.metric-strip.four{grid-template-columns:1fr}.card{padding:18px}.plot{min-height:380px}.mistake{grid-template-columns:1fr}.top-actions .ghost-button{display:none}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand"><div class="brand-mark" aria-hidden="true"></div><span>Riesz Representation Laboratory</span></div>
+      <div class="top-actions"><button class="ghost-button" id="resetAll" type="button">Reset laboratory</button><button class="icon-button" id="themeToggle" type="button" aria-label="Toggle light and dark mode">◐</button></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="shell hero">
+      <div>
+        <div class="eyebrow">Hilbert-space duality</div>
+        <h1>Every continuous measurement has a direction.</h1>
+        <p>A continuous linear functional on a Hilbert space is not an abstract external object: it is inner product with one unique vector. The theorem turns duality into geometry.</p>
+        <div class="hero-chips"><span class="chip">representing vectors</span><span class="chip">dual norm</span><span class="chip">orthogonal kernels</span><span class="chip">level hyperplanes</span><span class="chip">L² functionals</span></div>
+      </div>
+      <article class="hero-map" aria-label="Geometric meaning of the Riesz representation theorem">
+        <div class="hero-geometry"><div class="hero-circle"></div><div class="hero-kernel"></div><div class="hero-y"></div><div class="hero-level"></div><div class="hero-point"></div><div class="hero-equation math-display" data-math="f(x)=\langle x,y\rangle,\qquad \|f\|=\|y\|" data-display="true"></div></div>
+      </article>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">1 · The mathematical question</div><h2>Can the dual space be seen inside the original space?</h2></div><p>For a general Banach space, a functional need not be represented by a vector of the same space. The inner product gives Hilbert spaces an exceptional self-duality.</p></div>
+        <div class="grid-3">
+          <article class="card soft"><div class="card-label">Input</div><h3>A continuous functional</h3><div class="math-display" data-math="f\in H^*" data-display="true"></div><p>It assigns one scalar to each vector, linearly and continuously.</p></article>
+          <article class="card soft"><div class="card-label">Hidden geometry</div><h3>A unique direction</h3><div class="math-display" data-math="y\in H" data-display="true"></div><p>The vector is normal to the kernel and records both the direction and strength of the functional.</p></article>
+          <article class="card soft"><div class="card-label">Identification</div><h3>Functional equals inner product</h3><div class="math-display" data-math="f(x)=\langle x,y\rangle" data-display="true"></div><p>All values of the functional are recovered by measuring components along one vector.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">2 · Formal theorem</div><h2>The Riesz representation theorem</h2></div><p>The main application is real Hilbert spaces. A convention note records the complex case precisely.</p></div>
+        <article class="card definition-card">
+          <div class="card-label">Theorem</div>
+          <div class="math-display" data-math="\text{For every }f\in H^*\text{ there exists a unique }y\in H\text{ such that }f(x)=\langle x,y\rangle\text{ for all }x\in H." data-display="true"></div>
+          <div class="math-display" data-math="\|f\|_{H^*}=\|y\|_H." data-display="true"></div>
+          <div class="notation-grid">
+            <div class="notation-item"><strong><span data-math="H"></span></strong>Complete inner-product space.</div>
+            <div class="notation-item"><strong><span data-math="H^*"></span></strong>Continuous linear functionals on <span data-math="H"></span>.</div>
+            <div class="notation-item"><strong><span data-math="y"></span></strong>Unique representing vector.</div>
+            <div class="notation-item"><strong><span data-math="J(y)"></span></strong>The functional <span data-math="x\mapsto\langle x,y\rangle"></span>.</div>
+          </div>
+          <div class="status warning" style="margin-top:18px"><strong>Complex convention.</strong> If the inner product is linear in its first variable, the formula remains <span data-math="f(x)=\langle x,y\rangle"></span>, but <span data-math="J:H\to H^*"></span> is conjugate-linear. Over real Hilbert spaces it is a linear isometric isomorphism.</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">3 · Quantifier architecture</div><h2>Read existence, uniqueness, and universality separately</h2></div><p>The vector is chosen after the functional and before the test vector. It must represent the functional simultaneously on the entire space.</p></div>
+        <article class="card">
+          <div class="math-display" data-math="\forall f\in H^*\;\exists!\,y\in H\;\forall x\in H:\quad f(x)=\langle x,y\rangle." data-display="true"></div>
+          <div class="quantifier-row">
+            <div class="quantifier-piece"><strong>Ambient hypothesis</strong><span data-math="H\text{ Hilbert}"></span></div>
+            <div class="quantifier-piece"><strong>Universal input</strong><span data-math="\forall f\in H^*"></span></div>
+            <div class="quantifier-piece"><strong>Existence</strong><span data-math="\exists y\in H"></span></div>
+            <div class="quantifier-piece"><strong>Uniqueness</strong><span data-math="\exists!\,y"></span></div>
+            <div class="quantifier-piece"><strong>Global identity</strong><span data-math="\forall x\in H"></span></div>
+          </div>
+          <div class="status warning" style="margin-top:18px"><strong>Forbidden dependency.</strong> The representing vector may depend on <span data-math="f"></span>, but it cannot depend on the later test vector <span data-math="x"></span>.</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="geometryLab">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">4 · Geometric laboratory</div><h2>One vector determines every level hyperplane</h2></div><p>Adjust the functional and the test vector. The kernel, level set, norming direction, decomposition, and Cauchy–Schwarz bound update together.</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Functional and vector</div>
+            <div class="control-stack">
+              <div class="control"><label for="aSlider"><span data-math="a"></span><span id="aValue">1.60</span></label><input id="aSlider" type="range" min="-3" max="3" step="0.05" value="1.6"><div class="control-note">First coordinate of the representer <span data-math="y=(a,b)"></span>.</div></div>
+              <div class="control"><label for="bSlider"><span data-math="b"></span><span id="bValue">1.10</span></label><input id="bSlider" type="range" min="-3" max="3" step="0.05" value="1.1"><div class="control-note">Second coordinate of the representer.</div></div>
+              <div class="control"><label for="x1Slider"><span data-math="x_1"></span><span id="x1Value">1.40</span></label><input id="x1Slider" type="range" min="-3" max="3" step="0.05" value="1.4"></div>
+              <div class="control"><label for="x2Slider"><span data-math="x_2"></span><span id="x2Value">-0.70</span></label><input id="x2Slider" type="range" min="-3" max="3" step="0.05" value="-0.7"></div>
+              <button class="primary-button" id="chooseNorming" type="button">Choose the norming vector</button>
+            </div>
+          </aside>
+          <article class="card"><div id="geometryPlot" class="plot" aria-label="Representing vector, kernel, and level hyperplane"></div><div class="status" id="geometryStatus"></div></article>
+          <aside class="card">
+            <div class="card-label">Live duality</div>
+            <div id="geometryFormula" class="math-display"></div>
+            <div class="metric-strip four">
+              <div class="metric-cell"><div class="metric-name">functional value</div><div class="metric-value" id="functionalValue">—</div></div>
+              <div class="metric-cell"><div class="metric-name">dual norm</div><div class="metric-value" id="dualNorm">—</div></div>
+              <div class="metric-cell"><div class="metric-name">C–S bound</div><div class="metric-value" id="csBound">—</div></div>
+              <div class="metric-cell"><div class="metric-name">kernel residual</div><div class="metric-value" id="kernelResidual">—</div></div>
+            </div>
+            <div class="status good" style="margin-top:14px"><strong>Geometric meaning.</strong> The kernel is the hyperplane perpendicular to <span data-math="y"></span>. Moving parallel to the kernel changes the vector but leaves the functional value unchanged.</div>
+          </aside>
+        </div>
+        <div class="grid-2" style="margin-top:20px">
+          <article class="card"><div id="unitCirclePlot" class="plot compact" aria-label="Functional values on the unit circle"></div></article>
+          <article class="card">
+            <div class="card-label">Read the diagrams</div>
+            <p class="muted"><strong>Cyan:</strong> representing vector <span data-math="y"></span> and norming direction. <strong>Teal:</strong> kernel <span data-math="y^\perp"></span>. <strong>Violet:</strong> the level line through <span data-math="x"></span>. <strong>Amber:</strong> the chosen test vector. On the right, the height of <span data-math="u\mapsto f(u)"></span> over the unit circle reaches its maximum at <span data-math="u=y/\|y\|"></span>.</p>
+            <div class="math-display" data-math="\|f\|=\sup_{\|u\|=1}|\langle u,y\rangle|=\|y\|" data-display="true"></div>
+            <div class="status warning"><strong>What is invariant?</strong> Every level set is parallel to the kernel, and all are perpendicular to the same representing direction.</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">5 · Recovering the representer</div><h2>The functional's coordinates are its values on an orthonormal basis</h2></div><p>In a finite orthonormal system, Riesz representation is coordinate reconstruction. In an infinite basis, the same principle becomes a convergent Hilbert expansion.</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Sample values</div>
+            <div class="control-stack">
+              <div class="control"><label for="c1Slider"><span data-math="f(e_1)"></span><span id="c1Value">1.20</span></label><input id="c1Slider" type="range" min="-2.5" max="2.5" step="0.05" value="1.2"></div>
+              <div class="control"><label for="c2Slider"><span data-math="f(e_2)"></span><span id="c2Value">-0.80</span></label><input id="c2Slider" type="range" min="-2.5" max="2.5" step="0.05" value="-0.8"></div>
+              <div class="control"><label for="c3Slider"><span data-math="f(e_3)"></span><span id="c3Value">1.50</span></label><input id="c3Slider" type="range" min="-2.5" max="2.5" step="0.05" value="1.5"></div>
+            </div>
+          </aside>
+          <article class="card"><div id="basisPlot" class="plot" aria-label="Coordinates of the representing vector"></div></article>
+          <aside class="card">
+            <div class="card-label">Reconstruction</div>
+            <div id="basisFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">representer norm</div><div class="metric-value" id="basisNorm">—</div></div>
+              <div class="metric-cell"><div class="metric-name">dual norm</div><div class="metric-value" id="basisDualNorm">—</div></div>
+            </div>
+            <div class="status good" style="margin-top:14px"><strong>Coordinate identity.</strong> For an orthonormal basis, <span data-math="y=\sum_k f(e_k)e_k"></span> in the real case. Parseval gives <span data-math="\|y\|^2=\sum_k|f(e_k)|^2"></span>.</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">6 · Function-space mode</div><h2>Integral functionals in <span data-math="L^2[0,1]"></span></h2></div><p>The kernel is literally the representing vector. The inner product integrates pointwise interaction across the entire domain.</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Choose the pair</div>
+            <div class="control-stack">
+              <div class="control"><label for="kernelSelect"><span>Representer</span><span id="kernelLabel">sin(2πt)</span></label><select id="kernelSelect"><option value="sin">sin(2πt)</option><option value="linear">1+2t</option><option value="gaussian">Gaussian bump</option><option value="constant">constant 1</option></select></div>
+              <div class="control"><label for="inputSelect"><span>Test function</span><span id="inputLabel">cos(2πt)+t</span></label><select id="inputSelect"><option value="mixed">cos(2πt)+t</option><option value="same">normalized representer</option><option value="poly">t²</option><option value="step">step profile</option></select></div>
+              <div class="control"><label for="amplitudeSlider"><span data-math="\alpha"></span><span id="amplitudeValue">1.00</span></label><input id="amplitudeSlider" type="range" min="-2" max="2" step="0.05" value="1"><div class="control-note">Scales the chosen test function.</div></div>
+              <button class="primary-button" id="chooseL2Norming" type="button">Use the norming function</button>
+            </div>
+          </aside>
+          <article class="card"><div id="l2Plot" class="plot" aria-label="L2 representer and test function"></div></article>
+          <aside class="card">
+            <div class="card-label">Integral duality</div>
+            <div id="l2Formula" class="math-display"></div>
+            <div class="metric-strip four">
+              <div class="metric-cell"><div class="metric-name">F(g)</div><div class="metric-value" id="l2Value">—</div></div>
+              <div class="metric-cell"><div class="metric-name">||h||₂</div><div class="metric-value" id="hNorm">—</div></div>
+              <div class="metric-cell"><div class="metric-name">||g||₂</div><div class="metric-value" id="gNorm">—</div></div>
+              <div class="metric-cell"><div class="metric-name">cosine</div><div class="metric-value" id="l2Cosine">—</div></div>
+            </div>
+            <div class="status good" id="l2Status" style="margin-top:14px"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">7 · Proof architecture</div><h2>Kernel, projection, and one remaining direction</h2></div><p>The proof is driven by the projection theorem. The closed kernel removes all directions invisible to the functional, leaving a one-dimensional orthogonal complement.</p></div>
+        <div class="flow-map">
+          <div class="flow-node clickable" data-map="continuity"><span data-math="f\text{ continuous}"></span></div><span class="flow-arrow">→</span>
+          <div class="flow-node clickable" data-map="kernel"><span data-math="M=\ker f\text{ closed}"></span></div><span class="flow-arrow">→</span>
+          <div class="flow-node clickable" data-map="projection"><span data-math="H=M\oplus M^\perp"></span></div><span class="flow-arrow">→</span>
+          <div class="flow-node clickable" data-map="dimension"><span data-math="M^\perp=\operatorname{span}\{z\}"></span></div><span class="flow-arrow">→</span>
+          <div class="flow-node clickable" data-map="representer"><span data-math="f(x)=\langle x,y\rangle"></span></div>
+        </div>
+        <div id="mapExplanation" class="status" style="margin-top:16px">Click a node to see exactly where it enters the proof.</div>
+        <div class="proof-grid" style="margin-top:20px">
+          <article class="card">
+            <div class="card-label">Guided proof — real Hilbert spaces</div>
+            <div class="proof-steps" id="proofSteps">
+              <div class="proof-step open"><button type="button"><span>1. Dispose of the zero functional</span><span>−</span></button><div class="proof-step-content"><div class="math-display" data-math="f=0\quad\Longrightarrow\quad y=0." data-display="true"></div><p>Existence is immediate, and uniqueness follows because <span data-math="\langle x,y\rangle=0"></span> for every <span data-math="x"></span> implies <span data-math="\|y\|^2=0"></span> after choosing <span data-math="x=y"></span>.</p></div></div>
+              <div class="proof-step"><button type="button"><span>2. Take the closed kernel</span><span>+</span></button><div class="proof-step-content"><div class="math-display" data-math="M=\ker f=f^{-1}(\{0\})" data-display="true"></div><p>Continuity makes <span data-math="M"></span> closed. This is the exact point where boundedness of the functional enters.</p></div></div>
+              <div class="proof-step"><button type="button"><span>3. Extract a normal direction</span><span>+</span></button><div class="proof-step-content"><p>Choose <span data-math="z_0\notin M"></span> and subtract its projection onto the kernel:</p><div class="math-display" data-math="z=z_0-P_Mz_0\in M^\perp,\qquad z\ne0." data-display="true"></div><p>The vector <span data-math="z"></span> is invisible to no nonzero functional value and points normally away from the kernel.</p></div></div>
+              <div class="proof-step"><button type="button"><span>4. Show the orthogonal complement is one-dimensional</span><span>+</span></button><div class="proof-step-content"><p>For any <span data-math="x"></span>, set <span data-math="\alpha=f(x)/f(z)"></span>. Then <span data-math="f(x-\alpha z)=0"></span>, so</p><div class="math-display" data-math="x=(x-\alpha z)+\alpha z\in M+\operatorname{span}\{z\}." data-display="true"></div><p>Therefore <span data-math="M^\perp=\operatorname{span}\{z\}"></span>.</p></div></div>
+              <div class="proof-step"><button type="button"><span>5. Construct the representing vector</span><span>+</span></button><div class="proof-step-content"><div class="math-display" data-math="y=\frac{f(z)}{\|z\|^2}z." data-display="true"></div><p>Writing <span data-math="x=m+\alpha z"></span>, with <span data-math="m\in M"></span>, gives</p><div class="math-display" data-math="\langle x,y\rangle=\alpha f(z)=f(x)." data-display="true"></div></div></div>
+              <div class="proof-step"><button type="button"><span>6. Prove uniqueness and norm equality</span><span>+</span></button><div class="proof-step-content"><p>If two vectors represent the same functional, then <span data-math="\langle x,y_1-y_2\rangle=0"></span> for every <span data-math="x"></span>; taking <span data-math="x=y_1-y_2"></span> gives equality. Finally, Cauchy–Schwarz gives <span data-math="\|f\|\le\|y\|"></span>, while <span data-math="x=y/\|y\|"></span> gives the reverse inequality.</p></div></div>
+            </div>
+          </article>
+          <aside class="card">
+            <div class="card-label">Choose the next inference</div>
+            <p class="muted">Why is <span data-math="\ker f"></span> closed?</p>
+            <div class="proof-options" id="proofOptions">
+              <button class="proof-option" data-answer="wrong1" type="button">Every linear subspace of a Hilbert space is closed.</button>
+              <button class="proof-option" data-answer="correct" type="button">It is the inverse image of the closed set {0} under a continuous map.</button>
+              <button class="proof-option" data-answer="wrong2" type="button">Its orthogonal complement is automatically one-dimensional.</button>
+            </div>
+            <div class="feedback status" id="proofFeedback">Select a reason.</div>
+            <div class="status warning" style="margin-top:14px"><strong>Strategy.</strong> Convert the analytic hypothesis “continuous functional” into a geometric object “closed hyperplane,” then invoke orthogonal projection.</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">8 · Canonical examples</div><h2>The same theorem across different Hilbert spaces</h2></div><p>The formula changes its surface appearance, but the representing object always belongs to the same Hilbert space as the input.</p></div>
+        <div class="grid-3">
+          <article class="card example-card"><div class="card-label">Finite-dimensional</div><h3>Euclidean space</h3><div class="math-display" data-math="f(x)=a_1x_1+\cdots+a_nx_n=\langle x,a\rangle" data-display="true"></div><p class="muted">The representing vector is the coefficient vector. Its Euclidean norm equals the operator norm of the functional.</p></article>
+          <article class="card example-card"><div class="card-label">Sequence space</div><h3><span data-math="\ell^2"></span></h3><div class="math-display" data-math="f(x)=\sum_{n=1}^\infty x_n y_n,\qquad y\in\ell^2" data-display="true"></div><p class="muted">Cauchy–Schwarz guarantees convergence and continuity. Every continuous functional on <span data-math="\ell^2"></span> arises this way.</p></article>
+          <article class="card example-card"><div class="card-label">Function space</div><h3><span data-math="L^2(\Omega)"></span></h3><div class="math-display" data-math="F(g)=\int_\Omega g(t)h(t)\,dt,\qquad h\in L^2(\Omega)" data-display="true"></div><p class="muted">The representer is the integration kernel <span data-math="h"></span>, understood as an equivalence class.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">9 · What can go wrong?</div><h2>Remove a hypothesis and the identification breaks</h2></div><p>The theorem is not a generic fact about all normed spaces or all algebraic functionals.</p></div>
+        <article class="card">
+          <div class="counter-tabs">
+            <button class="counter-tab active" data-panel="counter1" type="button">Not Hilbert</button>
+            <button class="counter-tab" data-panel="counter2" type="button">Not continuous</button>
+            <button class="counter-tab" data-panel="counter3" type="button">Point evaluation in L²</button>
+            <button class="counter-tab" data-panel="counter4" type="button">Wrong slot convention</button>
+          </div>
+          <div class="counter-panel active" id="counter1"><div class="grid-2"><div><h3>Banach duality need not be self-duality</h3><p class="muted" style="margin-top:10px">For <span data-math="X=\ell^1"></span>, the dual is <span data-math="X^*=\ell^\infty"></span>, not naturally <span data-math="\ell^1"></span>. There is no inner product whose induced norm is the <span data-math="\ell^1"></span>-norm.</p></div><div class="status bad"><strong>Failed conclusion.</strong> One cannot represent every functional by inner product with a vector of the original Banach space. <strong>Repair:</strong> require Hilbert geometry.</div></div></div>
+          <div class="counter-panel" id="counter2"><div class="grid-2"><div><h3>Algebraic functionals may be unbounded</h3><p class="muted" style="margin-top:10px">On an infinite-dimensional Hilbert space, Hamel-basis constructions produce linear functionals that are not continuous.</p></div><div class="status bad"><strong>Proof break.</strong> The kernel need not be closed, so the projection theorem cannot be applied. No vector <span data-math="y\in H"></span> can represent such a functional, because inner-product functionals are automatically bounded.</div></div></div>
+          <div class="counter-panel" id="counter3"><div class="grid-2"><div><h3>Evaluation is not an L² functional</h3><p class="muted" style="margin-top:10px">The expression <span data-math="g\mapsto g(t_0)"></span> is not even well-defined on <span data-math="L^2"></span> equivalence classes, since changing a function at one point does not change its class.</p></div><div class="status bad"><strong>Failed object.</strong> There is no <span data-math="h\in L^2"></span> satisfying <span data-math="g(t_0)=\int gh"></span> for all <span data-math="g"></span>. <strong>Repair:</strong> use a reproducing-kernel Hilbert space where evaluation is continuous.</div></div></div>
+          <div class="counter-panel" id="counter4"><div class="grid-2"><div><h3>Complex linearity depends on convention</h3><p class="muted" style="margin-top:10px">With inner product linear in the first variable, <span data-math="x\mapsto\langle x,y\rangle"></span> is linear in <span data-math="x"></span>, but the map <span data-math="y\mapsto J(y)"></span> is conjugate-linear.</p></div><div class="status warning"><strong>Common source of sign and conjugation errors.</strong> State which slot is linear before writing the theorem or its coordinate formula.</div></div></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">10 · Common mistakes</div><h2>Precision checks for proof writing</h2></div><p>Each error confuses the Hilbert-space structure with a weaker fact about normed spaces or linear maps.</p></div>
+        <article class="card">
+          <div class="mistake"><div><strong>Incorrect:</strong><br>Every linear functional has a Riesz representer.</div><div><p class="muted">Continuity is essential in infinite dimensions. The correct statement concerns <span data-math="H^*"></span>, the continuous dual, not the full algebraic dual.</p></div></div>
+          <div class="mistake"><div><strong>Incorrect:</strong><br>The representing vector is any normal vector to the kernel.</div><div><p class="muted">The direction is normal, but its scale and orientation are fixed by the values of <span data-math="f"></span>. A nonzero multiple changes the functional.</p></div></div>
+          <div class="mistake"><div><strong>Incorrect:</strong><br><span data-math="\|f\|=|f(y)|"></span>.</div><div><p class="muted">For the representer, <span data-math="f(y)=\|y\|^2"></span>. The norm is obtained at the normalized vector: <span data-math="f(y/\|y\|)=\|y\|"></span> when <span data-math="y\ne0"></span>.</p></div></div>
+          <div class="mistake"><div><strong>Incorrect:</strong><br>Evaluation at a point is continuous on every function Hilbert space.</div><div><p class="muted">It fails on <span data-math="L^2"></span>. Continuity of evaluation is a special reproducing-kernel property, not a generic feature.</p></div></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">11 · Final synthesis</div><h2>Duality becomes orthogonal geometry</h2></div><p>Riesz representation identifies a continuous scalar measurement with a vector, its kernel with an orthogonal hyperplane, and its norm with the length of that vector.</p></div>
+        <article class="card">
+          <div class="summary-chain">
+            <div class="summary-node"><span data-math="f\in H^*"></span></div><span class="flow-arrow">→</span>
+            <div class="summary-node"><span data-math="\ker f\text{ closed}"></span></div><span class="flow-arrow">→</span>
+            <div class="summary-node"><span data-math="(\ker f)^\perp=\operatorname{span}\{y\}"></span></div><span class="flow-arrow">→</span>
+            <div class="summary-node"><span data-math="f(x)=\langle x,y\rangle"></span></div><span class="flow-arrow">→</span>
+            <div class="summary-node"><span data-math="\|f\|=\|y\|"></span></div>
+          </div>
+          <div class="math-display" data-math="\boxed{\text{continuous functional}\longleftrightarrow\text{unique representing vector}\longleftrightarrow\text{orthogonal direction}}" data-display="true"></div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="shell">Riesz Representation Theorem · Interactive Real Analysis Laboratory</div></footer>
+
+  <script>
+    'use strict';
+
+    const state={theme:localStorage.getItem('riesz-theme')||'light',a:1.6,b:1.1,x1:1.4,x2:-.7,c:[1.2,-.8,1.5],kernel:'sin',input:'mixed',amplitude:1};
+    const $=id=>document.getElementById(id);
+    const css=name=>getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    const fmt=(v,d=3)=>Number.isFinite(v)?Number(v).toFixed(d):'—';
+    const sq=x=>x*x;
+
+    function renderMath(el,tex,display=false){
+      if(!el||!window.katex)return;
+      try{katex.render(tex,el,{displayMode:display,throwOnError:false,strict:'ignore'});}catch(err){el.textContent=tex;}
+    }
+    function renderStaticMath(){
+      document.querySelectorAll('[data-math]').forEach(el=>renderMath(el,el.dataset.math,el.dataset.display==='true'));
+    }
+    function plotLayout(title,xTitle,yTitle,equal=false){
+      return{title:{text:title,font:{family:'Libre Baskerville, serif',size:16,color:css('--text')}},paper_bgcolor:css('--canvas'),plot_bgcolor:css('--canvas'),font:{family:'Inter, sans-serif',color:css('--text')},margin:{l:55,r:25,t:50,b:52},xaxis:{title:xTitle,gridcolor:css('--grid'),zerolinecolor:css('--axis'),color:css('--axis'),scaleanchor:equal?'y':undefined,scaleratio:equal?1:undefined},yaxis:{title:yTitle,gridcolor:css('--grid'),zerolinecolor:css('--axis'),color:css('--axis')},showlegend:true,legend:{orientation:'h',y:-.2},hovermode:'closest',transition:{duration:180}};
+    }
+    const config={responsive:true,displaylogo:false,modeBarButtonsToRemove:['lasso2d','select2d']};
+
+    function applyTheme(theme){
+      state.theme=theme;document.documentElement.dataset.theme=theme;localStorage.setItem('riesz-theme',theme);$('themeToggle').textContent=theme==='dark'?'☀':'◐';
+      updateAllPlots();
+    }
+
+    function unitVector(v){const n=Math.hypot(v[0],v[1]);return n>1e-12?[v[0]/n,v[1]/n]:[1,0];}
+    function updateGeometry(){
+      state.a=+$('aSlider').value;state.b=+$('bSlider').value;state.x1=+$('x1Slider').value;state.x2=+$('x2Slider').value;
+      $('aValue').textContent=fmt(state.a,2);$('bValue').textContent=fmt(state.b,2);$('x1Value').textContent=fmt(state.x1,2);$('x2Value').textContent=fmt(state.x2,2);
+      const y=[state.a,state.b],x=[state.x1,state.x2],yn=Math.hypot(...y),xn=Math.hypot(...x),value=state.a*state.x1+state.b*state.x2;
+      const u=unitVector(y),k=[-u[1],u[0]],projScalar=yn>1e-12?value/yn:0,parallel=[projScalar*u[0],projScalar*u[1]],kernelPart=[x[0]-parallel[0],x[1]-parallel[1]];
+      const range=4.2,t=[-range,range],kernelX=t.map(s=>s*k[0]),kernelY=t.map(s=>s*k[1]);
+      let levelX=[],levelY=[];
+      if(yn>1e-12){levelX=t.map(s=>parallel[0]+s*k[0]);levelY=t.map(s=>parallel[1]+s*k[1]);}
+      const traces=[
+        {x:kernelX,y:kernelY,mode:'lines',name:'ker f',line:{color:css('--teal'),width:4}},
+        {x:levelX,y:levelY,mode:'lines',name:'level through x',line:{color:css('--violet'),width:3,dash:'dash'}},
+        {x:[0,y[0]],y:[0,y[1]],mode:'lines+markers',name:'representer y',line:{color:css('--cyan'),width:5},marker:{size:[5,10],color:css('--cyan')}},
+        {x:[0,x[0]],y:[0,x[1]],mode:'lines+markers',name:'test vector x',line:{color:css('--amber'),width:4},marker:{size:[5,10],color:css('--amber')}},
+        {x:[0,parallel[0]],y:[0,parallel[1]],mode:'lines+markers',name:'normal component',line:{color:css('--cyan-deep'),width:3,dash:'dot'},marker:{size:[4,8],color:css('--cyan-deep')}},
+        {x:[parallel[0],x[0]],y:[parallel[1],x[1]],mode:'lines',name:'kernel component',line:{color:css('--teal'),width:3,dash:'dot'}}
+      ];
+      Plotly.react('geometryPlot',traces,{...plotLayout('Functional geometry','x₁','x₂',true),xaxis:{...plotLayout('','','',true).xaxis,range:[-4.2,4.2]},yaxis:{...plotLayout('','','',true).yaxis,range:[-4.2,4.2]}},config);
+      const theta=Array.from({length:241},(_,i)=>2*Math.PI*i/240),ux=theta.map(Math.cos),uy=theta.map(Math.sin),vals=theta.map((_,i)=>state.a*ux[i]+state.b*uy[i]);
+      const normPoint=yn>1e-12?u:[1,0];
+      Plotly.react('unitCirclePlot',[
+        {x:theta,y:vals,mode:'lines',name:'f(uθ)',line:{color:css('--violet'),width:3}},
+        {x:[Math.atan2(normPoint[1],normPoint[0])<0?Math.atan2(normPoint[1],normPoint[0])+2*Math.PI:Math.atan2(normPoint[1],normPoint[0])],y:[yn],mode:'markers',name:'maximum',marker:{color:css('--cyan'),size:11}}
+      ],{...plotLayout('Functional values on the Euclidean unit circle','angle θ','f(uθ)'),xaxis:{...plotLayout('','','').xaxis,tickvals:[0,Math.PI/2,Math.PI,3*Math.PI/2,2*Math.PI],ticktext:['0','π/2','π','3π/2','2π']}},config);
+      const geometryTex=yn<1e-12
+        ? String.raw`\begin{aligned}y&=(0,0),\\f(x)&=0,\\\ker f&=\mathbb{R}^2.\end{aligned}`
+        : String.raw`\begin{aligned}y&=(${fmt(state.a,2)},${fmt(state.b,2)}),\\x&=(${fmt(state.x1,2)},${fmt(state.x2,2)}),\\f(x)&=\langle x,y\rangle=${fmt(value,3)},\\x&=x_{\ker f}+\frac{f(x)}{\|y\|^2}y.\end{aligned}`;
+      renderMath($('geometryFormula'),geometryTex,true);
+      $('functionalValue').textContent=fmt(value);$('dualNorm').textContent=fmt(yn);$('csBound').textContent=fmt(xn*yn);$('kernelResidual').textContent=fmt(state.a*kernelPart[0]+state.b*kernelPart[1]);
+      const ratio=xn*yn>1e-12?Math.abs(value)/(xn*yn):0;
+      $('geometryStatus').className='status '+(ratio>0.999?'good':'');
+      $('geometryStatus').innerHTML=yn<1e-12?'<strong>Zero functional.</strong> Every vector lies in the kernel, and the unique representer is 0.':`<strong>Cauchy–Schwarz:</strong> |f(x)|/(||f|| ||x||) = ${fmt(ratio,3)}. Equality occurs exactly when x is parallel to y.`;
+    }
+
+    function chooseNorming(){
+      const n=Math.hypot(+$('aSlider').value,+$('bSlider').value);if(n<1e-12)return;$('x1Slider').value=(+$('aSlider').value/n).toFixed(4);$('x2Slider').value=(+$('bSlider').value/n).toFixed(4);updateGeometry();
+    }
+
+    function updateBasis(){
+      state.c=[+$('c1Slider').value,+$('c2Slider').value,+$('c3Slider').value];
+      ['c1','c2','c3'].forEach((s,i)=>$(s+'Value').textContent=fmt(state.c[i],2));
+      const norm=Math.hypot(...state.c);
+      Plotly.react('basisPlot',[{x:['e₁','e₂','e₃'],y:state.c,type:'bar',name:'f(eᵢ)',marker:{color:[css('--cyan'),css('--teal'),css('--violet')]}}],{...plotLayout('The representer is reconstructed from basis values','orthonormal basis vector','coefficient'),showlegend:false},config);
+      renderMath($('basisFormula'),String.raw`\begin{aligned}y&=f(e_1)e_1+f(e_2)e_2+f(e_3)e_3\\&=${fmt(state.c[0],2)}e_1${state.c[1]>=0?'+':''}${fmt(state.c[1],2)}e_2${state.c[2]>=0?'+':''}${fmt(state.c[2],2)}e_3,\\\|f\|^2&=\|y\|^2=\sum_{j=1}^3|f(e_j)|^2=${fmt(norm*norm,3)}.\end{aligned}`,true);
+      $('basisNorm').textContent=fmt(norm);$('basisDualNorm').textContent=fmt(norm);
+    }
+
+    function kernelFn(type,t){if(type==='sin')return Math.sin(2*Math.PI*t);if(type==='linear')return 1+2*t;if(type==='gaussian')return Math.exp(-45*sq(t-.58));return 1;}
+    function rawInput(type,t,h,hNorm){if(type==='same')return hNorm>1e-12?h/hNorm:0;if(type==='poly')return t*t;if(type==='step')return t<.45?-1:1;return Math.cos(2*Math.PI*t)+t;}
+    function trapz(xs,ys){let s=0;for(let i=1;i<xs.length;i++)s+=(xs[i]-xs[i-1])*(ys[i]+ys[i-1])/2;return s;}
+    function updateL2(){
+      state.kernel=$('kernelSelect').value;state.input=$('inputSelect').value;state.amplitude=+$('amplitudeSlider').value;
+      const labels={sin:'sin(2πt)',linear:'1+2t',gaussian:'Gaussian bump',constant:'constant 1',mixed:'cos(2πt)+t',same:'normalized representer',poly:'t²',step:'step profile'};
+      $('kernelLabel').textContent=labels[state.kernel];$('inputLabel').textContent=labels[state.input];$('amplitudeValue').textContent=fmt(state.amplitude,2);
+      const t=Array.from({length:401},(_,i)=>i/400),h=t.map(v=>kernelFn(state.kernel,v)),hNorm=Math.sqrt(trapz(t,h.map(sq))),g=t.map((v,i)=>state.amplitude*rawInput(state.input,v,h[i],hNorm)),gNorm=Math.sqrt(trapz(t,g.map(sq))),prod=t.map((_,i)=>g[i]*h[i]),val=trapz(t,prod),cos=hNorm*gNorm>1e-12?val/(hNorm*gNorm):0;
+      Plotly.react('l2Plot',[
+        {x:t,y:h,mode:'lines',name:'representer h',line:{color:css('--cyan'),width:4}},
+        {x:t,y:g,mode:'lines',name:'test function g',line:{color:css('--violet'),width:3}},
+        {x:t,y:prod,mode:'lines',name:'pointwise product gh',line:{color:css('--amber'),width:2,dash:'dot'},fill:'tozeroy',fillcolor:'rgba(181,122,32,.10)'}
+      ],plotLayout('An integral functional as an inner product','t','value'),config);
+      renderMath($('l2Formula'),String.raw`\begin{aligned}F(g)&=\int_0^1 g(t)h(t)\,dt=${fmt(val,4)},\\\|F\|&=\|h\|_2=${fmt(hNorm,4)},\\|F(g)|&\le \|h\|_2\|g\|_2=${fmt(hNorm*gNorm,4)}.\end{aligned}`,true);
+      $('l2Value').textContent=fmt(val,4);$('hNorm').textContent=fmt(hNorm,4);$('gNorm').textContent=fmt(gNorm,4);$('l2Cosine').textContent=fmt(cos,4);
+      $('l2Status').innerHTML=Math.abs(Math.abs(cos)-1)<.002?'<strong>Equality case.</strong> The test function is parallel to the representer, so Cauchy–Schwarz is sharp and the dual norm is attained.':'<strong>Angular interpretation.</strong> The normalized functional value is the Hilbert-space cosine between g and h.';
+    }
+    function chooseL2Norming(){$('inputSelect').value='same';$('amplitudeSlider').value='1';updateL2();}
+
+    function updateAllPlots(){if(!window.Plotly)return;updateGeometry();updateBasis();updateL2();}
+
+    function bindControls(){
+      ['aSlider','bSlider','x1Slider','x2Slider'].forEach(id=>$(id).addEventListener('input',updateGeometry));$('chooseNorming').addEventListener('click',chooseNorming);
+      ['c1Slider','c2Slider','c3Slider'].forEach(id=>$(id).addEventListener('input',updateBasis));
+      ['kernelSelect','inputSelect','amplitudeSlider'].forEach(id=>$(id).addEventListener('input',updateL2));$('chooseL2Norming').addEventListener('click',chooseL2Norming);
+      $('themeToggle').addEventListener('click',()=>applyTheme(state.theme==='dark'?'light':'dark'));
+      $('resetAll').addEventListener('click',()=>{
+        const defaults={aSlider:1.6,bSlider:1.1,x1Slider:1.4,x2Slider:-.7,c1Slider:1.2,c2Slider:-.8,c3Slider:1.5,kernelSelect:'sin',inputSelect:'mixed',amplitudeSlider:1};
+        Object.entries(defaults).forEach(([id,v])=>$(id).value=v);updateAllPlots();window.scrollTo({top:0,behavior:'smooth'});
+      });
+      document.querySelectorAll('.proof-step button').forEach(btn=>btn.addEventListener('click',()=>{const step=btn.parentElement;step.classList.toggle('open');btn.lastElementChild.textContent=step.classList.contains('open')?'−':'+';}));
+      document.querySelectorAll('.proof-option').forEach(btn=>btn.addEventListener('click',()=>{
+        document.querySelectorAll('.proof-option').forEach(b=>b.classList.remove('correct','incorrect'));
+        const correct=btn.dataset.answer==='correct';btn.classList.add(correct?'correct':'incorrect');$('proofFeedback').className='feedback status '+(correct?'good':'bad');
+        $('proofFeedback').innerHTML=correct?'<strong>Correct.</strong> Continuity is exactly what makes the zero level set closed.':'<strong>Not valid.</strong> A linear subspace need not be closed, and one-dimensionality of the orthogonal complement has not yet been proved.';
+      }));
+      document.querySelectorAll('.counter-tab').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.counter-tab').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.counter-panel').forEach(p=>p.classList.remove('active'));btn.classList.add('active');$(btn.dataset.panel).classList.add('active');}));
+      const mapText={continuity:'Continuity enters only to guarantee that ker f is closed.',kernel:'The kernel contains every direction invisible to the functional.',projection:'Closedness permits the orthogonal decomposition supplied by the projection theorem.',dimension:'Because the range is one-dimensional, only one orthogonal direction remains outside the kernel.',representer:'Scaling that normal direction reproduces the exact values of the functional.'};
+      document.querySelectorAll('[data-map]').forEach(node=>node.addEventListener('click',()=>{$('mapExplanation').innerHTML='<strong>'+mapText[node.dataset.map]+'</strong>';}));
+    }
+
+    window.addEventListener('DOMContentLoaded',()=>{
+      document.documentElement.dataset.theme=state.theme;
+      const wait=()=>{if(window.katex&&window.Plotly){renderStaticMath();bindControls();applyTheme(state.theme);}else setTimeout(wait,40);};wait();
+    });
+  </script>
+</body>
+</html>

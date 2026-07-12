@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Interactive laboratory for convex functions, epigraphs, Jensen's inequality, sublevel sets, continuity, and lower semicontinuity." />
+  <title>Convex Functions and Epigraphs — Interactive Laboratory</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    :root{
+      --bg:#f7f9f8;--surface:rgba(255,255,255,.97);--surface-2:#eef5f5;--surface-3:#e4edef;
+      --text:#172126;--muted:#617178;--line:#d4dfe1;--cyan:#00a8c6;--cyan-deep:#087f98;
+      --teal:#168f88;--violet:#7567c7;--amber:#b57a20;--danger:#b74c4c;--success:#147d64;
+      --shadow:0 18px 52px rgba(37,56,64,.09);--radius:22px;--canvas:#fff;--axis:#65787e;
+      --grid:#dce6e8;--focus:rgba(0,168,198,.23)
+    }
+    html[data-theme="dark"]{
+      --bg:#121a20;--surface:rgba(27,38,46,.97);--surface-2:#213039;--surface-3:#273942;
+      --text:#edf5f6;--muted:#a8b8bd;--line:#344750;--cyan:#44c9e1;--cyan-deep:#7ed9e8;
+      --teal:#58c4b9;--violet:#aaa0e6;--amber:#e3b35d;--danger:#ef8989;--success:#68d0ad;
+      --shadow:0 18px 52px rgba(0,0,0,.25);--canvas:#17232a;--axis:#9bb0b7;--grid:#30424a;
+      --focus:rgba(68,201,225,.22)
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;color:var(--text);
+      background:
+        radial-gradient(circle at 7% 0%,rgba(0,168,198,.085),transparent 29rem),
+        radial-gradient(circle at 100% 17%,rgba(117,103,199,.065),transparent 32rem),
+        var(--bg);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.65;transition:background .25s ease,color .25s ease
+    }
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    .shell{width:min(1480px,calc(100% - 32px));margin:0 auto}
+    .topbar{
+      position:sticky;top:0;z-index:50;border-bottom:1px solid color-mix(in srgb,var(--line) 84%,transparent);
+      backdrop-filter:blur(18px);background:color-mix(in srgb,var(--bg) 82%,transparent)
+    }
+    .topbar-inner{min-height:68px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:-.02em}
+    .brand-mark{
+      width:34px;height:34px;border:1px solid var(--cyan);border-radius:11px;display:grid;place-items:center;
+      box-shadow:inset 0 0 0 6px color-mix(in srgb,var(--cyan) 10%,transparent)
+    }
+    .brand-mark::before{content:"epi";color:var(--cyan-deep);font-family:"Libre Baskerville",serif;font-weight:700;font-size:.72rem}
+    .top-actions{display:flex;gap:9px;align-items:center}
+    .icon-button,.ghost-button,.primary-button,.segmented button,.proof-option,.counter-tab,.map-node{
+      border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:12px;
+      min-height:40px;padding:9px 13px;transition:transform .18s ease,border-color .18s ease,background .18s ease
+    }
+    .icon-button:hover,.ghost-button:hover,.segmented button:hover,.proof-option:hover,.counter-tab:hover,.map-node:hover{
+      transform:translateY(-1px);border-color:var(--cyan)
+    }
+    .primary-button{background:var(--cyan);color:#062e37;font-weight:700;border-color:transparent}
+    .primary-button:hover{transform:translateY(-1px);filter:brightness(1.03)}
+    h1,h2,h3,.serif{font-family:"Libre Baskerville",Georgia,serif;letter-spacing:-.025em}
+    h1{font-size:clamp(2.65rem,5.8vw,5.15rem);line-height:1.03;margin:12px 0 20px}
+    h2{font-size:clamp(2rem,4vw,3.15rem);line-height:1.14;margin:0}
+    h3{font-size:1.2rem;margin:0}
+    p{margin:0}
+    .hero{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(360px,.92fr);gap:30px;padding:70px 0 46px;align-items:center}
+    .eyebrow{color:var(--cyan-deep);font-weight:700;text-transform:uppercase;letter-spacing:.14em;font-size:.78rem}
+    .hero p{color:var(--muted);max-width:850px;font-size:clamp(1.02rem,1.8vw,1.24rem)}
+    .hero-chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:28px}
+    .chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);padding:8px 11px;border-radius:999px;color:var(--muted);font-size:.9rem}
+    .chip::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--cyan)}
+    .hero-map{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:28px;padding:22px;min-height:420px;overflow:hidden}
+    .hero-svg{width:100%;height:370px;display:block}
+    .section{padding:72px 0}
+    .section-head{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:27px}
+    .section-head p{color:var(--muted);max-width:780px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+    .grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+    .lab-grid{display:grid;grid-template-columns:minmax(285px,.78fr) minmax(0,1.42fr) minmax(300px,.92fr);gap:20px;align-items:start}
+    .proof-grid{display:grid;grid-template-columns:minmax(0,1.22fr) minmax(300px,.78fr);gap:20px}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;min-width:0}
+    .card.soft{background:var(--surface-2);box-shadow:none}
+    .card h3+p{margin-top:9px;color:var(--muted)}
+    .card-label{color:var(--cyan-deep);font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;font-weight:700;margin-bottom:10px}
+    .muted{color:var(--muted)}.small{font-size:.9rem}
+    .definition-card{padding:30px;border-left:4px solid var(--cyan)}
+    .math-display{margin:18px 0;overflow-x:auto;overflow-y:hidden;padding:8px 2px}
+    .katex-display{margin:.72em 0!important}
+    .katex{max-width:100%}
+    .notation-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}
+    .notation-item{border:1px solid var(--line);background:var(--surface-2);border-radius:14px;padding:13px}
+    .notation-item strong{display:block;margin-bottom:6px;color:var(--cyan-deep)}
+    .flow-map{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;margin-top:18px}
+    .flow-node{border:1px solid var(--line);background:var(--surface-2);border-radius:14px;padding:12px 14px;min-width:150px;text-align:center}
+    .flow-node.clickable{cursor:pointer}
+    .flow-node.clickable:hover{border-color:var(--cyan)}
+    .flow-arrow{color:var(--cyan-deep);font-size:1.4rem}
+    .control-stack{display:grid;gap:16px}
+    .control label{display:flex;justify-content:space-between;gap:12px;align-items:baseline;font-weight:600;margin-bottom:7px}
+    .control label span:last-child{color:var(--cyan-deep);font-variant-numeric:tabular-nums}
+    input[type="range"]{width:100%;accent-color:var(--cyan)}
+    select{width:100%;min-height:43px;border-radius:11px;border:1px solid var(--line);background:var(--surface);color:var(--text);padding:8px 10px}
+    .control-note{color:var(--muted);font-size:.82rem;margin-top:5px}
+    .metric-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
+    .metric-strip.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .metric-cell{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:13px;text-align:center}
+    .metric-name{color:var(--muted);font-size:.79rem;text-transform:uppercase;letter-spacing:.06em}
+    .metric-value{font-size:1.16rem;font-weight:700;color:var(--cyan-deep);font-variant-numeric:tabular-nums}
+    .status{border-radius:14px;padding:14px;border:1px solid var(--line);background:var(--surface-2)}
+    .status.good{border-color:color-mix(in srgb,var(--success) 55%,var(--line));background:color-mix(in srgb,var(--success) 9%,var(--surface))}
+    .status.warning{border-color:color-mix(in srgb,var(--amber) 55%,var(--line));background:color-mix(in srgb,var(--amber) 8%,var(--surface))}
+    .status.bad{border-color:color-mix(in srgb,var(--danger) 55%,var(--line));background:color-mix(in srgb,var(--danger) 8%,var(--surface))}
+    .diagram-shell{background:var(--canvas);border:1px solid var(--line);border-radius:18px;overflow:hidden;min-height:500px}
+    .diagram-shell svg{display:block;width:100%;height:auto;min-height:500px;touch-action:none}
+    .legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;color:var(--muted);font-size:.86rem}
+    .legend span{display:flex;align-items:center;gap:7px}
+    .legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+    .proof-steps{display:grid;gap:10px}
+    .proof-step{border:1px solid var(--line);background:var(--surface);border-radius:15px;overflow:hidden}
+    .proof-step>button{width:100%;border:0;background:transparent;color:var(--text);display:flex;justify-content:space-between;gap:14px;padding:15px;text-align:left;font-weight:700}
+    .proof-body{display:none;border-top:1px solid var(--line);padding:0 16px 17px;color:var(--muted)}
+    .proof-step.open .proof-body{display:block}
+    .proof-number{display:inline-grid;place-items:center;width:26px;height:26px;margin-right:10px;border-radius:8px;background:var(--surface-2);color:var(--cyan-deep)}
+    .quiz-options{display:grid;gap:10px;margin-top:14px}
+    .proof-option{text-align:left}
+    .proof-option.correct{border-color:var(--success);background:color-mix(in srgb,var(--success) 10%,var(--surface))}
+    .proof-option.wrong{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 9%,var(--surface))}
+    .counter-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+    .counter-tab.active{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 9%,var(--surface))}
+    .counter-content{display:none}.counter-content.active{display:block}
+    .mistake{border-top:1px solid var(--line);padding:16px 0}.mistake:first-child{border-top:0;padding-top:0}
+    .mistake strong{color:var(--danger)}
+    .footer{padding:38px 0 54px;color:var(--muted);border-top:1px solid var(--line)}
+    @media(max-width:1120px){
+      .hero,.lab-grid,.proof-grid{grid-template-columns:1fr}
+      .hero-map{min-height:360px}.hero-svg{height:320px}
+      .grid-4,.notation-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media(max-width:760px){
+      .shell{width:min(100% - 20px,1480px)}
+      .topbar-inner{min-height:60px}.brand span:last-child{display:none}
+      .hero{padding-top:46px}.section{padding:52px 0}
+      .grid-2,.grid-3,.grid-4,.notation-grid,.metric-strip,.metric-strip.four{grid-template-columns:1fr}
+      .section-head{align-items:start;flex-direction:column}
+      .card{padding:18px}.definition-card{padding:22px}
+      .diagram-shell,.diagram-shell svg{min-height:420px}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>Convex Functions Laboratory</span></div>
+      <div class="top-actions">
+        <button class="ghost-button" id="scrollToLab">Open epigraph lab</button>
+        <button class="icon-button" id="themeToggle" aria-label="Toggle light and dark mode">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="shell hero">
+      <div>
+        <div class="eyebrow">Interactive convex analysis</div>
+        <h1>Convex functions and epigraphs</h1>
+        <p>A convex function bends below its chords. In one higher dimension, this becomes an ordinary set-theoretic statement: the region above the graph is convex. The same geometry controls Jensen’s inequality, sublevel sets, continuity, and lower semicontinuity.</p>
+        <div class="hero-chips">
+          <span class="chip">epigraphs</span><span class="chip">Jensen inequality</span><span class="chip">sublevel sets</span><span class="chip">continuity</span><span class="chip">lower semicontinuity</span>
+        </div>
+      </div>
+      <div class="hero-map" aria-label="Convex epigraph illustration">
+        <svg class="hero-svg" viewBox="0 0 540 370" role="img">
+          <defs><pattern id="heroGrid" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M 36 0 L 0 0 0 36" fill="none" stroke="var(--grid)" stroke-width="1"/></pattern></defs>
+          <rect x="0" y="0" width="540" height="370" rx="18" fill="var(--canvas)"/>
+          <rect x="0" y="0" width="540" height="370" rx="18" fill="url(#heroGrid)"/>
+          <path d="M54 320 C132 182, 210 88, 270 72 C340 53, 418 153, 486 322 L486 20 L54 20 Z" fill="color-mix(in srgb,var(--cyan) 14%,transparent)"/>
+          <path d="M54 320 C132 182, 210 88, 270 72 C340 53, 418 153, 486 322" fill="none" stroke="var(--cyan)" stroke-width="5"/>
+          <line x1="108" y1="236" x2="430" y2="216" stroke="var(--violet)" stroke-width="4"/>
+          <circle cx="108" cy="236" r="8" fill="var(--violet)"/><circle cx="430" cy="216" r="8" fill="var(--violet)"/>
+          <circle cx="270" cy="226" r="8" fill="var(--amber)"/>
+          <line x1="270" y1="226" x2="270" y2="72" stroke="var(--amber)" stroke-width="3" stroke-dasharray="7 6"/>
+          <text x="270" y="350" text-anchor="middle" fill="var(--muted)" font-family="Inter" font-size="15">the epigraph is convex exactly when every chord lies above the graph</text>
+        </svg>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">1 · Definitions</div><h2>Function geometry as set geometry</h2></div>
+          <p>The epigraph lifts a scalar-valued function into one additional dimension, where convexity and closedness can be studied with ordinary geometric tools.</p>
+        </div>
+        <div class="grid-3">
+          <article class="card">
+            <div class="card-label">Convex function</div>
+            <div class="math-display" data-math="f((1-t)x+ty)\le(1-t)f(x)+tf(y)" data-display="true"></div>
+            <p class="muted">This must hold for every \(x,y\) in the convex domain and every \(t\in[0,1]\).</p>
+          </article>
+          <article class="card">
+            <div class="card-label">Epigraph</div>
+            <div class="math-display" data-math="\operatorname{epi}f=\{(x,r):r\ge f(x)\}" data-display="true"></div>
+            <p class="muted">The epigraph is the region on or above the graph.</p>
+          </article>
+          <article class="card">
+            <div class="card-label">Lower semicontinuity</div>
+            <div class="math-display" data-math="f(x)\le\liminf_{n\to\infty}f(x_n)\qquad(x_n\to x)" data-display="true"></div>
+            <p class="muted">The value at the limit cannot lie strictly above nearby limiting lower values.</p>
+          </article>
+        </div>
+        <div class="notation-grid">
+          <div class="notation-item"><strong><span data-math="\operatorname{epi}f"></span></strong>epigraph</div>
+          <div class="notation-item"><strong><span data-math="L_\alpha(f)"></span></strong>sublevel set</div>
+          <div class="notation-item"><strong><span data-math="\operatorname{dom}f"></span></strong>effective domain</div>
+          <div class="notation-item"><strong><span data-math="\overline{\mathbb R}"></span></strong>extended real line</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="epigraphLab">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">2 · Epigraph laboratory</div><h2>Move a chord and test convexity</h2></div><p>The Jensen gap is the vertical distance between the chord and the graph at the convex combination point.</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Function and chord controls</div>
+            <div class="control-stack">
+              <div class="control">
+                <label for="functionPreset">Function</label>
+                <select id="functionPreset">
+                  <option value="quadratic">f(x)=x²/2</option>
+                  <option value="absolute">f(x)=|x|</option>
+                  <option value="exponential">f(x)=eˣ/3</option>
+                  <option value="quartic">f(x)=x⁴/8+x²/4</option>
+                  <option value="concave">f(x)=−x²/2</option>
+                  <option value="wavy">f(x)=x²/4+0.8 sin(2x)</option>
+                </select>
+              </div>
+              <div class="control"><label for="leftPoint"><span data-math="x"></span><span id="leftPointVal">−2.20</span></label><input id="leftPoint" type="range" min="-3.5" max="3.5" step=".05" value="-2.2"></div>
+              <div class="control"><label for="rightPoint"><span data-math="y"></span><span id="rightPointVal">2.40</span></label><input id="rightPoint" type="range" min="-3.5" max="3.5" step=".05" value="2.4"></div>
+              <div class="control"><label for="mixWeight"><span data-math="t"></span><span id="mixWeightVal">0.42</span></label><input id="mixWeight" type="range" min="0" max="1" step=".01" value=".42"></div>
+              <label class="toggle-line"><input id="showEpigraph" type="checkbox" checked>shade epigraph</label>
+              <label class="toggle-line"><input id="showVerticalGap" type="checkbox" checked>show Jensen gap</label>
+              <button id="swapChord" class="ghost-button">Swap endpoints</button>
+              <button id="animateWeight" class="ghost-button">Animate t</button>
+            </div>
+          </aside>
+
+          <article class="card">
+            <div class="diagram-shell"><svg id="epigraphSvg" viewBox="0 0 820 520" aria-label="Convex function, epigraph, and Jensen chord"></svg></div>
+            <div class="legend">
+              <span><i style="background:var(--cyan)"></i>graph and epigraph</span>
+              <span><i style="background:var(--violet)"></i>chord</span>
+              <span><i style="background:var(--amber)"></i>Jensen gap</span>
+              <span><i style="background:var(--teal)"></i>graph point at mixture</span>
+            </div>
+          </article>
+
+          <aside class="card">
+            <div class="card-label">Jensen diagnosis</div>
+            <div id="jensenFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">mixture point</div><div class="metric-value" id="mixturePoint">—</div></div>
+              <div class="metric-cell"><div class="metric-name">graph value</div><div class="metric-value" id="graphValue">—</div></div>
+              <div class="metric-cell"><div class="metric-name">chord value</div><div class="metric-value" id="chordValue">—</div></div>
+              <div class="metric-cell"><div class="metric-name">Jensen gap</div><div class="metric-value" id="jensenGap">—</div></div>
+            </div>
+            <div id="jensenStatus" class="status good" style="margin-top:14px"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">3 · Epigraph characterization</div><h2>Convexity of f is convexity of epi f</h2></div><p>The theorem is simply Jensen’s inequality rewritten in one higher dimension.</p></div>
+        <article class="card definition-card">
+          <div class="card-label">Theorem</div>
+          <div class="math-display" data-math="f\text{ is convex}\quad\Longleftrightarrow\quad \operatorname{epi}f\text{ is a convex subset of }\mathbb R^{n+1}." data-display="true"></div>
+          <div class="flow-map">
+            <div class="flow-node">two epigraph points</div><span class="flow-arrow">→</span>
+            <div class="flow-node">convex combination</div><span class="flow-arrow">→</span>
+            <div class="flow-node">Jensen inequality</div><span class="flow-arrow">→</span>
+            <div class="flow-node">height remains above graph</div>
+          </div>
+        </article>
+        <div class="proof-grid" style="margin-top:20px">
+          <article class="card">
+            <div class="proof-steps">
+              <div class="proof-step open"><button type="button"><span><span class="proof-number">1</span>Convex function implies convex epigraph</span><span>−</span></button><div class="proof-body"><p>Take \((x,r),(y,s)\in\operatorname{epi}f\). Then \(r\ge f(x)\) and \(s\ge f(y)\). For \(t\in[0,1]\),</p><div class="math-display" data-math="(1-t)r+ts\ge(1-t)f(x)+tf(y)\ge f((1-t)x+ty)." data-display="true"></div><p>Hence the convex combination remains in the epigraph.</p></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">2</span>Convex epigraph implies Jensen</span><span>+</span></button><div class="proof-body"><p>The graph points \((x,f(x))\) and \((y,f(y))\) lie in the epigraph. Convexity gives</p><div class="math-display" data-math="\bigl((1-t)x+ty,\ (1-t)f(x)+tf(y)\bigr)\in\operatorname{epi}f." data-display="true"></div><p>By definition of the epigraph, Jensen’s inequality follows.</p></div></div>
+            </div>
+          </article>
+          <aside class="card">
+            <div class="card-label">Proof strategy</div>
+            <h3>Translate an inequality into membership</h3>
+            <p class="muted">The scalar inequality is exactly the condition that a convex combination of two graph points lies above the graph.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="jensenLab">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">4 · Finite Jensen laboratory</div><h2>Average inputs before or after applying f</h2></div><p>Adjust three weights. For a convex function, the function of the weighted mean never exceeds the weighted mean of function values.</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Three-point distribution</div>
+            <div class="control-stack">
+              <div class="control"><label for="jX1"><span data-math="x_1"></span><span id="jX1Val">−2.00</span></label><input id="jX1" type="range" min="-3" max="3" step=".05" value="-2"></div>
+              <div class="control"><label for="jX2"><span data-math="x_2"></span><span id="jX2Val">0.20</span></label><input id="jX2" type="range" min="-3" max="3" step=".05" value=".2"></div>
+              <div class="control"><label for="jX3"><span data-math="x_3"></span><span id="jX3Val">2.40</span></label><input id="jX3" type="range" min="-3" max="3" step=".05" value="2.4"></div>
+              <div class="control"><label for="jW1"><span data-math="\lambda_1"></span><span id="jW1Val">0.25</span></label><input id="jW1" type="range" min="0" max="1" step=".01" value=".25"></div>
+              <div class="control"><label for="jW2"><span data-math="\lambda_2"></span><span id="jW2Val">0.35</span></label><input id="jW2" type="range" min="0" max="1" step=".01" value=".35"></div>
+              <button id="normalizeJensen" class="ghost-button">Normalize weights</button>
+            </div>
+          </aside>
+
+          <article class="card">
+            <div class="diagram-shell"><svg id="jensenSvg" viewBox="0 0 820 520" aria-label="Finite Jensen inequality"></svg></div>
+            <div class="legend">
+              <span><i style="background:var(--violet)"></i>weighted graph points</span>
+              <span><i style="background:var(--teal)"></i>f(weighted mean)</span>
+              <span><i style="background:var(--amber)"></i>weighted function mean</span>
+            </div>
+          </article>
+
+          <aside class="card">
+            <div class="card-label">Weighted comparison</div>
+            <div id="finiteJensenFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">weighted input</div><div class="metric-value" id="weightedInput">—</div></div>
+              <div class="metric-cell"><div class="metric-name">f(weighted input)</div><div class="metric-value" id="fWeightedInput">—</div></div>
+              <div class="metric-cell"><div class="metric-name">weighted f-values</div><div class="metric-value" id="weightedF">—</div></div>
+              <div class="metric-cell"><div class="metric-name">Jensen gap</div><div class="metric-value" id="finiteGap">—</div></div>
+            </div>
+            <div id="finiteJensenStatus" class="status good" style="margin-top:14px"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="levelLab">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">5 · Sublevel-set laboratory</div><h2>Slice the epigraph horizontally</h2></div><p>The slice at height \(\alpha\) projects to \(L_\alpha(f)=\{x:f(x)\le\alpha\}\). Convexity of the epigraph forces every sublevel set to be convex.</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Level controls</div>
+            <div class="control-stack">
+              <div class="control">
+                <label for="levelFunction">Function</label>
+                <select id="levelFunction">
+                  <option value="quadratic">f(x)=x²/2</option>
+                  <option value="absolute">f(x)=|x|</option>
+                  <option value="doublewell">f(x)=(x²−1)²</option>
+                  <option value="wavy">f(x)=x²/4+0.8 sin(2x)</option>
+                </select>
+              </div>
+              <div class="control"><label for="levelAlpha"><span data-math="\alpha"></span><span id="levelAlphaVal">1.50</span></label><input id="levelAlpha" type="range" min="-0.5" max="5" step=".05" value="1.5"></div>
+              <label class="toggle-line"><input id="showLevelProjection" type="checkbox" checked>show projection to x-axis</label>
+              <button id="animateLevel" class="ghost-button">Sweep level</button>
+            </div>
+          </aside>
+
+          <article class="card">
+            <div class="diagram-shell"><svg id="levelSvg" viewBox="0 0 820 520" aria-label="Sublevel sets of functions"></svg></div>
+            <div class="legend">
+              <span><i style="background:var(--cyan)"></i>function graph</span>
+              <span><i style="background:var(--violet)"></i>level α</span>
+              <span><i style="background:var(--teal)"></i>sublevel set</span>
+            </div>
+          </article>
+
+          <aside class="card">
+            <div class="card-label">Sublevel diagnosis</div>
+            <div id="levelFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">components</div><div class="metric-value" id="componentCount">—</div></div>
+              <div class="metric-cell"><div class="metric-name">convex set?</div><div class="metric-value" id="levelConvex">—</div></div>
+              <div class="metric-cell"><div class="metric-name">closed?</div><div class="metric-value" id="levelClosed">—</div></div>
+              <div class="metric-cell"><div class="metric-name">function convex?</div><div class="metric-value" id="levelFunctionConvex">—</div></div>
+            </div>
+            <div id="levelStatus" class="status good" style="margin-top:14px"></div>
+          </aside>
+        </div>
+        <div class="grid-2" style="margin-top:20px">
+          <article class="card">
+            <div class="card-label">Necessary, not sufficient</div>
+            <p class="muted">Convex functions have convex sublevel sets. The converse fails: a function may be quasiconvex, with every sublevel set convex, without satisfying Jensen’s inequality.</p>
+          </article>
+          <article class="card">
+            <div class="card-label">Lower semicontinuity</div>
+            <p class="muted">A function is lower semicontinuous exactly when every sublevel set \(\{x:f(x)\le\alpha\}\) is closed, equivalently when its epigraph is closed.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="lscLab">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">6 · Lower-semicontinuity laboratory</div><h2>Closed epigraphs forbid upward spikes</h2></div><p>Approach the discontinuity point. A missing limit point in the epigraph signals failure of lower semicontinuity.</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Discontinuity controls</div>
+            <div class="control-stack">
+              <div class="control">
+                <label for="lscPreset">Function</label>
+                <select id="lscPreset">
+                  <option value="continuous">continuous convex: x²</option>
+                  <option value="downspike">downward spike at 0 (l.s.c.)</option>
+                  <option value="upspike">upward spike at 0 (not l.s.c.)</option>
+                  <option value="indicator">indicator of a closed set</option>
+                  <option value="openindicator">indicator of an open set</option>
+                </select>
+              </div>
+              <div class="control"><label for="sequenceIndex"><span data-math="n"></span><span id="sequenceIndexVal">8</span></label><input id="sequenceIndex" type="range" min="1" max="40" step="1" value="8"></div>
+              <label class="toggle-line"><input id="showSequence" type="checkbox" checked>show approaching sequence</label>
+              <label class="toggle-line"><input id="showMissingPoint" type="checkbox" checked>mark epigraph closure defect</label>
+            </div>
+          </aside>
+
+          <article class="card">
+            <div class="diagram-shell"><svg id="lscSvg" viewBox="0 0 820 520" aria-label="Lower semicontinuity and closed epigraphs"></svg></div>
+            <div class="legend">
+              <span><i style="background:var(--cyan)"></i>graph / epigraph</span>
+              <span><i style="background:var(--violet)"></i>approaching sequence</span>
+              <span><i style="background:var(--danger)"></i>closure defect</span>
+            </div>
+          </article>
+
+          <aside class="card">
+            <div class="card-label">Sequential test</div>
+            <div id="lscFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">value at limit</div><div class="metric-value" id="fAtZero">—</div></div>
+              <div class="metric-cell"><div class="metric-name">liminf</div><div class="metric-value" id="liminfValue">—</div></div>
+              <div class="metric-cell"><div class="metric-name">l.s.c.?</div><div class="metric-value" id="isLsc">—</div></div>
+              <div class="metric-cell"><div class="metric-name">epi closed?</div><div class="metric-value" id="epiClosed">—</div></div>
+            </div>
+            <div id="lscStatus" class="status good" style="margin-top:14px"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">7 · Continuity of convex functions</div><h2>Convexity prevents interior oscillation</h2></div><p>A proper convex function is continuous on the relative interior of its effective domain.</p></div>
+        <article class="card definition-card">
+          <div class="card-label">Theorem</div>
+          <div class="math-display" data-math="f:\mathbb R^n\to(-\infty,+\infty]\text{ proper and convex}\quad\Longrightarrow\quad f\text{ is continuous on }\operatorname{ri}(\operatorname{dom}f)." data-display="true"></div>
+          <p>At boundary points of the domain, continuity may fail or the value may be \(+\infty\).</p>
+        </article>
+        <div class="grid-3" style="margin-top:20px">
+          <article class="card"><div class="card-label">One-dimensional idea</div><h3>Secant slopes are monotone</h3><div class="math-display" data-math="\frac{f(y)-f(x)}{y-x}\le\frac{f(z)-f(x)}{z-x}\le\frac{f(z)-f(y)}{z-y}" data-display="true"></div></article>
+          <article class="card"><div class="card-label">Local consequence</div><h3>Bounded slopes on compact subintervals</h3><p>The function is locally Lipschitz away from the boundary of its domain.</p></article>
+          <article class="card"><div class="card-label">Higher dimensions</div><h3>Restrict to line segments</h3><p>Continuity follows by controlling the function along finitely many directions inside a small simplex.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">8 · Closed epigraph theorem</div><h2>Lower semicontinuity is geometric closedness</h2></div><p>The theorem connects a sequential limit condition, closed sublevel sets, and a closed set in one higher dimension.</p></div>
+        <article class="card definition-card">
+          <div class="math-display" data-math="f\text{ is lower semicontinuous}\quad\Longleftrightarrow\quad \operatorname{epi}f\text{ is closed}\quad\Longleftrightarrow\quad \{x:f(x)\le\alpha\}\text{ is closed for every }\alpha." data-display="true"></div>
+        </article>
+        <div class="proof-grid" style="margin-top:20px">
+          <article class="card">
+            <div class="proof-steps">
+              <div class="proof-step open"><button type="button"><span><span class="proof-number">1</span>Closed epigraph implies liminf inequality</span><span>−</span></button><div class="proof-body"><p>Let \(x_n\to x\) and choose a subsequence along which \(f(x_n)\to\liminf f(x_n)\). If this limit is finite, the epigraph points \((x_n,f(x_n))\) converge to \((x,\ell)\). Closedness gives \(\ell\ge f(x)\).</p></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">2</span>Liminf inequality implies closed epigraph</span><span>+</span></button><div class="proof-body"><p>If \((x_n,r_n)\in\operatorname{epi}f\) and \((x_n,r_n)\to(x,r)\), then \(f(x_n)\le r_n\). Hence</p><div class="math-display" data-math="f(x)\le\liminf f(x_n)\le\lim r_n=r." data-display="true"></div><p>Therefore \((x,r)\in\operatorname{epi}f\).</p></div></div>
+            </div>
+          </article>
+          <aside class="card">
+            <div class="card-label">Proof strategy</div>
+            <h3>Encode values as points</h3>
+            <p class="muted">An upward spike at the limit point creates a convergent sequence of epigraph points whose limit lies below the graph, exactly violating closedness.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">9 · Guided theorem proving</div><h2>Choose the valid inference</h2></div><p>The epigraph proof depends on using the correct inequality direction.</p></div>
+        <div class="proof-grid">
+          <article class="card">
+            <div class="card-label">Challenge</div>
+            <p>Suppose \((x,r),(y,s)\in\operatorname{epi}f\) and \(f\) is convex. Why does their convex combination remain in the epigraph?</p>
+            <div class="quiz-options">
+              <button class="proof-option" data-answer="correct">Because \((1-t)r+ts\ge(1-t)f(x)+tf(y)\ge f((1-t)x+ty)\).</button>
+              <button class="proof-option" data-answer="wrong1">Because \((1-t)r+ts\le f((1-t)x+ty)\).</button>
+              <button class="proof-option" data-answer="wrong2">Because every epigraph is convex by definition.</button>
+              <button class="proof-option" data-answer="wrong3">Because \(f((1-t)x+ty)=(1-t)f(x)+tf(y)\) for every convex function.</button>
+            </div>
+          </article>
+          <aside class="card">
+            <div class="card-label">Feedback</div>
+            <div id="quizFeedback" class="status">Choose a proof step.</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">10 · What can go wrong?</div><h2>Nearby properties are not equivalent</h2></div><p>Convexity, quasiconvexity, continuity, and lower semicontinuity form distinct logical layers.</p></div>
+        <article class="card">
+          <div class="counter-tabs">
+            <button class="counter-tab active" data-counter="sublevels">Convex sublevels</button>
+            <button class="counter-tab" data-counter="continuity">Boundary continuity</button>
+            <button class="counter-tab" data-counter="lsc">Convex but not l.s.c.</button>
+            <button class="counter-tab" data-counter="closedepi">Closed epi without convexity</button>
+          </div>
+          <div class="counter-content active" id="counter-sublevels">
+            <div class="grid-2"><div><h3>Convex sublevel sets do not imply convexity</h3><p class="muted">The increasing function \(f(x)=x^3\) has interval sublevel sets on \(\mathbb R\), yet it is not convex on all of \(\mathbb R\).</p></div><div class="status bad"><strong>Correct concept.</strong> Such a function is quasiconvex, not necessarily convex.</div></div>
+          </div>
+          <div class="counter-content" id="counter-continuity">
+            <div class="grid-2"><div><h3>Continuity is guaranteed only on the relative interior</h3><p class="muted">An extended-real indicator of a closed convex set is convex and lower semicontinuous, but it jumps to \(+\infty\) outside the set.</p></div><div class="status bad"><strong>Correct domain.</strong> Continuity is asserted on \(\operatorname{ri}(\operatorname{dom}f)\).</div></div>
+          </div>
+          <div class="counter-content" id="counter-lsc">
+            <div class="grid-2"><div><h3>A convex function need not be closed at a boundary point</h3><p class="muted">On \([0,\infty)\), define \(f(0)=1\) and \(f(x)=0\) for \(x>0\). This function is convex but not lower semicontinuous at \(0\).</p></div><div class="status bad"><strong>Geometric defect.</strong> The epigraph misses the limit point \((0,0)\).</div></div>
+          </div>
+          <div class="counter-content" id="counter-closedepi">
+            <div class="grid-2"><div><h3>Closed epigraph does not imply convexity</h3><p class="muted">Every continuous nonconvex function, such as \(f(x)=\sin x\), has a closed epigraph.</p></div><div class="status bad"><strong>Distinct roles.</strong> Closedness corresponds to lower semicontinuity; convexity corresponds to epigraph convexity.</div></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">11 · Common mistakes</div><h2>Precision traps</h2></div><p>Most errors confuse a geometric property of the epigraph with a topological property of the graph.</p></div>
+        <article class="card">
+          <div class="mistake"><strong>Incorrect:</strong> “The graph of a convex function is a convex set.” <span class="muted">Correct: the epigraph is convex; the graph usually is not.</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “Convexity means the graph lies above every chord.” <span class="muted">Correct: the graph lies below or on every chord.</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “Convex sublevel sets characterize convex functions.” <span class="muted">Correct: they characterize quasiconvexity.</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “Every finite convex function is automatically continuous everywhere.” <span class="muted">Correct on open domains; more generally, continuity holds on the relative interior of the effective domain.</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “Lower semicontinuity forbids downward spikes.” <span class="muted">Correct: downward spikes are allowed; an upward spike at the limit point violates the liminf inequality.</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">12 · Final synthesis</div><h2>One extra dimension organizes the theory</h2></div><p>Convexity, topology, and optimization become properties of one geometric set.</p></div>
+        <div class="flow-map">
+          <div class="flow-node">Jensen inequality</div><span class="flow-arrow">↔</span>
+          <div class="flow-node">convex epigraph</div><span class="flow-arrow">→</span>
+          <div class="flow-node">convex sublevels</div><span class="flow-arrow">+</span>
+          <div class="flow-node">closed epigraph</div><span class="flow-arrow">↔</span>
+          <div class="flow-node">lower semicontinuity</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="shell">Interactive laboratory · convex functions, epigraphs, Jensen inequality, level sets, continuity, and lower semicontinuity.</div></footer>
+
+  <script>
+    "use strict";
+
+    const $=(s,r=document)=>r.querySelector(s);
+    const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+    const css=name=>getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+    const fmt=(v,d=3)=>{const n=Math.abs(v)<1e-10?0:v;return n.toFixed(d).replace("-","−");};
+
+    function renderMath(root=document){
+      if(window.katex){
+        $$("[data-math]",root).forEach(el=>{
+          if(el.dataset.rendered==="1")return;
+          try{katex.render(el.dataset.math,el,{throwOnError:false,displayMode:el.dataset.display==="true"});el.dataset.rendered="1";}
+          catch(e){el.textContent=el.dataset.math;}
+        });
+      }
+      if(window.renderMathInElement){
+        renderMathInElement(root,{
+          throwOnError:false,
+          delimiters:[
+            {left:"\\(",right:"\\)",display:false},
+            {left:"\\[",right:"\\]",display:true}
+          ]
+        });
+      }
+    }
+    function renderInto(el,tex,display=true){
+      if(!window.katex){el.textContent=tex;return;}
+      katex.render(tex,el,{throwOnError:false,displayMode:display});
+    }
+
+    function setTheme(theme){
+      document.documentElement.dataset.theme=theme;
+      localStorage.setItem("convexFunctionsTheme",theme);
+      drawAll();
+    }
+    document.documentElement.dataset.theme=localStorage.getItem("convexFunctionsTheme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+    $("#themeToggle").addEventListener("click",()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark"));
+    $("#scrollToLab").addEventListener("click",()=>$("#epigraphLab").scrollIntoView({behavior:"smooth"}));
+
+    function svgEl(tag,attrs={}){
+      const el=document.createElementNS("http://www.w3.org/2000/svg",tag);
+      Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));
+      return el;
+    }
+    function clearSvg(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+    function drawAxes(svg,w,h,xmin=-4,xmax=4,ymin=-2,ymax=7){
+      svg.appendChild(svgEl("rect",{x:0,y:0,width:w,height:h,fill:css("--canvas")}));
+      const X=x=>40+(x-xmin)/(xmax-xmin)*(w-80);
+      const Y=y=>h-40-(y-ymin)/(ymax-ymin)*(h-80);
+      for(let x=Math.ceil(xmin);x<=xmax;x++)svg.appendChild(svgEl("line",{x1:X(x),y1:40,x2:X(x),y2:h-40,stroke:css("--grid"),"stroke-width":1}));
+      for(let y=Math.ceil(ymin);y<=ymax;y++)svg.appendChild(svgEl("line",{x1:40,y1:Y(y),x2:w-40,y2:Y(y),stroke:css("--grid"),"stroke-width":1}));
+      if(xmin<=0&&xmax>=0)svg.appendChild(svgEl("line",{x1:X(0),y1:40,x2:X(0),y2:h-40,stroke:css("--axis"),"stroke-width":1.5}));
+      if(ymin<=0&&ymax>=0)svg.appendChild(svgEl("line",{x1:40,y1:Y(0),x2:w-40,y2:Y(0),stroke:css("--axis"),"stroke-width":1.5}));
+      return{X,Y,xmin,xmax,ymin,ymax};
+    }
+
+    const functionDefs={
+      quadratic:{f:x=>.5*x*x,tex:"\\frac{x^2}{2}",convex:true},
+      absolute:{f:x=>Math.abs(x),tex:"|x|",convex:true},
+      exponential:{f:x=>Math.exp(x)/3,tex:"\\frac{e^x}{3}",convex:true},
+      quartic:{f:x=>x**4/8+x*x/4,tex:"\\frac{x^4}{8}+\\frac{x^2}{4}",convex:true},
+      concave:{f:x=>-.5*x*x,tex:"-\\frac{x^2}{2}",convex:false},
+      wavy:{f:x=>x*x/4+.8*Math.sin(2*x),tex:"\\frac{x^2}{4}+0.8\\sin(2x)",convex:false},
+      doublewell:{f:x=>(x*x-1)**2,tex:"(x^2-1)^2",convex:false}
+    };
+
+    function samplePath(f,X,Y,xmin,xmax,n=320){
+      let d="";
+      for(let i=0;i<=n;i++){
+        const x=xmin+(xmax-xmin)*i/n,y=f(x);
+        if(!Number.isFinite(y))continue;
+        d+=(d?" L ":"M ")+`${X(x)} ${Y(y)}`;
+      }
+      return d;
+    }
+
+    let weightTimer=null;
+    ["functionPreset","leftPoint","rightPoint","mixWeight","showEpigraph","showVerticalGap"].forEach(id=>$("#"+id).addEventListener("input",drawEpigraphLab));
+    $("#swapChord").addEventListener("click",()=>{
+      const a=$("#leftPoint").value;$("#leftPoint").value=$("#rightPoint").value;$("#rightPoint").value=a;drawEpigraphLab();
+    });
+    $("#animateWeight").addEventListener("click",()=>{
+      clearInterval(weightTimer);let t=+$("#mixWeight").value,dir=1;
+      weightTimer=setInterval(()=>{t+=.012*dir;if(t>=1){t=1;dir=-1;}if(t<=0){t=0;dir=1;}$("#mixWeight").value=t;drawEpigraphLab();},45);
+    });
+
+    function drawEpigraphLab(){
+      const svg=$("#epigraphSvg"),w=820,h=520,plot=drawAxes(svg,w,h,-4,4,-2,7);
+      const def=functionDefs[$("#functionPreset").value],f=def.f,x=+$("#leftPoint").value,y=+$("#rightPoint").value,t=+$("#mixWeight").value;
+      const z=(1-t)*x+t*y,fx=f(x),fy=f(y),fz=f(z),chord=(1-t)*fx+t*fy,gap=chord-fz;
+
+      if($("#showEpigraph").checked){
+        let pts=[];
+        for(let i=0;i<=240;i++){
+          const xx=-4+8*i/240,yy=Math.min(7,f(xx));
+          pts.push(`${plot.X(xx)},${plot.Y(yy)}`);
+        }
+        pts.push(`${plot.X(4)},${plot.Y(7)}`,`${plot.X(-4)},${plot.Y(7)}`);
+        svg.appendChild(svgEl("polygon",{points:pts.join(" "),fill:css("--cyan"),opacity:.10}));
+      }
+      svg.appendChild(svgEl("path",{d:samplePath(f,plot.X,plot.Y,-4,4),fill:"none",stroke:css("--cyan"),"stroke-width":4}));
+
+      const A={x:plot.X(x),y:plot.Y(fx)},B={x:plot.X(y),y:plot.Y(fy)},G={x:plot.X(z),y:plot.Y(fz)},C={x:plot.X(z),y:plot.Y(chord)};
+      svg.appendChild(svgEl("line",{x1:A.x,y1:A.y,x2:B.x,y2:B.y,stroke:css("--violet"),"stroke-width":4}));
+      [A,B].forEach(P=>svg.appendChild(svgEl("circle",{cx:P.x,cy:P.y,r:9,fill:css("--violet"),stroke:css("--canvas"),"stroke-width":3})));
+      svg.appendChild(svgEl("circle",{cx:G.x,cy:G.y,r:10,fill:css("--teal"),stroke:css("--canvas"),"stroke-width":3}));
+      svg.appendChild(svgEl("circle",{cx:C.x,cy:C.y,r:9,fill:css("--amber"),stroke:css("--canvas"),"stroke-width":3}));
+      if($("#showVerticalGap").checked){
+        svg.appendChild(svgEl("line",{x1:G.x,y1:G.y,x2:C.x,y2:C.y,stroke:gap>=0?css("--amber"):css("--danger"),"stroke-width":5,"stroke-dasharray":"7 6"}));
+      }
+
+      $("#leftPointVal").textContent=fmt(x,2);$("#rightPointVal").textContent=fmt(y,2);$("#mixWeightVal").textContent=fmt(t,2);
+      $("#mixturePoint").textContent=fmt(z,3);$("#graphValue").textContent=fmt(fz,3);$("#chordValue").textContent=fmt(chord,3);$("#jensenGap").textContent=fmt(gap,3);
+      renderInto($("#jensenFormula"),String.raw`f((1-${fmt(t,2)})x+${fmt(t,2)}y)=${fmt(fz,3)}\ ${gap>=-1e-8?"\\le":"\\nleq"}\ ${fmt(chord,3)}=(1-${fmt(t,2)})f(x)+${fmt(t,2)}f(y)`);
+      const st=$("#jensenStatus");
+      if(gap>=-1e-7){
+        st.className="status good";st.innerHTML="<strong>Jensen succeeds for this chord.</strong> The graph point lies below the chord, so the corresponding epigraph segment remains above the graph.";
+      }else{
+        st.className="status bad";st.innerHTML="<strong>Convexity violation detected.</strong> The graph rises above the chord at the mixture point.";
+      }
+    }
+
+    // Finite Jensen lab
+    ["jX1","jX2","jX3","jW1","jW2"].forEach(id=>$("#"+id).addEventListener("input",drawFiniteJensen));
+    $("#normalizeJensen").addEventListener("click",()=>{
+      let a=+$("#jW1").value,b=+$("#jW2").value,s=a+b;
+      if(s>1){a/=s;b/=s;}
+      $("#jW1").value=a;$("#jW2").value=b;drawFiniteJensen();
+    });
+
+    function drawFiniteJensen(){
+      const svg=$("#jensenSvg"),w=820,h=520,plot=drawAxes(svg,w,h,-3.5,3.5,-1,6);
+      const f=functionDefs.quadratic.f,xs=[+$("#jX1").value,+$("#jX2").value,+$("#jX3").value];
+      let w1=+$("#jW1").value,w2=+$("#jW2").value;
+      if(w1+w2>1){const s=w1+w2;w1/=s;w2/=s;}
+      const ws=[w1,w2,1-w1-w2],mean=ws.reduce((a,v,i)=>a+v*xs[i],0);
+      const lhs=f(mean),rhs=ws.reduce((a,v,i)=>a+v*f(xs[i]),0),gap=rhs-lhs;
+      svg.appendChild(svgEl("path",{d:samplePath(f,plot.X,plot.Y,-3.5,3.5),fill:"none",stroke:css("--cyan"),"stroke-width":4}));
+      xs.forEach((x,i)=>{
+        const P={x:plot.X(x),y:plot.Y(f(x))};
+        svg.appendChild(svgEl("circle",{cx:P.x,cy:P.y,r:8+22*Math.sqrt(Math.max(ws[i],0)),fill:css("--violet"),opacity:.78,stroke:css("--canvas"),"stroke-width":3}));
+        const tx=svgEl("text",{x:P.x+11,y:P.y-12,fill:css("--muted"),"font-size":13,"font-family":"Inter"});tx.textContent=`λ${i+1}=${fmt(ws[i],2)}`;svg.appendChild(tx);
+      });
+      const M={x:plot.X(mean),y:plot.Y(lhs)},R={x:plot.X(mean),y:plot.Y(rhs)};
+      svg.appendChild(svgEl("line",{x1:M.x,y1:M.y,x2:R.x,y2:R.y,stroke:css("--amber"),"stroke-width":5,"stroke-dasharray":"7 6"}));
+      svg.appendChild(svgEl("circle",{cx:M.x,cy:M.y,r:10,fill:css("--teal"),stroke:css("--canvas"),"stroke-width":3}));
+      svg.appendChild(svgEl("circle",{cx:R.x,cy:R.y,r:9,fill:css("--amber"),stroke:css("--canvas"),"stroke-width":3}));
+
+      $("#jX1Val").textContent=fmt(xs[0],2);$("#jX2Val").textContent=fmt(xs[1],2);$("#jX3Val").textContent=fmt(xs[2],2);
+      $("#jW1Val").textContent=fmt(ws[0],2);$("#jW2Val").textContent=fmt(ws[1],2);
+      $("#weightedInput").textContent=fmt(mean,3);$("#fWeightedInput").textContent=fmt(lhs,3);$("#weightedF").textContent=fmt(rhs,3);$("#finiteGap").textContent=fmt(gap,3);
+      renderInto($("#finiteJensenFormula"),String.raw`f\!\left(\sum_{i=1}^3\lambda_i x_i\right)=${fmt(lhs,3)}\le ${fmt(rhs,3)}=\sum_{i=1}^3\lambda_i f(x_i)`);
+      $("#finiteJensenStatus").className="status good";
+      $("#finiteJensenStatus").innerHTML="<strong>Finite Jensen verified.</strong> The weighted average of the graph heights dominates the graph height at the weighted average input.";
+    }
+
+    // Sublevel lab
+    let levelTimer=null;
+    ["levelFunction","levelAlpha","showLevelProjection"].forEach(id=>$("#"+id).addEventListener("input",drawLevelLab));
+    $("#animateLevel").addEventListener("click",()=>{
+      clearInterval(levelTimer);let a=+$("#levelAlpha").value,dir=1;
+      levelTimer=setInterval(()=>{a+=.04*dir;if(a>=5){a=5;dir=-1;}if(a<=-.5){a=-.5;dir=1;}$("#levelAlpha").value=a;drawLevelLab();},45);
+    });
+
+    function intervalsBelow(f,alpha,xmin=-4,xmax=4,n=1000){
+      const intervals=[];let inside=false,start=null,prev=xmin;
+      for(let i=0;i<=n;i++){
+        const x=xmin+(xmax-xmin)*i/n,ok=f(x)<=alpha;
+        if(ok&&!inside){inside=true;start=x;}
+        if(!ok&&inside){inside=false;intervals.push([start,prev]);}
+        prev=x;
+      }
+      if(inside)intervals.push([start,xmax]);
+      return intervals;
+    }
+
+    function drawLevelLab(){
+      const svg=$("#levelSvg"),w=820,h=520,plot=drawAxes(svg,w,h,-4,4,-1,6);
+      const key=$("#levelFunction").value,def=functionDefs[key],f=def.f,alpha=+$("#levelAlpha").value;
+      svg.appendChild(svgEl("path",{d:samplePath(f,plot.X,plot.Y,-4,4),fill:"none",stroke:css("--cyan"),"stroke-width":4}));
+      svg.appendChild(svgEl("line",{x1:40,y1:plot.Y(alpha),x2:w-40,y2:plot.Y(alpha),stroke:css("--violet"),"stroke-width":4}));
+      const intervals=intervalsBelow(f,alpha);
+      intervals.forEach(([a,b])=>{
+        if($("#showLevelProjection").checked){
+          svg.appendChild(svgEl("line",{x1:plot.X(a),y1:plot.Y(0),x2:plot.X(b),y2:plot.Y(0),stroke:css("--teal"),"stroke-width":13,"stroke-linecap":"round"}));
+        }
+        const pts=[];
+        for(let i=0;i<=100;i++){
+          const x=a+(b-a)*i/100;
+          pts.push(`${plot.X(x)},${plot.Y(Math.min(alpha,f(x)))}`);
+        }
+        pts.push(`${plot.X(b)},${plot.Y(alpha)}`,`${plot.X(a)},${plot.Y(alpha)}`);
+        svg.appendChild(svgEl("polygon",{points:pts.join(" "),fill:css("--teal"),opacity:.10}));
+      });
+      const convexSet=intervals.length<=1;
+      $("#levelAlphaVal").textContent=fmt(alpha,2);$("#componentCount").textContent=intervals.length;$("#levelConvex").textContent=convexSet?"yes":"no";
+      $("#levelClosed").textContent="yes";$("#levelFunctionConvex").textContent=def.convex?"yes":"no";
+      const setTex=intervals.length===0?"\\varnothing":intervals.map(([a,b])=>`[${fmt(a,2)},${fmt(b,2)}]`).join("\\cup");
+      renderInto($("#levelFormula"),String.raw`L_{${fmt(alpha,2)}}(f)=\{x:f(x)\le ${fmt(alpha,2)}\}\approx ${setTex}`);
+      const st=$("#levelStatus");
+      if(def.convex){
+        st.className="status good";st.innerHTML="<strong>Convex-function prediction confirmed.</strong> The sublevel set is an interval, a point, the empty set, or all of the displayed domain.";
+      }else if(convexSet){
+        st.className="status warning";st.innerHTML="<strong>This sublevel happens to be convex.</strong> One level cannot certify convexity of the function; all chords must satisfy Jensen.";
+      }else{
+        st.className="status bad";st.innerHTML="<strong>Disconnected sublevel set.</strong> This immediately proves that the function is not convex.";
+      }
+    }
+
+    // LSC lab
+    ["lscPreset","sequenceIndex","showSequence","showMissingPoint"].forEach(id=>$("#"+id).addEventListener("input",drawLscLab));
+
+    function lscData(key){
+      if(key==="continuous")return{f:x=>x*x,x0:0,seq:k=>1/(k+1),f0:0,liminf:0,lsc:true,closed:true,label:"x^2"};
+      if(key==="downspike")return{f:x=>Math.abs(x)<1e-9?0:1,x0:0,seq:k=>1/(k+1),f0:0,liminf:1,lsc:true,closed:true,label:"0 at 0, 1 elsewhere"};
+      if(key==="upspike")return{f:x=>Math.abs(x)<1e-9?1:0,x0:0,seq:k=>1/(k+1),f0:1,liminf:0,lsc:false,closed:false,label:"1 at 0, 0 elsewhere"};
+      if(key==="indicator")return{f:x=>Math.abs(x)<=1?0:4.5,x0:1,seq:k=>1+1/(k+1),f0:0,liminf:4.5,lsc:true,closed:true,label:"indicator of [-1,1]"};
+      return{f:x=>Math.abs(x)<1?0:4.5,x0:1,seq:k=>1-1/(k+1),f0:4.5,liminf:0,lsc:false,closed:false,label:"indicator of (-1,1)"};
+    }
+
+    function drawLscLab(){
+      const svg=$("#lscSvg"),w=820,h=520,plot=drawAxes(svg,w,h,-3,3,-1,5);
+      const key=$("#lscPreset").value,data=lscData(key),n=+$("#sequenceIndex").value;
+      $("#sequenceIndexVal").textContent=n;
+
+      // draw graph samples with discontinuity-aware styling
+      if(key==="continuous"){
+        svg.appendChild(svgEl("path",{d:samplePath(data.f,plot.X,plot.Y,-3,3),fill:"none",stroke:css("--cyan"),"stroke-width":4}));
+      }else if(key==="downspike"||key==="upspike"){
+        const ySide=key==="downspike"?1:0,y0=data.f0;
+        svg.appendChild(svgEl("line",{x1:plot.X(-3),y1:plot.Y(ySide),x2:plot.X(3),y2:plot.Y(ySide),stroke:css("--cyan"),"stroke-width":4}));
+        svg.appendChild(svgEl("circle",{cx:plot.X(0),cy:plot.Y(ySide),r:9,fill:css("--canvas"),stroke:css("--cyan"),"stroke-width":4}));
+        svg.appendChild(svgEl("circle",{cx:plot.X(0),cy:plot.Y(y0),r:9,fill:css("--cyan"),stroke:css("--canvas"),"stroke-width":3}));
+      }else{
+        const closed=key==="indicator";
+        svg.appendChild(svgEl("line",{x1:plot.X(-1),y1:plot.Y(0),x2:plot.X(1),y2:plot.Y(0),stroke:css("--cyan"),"stroke-width":5}));
+        [-1,1].forEach(x=>svg.appendChild(svgEl("circle",{cx:plot.X(x),cy:plot.Y(0),r:9,fill:closed?css("--cyan"):css("--canvas"),stroke:css("--cyan"),"stroke-width":4})));
+        svg.appendChild(svgEl("line",{x1:plot.X(-3),y1:plot.Y(4.5),x2:plot.X(-1),y2:plot.Y(4.5),stroke:css("--cyan"),"stroke-width":4}));
+        svg.appendChild(svgEl("line",{x1:plot.X(1),y1:plot.Y(4.5),x2:plot.X(3),y2:plot.Y(4.5),stroke:css("--cyan"),"stroke-width":4}));
+      }
+
+      if($("#showSequence").checked){
+        for(let k=1;k<=Math.min(n,18);k++){
+          const x=data.seq(k),y=data.f(x);
+          svg.appendChild(svgEl("circle",{cx:plot.X(x),cy:plot.Y(y),r:5,fill:css("--violet"),opacity:.45+.5*k/Math.min(n,18)}));
+        }
+      }
+      if($("#showMissingPoint").checked&&!data.closed){
+        const defectX=data.x0,defectY=data.liminf;
+        svg.appendChild(svgEl("circle",{cx:plot.X(defectX),cy:plot.Y(defectY),r:14,fill:"none",stroke:css("--danger"),"stroke-width":5,"stroke-dasharray":"6 5"}));
+      }
+
+      $("#fAtZero").textContent=fmt(data.f0,2);$("#liminfValue").textContent=fmt(data.liminf,2);$("#isLsc").textContent=data.lsc?"yes":"no";$("#epiClosed").textContent=data.closed?"yes":"no";
+      renderInto($("#lscFormula"),String.raw`f(x_0)=${fmt(data.f0,2)}\ ${data.lsc?"\\le":"\\nleq"}\ \liminf_{n\to\infty}f(x_n)=${fmt(data.liminf,2)},\qquad x_n\to x_0=${fmt(data.x0,2)}`);
+      const st=$("#lscStatus");
+      if(data.lsc){
+        st.className="status good";st.innerHTML="<strong>Lower semicontinuity holds.</strong> Every limiting epigraph point remains in the epigraph.";
+      }else{
+        st.className="status bad";st.innerHTML="<strong>Lower semicontinuity fails.</strong> A sequence approaches a point whose function value lies strictly above the limiting lower values, leaving a hole in the epigraph.";
+      }
+    }
+
+    $$(".proof-step>button").forEach(btn=>btn.addEventListener("click",()=>{
+      const step=btn.parentElement;step.classList.toggle("open");btn.lastElementChild.textContent=step.classList.contains("open")?"−":"+";
+    }));
+
+    $$(".proof-option").forEach(btn=>btn.addEventListener("click",()=>{
+      $$(".proof-option").forEach(b=>b.classList.remove("correct","wrong"));
+      const f=$("#quizFeedback");
+      if(btn.dataset.answer==="correct"){
+        btn.classList.add("correct");f.className="status good";
+        f.innerHTML="<strong>Correct.</strong> The first inequality uses epigraph membership, while the second is exactly convexity of \(f\).";
+      }else if(btn.dataset.answer==="wrong1"){
+        btn.classList.add("wrong");f.className="status bad";
+        f.innerHTML="<strong>Wrong direction.</strong> Epigraph membership requires the height coordinate to be at least the function value.";
+      }else if(btn.dataset.answer==="wrong2"){
+        btn.classList.add("wrong");f.className="status bad";
+        f.innerHTML="<strong>False statement.</strong> Epigraphs may be nonconvex; their convexity is equivalent to convexity of the function.";
+      }else{
+        btn.classList.add("wrong");f.className="status bad";
+        f.innerHTML="<strong>Too strong.</strong> Equality characterizes affine behavior along the selected segment, not general convexity.";
+      }
+    }));
+
+    $$(".counter-tab").forEach(tab=>tab.addEventListener("click",()=>{
+      $$(".counter-tab").forEach(t=>t.classList.toggle("active",t===tab));
+      $$(".counter-content").forEach(c=>c.classList.toggle("active",c.id==="counter-"+tab.dataset.counter));
+    }));
+
+    function drawAll(){drawEpigraphLab();drawFiniteJensen();drawLevelLab();drawLscLab();}
+    window.addEventListener("load",()=>{renderMath();drawAll();});
+    setTimeout(()=>{renderMath();drawAll();},300);
+  </script>
+</body>
+</html>

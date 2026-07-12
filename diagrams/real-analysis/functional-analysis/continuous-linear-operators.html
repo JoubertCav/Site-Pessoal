@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Interactive laboratory for continuous linear operators, boundedness, continuity, operator norm, kernels, ranges, and matrix analogies." />
+  <title>Continuous Linear Operators — Interactive Laboratory</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #f6f8f6;
+      --surface: rgba(255,255,255,.96);
+      --surface-2: #edf4f4;
+      --surface-3: #e4edef;
+      --text: #172126;
+      --muted: #617178;
+      --line: #d5e0e2;
+      --cyan: #00a8c6;
+      --cyan-deep: #087f98;
+      --teal: #168f88;
+      --violet: #7567c7;
+      --amber: #b57a20;
+      --danger: #b74c4c;
+      --success: #147d64;
+      --shadow: 0 18px 52px rgba(37,56,64,.09);
+      --radius: 22px;
+      --canvas: #ffffff;
+      --axis: #61747b;
+      --grid: #dce5e7;
+      --focus: rgba(0,168,198,.23);
+    }
+
+    html[data-theme="dark"] {
+      --bg: #121a20;
+      --surface: rgba(27,38,46,.96);
+      --surface-2: #213039;
+      --surface-3: #273942;
+      --text: #edf5f6;
+      --muted: #a8b8bd;
+      --line: #344750;
+      --cyan: #44c9e1;
+      --cyan-deep: #7ed9e8;
+      --teal: #58c4b9;
+      --violet: #aaa0e6;
+      --amber: #e3b35d;
+      --danger: #ef8989;
+      --success: #68d0ad;
+      --shadow: 0 18px 52px rgba(0,0,0,.25);
+      --canvas: #17232a;
+      --axis: #9bb0b7;
+      --grid: #30424a;
+      --focus: rgba(68,201,225,.22);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 8% 0%, rgba(0,168,198,.08), transparent 28rem),
+        radial-gradient(circle at 100% 18%, rgba(117,103,199,.06), transparent 30rem),
+        var(--bg);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.65;
+      transition: background .25s ease, color .25s ease;
+    }
+
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    .shell { width: min(1480px, calc(100% - 32px)); margin: 0 auto; }
+
+    .topbar {
+      position: sticky; top: 0; z-index: 40;
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 84%, transparent);
+      backdrop-filter: blur(18px);
+      background: color-mix(in srgb, var(--bg) 82%, transparent);
+    }
+    .topbar-inner { min-height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: -.02em; }
+    .brand-mark {
+      width: 34px; height: 34px; border: 1px solid var(--cyan); border-radius: 11px;
+      display: grid; place-items: center; box-shadow: inset 0 0 0 6px color-mix(in srgb, var(--cyan) 10%, transparent);
+    }
+    .brand-mark::before { content: "T"; color: var(--cyan-deep); font-family: "Libre Baskerville", serif; font-weight: 700; }
+    .top-actions { display: flex; gap: 9px; align-items: center; }
+
+    .icon-button, .ghost-button, .primary-button, .segmented button, .proof-option, .counter-tab {
+      border: 1px solid var(--line); background: var(--surface); color: var(--text);
+      border-radius: 12px; min-height: 40px; padding: 9px 13px;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .icon-button:hover, .ghost-button:hover, .segmented button:hover, .proof-option:hover, .counter-tab:hover {
+      transform: translateY(-1px); border-color: var(--cyan);
+    }
+    .primary-button { background: var(--cyan); color: #062e37; font-weight: 700; border-color: transparent; }
+    .primary-button:hover { transform: translateY(-1px); filter: brightness(1.03); }
+
+    h1, h2, h3, .serif { font-family: "Libre Baskerville", Georgia, serif; letter-spacing: -.025em; }
+    h1 { font-size: clamp(2.65rem, 5.8vw, 5.15rem); line-height: 1.03; margin: 12px 0 20px; }
+    h2 { font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.14; margin: 0; }
+    h3 { font-size: 1.2rem; margin: 0; }
+    p { margin: 0; }
+
+    .hero { display: grid; grid-template-columns: minmax(0,1.12fr) minmax(360px,.88fr); gap: 30px; padding: 70px 0 46px; align-items: center; }
+    .eyebrow { color: var(--cyan-deep); font-weight: 700; text-transform: uppercase; letter-spacing: .14em; font-size: .78rem; }
+    .hero p { color: var(--muted); max-width: 850px; font-size: clamp(1.02rem,1.8vw,1.24rem); }
+    .hero-chips { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 28px; }
+    .chip { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--line); background: var(--surface); padding: 8px 11px; border-radius: 999px; color: var(--muted); font-size: .9rem; }
+    .chip::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); }
+
+    .hero-map { background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); border-radius: 28px; padding: 24px; min-height: 400px; overflow: hidden; }
+    .operator-visual { position: relative; height: 350px; }
+    .space-disc { position: absolute; top: 67px; width: 172px; height: 172px; border-radius: 50%; border: 1.5px solid var(--line); background: color-mix(in srgb, var(--surface-2) 70%, transparent); }
+    .space-disc.domain { left: 18px; }
+    .space-disc.codomain { right: 18px; border-radius: 45% 55% 58% 42% / 58% 40% 60% 42%; border-color: var(--teal); transform: rotate(-12deg); }
+    .operator-arrow { position: absolute; left: 50%; top: 151px; width: 120px; height: 2px; background: var(--cyan); transform: translateX(-50%); }
+    .operator-arrow::after { content: ""; position: absolute; right: -1px; top: -5px; border-left: 10px solid var(--cyan); border-top: 6px solid transparent; border-bottom: 6px solid transparent; }
+    .operator-label { position: absolute; left: 50%; top: 109px; transform: translateX(-50%); color: var(--cyan-deep); font-family: "Libre Baskerville", serif; font-weight: 700; font-size: 1.4rem; }
+    .vector-line { position: absolute; height: 3px; transform-origin: left center; border-radius: 99px; }
+    .vector-line.x { left: 72px; top: 168px; width: 84px; background: var(--violet); transform: rotate(-32deg); }
+    .vector-line.tx { right: 74px; top: 169px; width: 102px; background: var(--teal); transform: rotate(-15deg); }
+    .vector-line::after { content: ""; position: absolute; right: -1px; top: -4px; border-left: 9px solid currentColor; border-top: 5px solid transparent; border-bottom: 5px solid transparent; }
+    .vector-line.x { color: var(--violet); }
+    .vector-line.tx { color: var(--teal); }
+    .space-title { position: absolute; top: 252px; width: 172px; text-align: center; color: var(--muted); }
+    .space-title.left { left: 18px; }
+    .space-title.right { right: 18px; }
+    .hero-equation { position: absolute; left: 0; right: 0; bottom: 6px; text-align: center; color: var(--text); }
+
+    .section { padding: 72px 0; }
+    .section-head { display: flex; justify-content: space-between; gap: 24px; align-items: end; margin-bottom: 27px; }
+    .section-head p { color: var(--muted); max-width: 720px; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; }
+    .lab-grid { display: grid; grid-template-columns: minmax(260px,.72fr) minmax(0,1.38fr) minmax(280px,.9fr); gap: 20px; align-items: start; }
+    .proof-grid { display: grid; grid-template-columns: minmax(0,1.25fr) minmax(300px,.75fr); gap: 20px; }
+    .matrix-view-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; }
+
+    .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px; min-width: 0; }
+    .card.soft { background: var(--surface-2); box-shadow: none; }
+    .card h3 + p { margin-top: 9px; color: var(--muted); }
+    .card-label { color: var(--cyan-deep); font-size: .78rem; text-transform: uppercase; letter-spacing: .12em; font-weight: 700; margin-bottom: 10px; }
+    .muted { color: var(--muted); }
+    .small { font-size: .9rem; }
+
+    .definition-card { padding: 30px; border-left: 4px solid var(--cyan); }
+    .math-display { margin: 18px 0; overflow-x: auto; overflow-y: hidden; padding: 8px 2px; }
+    .katex-display { margin: .72em 0 !important; }
+    .katex { max-width: 100%; }
+
+    .notation-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px; margin-top: 18px; }
+    .notation-item { border: 1px solid var(--line); background: var(--surface-2); border-radius: 14px; padding: 13px; }
+    .notation-item strong { display: block; margin-bottom: 6px; color: var(--cyan-deep); }
+
+    .quantifier-row { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 10px; margin-top: 22px; }
+    .quantifier-piece { padding: 14px; border: 1px solid var(--line); border-radius: 15px; background: var(--surface-2); text-align: center; }
+    .quantifier-piece strong { display: block; color: var(--cyan-deep); font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 7px; }
+
+    .flow-map { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; margin-top: 18px; }
+    .flow-node { border: 1px solid var(--line); background: var(--surface-2); border-radius: 14px; padding: 12px 14px; min-width: 150px; text-align: center; }
+    .flow-node.clickable { cursor: pointer; }
+    .flow-node.clickable:hover { border-color: var(--cyan); }
+    .flow-arrow { color: var(--cyan-deep); font-size: 1.4rem; }
+
+    .control-stack { display: grid; gap: 17px; }
+    .control label { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; font-weight: 600; margin-bottom: 7px; }
+    .control label span:last-child { color: var(--cyan-deep); font-variant-numeric: tabular-nums; }
+    input[type="range"] { width: 100%; accent-color: var(--cyan); }
+    select { width: 100%; min-height: 43px; border-radius: 11px; border: 1px solid var(--line); background: var(--surface); color: var(--text); padding: 8px 10px; }
+    .control-note { color: var(--muted); font-size: .82rem; margin-top: 5px; }
+
+    .plot { width: 100%; min-height: 420px; border-radius: 16px; overflow: hidden; }
+    .plot.small-plot { min-height: 340px; }
+    .metric-strip { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px; margin-top: 14px; }
+    .metric-cell { background: var(--surface-2); border: 1px solid var(--line); border-radius: 14px; padding: 13px; text-align: center; }
+    .metric-name { color: var(--muted); font-size: .79rem; text-transform: uppercase; letter-spacing: .06em; }
+    .metric-value { font-size: 1.22rem; font-weight: 700; color: var(--cyan-deep); font-variant-numeric: tabular-nums; }
+
+    .status { border-radius: 14px; padding: 14px; border: 1px solid var(--line); background: var(--surface-2); }
+    .status.good { border-color: color-mix(in srgb, var(--success) 55%, var(--line)); background: color-mix(in srgb, var(--success) 9%, var(--surface)); }
+    .status.bad { border-color: color-mix(in srgb, var(--danger) 55%, var(--line)); background: color-mix(in srgb, var(--danger) 9%, var(--surface)); }
+    .status.warning { border-color: color-mix(in srgb, var(--amber) 55%, var(--line)); background: color-mix(in srgb, var(--amber) 9%, var(--surface)); }
+
+    .segmented { display: flex; flex-wrap: wrap; gap: 8px; }
+    .segmented button.active { background: var(--cyan); color: #062e37; border-color: var(--cyan); font-weight: 700; }
+
+    .proof-steps { display: grid; gap: 11px; }
+    .proof-step { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--surface); }
+    .proof-step button { width: 100%; border: 0; background: transparent; color: var(--text); padding: 15px 17px; display: flex; justify-content: space-between; gap: 16px; text-align: left; font-weight: 700; }
+    .proof-step .proof-body { display: none; padding: 0 17px 17px; color: var(--muted); }
+    .proof-step.open { border-color: var(--cyan); }
+    .proof-step.open .proof-body { display: block; }
+    .proof-number { display: inline-grid; place-items: center; min-width: 25px; height: 25px; border-radius: 50%; background: var(--surface-2); color: var(--cyan-deep); margin-right: 8px; font-size: .82rem; }
+
+    .example-card { position: relative; overflow: hidden; min-height: 270px; }
+    .example-card::after { content: ""; position: absolute; width: 120px; height: 120px; border-radius: 50%; right: -48px; bottom: -48px; border: 1px solid color-mix(in srgb, var(--cyan) 38%, var(--line)); }
+    .badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 5px 9px; font-size: .76rem; font-weight: 700; background: var(--surface-2); color: var(--cyan-deep); border: 1px solid var(--line); margin-bottom: 12px; }
+    .fact-list { display: grid; gap: 9px; margin-top: 15px; }
+    .fact { display: flex; gap: 9px; align-items: flex-start; color: var(--muted); font-size: .92rem; }
+    .fact::before { content: ""; width: 8px; height: 8px; flex: 0 0 8px; margin-top: .52em; border-radius: 50%; background: var(--teal); }
+
+    .counter-tabs { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 18px; }
+    .counter-tab.active { background: var(--danger); border-color: var(--danger); color: #fff; }
+    .counter-panel { display: none; }
+    .counter-panel.active { display: block; }
+
+    .mistake { border-top: 1px solid var(--line); padding: 17px 0; }
+    .mistake:first-child { border-top: 0; padding-top: 0; }
+    .wrong { color: var(--danger); font-weight: 700; }
+    .correct { color: var(--success); font-weight: 700; }
+
+    .quiz-options { display: grid; gap: 9px; margin-top: 16px; }
+    .proof-option { text-align: left; }
+    .proof-option.correct-choice { border-color: var(--success); background: color-mix(in srgb, var(--success) 8%, var(--surface)); }
+    .proof-option.wrong-choice { border-color: var(--danger); background: color-mix(in srgb, var(--danger) 8%, var(--surface)); }
+
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 760px; }
+    th, td { border-bottom: 1px solid var(--line); padding: 13px 12px; text-align: left; vertical-align: top; }
+    th { color: var(--cyan-deep); font-size: .8rem; text-transform: uppercase; letter-spacing: .07em; }
+
+    .read-box, .formal-box { border-radius: 16px; padding: 16px; margin-top: 15px; }
+    .read-box { border: 1px solid color-mix(in srgb, var(--cyan) 48%, var(--line)); background: color-mix(in srgb, var(--cyan) 7%, var(--surface)); }
+    .formal-box { border: 1px solid color-mix(in srgb, var(--violet) 44%, var(--line)); background: color-mix(in srgb, var(--violet) 7%, var(--surface)); }
+    .box-title { font-weight: 700; margin-bottom: 6px; }
+
+    .footer { padding: 42px 0 70px; color: var(--muted); text-align: center; }
+    .summary-band { background: var(--surface); border: 1px solid var(--line); border-radius: 26px; box-shadow: var(--shadow); padding: 30px; }
+    .summary-equation { text-align: center; margin-top: 20px; }
+
+    @media (max-width: 1120px) {
+      .hero, .lab-grid, .proof-grid { grid-template-columns: 1fr; }
+      .hero-map { min-height: 370px; }
+      .grid-3 { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .quantifier-row, .notation-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+    }
+    @media (max-width: 760px) {
+      .shell { width: min(100% - 20px, 1480px); }
+      .topbar-inner { min-height: 62px; }
+      .brand span:last-child { display: none; }
+      .hero { padding-top: 44px; }
+      .hero-map { display: none; }
+      .section { padding: 54px 0; }
+      .section-head { display: block; }
+      .section-head p { margin-top: 12px; }
+      .grid-2, .grid-3, .matrix-view-grid { grid-template-columns: 1fr; }
+      .quantifier-row, .notation-grid, .metric-strip { grid-template-columns: 1fr 1fr; }
+      .card { padding: 18px; }
+      .definition-card { padding: 22px; }
+      .plot { min-height: 360px; }
+      .math-display .katex { font-size: .94em; }
+    }
+    @media (max-width: 460px) {
+      .quantifier-row, .notation-grid, .metric-strip { grid-template-columns: 1fr; }
+      .top-actions .ghost-button { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>Continuous Linear Operators</span></div>
+      <div class="top-actions">
+        <button class="ghost-button" id="resetAll" type="button">Reset laboratory</button>
+        <button class="icon-button" id="themeToggle" type="button" aria-label="Toggle color theme" title="Toggle light and dark modes">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="shell hero">
+      <div>
+        <div class="eyebrow">Functional analysis laboratory</div>
+        <h1>Continuous linear operators</h1>
+        <p>A linear operator preserves algebraic structure. Boundedness controls its geometric distortion. Together they produce the morphisms of normed-space analysis.</p>
+        <div class="hero-chips">
+          <span class="chip">boundedness</span>
+          <span class="chip">continuity</span>
+          <span class="chip">operator norm</span>
+          <span class="chip">kernel &amp; range</span>
+          <span class="chip">matrix analogy</span>
+        </div>
+      </div>
+      <div class="hero-map" aria-label="Conceptual map from a normed space X to a normed space Y">
+        <div class="operator-visual">
+          <div class="space-disc domain"></div>
+          <div class="space-disc codomain"></div>
+          <div class="operator-label">T</div>
+          <div class="operator-arrow"></div>
+          <div class="vector-line x"></div>
+          <div class="vector-line tx"></div>
+          <div class="space-title left">domain <span data-katex="X"></span></div>
+          <div class="space-title right">codomain <span data-katex="Y"></span></div>
+          <div class="hero-equation" data-katex-display="\|Tx\|_Y\leq \|T\|\,\|x\|_X"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="shell section" id="question">
+      <div class="section-head">
+        <div><div class="eyebrow">1. The mathematical question</div><h2>When is a linear map analytically stable?</h2></div>
+        <p>Linearity alone does not prevent arbitrarily large amplification. Continuity is the requirement that small perturbations of the input remain small after applying the operator.</p>
+      </div>
+      <div class="grid-3">
+        <article class="card">
+          <div class="card-label">Algebra</div>
+          <h3>Preserve combinations</h3>
+          <div class="math-display" data-katex-display="T(\alpha x+\beta y)=\alpha Tx+\beta Ty"></div>
+          <p class="muted">The operator respects addition and scalar multiplication.</p>
+        </article>
+        <article class="card">
+          <div class="card-label">Geometry</div>
+          <h3>Control amplification</h3>
+          <div class="math-display" data-katex-display="\|Tx\|\leq C\|x\|"></div>
+          <p class="muted">One global constant controls every direction and every scale.</p>
+        </article>
+        <article class="card">
+          <div class="card-label">Analysis</div>
+          <h3>Preserve limits</h3>
+          <div class="math-display" data-katex-display="x_n\to x\Longrightarrow Tx_n\to Tx"></div>
+          <p class="muted">For linear maps, this is equivalent to boundedness.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="shell section" id="definitions">
+      <div class="section-head">
+        <div><div class="eyebrow">2. Formal definitions</div><h2>The analytic structure of an operator</h2></div>
+        <p>Let <span data-katex="X"></span> and <span data-katex="Y"></span> be normed vector spaces over the same scalar field.</p>
+      </div>
+
+      <div class="card definition-card">
+        <div class="card-label">Definition — bounded linear operator</div>
+        <div class="math-display" data-katex-display="T:X\to Y\text{ is bounded }\Longleftrightarrow \exists C\geq 0\;\forall x\in X,\quad \|Tx\|_Y\leq C\|x\|_X."></div>
+        <div class="quantifier-row">
+          <div class="quantifier-piece"><strong>Object</strong><span data-katex="T:X\to Y"></span></div>
+          <div class="quantifier-piece"><strong>Existence</strong><span data-katex="\exists C\geq0"></span></div>
+          <div class="quantifier-piece"><strong>Universal input</strong><span data-katex="\forall x\in X"></span></div>
+          <div class="quantifier-piece"><strong>Estimate</strong><span data-katex="\|Tx\|\leq C\|x\|"></span></div>
+          <div class="quantifier-piece"><strong>Dependency</strong><span data-katex="C=C(T)"></span></div>
+        </div>
+        <div class="formal-box">
+          <div class="box-title">Formal meaning</div>
+          The constant may depend on the operator and on the chosen norms, but it must not depend on the individual vector <span data-katex="x"></span>.
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top:20px">
+        <article class="card">
+          <div class="card-label">Operator norm</div>
+          <div class="math-display" data-katex-display="\|T\|=\sup_{x\neq0}\frac{\|Tx\|_Y}{\|x\|_X}=\sup_{\|x\|_X\leq1}\|Tx\|_Y."></div>
+          <p class="muted">It is the smallest admissible boundedness constant and the maximum possible amplification in the supremal sense.</p>
+        </article>
+        <article class="card">
+          <div class="card-label">Kernel and range</div>
+          <div class="math-display" data-katex-display="\ker T=\{x\in X:Tx=0\},\qquad \operatorname{ran}T=T(X)."></div>
+          <p class="muted">The kernel records directions erased by the operator; the range records outputs that can actually be reached.</p>
+        </article>
+      </div>
+
+      <div class="card soft" style="margin-top:20px">
+        <div class="card-label">Notation panel</div>
+        <div class="notation-grid">
+          <div class="notation-item"><strong data-katex="\mathcal L(X,Y)"></strong><span class="small muted">bounded linear maps from <span data-katex="X"></span> to <span data-katex="Y"></span></span></div>
+          <div class="notation-item"><strong data-katex="X^*=\mathcal L(X,\mathbb F)"></strong><span class="small muted">continuous dual space</span></div>
+          <div class="notation-item"><strong data-katex="B_X"></strong><span class="small muted">closed unit ball of <span data-katex="X"></span></span></div>
+          <div class="notation-item"><strong data-katex="I_X"></strong><span class="small muted">identity operator on <span data-katex="X"></span></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="shell section" id="matrix-lab">
+      <div class="section-head">
+        <div><div class="eyebrow">3. Matrix laboratory</div><h2>See the operator norm as maximal stretching</h2></div>
+        <p>For a matrix on Euclidean space, the unit circle becomes an ellipse. The longest semiaxis has length <span data-katex="\|A\|_2"></span>.</p>
+      </div>
+
+      <div class="lab-grid">
+        <aside class="card">
+          <div class="card-label">Matrix controls</div>
+          <div class="control-stack">
+            <div class="control"><label for="a11"><span data-katex="a_{11}"></span><span id="a11Value">2.00</span></label><input id="a11" type="range" min="-3" max="3" step="0.05" value="2"><div class="control-note">Horizontal output from the first coordinate.</div></div>
+            <div class="control"><label for="a12"><span data-katex="a_{12}"></span><span id="a12Value">-1.00</span></label><input id="a12" type="range" min="-3" max="3" step="0.05" value="-1"><div class="control-note">Horizontal output from the second coordinate.</div></div>
+            <div class="control"><label for="a21"><span data-katex="a_{21}"></span><span id="a21Value">1.00</span></label><input id="a21" type="range" min="-3" max="3" step="0.05" value="1"><div class="control-note">Vertical output from the first coordinate.</div></div>
+            <div class="control"><label for="a22"><span data-katex="a_{22}"></span><span id="a22Value">2.00</span></label><input id="a22" type="range" min="-3" max="3" step="0.05" value="2"><div class="control-note">Vertical output from the second coordinate.</div></div>
+            <hr style="border:0;border-top:1px solid var(--line);width:100%">
+            <div class="control"><label for="vectorAngle"><span data-katex="\theta"></span><span id="vectorAngleValue">35°</span></label><input id="vectorAngle" type="range" min="0" max="360" step="1" value="35"><div class="control-note">Direction of the unit input vector.</div></div>
+            <button class="primary-button" id="alignMax" type="button">Align with maximal stretch</button>
+            <button class="ghost-button" id="makeSingular" type="button">Make matrix singular</button>
+          </div>
+        </aside>
+
+        <div class="card">
+          <div class="matrix-view-grid">
+            <div><div class="card-label">Domain</div><div id="domainPlot" class="plot small-plot" aria-label="Unit circle and selected input vector"></div></div>
+            <div><div class="card-label">Codomain</div><div id="imagePlot" class="plot small-plot" aria-label="Image ellipse and transformed vector"></div></div>
+          </div>
+          <div class="metric-strip">
+            <div class="metric-cell"><div class="metric-name">input norm</div><div class="metric-value" id="inputNorm">1.000</div></div>
+            <div class="metric-cell"><div class="metric-name">output norm</div><div class="metric-value" id="outputNorm">2.236</div></div>
+            <div class="metric-cell"><div class="metric-name">ratio</div><div class="metric-value" id="stretchRatio">2.236</div></div>
+            <div class="metric-cell"><div class="metric-name">operator norm</div><div class="metric-value" id="operatorNorm">2.236</div></div>
+          </div>
+          <div class="read-box">
+            <div class="box-title">Read the diagram</div>
+            In the domain, the cyan curve is the Euclidean unit circle and the violet arrow is <span data-katex="x"></span>. In the codomain, the teal curve is <span data-katex="A(B_2)"></span> and the violet arrow is <span data-katex="Ax"></span>. The longest radius of the ellipse is the operator norm.
+          </div>
+        </div>
+
+        <aside class="card">
+          <div class="card-label">Live analysis</div>
+          <div id="matrixFormula" class="math-display"></div>
+          <div id="matrixStatus" class="status good"></div>
+          <div style="height:12px"></div>
+          <div id="kernelFormula" class="math-display"></div>
+          <div id="rangeFormula" class="math-display"></div>
+          <div class="status" style="margin-top:12px">
+            <strong>Invariant picture.</strong><br>
+            <span class="muted small">Rank counts output directions. Nullity counts erased input directions. In finite dimensions,</span>
+            <div class="math-display" data-katex-display="\dim X=\dim\ker A+\dim\operatorname{ran}A"></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="shell section" id="continuity-lab">
+      <div class="section-head">
+        <div><div class="eyebrow">4. Quantifier laboratory</div><h2>From boundedness to continuity at the origin</h2></div>
+        <p>The same constant that controls global amplification produces a valid <span data-katex="\delta"></span> for every requested output tolerance <span data-katex="\varepsilon"></span>.</p>
+      </div>
+      <div class="lab-grid">
+        <aside class="card">
+          <div class="card-label">Adversarial tolerance</div>
+          <div class="control-stack">
+            <div class="control"><label for="epsilon"><span data-katex="\varepsilon"></span><span id="epsilonValue">1.00</span></label><input id="epsilon" type="range" min="0.1" max="4" step="0.05" value="1"><div class="control-note">Opponent chooses the allowed output radius.</div></div>
+            <div class="control"><label for="deltaFactor"><span>fraction of canonical δ</span><span id="deltaFactorValue">1.00</span></label><input id="deltaFactor" type="range" min="0.25" max="1.5" step="0.05" value="1"><div class="control-note">Test a smaller or larger input radius.</div></div>
+          </div>
+          <div id="deltaFormula" class="math-display"></div>
+          <div id="continuityStatus" class="status good"></div>
+        </aside>
+        <div class="card">
+          <div id="continuityPlot" class="plot" aria-label="Input ball mapped into an output ball"></div>
+          <div class="read-box">
+            <div class="box-title">Read the diagram</div>
+            The dashed cyan circle is the input ball of radius <span data-katex="\delta"></span>. Its teal image is an ellipse. The violet circle is the required output ball of radius <span data-katex="\varepsilon"></span>. Continuity succeeds when the whole ellipse lies inside that circle.
+          </div>
+        </div>
+        <aside class="card">
+          <div class="card-label">Quantifier game</div>
+          <div class="flow-map" style="justify-content:flex-start">
+            <div class="flow-node"><span data-katex="\forall\varepsilon>0"></span><div class="small muted">opponent</div></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node"><span data-katex="\exists\delta=\varepsilon/\|T\|"></span><div class="small muted">theorem</div></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node"><span data-katex="\forall x"></span><div class="small muted">adversarial input</div></div>
+          </div>
+          <div class="formal-box">
+            <div class="box-title">Valid dependency</div>
+            <div data-katex-display="\delta=\delta(\varepsilon,T),\qquad \delta\text{ must not depend on }x."></div>
+          </div>
+          <div class="status warning" style="margin-top:12px">
+            Choosing a different <span data-katex="\delta_x"></span> after seeing each input would not establish continuity. One radius must work for all admissible inputs.
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="shell section" id="theorem">
+      <div class="section-head">
+        <div><div class="eyebrow">5. Main theorem</div><h2>Boundedness and continuity are equivalent</h2></div>
+        <p>This equivalence is special to linear maps: continuity at one point propagates to every point and produces a global norm estimate.</p>
+      </div>
+      <div class="card definition-card">
+        <div class="card-label">Theorem</div>
+        <div class="math-display" data-katex-display="\text{For a linear map }T:X\to Y,\quad T\text{ bounded}\Longleftrightarrow T\text{ continuous at }0\Longleftrightarrow T\text{ continuous on }X."></div>
+        <div class="flow-map">
+          <div class="flow-node clickable" data-node="bounded"><span data-katex="\|Tx\|\leq C\|x\|"></span></div>
+          <div class="flow-arrow">⇒</div>
+          <div class="flow-node clickable" data-node="zero">continuous at <span data-katex="0"></span></div>
+          <div class="flow-arrow">⇒</div>
+          <div class="flow-node clickable" data-node="global">continuous everywhere</div>
+          <div class="flow-arrow">⇒</div>
+          <div class="flow-node clickable" data-node="recover">recover a global bound</div>
+        </div>
+        <div id="dependencyDetail" class="status" style="margin-top:18px">Click a node to inspect where it enters the proof.</div>
+      </div>
+
+      <div class="proof-grid" style="margin-top:20px">
+        <div class="card">
+          <div class="card-label">Proof navigator</div>
+          <div class="proof-steps">
+            <div class="proof-step open">
+              <button type="button"><span><span class="proof-number">1</span>Bounded implies Lipschitz</span><span>−</span></button>
+              <div class="proof-body">
+                <div data-katex-display="\|Tx-Ty\|=\|T(x-y)\|\leq \|T\|\,\|x-y\|."></div>
+                <p><strong>Reason.</strong> Use linearity to rewrite the output difference, then apply boundedness. This gives global Lipschitz continuity.</p>
+              </div>
+            </div>
+            <div class="proof-step">
+              <button type="button"><span><span class="proof-number">2</span>Continuity at zero propagates</span><span>+</span></button>
+              <div class="proof-body">
+                <div data-katex-display="Tx-Tx_0=T(x-x_0)."></div>
+                <p><strong>Reason.</strong> Every continuity problem at <span data-katex="x_0"></span> is translated to a continuity problem at the origin.</p>
+              </div>
+            </div>
+            <div class="proof-step">
+              <button type="button"><span><span class="proof-number">3</span>Extract one useful neighborhood</span><span>+</span></button>
+              <div class="proof-body">
+                <p>Assume continuity at zero. For output tolerance <span data-katex="1"></span>, choose <span data-katex="\delta>0"></span> such that</p>
+                <div data-katex-display="\|z\|<\delta\Longrightarrow \|Tz\|<1."></div>
+                <p><strong>Strategy.</strong> A single local bound near zero will be rescaled into a global estimate.</p>
+              </div>
+            </div>
+            <div class="proof-step">
+              <button type="button"><span><span class="proof-number">4</span>Normalize an arbitrary vector</span><span>+</span></button>
+              <div class="proof-body">
+                <p>For <span data-katex="x\neq0"></span>, set <span data-katex="z=\frac{\delta}{2\|x\|}x"></span>. Then <span data-katex="\|z\|=\delta/2<\delta"></span>, so <span data-katex="\|Tz\|<1"></span>.</p>
+              </div>
+            </div>
+            <div class="proof-step">
+              <button type="button"><span><span class="proof-number">5</span>Scale back to obtain boundedness</span><span>+</span></button>
+              <div class="proof-body">
+                <div data-katex-display="\frac{\delta}{2\|x\|}\|Tx\|=\|Tz\|<1\quad\Longrightarrow\quad \|Tx\|<\frac{2}{\delta}\|x\|."></div>
+                <p><strong>Conclusion.</strong> The global boundedness constant <span data-katex="C=2/\delta"></span> is independent of <span data-katex="x"></span>.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="card">
+          <div class="card-label">Proof strategy</div>
+          <h3>Local-to-global scaling</h3>
+          <p class="muted" style="margin-top:10px">Linearity supplies homogeneity. Continuity supplies control in one ball around zero. Rescaling sends any vector into that ball and then transports the estimate back.</p>
+          <div class="math-display" data-katex-display="\text{local control at }0+\text{homogeneity}\Longrightarrow\text{global bound}"></div>
+          <div class="status good"><strong>Key insight.</strong> For nonlinear maps, continuity at one point does not generally imply a global Lipschitz estimate.</div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="shell section" id="function-lab">
+      <div class="section-head">
+        <div><div class="eyebrow">6. Function-space laboratory</div><h2>Operators beyond matrices</h2></div>
+        <p>Change the operator and watch its analytic behavior. The derivative example reveals how linearity can survive while boundedness fails.</p>
+      </div>
+      <div class="lab-grid">
+        <aside class="card">
+          <div class="card-label">Choose an operator</div>
+          <div class="control-stack">
+            <div class="control"><label for="operatorSelect"><span>operator</span><span id="operatorBadge">Volterra</span></label>
+              <select id="operatorSelect">
+                <option value="volterra">Volterra integral: Vf(x)=∫₀ˣf(t)dt</option>
+                <option value="multiplication">Multiplication: M_gf=gf</option>
+                <option value="evaluation">Evaluation: Eₐf=f(a)</option>
+                <option value="derivative">Derivative on polynomials: Dp=p′</option>
+              </select>
+            </div>
+            <div class="control"><label for="functionParameter"><span id="parameterSymbol">frequency k</span><span id="functionParameterValue">3</span></label><input id="functionParameter" type="range" min="1" max="20" step="1" value="3"><div class="control-note" id="parameterNote">Input function is sin(kx).</div></div>
+            <div class="control" id="evaluationControl" style="display:none"><label for="evaluationPoint"><span data-katex="a"></span><span id="evaluationPointValue">0.50</span></label><input id="evaluationPoint" type="range" min="0" max="1" step="0.01" value="0.5"><div class="control-note">Point at which the function is sampled.</div></div>
+          </div>
+          <div id="functionOperatorFormula" class="math-display"></div>
+          <div id="functionStatus" class="status good"></div>
+        </aside>
+        <div class="card">
+          <div id="functionPlot" class="plot" aria-label="Input function and operator output"></div>
+          <div class="metric-strip">
+            <div class="metric-cell"><div class="metric-name">input norm</div><div class="metric-value" id="functionInputNorm">1.000</div></div>
+            <div class="metric-cell"><div class="metric-name">output norm</div><div class="metric-value" id="functionOutputNorm">0.667</div></div>
+            <div class="metric-cell"><div class="metric-name">observed ratio</div><div class="metric-value" id="functionRatio">0.667</div></div>
+            <div class="metric-cell"><div class="metric-name">true norm / verdict</div><div class="metric-value" id="functionTrueNorm">1</div></div>
+          </div>
+          <div class="read-box" id="functionReadBox"></div>
+        </div>
+        <aside class="card">
+          <div class="card-label">Analytic diagnosis</div>
+          <div id="functionDiagnosis"></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="shell section" id="matrix-analogy">
+      <div class="section-head">
+        <div><div class="eyebrow">7. Matrix analogy</div><h2>Finite-dimensional intuition, infinite-dimensional caution</h2></div>
+        <p>Matrices are the coordinate representation of linear operators. Several familiar matrix facts extend, while others need stronger hypotheses.</p>
+      </div>
+      <div class="card table-wrap">
+        <table>
+          <thead><tr><th>Matrix language</th><th>Operator language</th><th>Finite-dimensional fact</th><th>Infinite-dimensional caution</th></tr></thead>
+          <tbody>
+            <tr><td><span data-katex="Ax"></span></td><td><span data-katex="Tx"></span></td><td>Every linear map is continuous.</td><td>A linear map may be unbounded.</td></tr>
+            <tr><td>null space</td><td><span data-katex="\ker T"></span></td><td>Dimension is the nullity.</td><td>The kernel may be infinite-dimensional, but is closed when <span data-katex="T"></span> is continuous.</td></tr>
+            <tr><td>column space</td><td><span data-katex="\operatorname{ran}T"></span></td><td>Every subspace is closed.</td><td>The range of a bounded operator need not be closed.</td></tr>
+            <tr><td>largest singular value</td><td><span data-katex="\|T\|"></span></td><td>The supremum is attained on the unit sphere.</td><td>It may fail to be attained.</td></tr>
+            <tr><td>invertible matrix</td><td>bounded bijection</td><td>The inverse is automatically continuous.</td><td>Between Banach spaces, this requires the bounded inverse theorem.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="shell section" id="examples">
+      <div class="section-head">
+        <div><div class="eyebrow">8. Canonical examples</div><h2>A small library of operators</h2></div>
+        <p>Each example isolates one structural feature: exact norm, closed kernel, nonclosed range, or linearity without boundedness.</p>
+      </div>
+      <div class="grid-3">
+        <article class="card example-card">
+          <span class="badge">Canonical</span><h3>Evaluation functional</h3>
+          <div class="math-display" data-katex-display="E_a:C([0,1])\to\mathbb R,\qquad E_a(f)=f(a)."></div>
+          <div class="fact-list">
+            <div class="fact"><span data-katex="|E_a(f)|\leq\|f\|_\infty"></span>, so <span data-katex="\|E_a\|\leq1"></span>.</div>
+            <div class="fact">The constant function <span data-katex="f\equiv1"></span> shows <span data-katex="\|E_a\|=1"></span>.</div>
+            <div class="fact"><span data-katex="\ker E_a=\{f:f(a)=0\}"></span> is a closed hyperplane.</div>
+          </div>
+        </article>
+        <article class="card example-card">
+          <span class="badge">Nontrivial</span><h3>Volterra operator</h3>
+          <div class="math-display" data-katex-display="(Vf)(x)=\int_0^x f(t)\,dt."></div>
+          <div class="fact-list">
+            <div class="fact"><span data-katex="\|Vf\|_\infty\leq\|f\|_\infty"></span>.</div>
+            <div class="fact">Taking <span data-katex="f\equiv1"></span> gives <span data-katex="\|V\|=1"></span>.</div>
+            <div class="fact">The range lies inside continuously differentiable functions vanishing at zero.</div>
+          </div>
+        </article>
+        <article class="card example-card">
+          <span class="badge">Pathological boundary</span><h3>Derivative under the wrong norm</h3>
+          <div class="math-display" data-katex-display="D:\mathcal P([0,1])\to C([0,1]),\qquad Dp=p'."></div>
+          <div class="fact-list">
+            <div class="fact">For <span data-katex="p_n(x)=x^n"></span>, <span data-katex="\|p_n\|_\infty=1"></span>.</div>
+            <div class="fact"><span data-katex="\|Dp_n\|_\infty=n"></span>, so no uniform constant exists.</div>
+            <div class="fact">The operator is linear but not bounded in the sup norm.</div>
+          </div>
+        </article>
+        <article class="card example-card">
+          <span class="badge">Sequence space</span><h3>Right shift</h3>
+          <div class="math-display" data-katex-display="S(x_1,x_2,\ldots)=(0,x_1,x_2,\ldots)."></div>
+          <div class="fact-list">
+            <div class="fact">On <span data-katex="\ell^p"></span>, <span data-katex="\|Sx\|_p=\|x\|_p"></span>.</div>
+            <div class="fact"><span data-katex="\|S\|=1"></span> and <span data-katex="\ker S=\{0\}"></span>.</div>
+            <div class="fact">Its range is the closed subspace of sequences with first coordinate zero.</div>
+          </div>
+        </article>
+        <article class="card example-card">
+          <span class="badge">Multiplication</span><h3>Multiplier operator</h3>
+          <div class="math-display" data-katex-display="M_gf=gf\quad\text{on }C(K)."></div>
+          <div class="fact-list">
+            <div class="fact"><span data-katex="\|M_gf\|_\infty\leq\|g\|_\infty\|f\|_\infty"></span>.</div>
+            <div class="fact"><span data-katex="\|M_g\|=\|g\|_\infty"></span>.</div>
+            <div class="fact">The kernel consists of functions supported on the zero set of <span data-katex="g"></span>.</div>
+          </div>
+        </article>
+        <article class="card example-card">
+          <span class="badge">Nonclosed range</span><h3>Inclusion into <span data-katex="\ell^2"></span></h3>
+          <div class="math-display" data-katex-display="J:\ell^1\hookrightarrow\ell^2,\qquad Jx=x."></div>
+          <div class="fact-list">
+            <div class="fact"><span data-katex="\|x\|_2\leq\|x\|_1"></span>, hence <span data-katex="\|J\|=1"></span>.</div>
+            <div class="fact">Finite-support sequences lie in the range and are dense in <span data-katex="\ell^2"></span>.</div>
+            <div class="fact">The range is not closed because <span data-katex="\ell^1\neq\ell^2"></span>.</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="shell section" id="counterexamples">
+      <div class="section-head">
+        <div><div class="eyebrow">9. What can go wrong?</div><h2>Remove a hypothesis and locate the break</h2></div>
+        <p>The counterexamples are chosen to expose the exact inference that becomes invalid.</p>
+      </div>
+      <div class="card">
+        <div class="counter-tabs">
+          <button class="counter-tab active" data-counter="linear" type="button">Continuous but not linear</button>
+          <button class="counter-tab" data-counter="bounded" type="button">Linear but unbounded</button>
+          <button class="counter-tab" data-counter="range" type="button">Bounded with nonclosed range</button>
+          <button class="counter-tab" data-counter="attainment" type="button">Norm not attained</button>
+        </div>
+
+        <div class="counter-panel active" id="counter-linear">
+          <div class="grid-2">
+            <div>
+              <div class="card-label">Omitted hypothesis</div><h3>Linearity</h3>
+              <div class="math-display" data-katex-display="F:\mathbb R\to\mathbb R,\qquad F(x)=x^2."></div>
+              <p class="muted">The map is continuous at zero but there is no global constant <span data-katex="C"></span> satisfying <span data-katex="|x|^2\leq C|x|"></span> for every <span data-katex="x"></span>.</p>
+            </div>
+            <div class="status bad"><strong>Where the proof breaks.</strong><br>The rescaling identity <span data-katex="F(\lambda x)=\lambda F(x)"></span> is false. Local control cannot be transported globally.</div>
+          </div>
+        </div>
+
+        <div class="counter-panel" id="counter-bounded">
+          <div class="grid-2">
+            <div>
+              <div class="card-label">Failed conclusion</div><h3>Not every linear map is continuous</h3>
+              <div class="math-display" data-katex-display="D:\mathcal P([0,1])\to C([0,1]),\qquad Dp=p'."></div>
+              <p class="muted">With the sup norm, <span data-katex="p_n(x)=x^n"></span> has norm one while <span data-katex="\|Dp_n\|_\infty=n"></span>.</p>
+            </div>
+            <div class="status bad"><strong>Exact failure.</strong><br>The ratios <span data-katex="\|Dp_n\|/\|p_n\|"></span> are unbounded, so the supremum defining <span data-katex="\|D\|"></span> is infinite.</div>
+          </div>
+        </div>
+
+        <div class="counter-panel" id="counter-range">
+          <div class="grid-2">
+            <div>
+              <div class="card-label">False implication</div><h3>Continuous does not imply closed range</h3>
+              <div class="math-display" data-katex-display="J:\ell^1\to\ell^2,\qquad Jx=x."></div>
+              <p class="muted">The operator is bounded, yet <span data-katex="J(\ell^1)"></span> is a proper dense subspace of <span data-katex="\ell^2"></span>.</p>
+            </div>
+            <div class="status warning"><strong>What remains true.</strong><br>The kernel of every continuous linear operator is closed. Closedness of the range is an additional property.</div>
+          </div>
+        </div>
+
+        <div class="counter-panel" id="counter-attainment">
+          <div class="grid-2">
+            <div>
+              <div class="card-label">Finite-dimensional intuition fails</div><h3>The supremum need not be achieved</h3>
+              <div class="math-display" data-katex-display="T:\ell^2\to\ell^2,\qquad T(x_n)=\left(\left(1-\frac1n\right)x_n\right)."></div>
+              <p class="muted">Its norm is <span data-katex="1"></span>, because the diagonal coefficients approach one. But for every nonzero <span data-katex="x"></span>, one has <span data-katex="\|Tx\|_2<\|x\|_2"></span>.</p>
+            </div>
+            <div class="status bad"><strong>Why.</strong><br>The unit sphere of an infinite-dimensional normed space is generally not compact, so a continuous norm-ratio function need not attain its supremum.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="shell section" id="prover">
+      <div class="section-head">
+        <div><div class="eyebrow">10. Guided theorem prover</div><h2>Choose the next valid inference</h2></div>
+        <p>Identify the step that turns continuity at zero into a boundedness estimate.</p>
+      </div>
+      <div class="proof-grid">
+        <div class="card">
+          <div class="card-label">Current state</div>
+          <p>Assume <span data-katex="T:X\to Y"></span> is linear and continuous at zero. We have selected <span data-katex="\delta>0"></span> such that</p>
+          <div class="math-display" data-katex-display="\|z\|<\delta\Longrightarrow\|Tz\|<1."></div>
+          <p>For an arbitrary <span data-katex="x\neq0"></span>, what should we do next?</p>
+          <div class="quiz-options">
+            <button class="proof-option" data-answer="wrong1" type="button">Set <span data-katex="z=\delta x"></span>.</button>
+            <button class="proof-option" data-answer="correct" type="button">Set <span data-katex="z=\frac{\delta}{2\|x\|}x"></span>.</button>
+            <button class="proof-option" data-answer="wrong2" type="button">Choose a new <span data-katex="\delta_x"></span> after observing <span data-katex="x"></span>.</button>
+            <button class="proof-option" data-answer="wrong3" type="button">Assume directly that <span data-katex="\|Tx\|<1"></span>.</button>
+          </div>
+        </div>
+        <aside class="card">
+          <div class="card-label">Feedback</div>
+          <div id="quizFeedback" class="status">Choose an option. The explanation will identify the relevant quantifier or estimate.</div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="shell section" id="mistakes">
+      <div class="section-head">
+        <div><div class="eyebrow">11. Common mistakes</div><h2>Tempting statements that are false</h2></div>
+        <p>Each correction separates algebraic structure from topological structure.</p>
+      </div>
+      <div class="card">
+        <div class="mistake"><div class="wrong">Incorrect: every linear operator is continuous.</div><p class="muted">Correct only when the domain is finite-dimensional. In infinite dimensions, the derivative on polynomials under the sup norm is a standard counterexample.</p></div>
+        <div class="mistake"><div class="wrong">Incorrect: bounded means the set <span data-katex="T(X)"></span> is bounded.</div><p class="muted"><span class="correct">Correct:</span> bounded means bounded on the unit ball, equivalently <span data-katex="\|Tx\|\leq C\|x\|"></span>. A nonzero linear operator has an unbounded full range whenever scalar multiplication is unrestricted.</p></div>
+        <div class="mistake"><div class="wrong">Incorrect: the operator norm is always a maximum.</div><p class="muted"><span class="correct">Correct:</span> it is a supremum. Attainment follows in finite dimensions from compactness of the unit sphere, but may fail in infinite dimensions.</p></div>
+        <div class="mistake"><div class="wrong">Incorrect: a closed kernel implies the operator is continuous.</div><p class="muted"><span class="correct">Correct:</span> continuity implies a closed kernel. The converse fails in general: the unbounded derivative on the polynomial space has the closed kernel of constant polynomials.</p></div>
+        <div class="mistake"><div class="wrong">Incorrect: a bounded operator has closed range.</div><p class="muted"><span class="correct">Correct:</span> the range can be dense and nonclosed, as for <span data-katex="\ell^1\hookrightarrow\ell^2"></span>.</p></div>
+        <div class="mistake"><div class="wrong">Incorrect: continuity must be checked at every point separately.</div><p class="muted"><span class="correct">Correct:</span> for linear maps, continuity at zero is enough because <span data-katex="Tx-Tx_0=T(x-x_0)"></span>.</p></div>
+      </div>
+    </section>
+
+    <section class="shell section" id="summary">
+      <div class="summary-band">
+        <div class="eyebrow">12. Final synthesis</div>
+        <h2 style="text-align:center;margin-top:8px">One structure, five views</h2>
+        <div class="flow-map" style="margin-top:28px">
+          <div class="flow-node">linearity<br><span class="small muted">preserves combinations</span></div>
+          <div class="flow-arrow">+</div>
+          <div class="flow-node">boundedness<br><span class="small muted">controls distortion</span></div>
+          <div class="flow-arrow">⇔</div>
+          <div class="flow-node">continuity<br><span class="small muted">preserves limits</span></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node">operator norm<br><span class="small muted">maximal amplification</span></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node">kernel &amp; range<br><span class="small muted">lost and reachable directions</span></div>
+        </div>
+        <div class="summary-equation" data-katex-display="\boxed{\mathcal L(X,Y)=\{T:X\to Y:T\text{ linear and continuous}\}}"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer shell">Interactive Real Analysis Laboratory · Continuous Linear Operators</footer>
+
+  <script>
+    'use strict';
+
+    const state = {
+      matrix: [[2, -1], [1, 2]],
+      angle: 35,
+      epsilon: 1,
+      deltaFactor: 1,
+      operator: 'volterra',
+      functionParameter: 3,
+      evaluationPoint: 0.5
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    const safeStorage = {
+      get(key) { try { return window.localStorage.getItem(key); } catch (_) { return null; } },
+      set(key, value) { try { window.localStorage.setItem(key, value); } catch (_) { /* storage may be unavailable in restricted contexts */ } }
+    };
+    const fmt = (value, digits = 3) => Number.isFinite(value) ? Number(value).toFixed(digits) : '∞';
+
+    function renderMath(target, latex, displayMode = false) {
+      const el = typeof target === 'string' ? $(target) : target;
+      if (!el || !window.katex) return;
+      katex.render(latex, el, { displayMode, throwOnError: false, strict: 'ignore' });
+    }
+
+    function renderStaticMath(root = document) {
+      root.querySelectorAll('[data-katex]').forEach((el) => renderMath(el, el.dataset.katex, false));
+      root.querySelectorAll('[data-katex-display]').forEach((el) => renderMath(el, el.dataset.katexDisplay, true));
+    }
+
+    function themePlotLayout(extra = {}) {
+      return {
+        paper_bgcolor: css('--surface'),
+        plot_bgcolor: css('--canvas'),
+        font: { color: css('--text'), family: 'Inter, sans-serif' },
+        margin: { l: 48, r: 24, t: 30, b: 44 },
+        xaxis: { gridcolor: css('--grid'), zerolinecolor: css('--axis'), linecolor: css('--axis') },
+        yaxis: { gridcolor: css('--grid'), zerolinecolor: css('--axis'), linecolor: css('--axis') },
+        showlegend: false,
+        hovermode: 'closest',
+        ...extra
+      };
+    }
+
+    function matrixData() {
+      const [[a,b],[c,d]] = state.matrix;
+      const det = a*d - b*c;
+      const s11 = a*a + c*c;
+      const s12 = a*b + c*d;
+      const s22 = b*b + d*d;
+      const trace = s11 + s22;
+      const disc = Math.sqrt(Math.max(0, (s11-s22)*(s11-s22) + 4*s12*s12));
+      const lambdaMax = Math.max(0, (trace + disc)/2);
+      const lambdaMin = Math.max(0, (trace - disc)/2);
+      const sigmaMax = Math.sqrt(lambdaMax);
+      const sigmaMin = Math.sqrt(lambdaMin);
+
+      let vx, vy;
+      if (Math.abs(s12) > 1e-10) {
+        vx = lambdaMax - s22;
+        vy = s12;
+      } else if (s11 >= s22) {
+        vx = 1; vy = 0;
+      } else {
+        vx = 0; vy = 1;
+      }
+      const vnorm = Math.hypot(vx,vy) || 1;
+      vx /= vnorm; vy /= vnorm;
+
+      let kx = -b, ky = a;
+      if (Math.hypot(kx,ky) < 1e-9) { kx = d; ky = -c; }
+      const knorm = Math.hypot(kx,ky);
+      if (knorm > 1e-9) { kx/=knorm; ky/=knorm; }
+
+      return {a,b,c,d,det,sigmaMax,sigmaMin,vx,vy,kx,ky};
+    }
+
+    function multiply(x,y) {
+      const {a,b,c,d} = matrixData();
+      return [a*x+b*y, c*x+d*y];
+    }
+
+    function updateMatrixControls() {
+      const ids = ['a11','a12','a21','a22'];
+      state.matrix = [[Number($(ids[0]).value), Number($(ids[1]).value)], [Number($(ids[2]).value), Number($(ids[3]).value)]];
+      $('a11Value').textContent = fmt(state.matrix[0][0],2);
+      $('a12Value').textContent = fmt(state.matrix[0][1],2);
+      $('a21Value').textContent = fmt(state.matrix[1][0],2);
+      $('a22Value').textContent = fmt(state.matrix[1][1],2);
+      state.angle = Number($('vectorAngle').value);
+      $('vectorAngleValue').textContent = `${state.angle}°`;
+    }
+
+    function drawMatrixLab() {
+      updateMatrixControls();
+      const md = matrixData();
+      const theta = state.angle * Math.PI/180;
+      const x = Math.cos(theta), y = Math.sin(theta);
+      const [tx,ty] = multiply(x,y);
+      const outputNorm = Math.hypot(tx,ty);
+      const t = Array.from({length:241},(_,i)=>2*Math.PI*i/240);
+      const circleX = t.map(Math.cos), circleY = t.map(Math.sin);
+      const imageX = [], imageY = [];
+      t.forEach((u)=>{ const out=multiply(Math.cos(u),Math.sin(u)); imageX.push(out[0]); imageY.push(out[1]); });
+
+      const config = { responsive:true, displayModeBar:false };
+      Plotly.react('domainPlot', [
+        {x:circleX,y:circleY,mode:'lines',line:{color:css('--cyan'),width:3},hoverinfo:'skip'},
+        {x:[0,x],y:[0,y],mode:'lines+markers',line:{color:css('--violet'),width:4},marker:{size:[4,9],color:css('--violet')},hovertemplate:'x=(%{x:.3f}, %{y:.3f})<extra></extra>'},
+        {x:[-md.vx,md.vx],y:[-md.vy,md.vy],mode:'lines',line:{color:css('--amber'),width:2,dash:'dot'},hoverinfo:'skip'}
+      ], themePlotLayout({xaxis:{range:[-1.35,1.35],scaleanchor:'y',scaleratio:1,gridcolor:css('--grid'),zerolinecolor:css('--axis')},yaxis:{range:[-1.35,1.35],gridcolor:css('--grid'),zerolinecolor:css('--axis')},annotations:[{x:md.vx,y:md.vy,text:'max stretch',showarrow:false,font:{color:css('--amber'),size:11},xshift:22,yshift:12}]}), config);
+
+      const range = Math.max(1.5, md.sigmaMax*1.25);
+      const traces = [
+        {x:imageX,y:imageY,mode:'lines',line:{color:css('--teal'),width:3},fill:'toself',fillcolor:'rgba(22,143,136,.08)',hoverinfo:'skip'},
+        {x:[0,tx],y:[0,ty],mode:'lines+markers',line:{color:css('--violet'),width:4},marker:{size:[4,9],color:css('--violet')},hovertemplate:'Ax=(%{x:.3f}, %{y:.3f})<extra></extra>'}
+      ];
+      if (Math.abs(md.det) < 1e-5) {
+        traces.push({x:[-range*md.kx,range*md.kx],y:[-range*md.ky,range*md.ky],mode:'lines',line:{color:css('--danger'),width:2,dash:'dash'},hoverinfo:'skip'});
+      }
+      Plotly.react('imagePlot', traces, themePlotLayout({xaxis:{range:[-range,range],scaleanchor:'y',scaleratio:1,gridcolor:css('--grid'),zerolinecolor:css('--axis')},yaxis:{range:[-range,range],gridcolor:css('--grid'),zerolinecolor:css('--axis')}}), config);
+
+      $('inputNorm').textContent = '1.000';
+      $('outputNorm').textContent = fmt(outputNorm);
+      $('stretchRatio').textContent = fmt(outputNorm);
+      $('operatorNorm').textContent = fmt(md.sigmaMax);
+      renderMath('matrixFormula', String.raw`A=\begin{pmatrix}${fmt(md.a,2)}&${fmt(md.b,2)}\\${fmt(md.c,2)}&${fmt(md.d,2)}\end{pmatrix},\qquad \det A=${fmt(md.det,3)}`, true);
+
+      if (Math.abs(md.det) > 1e-5) {
+        $('matrixStatus').className = 'status good';
+        $('matrixStatus').innerHTML = `<strong>Invertible.</strong><br><span class="muted small">The image ellipse has positive area. Rank is 2, nullity is 0, and every output direction is reachable.</span>`;
+        renderMath('kernelFormula', String.raw`\ker A=\{0\}`, true);
+        renderMath('rangeFormula', String.raw`\operatorname{ran}A=\mathbb R^2`, true);
+      } else if (md.sigmaMax > 1e-8) {
+        $('matrixStatus').className = 'status warning';
+        $('matrixStatus').innerHTML = `<strong>Rank one.</strong><br><span class="muted small">The ellipse has collapsed to a line segment. One input direction is erased.</span>`;
+        renderMath('kernelFormula', String.raw`\ker A=\operatorname{span}\left\{(${fmt(md.kx,2)},${fmt(md.ky,2)})\right\}`, true);
+        const col1Norm = Math.hypot(md.a,md.c), col2Norm = Math.hypot(md.b,md.d);
+        const rx = col1Norm >= col2Norm ? md.a : md.b;
+        const ry = col1Norm >= col2Norm ? md.c : md.d;
+        renderMath('rangeFormula', String.raw`\operatorname{ran}A=\operatorname{span}\left\{(${fmt(rx,2)},${fmt(ry,2)})\right\}`, true);
+      } else {
+        $('matrixStatus').className = 'status bad';
+        $('matrixStatus').innerHTML = `<strong>Zero operator.</strong><br><span class="muted small">Every vector is erased and the range consists only of the origin.</span>`;
+        renderMath('kernelFormula', String.raw`\ker A=\mathbb R^2`, true);
+        renderMath('rangeFormula', String.raw`\operatorname{ran}A=\{0\}`, true);
+      }
+      drawContinuityLab();
+    }
+
+    function drawContinuityLab() {
+      const md = matrixData();
+      state.epsilon = Number($('epsilon').value);
+      state.deltaFactor = Number($('deltaFactor').value);
+      $('epsilonValue').textContent = fmt(state.epsilon,2);
+      $('deltaFactorValue').textContent = fmt(state.deltaFactor,2);
+      const canonical = md.sigmaMax > 1e-12 ? state.epsilon/md.sigmaMax : state.epsilon;
+      const delta = state.deltaFactor * canonical;
+      const imageRadius = md.sigmaMax * delta;
+      renderMath('deltaFormula', md.sigmaMax > 1e-12
+        ? String.raw`\delta=${fmt(state.deltaFactor,2)}\frac{\varepsilon}{\|A\|_2}=${fmt(delta,3)}`
+        : String.raw`A=0,\qquad \delta\text{ may be any positive number}`, true);
+
+      const success = imageRadius <= state.epsilon + 1e-9;
+      $('continuityStatus').className = success ? 'status good' : 'status bad';
+      $('continuityStatus').innerHTML = success
+        ? `<strong>Success.</strong><br><span class="muted small">The worst possible output norm is ${fmt(imageRadius,3)}, which does not exceed ε=${fmt(state.epsilon,3)}.</span>`
+        : `<strong>Failure.</strong><br><span class="muted small">The chosen input radius allows output norm ${fmt(imageRadius,3)} > ε=${fmt(state.epsilon,3)}. A maximal-stretch direction escapes.</span>`;
+
+      const t = Array.from({length:241},(_,i)=>2*Math.PI*i/240);
+      const inputX=t.map(u=>delta*Math.cos(u)), inputY=t.map(u=>delta*Math.sin(u));
+      const imageX=[],imageY=[];
+      t.forEach(u=>{const v=multiply(delta*Math.cos(u),delta*Math.sin(u));imageX.push(v[0]);imageY.push(v[1]);});
+      const epsX=t.map(u=>state.epsilon*Math.cos(u)),epsY=t.map(u=>state.epsilon*Math.sin(u));
+      const range=Math.max(state.epsilon*1.35,imageRadius*1.2,1);
+      Plotly.react('continuityPlot',[
+        {x:epsX,y:epsY,mode:'lines',line:{color:css('--violet'),width:3},fill:'toself',fillcolor:'rgba(117,103,199,.05)',name:'output ε-ball',hoverinfo:'skip'},
+        {x:imageX,y:imageY,mode:'lines',line:{color:success?css('--teal'):css('--danger'),width:3},fill:'toself',fillcolor:success?'rgba(22,143,136,.08)':'rgba(183,76,76,.08)',name:'image of δ-ball',hoverinfo:'skip'},
+        {x:inputX,y:inputY,mode:'lines',line:{color:css('--cyan'),width:2,dash:'dash'},name:'input δ-ball',hoverinfo:'skip'}
+      ],themePlotLayout({xaxis:{range:[-range,range],scaleanchor:'y',scaleratio:1,gridcolor:css('--grid'),zerolinecolor:css('--axis')},yaxis:{range:[-range,range],gridcolor:css('--grid'),zerolinecolor:css('--axis')},showlegend:true,legend:{orientation:'h',x:0,y:1.12}}),{responsive:true,displayModeBar:false});
+    }
+
+    function linspace(a,b,n) { return Array.from({length:n},(_,i)=>a+(b-a)*i/(n-1)); }
+    function supAbs(values) { return Math.max(...values.map(v=>Math.abs(v))); }
+
+    function updateFunctionControls() {
+      state.operator = $('operatorSelect').value;
+      state.functionParameter = Number($('functionParameter').value);
+      state.evaluationPoint = Number($('evaluationPoint').value);
+      $('functionParameterValue').textContent = String(state.functionParameter);
+      $('evaluationPointValue').textContent = fmt(state.evaluationPoint,2);
+      const names = {volterra:'Volterra',multiplication:'Multiplier',evaluation:'Evaluation',derivative:'Derivative'};
+      $('operatorBadge').textContent = names[state.operator];
+      $('evaluationControl').style.display = state.operator === 'evaluation' ? 'block' : 'none';
+      if (state.operator === 'derivative') {
+        $('parameterSymbol').textContent = 'degree n';
+        $('parameterNote').textContent = 'Input polynomial is pₙ(x)=xⁿ.';
+      } else {
+        $('parameterSymbol').textContent = 'frequency k';
+        $('parameterNote').textContent = 'Input function is sin(kπx).';
+      }
+    }
+
+    function drawFunctionLab() {
+      updateFunctionControls();
+      const x = linspace(0,1,401);
+      const n = state.functionParameter;
+      let input, output, outputX=x, formula, statusClass='good', statusHTML='', trueNorm='1', diagnosis='', read='';
+
+      if (state.operator === 'volterra') {
+        input = x.map(t=>Math.sin(n*Math.PI*t));
+        output = x.map(t=>(1-Math.cos(n*Math.PI*t))/(n*Math.PI));
+        formula = String.raw`(Vf)(x)=\int_0^x f(t)\,dt,\qquad \|V\|=1`;
+        statusHTML = `<strong>Bounded.</strong><br><span class="muted small">For every x, |Vf(x)|≤x‖f‖∞≤‖f‖∞. The constant function 1 attains the norm.</span>`;
+        diagnosis = `<h3>Integration smooths.</h3><p class="muted" style="margin-top:10px">Higher-frequency oscillations cancel inside the integral. The displayed sine usually experiences much less than the worst-case amplification.</p><div class="formal-box"><div class="box-title">Estimate</div><div id="diagMath"></div></div>`;
+        read = `<div class="box-title">Read the diagram</div>The cyan graph is f(x)=sin(kπx). The teal graph is its accumulated integral. Cancellation makes the output small when frequency increases.`;
+      } else if (state.operator === 'multiplication') {
+        input = x.map(t=>Math.sin(n*Math.PI*t));
+        const g=x.map(t=>0.5+1.5*t);
+        output = input.map((v,i)=>g[i]*v);
+        formula = String.raw`(M_gf)(x)=g(x)f(x),\qquad g(x)=\tfrac12+\tfrac32x,\qquad \|M_g\|=2`;
+        trueNorm='2';
+        statusHTML = `<strong>Bounded.</strong><br><span class="muted small">Pointwise multiplication gives ‖gf‖∞≤‖g‖∞‖f‖∞. Here ‖g‖∞=2.</span>`;
+        diagnosis = `<h3>Local amplification.</h3><p class="muted" style="margin-top:10px">The multiplier is weakest near x=0 and strongest near x=1. The operator norm is the largest magnitude of g.</p><div class="formal-box"><div class="box-title">Exact norm</div><div id="diagMath"></div></div>`;
+        read = `<div class="box-title">Read the diagram</div>The cyan graph is f. The teal graph is gf. Its vertical scaling changes with x because the multiplier g is not constant.`;
+      } else if (state.operator === 'evaluation') {
+        input = x.map(t=>Math.sin(n*Math.PI*t));
+        const idx=Math.round(state.evaluationPoint*(x.length-1));
+        outputX=[state.evaluationPoint]; output=[input[idx]];
+        formula = String.raw`E_a(f)=f(a),\qquad a=${fmt(state.evaluationPoint,2)},\qquad \|E_a\|=1`;
+        statusHTML = `<strong>Bounded functional.</strong><br><span class="muted small">The output is a scalar and |f(a)|≤‖f‖∞. Constant functions show that the norm equals 1.</span>`;
+        diagnosis = `<h3>A function becomes one number.</h3><p class="muted" style="margin-top:10px">The kernel is the closed hyperplane of functions vanishing at a. The range is all of ℝ.</p><div class="formal-box"><div class="box-title">Kernel</div><div id="diagMath"></div></div>`;
+        read = `<div class="box-title">Read the diagram</div>The cyan curve is f. The violet marker is the sampled point (a,f(a)). The operator output is the marker's vertical coordinate.`;
+      } else {
+        input = x.map(t=>Math.pow(t,n));
+        output = x.map(t=>n*Math.pow(t,Math.max(0,n-1)));
+        formula = String.raw`p_n(x)=x^n,\qquad Dp_n(x)=nx^{n-1}`;
+        statusClass='bad'; trueNorm='unbounded';
+        statusHTML = `<strong>Unbounded in the sup norm.</strong><br><span class="muted small">The input norm remains 1 while the derivative norm equals n. Increasing the degree defeats every proposed bound.</span>`;
+        diagnosis = `<h3>Linearity is not enough.</h3><p class="muted" style="margin-top:10px">Differentiation magnifies increasingly narrow changes near x=1. The ratios n diverge.</p><div class="formal-box"><div class="box-title">Counterexample sequence</div><div id="diagMath"></div></div>`;
+        read = `<div class="box-title">Read the diagram</div>The cyan graph xⁿ remains inside the unit sup ball. The teal derivative reaches height n at x=1, revealing unbounded amplification.`;
+      }
+
+      const inNorm=supAbs(input), outNorm=supAbs(output), ratio=inNorm>0?outNorm/inNorm:0;
+      const traces=[{x,y:input,mode:'lines',line:{color:css('--cyan'),width:3},name:'input f',hovertemplate:'x=%{x:.3f}<br>f=%{y:.3f}<extra></extra>'}];
+      if (state.operator==='evaluation') {
+        traces.push({x:outputX,y:output,mode:'markers',marker:{color:css('--violet'),size:12,line:{color:css('--surface'),width:2}},name:'f(a)',hovertemplate:'a=%{x:.3f}<br>f(a)=%{y:.3f}<extra></extra>'});
+      } else {
+        traces.push({x:outputX,y:output,mode:'lines',line:{color:state.operator==='derivative'?css('--danger'):css('--teal'),width:3},name:'output Tf',hovertemplate:'x=%{x:.3f}<br>Tf=%{y:.3f}<extra></extra>'});
+      }
+      Plotly.react('functionPlot',traces,themePlotLayout({showlegend:true,legend:{orientation:'h',x:0,y:1.12},xaxis:{title:'x',gridcolor:css('--grid'),zerolinecolor:css('--axis')},yaxis:{title:'value',gridcolor:css('--grid'),zerolinecolor:css('--axis')}}),{responsive:true,displayModeBar:false});
+
+      renderMath('functionOperatorFormula',formula,true);
+      $('functionStatus').className=`status ${statusClass}`;
+      $('functionStatus').innerHTML=statusHTML;
+      $('functionInputNorm').textContent=fmt(inNorm);
+      $('functionOutputNorm').textContent=fmt(outNorm);
+      $('functionRatio').textContent=fmt(ratio);
+      $('functionTrueNorm').textContent=trueNorm;
+      $('functionDiagnosis').innerHTML=diagnosis;
+      $('functionReadBox').innerHTML=read;
+
+      if (state.operator==='volterra') renderMath('diagMath',String.raw`\|Vf\|_\infty\leq\|f\|_\infty`,true);
+      if (state.operator==='multiplication') renderMath('diagMath',String.raw`\|M_g\|=\sup_{x\in[0,1]}|g(x)|=2`,true);
+      if (state.operator==='evaluation') renderMath('diagMath',String.raw`\ker E_a=\{f\in C([0,1]):f(a)=0\}`,true);
+      if (state.operator==='derivative') renderMath('diagMath',String.raw`\frac{\|Dp_n\|_\infty}{\|p_n\|_\infty}=n\longrightarrow\infty`,true);
+      renderStaticMath($('functionDiagnosis'));
+      renderStaticMath($('functionReadBox'));
+    }
+
+    function bindProofSteps() {
+      document.querySelectorAll('.proof-step > button').forEach((button)=>{
+        button.addEventListener('click',()=>{
+          const step=button.parentElement;
+          step.classList.toggle('open');
+          button.lastElementChild.textContent=step.classList.contains('open')?'−':'+';
+        });
+      });
+    }
+
+    function bindDependencyMap() {
+      const details={
+        bounded:'Boundedness gives the Lipschitz estimate ‖Tx−Ty‖≤‖T‖‖x−y‖.',
+        zero:'Continuity at zero supplies one controlled input ball. This is the only point at which continuity must be assumed.',
+        global:'Linearity translates x−x₀ to the origin, so continuity at zero implies continuity at every x₀.',
+        recover:'Normalize any nonzero vector into the controlled ball, apply the local estimate, and scale back.'
+      };
+      document.querySelectorAll('[data-node]').forEach(node=>node.addEventListener('click',()=>{
+        $('dependencyDetail').innerHTML=`<strong>${details[node.dataset.node]}</strong>`;
+      }));
+    }
+
+    function bindCounterTabs() {
+      document.querySelectorAll('.counter-tab').forEach(tab=>tab.addEventListener('click',()=>{
+        document.querySelectorAll('.counter-tab').forEach(t=>t.classList.remove('active'));
+        document.querySelectorAll('.counter-panel').forEach(p=>p.classList.remove('active'));
+        tab.classList.add('active');
+        $(`counter-${tab.dataset.counter}`).classList.add('active');
+      }));
+    }
+
+    function bindQuiz() {
+      document.querySelectorAll('.proof-option').forEach(option=>option.addEventListener('click',()=>{
+        document.querySelectorAll('.proof-option').forEach(o=>o.classList.remove('correct-choice','wrong-choice'));
+        const answer=option.dataset.answer;
+        if (answer==='correct') {
+          option.classList.add('correct-choice');
+          $('quizFeedback').className='status good';
+          $('quizFeedback').innerHTML='<strong>Correct.</strong><br>The normalization guarantees ‖z‖=δ/2<δ for every nonzero x. Linearity then converts the local estimate into a bound proportional to ‖x‖.';
+        } else {
+          option.classList.add('wrong-choice');
+          $('quizFeedback').className='status bad';
+          const messages={
+            wrong1:'The norm of δx is δ‖x‖, which need not be smaller than δ. Large x may lie outside the controlled ball.',
+            wrong2:'Continuity requires one δ for all inputs satisfying the premise. Allowing δ to depend on x reverses the quantifier dependency.',
+            wrong3:'The estimate ‖Tx‖<1 is known only for inputs inside the δ-ball; applying it directly to arbitrary x assumes the desired conclusion.'
+          };
+          $('quizFeedback').innerHTML=`<strong>Invalid inference.</strong><br>${messages[answer]}`;
+        }
+      }));
+    }
+
+    function setTheme(theme) {
+      document.documentElement.dataset.theme=theme;
+      safeStorage.set('continuous-operators-theme',theme);
+      setTimeout(()=>{drawMatrixLab();drawFunctionLab();},20);
+    }
+
+    function resetAll() {
+      const defaults={a11:2,a12:-1,a21:1,a22:2,vectorAngle:35,epsilon:1,deltaFactor:1,functionParameter:3,evaluationPoint:.5};
+      Object.entries(defaults).forEach(([id,val])=>{if($(id))$(id).value=val;});
+      $('operatorSelect').value='volterra';
+      drawMatrixLab(); drawFunctionLab();
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    function bindControls() {
+      ['a11','a12','a21','a22','vectorAngle'].forEach(id=>$(id).addEventListener('input',drawMatrixLab));
+      ['epsilon','deltaFactor'].forEach(id=>$(id).addEventListener('input',drawContinuityLab));
+      ['operatorSelect','functionParameter','evaluationPoint'].forEach(id=>$(id).addEventListener('input',drawFunctionLab));
+      $('alignMax').addEventListener('click',()=>{
+        const md=matrixData();
+        let angle=Math.atan2(md.vy,md.vx)*180/Math.PI;
+        if(angle<0)angle+=360;
+        $('vectorAngle').value=angle;
+        drawMatrixLab();
+      });
+      $('makeSingular').addEventListener('click',()=>{
+        const a=Number($('a11').value), b=Number($('a12').value);
+        $('a21').value=(.5*a).toFixed(2);
+        $('a22').value=(.5*b).toFixed(2);
+        drawMatrixLab();
+      });
+      $('themeToggle').addEventListener('click',()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));
+      $('resetAll').addEventListener('click',resetAll);
+    }
+
+    window.addEventListener('DOMContentLoaded',()=>{
+      const saved=safeStorage.get('continuous-operators-theme');
+      const preferred=saved||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+      document.documentElement.dataset.theme=preferred;
+      renderStaticMath();
+      bindControls(); bindProofSteps(); bindDependencyMap(); bindCounterTabs(); bindQuiz();
+      drawMatrixLab(); drawFunctionLab();
+      window.addEventListener('resize',()=>{
+        if(window.Plotly){
+          ['domainPlot','imagePlot','continuityPlot','functionPlot'].forEach(id=>{if($(id))Plotly.Plots.resize($(id));});
+        }
+      });
+    });
+  </script>
+</body>
+</html>

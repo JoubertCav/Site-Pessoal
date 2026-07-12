@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Interactive laboratory for supporting hyperplanes, normal cones, exposed faces, and convex optimization geometry." />
+  <title>Supporting Hyperplanes — Interactive Convex Geometry Laboratory</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    :root{
+      --bg:#f7f9f8;--surface:rgba(255,255,255,.97);--surface-2:#eef5f5;--surface-3:#e4edef;
+      --text:#172126;--muted:#617178;--line:#d4dfe1;--cyan:#00a8c6;--cyan-deep:#087f98;
+      --teal:#168f88;--violet:#7567c7;--amber:#b57a20;--danger:#b74c4c;--success:#147d64;
+      --shadow:0 18px 52px rgba(37,56,64,.09);--radius:22px;--canvas:#fff;--axis:#65787e;
+      --grid:#dce6e8;--focus:rgba(0,168,198,.23)
+    }
+    html[data-theme="dark"]{
+      --bg:#121a20;--surface:rgba(27,38,46,.97);--surface-2:#213039;--surface-3:#273942;
+      --text:#edf5f6;--muted:#a8b8bd;--line:#344750;--cyan:#44c9e1;--cyan-deep:#7ed9e8;
+      --teal:#58c4b9;--violet:#aaa0e6;--amber:#e3b35d;--danger:#ef8989;--success:#68d0ad;
+      --shadow:0 18px 52px rgba(0,0,0,.25);--canvas:#17232a;--axis:#9bb0b7;--grid:#30424a;
+      --focus:rgba(68,201,225,.22)
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;color:var(--text);
+      background:
+        radial-gradient(circle at 7% 0%,rgba(0,168,198,.085),transparent 29rem),
+        radial-gradient(circle at 100% 17%,rgba(117,103,199,.065),transparent 32rem),
+        var(--bg);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.65;transition:background .25s ease,color .25s ease
+    }
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    .shell{width:min(1480px,calc(100% - 32px));margin:0 auto}
+    .topbar{
+      position:sticky;top:0;z-index:50;border-bottom:1px solid color-mix(in srgb,var(--line) 84%,transparent);
+      backdrop-filter:blur(18px);background:color-mix(in srgb,var(--bg) 82%,transparent)
+    }
+    .topbar-inner{min-height:68px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:-.02em}
+    .brand-mark{
+      width:34px;height:34px;border:1px solid var(--cyan);border-radius:11px;display:grid;place-items:center;
+      box-shadow:inset 0 0 0 6px color-mix(in srgb,var(--cyan) 10%,transparent)
+    }
+    .brand-mark::before{content:"N";color:var(--cyan-deep);font-family:"Libre Baskerville",serif;font-weight:700}
+    .top-actions{display:flex;gap:9px;align-items:center}
+    .icon-button,.ghost-button,.primary-button,.segmented button,.proof-option,.counter-tab,.map-node{
+      border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:12px;
+      min-height:40px;padding:9px 13px;transition:transform .18s ease,border-color .18s ease,background .18s ease
+    }
+    .icon-button:hover,.ghost-button:hover,.segmented button:hover,.proof-option:hover,.counter-tab:hover,.map-node:hover{
+      transform:translateY(-1px);border-color:var(--cyan)
+    }
+    .primary-button{background:var(--cyan);color:#062e37;font-weight:700;border-color:transparent}
+    .primary-button:hover{transform:translateY(-1px);filter:brightness(1.03)}
+    h1,h2,h3,.serif{font-family:"Libre Baskerville",Georgia,serif;letter-spacing:-.025em}
+    h1{font-size:clamp(2.65rem,5.8vw,5.15rem);line-height:1.03;margin:12px 0 20px}
+    h2{font-size:clamp(2rem,4vw,3.15rem);line-height:1.14;margin:0}
+    h3{font-size:1.2rem;margin:0}
+    p{margin:0}
+    .hero{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(360px,.92fr);gap:30px;padding:70px 0 46px;align-items:center}
+    .eyebrow{color:var(--cyan-deep);font-weight:700;text-transform:uppercase;letter-spacing:.14em;font-size:.78rem}
+    .hero p{color:var(--muted);max-width:850px;font-size:clamp(1.02rem,1.8vw,1.24rem)}
+    .hero-chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:28px}
+    .chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);padding:8px 11px;border-radius:999px;color:var(--muted);font-size:.9rem}
+    .chip::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--cyan)}
+    .hero-map{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:28px;padding:22px;min-height:420px;overflow:hidden}
+    .hero-svg{width:100%;height:370px;display:block}
+    .section{padding:72px 0}
+    .section-head{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:27px}
+    .section-head p{color:var(--muted);max-width:780px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+    .grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+    .lab-grid{display:grid;grid-template-columns:minmax(285px,.78fr) minmax(0,1.42fr) minmax(300px,.92fr);gap:20px;align-items:start}
+    .proof-grid{display:grid;grid-template-columns:minmax(0,1.22fr) minmax(300px,.78fr);gap:20px}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;min-width:0}
+    .card.soft{background:var(--surface-2);box-shadow:none}
+    .card h3+p{margin-top:9px;color:var(--muted)}
+    .card-label{color:var(--cyan-deep);font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;font-weight:700;margin-bottom:10px}
+    .muted{color:var(--muted)}.small{font-size:.9rem}
+    .definition-card{padding:30px;border-left:4px solid var(--cyan)}
+    .math-display{margin:18px 0;overflow-x:auto;overflow-y:hidden;padding:8px 2px}
+    .katex-display{margin:.72em 0!important}
+    .katex{max-width:100%}
+    .notation-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}
+    .notation-item{border:1px solid var(--line);background:var(--surface-2);border-radius:14px;padding:13px}
+    .notation-item strong{display:block;margin-bottom:6px;color:var(--cyan-deep)}
+    .flow-map{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;margin-top:18px}
+    .flow-node{border:1px solid var(--line);background:var(--surface-2);border-radius:14px;padding:12px 14px;min-width:150px;text-align:center}
+    .flow-node.clickable{cursor:pointer}
+    .flow-node.clickable:hover{border-color:var(--cyan)}
+    .flow-arrow{color:var(--cyan-deep);font-size:1.4rem}
+    .control-stack{display:grid;gap:16px}
+    .control label{display:flex;justify-content:space-between;gap:12px;align-items:baseline;font-weight:600;margin-bottom:7px}
+    .control label span:last-child{color:var(--cyan-deep);font-variant-numeric:tabular-nums}
+    input[type="range"]{width:100%;accent-color:var(--cyan)}
+    select{width:100%;min-height:43px;border-radius:11px;border:1px solid var(--line);background:var(--surface);color:var(--text);padding:8px 10px}
+    .control-note{color:var(--muted);font-size:.82rem;margin-top:5px}
+    .metric-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
+    .metric-strip.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .metric-cell{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:13px;text-align:center}
+    .metric-name{color:var(--muted);font-size:.79rem;text-transform:uppercase;letter-spacing:.06em}
+    .metric-value{font-size:1.16rem;font-weight:700;color:var(--cyan-deep);font-variant-numeric:tabular-nums}
+    .status{border-radius:14px;padding:14px;border:1px solid var(--line);background:var(--surface-2)}
+    .status.good{border-color:color-mix(in srgb,var(--success) 55%,var(--line));background:color-mix(in srgb,var(--success) 9%,var(--surface))}
+    .status.warning{border-color:color-mix(in srgb,var(--amber) 55%,var(--line));background:color-mix(in srgb,var(--amber) 8%,var(--surface))}
+    .status.bad{border-color:color-mix(in srgb,var(--danger) 55%,var(--line));background:color-mix(in srgb,var(--danger) 8%,var(--surface))}
+    .diagram-shell{background:var(--canvas);border:1px solid var(--line);border-radius:18px;overflow:hidden;min-height:500px}
+    .diagram-shell svg{display:block;width:100%;height:auto;min-height:500px;touch-action:none}
+    .legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;color:var(--muted);font-size:.86rem}
+    .legend span{display:flex;align-items:center;gap:7px}
+    .legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+    .proof-steps{display:grid;gap:10px}
+    .proof-step{border:1px solid var(--line);background:var(--surface);border-radius:15px;overflow:hidden}
+    .proof-step>button{width:100%;border:0;background:transparent;color:var(--text);display:flex;justify-content:space-between;gap:14px;padding:15px;text-align:left;font-weight:700}
+    .proof-body{display:none;border-top:1px solid var(--line);padding:0 16px 17px;color:var(--muted)}
+    .proof-step.open .proof-body{display:block}
+    .proof-number{display:inline-grid;place-items:center;width:26px;height:26px;margin-right:10px;border-radius:8px;background:var(--surface-2);color:var(--cyan-deep)}
+    .quiz-options{display:grid;gap:10px;margin-top:14px}
+    .proof-option{text-align:left}
+    .proof-option.correct{border-color:var(--success);background:color-mix(in srgb,var(--success) 10%,var(--surface))}
+    .proof-option.wrong{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 9%,var(--surface))}
+    .counter-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+    .counter-tab.active{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 9%,var(--surface))}
+    .counter-content{display:none}.counter-content.active{display:block}
+    .mistake{border-top:1px solid var(--line);padding:16px 0}.mistake:first-child{border-top:0;padding-top:0}
+    .mistake strong{color:var(--danger)}
+    .cone-swatch{height:14px;border-radius:999px;background:linear-gradient(90deg,var(--violet),var(--teal));margin-top:12px}
+    .footer{padding:38px 0 54px;color:var(--muted);border-top:1px solid var(--line)}
+    @media(max-width:1120px){
+      .hero,.lab-grid,.proof-grid{grid-template-columns:1fr}
+      .hero-map{min-height:360px}.hero-svg{height:320px}
+      .grid-4,.notation-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media(max-width:760px){
+      .shell{width:min(100% - 20px,1480px)}
+      .topbar-inner{min-height:60px}.brand span:last-child{display:none}
+      .hero{padding-top:46px}.section{padding:52px 0}
+      .grid-2,.grid-3,.grid-4,.notation-grid,.metric-strip,.metric-strip.four{grid-template-columns:1fr}
+      .section-head{align-items:start;flex-direction:column}
+      .card{padding:18px}.definition-card{padding:22px}
+      .diagram-shell,.diagram-shell svg{min-height:420px}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>Supporting Hyperplanes Laboratory</span></div>
+      <div class="top-actions">
+        <button class="ghost-button" id="scrollToLab">Open laboratory</button>
+        <button class="icon-button" id="themeToggle" aria-label="Toggle light and dark mode">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="shell hero">
+      <div>
+        <div class="eyebrow">Interactive convex analysis</div>
+        <h1>Supporting hyperplanes</h1>
+        <p>A support direction \(u\) turns a boundary point into an optimization certificate. Rotate the normal, inspect the exposed face, and see how the normal cone collects every linear objective optimized at the same boundary point.</p>
+        <div class="hero-chips">
+          <span class="chip">boundary support</span><span class="chip">normal cones</span><span class="chip">exposed faces</span><span class="chip">support functions</span><span class="chip">optimization geometry</span>
+        </div>
+      </div>
+      <div class="hero-map" aria-label="Supporting hyperplane illustration">
+        <svg class="hero-svg" viewBox="0 0 540 370" role="img">
+          <defs><pattern id="heroGrid" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M 36 0 L 0 0 0 36" fill="none" stroke="var(--grid)" stroke-width="1"/></pattern></defs>
+          <rect x="0" y="0" width="540" height="370" rx="18" fill="var(--canvas)"/>
+          <rect x="0" y="0" width="540" height="370" rx="18" fill="url(#heroGrid)"/>
+          <polygon points="85,278 76,132 206,62 398,87 468,215 352,307 176,320" fill="color-mix(in srgb,var(--cyan) 17%,transparent)" stroke="var(--cyan)" stroke-width="3"/>
+          <line x1="275" y1="18" x2="492" y2="345" stroke="var(--violet)" stroke-width="4"/>
+          <line x1="397" y1="87" x2="340" y2="1" stroke="var(--amber)" stroke-width="4"/>
+          <circle cx="398" cy="87" r="10" fill="var(--teal)" stroke="var(--canvas)" stroke-width="3"/>
+          <path d="M398 87 L338 34 A74 74 0 0 1 466 66 Z" fill="color-mix(in srgb,var(--violet) 18%,transparent)" stroke="var(--violet)" stroke-width="2"/>
+          <text x="270" y="352" text-anchor="middle" fill="var(--muted)" font-family="Inter" font-size="15">the supporting normals at one vertex form a cone</text>
+        </svg>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">1 · Formal objects</div><h2>Support, exposed faces, and normal cones</h2></div>
+          <p>Three definitions describe the same geometry from complementary directions: a hyperplane, its maximizing face, and the cone of objective vectors that select it.</p>
+        </div>
+        <div class="grid-3">
+          <article class="card">
+            <div class="card-label">Supporting hyperplane</div>
+            <div class="math-display" data-math="C\subseteq\{x:\langle u,x\rangle\le\alpha\},\qquad C\cap H(u,\alpha)\neq\varnothing" data-display="true"></div>
+            <p class="muted">The set lies in one closed half-space and touches the hyperplane.</p>
+          </article>
+          <article class="card">
+            <div class="card-label">Exposed face</div>
+            <div class="math-display" data-math="F_C(u)=\operatorname*{arg\,max}_{x\in C}\langle u,x\rangle" data-display="true"></div>
+            <p class="muted">The contact set may be one point, an edge, or a higher-dimensional face.</p>
+          </article>
+          <article class="card">
+            <div class="card-label">Normal cone</div>
+            <div class="math-display" data-math="N_C(x)=\{u:\langle u,y-x\rangle\le0\ \forall y\in C\}" data-display="true"></div>
+            <p class="muted">Every vector in the cone defines a supporting hyperplane at \(x\).</p>
+          </article>
+        </div>
+        <div class="notation-grid">
+          <div class="notation-item"><strong><span data-math="h_C(u)"></span></strong>support function</div>
+          <div class="notation-item"><strong><span data-math="F_C(u)"></span></strong>exposed face</div>
+          <div class="notation-item"><strong><span data-math="N_C(x)"></span></strong>normal cone</div>
+          <div class="notation-item"><strong><span data-math="T_C(x)"></span></strong>tangent cone</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="supportLab">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">2 · Support-direction laboratory</div><h2>Rotate the objective and reveal the exposed face</h2></div><p>The level set \(\langle u,x\rangle=h_C(u)\) slides until it first touches the convex set.</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Support controls</div>
+            <div class="control-stack">
+              <div class="control">
+                <label for="supportShape">Convex set</label>
+                <select id="supportShape">
+                  <option value="square">Square</option>
+                  <option value="pentagon">Irregular pentagon</option>
+                  <option value="triangle">Triangle</option>
+                  <option value="disk">Disk</option>
+                  <option value="ellipse">Ellipse</option>
+                </select>
+              </div>
+              <div class="control"><label for="supportAngle"><span data-math="\theta"></span><span id="supportAngleVal">28°</span></label><input id="supportAngle" type="range" min="0" max="359" step="1" value="28"></div>
+              <label class="toggle-line"><input id="showLevelSets" type="checkbox" checked>show parallel level sets</label>
+              <label class="toggle-line"><input id="showNormalVector" type="checkbox" checked>show normal vector</label>
+              <label class="toggle-line"><input id="shadeHalfspace" type="checkbox" checked>shade supporting half-space</label>
+              <button id="snapSupport" class="ghost-button">Snap to an edge normal</button>
+              <button id="rotateSupport" class="ghost-button">Rotate continuously</button>
+            </div>
+          </aside>
+
+          <article class="card">
+            <div class="diagram-shell"><svg id="supportSvg" viewBox="0 0 800 520" aria-label="Supporting line and exposed face"></svg></div>
+            <div class="legend">
+              <span><i style="background:var(--cyan)"></i>convex set</span>
+              <span><i style="background:var(--teal)"></i>exposed face</span>
+              <span><i style="background:var(--violet)"></i>supporting hyperplane</span>
+              <span><i style="background:var(--amber)"></i>normal vector</span>
+            </div>
+          </article>
+
+          <aside class="card">
+            <div class="card-label">Support calculation</div>
+            <div id="supportFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">support value</div><div class="metric-value" id="supportValue">—</div></div>
+              <div class="metric-cell"><div class="metric-name">face dimension</div><div class="metric-value" id="supportFaceDim">—</div></div>
+              <div class="metric-cell"><div class="metric-name">unique maximizer?</div><div class="metric-value" id="uniqueMax">—</div></div>
+              <div class="metric-cell"><div class="metric-name">support point count</div><div class="metric-value" id="supportCount">—</div></div>
+            </div>
+            <div id="supportStatus" class="status good" style="margin-top:14px"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="normalConeLab">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">3 · Normal-cone laboratory</div><h2>Select a boundary point and inspect all supporting normals</h2></div><p>At a smooth point the cone is one ray. Along an edge it is also one ray. At a vertex it opens into a genuine angular cone.</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Boundary-point controls</div>
+            <div class="control-stack">
+              <div class="control">
+                <label for="coneShape">Convex set</label>
+                <select id="coneShape">
+                  <option value="square">Square</option>
+                  <option value="pentagon">Pentagon</option>
+                  <option value="disk">Disk</option>
+                </select>
+              </div>
+              <div class="control"><label for="boundaryParam"><span data-math="s"></span><span id="boundaryParamVal">0.00</span></label><input id="boundaryParam" type="range" min="0" max="1" step=".002" value="0"></div>
+              <div class="control"><label for="candidateNormal"><span data-math="\phi"></span><span id="candidateNormalVal">45°</span></label><input id="candidateNormal" type="range" min="0" max="359" step="1" value="45"></div>
+              <label class="toggle-line"><input id="showTangentCone" type="checkbox" checked>show tangent cone</label>
+              <label class="toggle-line"><input id="showCandidateHyperplane" type="checkbox" checked>test candidate normal</label>
+              <button id="jumpVertex" class="ghost-button">Jump to a vertex</button>
+              <button id="jumpEdge" class="ghost-button">Jump to an edge interior</button>
+            </div>
+          </aside>
+
+          <article class="card">
+            <div class="diagram-shell"><svg id="coneSvg" viewBox="0 0 800 520" aria-label="Normal and tangent cones at a boundary point"></svg></div>
+            <div class="legend">
+              <span><i style="background:var(--cyan)"></i>convex set</span>
+              <span><i style="background:var(--violet)"></i>normal cone</span>
+              <span><i style="background:var(--teal)"></i>tangent cone</span>
+              <span><i style="background:var(--amber)"></i>candidate normal</span>
+            </div>
+          </article>
+
+          <aside class="card">
+            <div class="card-label">Cone diagnosis</div>
+            <div id="coneFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">boundary type</div><div class="metric-value" id="boundaryType">—</div></div>
+              <div class="metric-cell"><div class="metric-name">normal cone angle</div><div class="metric-value" id="coneAngle">—</div></div>
+              <div class="metric-cell"><div class="metric-name">candidate valid?</div><div class="metric-value" id="candidateValid">—</div></div>
+              <div class="metric-cell"><div class="metric-name">optimality</div><div class="metric-value" id="candidateOptimality">—</div></div>
+            </div>
+            <div id="coneStatus" class="status good" style="margin-top:14px"></div>
+            <div class="cone-swatch"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="optimizationLab">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">4 · Optimization geometry</div><h2>Linear objectives stop at supporting faces</h2></div><p>Maximizing \(c^\top x\) over a convex set is equivalent to sliding the level hyperplane orthogonal to \(c\) until the last feasible contact.</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Objective controls</div>
+            <div class="control-stack">
+              <div class="control">
+                <label for="optShape">Feasible set</label>
+                <select id="optShape">
+                  <option value="polytope">Polytope</option>
+                  <option value="square">Square</option>
+                  <option value="disk">Disk</option>
+                </select>
+              </div>
+              <div class="control"><label for="objectiveAngle"><span data-math="\arg c"></span><span id="objectiveAngleVal">35°</span></label><input id="objectiveAngle" type="range" min="0" max="359" step="1" value="35"></div>
+              <div class="control"><label for="objectiveScale"><span data-math="\|c\|"></span><span id="objectiveScaleVal">1.00</span></label><input id="objectiveScale" type="range" min=".25" max="2.5" step=".05" value="1"></div>
+              <label class="toggle-line"><input id="showObjectiveLevels" type="checkbox" checked>show objective levels</label>
+              <label class="toggle-line"><input id="showGradient" type="checkbox" checked>show gradient vector</label>
+              <button id="animateObjective" class="ghost-button">Rotate objective</button>
+            </div>
+          </aside>
+
+          <article class="card">
+            <div class="diagram-shell"><svg id="optSvg" viewBox="0 0 800 520" aria-label="Linear optimization and supporting hyperplanes"></svg></div>
+            <div class="legend">
+              <span><i style="background:var(--cyan)"></i>feasible set</span>
+              <span><i style="background:var(--teal)"></i>argmax face</span>
+              <span><i style="background:var(--violet)"></i>objective level</span>
+              <span><i style="background:var(--amber)"></i>objective gradient</span>
+            </div>
+          </article>
+
+          <aside class="card">
+            <div class="card-label">Optimality certificate</div>
+            <div id="optFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">optimal value</div><div class="metric-value" id="optimalValue">—</div></div>
+              <div class="metric-cell"><div class="metric-name">argmax dimension</div><div class="metric-value" id="argmaxDim">—</div></div>
+              <div class="metric-cell"><div class="metric-name">unique optimum?</div><div class="metric-value" id="uniqueOptimum">—</div></div>
+              <div class="metric-cell"><div class="metric-name">normal condition</div><div class="metric-value" id="normalCondition">—</div></div>
+            </div>
+            <div id="optStatus" class="status good" style="margin-top:14px"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">5 · Supporting-hyperplane theorem</div><h2>Every boundary point admits support</h2></div><p>For a nonempty convex set in finite-dimensional space, each boundary point has at least one nonzero supporting normal.</p></div>
+        <article class="card definition-card">
+          <div class="card-label">Theorem</div>
+          <div class="math-display" data-math="C\subset\mathbb R^n\text{ convex},\quad x_0\in\partial C\quad\Longrightarrow\quad \exists u\neq0:\ \langle u,x\rangle\le\langle u,x_0\rangle\ \forall x\in C." data-display="true"></div>
+          <p>Equivalently, \(N_C(x_0)\neq\{0\}\).</p>
+          <div class="flow-map">
+            <div class="flow-node">exterior points \(p_k\to x_0\)</div><span class="flow-arrow">→</span>
+            <div class="flow-node">separating normals \(u_k\)</div><span class="flow-arrow">→</span>
+            <div class="flow-node">normalize</div><span class="flow-arrow">→</span>
+            <div class="flow-node">convergent subsequence</div><span class="flow-arrow">→</span>
+            <div class="flow-node">support at \(x_0\)</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">6 · Proof architecture</div><h2>Support as a limit of strict separators</h2></div><p>Boundary support follows by approaching the boundary from outside and passing to a limit of normalized separating normals.</p></div>
+        <div class="proof-grid">
+          <article class="card">
+            <div class="proof-steps">
+              <div class="proof-step open"><button type="button"><span><span class="proof-number">1</span>Approach from the complement</span><span>−</span></button><div class="proof-body"><p>Because \(x_0\in\partial C\), choose \(p_k\notin\overline C\) with \(p_k\to x_0\).</p></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">2</span>Strictly separate each exterior point</span><span>+</span></button><div class="proof-body"><p>By point–closed-convex-set separation, there are \(u_k\neq0\) such that</p><div class="math-display" data-math="\sup_{x\in C}\langle u_k,x\rangle<\langle u_k,p_k\rangle." data-display="true"></div></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">3</span>Normalize the normals</span><span>+</span></button><div class="proof-body"><p>Replace \(u_k\) by \(u_k/\|u_k\|\). The sequence lies on the compact unit sphere of \(\mathbb R^n\).</p></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">4</span>Extract a convergent subsequence</span><span>+</span></button><div class="proof-body"><p>After passing to a subsequence, \(u_k\to u\) with \(\|u\|=1\).</p></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">5</span>Pass to the limit</span><span>+</span></button><div class="proof-body"><p>For each fixed \(x\in C\),</p><div class="math-display" data-math="\langle u_k,x\rangle\le\langle u_k,p_k\rangle." data-display="true"></div><p>Letting \(k\to\infty\) gives \(\langle u,x\rangle\le\langle u,x_0\rangle\).</p></div></div>
+            </div>
+          </article>
+          <aside class="card">
+            <div class="card-label">Proof strategy</div>
+            <h3>Approximation + compactness</h3>
+            <p class="muted">Strict separation is available outside the set. Compactness of the unit sphere prevents the normal directions from escaping and produces a limiting support direction.</p>
+            <div class="status good" style="margin-top:16px"><strong>Hypothesis map.</strong> Convexity gives separation; finite dimension gives compactness of normalized normals; the boundary condition supplies exterior approximants.</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">7 · Normal-cone optimality</div><h2>First-order conditions without derivatives</h2></div><p>A point maximizes a linear functional exactly when the objective vector belongs to its normal cone.</p></div>
+        <article class="card definition-card">
+          <div class="math-display" data-math="x^\star\in\operatorname*{arg\,max}_{x\in C}\langle c,x\rangle\quad\Longleftrightarrow\quad c\in N_C(x^\star)." data-display="true"></div>
+          <p>For minimizing a differentiable convex function \(f\) over \(C\), the corresponding condition is</p>
+          <div class="math-display" data-math="0\in\nabla f(x^\star)+N_C(x^\star)." data-display="true"></div>
+        </article>
+        <div class="grid-3" style="margin-top:20px">
+          <article class="card"><div class="card-label">Interior optimum</div><h3>Zero normal cone</h3><p>If \(x^\star\in\operatorname{int}C\), then \(N_C(x^\star)=\{0\}\). A differentiable unconstrained optimum therefore satisfies \(\nabla f(x^\star)=0\).</p></article>
+          <article class="card"><div class="card-label">Smooth boundary</div><h3>One normal ray</h3><p>The gradient must oppose the unique outward normal direction.</p></article>
+          <article class="card"><div class="card-label">Corner</div><h3>Many admissible normals</h3><p>The normal cone is generated by the active constraint normals, matching the geometry of KKT multipliers.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">8 · Exposed faces and differentiability</div><h2>The support function encodes boundary geometry</h2></div><p>The size of the maximizing face determines whether the support function has a unique gradient.</p></div>
+        <div class="grid-2">
+          <article class="card">
+            <div class="card-label">Unique support point</div>
+            <div class="math-display" data-math="F_C(u)=\{x_u\}\quad\Longrightarrow\quad \nabla h_C(u)=x_u" data-display="true"></div>
+            <p class="muted">For compact convex \(C\), uniqueness of the maximizer yields differentiability of the support function at \(u\).</p>
+          </article>
+          <article class="card">
+            <div class="card-label">Flat exposed face</div>
+            <div class="math-display" data-math="\partial h_C(u)=F_C(u)" data-display="true"></div>
+            <p class="muted">When an entire edge maximizes, the support function is not differentiable; its subdifferential is the exposed face.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">9 · Guided theorem proving</div><h2>Choose the valid inference</h2></div><p>The normal-cone inequality determines which side of the support plane contains the set.</p></div>
+        <div class="proof-grid">
+          <article class="card">
+            <div class="card-label">Challenge</div>
+            <p>Suppose \(u\in N_C(x_0)\). Which conclusion is valid?</p>
+            <div class="quiz-options">
+              <button class="proof-option" data-answer="correct">\(\langle u,x\rangle\le\langle u,x_0\rangle\) for every \(x\in C\).</button>
+              <button class="proof-option" data-answer="wrong1">\(\langle u,x\rangle\ge\langle u,x_0\rangle\) for every \(x\in C\).</button>
+              <button class="proof-option" data-answer="wrong2">\(x_0\) is necessarily the unique maximizer.</button>
+              <button class="proof-option" data-answer="wrong3">\(u\) must have norm one.</button>
+            </div>
+          </article>
+          <aside class="card">
+            <div class="card-label">Feedback</div>
+            <div id="quizFeedback" class="status">Choose a proof step.</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">10 · What can go wrong?</div><h2>Support does not imply uniqueness or smoothness</h2></div><p>The contact set and the normal cone may be much larger than a single point or ray.</p></div>
+        <article class="card">
+          <div class="counter-tabs">
+            <button class="counter-tab active" data-counter="unique">Unique contact</button>
+            <button class="counter-tab" data-counter="boundary">Boundary only</button>
+            <button class="counter-tab" data-counter="normal">Unique normal</button>
+            <button class="counter-tab" data-counter="exposed">Extreme vs exposed</button>
+          </div>
+          <div class="counter-content active" id="counter-unique">
+            <div class="grid-2"><div><h3>A supporting hyperplane may touch an edge</h3><p class="muted">For a square and an axis-aligned normal, every point of one edge maximizes the objective.</p></div><div class="status bad"><strong>Correction.</strong> Support identifies an exposed face, not necessarily an exposed point.</div></div>
+          </div>
+          <div class="counter-content" id="counter-boundary">
+            <div class="grid-2"><div><h3>Interior points admit no nonzero support normal</h3><p class="muted">A nonzero hyperplane through an interior point cuts a small ball around that point into two sides.</p></div><div class="status bad"><strong>Consequence.</strong> \(N_C(x)=\{0\}\) for interior points of a full-dimensional convex set.</div></div>
+          </div>
+          <div class="counter-content" id="counter-normal">
+            <div class="grid-2"><div><h3>A corner has many supporting hyperplanes</h3><p class="muted">At a polygon vertex, every normal inside the cone spanned by adjacent edge normals is valid.</p></div><div class="status bad"><strong>Correction.</strong> Smoothness is what collapses the normal cone to a single ray.</div></div>
+          </div>
+          <div class="counter-content" id="counter-exposed">
+            <div class="grid-2"><div><h3>Extreme need not imply exposed</h3><p class="muted">Some extreme points of closed convex sets cannot be isolated as the unique maximizer of any linear functional.</p></div><div class="status bad"><strong>Correct implication.</strong> Exposed points are extreme, but the converse fails in general.</div></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">11 · Common mistakes</div><h2>Precision traps</h2></div><p>The direction of inequalities and the distinction between faces and points are the main sources of error.</p></div>
+        <article class="card">
+          <div class="mistake"><strong>Incorrect:</strong> “A supporting hyperplane must intersect the set at exactly one point.” <span class="muted">Correct: its contact set is an exposed face and may have positive dimension.</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “Every boundary point has a unique normal.” <span class="muted">Correct: uniqueness is a smoothness property, not merely a boundary property.</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “The normal cone contains only unit vectors.” <span class="muted">Correct: it is a cone, hence closed under multiplication by nonnegative scalars and always contains zero.</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “\(u\in N_C(x)\) means \(x\) minimizes \(\langle u,\cdot\rangle\).” <span class="muted">With the convention used here, it means \(x\) maximizes the functional.</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “Any face is exposed.” <span class="muted">Correct for polyhedra, but false for arbitrary closed convex sets.</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">12 · Final synthesis</div><h2>Support unifies geometry and optimization</h2></div><p>The same inequality describes tangency, exposed faces, dual objectives, and constrained first-order conditions.</p></div>
+        <div class="flow-map">
+          <div class="flow-node">boundary point</div><span class="flow-arrow">→</span>
+          <div class="flow-node">normal cone</div><span class="flow-arrow">→</span>
+          <div class="flow-node">supporting hyperplanes</div><span class="flow-arrow">→</span>
+          <div class="flow-node">exposed faces</div><span class="flow-arrow">→</span>
+          <div class="flow-node">optimality certificates</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="shell">Interactive laboratory · supporting hyperplanes, normal cones, exposed faces, and optimization geometry.</div></footer>
+
+  <script>
+    "use strict";
+
+    const $=(s,r=document)=>r.querySelector(s);
+    const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+    const css=name=>getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+    const fmt=(v,d=3)=>{const n=Math.abs(v)<1e-10?0:v;return n.toFixed(d).replace("-","−");};
+
+    function renderMath(root=document){
+      if(window.katex){
+        $$("[data-math]",root).forEach(el=>{
+          if(el.dataset.rendered==="1")return;
+          try{katex.render(el.dataset.math,el,{throwOnError:false,displayMode:el.dataset.display==="true"});el.dataset.rendered="1";}
+          catch(e){el.textContent=el.dataset.math;}
+        });
+      }
+      if(window.renderMathInElement){
+        renderMathInElement(root,{
+          throwOnError:false,
+          delimiters:[
+            {left:"\\(",right:"\\)",display:false},
+            {left:"\\[",right:"\\]",display:true}
+          ]
+        });
+      }
+    }
+    function renderInto(el,tex,display=true){
+      if(!window.katex){el.textContent=tex;return;}
+      katex.render(tex,el,{throwOnError:false,displayMode:display});
+    }
+
+    function setTheme(theme){
+      document.documentElement.dataset.theme=theme;
+      localStorage.setItem("supportingHyperplanesTheme",theme);
+      drawAll();
+    }
+    document.documentElement.dataset.theme=localStorage.getItem("supportingHyperplanesTheme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+    $("#themeToggle").addEventListener("click",()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark"));
+    $("#scrollToLab").addEventListener("click",()=>$("#supportLab").scrollIntoView({behavior:"smooth"}));
+
+    function svgEl(tag,attrs={}){
+      const el=document.createElementNS("http://www.w3.org/2000/svg",tag);
+      Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));
+      return el;
+    }
+    function clearSvg(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+    function drawGrid(svg,w,h,step=50){
+      svg.appendChild(svgEl("rect",{x:0,y:0,width:w,height:h,fill:css("--canvas")}));
+      for(let x=step;x<w;x+=step)svg.appendChild(svgEl("line",{x1:x,y1:0,x2:x,y2:h,stroke:css("--grid"),"stroke-width":1}));
+      for(let y=step;y<h;y+=step)svg.appendChild(svgEl("line",{x1:0,y1:y,x2:w,y2:y,stroke:css("--grid"),"stroke-width":1}));
+      svg.appendChild(svgEl("line",{x1:0,y1:h/2,x2:w,y2:h/2,stroke:css("--axis"),"stroke-width":1.3}));
+      svg.appendChild(svgEl("line",{x1:w/2,y1:0,x2:w/2,y2:h,stroke:css("--axis"),"stroke-width":1.3}));
+    }
+    const worldToScreen=(p,w,h,range=5)=>({x:w/2+p.x*w/(2*range),y:h/2-p.y*h/(2*range)});
+    const dot=(a,b)=>a.x*b.x+a.y*b.y;
+    const add=(a,b)=>({x:a.x+b.x,y:a.y+b.y});
+    const sub=(a,b)=>({x:a.x-b.x,y:a.y-b.y});
+    const mul=(s,a)=>({x:s*a.x,y:s*a.y});
+    const norm=a=>Math.hypot(a.x,a.y);
+    const normalize=a=>{const n=norm(a);return n<1e-12?{x:1,y:0}:{x:a.x/n,y:a.y/n};};
+    const angleOf=a=>(Math.atan2(a.y,a.x)*180/Math.PI+360)%360;
+    const angleDiff=(a,b)=>((a-b+540)%360)-180;
+
+    const polygons={
+      square:[{x:-2.35,y:-2.35},{x:2.35,y:-2.35},{x:2.35,y:2.35},{x:-2.35,y:2.35}],
+      pentagon:[{x:-3.0,y:-1.45},{x:-1.7,y:2.55},{x:1.25,y:3.0},{x:3.2,y:.55},{x:1.45,y:-2.55}],
+      triangle:[{x:-2.8,y:-2.0},{x:3.0,y:-1.7},{x:.35,y:2.9}],
+      polytope:[{x:-3.1,y:-1.55},{x:-2.0,y:2.3},{x:.2,y:3.1},{x:2.7,y:2.0},{x:3.2,y:-.8},{x:1.4,y:-2.8},{x:-1.5,y:-2.7}]
+    };
+
+    function supportData(shape,u){
+      if(shape==="disk"){
+        const r=2.45,p=mul(r,u);
+        return{h:r,points:[p],faceDim:0,kind:"disk"};
+      }
+      if(shape==="ellipse"){
+        const a=2.9,b=1.75;
+        const denom=Math.sqrt(a*a*u.x*u.x+b*b*u.y*u.y);
+        const p={x:a*a*u.x/denom,y:b*b*u.y/denom};
+        return{h:denom,points:[p],faceDim:0,kind:"ellipse",a,b};
+      }
+      const poly=polygons[shape]||polygons.square;
+      const values=poly.map(p=>dot(u,p)),h=Math.max(...values),tol=1e-7;
+      const ids=values.map((v,i)=>Math.abs(v-h)<tol?i:-1).filter(i=>i>=0);
+      return{h,points:ids.map(i=>poly[i]),indices:ids,faceDim:ids.length>1?1:0,kind:"polygon",poly};
+    }
+
+    function drawConvexShape(svg,shape,w,h,color=css("--cyan")){
+      if(shape==="disk"){
+        const c=worldToScreen({x:0,y:0},w,h);
+        svg.appendChild(svgEl("circle",{cx:c.x,cy:c.y,r:2.45*w/10,fill:`color-mix(in srgb,${color} 16%,transparent)`,stroke:color,"stroke-width":4}));
+      }else if(shape==="ellipse"){
+        const c=worldToScreen({x:0,y:0},w,h);
+        svg.appendChild(svgEl("ellipse",{cx:c.x,cy:c.y,rx:2.9*w/10,ry:1.75*h/10,fill:`color-mix(in srgb,${color} 16%,transparent)`,stroke:color,"stroke-width":4}));
+      }else{
+        const poly=polygons[shape]||polygons.square,pts=poly.map(p=>worldToScreen(p,w,h));
+        svg.appendChild(svgEl("polygon",{points:pts.map(p=>`${p.x},${p.y}`).join(" "),fill:`color-mix(in srgb,${color} 16%,transparent)`,stroke:color,"stroke-width":4,"stroke-linejoin":"round"}));
+      }
+    }
+
+    function drawNormalLine(svg,u,alpha,w,h,color,width=4,dash=""){
+      const p=mul(alpha,u),t={x:-u.y,y:u.x};
+      const A=worldToScreen(add(p,mul(-10,t)),w,h),B=worldToScreen(add(p,mul(10,t)),w,h);
+      svg.appendChild(svgEl("line",{x1:A.x,y1:A.y,x2:B.x,y2:B.y,stroke:color,"stroke-width":width,"stroke-dasharray":dash}));
+    }
+
+    function shadeSupportHalfspace(svg,u,hValue,w,h){
+      let poly=[{x:-5,y:-5},{x:5,y:-5},{x:5,y:5},{x:-5,y:5}];
+      const out=[];
+      for(let i=0;i<poly.length;i++){
+        const A=poly[i],B=poly[(i+1)%poly.length],fA=dot(u,A)-hValue,fB=dot(u,B)-hValue;
+        const inA=fA<=1e-9,inB=fB<=1e-9;
+        if(inA&&inB)out.push(B);
+        else if(inA&&!inB){
+          const t=fA/(fA-fB);out.push(add(A,mul(t,sub(B,A))));
+        }else if(!inA&&inB){
+          const t=fA/(fA-fB);out.push(add(A,mul(t,sub(B,A))),B);
+        }
+      }
+      if(out.length>=3){
+        const pts=out.map(p=>worldToScreen(p,w,h));
+        svg.appendChild(svgEl("polygon",{points:pts.map(p=>`${p.x},${p.y}`).join(" "),fill:css("--cyan"),opacity:.065}));
+      }
+    }
+
+    let supportTimer=null;
+    ["supportShape","supportAngle","showLevelSets","showNormalVector","shadeHalfspace"].forEach(id=>$("#"+id).addEventListener("input",drawSupportLab));
+    $("#snapSupport").addEventListener("click",()=>{
+      const shape=$("#supportShape").value;
+      if(shape==="disk"||shape==="ellipse")$("#supportAngle").value=0;
+      else{
+        const p=polygons[shape][0],q=polygons[shape][1],edge=sub(q,p);
+        let normal={x:edge.y,y:-edge.x};
+        const centroid=polygons[shape].reduce((a,b)=>add(a,b),{x:0,y:0});
+        const mid=mul(.5,add(p,q));
+        if(dot(normal,sub(centroid,mid))>0)normal=mul(-1,normal);
+        $("#supportAngle").value=Math.round(angleOf(normal));
+      }
+      drawSupportLab();
+    });
+    $("#rotateSupport").addEventListener("click",()=>{
+      clearInterval(supportTimer);
+      supportTimer=setInterval(()=>{
+        $("#supportAngle").value=(+$("#supportAngle").value+1)%360;
+        drawSupportLab();
+      },45);
+    });
+
+    function drawSupportLab(){
+      const svg=$("#supportSvg"),w=800,h=520;clearSvg(svg);drawGrid(svg,w,h);
+      const shape=$("#supportShape").value,theta=+$("#supportAngle").value*Math.PI/180,u={x:Math.cos(theta),y:Math.sin(theta)};
+      const data=supportData(shape,u);
+      if($("#shadeHalfspace").checked)shadeSupportHalfspace(svg,u,data.h,w,h);
+      drawConvexShape(svg,shape,w,h);
+
+      if($("#showLevelSets").checked){
+        for(let k=1;k<=3;k++)drawNormalLine(svg,u,data.h-.55*k,w,h,css("--violet"),1.5,"8 7");
+      }
+      drawNormalLine(svg,u,data.h,w,h,css("--violet"),4);
+
+      if(data.faceDim===0){
+        const P=worldToScreen(data.points[0],w,h);
+        svg.appendChild(svgEl("circle",{cx:P.x,cy:P.y,r:12,fill:css("--teal"),stroke:css("--canvas"),"stroke-width":3}));
+      }else{
+        const P=worldToScreen(data.points[0],w,h),Q=worldToScreen(data.points[1],w,h);
+        svg.appendChild(svgEl("line",{x1:P.x,y1:P.y,x2:Q.x,y2:Q.y,stroke:css("--teal"),"stroke-width":13,"stroke-linecap":"round"}));
+      }
+      if($("#showNormalVector").checked){
+        const base=data.points[0],B=worldToScreen(base,w,h),N=worldToScreen(add(base,mul(1.25,u)),w,h);
+        svg.appendChild(svgEl("line",{x1:B.x,y1:B.y,x2:N.x,y2:N.y,stroke:css("--amber"),"stroke-width":4}));
+        svg.appendChild(svgEl("circle",{cx:N.x,cy:N.y,r:7,fill:css("--amber")}));
+      }
+
+      $("#supportAngleVal").textContent=`${Math.round(theta*180/Math.PI)}°`;
+      $("#supportValue").textContent=fmt(data.h,3);
+      $("#supportFaceDim").textContent=data.faceDim;
+      $("#uniqueMax").textContent=data.faceDim===0?"yes":"no";
+      $("#supportCount").textContent=data.faceDim===0?"1":"continuum";
+      renderInto($("#supportFormula"),String.raw`h_C(u)=\max_{x\in C}\langle u,x\rangle=${fmt(data.h,3)},\qquad u=(${fmt(u.x,3)},${fmt(u.y,3)})`);
+      const st=$("#supportStatus");
+      if(data.faceDim===0){
+        st.className="status good";
+        st.innerHTML="<strong>Exposed point.</strong> The selected objective has a unique maximizer, so the support function has a single contact point.";
+      }else{
+        st.className="status warning";
+        st.innerHTML="<strong>Exposed edge.</strong> The objective is constant on a whole boundary segment. The support function is not differentiable in this direction.";
+      }
+    }
+
+    // Boundary path utilities
+    function perimeterData(poly){
+      const lengths=[],cum=[0];let total=0;
+      for(let i=0;i<poly.length;i++){
+        const L=norm(sub(poly[(i+1)%poly.length],poly[i]));lengths.push(L);total+=L;cum.push(total);
+      }
+      return{lengths,cum,total};
+    }
+    function boundaryPointPolygon(poly,s){
+      const pd=perimeterData(poly),target=s*pd.total;
+      let edge=0;
+      while(edge<poly.length-1&&target>pd.cum[edge+1])edge++;
+      const t=(target-pd.cum[edge])/pd.lengths[edge];
+      return{point:add(poly[edge],mul(t,sub(poly[(edge+1)%poly.length],poly[edge]))),edge,t};
+    }
+    function outwardNormal(poly,edge){
+      const a=poly[edge],b=poly[(edge+1)%poly.length],e=sub(b,a);
+      let n=normalize({x:e.y,y:-e.x});
+      const centroid=mul(1/poly.length,poly.reduce((acc,p)=>add(acc,p),{x:0,y:0}));
+      const mid=mul(.5,add(a,b));
+      if(dot(n,sub(centroid,mid))>0)n=mul(-1,n);
+      return n;
+    }
+    function normalConeData(shape,s){
+      if(shape==="disk"){
+        const th=2*Math.PI*s,p={x:2.45*Math.cos(th),y:2.45*Math.sin(th)},n=normalize(p);
+        return{point:p,type:"smooth",normals:[n],coneAngle:0,validAngles:[angleOf(n)]};
+      }
+      const poly=polygons[shape]||polygons.square;
+      const b=boundaryPointPolygon(poly,s),tol=.015;
+      if(b.t<tol||b.t>1-tol){
+        const vertex=b.t<tol?b.edge:(b.edge+1)%poly.length;
+        const prev=(vertex-1+poly.length)%poly.length,next=vertex;
+        const n1=outwardNormal(poly,prev),n2=outwardNormal(poly,next);
+        return{point:poly[vertex],type:"vertex",normals:[n1,n2],coneAngle:Math.abs(angleDiff(angleOf(n2),angleOf(n1))),validAngles:[angleOf(n1),angleOf(n2)]};
+      }
+      const n=outwardNormal(poly,b.edge);
+      return{point:b.point,type:"edge",normals:[n],coneAngle:0,validAngles:[angleOf(n)]};
+    }
+    function angleInCone(phi,a,b){
+      let d=angleDiff(b,a);
+      if(d<0){const tmp=a;a=b;b=tmp;d=-d;}
+      const x=angleDiff(phi,a);
+      return x>=-1e-7&&x<=d+1e-7;
+    }
+
+    ["coneShape","boundaryParam","candidateNormal","showTangentCone","showCandidateHyperplane"].forEach(id=>$("#"+id).addEventListener("input",drawConeLab));
+    $("#jumpVertex").addEventListener("click",()=>{$("#boundaryParam").value=0;drawConeLab();});
+    $("#jumpEdge").addEventListener("click",()=>{$("#boundaryParam").value=.125;drawConeLab();});
+
+    function drawConeLab(){
+      const svg=$("#coneSvg"),w=800,h=520;clearSvg(svg);drawGrid(svg,w,h);
+      const shape=$("#coneShape").value,s=+$("#boundaryParam").value,phi=+$("#candidateNormal").value;
+      const data=normalConeData(shape,s),P=worldToScreen(data.point,w,h);
+      drawConvexShape(svg,shape,w,h);
+
+      // Normal cone
+      if(data.type==="vertex"){
+        let a=data.validAngles[0]*Math.PI/180,b=data.validAngles[1]*Math.PI/180;
+        let d=((b-a+Math.PI*3)%(2*Math.PI))-Math.PI;
+        if(d<0){const tmp=a;a=b;b=tmp;d=-d;}
+        const n1={x:Math.cos(a),y:Math.sin(a)},n2={x:Math.cos(a+d),y:Math.sin(a+d)};
+        const A=worldToScreen(add(data.point,mul(1.8,n1)),w,h),B=worldToScreen(add(data.point,mul(1.8,n2)),w,h);
+        svg.appendChild(svgEl("path",{d:`M ${P.x} ${P.y} L ${A.x} ${A.y} A ${1.8*w/10} ${1.8*h/10} 0 0 0 ${B.x} ${B.y} Z`,fill:`color-mix(in srgb,${css("--violet")} 18%,transparent)`,stroke:css("--violet"),"stroke-width":3}));
+      }else{
+        const n=data.normals[0],N=worldToScreen(add(data.point,mul(1.8,n)),w,h);
+        svg.appendChild(svgEl("line",{x1:P.x,y1:P.y,x2:N.x,y2:N.y,stroke:css("--violet"),"stroke-width":8,"stroke-linecap":"round"}));
+      }
+
+      // Tangent cone schematic
+      if($("#showTangentCone").checked){
+        if(data.type==="vertex"){
+          const shapePoly=polygons[shape];
+          const idx=shapePoly.findIndex(q=>norm(sub(q,data.point))<1e-7);
+          const v1=normalize(sub(shapePoly[(idx-1+shapePoly.length)%shapePoly.length],data.point));
+          const v2=normalize(sub(shapePoly[(idx+1)%shapePoly.length],data.point));
+          const A=worldToScreen(add(data.point,mul(1.65,v1)),w,h),B=worldToScreen(add(data.point,mul(1.65,v2)),w,h);
+          svg.appendChild(svgEl("polygon",{points:`${P.x},${P.y} ${A.x},${A.y} ${B.x},${B.y}`,fill:`color-mix(in srgb,${css("--teal")} 15%,transparent)`,stroke:css("--teal"),"stroke-width":2}));
+        }else{
+          const n=data.normals[0],t={x:-n.y,y:n.x};
+          const A=worldToScreen(add(data.point,mul(1.7,t)),w,h),B=worldToScreen(add(data.point,mul(-1.7,t)),w,h);
+          svg.appendChild(svgEl("line",{x1:A.x,y1:A.y,x2:B.x,y2:B.y,stroke:css("--teal"),"stroke-width":7,"stroke-linecap":"round"}));
+        }
+      }
+
+      const cand={x:Math.cos(phi*Math.PI/180),y:Math.sin(phi*Math.PI/180)};
+      const C=worldToScreen(add(data.point,mul(1.55,cand)),w,h);
+      svg.appendChild(svgEl("line",{x1:P.x,y1:P.y,x2:C.x,y2:C.y,stroke:css("--amber"),"stroke-width":4}));
+      svg.appendChild(svgEl("circle",{cx:C.x,cy:C.y,r:7,fill:css("--amber")}));
+      if($("#showCandidateHyperplane").checked)drawNormalLine(svg,cand,dot(cand,data.point),w,h,css("--amber"),2,"7 6");
+      svg.appendChild(svgEl("circle",{cx:P.x,cy:P.y,r:11,fill:css("--cyan-deep"),stroke:css("--canvas"),"stroke-width":3}));
+
+      let valid=false;
+      if(data.type==="vertex")valid=angleInCone(phi,data.validAngles[0],data.validAngles[1])||angleInCone(phi,data.validAngles[1],data.validAngles[0]);
+      else valid=Math.abs(angleDiff(phi,data.validAngles[0]))<3;
+      $("#boundaryParamVal").textContent=fmt(s,3);$("#candidateNormalVal").textContent=`${Math.round(phi)}°`;
+      $("#boundaryType").textContent=data.type;$("#coneAngle").textContent=`${Math.round(data.coneAngle)}°`;
+      $("#candidateValid").textContent=valid?"yes":"no";$("#candidateOptimality").textContent=valid?"certified":"fails";
+      renderInto($("#coneFormula"),String.raw`N_C(x)=\{u:\langle u,y-x\rangle\le0\ \forall y\in C\},\qquad \phi=${Math.round(phi)}^\circ`);
+      const st=$("#coneStatus");
+      if(valid){
+        st.className="status good";st.innerHTML="<strong>Valid supporting normal.</strong> The candidate lies in the normal cone, so the selected boundary point maximizes the corresponding linear functional.";
+      }else{
+        st.className="status bad";st.innerHTML="<strong>Invalid candidate.</strong> The proposed hyperplane cuts through the set or places feasible points on the outward side.";
+      }
+    }
+
+    let optTimer=null;
+    ["optShape","objectiveAngle","objectiveScale","showObjectiveLevels","showGradient"].forEach(id=>$("#"+id).addEventListener("input",drawOptimizationLab));
+    $("#animateObjective").addEventListener("click",()=>{
+      clearInterval(optTimer);
+      optTimer=setInterval(()=>{
+        $("#objectiveAngle").value=(+$("#objectiveAngle").value+1)%360;
+        drawOptimizationLab();
+      },45);
+    });
+
+    function drawOptimizationLab(){
+      const svg=$("#optSvg"),w=800,h=520;clearSvg(svg);drawGrid(svg,w,h);
+      const shape=$("#optShape").value,theta=+$("#objectiveAngle").value*Math.PI/180,scale=+$("#objectiveScale").value;
+      const u={x:Math.cos(theta),y:Math.sin(theta)},c=mul(scale,u);
+      const data=supportData(shape,u);
+      drawConvexShape(svg,shape,w,h);
+      if($("#showObjectiveLevels").checked){
+        for(let k=0;k<5;k++)drawNormalLine(svg,u,data.h-.55*k,w,h,k===0?css("--violet"):css("--line"),k===0?4:1.5,k===0?"":"8 7");
+      }else drawNormalLine(svg,u,data.h,w,h,css("--violet"),4);
+
+      if(data.faceDim===0){
+        const P=worldToScreen(data.points[0],w,h);
+        svg.appendChild(svgEl("circle",{cx:P.x,cy:P.y,r:12,fill:css("--teal"),stroke:css("--canvas"),"stroke-width":3}));
+      }else{
+        const P=worldToScreen(data.points[0],w,h),Q=worldToScreen(data.points[1],w,h);
+        svg.appendChild(svgEl("line",{x1:P.x,y1:P.y,x2:Q.x,y2:Q.y,stroke:css("--teal"),"stroke-width":13,"stroke-linecap":"round"}));
+      }
+      if($("#showGradient").checked){
+        const O=worldToScreen({x:0,y:0},w,h),G=worldToScreen(mul(1.4,c),w,h);
+        svg.appendChild(svgEl("line",{x1:O.x,y1:O.y,x2:G.x,y2:G.y,stroke:css("--amber"),"stroke-width":4}));
+        svg.appendChild(svgEl("circle",{cx:G.x,cy:G.y,r:7,fill:css("--amber")}));
+      }
+
+      const value=scale*data.h;
+      $("#objectiveAngleVal").textContent=`${Math.round(theta*180/Math.PI)}°`;$("#objectiveScaleVal").textContent=fmt(scale,2);
+      $("#optimalValue").textContent=fmt(value,3);$("#argmaxDim").textContent=data.faceDim;
+      $("#uniqueOptimum").textContent=data.faceDim===0?"yes":"no";$("#normalCondition").textContent="satisfied";
+      renderInto($("#optFormula"),String.raw`\max_{x\in C}\langle c,x\rangle=${fmt(value,3)},\qquad c=(${fmt(c.x,3)},${fmt(c.y,3)})\in N_C(x^\star)`);
+      const st=$("#optStatus");
+      if(data.faceDim===0){
+        st.className="status good";st.innerHTML="<strong>Unique linear optimum.</strong> The objective vector belongs to the normal cone of one exposed point.";
+      }else{
+        st.className="status warning";st.innerHTML="<strong>Multiple optima.</strong> Every point of the exposed edge has the same objective value.";
+      }
+    }
+
+    $$(".proof-step>button").forEach(btn=>btn.addEventListener("click",()=>{
+      const step=btn.parentElement;step.classList.toggle("open");btn.lastElementChild.textContent=step.classList.contains("open")?"−":"+";
+    }));
+
+    $$(".proof-option").forEach(btn=>btn.addEventListener("click",()=>{
+      $$(".proof-option").forEach(b=>b.classList.remove("correct","wrong"));
+      const f=$("#quizFeedback");
+      if(btn.dataset.answer==="correct"){
+        btn.classList.add("correct");f.className="status good";
+        f.innerHTML="<strong>Correct.</strong> This is exactly the defining inequality of the normal cone. Therefore \(x_0\) maximizes the linear functional \(x\mapsto\langle u,x\rangle\) over \(C\).";
+      }else if(btn.dataset.answer==="wrong1"){
+        btn.classList.add("wrong");f.className="status bad";
+        f.innerHTML="<strong>Wrong orientation.</strong> With the convention used here, the normal points toward increasing objective values outside the set.";
+      }else if(btn.dataset.answer==="wrong2"){
+        btn.classList.add("wrong");f.className="status bad";
+        f.innerHTML="<strong>Uniqueness is not guaranteed.</strong> The contact set may be an entire exposed face.";
+      }else{
+        btn.classList.add("wrong");f.className="status bad";
+        f.innerHTML="<strong>Normalization is optional.</strong> A normal cone contains every nonnegative scalar multiple of each valid normal.";
+      }
+    }));
+
+    $$(".counter-tab").forEach(tab=>tab.addEventListener("click",()=>{
+      $$(".counter-tab").forEach(t=>t.classList.toggle("active",t===tab));
+      $$(".counter-content").forEach(c=>c.classList.toggle("active",c.id==="counter-"+tab.dataset.counter));
+    }));
+
+    function drawAll(){drawSupportLab();drawConeLab();drawOptimizationLab();}
+    window.addEventListener("load",()=>{renderMath();drawAll();});
+    setTimeout(()=>{renderMath();drawAll();},300);
+  </script>
+</body>
+</html>

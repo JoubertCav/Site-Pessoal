@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Interactive laboratory for the Hahn–Banach theorem: extension of linear functionals, domination by sublinear maps, separation, supporting hyperplanes, and support functions." />
+  <title>Hahn–Banach Theorem — Interactive Laboratory</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #f7f9f8;
+      --surface: rgba(255,255,255,.97);
+      --surface-2: #eef5f5;
+      --surface-3: #e4edef;
+      --text: #172126;
+      --muted: #617178;
+      --line: #d5e0e2;
+      --cyan: #00a8c6;
+      --cyan-deep: #087f98;
+      --teal: #168f88;
+      --violet: #7567c7;
+      --amber: #b57a20;
+      --danger: #b74c4c;
+      --success: #147d64;
+      --shadow: 0 18px 52px rgba(37,56,64,.09);
+      --radius: 22px;
+      --canvas: #ffffff;
+      --axis: #61747b;
+      --grid: #dce5e7;
+      --focus: rgba(0,168,198,.23);
+    }
+
+    html[data-theme="dark"] {
+      --bg: #121a20;
+      --surface: rgba(27,38,46,.97);
+      --surface-2: #213039;
+      --surface-3: #273942;
+      --text: #edf5f6;
+      --muted: #a8b8bd;
+      --line: #344750;
+      --cyan: #44c9e1;
+      --cyan-deep: #7ed9e8;
+      --teal: #58c4b9;
+      --violet: #aaa0e6;
+      --amber: #e3b35d;
+      --danger: #ef8989;
+      --success: #68d0ad;
+      --shadow: 0 18px 52px rgba(0,0,0,.25);
+      --canvas: #17232a;
+      --axis: #9bb0b7;
+      --grid: #30424a;
+      --focus: rgba(68,201,225,.22);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 7% 0%, rgba(0,168,198,.085), transparent 29rem),
+        radial-gradient(circle at 100% 17%, rgba(117,103,199,.065), transparent 32rem),
+        var(--bg);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.65;
+      transition: background .25s ease, color .25s ease;
+    }
+
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; }
+    .shell { width: min(1480px, calc(100% - 32px)); margin: 0 auto; }
+
+    .topbar {
+      position: sticky; top: 0; z-index: 50;
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 84%, transparent);
+      backdrop-filter: blur(18px);
+      background: color-mix(in srgb, var(--bg) 82%, transparent);
+    }
+    .topbar-inner { min-height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: -.02em; }
+    .brand-mark {
+      width: 34px; height: 34px; border: 1px solid var(--cyan); border-radius: 11px;
+      display: grid; place-items: center; box-shadow: inset 0 0 0 6px color-mix(in srgb, var(--cyan) 10%, transparent);
+    }
+    .brand-mark::before { content: "H"; color: var(--cyan-deep); font-family: "Libre Baskerville", serif; font-weight: 700; }
+    .top-actions { display: flex; gap: 9px; align-items: center; }
+
+    .icon-button, .ghost-button, .primary-button, .segmented button, .proof-option, .counter-tab, .map-node {
+      border: 1px solid var(--line); background: var(--surface); color: var(--text);
+      border-radius: 12px; min-height: 40px; padding: 9px 13px;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .icon-button:hover, .ghost-button:hover, .segmented button:hover, .proof-option:hover, .counter-tab:hover, .map-node:hover {
+      transform: translateY(-1px); border-color: var(--cyan);
+    }
+    .primary-button { background: var(--cyan); color: #062e37; font-weight: 700; border-color: transparent; }
+    .primary-button:hover { transform: translateY(-1px); filter: brightness(1.03); }
+
+    h1, h2, h3, .serif { font-family: "Libre Baskerville", Georgia, serif; letter-spacing: -.025em; }
+    h1 { font-size: clamp(2.65rem, 5.8vw, 5.1rem); line-height: 1.03; margin: 12px 0 20px; }
+    h2 { font-size: clamp(2rem, 4vw, 3.15rem); line-height: 1.14; margin: 0; }
+    h3 { font-size: 1.2rem; margin: 0; }
+    p { margin: 0; }
+
+    .hero { display: grid; grid-template-columns: minmax(0,1.12fr) minmax(360px,.88fr); gap: 30px; padding: 70px 0 46px; align-items: center; }
+    .eyebrow { color: var(--cyan-deep); font-weight: 700; text-transform: uppercase; letter-spacing: .14em; font-size: .78rem; }
+    .hero p { color: var(--muted); max-width: 850px; font-size: clamp(1.02rem,1.8vw,1.24rem); }
+    .hero-chips { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 28px; }
+    .chip { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--line); background: var(--surface); padding: 8px 11px; border-radius: 999px; color: var(--muted); font-size: .9rem; }
+    .chip::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); }
+
+    .hero-map { background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); border-radius: 28px; padding: 24px; min-height: 410px; overflow: hidden; }
+    .extension-visual { position: relative; height: 360px; }
+    .subspace-line { position: absolute; left: 42px; right: 42px; top: 190px; height: 3px; background: var(--cyan); transform: rotate(-17deg); transform-origin: center; }
+    .subspace-line::after { content: "M"; position: absolute; right: 4px; top: -29px; color: var(--cyan-deep); font-family: "Libre Baskerville",serif; font-weight: 700; }
+    .old-arrow { position: absolute; left: 46%; top: 189px; width: 90px; height: 3px; background: var(--teal); transform: rotate(-17deg); transform-origin: left center; color: var(--teal); }
+    .old-arrow::after, .new-arrow::after { content: ""; position: absolute; right: -1px; top: -5px; border-left: 11px solid currentColor; border-top: 6px solid transparent; border-bottom: 6px solid transparent; }
+    .new-arrow { position: absolute; left: 46%; top: 189px; width: 122px; height: 3px; background: var(--violet); transform: rotate(-66deg); transform-origin: left center; color: var(--violet); }
+    .level-family { position: absolute; inset: 40px 30px 56px; }
+    .level-family span { position: absolute; left: 50px; right: 50px; height: 1px; background: var(--line); transform: rotate(24deg); }
+    .level-family span:nth-child(1){top:40px}.level-family span:nth-child(2){top:91px}.level-family span:nth-child(3){top:142px;background:var(--violet);height:2px}.level-family span:nth-child(4){top:193px}.level-family span:nth-child(5){top:244px}
+    .extension-label { position: absolute; left: 30px; top: 25px; color: var(--muted); font-size: .86rem; }
+    .hero-equation { position: absolute; left: 0; right: 0; bottom: 2px; text-align: center; }
+
+    .section { padding: 72px 0; }
+    .section-head { display: flex; justify-content: space-between; gap: 24px; align-items: end; margin-bottom: 27px; }
+    .section-head p { color: var(--muted); max-width: 780px; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 16px; }
+    .lab-grid { display: grid; grid-template-columns: minmax(265px,.72fr) minmax(0,1.38fr) minmax(285px,.9fr); gap: 20px; align-items: start; }
+    .proof-grid { display: grid; grid-template-columns: minmax(0,1.22fr) minmax(300px,.78fr); gap: 20px; }
+    .plot-pair { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; }
+
+    .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px; min-width: 0; }
+    .card.soft { background: var(--surface-2); box-shadow: none; }
+    .card h3 + p { margin-top: 9px; color: var(--muted); }
+    .card-label { color: var(--cyan-deep); font-size: .78rem; text-transform: uppercase; letter-spacing: .12em; font-weight: 700; margin-bottom: 10px; }
+    .muted { color: var(--muted); }
+    .small { font-size: .9rem; }
+
+    .definition-card { padding: 30px; border-left: 4px solid var(--cyan); }
+    .math-display { margin: 18px 0; overflow-x: auto; overflow-y: hidden; padding: 8px 2px; }
+    .katex-display { margin: .72em 0 !important; }
+    .katex { max-width: 100%; }
+
+    .notation-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px; margin-top: 18px; }
+    .notation-item { border: 1px solid var(--line); background: var(--surface-2); border-radius: 14px; padding: 13px; }
+    .notation-item strong { display: block; margin-bottom: 6px; color: var(--cyan-deep); }
+
+    .quantifier-row { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 10px; margin-top: 22px; }
+    .quantifier-piece { padding: 14px; border: 1px solid var(--line); border-radius: 15px; background: var(--surface-2); text-align: center; }
+    .quantifier-piece strong { display: block; color: var(--cyan-deep); font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 7px; }
+
+    .flow-map { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; margin-top: 18px; }
+    .flow-node { border: 1px solid var(--line); background: var(--surface-2); border-radius: 14px; padding: 12px 14px; min-width: 150px; text-align: center; }
+    .flow-node.clickable { cursor: pointer; }
+    .flow-node.clickable:hover { border-color: var(--cyan); }
+    .flow-arrow { color: var(--cyan-deep); font-size: 1.4rem; }
+
+    .control-stack { display: grid; gap: 17px; }
+    .control label { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; font-weight: 600; margin-bottom: 7px; }
+    .control label span:last-child { color: var(--cyan-deep); font-variant-numeric: tabular-nums; }
+    input[type="range"] { width: 100%; accent-color: var(--cyan); }
+    select { width: 100%; min-height: 43px; border-radius: 11px; border: 1px solid var(--line); background: var(--surface); color: var(--text); padding: 8px 10px; }
+    .control-note { color: var(--muted); font-size: .82rem; margin-top: 5px; }
+
+    .plot { width: 100%; min-height: 430px; border-radius: 16px; overflow: hidden; }
+    .plot.compact { min-height: 350px; }
+    .metric-strip { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; margin-top: 14px; }
+    .metric-cell { background: var(--surface-2); border: 1px solid var(--line); border-radius: 14px; padding: 13px; text-align: center; }
+    .metric-name { color: var(--muted); font-size: .79rem; text-transform: uppercase; letter-spacing: .06em; }
+    .metric-value { font-size: 1.18rem; font-weight: 700; color: var(--cyan-deep); font-variant-numeric: tabular-nums; }
+
+    .status { border-radius: 14px; padding: 14px; border: 1px solid var(--line); background: var(--surface-2); }
+    .status.good { border-color: color-mix(in srgb, var(--success) 55%, var(--line)); background: color-mix(in srgb, var(--success) 9%, var(--surface)); }
+    .status.bad { border-color: color-mix(in srgb, var(--danger) 55%, var(--line)); background: color-mix(in srgb, var(--danger) 9%, var(--surface)); }
+    .status.warning { border-color: color-mix(in srgb, var(--amber) 55%, var(--line)); background: color-mix(in srgb, var(--amber) 9%, var(--surface)); }
+
+    .segmented { display: flex; flex-wrap: wrap; gap: 8px; }
+    .segmented button.active { background: var(--cyan); color: #062e37; border-color: var(--cyan); font-weight: 700; }
+
+    .proof-steps { display: grid; gap: 11px; }
+    .proof-step { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--surface); }
+    .proof-step button { width: 100%; border: 0; background: transparent; color: var(--text); padding: 15px 17px; display: flex; justify-content: space-between; gap: 16px; text-align: left; font-weight: 700; }
+    .proof-step .proof-body { display: none; padding: 0 17px 17px; color: var(--muted); }
+    .proof-step.open { border-color: var(--cyan); }
+    .proof-step.open .proof-body { display: block; }
+    .proof-number { display: inline-grid; place-items: center; min-width: 25px; height: 25px; border-radius: 50%; background: var(--surface-2); color: var(--cyan-deep); margin-right: 8px; font-size: .82rem; }
+
+    .example-card { position: relative; overflow: hidden; min-height: 310px; }
+    .example-card::after { content: ""; position: absolute; width: 120px; height: 120px; border-radius: 50%; right: -48px; bottom: -48px; border: 1px solid color-mix(in srgb, var(--cyan) 38%, var(--line)); }
+    .badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 5px 9px; font-size: .76rem; font-weight: 700; background: var(--surface-2); color: var(--cyan-deep); border: 1px solid var(--line); margin-bottom: 12px; }
+    .fact-list { display: grid; gap: 9px; margin-top: 15px; }
+    .fact { display: flex; gap: 9px; align-items: flex-start; color: var(--muted); font-size: .92rem; }
+    .fact::before { content: ""; width: 8px; height: 8px; flex: 0 0 8px; margin-top: .52em; border-radius: 50%; background: var(--teal); }
+
+    .counter-tabs { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 18px; }
+    .counter-tab.active { background: var(--danger); border-color: var(--danger); color: #fff; }
+    .counter-panel { display: none; }
+    .counter-panel.active { display: block; }
+
+    .mistake { border-top: 1px solid var(--line); padding: 17px 0; }
+    .mistake:first-child { border-top: 0; padding-top: 0; }
+    .wrong { color: var(--danger); font-weight: 700; }
+    .correct { color: var(--success); font-weight: 700; }
+
+    .prover-options { display: grid; gap: 9px; margin-top: 14px; }
+    .proof-option { text-align: left; }
+    .proof-option.correct-choice { border-color: var(--success); background: color-mix(in srgb, var(--success) 10%, var(--surface)); }
+    .proof-option.wrong-choice { border-color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, var(--surface)); }
+
+    .support-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: .9rem; }
+    .support-table th, .support-table td { border-bottom: 1px solid var(--line); text-align: left; padding: 10px 8px; vertical-align: top; }
+    .support-table th { color: var(--cyan-deep); }
+
+    .footer { padding: 45px 0 70px; color: var(--muted); text-align: center; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    @media (max-width: 1120px) {
+      .hero, .lab-grid, .proof-grid { grid-template-columns: 1fr; }
+      .hero-map { min-height: 380px; }
+      .grid-4 { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .notation-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .quantifier-row { grid-template-columns: repeat(2,minmax(0,1fr)); }
+    }
+    @media (max-width: 760px) {
+      .shell { width: min(100% - 20px, 1480px); }
+      .topbar-inner { min-height: 62px; }
+      .brand span:last-child { display: none; }
+      .hero { padding-top: 48px; }
+      .section { padding: 54px 0; }
+      .section-head { display: block; }
+      .section-head p { margin-top: 12px; }
+      .grid-2, .grid-3, .grid-4, .plot-pair, .notation-grid, .quantifier-row, .metric-strip { grid-template-columns: 1fr; }
+      .card, .definition-card { padding: 18px; }
+      .plot { min-height: 360px; }
+      .hero-map { min-height: 340px; padding: 14px; }
+      .extension-visual { height: 320px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>Hahn–Banach Laboratory</span></div>
+      <div class="top-actions">
+        <button class="ghost-button" id="resetAll" type="button">Reset</button>
+        <button class="icon-button" id="themeToggle" type="button" aria-label="Toggle light and dark mode">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="shell hero">
+      <div>
+        <div class="eyebrow">Functional analysis · extension and separation</div>
+        <h1>Hahn–Banach theorem</h1>
+        <p>
+          A linear measurement known only on a subspace can be extended to the whole space without violating a prescribed sublinear bound. The same principle creates separating hyperplanes, norming functionals, and supporting lines of convex sets.
+        </p>
+        <div class="hero-chips">
+          <span class="chip">dominated extension</span>
+          <span class="chip">norm preservation</span>
+          <span class="chip">separation</span>
+          <span class="chip">support functions</span>
+        </div>
+      </div>
+      <div class="hero-map" aria-label="Geometric overview of functional extension">
+        <div class="extension-visual">
+          <div class="extension-label">A functional on the cyan subspace becomes a family of parallel level sets on the ambient space.</div>
+          <div class="level-family"><span></span><span></span><span></span><span></span><span></span></div>
+          <div class="subspace-line"></div>
+          <div class="old-arrow"></div>
+          <div class="new-arrow"></div>
+          <div class="hero-equation" data-math="F|_M=f,\qquad F\le p"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">1 · The mathematical question</div><h2>Can a partial linear measurement be continued?</h2></div>
+          <p>A functional on a subspace already fixes some slopes. Hahn–Banach says that compatible slopes in the missing directions can be chosen globally.</p>
+        </div>
+        <div class="grid-3">
+          <article class="card">
+            <div class="card-label">Known data</div>
+            <h3>A subspace and a functional</h3>
+            <div class="math-display" data-math="M\subseteq X,\qquad f:M\to\mathbb{R}\ \text{linear}" data-display="true"></div>
+            <p class="muted">Only vectors in <span data-math="M"></span> can initially be measured.</p>
+          </article>
+          <article class="card">
+            <div class="card-label">Control mechanism</div>
+            <h3>A sublinear ceiling</h3>
+            <div class="math-display" data-math="p(x+y)\le p(x)+p(y),\qquad p(tx)=t\,p(x)\quad(t\ge0)" data-display="true"></div>
+            <p class="muted">The map <span data-math="p"></span> controls how large the extension may become.</p>
+          </article>
+          <article class="card">
+            <div class="card-label">Desired output</div>
+            <h3>A global extension</h3>
+            <div class="math-display" data-math="F:X\to\mathbb{R},\qquad F|_M=f,\qquad F(x)\le p(x)" data-display="true"></div>
+            <p class="muted">Linearity is preserved and the prescribed domination remains valid everywhere.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">2 · Formal theorem</div><h2>Dominated extension</h2></div>
+          <p>The real theorem is algebraic: no norm or topology is required until we derive the continuous norm-preserving corollary.</p>
+        </div>
+        <article class="card definition-card">
+          <div class="card-label">Hahn–Banach theorem — real form</div>
+          <div class="math-display" data-math="\begin{gathered}X\ \text{a real vector space},\quad M\subseteq X\ \text{a subspace},\\ p:X\to\mathbb{R}\ \text{sublinear},\quad f:M\to\mathbb{R}\ \text{linear},\quad f(m)\le p(m)\ \forall m\in M.\end{gathered}" data-display="true"></div>
+          <div class="math-display" data-math="\Longrightarrow\quad \exists F:X\to\mathbb{R}\ \text{linear such that}\quad F|_M=f\quad\text{and}\quad F(x)\le p(x)\ \forall x\in X." data-display="true"></div>
+
+          <div class="quantifier-row">
+            <div class="quantifier-piece"><strong>For every</strong><span data-math="X,M,p,f"></span></div>
+            <div class="quantifier-piece"><strong>Assuming</strong><span data-math="p\ \text{sublinear}"></span></div>
+            <div class="quantifier-piece"><strong>Compatibility</strong><span data-math="f\le p\ \text{on }M"></span></div>
+            <div class="quantifier-piece"><strong>There exists</strong><span data-math="F:X\to\mathbb R"></span></div>
+            <div class="quantifier-piece"><strong>For all</strong><span data-math="F(x)\le p(x)"></span></div>
+          </div>
+        </article>
+
+        <div class="grid-2" style="margin-top:20px">
+          <article class="card">
+            <div class="card-label">Normed-space corollary</div>
+            <h3>Norm-preserving extension</h3>
+            <div class="math-display" data-math="f\in M^*\quad\Longrightarrow\quad \exists F\in X^*:\ F|_M=f,\ \|F\|=\|f\|" data-display="true"></div>
+            <p class="muted">Apply the theorem to <span data-math="p(x)=\|f\|\,\|x\|"></span>. Using both <span data-math="x"></span> and <span data-math="-x"></span> yields <span data-math="|F(x)|\le \|f\|\|x\|"></span>.</p>
+          </article>
+          <article class="card">
+            <div class="card-label">Notation</div>
+            <div class="notation-grid">
+              <div class="notation-item"><strong><span data-math="X"></span></strong>ambient vector space</div>
+              <div class="notation-item"><strong><span data-math="M"></span></strong>initial subspace</div>
+              <div class="notation-item"><strong><span data-math="p"></span></strong>sublinear dominating map</div>
+              <div class="notation-item"><strong><span data-math="F"></span></strong>global extension</div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">3 · Extension laboratory</div><h2>Choose the missing slope</h2></div>
+          <p>On the line <span data-math="M=\mathbb R e_1"></span>, the functional fixes the first coefficient. Domination leaves an interval of admissible values for the second coefficient.</p>
+        </div>
+
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Controls</div>
+            <div class="control-stack">
+              <div class="control">
+                <label for="cSlider"><span data-math="c=f(e_1)"></span><span id="cValue">0.60</span></label>
+                <input id="cSlider" type="range" min="-1" max="1" step="0.01" value="0.60">
+                <div class="control-note">The known functional is <span data-math="f(x,0)=cx"></span>.</div>
+              </div>
+              <div class="control">
+                <label for="lambdaSlider"><span data-math="\lambda"></span><span id="lambdaValue">1.40</span></label>
+                <input id="lambdaSlider" type="range" min="0.45" max="2.5" step="0.01" value="1.40">
+                <div class="control-note">Controls the elliptical norm <span data-math="p(x,y)=\sqrt{x^2+\lambda^2y^2}"></span>.</div>
+              </div>
+              <div class="control">
+                <label for="bSlider"><span data-math="b=F(e_2)"></span><span id="bValue">0.00</span></label>
+                <input id="bSlider" type="range" min="-1.2" max="1.2" step="0.01" value="0">
+                <div class="control-note">Select the missing slope in <span data-math="F(x,y)=cx+by"></span>.</div>
+              </div>
+              <button type="button" class="primary-button" id="chooseMidpoint">Choose canonical midpoint</button>
+              <button type="button" class="ghost-button" id="chooseBoundary">Choose boundary extension</button>
+            </div>
+          </aside>
+
+          <article class="card">
+            <div id="extensionPlot" class="plot" aria-label="Sublinear unit ball and extension level sets"></div>
+            <div class="status" id="extensionStatus"></div>
+          </article>
+
+          <aside class="card">
+            <div class="card-label">Admissibility</div>
+            <div id="extensionFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">lower bound</div><div class="metric-value" id="lowerBound">−</div></div>
+              <div class="metric-cell"><div class="metric-name">upper bound</div><div class="metric-value" id="upperBound">−</div></div>
+              <div class="metric-cell"><div class="metric-name">dual size</div><div class="metric-value" id="dualSize">−</div></div>
+              <div class="metric-cell"><div class="metric-name">extension</div><div class="metric-value" id="extensionVerdict">−</div></div>
+            </div>
+            <div class="status warning" style="margin-top:14px">
+              <strong>Read the diagram.</strong><br>
+              The ellipse is <span data-math="p(x,y)\le1"></span>. Parallel violet lines are level sets of <span data-math="F"></span>. Domination holds exactly when every point of the ellipse lies between the levels <span data-math="F=\pm1"></span>.
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">4 · The proof mechanism</div><h2>Why the admissible interval is never empty</h2></div>
+          <p>The entire proof is driven by a one-dimensional extension step. Zorn's lemma then assembles all compatible partial extensions.</p>
+        </div>
+
+        <div class="proof-grid">
+          <article class="card">
+            <div class="card-label">One-step extension navigator</div>
+            <div class="proof-steps">
+              <div class="proof-step open">
+                <button type="button"><span><span class="proof-number">1</span>Add one direction</span><span>−</span></button>
+                <div class="proof-body">
+                  Choose <span data-math="x_0\notin M"></span>. Every point of <span data-math="M+\mathbb R x_0"></span> has a unique form <span data-math="m+t x_0"></span>. An extension must therefore have the form
+                  <div class="math-display" data-math="g(m+t x_0)=f(m)+t\alpha" data-display="true"></div>
+                  for one unknown scalar <span data-math="\alpha=g(x_0)"></span>.
+                </div>
+              </div>
+              <div class="proof-step">
+                <button type="button"><span><span class="proof-number">2</span>Translate domination into bounds</span><span>+</span></button>
+                <div class="proof-body">
+                  Domination for positive and negative coefficients yields
+                  <div class="math-display" data-math="\sup_{m\in M}\bigl(f(m)-p(m-x_0)\bigr)\le \alpha\le \inf_{m\in M}\bigl(p(m+x_0)-f(m)\bigr)." data-display="true"></div>
+                </div>
+              </div>
+              <div class="proof-step">
+                <button type="button"><span><span class="proof-number">3</span>Use sublinearity</span><span>+</span></button>
+                <div class="proof-body">
+                  For any <span data-math="m_1,m_2\in M"></span>, linearity and subadditivity give
+                  <div class="math-display" data-math="f(m_1)+f(m_2)=f(m_1+m_2)\le p(m_1+m_2)\le p(m_1-x_0)+p(m_2+x_0)." data-display="true"></div>
+                  Rearranging shows every lower candidate is at most every upper candidate. Hence the interval is nonempty.
+                </div>
+              </div>
+              <div class="proof-step">
+                <button type="button"><span><span class="proof-number">4</span>Choose any admissible value</span><span>+</span></button>
+                <div class="proof-body">
+                  Pick <span data-math="\alpha"></span> in that interval. The formula in Step 1 defines a linear extension dominated by <span data-math="p"></span> on the enlarged subspace.
+                </div>
+              </div>
+              <div class="proof-step">
+                <button type="button"><span><span class="proof-number">5</span>Pass to a maximal extension</span><span>+</span></button>
+                <div class="proof-body">
+                  Order all dominated extensions by inclusion. Every chain has an upper bound obtained by taking the union. Zorn's lemma gives a maximal extension; Step 1 implies its domain cannot be smaller than <span data-math="X"></span>.
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <aside class="card">
+            <div class="card-label">Guided theorem prover</div>
+            <h3 id="proverQuestion">Which fact makes the interval nonempty?</h3>
+            <div class="prover-options" id="proverOptions">
+              <button class="proof-option" data-answer="wrong">Completeness of the ambient normed space</button>
+              <button class="proof-option" data-answer="correct">Subadditivity and positive homogeneity of the dominating map</button>
+              <button class="proof-option" data-answer="wrong">Compactness of the unit ball</button>
+            </div>
+            <div id="proverFeedback" class="status" style="margin-top:14px">Select a reason.</div>
+            <div class="status warning" style="margin-top:14px">
+              <strong>Proof strategy.</strong><br>
+              Local construction + maximality. In finite dimension, repeat the one-dimensional step finitely many times; in arbitrary dimension, Zorn's lemma replaces iteration.
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">5 · Hypothesis dependency</div><h2>What each assumption does</h2></div>
+          <p>Click a node to see its exact role. These are logical implications, not merely thematic associations.</p>
+        </div>
+        <article class="card">
+          <div class="flow-map">
+            <button class="flow-node clickable" data-map="linear">linearity of <span data-math="f"></span></button>
+            <span class="flow-arrow">+</span>
+            <button class="flow-node clickable" data-map="domination"><span data-math="f\le p"></span> on <span data-math="M"></span></button>
+            <span class="flow-arrow">+</span>
+            <button class="flow-node clickable" data-map="sublinear">sublinearity of <span data-math="p"></span></button>
+            <span class="flow-arrow">→</span>
+            <button class="flow-node clickable" data-map="interval">nonempty admissible interval</button>
+            <span class="flow-arrow">→</span>
+            <button class="flow-node clickable" data-map="zorn">maximal dominated extension</button>
+            <span class="flow-arrow">→</span>
+            <button class="flow-node clickable" data-map="global">global <span data-math="F"></span></button>
+          </div>
+          <div id="mapExplanation" class="status" style="margin-top:20px">Choose a node.</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">6 · Separation laboratory</div><h2>A functional distinguishes a point from a convex set</h2></div>
+          <p>For a closed convex set and an exterior point, Hahn–Banach produces a continuous functional whose level hyperplane lies strictly between them.</p>
+        </div>
+
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Controls</div>
+            <div class="control-stack">
+              <div class="control">
+                <label for="setType"><span>Convex set</span><span id="setTypeLabel">ellipse</span></label>
+                <select id="setType">
+                  <option value="ellipse">Ellipse</option>
+                  <option value="disk">Disk</option>
+                  <option value="triangle">Triangle</option>
+                </select>
+              </div>
+              <div class="control">
+                <label for="pointX"><span data-math="z_1"></span><span id="pointXValue">2.40</span></label>
+                <input id="pointX" type="range" min="-3.5" max="3.5" step="0.01" value="2.4">
+              </div>
+              <div class="control">
+                <label for="pointY"><span data-math="z_2"></span><span id="pointYValue">1.55</span></label>
+                <input id="pointY" type="range" min="-3.5" max="3.5" step="0.01" value="1.55">
+              </div>
+              <button type="button" class="primary-button" id="moveOutside">Move point outside</button>
+              <button type="button" class="ghost-button" id="moveBoundary">Move point to boundary</button>
+            </div>
+          </aside>
+
+          <article class="card">
+            <div id="separationPlot" class="plot" aria-label="Convex set, exterior point, and separating hyperplane"></div>
+            <div id="separationStatus" class="status"></div>
+          </article>
+
+          <aside class="card">
+            <div class="card-label">Separating functional</div>
+            <div id="separationFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">support value</div><div class="metric-value" id="supportValue">−</div></div>
+              <div class="metric-cell"><div class="metric-name">point value</div><div class="metric-value" id="pointValue">−</div></div>
+              <div class="metric-cell"><div class="metric-name">gap</div><div class="metric-value" id="separationGap">−</div></div>
+              <div class="metric-cell"><div class="metric-name">separation</div><div class="metric-value" id="separationVerdict">−</div></div>
+            </div>
+            <div class="status warning" style="margin-top:14px">
+              <strong>Scope.</strong><br>
+              In this finite-dimensional Euclidean picture, the normal is obtained from the nearest point. Hahn–Banach supplies the functional abstractly in normed spaces, without requiring an inner product or a nearest-point projection.
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">7 · Support laboratory</div><h2>Supporting hyperplanes and the support function</h2></div>
+          <p>Turn the normal direction. The supporting line moves while remaining tangent to the convex body, and its signed distance is encoded by <span data-math="h_C"></span>.</p>
+        </div>
+        <div class="grid-2">
+          <article class="card">
+            <div class="control-stack" style="margin-bottom:14px">
+              <div class="control">
+                <label for="thetaSlider"><span data-math="\theta"></span><span id="thetaValue">35°</span></label>
+                <input id="thetaSlider" type="range" min="0" max="360" step="1" value="35">
+                <div class="control-note">The unit normal is <span data-math="u=(\cos\theta,\sin\theta)"></span>.</div>
+              </div>
+            </div>
+            <div id="supportPlot" class="plot compact" aria-label="Supporting line and support point"></div>
+          </article>
+          <article class="card">
+            <div class="card-label">Support data</div>
+            <div id="supportFormula" class="math-display"></div>
+            <p class="muted">For a nonempty set <span data-math="C"></span>, its support function is</p>
+            <div class="math-display" data-math="h_C(u)=\sup_{x\in C}u(x)." data-display="true"></div>
+            <table class="support-table">
+              <tr><th>Object</th><th>Geometric meaning</th></tr>
+              <tr><td><span data-math="u"></span></td><td>outward normal functional</td></tr>
+              <tr><td><span data-math="h_C(u)"></span></td><td>largest height of the set in direction <span data-math="u"></span></td></tr>
+              <tr><td><span data-math="\{x:u(x)=h_C(u)\}"></span></td><td>supporting hyperplane</td></tr>
+              <tr><td><span data-math="\operatorname{argmax}_{x\in C}u(x)"></span></td><td>support face; it need not be a single point</td></tr>
+            </table>
+            <div class="status good" style="margin-top:14px">
+              A norming functional is the special case where <span data-math="C"></span> is the closed unit ball and the hyperplane supports it at <span data-math="x/\|x\|"></span>.
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">8 · Consequences</div><h2>Extension becomes geometry</h2></div>
+          <p>Several fundamental results are different readings of the same theorem.</p>
+        </div>
+        <div class="grid-4">
+          <article class="card example-card">
+            <span class="badge">Norming functional</span>
+            <h3>Every nonzero vector has a supporting functional</h3>
+            <div class="math-display" data-math="x_0\ne0\Longrightarrow\exists\varphi\in X^*:\ \|\varphi\|=1,\ \varphi(x_0)=\|x_0\|" data-display="true"></div>
+            <div class="fact-list">
+              <div class="fact">Define a functional first on <span data-math="\operatorname{span}\{x_0\}"></span>.</div>
+              <div class="fact">Extend it without increasing the norm.</div>
+              <div class="fact">The dual unit ball supports the primal vector.</div>
+            </div>
+          </article>
+          <article class="card example-card">
+            <span class="badge">Point separation</span>
+            <h3>Closed convex sets can be detected by functionals</h3>
+            <div class="math-display" data-math="x_0\notin C\Longrightarrow\exists\varphi\in X^*,\ \alpha:\ \sup_{c\in C}\varphi(c)<\alpha<\varphi(x_0)" data-display="true"></div>
+            <div class="fact-list">
+              <div class="fact">Closedness creates a positive geometric gap.</div>
+              <div class="fact">Convexity makes one hyperplane sufficient.</div>
+            </div>
+          </article>
+          <article class="card example-card">
+            <span class="badge">Supporting hyperplane</span>
+            <h3>Boundary points admit supporting functionals</h3>
+            <div class="math-display" data-math="C\ 	ext{convex},\ \operatorname{int}C\ne\varnothing,\ x_0\in\partial C\Longrightarrow\exists\varphi\ne0:\ \varphi(x)\le\varphi(x_0)\quad(x\in C)" data-display="true"></div>
+            <div class="fact-list">
+              <div class="fact">Separate the boundary point from the open convex set <span data-math="\operatorname{int}C"></span>.</div>
+              <div class="fact">The support face may contain many points.</div>
+            </div>
+          </article>
+          <article class="card example-card">
+            <span class="badge">Dual characterization</span>
+            <h3>The norm is recovered from the dual</h3>
+            <div class="math-display" data-math="\|x\|=\sup_{\|\varphi\|\le1}|\varphi(x)|" data-display="true"></div>
+            <div class="fact-list">
+              <div class="fact">The easy inequality follows from boundedness.</div>
+              <div class="fact">Hahn–Banach produces equality at each fixed vector.</div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">9 · Examples</div><h2>Three ways extension appears</h2></div>
+          <p>From elementary geometry to infinite-dimensional analysis.</p>
+        </div>
+        <div class="grid-3">
+          <article class="card example-card">
+            <span class="badge">Canonical</span>
+            <h3>A line in <span data-math="(\mathbb R^2,\|\cdot\|_1)"></span></h3>
+            <div class="math-display" data-math="M=\mathbb Re_1,\qquad f(x,0)=x" data-display="true"></div>
+            <p class="muted">Every <span data-math="F_b(x,y)=x+by"></span> with <span data-math="|b|\le1"></span> has dual norm <span data-math="\|(1,b)\|_\infty=1"></span>. Norm-preserving extensions need not be unique.</p>
+          </article>
+          <article class="card example-card">
+            <span class="badge">Function space</span>
+            <h3>Extend a measurement from a subspace</h3>
+            <div class="math-display" data-math="M\subset C[0,1],\qquad f(g)=g(0)-g(1)" data-display="true"></div>
+            <p class="muted">On any subspace where this formula is defined, <span data-math="|f(g)|\le2\|g\|_\infty"></span>. Hahn–Banach extends the functional to the ambient normed space with the same norm.</p>
+          </article>
+          <article class="card example-card">
+            <span class="badge">Sequence space</span>
+            <h3>A functional on finitely supported sequences</h3>
+            <div class="math-display" data-math="f(x)=\sum_{n=1}^\infty a_nx_n\quad\text{on }c_{00}" data-display="true"></div>
+            <p class="muted">When the coefficients define a bounded functional for the chosen norm, Hahn–Banach extends it to the completion. The theorem guarantees existence even when no canonical formula is initially visible.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">10 · What can go wrong?</div><h2>Remove a hypothesis and watch the mechanism break</h2></div>
+          <p>Each failure identifies the exact logical point at which the proof can no longer proceed.</p>
+        </div>
+        <article class="card">
+          <div class="counter-tabs">
+            <button class="counter-tab active" data-panel="nonsublinear">No sublinearity</button>
+            <button class="counter-tab" data-panel="nondominated">No initial domination</button>
+            <button class="counter-tab" data-panel="nonconvex">No convexity</button>
+            <button class="counter-tab" data-panel="notclosed">No closedness</button>
+          </div>
+
+          <div class="counter-panel active" id="nonsublinear">
+            <div class="grid-2">
+              <div>
+                <h3>A contradictory pair of missing slopes</h3>
+                <div class="math-display" data-math="M=\mathbb Re_1,\quad f(x,0)=x,\quad p(x,y)=|x|-|y|" data-display="true"></div>
+                <p class="muted">On <span data-math="M"></span>, we have <span data-math="f(x,0)=x\le|x|=p(x,0)"></span>. But an extension <span data-math="F(x,y)=x+by"></span> would require</p>
+                <div class="math-display" data-math="b=F(0,1)\le-1,\qquad -b=F(0,-1)\le-1," data-display="true"></div>
+                <p class="muted">which is impossible. The map <span data-math="p"></span> is not sublinear.</p>
+              </div>
+              <div class="status bad"><strong>Where the proof breaks.</strong><br>The lower bound can exceed the upper bound because the subadditivity estimate in Step 3 is unavailable.</div>
+            </div>
+          </div>
+
+          <div class="counter-panel" id="nondominated">
+            <div class="grid-2">
+              <div>
+                <h3>The obstruction is already present on the subspace</h3>
+                <div class="math-display" data-math="M=\mathbb R,\qquad f(t)=2t,\qquad p(t)=|t|" data-display="true"></div>
+                <p class="muted">At <span data-math="t=1"></span>, <span data-math="f(1)=2>1=p(1)"></span>. No extension can repair a violation that already occurs on the original domain.</p>
+              </div>
+              <div class="status bad"><strong>Failed hypothesis.</strong><br>The condition <span data-math="f\le p"></span> on <span data-math="M"></span> is necessary, not cosmetic.</div>
+            </div>
+          </div>
+
+          <div class="counter-panel" id="nonconvex">
+            <div class="grid-2">
+              <div>
+                <h3>An exterior point may lie in the convex hull</h3>
+                <div class="math-display" data-math="C=\{(-1,0),(1,0)\},\qquad z=(0,0)\notin C" data-display="true"></div>
+                <p class="muted">For every linear functional <span data-math="\varphi(x,y)=ax+by"></span>, the values on <span data-math="C"></span> are <span data-math="-a"></span> and <span data-math="a"></span>. Thus <span data-math="\sup_C\varphi=|a|\ge0=\varphi(z)"></span>. Strict separation is impossible.</p>
+              </div>
+              <div class="status bad"><strong>Geometric reason.</strong><br>A hyperplane separates convex hulls. Since <span data-math="z\in\operatorname{co}(C)"></span>, no linear functional can place it strictly beyond both points.</div>
+            </div>
+          </div>
+
+          <div class="counter-panel" id="notclosed">
+            <div class="grid-2">
+              <div>
+                <h3>A boundary point of an open set has zero gap</h3>
+                <div class="math-display" data-math="C=\{x\in\mathbb R^2:\|x\|_2<1\},\qquad z=(1,0)\notin C" data-display="true"></div>
+                <p class="muted">The functional <span data-math="\varphi(x,y)=x"></span> satisfies <span data-math="\sup_C\varphi=1=\varphi(z)"></span>. Separation is possible only in a non-strict supporting sense.</p>
+              </div>
+              <div class="status bad"><strong>Where strictness fails.</strong><br>Without closedness, the distance from <span data-math="z"></span> to <span data-math="C"></span> may be zero.</div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">11 · Common mistakes</div><h2>Precision matters</h2></div>
+          <p>These distinctions prevent the most common misstatements of the theorem.</p>
+        </div>
+        <article class="card">
+          <div class="mistake">
+            <div class="wrong">Incorrect: the Hahn–Banach extension is unique.</div>
+            <p class="muted">The theorem asserts existence. The admissible interval may contain many values, producing many extensions.</p>
+            <div class="correct">Correct: uniqueness requires additional structure or additional constraints.</div>
+          </div>
+          <div class="mistake">
+            <div class="wrong">Incorrect: the algebraic theorem needs completeness.</div>
+            <p class="muted">Completeness does not appear in the dominated-extension statement.</p>
+            <div class="correct">Correct: the real algebraic theorem uses vector-space structure, sublinearity, and a maximality principle.</div>
+          </div>
+          <div class="mistake">
+            <div class="wrong">Incorrect: <span data-math="F\le p"></span> automatically means <span data-math="|F|\le p"></span>.</div>
+            <p class="muted">That conclusion uses symmetry, as in <span data-math="p(x)=C\|x\|"></span>, and domination applied to <span data-math="-x"></span>.</p>
+            <div class="correct">Correct: the general theorem is one-sided; the normed corollary becomes two-sided.</div>
+          </div>
+          <div class="mistake">
+            <div class="wrong">Incorrect: every exterior point can be strictly separated from every set.</div>
+            <p class="muted">Convexity and an appropriate closedness/gap assumption are essential.</p>
+            <div class="correct">Correct: separation theorems have hypotheses tailored to weak, proper, or strict separation.</div>
+          </div>
+          <div class="mistake">
+            <div class="wrong">Incorrect: a supporting functional always touches at exactly one point.</div>
+            <p class="muted">Flat faces produce many maximizers.</p>
+            <div class="correct">Correct: the contact set is a support face and may have positive dimension.</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">12 · Final synthesis</div><h2>One theorem, four interpretations</h2></div>
+          <p>The theorem is best remembered as an engine that converts local linear information into global geometry.</p>
+        </div>
+        <article class="card definition-card">
+          <div class="flow-map">
+            <div class="flow-node"><span data-math="f\ \text{on }M"></span><br><span class="small muted">partial measurement</span></div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-node"><span data-math="F\le p"></span><br><span class="small muted">controlled extension</span></div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-node"><span data-math="\|F\|=\|f\|"></span><br><span class="small muted">norm preservation</span></div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-node"><span data-math="\varphi(x)\le\alpha"></span><br><span class="small muted">separation</span></div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-node"><span data-math="h_C(\varphi)"></span><br><span class="small muted">support geometry</span></div>
+          </div>
+          <div class="math-display" data-math="\boxed{\text{local linear data}\longrightarrow\text{global functional}\longrightarrow\text{hyperplane geometry}}" data-display="true"></div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer shell">Interactive Real Analysis Laboratory · Hahn–Banach theorem</footer>
+
+  <script>
+  (() => {
+    'use strict';
+
+    const $ = (id) => document.getElementById(id);
+    const clamp = (x,a,b) => Math.max(a,Math.min(b,x));
+    const fmt = (x,d=3) => Number.isFinite(x) ? x.toFixed(d).replace('-0.000','0.000') : '—';
+    const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+    const state = {
+      c: 0.60,
+      lambda: 1.40,
+      b: 0,
+      setType: 'ellipse',
+      point: [2.4,1.55],
+      theta: 35
+    };
+
+    function renderStaticMath() {
+      document.querySelectorAll('[data-math]').forEach(el => {
+        if (!window.katex) return;
+        katex.render(el.dataset.math, el, {
+          throwOnError: false,
+          displayMode: el.dataset.display === 'true',
+          strict: 'ignore'
+        });
+      });
+    }
+
+    function setMath(id, tex, display=true) {
+      const el = $(id);
+      if (!el || !window.katex) return;
+      katex.render(tex, el, { throwOnError:false, displayMode:display, strict:'ignore' });
+    }
+
+    function plotTheme() {
+      return {
+        paper_bgcolor: css('--canvas'),
+        plot_bgcolor: css('--canvas'),
+        font: { color: css('--text'), family: 'Inter, sans-serif' },
+        xaxis: { gridcolor: css('--grid'), zerolinecolor: css('--axis'), linecolor: css('--axis') },
+        yaxis: { gridcolor: css('--grid'), zerolinecolor: css('--axis'), linecolor: css('--axis') }
+      };
+    }
+
+    function baseLayout(title, range=[-3,3], height=430) {
+      const t = plotTheme();
+      return {
+        title: { text:title, font:{size:15}, x:.02, xanchor:'left' },
+        height,
+        margin:{l:52,r:24,t:52,b:48},
+        paper_bgcolor:t.paper_bgcolor,
+        plot_bgcolor:t.plot_bgcolor,
+        font:t.font,
+        showlegend:true,
+        legend:{orientation:'h',y:1.08,x:1,xanchor:'right'},
+        xaxis:{...t.xaxis,range,scaleanchor:'y',scaleratio:1,title:'x'},
+        yaxis:{...t.yaxis,range,title:'y'},
+        hovermode:'closest'
+      };
+    }
+
+    function updateExtensionControls() {
+      state.c = parseFloat($('cSlider').value);
+      state.lambda = parseFloat($('lambdaSlider').value);
+      const maxB = state.lambda * Math.sqrt(Math.max(0,1-state.c*state.c));
+      $('bSlider').min = (-Math.max(0.25,maxB*1.35)).toFixed(3);
+      $('bSlider').max = ( Math.max(0.25,maxB*1.35)).toFixed(3);
+      state.b = clamp(parseFloat($('bSlider').value), parseFloat($('bSlider').min), parseFloat($('bSlider').max));
+      $('bSlider').value = state.b;
+      $('cValue').textContent = fmt(state.c,2);
+      $('lambdaValue').textContent = fmt(state.lambda,2);
+      $('bValue').textContent = fmt(state.b,2);
+      return maxB;
+    }
+
+    function renderExtension() {
+      const maxB = updateExtensionControls();
+      const c = state.c, b = state.b, lam = state.lambda;
+      const theta = Array.from({length:241},(_,i)=>2*Math.PI*i/240);
+      const ex = theta.map(t=>Math.cos(t));
+      const ey = theta.map(t=>Math.sin(t)/lam);
+
+      const traces = [
+        {x:ex,y:ey,mode:'lines',fill:'toself',name:'p(x,y) ≤ 1',line:{color:css('--cyan'),width:3},fillcolor:'rgba(0,168,198,.10)',hoverinfo:'skip'},
+        {x:[-3,3],y:[0,0],mode:'lines',name:'M',line:{color:css('--teal'),width:3},hoverinfo:'skip'}
+      ];
+
+      const normCoeff = Math.sqrt(c*c + (b/lam)*(b/lam));
+      const levels = [-1,-.5,0,.5,1];
+      levels.forEach((k,i)=>{
+        let xs=[], ys=[];
+        if (Math.abs(b)>1e-8) {
+          xs=[-3,3]; ys=xs.map(x=>(k-c*x)/b);
+        } else if (Math.abs(c)>1e-8) {
+          xs=[k/c,k/c]; ys=[-3,3];
+        } else {
+          xs=[];ys=[];
+        }
+        traces.push({x:xs,y:ys,mode:'lines',name:i===2?'ker F':undefined,showlegend:i===2,line:{color:i===2?css('--violet'):css('--line'),width:i===2?3:1,dash:i===2?'solid':'dot'},hoverinfo:'skip'});
+      });
+
+      const supportX = normCoeff>1e-10 ? c/(normCoeff) : 0;
+      const supportY = normCoeff>1e-10 ? (b/(lam*lam))/normCoeff : 0;
+      traces.push({x:[0,supportX],y:[0,supportY],mode:'lines+markers',name:'maximizing direction',line:{color:css('--amber'),width:3},marker:{size:[5,10],color:css('--amber')}});
+
+      Plotly.react('extensionPlot', traces, baseLayout('Elliptical unit ball and extension levels',[-2.6,2.6],430), {responsive:true,displaylogo:false,modeBarButtonsToRemove:['lasso2d','select2d']});
+
+      const admissible = Math.abs(b) <= maxB + 1e-9;
+      $('lowerBound').textContent = fmt(-maxB,3);
+      $('upperBound').textContent = fmt(maxB,3);
+      $('dualSize').textContent = fmt(normCoeff,3);
+      $('extensionVerdict').textContent = admissible ? 'dominated' : 'fails';
+      $('extensionVerdict').style.color = admissible ? css('--success') : css('--danger');
+      setMath('extensionFormula', String.raw`-\lambda\sqrt{1-c^2}\le b\le \lambda\sqrt{1-c^2},\qquad \sqrt{c^2+\frac{b^2}{\lambda^2}}=${fmt(normCoeff,3)}.`);
+      const st = $('extensionStatus');
+      st.className = 'status ' + (admissible?'good':'bad');
+      st.innerHTML = admissible
+        ? `<strong>Valid extension.</strong> The coefficient vector lies in the dual unit ball, so <span id="statusMathGood"></span>.`
+        : `<strong>Domination fails.</strong> Some point of the primal unit ball satisfies <span id="statusMathBad"></span>.`;
+      if (admissible) katex.render(String.raw`|F(x,y)|\le p(x,y)`, $('statusMathGood'), {throwOnError:false});
+      else katex.render(String.raw`|F(x,y)|>p(x,y)`, $('statusMathBad'), {throwOnError:false});
+    }
+
+    function convexBoundary(type, n=300) {
+      const pts=[];
+      if (type==='disk') {
+        for(let i=0;i<=n;i++){const t=2*Math.PI*i/n;pts.push([1.25*Math.cos(t),1.25*Math.sin(t)]);}
+      } else if (type==='ellipse') {
+        for(let i=0;i<=n;i++){const t=2*Math.PI*i/n;pts.push([1.55*Math.cos(t),.95*Math.sin(t)]);}
+      } else {
+        const v=[[-1.45,-.95],[1.45,-.75],[.25,1.45]];
+        for(let j=0;j<3;j++){
+          const a=v[j],b=v[(j+1)%3];
+          for(let i=0;i<=Math.floor(n/3);i++){const s=i/Math.floor(n/3);pts.push([a[0]*(1-s)+b[0]*s,a[1]*(1-s)+b[1]*s]);}
+        }
+      }
+      return pts;
+    }
+
+    function closestOnSegment(p,a,b) {
+      const vx=b[0]-a[0], vy=b[1]-a[1];
+      const t=clamp(((p[0]-a[0])*vx+(p[1]-a[1])*vy)/(vx*vx+vy*vy),0,1);
+      return [a[0]+t*vx,a[1]+t*vy];
+    }
+
+    function pointInTriangle(p,a,b,c) {
+      const sign=(p1,p2,p3)=>(p1[0]-p3[0])*(p2[1]-p3[1])-(p2[0]-p3[0])*(p1[1]-p3[1]);
+      const d1=sign(p,a,b),d2=sign(p,b,c),d3=sign(p,c,a);
+      const neg=(d1<0)||(d2<0)||(d3<0), pos=(d1>0)||(d2>0)||(d3>0);
+      return !(neg&&pos);
+    }
+
+    function projectionToSet(type,p) {
+      if(type==='disk'){
+        const r=Math.hypot(p[0],p[1]);
+        if(r<1.25-1e-6) return {inside:true,q:p.slice()};
+        if(Math.abs(r-1.25)<=1e-6) return {inside:false,q:p.slice()};
+        return {inside:false,q:[1.25*p[0]/r,1.25*p[1]/r]};
+      }
+      if(type==='ellipse'){
+        const a=1.55,b=.95;
+        const rho=(p[0]/a)**2+(p[1]/b)**2;
+        if(rho<1-1e-6) return {inside:true,q:p.slice()};
+        if(Math.abs(rho-1)<=1e-6) return {inside:false,q:p.slice()};
+        let best=null,bd=Infinity;
+        for(let i=0;i<2000;i++){
+          const t=2*Math.PI*i/2000,q=[a*Math.cos(t),b*Math.sin(t)],d=(p[0]-q[0])**2+(p[1]-q[1])**2;
+          if(d<bd){bd=d;best=q;}
+        }
+        return {inside:false,q:best};
+      }
+      const v=[[-1.45,-.95],[1.45,-.75],[.25,1.45]];
+      let best=null,bd=Infinity;
+      for(let j=0;j<3;j++){
+        const q=closestOnSegment(p,v[j],v[(j+1)%3]);
+        const d=(p[0]-q[0])**2+(p[1]-q[1])**2;
+        if(d<bd){bd=d;best=q;}
+      }
+      if(pointInTriangle(p,v[0],v[1],v[2]) && bd>1e-12) return {inside:true,q:p.slice()};
+      return {inside:false,q:best};
+    }
+
+
+    function boundaryNormal(type,q) {
+      if(type==='disk') {
+        const r=Math.hypot(q[0],q[1]) || 1;
+        return [q[0]/r,q[1]/r];
+      }
+      if(type==='ellipse') {
+        const a=1.55,b=.95;
+        const v=[q[0]/(a*a),q[1]/(b*b)];
+        const r=Math.hypot(v[0],v[1]) || 1;
+        return [v[0]/r,v[1]/r];
+      }
+      const vertices=[[-1.45,-.95],[1.45,-.75],[.25,1.45]];
+      let bestEdge=0,bd=Infinity;
+      for(let j=0;j<3;j++) {
+        const foot=closestOnSegment(q,vertices[j],vertices[(j+1)%3]);
+        const d=(q[0]-foot[0])**2+(q[1]-foot[1])**2;
+        if(d<bd){bd=d;bestEdge=j;}
+      }
+      const a=vertices[bestEdge],b=vertices[(bestEdge+1)%3];
+      const dx=b[0]-a[0],dy=b[1]-a[1];
+      const r=Math.hypot(dx,dy) || 1;
+      return [dy/r,-dx/r];
+    }
+
+    function supportOfBoundary(boundary,n) {
+      let h=-Infinity,q=boundary[0];
+      boundary.forEach(pt=>{const v=n[0]*pt[0]+n[1]*pt[1];if(v>h){h=v;q=pt;}});
+      return {h,q};
+    }
+
+    function lineForNormal(n,alpha,range=4) {
+      if(Math.abs(n[1])>1e-8){const x=[-range,range];return {x,y:x.map(t=>(alpha-n[0]*t)/n[1])};}
+      const xx=alpha/n[0];return {x:[xx,xx],y:[-range,range]};
+    }
+
+    function renderSeparation() {
+      state.setType=$('setType').value;
+      state.point=[parseFloat($('pointX').value),parseFloat($('pointY').value)];
+      $('setTypeLabel').textContent=state.setType;
+      $('pointXValue').textContent=fmt(state.point[0],2);
+      $('pointYValue').textContent=fmt(state.point[1],2);
+      const boundary=convexBoundary(state.setType);
+      const proj=projectionToSet(state.setType,state.point);
+      let n=[1,0], q=proj.q;
+      if(!proj.inside){
+        n=[state.point[0]-q[0],state.point[1]-q[1]];
+        const nn=Math.hypot(n[0],n[1]);
+        n = nn>1e-9 ? [n[0]/nn,n[1]/nn] : boundaryNormal(state.setType,q);
+      }
+      const sup=supportOfBoundary(boundary,n);
+      q=sup.q;
+      const pointVal=n[0]*state.point[0]+n[1]*state.point[1];
+      const gap=pointVal-sup.h;
+      const line=lineForNormal(n,sup.h,4);
+      const traces=[
+        {x:boundary.map(p=>p[0]),y:boundary.map(p=>p[1]),mode:'lines',fill:'toself',name:'C',line:{color:css('--cyan'),width:3},fillcolor:'rgba(0,168,198,.10)'},
+        {x:[state.point[0]],y:[state.point[1]],mode:'markers+text',name:'z',text:['z'],textposition:'top right',marker:{size:12,color:css('--danger')}},
+        {x:line.x,y:line.y,mode:'lines',name:'support / separator',line:{color:css('--violet'),width:3}},
+        {x:[q[0],state.point[0]],y:[q[1],state.point[1]],mode:'lines+markers',name:'normal gap',line:{color:css('--amber'),width:3,dash:'dot'},marker:{size:[9,7],color:css('--amber')}}
+      ];
+      Plotly.react('separationPlot',traces,baseLayout('Convex set and separating hyperplane',[-3.7,3.7],430),{responsive:true,displaylogo:false,modeBarButtonsToRemove:['lasso2d','select2d']});
+      $('supportValue').textContent=fmt(sup.h,3);
+      $('pointValue').textContent=fmt(pointVal,3);
+      $('separationGap').textContent=fmt(gap,3);
+      $('separationVerdict').textContent=gap>1e-3?'strict':(Math.abs(gap)<=1e-3?'supporting':'none');
+      $('separationVerdict').style.color=gap>1e-3?css('--success'):(Math.abs(gap)<=1e-3?css('--amber'):css('--danger'));
+      setMath('separationFormula',String.raw`\varphi(x)=(${fmt(n[0],3)})x_1+(${fmt(n[1],3)})x_2,\qquad h_C(\varphi)=${fmt(sup.h,3)}.`);
+      const st=$('separationStatus');
+      if(proj.inside){st.className='status bad';st.innerHTML='<strong>No exterior-point separation.</strong> The selected point lies inside the convex set.';}
+      else if(gap>1e-3){st.className='status good';st.innerHTML='<strong>Strict separation.</strong> The point lies beyond the supporting hyperplane by a positive functional gap.';}
+      else {st.className='status warning';st.innerHTML='<strong>Supporting case.</strong> The point is on or numerically extremely close to the boundary, so the strict gap vanishes.';}
+    }
+
+    function renderSupport() {
+      state.theta=parseFloat($('thetaSlider').value);
+      $('thetaValue').textContent=`${Math.round(state.theta)}°`;
+      const th=state.theta*Math.PI/180,n=[Math.cos(th),Math.sin(th)];
+      const boundary=convexBoundary(state.setType);
+      const sup=supportOfBoundary(boundary,n);
+      const line=lineForNormal(n,sup.h,4);
+      const traces=[
+        {x:boundary.map(p=>p[0]),y:boundary.map(p=>p[1]),mode:'lines',fill:'toself',name:'C',line:{color:css('--cyan'),width:3},fillcolor:'rgba(0,168,198,.10)'},
+        {x:line.x,y:line.y,mode:'lines',name:'support line',line:{color:css('--violet'),width:3}},
+        {x:[sup.q[0]],y:[sup.q[1]],mode:'markers',name:'support point',marker:{size:12,color:css('--amber')}},
+        {x:[0,n[0]*1.2],y:[0,n[1]*1.2],mode:'lines+markers',name:'normal u',line:{color:css('--teal'),width:3},marker:{size:[5,9],color:css('--teal')}}
+      ];
+      Plotly.react('supportPlot',traces,baseLayout('Rotate the supporting functional',[-2.5,2.5],350),{responsive:true,displaylogo:false,modeBarButtonsToRemove:['lasso2d','select2d']});
+      setMath('supportFormula',String.raw`u=(${fmt(n[0],3)},${fmt(n[1],3)}),\qquad h_C(u)=${fmt(sup.h,3)},\qquad x_u=(${fmt(sup.q[0],3)},${fmt(sup.q[1],3)}).`);
+    }
+
+    function wireProofSteps(){
+      document.querySelectorAll('.proof-step > button').forEach(btn=>btn.addEventListener('click',()=>{
+        const step=btn.parentElement;step.classList.toggle('open');
+        btn.lastElementChild.textContent=step.classList.contains('open')?'−':'+';
+      }));
+    }
+
+    function wireProver(){
+      $('proverOptions').addEventListener('click',e=>{
+        const btn=e.target.closest('.proof-option');if(!btn)return;
+        document.querySelectorAll('.proof-option').forEach(b=>b.classList.remove('correct-choice','wrong-choice'));
+        const ok=btn.dataset.answer==='correct';btn.classList.add(ok?'correct-choice':'wrong-choice');
+        const fb=$('proverFeedback');fb.className='status '+(ok?'good':'bad');
+        fb.textContent=ok?'Correct. Sublinearity compares every lower bound with every upper bound.':'Not this time. The one-step argument is algebraic and does not use completeness or compactness.';
+      });
+    }
+
+    const mapText={
+      linear:'Linearity reduces the new extension to one unknown scalar α and allows f(m₁)+f(m₂)=f(m₁+m₂).',
+      domination:'Initial domination supplies all candidate lower and upper inequalities. Without it, the obstruction may already occur on M.',
+      sublinear:'Subadditivity is the comparison engine: it proves that no lower bound exceeds any upper bound.',
+      interval:'A nonempty interval permits at least one value for the missing slope. Multiple values explain nonuniqueness.',
+      zorn:'The union of a chain of compatible extensions is again a compatible extension, so maximality applies.',
+      global:'If a maximal domain omitted a direction, the one-step lemma would enlarge it, contradicting maximality.'
+    };
+
+    function wireMap(){
+      document.querySelectorAll('[data-map]').forEach(btn=>btn.addEventListener('click',()=>{
+        $('mapExplanation').textContent=mapText[btn.dataset.map];
+      }));
+    }
+
+    function wireCounters(){
+      document.querySelectorAll('.counter-tab').forEach(tab=>tab.addEventListener('click',()=>{
+        document.querySelectorAll('.counter-tab').forEach(t=>t.classList.remove('active'));
+        document.querySelectorAll('.counter-panel').forEach(p=>p.classList.remove('active'));
+        tab.classList.add('active');$(tab.dataset.panel).classList.add('active');
+      }));
+    }
+
+    function safeStorageGet(key){
+      try { return window.localStorage.getItem(key); } catch (_) { return null; }
+    }
+
+    function safeStorageSet(key,value){
+      try { window.localStorage.setItem(key,value); } catch (_) { /* storage may be unavailable */ }
+    }
+
+    function setTheme(theme){
+      document.documentElement.dataset.theme=theme;
+      safeStorageSet('hb-theme',theme);
+      $('themeToggle').textContent=theme==='dark'?'☀':'◐';
+      renderExtension();renderSeparation();renderSupport();
+    }
+
+    function reset(){
+      $('cSlider').value=.60;$('lambdaSlider').value=1.40;$('bSlider').value=0;
+      $('setType').value='ellipse';$('pointX').value=2.4;$('pointY').value=1.55;$('thetaSlider').value=35;
+      state.c=.60;state.lambda=1.40;state.b=0;state.setType='ellipse';state.point=[2.4,1.55];state.theta=35;
+      renderExtension();renderSeparation();renderSupport();
+    }
+
+    function wireControls(){
+      ['cSlider','lambdaSlider','bSlider'].forEach(id=>$(id).addEventListener('input',renderExtension));
+      $('chooseMidpoint').addEventListener('click',()=>{$('bSlider').value=0;renderExtension();});
+      $('chooseBoundary').addEventListener('click',()=>{
+        const c=parseFloat($('cSlider').value),lam=parseFloat($('lambdaSlider').value);
+        $('bSlider').value=lam*Math.sqrt(Math.max(0,1-c*c));renderExtension();
+      });
+      ['setType','pointX','pointY'].forEach(id=>$(id).addEventListener(id==='setType'?'change':'input',()=>{renderSeparation();renderSupport();}));
+      $('moveOutside').addEventListener('click',()=>{$('pointX').value=2.4;$('pointY').value=1.55;renderSeparation();});
+      $('moveBoundary').addEventListener('click',()=>{
+        if($('setType').value==='disk'){$('pointX').value=1.25;$('pointY').value=0;}
+        else if($('setType').value==='ellipse'){$('pointX').value=1.55;$('pointY').value=0;}
+        else {$('pointX').value=.25;$('pointY').value=1.45;}
+        renderSeparation();
+      });
+      $('thetaSlider').addEventListener('input',renderSupport);
+      $('themeToggle').addEventListener('click',()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));
+      $('resetAll').addEventListener('click',reset);
+    }
+
+    function init(){
+      renderStaticMath();wireProofSteps();wireProver();wireMap();wireCounters();wireControls();
+      const stored=safeStorageGet('hb-theme');
+      const preferred=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+      document.documentElement.dataset.theme=stored||preferred;
+      $('themeToggle').textContent=document.documentElement.dataset.theme==='dark'?'☀':'◐';
+      renderExtension();renderSeparation();renderSupport();
+      window.addEventListener('resize',()=>{Plotly.Plots.resize('extensionPlot');Plotly.Plots.resize('separationPlot');Plotly.Plots.resize('supportPlot');});
+    }
+
+    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>setTimeout(init,0));
+    else setTimeout(init,0);
+  })();
+  </script>
+</body>
+</html>

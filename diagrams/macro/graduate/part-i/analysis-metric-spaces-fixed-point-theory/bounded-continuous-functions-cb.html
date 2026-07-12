@@ -1,0 +1,3828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Space of Bounded Continuous Functions</title>
+
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
+  />
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
+  ></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f0e6;
+      --paper: #fffdf8;
+      --paper-soft: #f3ede2;
+      --ink: #192523;
+      --muted: #687471;
+      --line: rgba(30, 43, 40, 0.13);
+      --grid: rgba(46, 67, 62, 0.075);
+      --axis: rgba(25, 37, 35, 0.42);
+      --primary: #267f75;
+      --primary-soft: rgba(38, 127, 117, 0.13);
+      --teal: #69b8aa;
+      --teal-soft: rgba(105, 184, 170, 0.17);
+      --violet: #7583c5;
+      --violet-soft: rgba(117, 131, 197, 0.14);
+      --amber: #bf7e50;
+      --amber-soft: rgba(191, 126, 80, 0.14);
+      --danger: #b66064;
+      --danger-soft: rgba(182, 96, 100, 0.13);
+      --shadow: 0 24px 68px rgba(32, 48, 44, 0.09);
+      --shadow-soft: 0 10px 30px rgba(32, 48, 44, 0.065);
+      --radius: 28px;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --serif: Georgia, Cambria, "Times New Roman", serif;
+    }
+
+    [data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #101817;
+      --paper: #17211f;
+      --paper-soft: #202c29;
+      --ink: #eef4f1;
+      --muted: #9fada9;
+      --line: rgba(236, 244, 241, 0.12);
+      --grid: rgba(236, 244, 241, 0.07);
+      --axis: rgba(236, 244, 241, 0.38);
+      --primary: #70d0c1;
+      --primary-soft: rgba(112, 208, 193, 0.14);
+      --teal: #90cfc1;
+      --teal-soft: rgba(144, 207, 193, 0.16);
+      --violet: #a4b0f0;
+      --violet-soft: rgba(164, 176, 240, 0.15);
+      --amber: #dfa273;
+      --amber-soft: rgba(223, 162, 115, 0.15);
+      --danger: #df898d;
+      --danger-soft: rgba(223, 137, 141, 0.15);
+      --shadow: 0 26px 72px rgba(0, 0, 0, 0.32);
+      --shadow-soft: 0 12px 34px rgba(0, 0, 0, 0.22);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100%;
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 9% -5%, var(--primary-soft), transparent 34rem),
+        radial-gradient(circle at 92% 0%, var(--violet-soft), transparent 32rem),
+        var(--bg);
+      font-family: var(--sans);
+      text-rendering: geometricPrecision;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 180ms ease, color 180ms ease;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.38;
+      background-image:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: 46px 46px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.42), transparent 54%);
+    }
+
+    button,
+    select,
+    input {
+      font: inherit;
+      color: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app {
+      position: relative;
+      width: min(1280px, calc(100% - 34px));
+      margin: 0 auto;
+      padding: 30px 0 48px;
+    }
+
+    .hero {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 24px;
+      align-items: start;
+      margin-bottom: 17px;
+      padding: 26px 28px 25px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 32px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.38), transparent 58%),
+        var(--paper);
+      box-shadow: var(--shadow-soft);
+    }
+
+    [data-theme="dark"] .hero {
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.035), transparent 58%),
+        var(--paper);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      top: -110px;
+      right: -70px;
+      width: 270px;
+      height: 270px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--primary-soft), transparent 68%);
+    }
+
+    .eyebrow,
+    .section-label {
+      color: var(--primary);
+      font-size: 0.72rem;
+      font-weight: 810;
+      letter-spacing: 0.17em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow {
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      max-width: 930px;
+      margin: 0 0 12px;
+      font-family: var(--serif);
+      font-size: clamp(2.25rem, 5.2vw, 4.85rem);
+      font-weight: 540;
+      line-height: 0.95;
+      letter-spacing: -0.055em;
+    }
+
+    .subtitle {
+      max-width: 865px;
+      margin: 0;
+      color: var(--muted);
+      font-family: var(--serif);
+      font-size: clamp(1rem, 1.35vw, 1.15rem);
+      line-height: 1.58;
+    }
+
+    .theme-button {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--paper);
+      box-shadow: var(--shadow-soft);
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .theme-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--teal));
+      box-shadow: 0 0 0 5px var(--primary-soft);
+    }
+
+    .nav {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 6px;
+      margin-bottom: 17px;
+      padding: 6px;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: color-mix(in srgb, var(--paper-soft) 92%, transparent);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .nav-button {
+      min-height: 48px;
+      border: 0;
+      border-radius: 11px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 730;
+      transition: transform 160ms ease, background-color 160ms ease, color 160ms ease;
+    }
+
+    .nav-button:hover {
+      transform: translateY(-1px);
+    }
+
+    .nav-button.active {
+      color: var(--ink);
+      background: var(--paper);
+      box-shadow: 0 5px 16px rgba(30, 44, 41, 0.075);
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.46fr) minmax(310px, 0.54fr);
+      gap: 17px;
+      align-items: start;
+    }
+
+    .visual-card,
+    .side-card,
+    .bottom-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: color-mix(in srgb, var(--paper) 97%, transparent);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .visual-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 18px;
+      padding: 19px 22px 15px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .visual-title {
+      margin: 5px 0 0;
+      font-family: var(--serif);
+      font-size: clamp(1.45rem, 2.3vw, 2rem);
+      font-weight: 520;
+      letter-spacing: -0.025em;
+    }
+
+    .visual-copy {
+      max-width: 660px;
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-family: var(--serif);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .status-pill {
+      flex: 0 0 auto;
+      max-width: 42%;
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: 0.74rem;
+      font-weight: 780;
+      text-align: center;
+    }
+
+    .status-pill.bad {
+      color: var(--danger);
+      background: var(--danger-soft);
+    }
+
+    .status-pill.warn {
+      color: var(--amber);
+      background: var(--amber-soft);
+    }
+
+    .formula-strip {
+      padding: 15px 22px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(90deg, var(--primary-soft), transparent 78%);
+      overflow-x: auto;
+    }
+
+    .formula-strip .katex-display {
+      margin: 0.1em 0;
+      text-align: left;
+    }
+
+    .visual-wrap {
+      padding: 15px 17px 18px;
+    }
+
+    .svg-shell {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 23px;
+      background: color-mix(in srgb, var(--paper) 86%, transparent);
+    }
+
+    svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      touch-action: none;
+    }
+
+    .dual-view {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .mini-visual {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 21px;
+      background: color-mix(in srgb, var(--paper) 86%, transparent);
+    }
+
+    .mini-head {
+      padding: 13px 15px 11px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .mini-head strong {
+      display: block;
+      margin-bottom: 3px;
+      font-family: var(--serif);
+      font-size: 1.03rem;
+      font-weight: 560;
+    }
+
+    .mini-head span {
+      color: var(--muted);
+      font-size: 0.73rem;
+      line-height: 1.4;
+    }
+
+    .caption {
+      padding: 13px 16px 16px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.81rem;
+      line-height: 1.5;
+    }
+
+    .caption strong {
+      color: var(--ink);
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 9px;
+    }
+
+    .legend-key {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--paper-soft);
+      color: var(--muted);
+      font-size: 0.7rem;
+    }
+
+    .swatch {
+      width: 11px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--primary);
+    }
+
+    .side-stack {
+      display: grid;
+      gap: 17px;
+    }
+
+    .side-card {
+      padding: 18px;
+    }
+
+    .side-title {
+      margin: 4px 0 0;
+      font-family: var(--serif);
+      font-size: 1.3rem;
+      font-weight: 540;
+    }
+
+    .side-copy {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.48;
+    }
+
+    .controls {
+      display: grid;
+      gap: 11px;
+      margin-top: 15px;
+    }
+
+    .control {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent),
+        var(--paper-soft);
+    }
+
+    [data-theme="dark"] .control {
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent),
+        var(--paper-soft);
+    }
+
+    .control-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .control label {
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 760;
+      letter-spacing: 0.045em;
+      text-transform: uppercase;
+    }
+
+    .control output {
+      padding: 2px 7px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--paper);
+      color: var(--ink);
+      font-size: 0.72rem;
+      font-weight: 760;
+      font-variant-numeric: tabular-nums;
+    }
+
+    select {
+      width: 100%;
+      min-height: 41px;
+      padding: 0 34px 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--paper);
+      outline: none;
+      font-size: 0.82rem;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary);
+    }
+
+    .control-help {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 0.7rem;
+      line-height: 1.4;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .action-button {
+      flex: 1 1 auto;
+      min-height: 39px;
+      padding: 0 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--paper);
+      font-size: 0.77rem;
+      font-weight: 750;
+    }
+
+    .action-button.primary {
+      border-color: color-mix(in srgb, var(--primary) 42%, var(--line));
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    .readout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      margin-top: 14px;
+    }
+
+    .stat {
+      min-height: 74px;
+      padding: 11px;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: var(--paper-soft);
+    }
+
+    .stat small {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 0.65rem;
+      font-weight: 760;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 0.9rem;
+      line-height: 1.3;
+    }
+
+    .insight {
+      margin-top: 14px;
+      padding: 13px 14px;
+      border-left: 3px solid var(--primary);
+      border-radius: 0 14px 14px 0;
+      background: var(--primary-soft);
+      color: var(--muted);
+      font-family: var(--serif);
+      font-size: 0.86rem;
+      line-height: 1.52;
+    }
+
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+      gap: 17px;
+      margin-top: 17px;
+    }
+
+    .bottom-card {
+      padding: 19px 21px;
+    }
+
+    .equation-box {
+      margin-top: 11px;
+      padding: 16px 18px;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background:
+        linear-gradient(90deg, var(--primary-soft), transparent),
+        var(--paper-soft);
+    }
+
+    .equation-box .katex-display {
+      margin: 0.12em 0;
+      text-align: left;
+    }
+
+    .equation-note {
+      margin: 11px 0 0;
+      color: var(--muted);
+      font-family: var(--serif);
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .theory-list {
+      display: grid;
+      gap: 9px;
+      margin-top: 12px;
+    }
+
+    .theory-line {
+      display: grid;
+      grid-template-columns: 24px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+    }
+
+    .theory-number {
+      display: grid;
+      place-items: center;
+      width: 23px;
+      height: 23px;
+      border-radius: 50%;
+      background: var(--paper-soft);
+      color: var(--primary);
+      font-size: 0.7rem;
+      font-weight: 850;
+    }
+
+    .theory-line p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.48;
+    }
+
+    .theory-line strong {
+      color: var(--ink);
+    }
+
+    .reset-button {
+      width: 100%;
+      min-height: 41px;
+      margin-top: 13px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: transparent;
+      font-size: 0.78rem;
+      font-weight: 740;
+    }
+
+    .reset-button:hover {
+      background: var(--paper-soft);
+    }
+
+    .svg-label {
+      fill: var(--muted);
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 620;
+    }
+
+    .svg-small {
+      fill: var(--muted);
+      font-family: var(--sans);
+      font-size: 10.5px;
+    }
+
+    .svg-title {
+      fill: var(--ink);
+      font-family: var(--serif);
+      font-size: 15px;
+      font-weight: 560;
+    }
+
+    @media (max-width: 1020px) {
+      .main-grid,
+      .bottom-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .side-card {
+        display: grid;
+        grid-template-columns: minmax(220px, 0.6fr) minmax(0, 1.4fr);
+        gap: 18px;
+      }
+
+      .side-card > .readout,
+      .side-card > .insight,
+      .side-card > .button-row,
+      .side-card > .reset-button {
+        grid-column: 1 / -1;
+      }
+
+      .controls {
+        margin-top: 0;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .app {
+        width: min(100% - 18px, 1280px);
+        padding-top: 18px;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 22px;
+        border-radius: 27px;
+      }
+
+      .theme-button {
+        justify-self: start;
+      }
+
+      .nav {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .nav-button:last-child {
+        grid-column: 1 / -1;
+      }
+
+      .visual-head {
+        flex-direction: column;
+      }
+
+      .status-pill {
+        max-width: 100%;
+      }
+
+      .dual-view {
+        grid-template-columns: 1fr;
+      }
+
+      .side-card {
+        display: block;
+      }
+
+      .controls {
+        margin-top: 15px;
+      }
+
+      .readout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+    <header class="hero">
+      <div>
+        <div class="eyebrow">Function spaces for recursive macroeconomics</div>
+        <h1>The Space of Bounded Continuous Functions</h1>
+        <p class="subtitle">
+          A value function is not merely a curve drawn over the state space.
+          It is one element of a normed function space, where boundedness controls
+          magnitudes, continuity controls local behavior, and completeness makes
+          limiting value functions exist.
+        </p>
+      </div>
+
+      <button
+        class="theme-button"
+        id="themeButton"
+        type="button"
+        aria-label="Toggle light and dark mode"
+      >
+        <span class="theme-dot"></span>
+        <span id="themeText">Dark mode</span>
+      </button>
+    </header>
+
+    <nav class="nav" aria-label="Theoretical views">
+      <button class="nav-button active" data-view="space" type="button">C_b(X)</button>
+      <button class="nav-button" data-view="sup" type="button">Sup norm</button>
+      <button class="nav-button" data-view="complete" type="button">Completeness</button>
+      <button class="nav-button" data-view="returns" type="button">Bounded returns</button>
+      <button class="nav-button" data-view="value" type="button">Value functions</button>
+    </nav>
+
+    <section class="main-grid">
+      <article class="visual-card">
+        <header class="visual-head">
+          <div>
+            <div class="section-label" id="visualLabel"></div>
+            <h2 class="visual-title" id="visualTitle"></h2>
+            <p class="visual-copy" id="visualCopy"></p>
+          </div>
+
+          <div class="status-pill" id="statusPill"></div>
+        </header>
+
+        <div class="formula-strip">
+          <div id="topFormula"></div>
+        </div>
+
+        <div class="visual-wrap" id="visualWrap"></div>
+      </article>
+
+      <aside class="side-stack">
+        <section class="side-card">
+          <div>
+            <div class="section-label">Controls</div>
+            <h2 class="side-title" id="controlTitle"></h2>
+            <p class="side-copy" id="controlCopy"></p>
+          </div>
+
+          <div class="controls" id="controls"></div>
+          <div class="button-row" id="buttonRow"></div>
+          <div class="readout" id="readout"></div>
+          <div class="insight" id="insight"></div>
+
+          <button class="reset-button" id="resetButton" type="button">
+            Restore canonical example
+          </button>
+        </section>
+      </aside>
+    </section>
+
+    <section class="bottom-grid">
+      <article class="bottom-card">
+        <div class="section-label">Central statement</div>
+        <div class="equation-box">
+          <div id="mainEquation"></div>
+        </div>
+        <p class="equation-note" id="equationNote"></p>
+      </article>
+
+      <article class="bottom-card">
+        <div class="section-label">What the picture proves</div>
+        <div class="theory-list" id="theoryList"></div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const defaults = {
+        view: "space",
+
+        spaceCase: "boundedContinuous",
+        spaceAmplitude: 1.25,
+        spaceSlope: 0.22,
+        spaceBound: 2.0,
+
+        supN: 3,
+        supDecay: 0.62,
+        supFrequency: 1.4,
+
+        completeCase: "uniformCauchy",
+        completeN: 5,
+        completeRho: 0.68,
+
+        returnM: 2.0,
+        returnBeta: 0.9,
+        returnHorizon: 18,
+        returnPattern: "bounded",
+
+        valueBeta: 0.9,
+        valueIteration: 4,
+        valueRewardScale: 1.0,
+        valuePolicy: 0.72
+      };
+
+      const state = { ...defaults };
+
+      const els = {
+        navButtons: [...document.querySelectorAll(".nav-button")],
+        visualLabel: document.getElementById("visualLabel"),
+        visualTitle: document.getElementById("visualTitle"),
+        visualCopy: document.getElementById("visualCopy"),
+        statusPill: document.getElementById("statusPill"),
+        topFormula: document.getElementById("topFormula"),
+        visualWrap: document.getElementById("visualWrap"),
+        controlTitle: document.getElementById("controlTitle"),
+        controlCopy: document.getElementById("controlCopy"),
+        controls: document.getElementById("controls"),
+        buttonRow: document.getElementById("buttonRow"),
+        readout: document.getElementById("readout"),
+        insight: document.getElementById("insight"),
+        resetButton: document.getElementById("resetButton"),
+        mainEquation: document.getElementById("mainEquation"),
+        equationNote: document.getElementById("equationNote"),
+        theoryList: document.getElementById("theoryList"),
+        themeButton: document.getElementById("themeButton"),
+        themeText: document.getElementById("themeText")
+      };
+
+      const NS = "http://www.w3.org/2000/svg";
+
+      function css(name) {
+        return getComputedStyle(document.documentElement)
+          .getPropertyValue(name)
+          .trim();
+      }
+
+      function fmt(value, digits = 2) {
+        return Number(value)
+          .toFixed(digits)
+          .replace(/\.00$/, "");
+      }
+
+      function clamp(value, min, max) {
+        return Math.max(min, Math.min(max, value));
+      }
+
+      function renderMath(element, tex, display = true) {
+        if (!window.katex) {
+          element.textContent = tex;
+          return;
+        }
+
+        katex.render(tex, element, {
+          displayMode: display,
+          throwOnError: false,
+          strict: "ignore"
+        });
+      }
+
+      function inlineMath(tex) {
+        const span = document.createElement("span");
+        renderMath(span, tex, false);
+        return span.outerHTML;
+      }
+
+      function setTheory(items) {
+        els.theoryList.innerHTML = items.map((item, index) => `
+          <div class="theory-line">
+            <div class="theory-number">${index + 1}</div>
+            <p>${item}</p>
+          </div>
+        `).join("");
+      }
+
+      function setHeader(label, title, copy, status, statusClass = "") {
+        els.visualLabel.textContent = label;
+        els.visualTitle.textContent = title;
+        els.visualCopy.textContent = copy;
+        els.statusPill.textContent = status;
+        els.statusPill.className = `status-pill ${statusClass}`.trim();
+      }
+
+      function setSide(title, copy) {
+        els.controlTitle.textContent = title;
+        els.controlCopy.textContent = copy;
+      }
+
+      function setReadout(items) {
+        els.readout.innerHTML = items.map(item => `
+          <div class="stat">
+            <small>${item.label}</small>
+            <strong>${item.value}</strong>
+          </div>
+        `).join("");
+      }
+
+      function setButtons(buttons = []) {
+        els.buttonRow.innerHTML = buttons.map(button => `
+          <button
+            class="action-button ${button.primary ? "primary" : ""}"
+            id="${button.id}"
+            type="button"
+          >
+            ${button.label}
+          </button>
+        `).join("");
+      }
+
+      function svgElement(name, attributes = {}, parent = null) {
+        const node = document.createElementNS(NS, name);
+
+        Object.entries(attributes).forEach(([key, value]) => {
+          node.setAttribute(key, value);
+        });
+
+        if (parent) {
+          parent.appendChild(node);
+        }
+
+        return node;
+      }
+
+      function appendText(parent, text, x, y, className = "svg-label", anchor = "start") {
+        const node = svgElement(
+          "text",
+          {
+            x,
+            y,
+            class: className,
+            "text-anchor": anchor
+          },
+          parent
+        );
+
+        node.textContent = text;
+        return node;
+      }
+
+      function pathFrom(points, curve = "linear") {
+        if (window.d3) {
+          let curveType = d3.curveLinear;
+
+          if (curve === "basis") {
+            curveType = d3.curveBasis;
+          }
+
+          if (curve === "monotone") {
+            curveType = d3.curveMonotoneX;
+          }
+
+          return d3.line()
+            .x(point => point[0])
+            .y(point => point[1])
+            .curve(curveType)(points);
+        }
+
+        return points.map(
+          (point, index) =>
+            `${index ? "L" : "M"} ${point[0]} ${point[1]}`
+        ).join(" ");
+      }
+
+      function plotMap(width, height, margin, xDomain, yDomain) {
+        const xScale = d3
+          .scaleLinear()
+          .domain(xDomain)
+          .range([margin.left, width - margin.right]);
+
+        const yScale = d3
+          .scaleLinear()
+          .domain(yDomain)
+          .range([height - margin.bottom, margin.top]);
+
+        return {
+          x: value => xScale(value),
+          y: value => yScale(value),
+          invX: value => xScale.invert(value),
+          invY: value => yScale.invert(value)
+        };
+      }
+
+      function drawGrid(svg, map, width, height, margin, xTicks, yTicks) {
+        xTicks.forEach(value => {
+          svgElement(
+            "line",
+            {
+              x1: map.x(value),
+              x2: map.x(value),
+              y1: margin.top,
+              y2: height - margin.bottom,
+              stroke: css("--grid"),
+              "stroke-width": 1
+            },
+            svg
+          );
+        });
+
+        yTicks.forEach(value => {
+          svgElement(
+            "line",
+            {
+              x1: margin.left,
+              x2: width - margin.right,
+              y1: map.y(value),
+              y2: map.y(value),
+              stroke: css("--grid"),
+              "stroke-width": 1
+            },
+            svg
+          );
+        });
+
+        if (xTicks.includes(0)) {
+          svgElement(
+            "line",
+            {
+              x1: map.x(0),
+              x2: map.x(0),
+              y1: margin.top,
+              y2: height - margin.bottom,
+              stroke: css("--axis"),
+              "stroke-width": 1.15
+            },
+            svg
+          );
+        }
+
+        if (yTicks.includes(0)) {
+          svgElement(
+            "line",
+            {
+              x1: margin.left,
+              x2: width - margin.right,
+              y1: map.y(0),
+              y2: map.y(0),
+              stroke: css("--axis"),
+              "stroke-width": 1.15
+            },
+            svg
+          );
+        }
+      }
+
+      function createSvg(width, height, ariaLabel) {
+        const shell = document.createElement("div");
+        shell.className = "svg-shell";
+
+        const svg = document.createElementNS(NS, "svg");
+        svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+        svg.setAttribute("role", "img");
+        svg.setAttribute("aria-label", ariaLabel);
+
+        shell.appendChild(svg);
+
+        return {
+          shell,
+          svg
+        };
+      }
+
+      function baseFunction(x) {
+        return (
+          0.48 * Math.sin(1.25 * x) +
+          0.18 * Math.cos(2.1 * x) +
+          0.08 * x
+        );
+      }
+
+      function spaceFunction(x) {
+        if (state.spaceCase === "boundedContinuous") {
+          return (
+            state.spaceAmplitude *
+            Math.tanh(
+              0.9 * x
+            ) +
+            0.22 *
+            Math.sin(1.7 * x)
+          );
+        }
+
+        if (state.spaceCase === "unboundedContinuous") {
+          return (
+            state.spaceSlope *
+            x * x +
+            0.25 * x
+          );
+        }
+
+        if (state.spaceCase === "boundedDiscontinuous") {
+          return (
+            0.65 *
+            Math.sin(1.4 * x) +
+            (
+              x >= 0
+                ? 0.7
+                : -0.7
+            )
+          );
+        }
+
+        return (
+          state.spaceAmplitude *
+          Math.tanh(
+            0.75 * x
+          ) +
+          state.spaceSlope *
+          x
+        );
+      }
+
+      function spaceStatus() {
+        if (state.spaceCase === "boundedContinuous") {
+          return {
+            bounded: true,
+            continuous: true,
+            member: true
+          };
+        }
+
+        if (state.spaceCase === "unboundedContinuous") {
+          return {
+            bounded: false,
+            continuous: true,
+            member: false
+          };
+        }
+
+        if (state.spaceCase === "boundedDiscontinuous") {
+          return {
+            bounded: true,
+            continuous: false,
+            member: false
+          };
+        }
+
+        const bounded =
+          Math.abs(state.spaceSlope) < 1e-8;
+
+        return {
+          bounded,
+          continuous: true,
+          member: bounded
+        };
+      }
+
+      function renderSpace() {
+        const status = spaceStatus();
+
+        setHeader(
+          "The ambient function space",
+          "Boundedness and continuity are separate requirements",
+          "A curve belongs to C_b(X) only when it is continuous on X and its absolute value is uniformly bounded over the entire state space.",
+          status.member
+            ? "f belongs to C_b(X)"
+            : "f does not belong to C_b(X)",
+          status.member ? "" : "bad"
+        );
+
+        renderMath(
+          els.topFormula,
+          `C_b(X)
+          =
+          \\left\\{
+          f:X\\to\\mathbb{R}:
+          f\\text{ continuous and }
+          \\sup_{x\\in X}|f(x)|<\\infty
+          \\right\\}`
+        );
+
+        setSide(
+          "Test a function",
+          "Switch between boundedness and continuity failures. The horizontal envelope visualizes the uniform bound."
+        );
+
+        els.controls.innerHTML = `
+          <div class="control">
+            <div class="control-row">
+              <label for="spaceCase">Function family</label>
+            </div>
+
+            <select id="spaceCase">
+              <option value="boundedContinuous" ${state.spaceCase === "boundedContinuous" ? "selected" : ""}>Bounded and continuous</option>
+              <option value="unboundedContinuous" ${state.spaceCase === "unboundedContinuous" ? "selected" : ""}>Continuous but unbounded</option>
+              <option value="boundedDiscontinuous" ${state.spaceCase === "boundedDiscontinuous" ? "selected" : ""}>Bounded but discontinuous</option>
+              <option value="linearTail" ${state.spaceCase === "linearTail" ? "selected" : ""}>Bounded core with linear tail</option>
+            </select>
+          </div>
+
+          <div class="control">
+            <div class="control-row">
+              <label for="spaceAmplitude">Amplitude A</label>
+              <output>${fmt(state.spaceAmplitude)}</output>
+            </div>
+
+            <input
+              id="spaceAmplitude"
+              type="range"
+              min="0.35"
+              max="2.4"
+              step="0.05"
+              value="${state.spaceAmplitude}"
+            />
+          </div>
+
+          <div class="control">
+            <div class="control-row">
+              <label for="spaceSlope">Tail slope s</label>
+              <output>${fmt(state.spaceSlope)}</output>
+            </div>
+
+            <input
+              id="spaceSlope"
+              type="range"
+              min="-0.45"
+              max="0.45"
+              step="0.01"
+              value="${state.spaceSlope}"
+            />
+          </div>
+
+          <div class="control">
+            <div class="control-row">
+              <label for="spaceBound">Displayed bound M</label>
+              <output>${fmt(state.spaceBound)}</output>
+            </div>
+
+            <input
+              id="spaceBound"
+              type="range"
+              min="0.5"
+              max="4"
+              step="0.05"
+              value="${state.spaceBound}"
+            />
+          </div>
+        `;
+
+        setButtons([]);
+
+        const xValues = d3.range(
+          -5,
+          5.001,
+          0.02
+        );
+
+        const yValues = xValues.map(
+          spaceFunction
+        );
+
+        const sampledNorm = d3.max(
+          yValues,
+          value => Math.abs(value)
+        );
+
+        setReadout([
+          {
+            label: "Continuous?",
+            value: status.continuous
+              ? "yes"
+              : "no"
+          },
+          {
+            label: "Bounded?",
+            value: status.bounded
+              ? "yes"
+              : "no"
+          },
+          {
+            label: "Sampled sup",
+            value: fmt(sampledNorm, 3)
+          },
+          {
+            label: "Membership",
+            value: status.member
+              ? "f ∈ C_b(X)"
+              : "f ∉ C_b(X)"
+          }
+        ]);
+
+        els.insight.innerHTML = status.member
+          ? `The entire graph remains inside one horizontal envelope and has no
+             jumps. Thus it is one admissible point of the function space
+             ${inlineMath("C_b(X)")}.`
+          : !status.continuous
+            ? `Boundedness controls height, but the jump destroys continuity.
+               Both conditions are required simultaneously.`
+            : `Continuity alone does not control the tails. On a noncompact
+               state space, a continuous function can still escape every finite
+               uniform bound.`;
+
+        const {
+          shell,
+          svg
+        } = createSvg(
+          820,
+          540,
+          "Bounded and continuous function with a uniform envelope"
+        );
+
+        els.visualWrap.innerHTML = "";
+        els.visualWrap.appendChild(shell);
+
+        const width = 820;
+        const height = 540;
+        const margin = {
+          left: 62,
+          right: 30,
+          top: 34,
+          bottom: 54
+        };
+
+        const yExtent = Math.max(
+          4.5,
+          state.spaceBound + 0.7,
+          sampledNorm + 0.6
+        );
+
+        const map = plotMap(
+          width,
+          height,
+          margin,
+          [-5, 5],
+          [-yExtent, yExtent]
+        );
+
+        drawGrid(
+          svg,
+          map,
+          width,
+          height,
+          margin,
+          [-4, -3, -2, -1, 0, 1, 2, 3, 4],
+          d3.range(
+            -Math.floor(yExtent),
+            Math.floor(yExtent) + 1,
+            1
+          )
+        );
+
+        svgElement(
+          "rect",
+          {
+            x: margin.left,
+            y: map.y(state.spaceBound),
+            width:
+              width -
+              margin.left -
+              margin.right,
+            height:
+              map.y(-state.spaceBound) -
+              map.y(state.spaceBound),
+            fill: css("--primary-soft")
+          },
+          svg
+        );
+
+        [
+          state.spaceBound,
+          -state.spaceBound
+        ].forEach(value => {
+          svgElement(
+            "line",
+            {
+              x1: margin.left,
+              x2: width - margin.right,
+              y1: map.y(value),
+              y2: map.y(value),
+              stroke: css("--primary"),
+              "stroke-width": 1.4,
+              "stroke-dasharray": "5 5"
+            },
+            svg
+          );
+        });
+
+        if (
+          state.spaceCase ===
+          "boundedDiscontinuous"
+        ) {
+          const left = xValues
+            .filter(x => x < 0)
+            .map(x => [
+              map.x(x),
+              map.y(spaceFunction(x))
+            ]);
+
+          const right = xValues
+            .filter(x => x >= 0)
+            .map(x => [
+              map.x(x),
+              map.y(spaceFunction(x))
+            ]);
+
+          [left, right].forEach(points => {
+            svgElement(
+              "path",
+              {
+                d: pathFrom(points, "monotone"),
+                fill: "none",
+                stroke: css("--ink"),
+                "stroke-width": 2.8,
+                "stroke-linecap": "round"
+              },
+              svg
+            );
+          });
+
+          const leftLimit =
+            0.65 *
+            Math.sin(0) -
+            0.7;
+
+          const rightValue =
+            0.65 *
+            Math.sin(0) +
+            0.7;
+
+          svgElement(
+            "circle",
+            {
+              cx: map.x(0),
+              cy: map.y(leftLimit),
+              r: 7,
+              fill: css("--paper"),
+              stroke: css("--danger"),
+              "stroke-width": 2.5
+            },
+            svg
+          );
+
+          svgElement(
+            "circle",
+            {
+              cx: map.x(0),
+              cy: map.y(rightValue),
+              r: 7,
+              fill: css("--danger"),
+              stroke: css("--paper"),
+              "stroke-width": 2.5
+            },
+            svg
+          );
+        } else {
+          svgElement(
+            "path",
+            {
+              d: pathFrom(
+                xValues.map((x, index) => [
+                  map.x(x),
+                  map.y(yValues[index])
+                ]),
+                "monotone"
+              ),
+              fill: "none",
+              stroke: css("--ink"),
+              "stroke-width": 2.8,
+              "stroke-linecap": "round"
+            },
+            svg
+          );
+        }
+
+        const outsidePoints = xValues
+          .map((x, index) => ({
+            x,
+            y: yValues[index]
+          }))
+          .filter(point =>
+            Math.abs(point.y) >
+            state.spaceBound
+          );
+
+        outsidePoints.forEach((point, index) => {
+          if (index % 8 !== 0) return;
+
+          svgElement(
+            "circle",
+            {
+              cx: map.x(point.x),
+              cy: map.y(point.y),
+              r: 3.3,
+              fill: css("--danger"),
+              opacity: 0.75
+            },
+            svg
+          );
+        });
+
+        appendText(
+          svg,
+          "M",
+          width - margin.right - 8,
+          map.y(state.spaceBound) - 7,
+          "svg-small",
+          "end"
+        );
+
+        appendText(
+          svg,
+          "−M",
+          width - margin.right - 8,
+          map.y(-state.spaceBound) + 16,
+          "svg-small",
+          "end"
+        );
+
+        appendText(
+          svg,
+          "state x",
+          width - margin.right,
+          height - 18,
+          "svg-small",
+          "end"
+        );
+
+        appendText(
+          svg,
+          "function value f(x)",
+          margin.left,
+          margin.top - 12,
+          "svg-small"
+        );
+
+        renderMath(
+          els.mainEquation,
+          `f\\in C_b(X)
+          \\Longleftrightarrow
+          f\\in C(X)
+          \\text{ and }
+          \\|f\\|_\\infty
+          =
+          \\sup_{x\\in X}|f(x)|
+          <\\infty`
+        );
+
+        els.equationNote.textContent =
+          "On compact X, every continuous real-valued function is automatically bounded; on noncompact X, boundedness must be imposed separately.";
+
+        setTheory([
+          `<strong>Vector-space structure.</strong> Sums and scalar multiples of bounded continuous functions remain bounded and continuous.`,
+          `<strong>Uniform magnitude.</strong> The sup norm records the largest absolute function value over the state space.`,
+          `<strong>Economic interpretation.</strong> A value function assigns one finite lifetime value to every state.`
+        ]);
+
+        [
+          "spaceCase",
+          "spaceAmplitude",
+          "spaceSlope",
+          "spaceBound"
+        ].forEach(id => {
+          const element =
+            document.getElementById(id);
+
+          element.addEventListener(
+            element.tagName === "SELECT"
+              ? "change"
+              : "input",
+            event => {
+              state[id] =
+                element.tagName === "SELECT"
+                  ? event.target.value
+                  : Number(event.target.value);
+
+              render();
+            }
+          );
+        });
+      }
+
+      function targetFunction(x) {
+        return (
+          0.72 * Math.sin(0.9 * x) +
+          0.17 * x
+        );
+      }
+
+      function approximateFunction(x) {
+        return (
+          targetFunction(x) +
+          Math.pow(
+            state.supDecay,
+            state.supN
+          ) *
+          1.15 *
+          Math.cos(
+            state.supFrequency * x
+          )
+        );
+      }
+
+      function renderSup() {
+        const xValues = d3.range(
+          0,
+          6.001,
+          0.02
+        );
+
+        const target = xValues.map(
+          targetFunction
+        );
+
+        const approx = xValues.map(
+          approximateFunction
+        );
+
+        const errors = approx.map(
+          (value, index) =>
+            Math.abs(
+              value -
+              target[index]
+            )
+        );
+
+        const supError = d3.max(errors);
+        const maxIndex = errors.indexOf(
+          supError
+        );
+
+        setHeader(
+          "Uniform distance",
+          "The worst vertical gap is the distance",
+          "The sup norm compares two functions by the largest discrepancy over all states, not by an average or by one selected point.",
+          `‖f_n − f‖∞ = ${fmt(supError, 4)}`
+        );
+
+        renderMath(
+          els.topFormula,
+          `d_\\infty(f,g)
+          =
+          \\|f-g\\|_\\infty
+          =
+          \\sup_{x\\in X}|f(x)-g(x)|`
+        );
+
+        setSide(
+          "Shrink the uniform error",
+          "Increase the approximation index or alter error persistence. The entire dashed function must enter the same band."
+        );
+
+        els.controls.innerHTML = `
+          <div class="control">
+            <div class="control-row">
+              <label for="supN">Approximation index n</label>
+              <output>${state.supN}</output>
+            </div>
+
+            <input
+              id="supN"
+              type="range"
+              min="0"
+              max="12"
+              step="1"
+              value="${state.supN}"
+            />
+          </div>
+
+          <div class="control">
+            <div class="control-row">
+              <label for="supDecay">Error persistence ρ</label>
+              <output>${fmt(state.supDecay)}</output>
+            </div>
+
+            <input
+              id="supDecay"
+              type="range"
+              min="0.25"
+              max="0.9"
+              step="0.01"
+              value="${state.supDecay}"
+            />
+          </div>
+
+          <div class="control">
+            <div class="control-row">
+              <label for="supFrequency">Error frequency ω</label>
+              <output>${fmt(state.supFrequency)}</output>
+            </div>
+
+            <input
+              id="supFrequency"
+              type="range"
+              min="0.5"
+              max="3"
+              step="0.05"
+              value="${state.supFrequency}"
+            />
+          </div>
+        `;
+
+        setButtons([]);
+
+        setReadout([
+          {
+            label: "Worst state",
+            value: `x = ${fmt(
+              xValues[maxIndex],
+              3
+            )}`
+          },
+          {
+            label: "Sup error",
+            value: fmt(
+              supError,
+              4
+            )
+          },
+          {
+            label: "Approximation",
+            value: `f_${state.supN}`
+          },
+          {
+            label: "Metric",
+            value: "uniform"
+          }
+        ]);
+
+        els.insight.innerHTML =
+          `Every state is controlled by the same error bound.
+           This is why the sup norm is natural for Bellman operators:
+           it prevents a large approximation error from hiding at an
+           economically important state.`;
+
+        const {
+          shell,
+          svg
+        } = createSvg(
+          820,
+          540,
+          "Sup norm as the largest vertical distance between two functions"
+        );
+
+        els.visualWrap.innerHTML = "";
+        els.visualWrap.appendChild(shell);
+
+        const width = 820;
+        const height = 540;
+        const margin = {
+          left: 62,
+          right: 30,
+          top: 34,
+          bottom: 54
+        };
+
+        const yMin = d3.min(
+          target.concat(approx)
+        ) - 0.65;
+
+        const yMax = d3.max(
+          target.concat(approx)
+        ) + 0.65;
+
+        const map = plotMap(
+          width,
+          height,
+          margin,
+          [0, 6],
+          [yMin, yMax]
+        );
+
+        drawGrid(
+          svg,
+          map,
+          width,
+          height,
+          margin,
+          [0, 1, 2, 3, 4, 5, 6],
+          d3.range(
+            Math.floor(yMin),
+            Math.ceil(yMax) + 1,
+            1
+          )
+        );
+
+        const upper = xValues.map(
+          (x, index) => [
+            map.x(x),
+            map.y(
+              target[index] +
+              supError
+            )
+          ]
+        );
+
+        const lower = xValues
+          .slice()
+          .reverse()
+          .map((x, reverseIndex) => {
+            const index =
+              xValues.length -
+              1 -
+              reverseIndex;
+
+            return [
+              map.x(x),
+              map.y(
+                target[index] -
+                supError
+              )
+            ];
+          });
+
+        svgElement(
+          "path",
+          {
+            d:
+              `${pathFrom(upper)} ` +
+              `${pathFrom(lower).replace(/^M/, "L")} Z`,
+            fill: css("--primary-soft"),
+            stroke: "none"
+          },
+          svg
+        );
+
+        svgElement(
+          "path",
+          {
+            d: pathFrom(
+              xValues.map((x, index) => [
+                map.x(x),
+                map.y(
+                  target[index]
+                )
+              ]),
+              "monotone"
+            ),
+            fill: "none",
+            stroke: css("--primary"),
+            "stroke-width": 3
+          },
+          svg
+        );
+
+        svgElement(
+          "path",
+          {
+            d: pathFrom(
+              xValues.map((x, index) => [
+                map.x(x),
+                map.y(
+                  approx[index]
+                )
+              ]),
+              "monotone"
+            ),
+            fill: "none",
+            stroke: css("--violet"),
+            "stroke-width": 2.6,
+            "stroke-dasharray": "8 6"
+          },
+          svg
+        );
+
+        svgElement(
+          "line",
+          {
+            x1: map.x(
+              xValues[maxIndex]
+            ),
+            x2: map.x(
+              xValues[maxIndex]
+            ),
+            y1: map.y(
+              target[maxIndex]
+            ),
+            y2: map.y(
+              approx[maxIndex]
+            ),
+            stroke: css("--amber"),
+            "stroke-width": 4
+          },
+          svg
+        );
+
+        [
+          target[maxIndex],
+          approx[maxIndex]
+        ].forEach(value => {
+          svgElement(
+            "circle",
+            {
+              cx: map.x(
+                xValues[maxIndex]
+              ),
+              cy: map.y(value),
+              r: 5.5,
+              fill: css("--amber"),
+              stroke: css("--paper"),
+              "stroke-width": 1.8
+            },
+            svg
+          );
+        });
+
+        appendText(
+          svg,
+          `sup gap = ${fmt(
+            supError,
+            4
+          )}`,
+          map.x(
+            xValues[maxIndex]
+          ) + 14,
+          map.y(
+            Math.max(
+              target[maxIndex],
+              approx[maxIndex]
+            )
+          ) - 10,
+          "svg-label"
+        ).setAttribute(
+          "fill",
+          css("--amber")
+        );
+
+        appendText(
+          svg,
+          "f",
+          map.x(5.35),
+          map.y(
+            targetFunction(5.35)
+          ) - 12,
+          "svg-title"
+        );
+
+        appendText(
+          svg,
+          `f${state.supN}`,
+          map.x(4.8),
+          map.y(
+            approximateFunction(4.8)
+          ) + 20,
+          "svg-title"
+        ).setAttribute(
+          "fill",
+          css("--violet")
+        );
+
+        renderMath(
+          els.mainEquation,
+          `f_n\\to f
+          \\text{ in }\\|\\cdot\\|_\\infty
+          \\Longleftrightarrow
+          \\sup_{x\\in X}
+          |f_n(x)-f(x)|
+          \\longrightarrow 0`
+        );
+
+        els.equationNote.textContent =
+          "Sup-norm convergence is uniform convergence: one iteration index controls the approximation error at every state.";
+
+        setTheory([
+          `<strong>Worst-case geometry.</strong> The distance equals the largest vertical discrepancy.`,
+          `<strong>Uniform convergence.</strong> One common band eventually contains the entire approximating function.`,
+          `<strong>Bellman relevance.</strong> Max operators interact cleanly with uniform error bounds.`
+        ]);
+
+        [
+          "supN",
+          "supDecay",
+          "supFrequency"
+        ].forEach(id => {
+          document
+            .getElementById(id)
+            .addEventListener(
+              "input",
+              event => {
+                state[id] =
+                  Number(
+                    event.target.value
+                  );
+
+                render();
+              }
+            );
+        });
+      }
+
+      function completeTarget(x) {
+        return (
+          0.65 *
+          Math.sin(1.1 * x) +
+          0.12 * x
+        );
+      }
+
+      function completeApprox(x) {
+        if (
+          state.completeCase ===
+          "uniformCauchy"
+        ) {
+          return (
+            completeTarget(x) +
+            Math.pow(
+              state.completeRho,
+              state.completeN
+            ) *
+            1.2 *
+            Math.cos(1.7 * x)
+          );
+        }
+
+        return Math.pow(
+          x,
+          state.completeN
+        );
+      }
+
+      function renderComplete() {
+        const uniform =
+          state.completeCase ===
+          "uniformCauchy";
+
+        const xValues = uniform
+          ? d3.range(
+              0,
+              6.001,
+              0.02
+            )
+          : d3.range(
+              0,
+              1.0001,
+              0.005
+            );
+
+        const target = uniform
+          ? xValues.map(
+              completeTarget
+            )
+          : xValues.map(
+              x => x < 1
+                ? 0
+                : 1
+            );
+
+        const approx = xValues.map(
+          completeApprox
+        );
+
+        const supError = d3.max(
+          approx.map(
+            (value, index) =>
+              Math.abs(
+                value -
+                target[index]
+              )
+          )
+        );
+
+        setHeader(
+          "Banach-space structure",
+          uniform
+            ? "A sup-Cauchy sequence converges inside C_b(X)"
+            : "Pointwise convergence is not enough",
+          uniform
+            ? "The approximations become uniformly close, and their limit remains bounded and continuous."
+            : "The continuous functions xⁿ converge pointwise to a discontinuous limit, so this is not convergence in the sup norm.",
+          uniform
+            ? "C_b(X) is complete under the sup norm"
+            : "pointwise limit leaves C([0,1])",
+          uniform ? "" : "warn"
+        );
+
+        renderMath(
+          els.topFormula,
+          `\\{f_n\\}\\text{ Cauchy in }\\|\\cdot\\|_\\infty
+          \\Longrightarrow
+          \\exists f\\in C_b(X):
+          \\|f_n-f\\|_\\infty\\to0`
+        );
+
+        setSide(
+          "Compare convergence modes",
+          "The completeness theorem needs the sup metric. Pointwise convergence can preserve neither continuity nor uniform control."
+        );
+
+        els.controls.innerHTML = `
+          <div class="control">
+            <div class="control-row">
+              <label for="completeCase">Case</label>
+            </div>
+
+            <select id="completeCase">
+              <option value="uniformCauchy" ${uniform ? "selected" : ""}>Uniformly Cauchy sequence</option>
+              <option value="pointwiseOnly" ${!uniform ? "selected" : ""}>Pointwise only: fₙ(x)=xⁿ</option>
+            </select>
+          </div>
+
+          <div class="control">
+            <div class="control-row">
+              <label for="completeN">Index n</label>
+              <output>${state.completeN}</output>
+            </div>
+
+            <input
+              id="completeN"
+              type="range"
+              min="1"
+              max="18"
+              step="1"
+              value="${state.completeN}"
+            />
+          </div>
+
+          ${
+            uniform
+              ? `
+                <div class="control">
+                  <div class="control-row">
+                    <label for="completeRho">Cauchy decay ρ</label>
+                    <output>${fmt(state.completeRho)}</output>
+                  </div>
+
+                  <input
+                    id="completeRho"
+                    type="range"
+                    min="0.3"
+                    max="0.9"
+                    step="0.01"
+                    value="${state.completeRho}"
+                  />
+                </div>
+              `
+              : ""
+          }
+        `;
+
+        setButtons([]);
+
+        setReadout([
+          {
+            label: "Convergence",
+            value: uniform
+              ? "uniform"
+              : "pointwise"
+          },
+          {
+            label: "Sup error",
+            value: fmt(
+              supError,
+              4
+            )
+          },
+          {
+            label: "Limit bounded?",
+            value: "yes"
+          },
+          {
+            label: "Limit continuous?",
+            value: uniform
+              ? "yes"
+              : "no"
+          }
+        ]);
+
+        els.insight.innerHTML = uniform
+          ? `Uniform Cauchy control constructs one pointwise limit and then
+             upgrades the convergence to uniform convergence. The uniform limit
+             of continuous functions is continuous, while the common sup bound
+             preserves boundedness.`
+          : `Every fixed state below one eventually receives a value near zero,
+             yet the endpoint remains one. The pointwise limit jumps at
+             ${inlineMath("x=1")}, showing why pointwise convergence does not
+             establish completeness of ${inlineMath("C_b(X)")}.`;
+
+        const {
+          shell,
+          svg
+        } = createSvg(
+          820,
+          540,
+          "Completeness of bounded continuous functions under the sup norm"
+        );
+
+        els.visualWrap.innerHTML = "";
+        els.visualWrap.appendChild(shell);
+
+        const width = 820;
+        const height = 540;
+        const margin = {
+          left: 62,
+          right: 30,
+          top: 34,
+          bottom: 54
+        };
+
+        const yMin = uniform
+          ? -1.6
+          : -0.08;
+
+        const yMax = uniform
+          ? 1.9
+          : 1.08;
+
+        const map = plotMap(
+          width,
+          height,
+          margin,
+          uniform
+            ? [0, 6]
+            : [0, 1],
+          [yMin, yMax]
+        );
+
+        drawGrid(
+          svg,
+          map,
+          width,
+          height,
+          margin,
+          uniform
+            ? [0, 1, 2, 3, 4, 5, 6]
+            : [0, 0.2, 0.4, 0.6, 0.8, 1],
+          uniform
+            ? [-1, 0, 1]
+            : [0, 0.25, 0.5, 0.75, 1]
+        );
+
+        const history = [];
+
+        const firstIndex = Math.max(
+          1,
+          state.completeN - 4
+        );
+
+        for (
+          let n = firstIndex;
+          n <= state.completeN;
+          n += 1
+        ) {
+          history.push({
+            n,
+            values: xValues.map(x => {
+              if (uniform) {
+                return (
+                  completeTarget(x) +
+                  Math.pow(
+                    state.completeRho,
+                    n
+                  ) *
+                  1.2 *
+                  Math.cos(1.7 * x)
+                );
+              }
+
+              return Math.pow(x, n);
+            })
+          });
+        }
+
+        history.forEach((item, historyIndex) => {
+          svgElement(
+            "path",
+            {
+              d: pathFrom(
+                xValues.map((x, index) => [
+                  map.x(x),
+                  map.y(
+                    item.values[index]
+                  )
+                ]),
+                "monotone"
+              ),
+              fill: "none",
+              stroke:
+                historyIndex ===
+                history.length - 1
+                  ? css("--violet")
+                  : css("--primary"),
+              "stroke-width":
+                historyIndex ===
+                history.length - 1
+                  ? 2.8
+                  : 1.2,
+              opacity:
+                0.16 +
+                0.18 *
+                historyIndex
+            },
+            svg
+          );
+        });
+
+        if (uniform) {
+          svgElement(
+            "path",
+            {
+              d: pathFrom(
+                xValues.map((x, index) => [
+                  map.x(x),
+                  map.y(
+                    target[index]
+                  )
+                ]),
+                "monotone"
+              ),
+              fill: "none",
+              stroke: css("--ink"),
+              "stroke-width": 3
+            },
+            svg
+          );
+
+          const upper = xValues.map(
+            (x, index) => [
+              map.x(x),
+              map.y(
+                target[index] +
+                supError
+              )
+            ]
+          );
+
+          const lower = xValues
+            .slice()
+            .reverse()
+            .map((x, reverseIndex) => {
+              const index =
+                xValues.length -
+                1 -
+                reverseIndex;
+
+              return [
+                map.x(x),
+                map.y(
+                  target[index] -
+                  supError
+                )
+              ];
+            });
+
+          svgElement(
+            "path",
+            {
+              d:
+                `${pathFrom(upper)} ` +
+                `${pathFrom(lower).replace(/^M/, "L")} Z`,
+              fill: css("--primary-soft"),
+              stroke: "none"
+            },
+            svg
+          );
+
+          appendText(
+            svg,
+            "uniform limit f",
+            map.x(4.65),
+            map.y(
+              completeTarget(4.65)
+            ) - 18,
+            "svg-label"
+          );
+        } else {
+          const limitPoints = xValues.map(x => [
+            map.x(x),
+            map.y(
+              x < 1
+                ? 0
+                : 1
+            )
+          ]);
+
+          svgElement(
+            "path",
+            {
+              d: pathFrom(limitPoints),
+              fill: "none",
+              stroke: css("--danger"),
+              "stroke-width": 2.6,
+              "stroke-dasharray": "7 6"
+            },
+            svg
+          );
+
+          svgElement(
+            "circle",
+            {
+              cx: map.x(1),
+              cy: map.y(0),
+              r: 7,
+              fill: css("--paper"),
+              stroke: css("--danger"),
+              "stroke-width": 2.4
+            },
+            svg
+          );
+
+          svgElement(
+            "circle",
+            {
+              cx: map.x(1),
+              cy: map.y(1),
+              r: 7,
+              fill: css("--danger"),
+              stroke: css("--paper"),
+              "stroke-width": 2.4
+            },
+            svg
+          );
+
+          appendText(
+            svg,
+            "pointwise limit is discontinuous",
+            map.x(0.58),
+            map.y(0.18),
+            "svg-label"
+          ).setAttribute(
+            "fill",
+            css("--danger")
+          );
+        }
+
+        renderMath(
+          els.mainEquation,
+          uniform
+            ? `\\{f_n\\}\\text{ sup-Cauchy}
+               \\Longrightarrow
+               f_n\\to f\\text{ uniformly}
+               \\Longrightarrow
+               f\\in C_b(X)`
+            : `f_n(x)=x^n
+               \\to
+               \\begin{cases}
+               0,&0\\leq x<1,\\\\
+               1,&x=1,
+               \\end{cases}
+               \\quad\\text{pointwise but not uniformly}`
+        );
+
+        els.equationNote.textContent =
+          "Completeness is tied to the chosen norm: C_b(X) is Banach under the sup norm, not under an unspecified weaker convergence rule.";
+
+        setTheory([
+          `<strong>Cauchy control.</strong> Late functions are uniformly close to one another.`,
+          `<strong>Limit construction.</strong> Pointwise limits exist and the Cauchy estimate upgrades convergence to uniform convergence.`,
+          `<strong>Closure of the space.</strong> Uniform limits preserve continuity, while uniform boundedness preserves finite sup norm.`
+        ]);
+
+        document.getElementById("completeCase").addEventListener("change", event => {
+          state.completeCase =
+            event.target.value;
+
+          render();
+        });
+
+        document.getElementById("completeN").addEventListener("input", event => {
+          state.completeN =
+            Number(
+              event.target.value
+            );
+
+          render();
+        });
+
+        if (uniform) {
+          document.getElementById("completeRho").addEventListener("input", event => {
+            state.completeRho =
+              Number(
+                event.target.value
+              );
+
+            render();
+          });
+        }
+      }
+
+      function returnValue(t) {
+        if (
+          state.returnPattern ===
+          "bounded"
+        ) {
+          return (
+            state.returnM *
+            (
+              0.62 +
+              0.24 *
+              Math.sin(0.8 * t)
+            )
+          );
+        }
+
+        if (
+          state.returnPattern ===
+          "alternating"
+        ) {
+          return (
+            state.returnM *
+            (
+              t % 2 === 0
+                ? 1
+                : -1
+            )
+          );
+        }
+
+        return (
+          state.returnM *
+          (
+            1 +
+            0.08 * t
+          )
+        );
+      }
+
+      function renderReturns() {
+        const bounded =
+          state.returnPattern !==
+          "growing";
+
+        const horizon =
+          state.returnHorizon;
+
+        const times = d3.range(
+          0,
+          horizon + 1
+        );
+
+        const rewards = times.map(
+          returnValue
+        );
+
+        const discounted = rewards.map(
+          (reward, index) =>
+            Math.pow(
+              state.returnBeta,
+              index
+            ) *
+            reward
+        );
+
+        const partialSums = [];
+
+        let running = 0;
+
+        discounted.forEach(value => {
+          running += value;
+          partialSums.push(running);
+        });
+
+        const bound =
+          state.returnM /
+          (
+            1 -
+            state.returnBeta
+          );
+
+        const actualMax = d3.max(
+          rewards,
+          value => Math.abs(value)
+        );
+
+        setHeader(
+          "Discounted lifetime returns",
+          "Bounded one-period rewards generate bounded value functions",
+          "The geometric discount factor transforms a uniform bound on current returns into a uniform bound on lifetime value.",
+          bounded
+            ? `|V(x)| ≤ M/(1−β) = ${fmt(bound)}`
+            : "the displayed reward process violates the bound",
+          bounded ? "" : "bad"
+        );
+
+        renderMath(
+          els.topFormula,
+          `|r(x,a)|\\leq M,\
+          0\\leq\\beta<1
+          \\Longrightarrow
+          \\left|
+          \\sum_{t=0}^{\\infty}
+          \\beta^t r_t
+          \\right|
+          \\leq
+          \\frac{M}{1-\\beta}`
+        );
+
+        setSide(
+          "Build the lifetime bound",
+          "Change the reward bound, discount factor, horizon, and reward pattern. The geometric envelope updates immediately."
+        );
+
+        els.controls.innerHTML = `
+          <div class="control">
+            <div class="control-row">
+              <label for="returnPattern">Reward pattern</label>
+            </div>
+
+            <select id="returnPattern">
+              <option value="bounded" ${state.returnPattern === "bounded" ? "selected" : ""}>Bounded oscillating rewards</option>
+              <option value="alternating" ${state.returnPattern === "alternating" ? "selected" : ""}>Alternating ±M</option>
+              <option value="growing" ${state.returnPattern === "growing" ? "selected" : ""}>Growing rewards</option>
+            </select>
+          </div>
+
+          <div class="control">
+            <div class="control-row">
+              <label for="returnM">Reward bound M</label>
+              <output>${fmt(state.returnM)}</output>
+            </div>
+
+            <input
+              id="returnM"
+              type="range"
+              min="0.5"
+              max="5"
+              step="0.1"
+              value="${state.returnM}"
+            />
+          </div>
+
+          <div class="control">
+            <div class="control-row">
+              <label for="returnBeta">Discount factor β</label>
+              <output>${fmt(state.returnBeta)}</output>
+            </div>
+
+            <input
+              id="returnBeta"
+              type="range"
+              min="0.5"
+              max="0.98"
+              step="0.01"
+              value="${state.returnBeta}"
+            />
+          </div>
+
+          <div class="control">
+            <div class="control-row">
+              <label for="returnHorizon">Displayed horizon T</label>
+              <output>${state.returnHorizon}</output>
+            </div>
+
+            <input
+              id="returnHorizon"
+              type="range"
+              min="6"
+              max="35"
+              step="1"
+              value="${state.returnHorizon}"
+            />
+          </div>
+        `;
+
+        setButtons([]);
+
+        setReadout([
+          {
+            label: "Observed reward max",
+            value: fmt(
+              actualMax,
+              3
+            )
+          },
+          {
+            label: "Partial value",
+            value: fmt(
+              partialSums[
+                partialSums.length - 1
+              ],
+              3
+            )
+          },
+          {
+            label: "Geometric bound",
+            value: fmt(
+              bound,
+              3
+            )
+          },
+          {
+            label: "Discounted tail",
+            value: fmt(
+              Math.pow(
+                state.returnBeta,
+                horizon + 1
+              ) *
+              state.returnM /
+              (
+                1 -
+                state.returnBeta
+              ),
+              3
+            )
+          }
+        ]);
+
+        els.insight.innerHTML = bounded
+          ? `The same constant ${inlineMath("M")} controls rewards at every
+             state and date. Discounting turns this into the geometric lifetime
+             envelope ${inlineMath("M/(1-\\beta)")}.`
+          : `The assumed reward bound is false for the growing pattern.
+             Discounting may still make some realized series finite, but the
+             uniform proof that every value function is bounded has been lost.`;
+
+        els.visualWrap.innerHTML = `
+          <div class="dual-view">
+            <div class="mini-visual">
+              <div class="mini-head">
+                <strong>Discounted rewards</strong>
+                <span>Each contribution is βᵗrₜ.</span>
+              </div>
+              <svg
+                id="rewardSvg"
+                viewBox="0 0 430 390"
+                aria-label="Discounted reward contributions"
+              ></svg>
+              <div class="caption">
+                Bars shrink because future rewards are discounted.
+              </div>
+            </div>
+
+            <div class="mini-visual">
+              <div class="mini-head">
+                <strong>Partial lifetime value</strong>
+                <span>Cumulative discounted returns.</span>
+              </div>
+              <svg
+                id="valueSumSvg"
+                viewBox="0 0 430 390"
+                aria-label="Partial discounted lifetime value"
+              ></svg>
+              <div class="caption">
+                The cumulative path remains inside the geometric value envelope.
+              </div>
+            </div>
+          </div>
+        `;
+
+        const rewardSvg =
+          document.getElementById(
+            "rewardSvg"
+          );
+
+        const valueSvg =
+          document.getElementById(
+            "valueSumSvg"
+          );
+
+        const width = 430;
+        const height = 390;
+        const margin = {
+          left: 44,
+          right: 22,
+          top: 26,
+          bottom: 42
+        };
+
+        const contributionMax =
+          Math.max(
+            0.5,
+            d3.max(
+              discounted,
+              value => Math.abs(value)
+            )
+          );
+
+        const rewardMap = plotMap(
+          width,
+          height,
+          margin,
+          [0, horizon],
+          [
+            -1.2 * contributionMax,
+            1.2 * contributionMax
+          ]
+        );
+
+        drawGrid(
+          rewardSvg,
+          rewardMap,
+          width,
+          height,
+          margin,
+          d3.range(
+            0,
+            horizon + 1,
+            Math.max(
+              1,
+              Math.floor(
+                horizon / 6
+              )
+            )
+          ),
+          [
+            -contributionMax,
+            0,
+            contributionMax
+          ]
+        );
+
+        const barWidth =
+          Math.max(
+            2,
+            (
+              width -
+              margin.left -
+              margin.right
+            ) /
+            (
+              horizon + 1
+            ) *
+            0.64
+          );
+
+        discounted.forEach((value, index) => {
+          const y0 =
+            rewardMap.y(0);
+
+          const yValue =
+            rewardMap.y(value);
+
+          svgElement(
+            "rect",
+            {
+              x:
+                rewardMap.x(index) -
+                barWidth / 2,
+              y: Math.min(
+                y0,
+                yValue
+              ),
+              width: barWidth,
+              height: Math.max(
+                1,
+                Math.abs(
+                  yValue -
+                  y0
+                )
+              ),
+              rx: 2,
+              fill:
+                value >= 0
+                  ? css("--primary")
+                  : css("--danger"),
+              opacity: 0.76
+            },
+            rewardSvg
+          );
+        });
+
+        appendText(
+          rewardSvg,
+          "βᵗrₜ",
+          margin.left,
+          margin.top - 8,
+          "svg-small"
+        );
+
+        const sumExtent =
+          Math.max(
+            bound,
+            d3.max(
+              partialSums,
+              value => Math.abs(value)
+            )
+          );
+
+        const sumMap = plotMap(
+          width,
+          height,
+          margin,
+          [0, horizon],
+          [
+            -1.08 * sumExtent,
+            1.08 * sumExtent
+          ]
+        );
+
+        drawGrid(
+          valueSvg,
+          sumMap,
+          width,
+          height,
+          margin,
+          d3.range(
+            0,
+            horizon + 1,
+            Math.max(
+              1,
+              Math.floor(
+                horizon / 6
+              )
+            )
+          ),
+          [
+            -bound,
+            0,
+            bound
+          ]
+        );
+
+        svgElement(
+          "rect",
+          {
+            x: margin.left,
+            y: sumMap.y(bound),
+            width:
+              width -
+              margin.left -
+              margin.right,
+            height:
+              sumMap.y(-bound) -
+              sumMap.y(bound),
+            fill: css("--primary-soft")
+          },
+          valueSvg
+        );
+
+        [
+          bound,
+          -bound
+        ].forEach(value => {
+          svgElement(
+            "line",
+            {
+              x1: margin.left,
+              x2: width - margin.right,
+              y1: sumMap.y(value),
+              y2: sumMap.y(value),
+              stroke: css("--primary"),
+              "stroke-width": 1.2,
+              "stroke-dasharray": "5 5"
+            },
+            valueSvg
+          );
+        });
+
+        svgElement(
+          "path",
+          {
+            d: pathFrom(
+              times.map((time, index) => [
+                sumMap.x(time),
+                sumMap.y(
+                  partialSums[index]
+                )
+              ]),
+              "monotone"
+            ),
+            fill: "none",
+            stroke: bounded
+              ? css("--violet")
+              : css("--danger"),
+            "stroke-width": 2.7
+          },
+          valueSvg
+        );
+
+        appendText(
+          valueSvg,
+          "M/(1−β)",
+          width - margin.right - 4,
+          sumMap.y(bound) - 6,
+          "svg-small",
+          "end"
+        );
+
+        renderMath(
+          els.mainEquation,
+          `\\|r\\|_\\infty\\leq M
+          \\Longrightarrow
+          \\|V\\|_\\infty
+          \\leq
+          \\sum_{t=0}^{\\infty}
+          \\beta^t M
+          =
+          \\frac{M}{1-\\beta}`
+        );
+
+        els.equationNote.textContent =
+          "A uniform reward bound is inherited by the lifetime value function through the geometric series.";
+
+        setTheory([
+          `<strong>Uniform reward control.</strong> The same M bounds every feasible current return.`,
+          `<strong>Discounted aggregation.</strong> The geometric series has finite sum when β<1.`,
+          `<strong>Function-space consequence.</strong> Lifetime values remain uniformly bounded over states.`
+        ]);
+
+        document.getElementById("returnPattern").addEventListener("change", event => {
+          state.returnPattern =
+            event.target.value;
+
+          render();
+        });
+
+        [
+          "returnM",
+          "returnBeta",
+          "returnHorizon"
+        ].forEach(id => {
+          document
+            .getElementById(id)
+            .addEventListener(
+              "input",
+              event => {
+                state[id] =
+                  Number(
+                    event.target.value
+                  );
+
+                render();
+              }
+            );
+        });
+      }
+
+      function rewardFunction(k) {
+        return (
+          state.valueRewardScale *
+          Math.log(
+            1 +
+            1.25 * k
+          )
+        );
+      }
+
+      function policyFunction(k) {
+        return (
+          state.valuePolicy *
+          k +
+          0.18 *
+          (
+            1 -
+            Math.exp(
+              -1.5 * k
+            )
+          )
+        );
+      }
+
+      function bellmanIterates() {
+        const grid = d3.range(
+          0,
+          5.001,
+          0.025
+        );
+
+        let values =
+          grid.map(() => 0);
+
+        const history = [
+          values.slice()
+        ];
+
+        for (
+          let iteration = 0;
+          iteration <
+          state.valueIteration;
+          iteration += 1
+        ) {
+          const next = grid.map(k => {
+            const nextState =
+              clamp(
+                policyFunction(k),
+                0,
+                5
+              );
+
+            const index =
+              clamp(
+                Math.round(
+                  nextState /
+                  5 *
+                  (
+                    grid.length - 1
+                  )
+                ),
+                0,
+                grid.length - 1
+              );
+
+            return (
+              rewardFunction(k) +
+              state.valueBeta *
+              values[index]
+            );
+          });
+
+          values = next;
+          history.push(
+            values.slice()
+          );
+        }
+
+        return {
+          grid,
+          history,
+          values
+        };
+      }
+
+      function renderValue() {
+        const {
+          grid,
+          history,
+          values
+        } = bellmanIterates();
+
+        const previous =
+          history[
+            Math.max(
+              0,
+              history.length - 2
+            )
+          ];
+
+        const increment =
+          d3.max(
+            values.map(
+              (value, index) =>
+                Math.abs(
+                  value -
+                  previous[index]
+                )
+            )
+          );
+
+        const rewardBound =
+          d3.max(
+            grid,
+            rewardFunction
+          );
+
+        const valueBound =
+          rewardBound /
+          (
+            1 -
+            state.valueBeta
+          );
+
+        setHeader(
+          "Value functions as elements of C_b(X)",
+          "The Bellman operator moves through function space",
+          "Each iteration is a whole bounded continuous function. The operator updates all states simultaneously and remains inside the same Banach space.",
+          `iteration ${state.valueIteration} · sup increment ${fmt(increment, 4)}`
+        );
+
+        renderMath(
+          els.topFormula,
+          `(Tv)(k)
+          =
+          r(k)
+          +
+          \\beta
+          v\\bigl(g(k)\\bigr),
+          \\qquad
+          T:C_b(X)\\to C_b(X)`
+        );
+
+        setSide(
+          "Iterate the operator",
+          "Change discounting, rewards, and the state transition. The entire value function moves inside a common bound."
+        );
+
+        els.controls.innerHTML = `
+          <div class="control">
+            <div class="control-row">
+              <label for="valueIteration">Iteration n</label>
+              <output>${state.valueIteration}</output>
+            </div>
+
+            <input
+              id="valueIteration"
+              type="range"
+              min="1"
+              max="16"
+              step="1"
+              value="${state.valueIteration}"
+            />
+          </div>
+
+          <div class="control">
+            <div class="control-row">
+              <label for="valueBeta">Discount factor β</label>
+              <output>${fmt(state.valueBeta)}</output>
+            </div>
+
+            <input
+              id="valueBeta"
+              type="range"
+              min="0.5"
+              max="0.97"
+              step="0.01"
+              value="${state.valueBeta}"
+            />
+          </div>
+
+          <div class="control">
+            <div class="control-row">
+              <label for="valueRewardScale">Reward scale A</label>
+              <output>${fmt(state.valueRewardScale)}</output>
+            </div>
+
+            <input
+              id="valueRewardScale"
+              type="range"
+              min="0.4"
+              max="2.2"
+              step="0.05"
+              value="${state.valueRewardScale}"
+            />
+          </div>
+
+          <div class="control">
+            <div class="control-row">
+              <label for="valuePolicy">State persistence γ</label>
+              <output>${fmt(state.valuePolicy)}</output>
+            </div>
+
+            <input
+              id="valuePolicy"
+              type="range"
+              min="0.3"
+              max="0.95"
+              step="0.01"
+              value="${state.valuePolicy}"
+            />
+          </div>
+        `;
+
+        setButtons([
+          {
+            id: "advanceIteration",
+            label: "Apply T once more",
+            primary: true
+          },
+          {
+            id: "restartIteration",
+            label: "Restart at v₀ = 0"
+          }
+        ]);
+
+        setReadout([
+          {
+            label: "Reward sup",
+            value: fmt(
+              rewardBound,
+              3
+            )
+          },
+          {
+            label: "Value bound",
+            value: fmt(
+              valueBound,
+              3
+            )
+          },
+          {
+            label: "Sup increment",
+            value: fmt(
+              increment,
+              4
+            )
+          },
+          {
+            label: "Function-space point",
+            value: `v_${state.valueIteration}`
+          }
+        ]);
+
+        els.insight.innerHTML =
+          `The graph is one point of an infinite-dimensional vector space.
+           Bounded rewards keep every iterate inside a common sup-norm ball,
+           continuity of the primitives keeps the iterates continuous, and
+           completeness contains the limiting value function.`;
+
+        els.visualWrap.innerHTML = `
+          <div class="dual-view">
+            <div class="mini-visual">
+              <div class="mini-head">
+                <strong>Value-function iteration</strong>
+                <span>Successive functions vₙ over the state space.</span>
+              </div>
+              <svg
+                id="valueFunctionSvg"
+                viewBox="0 0 430 390"
+                aria-label="Value function iteration"
+              ></svg>
+              <div class="caption">
+                Each curve is one element of C_b(X).
+              </div>
+            </div>
+
+            <div class="mini-visual">
+              <div class="mini-head">
+                <strong>Operator geometry</strong>
+                <span>Sup increments contract across iterations.</span>
+              </div>
+              <svg
+                id="operatorSvg"
+                viewBox="0 0 430 390"
+                aria-label="Bellman operator contraction"
+              ></svg>
+              <div class="caption">
+                The vertical scale measures distance in the sup norm.
+              </div>
+            </div>
+          </div>
+        `;
+
+        const valueSvg =
+          document.getElementById(
+            "valueFunctionSvg"
+          );
+
+        const operatorSvg =
+          document.getElementById(
+            "operatorSvg"
+          );
+
+        const width = 430;
+        const height = 390;
+        const margin = {
+          left: 46,
+          right: 22,
+          top: 26,
+          bottom: 42
+        };
+
+        const yMax =
+          Math.max(
+            valueBound,
+            d3.max(values)
+          ) *
+          1.05;
+
+        const valueMap = plotMap(
+          width,
+          height,
+          margin,
+          [0, 5],
+          [0, yMax]
+        );
+
+        drawGrid(
+          valueSvg,
+          valueMap,
+          width,
+          height,
+          margin,
+          [0, 1, 2, 3, 4, 5],
+          d3.range(
+            0,
+            yMax + 0.001,
+            Math.max(
+              0.5,
+              yMax / 4
+            )
+          )
+        );
+
+        svgElement(
+          "rect",
+          {
+            x: margin.left,
+            y: valueMap.y(
+              valueBound
+            ),
+            width:
+              width -
+              margin.left -
+              margin.right,
+            height:
+              valueMap.y(0) -
+              valueMap.y(
+                valueBound
+              ),
+            fill: css("--primary-soft")
+          },
+          valueSvg
+        );
+
+        const displayed =
+          history.slice(
+            Math.max(
+              0,
+              history.length - 5
+            )
+          );
+
+        displayed.forEach((curve, index) => {
+          svgElement(
+            "path",
+            {
+              d: pathFrom(
+                grid.map((k, gridIndex) => [
+                  valueMap.x(k),
+                  valueMap.y(
+                    curve[gridIndex]
+                  )
+                ]),
+                "monotone"
+              ),
+              fill: "none",
+              stroke:
+                index ===
+                displayed.length - 1
+                  ? css("--violet")
+                  : css("--primary"),
+              "stroke-width":
+                index ===
+                displayed.length - 1
+                  ? 2.8
+                  : 1.4,
+              opacity:
+                0.18 +
+                0.2 * index
+            },
+            valueSvg
+          );
+        });
+
+        svgElement(
+          "line",
+          {
+            x1: margin.left,
+            x2: width - margin.right,
+            y1: valueMap.y(
+              valueBound
+            ),
+            y2: valueMap.y(
+              valueBound
+            ),
+            stroke: css("--primary"),
+            "stroke-width": 1.3,
+            "stroke-dasharray": "5 5"
+          },
+          valueSvg
+        );
+
+        appendText(
+          valueSvg,
+          "‖v‖∞ ≤ ‖r‖∞/(1−β)",
+          width - margin.right - 4,
+          valueMap.y(
+            valueBound
+          ) - 7,
+          "svg-small",
+          "end"
+        );
+
+        const increments = [];
+
+        for (
+          let iteration = 1;
+          iteration <
+          history.length;
+          iteration += 1
+        ) {
+          increments.push(
+            d3.max(
+              history[iteration].map(
+                (value, index) =>
+                  Math.abs(
+                    value -
+                    history[
+                      iteration - 1
+                    ][index]
+                  )
+              )
+            )
+          );
+        }
+
+        const maxIncrement =
+          Math.max(
+            0.01,
+            d3.max(increments)
+          );
+
+        const operatorMap = plotMap(
+          width,
+          height,
+          margin,
+          [1, Math.max(2, increments.length)],
+          [0, 1.08 * maxIncrement]
+        );
+
+        drawGrid(
+          operatorSvg,
+          operatorMap,
+          width,
+          height,
+          margin,
+          d3.range(
+            1,
+            Math.max(
+              2,
+              increments.length
+            ) + 1,
+            Math.max(
+              1,
+              Math.floor(
+                increments.length / 5
+              )
+            )
+          ),
+          [
+            0,
+            maxIncrement / 2,
+            maxIncrement
+          ]
+        );
+
+        svgElement(
+          "path",
+          {
+            d: pathFrom(
+              increments.map((value, index) => [
+                operatorMap.x(
+                  index + 1
+                ),
+                operatorMap.y(value)
+              ]),
+              "monotone"
+            ),
+            fill: "none",
+            stroke: css("--primary"),
+            "stroke-width": 2.7
+          },
+          operatorSvg
+        );
+
+        increments.forEach((value, index) => {
+          svgElement(
+            "circle",
+            {
+              cx: operatorMap.x(
+                index + 1
+              ),
+              cy: operatorMap.y(value),
+              r:
+                index ===
+                increments.length - 1
+                  ? 5.8
+                  : 3.4,
+              fill:
+                index ===
+                increments.length - 1
+                  ? css("--amber")
+                  : css("--primary"),
+              stroke:
+                index ===
+                increments.length - 1
+                  ? css("--paper")
+                  : "none",
+              "stroke-width":
+                index ===
+                increments.length - 1
+                  ? 1.6
+                  : 0
+            },
+            operatorSvg
+          );
+        });
+
+        appendText(
+          operatorSvg,
+          "‖vₙ − vₙ₋₁‖∞",
+          margin.left,
+          margin.top - 8,
+          "svg-small"
+        );
+
+        renderMath(
+          els.mainEquation,
+          `T:C_b(X)\\to C_b(X),
+          \\qquad
+          \\|Tv-Tw\\|_\\infty
+          \\leq
+          \\beta
+          \\|v-w\\|_\\infty`
+        );
+
+        els.equationNote.textContent =
+          "The Bellman operator is naturally studied on C_b(X): it preserves the space and contracts distances measured by the sup norm.";
+
+        setTheory([
+          `<strong>Invariant space.</strong> Continuous bounded primitives make T map C_b(X) into itself.`,
+          `<strong>Contraction.</strong> Discounting scales sup-norm differences by at most β.`,
+          `<strong>Existence and uniqueness.</strong> Banach completeness delivers one fixed point v*=Tv.`
+        ]);
+
+        [
+          "valueIteration",
+          "valueBeta",
+          "valueRewardScale",
+          "valuePolicy"
+        ].forEach(id => {
+          document
+            .getElementById(id)
+            .addEventListener(
+              "input",
+              event => {
+                state[id] =
+                  Number(
+                    event.target.value
+                  );
+
+                render();
+              }
+            );
+        });
+
+        document
+          .getElementById(
+            "advanceIteration"
+          )
+          .addEventListener(
+            "click",
+            () => {
+              state.valueIteration =
+                Math.min(
+                  16,
+                  state.valueIteration + 1
+                );
+
+              render();
+            }
+          );
+
+        document
+          .getElementById(
+            "restartIteration"
+          )
+          .addEventListener(
+            "click",
+            () => {
+              state.valueIteration = 1;
+              render();
+            }
+          );
+      }
+
+      function render() {
+        els.navButtons.forEach(button => {
+          const active =
+            button.dataset.view ===
+            state.view;
+
+          button.classList.toggle(
+            "active",
+            active
+          );
+
+          button.setAttribute(
+            "aria-pressed",
+            String(active)
+          );
+        });
+
+        if (state.view === "space") {
+          renderSpace();
+        }
+
+        if (state.view === "sup") {
+          renderSup();
+        }
+
+        if (state.view === "complete") {
+          renderComplete();
+        }
+
+        if (state.view === "returns") {
+          renderReturns();
+        }
+
+        if (state.view === "value") {
+          renderValue();
+        }
+      }
+
+      els.navButtons.forEach(button => {
+        button.addEventListener(
+          "click",
+          () => {
+            state.view =
+              button.dataset.view;
+
+            render();
+          }
+        );
+      });
+
+      els.resetButton.addEventListener(
+        "click",
+        () => {
+          const currentView =
+            state.view;
+
+          Object.assign(
+            state,
+            defaults
+          );
+
+          state.view = currentView;
+          render();
+        }
+      );
+
+      function applyTheme(theme) {
+        document.documentElement.dataset.theme =
+          theme;
+
+        localStorage.setItem(
+          "boundedContinuousFunctionsTheme",
+          theme
+        );
+
+        els.themeText.textContent =
+          theme === "dark"
+            ? "Light mode"
+            : "Dark mode";
+
+        render();
+      }
+
+      const savedTheme =
+        localStorage.getItem(
+          "boundedContinuousFunctionsTheme"
+        );
+
+      const preferredTheme =
+        window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches
+          ? "dark"
+          : "light";
+
+      document.documentElement.dataset.theme =
+        savedTheme || preferredTheme;
+
+      els.themeText.textContent =
+        document.documentElement.dataset.theme === "dark"
+          ? "Light mode"
+          : "Dark mode";
+
+      els.themeButton.addEventListener(
+        "click",
+        () => {
+          applyTheme(
+            document.documentElement.dataset.theme === "dark"
+              ? "light"
+              : "dark"
+          );
+        }
+      );
+
+      render();
+    });
+  </script>
+</body>
+</html>

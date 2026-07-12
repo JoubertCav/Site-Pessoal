@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Interactive laboratory for Banach spaces, completeness, Cauchy sequences of functions, complete examples, and non-complete normed spaces." />
+  <title>Banach Spaces — Interactive Laboratory</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #f6f8f6;
+      --surface: rgba(255,255,255,.95);
+      --surface-2: #edf4f4;
+      --surface-3: #e5eef0;
+      --text: #172126;
+      --muted: #617178;
+      --line: #d5e0e2;
+      --cyan: #00a8c6;
+      --cyan-deep: #087f98;
+      --teal: #168f88;
+      --violet: #7567c7;
+      --amber: #b57a20;
+      --danger: #b74c4c;
+      --success: #147d64;
+      --shadow: 0 18px 52px rgba(37,56,64,.09);
+      --radius: 22px;
+      --canvas: #ffffff;
+      --axis: #61747b;
+      --grid: #dce5e7;
+      --focus: rgba(0,168,198,.23);
+      --epsilon-fill: rgba(0,168,198,.10);
+      --epsilon-line: rgba(0,127,152,.88);
+    }
+
+    html[data-theme="dark"] {
+      --bg: #121a20;
+      --surface: rgba(27,38,46,.96);
+      --surface-2: #213039;
+      --surface-3: #273942;
+      --text: #edf5f6;
+      --muted: #a8b8bd;
+      --line: #344750;
+      --cyan: #44c9e1;
+      --cyan-deep: #7ed9e8;
+      --teal: #58c4b9;
+      --violet: #aaa0e6;
+      --amber: #e3b35d;
+      --danger: #ef8989;
+      --success: #68d0ad;
+      --shadow: 0 18px 52px rgba(0,0,0,.25);
+      --canvas: #17232a;
+      --axis: #9bb0b7;
+      --grid: #30424a;
+      --focus: rgba(68,201,225,.22);
+      --epsilon-fill: rgba(68,201,225,.12);
+      --epsilon-line: rgba(126,217,232,.92);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 8% 0%, rgba(0,168,198,.08), transparent 28rem),
+        radial-gradient(circle at 100% 18%, rgba(117,103,199,.06), transparent 30rem),
+        var(--bg);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.65;
+      transition: background .25s ease, color .25s ease;
+    }
+
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    .shell { width: min(1480px, calc(100% - 32px)); margin: 0 auto; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 84%, transparent);
+      backdrop-filter: blur(18px);
+      background: color-mix(in srgb, var(--bg) 82%, transparent);
+    }
+    .topbar-inner {
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: -.02em; }
+    .brand-mark {
+      width: 34px; height: 34px; border: 1px solid var(--cyan); border-radius: 11px;
+      display: grid; place-items: center; box-shadow: inset 0 0 0 6px color-mix(in srgb, var(--cyan) 10%, transparent);
+    }
+    .brand-mark::before { content: ""; width: 17px; height: 17px; border: 1.6px solid var(--cyan); border-radius: 50%; }
+    .top-actions { display: flex; gap: 9px; align-items: center; }
+
+    .icon-button, .ghost-button, .primary-button, .segmented button, .proof-option, .axiom-button {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--text);
+      border-radius: 12px;
+      min-height: 40px;
+      padding: 9px 13px;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .icon-button:hover, .ghost-button:hover, .segmented button:hover, .proof-option:hover, .axiom-button:hover {
+      transform: translateY(-1px); border-color: var(--cyan);
+    }
+    .primary-button { background: var(--cyan); color: #062e37; font-weight: 700; border-color: transparent; }
+    .primary-button:hover { transform: translateY(-1px); filter: brightness(1.03); }
+
+    h1, h2, h3, .serif { font-family: "Libre Baskerville", Georgia, serif; letter-spacing: -.025em; }
+    h1 { font-size: clamp(2.75rem, 6vw, 5.3rem); line-height: 1.03; margin: 12px 0 20px; }
+    h2 { font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1.14; margin: 0; }
+    h3 { font-size: 1.2rem; margin: 0; }
+    p { margin: 0; }
+
+    .hero { display: grid; grid-template-columns: minmax(0,1.14fr) minmax(360px,.86fr); gap: 30px; padding: 70px 0 46px; align-items: center; }
+    .eyebrow { color: var(--cyan-deep); font-weight: 700; text-transform: uppercase; letter-spacing: .14em; font-size: .78rem; }
+    .hero p { color: var(--muted); max-width: 850px; font-size: clamp(1.02rem,1.8vw,1.24rem); }
+    .hero-chips { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 28px; }
+    .chip { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--line); background: var(--surface); padding: 8px 11px; border-radius: 999px; color: var(--muted); font-size: .9rem; }
+    .chip::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); }
+
+    .hero-map { background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); border-radius: 28px; padding: 24px; min-height: 390px; overflow: hidden; }
+    .completion-visual { position: relative; height: 340px; }
+    .completion-ring { position: absolute; border: 1.4px solid var(--line); border-radius: 50%; }
+    .ring-1 { width: 292px; height: 292px; left: 50%; top: 50%; transform: translate(-50%,-50%); }
+    .ring-2 { width: 210px; height: 210px; left: 50%; top: 50%; transform: translate(-50%,-50%); border-color: color-mix(in srgb, var(--cyan) 55%, var(--line)); }
+    .sequence-dot { position: absolute; width: 14px; height: 14px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 0 6px color-mix(in srgb, var(--cyan) 13%, transparent); }
+    .sequence-dot:nth-child(3){left:13%;top:65%}.sequence-dot:nth-child(4){left:30%;top:50%}.sequence-dot:nth-child(5){left:44%;top:41%}.sequence-dot:nth-child(6){left:55%;top:35%}.sequence-dot:nth-child(7){left:63%;top:32%}.sequence-dot:nth-child(8){left:69%;top:30%}.sequence-dot:nth-child(9){left:73%;top:29%}
+    .limit-dot { position: absolute; left: 77%; top: 27%; width: 23px; height: 23px; border-radius: 50%; border: 2px solid var(--teal); background: var(--surface); box-shadow: 0 0 0 8px color-mix(in srgb, var(--teal) 15%, transparent); }
+    .missing-cut { position: absolute; left: 71%; top: 21%; width: 77px; height: 77px; border-radius: 50%; border: 1.5px dashed var(--danger); opacity: .9; }
+    .map-caption { position: absolute; left: 18px; bottom: 16px; right: 18px; color: var(--muted); font-size: .92rem; }
+
+    .section { padding: 72px 0; }
+    .section-head { display: flex; justify-content: space-between; gap: 24px; align-items: end; margin-bottom: 27px; }
+    .section-head p { color: var(--muted); max-width: 720px; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; }
+    .lab-grid { display: grid; grid-template-columns: minmax(260px,.72fr) minmax(0,1.38fr) minmax(280px,.9fr); gap: 20px; align-items: start; }
+    .proof-grid { display: grid; grid-template-columns: minmax(0,1.25fr) minmax(300px,.75fr); gap: 20px; }
+
+    .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px; min-width: 0; }
+    .card.soft { background: var(--surface-2); box-shadow: none; }
+    .card h3 + p { margin-top: 9px; color: var(--muted); }
+    .card-label { color: var(--cyan-deep); font-size: .78rem; text-transform: uppercase; letter-spacing: .12em; font-weight: 700; margin-bottom: 10px; }
+    .muted { color: var(--muted); }
+    .small { font-size: .9rem; }
+
+    .definition-card { padding: 30px; border-left: 4px solid var(--cyan); }
+    .math-display { margin: 18px 0; overflow-x: auto; overflow-y: hidden; padding: 8px 2px; }
+    .katex-display { margin: .72em 0 !important; }
+    .katex { max-width: 100%; }
+
+    .quantifier-row { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 10px; margin-top: 22px; }
+    .quantifier-piece { padding: 14px; border: 1px solid var(--line); border-radius: 15px; background: var(--surface-2); text-align: center; }
+    .quantifier-piece strong { display: block; color: var(--cyan-deep); font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 7px; }
+
+    .flow-map { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; margin-top: 18px; }
+    .flow-node { border: 1px solid var(--line); background: var(--surface-2); border-radius: 14px; padding: 12px 14px; min-width: 150px; text-align: center; }
+    .flow-arrow { color: var(--cyan-deep); font-size: 1.4rem; }
+
+    .control-stack { display: grid; gap: 17px; }
+    .control label { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; font-weight: 600; margin-bottom: 7px; }
+    .control label span:last-child { color: var(--cyan-deep); font-variant-numeric: tabular-nums; }
+    input[type="range"] { width: 100%; accent-color: var(--cyan); }
+    select { width: 100%; min-height: 43px; border-radius: 11px; border: 1px solid var(--line); background: var(--surface); color: var(--text); padding: 8px 10px; }
+    .control-note { color: var(--muted); font-size: .82rem; margin-top: 5px; }
+
+    .plot { width: 100%; min-height: 420px; border-radius: 16px; overflow: hidden; }
+    .plot.small-plot { min-height: 330px; }
+    .metric-strip { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 10px; margin-top: 14px; }
+    .metric-cell { background: var(--surface-2); border: 1px solid var(--line); border-radius: 14px; padding: 13px; text-align: center; }
+    .metric-value { font-size: 1.27rem; font-weight: 700; color: var(--cyan-deep); font-variant-numeric: tabular-nums; }
+
+    .status { border-radius: 14px; padding: 14px; border: 1px solid var(--line); background: var(--surface-2); }
+    .status.good { border-color: color-mix(in srgb, var(--success) 55%, var(--line)); background: color-mix(in srgb, var(--success) 9%, var(--surface)); }
+    .status.bad { border-color: color-mix(in srgb, var(--danger) 55%, var(--line)); background: color-mix(in srgb, var(--danger) 9%, var(--surface)); }
+    .status.warning { border-color: color-mix(in srgb, var(--amber) 55%, var(--line)); background: color-mix(in srgb, var(--amber) 9%, var(--surface)); }
+
+    .segmented { display: flex; flex-wrap: wrap; gap: 8px; }
+    .segmented button.active { background: var(--cyan); color: #062e37; border-color: var(--cyan); font-weight: 700; }
+
+    .proof-steps { display: grid; gap: 11px; }
+    .proof-step { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--surface); }
+    .proof-step button { width: 100%; border: 0; background: transparent; color: var(--text); padding: 15px 17px; display: flex; justify-content: space-between; gap: 16px; text-align: left; font-weight: 700; }
+    .proof-step .proof-body { display: none; padding: 0 17px 17px; color: var(--muted); }
+    .proof-step.open { border-color: var(--cyan); }
+    .proof-step.open .proof-body { display: block; }
+    .proof-number { display: inline-grid; place-items: center; min-width: 25px; height: 25px; border-radius: 50%; background: var(--surface-2); color: var(--cyan-deep); margin-right: 8px; font-size: .82rem; }
+
+    .example-card { position: relative; overflow: hidden; min-height: 250px; }
+    .example-card::after { content: ""; position: absolute; width: 120px; height: 120px; border-radius: 50%; right: -48px; bottom: -48px; border: 1px solid color-mix(in srgb, var(--cyan) 38%, var(--line)); }
+    .badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 5px 9px; font-size: .76rem; font-weight: 700; background: var(--surface-2); color: var(--cyan-deep); border: 1px solid var(--line); margin-bottom: 12px; }
+    .fact-list { display: grid; gap: 9px; margin-top: 15px; }
+    .fact { display: flex; gap: 9px; align-items: flex-start; color: var(--muted); font-size: .92rem; }
+    .fact::before { content: ""; width: 8px; height: 8px; flex: 0 0 8px; margin-top: .52em; border-radius: 50%; background: var(--teal); }
+
+    .counter-tabs { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 18px; }
+    .counter-tabs button.active { background: var(--danger); border-color: var(--danger); color: #fff; }
+    .counter-panel { display: none; }
+    .counter-panel.active { display: block; }
+
+    .mistake { border-top: 1px solid var(--line); padding: 17px 0; }
+    .mistake:first-child { border-top: 0; padding-top: 0; }
+    .wrong { color: var(--danger); font-weight: 700; }
+    .correct { color: var(--success); font-weight: 700; }
+
+    .quiz-options { display: grid; gap: 9px; margin-top: 16px; }
+    .proof-option { text-align: left; }
+    .proof-option.correct { border-color: var(--success); background: color-mix(in srgb, var(--success) 10%, var(--surface)); }
+    .proof-option.incorrect { border-color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, var(--surface)); }
+
+    .summary-chain { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 9px; margin: 26px 0; }
+    .summary-node { background: var(--surface); border: 1px solid var(--line); border-radius: 15px; padding: 13px 16px; box-shadow: var(--shadow); }
+
+    footer { border-top: 1px solid var(--line); padding: 34px 0 52px; color: var(--muted); text-align: center; }
+
+    .tooltip { position: relative; border-bottom: 1px dotted var(--muted); cursor: help; }
+    .tooltip::after { content: attr(data-tip); position: absolute; left: 50%; bottom: calc(100% + 9px); transform: translateX(-50%); min-width: 230px; max-width: 310px; background: var(--text); color: var(--bg); padding: 9px 11px; border-radius: 10px; font-size: .78rem; line-height: 1.4; opacity: 0; pointer-events: none; transition: opacity .15s ease; z-index: 60; }
+    .tooltip:hover::after { opacity: 1; }
+
+    @media (max-width: 1120px) {
+      .hero, .lab-grid, .proof-grid { grid-template-columns: 1fr; }
+      .hero-map { min-height: 330px; }
+      .quantifier-row { grid-template-columns: repeat(2,minmax(0,1fr)); }
+    }
+    @media (max-width: 780px) {
+      .shell { width: min(100% - 20px, 1480px); }
+      .hero { padding-top: 46px; }
+      .grid-2, .grid-3, .metric-strip { grid-template-columns: 1fr; }
+      .section { padding: 54px 0; }
+      .section-head { align-items: flex-start; flex-direction: column; }
+      .quantifier-row { grid-template-columns: 1fr; }
+      .topbar-inner { min-height: 60px; }
+      .brand span:last-child { display: none; }
+      .card, .definition-card { padding: 18px; }
+      .plot { min-height: 360px; }
+      .flow-map { flex-direction: column; }
+      .flow-arrow { transform: rotate(90deg); }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"></div>
+        <span>Banach Spaces Laboratory</span>
+      </div>
+      <div class="top-actions">
+        <button id="resetButton" class="ghost-button" type="button">Reset</button>
+        <button id="themeToggle" class="icon-button" type="button" aria-label="Toggle light and dark mode">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="shell hero">
+      <div>
+        <div class="eyebrow">Interactive functional analysis</div>
+        <h1>Banach spaces</h1>
+        <p>
+          A norm measures distance. Completeness asks whether every internally convergent process actually lands inside the space. This laboratory turns that abstract requirement into visible Cauchy tails, uniform limits, escaping limits, and proof architecture.
+        </p>
+        <div class="hero-chips">
+          <span class="chip">complete normed spaces</span>
+          <span class="chip">Cauchy sequences</span>
+          <span class="chip">function spaces</span>
+          <span class="chip">non-complete subspaces</span>
+        </div>
+      </div>
+      <aside class="hero-map" aria-label="Visual metaphor for completion">
+        <div class="completion-visual">
+          <div class="completion-ring ring-1"></div>
+          <div class="completion-ring ring-2"></div>
+          <div class="sequence-dot"></div><div class="sequence-dot"></div><div class="sequence-dot"></div><div class="sequence-dot"></div><div class="sequence-dot"></div><div class="sequence-dot"></div><div class="sequence-dot"></div>
+          <div class="limit-dot"></div>
+          <div class="missing-cut"></div>
+          <div class="map-caption">
+            The cyan points form a Cauchy sequence. The teal point is the candidate limit. A Banach space contains it; an incomplete subspace may omit it.
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">1. Formal core</div>
+            <h2>What completeness says</h2>
+          </div>
+          <p>Completeness is not a property of a sequence alone. It is a property of the ambient normed space: every Cauchy sequence must converge to an element of that same space.</p>
+        </div>
+
+        <div class="card definition-card">
+          <div class="card-label">Definition — Banach space</div>
+          <div class="math-display">
+            \[
+              (X,\|\cdot\|)\text{ is Banach}
+              \quad\Longleftrightarrow\quad
+              \forall (x_n)\subset X,
+              \quad
+              (x_n)\text{ Cauchy}
+              \Longrightarrow
+              \exists x\in X:\ \|x_n-x\|\to 0.
+            \]
+          </div>
+          <div class="quantifier-row">
+            <div class="quantifier-piece"><strong>Universal object</strong>every sequence \((x_n)\subset X\)</div>
+            <div class="quantifier-piece"><strong>Hypothesis</strong>the sequence is Cauchy</div>
+            <div class="quantifier-piece"><strong>Existence</strong>there is a limit \(x\)</div>
+            <div class="quantifier-piece"><strong>Membership</strong>the limit satisfies \(x\in X\)</div>
+            <div class="quantifier-piece"><strong>Conclusion</strong>\(\|x_n-x\|\to0\)</div>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-top:20px">
+          <div class="card soft">
+            <div class="card-label">Cauchy condition</div>
+            <div class="math-display">
+              \[
+                \forall\varepsilon>0\;\exists N\in\mathbb N\;\forall m,n\ge N,
+                \qquad \|x_n-x_m\|<\varepsilon.
+              \]
+            </div>
+            <p class="muted">The tail terms become mutually close. No candidate limit is named.</p>
+          </div>
+          <div class="card soft">
+            <div class="card-label">Convergence</div>
+            <div class="math-display">
+              \[
+                \exists x\in X\;\forall\varepsilon>0\;\exists N\in\mathbb N\;\forall n\ge N,
+                \qquad \|x_n-x\|<\varepsilon.
+              \]
+            </div>
+            <p class="muted">The tail terms approach one fixed point that must belong to the space.</p>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:20px">
+          <div class="card-label">Hypothesis–conclusion map</div>
+          <div class="flow-map">
+            <div class="flow-node">normed space \((X,\|\cdot\|)\)</div>
+            <div class="flow-arrow">+</div>
+            <div class="flow-node">Cauchy tail control</div>
+            <div class="flow-arrow">⟹</div>
+            <div class="flow-node">candidate point in the completion</div>
+            <div class="flow-arrow">+</div>
+            <div class="flow-node">completeness</div>
+            <div class="flow-arrow">⟹</div>
+            <div class="flow-node">limit belongs to \(X\)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="cauchyLab">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">2. Cauchy laboratory</div>
+            <h2>Watch the tail contract</h2>
+          </div>
+          <p>Choose a sequence of functions, then compare two tail indices. The supremum distance measures the worst disagreement over the whole domain.</p>
+        </div>
+
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Controls</div>
+            <div class="control-stack">
+              <div class="control">
+                <label for="sequenceSelect"><span>Sequence</span></label>
+                <select id="sequenceSelect">
+                  <option value="geometric">Geometric partial sums</option>
+                  <option value="smoothabs">Smooth approximations to |x|</option>
+                  <option value="powers">Powers xⁿ on [0,1]</option>
+                </select>
+                <div class="control-note">Different examples separate Cauchy behavior, pointwise convergence, and completeness.</div>
+              </div>
+              <div class="control">
+                <label for="nSlider"><span>First index \(n\)</span><span id="nValue">5</span></label>
+                <input id="nSlider" type="range" min="1" max="35" value="5" step="1" />
+              </div>
+              <div class="control">
+                <label for="mSlider"><span>Second index \(m\)</span><span id="mValue">12</span></label>
+                <input id="mSlider" type="range" min="2" max="45" value="12" step="1" />
+              </div>
+              <div class="control">
+                <label for="epsilonSlider"><span>Tolerance \(\varepsilon\)</span><span id="epsilonValue">0.080</span></label>
+                <input id="epsilonSlider" type="range" min="0.005" max="0.5" value="0.08" step="0.005" />
+                <div class="control-note">The Cauchy test succeeds when \(\|f_n-f_m\|_\infty<\varepsilon\).</div>
+              </div>
+            </div>
+          </aside>
+
+          <div class="card">
+            <div class="card-label">Function graphs and maximum gap</div>
+            <div id="functionPlot" class="plot"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="small muted">Supremum distance</div><div id="supDistance" class="metric-value">—</div></div>
+              <div class="metric-cell"><div class="small muted">Dashed ε-radius</div><div id="toleranceMetric" class="metric-value">—</div></div>
+              <div class="metric-cell"><div class="small muted">Tail verdict</div><div id="tailVerdict" class="metric-value">—</div></div>
+            </div>
+          </div>
+
+          <aside class="card">
+            <div class="card-label">Formal meaning</div>
+            <div id="dynamicSequenceFormula" class="math-display"></div>
+            <div id="sequenceStatus" class="status"></div>
+            <div style="height:14px"></div>
+            <h3>Read the diagram</h3>
+            <p class="muted small" style="margin-top:9px">
+              The horizontal axis is the domain. Cyan and violet are \(f_n\) and \(f_m\). The translucent region with dashed boundaries is the \(arepsilon\)-tube around \(f_n\): the test passes exactly when the entire graph of \(f_m\) stays inside it. The amber segment marks the maximal gap, and the teal dashed curve is the proposed limit when one is available.
+            </p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="quantifierLab">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">3. Quantifier game</div>
+            <h2>Can one index control every later pair?</h2>
+          </div>
+          <p>The opponent chooses \(\varepsilon\). You choose a tail index \(N\). The app then searches for the worst pair \(m,n\ge N\) within a large finite window.</p>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="control-stack">
+              <div class="control">
+                <label for="qSequenceSelect"><span>Scalar sequence</span></label>
+                <select id="qSequenceSelect">
+                  <option value="harmonic">xₙ = 1/n</option>
+                  <option value="alternating">xₙ = (−1)ⁿ</option>
+                  <option value="sqrt2">rational approximations to √2</option>
+                </select>
+              </div>
+              <div class="control">
+                <label for="qEpsilon"><span>Opponent chooses \(\varepsilon\)</span><span id="qEpsilonValue">0.100</span></label>
+                <input id="qEpsilon" type="range" min="0.01" max="1.5" value="0.1" step="0.01" />
+              </div>
+              <div class="control">
+                <label for="qN"><span>You choose \(N\)</span><span id="qNValue">12</span></label>
+                <input id="qN" type="range" min="1" max="80" value="12" step="1" />
+              </div>
+            </div>
+            <div id="qFormula" class="math-display"></div>
+            <div id="qStatus" class="status"></div>
+          </div>
+          <div class="card">
+            <div id="sequencePlot" class="plot small-plot"></div>
+            <p class="muted small">Highlighted points belong to the tested tail. The bracket shows the largest separation found among those terms.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">4. Canonical examples</div>
+            <h2>Where completeness lives</h2>
+          </div>
+          <p>These examples are Banach for different structural reasons: coordinate completeness, pointwise construction plus uniform estimates, or absolute summability.</p>
+        </div>
+
+        <div class="grid-3">
+          <article class="card example-card">
+            <span class="badge">Finite dimensional</span>
+            <h3>\(\mathbb R^d\) under any norm</h3>
+            <div class="math-display">\[x_n\text{ Cauchy}\Longrightarrow x_n\to x\in\mathbb R^d.\]</div>
+            <div class="fact-list">
+              <div class="fact">Every norm is equivalent to the Euclidean norm.</div>
+              <div class="fact">Coordinatewise completeness gives the limit.</div>
+              <div class="fact">Finite-dimensional subspaces of normed spaces are closed.</div>
+            </div>
+          </article>
+          <article class="card example-card">
+            <span class="badge">Bounded functions</span>
+            <h3>\(B(X)\) with \(\|\cdot\|_\infty\)</h3>
+            <div class="math-display">\[\|f\|_\infty=\sup_{x\in X}|f(x)|.\]</div>
+            <div class="fact-list">
+              <div class="fact">A sup-norm Cauchy sequence is pointwise Cauchy.</div>
+              <div class="fact">The pointwise limit is bounded.</div>
+              <div class="fact">The convergence is uniform.</div>
+            </div>
+          </article>
+          <article class="card example-card">
+            <span class="badge">Sequence spaces</span>
+            <h3>\(\ell^p\), \(1\le p\le\infty\)</h3>
+            <div class="math-display">
+              \[\|x\|_p=\Big(\sum_{k=1}^\infty |x_k|^p\Big)^{1/p},\quad 1\le p<\infty,\qquad
+              \|x\|_\infty=\sup_k|x_k|.\]
+            </div>
+            <div class="fact-list">
+              <div class="fact">Cauchy control in norm forces coordinatewise limits.</div>
+              <div class="fact">Fatou-type estimates keep the limit in \(\ell^p\).</div>
+              <div class="fact">The norm distance to the limit tends to zero.</div>
+            </div>
+          </article>
+        </div>
+
+        <div class="grid-2" style="margin-top:20px">
+          <article class="card example-card">
+            <span class="badge">Continuous functions</span>
+            <h3>\(C(K)\) with the sup norm</h3>
+            <p class="muted">When \(K\) is compact, every continuous function is bounded, and a uniform limit of continuous functions is continuous. Hence \(C(K)\) is a closed subspace of \(B(K)\), therefore Banach.</p>
+          </article>
+          <article class="card example-card">
+            <span class="badge">Closed subspaces</span>
+            <h3>Closed subspace theorem</h3>
+            <div class="math-display">\[Y\subset X,\quad X\text{ Banach},\quad Y\text{ closed}\Longrightarrow Y\text{ Banach}.\]</div>
+            <p class="muted">A Cauchy sequence in \(Y\) converges in \(X\); closedness forces the limit back into \(Y\).</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="proofSection">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">5. Proof architecture</div>
+            <h2>Why \(B(X)\) is Banach</h2>
+          </div>
+          <p>The decisive move is to use the same Cauchy index uniformly for every point of the domain. Pointwise limits alone are not enough.</p>
+        </div>
+
+        <div class="proof-grid">
+          <div class="card">
+            <div class="card-label">Step-by-step proof navigator</div>
+            <div class="proof-steps" id="proofSteps">
+              <div class="proof-step open">
+                <button type="button"><span><span class="proof-number">1</span>Start with a Cauchy sequence</span><span class="proof-toggle">−</span></button>
+                <div class="proof-body">
+                  Let \((f_n)\) be Cauchy in \((B(X),\|\cdot\|_\infty)\). Thus, for every \(\varepsilon>0\), there exists \(N\) such that
+                  \[m,n\ge N\Longrightarrow \sup_{x\in X}|f_n(x)-f_m(x)|<\varepsilon.\]
+                  <strong>Used:</strong> the sup-norm Cauchy hypothesis.
+                </div>
+              </div>
+              <div class="proof-step">
+                <button type="button"><span><span class="proof-number">2</span>Construct a pointwise candidate</span><span class="proof-toggle">+</span></button>
+                <div class="proof-body">
+                  Fix \(x\in X\). Then
+                  \[|f_n(x)-f_m(x)|\le \|f_n-f_m\|_\infty,\]
+                  so \((f_n(x))\) is Cauchy in \(\mathbb R\). Since \(\mathbb R\) is complete, define
+                  \[f(x)=\lim_{n\to\infty}f_n(x).\]
+                  <strong>Used:</strong> completeness of the scalar field.
+                </div>
+              </div>
+              <div class="proof-step">
+                <button type="button"><span><span class="proof-number">3</span>Pass the uniform estimate to the limit</span><span class="proof-toggle">+</span></button>
+                <div class="proof-body">
+                  Fix \(\varepsilon>0\), and choose \(N\) so that \(m,n\ge N\) implies \(\|f_n-f_m\|_\infty<\varepsilon/2\). For \(n\ge N\) and every \(x\in X\), let \(m\to\infty\) in
+                  \[|f_n(x)-f_m(x)|<\frac{\varepsilon}{2}.\]
+                  This gives \(|f_n(x)-f(x)|\le\varepsilon/2<\varepsilon\) for every \(x\), hence
+                  \[\|f_n-f\|_\infty\le\frac{\varepsilon}{2}<\varepsilon.\]
+                  <strong>Crucial:</strong> one index \(N\) works simultaneously for all \(x\).
+                </div>
+              </div>
+              <div class="proof-step">
+                <button type="button"><span><span class="proof-number">4</span>Verify boundedness of the limit</span><span class="proof-toggle">+</span></button>
+                <div class="proof-body">
+                  Choose one index \(n_0\) with \(\|f-f_{n_0}\|_\infty<1\). Then
+                  \[\|f\|_\infty\le \|f-f_{n_0}\|_\infty+\|f_{n_0}\|_\infty<1+\|f_{n_0}\|_\infty.\]
+                  Thus \(f\in B(X)\).
+                </div>
+              </div>
+              <div class="proof-step">
+                <button type="button"><span><span class="proof-number">5</span>Conclude completeness</span><span class="proof-toggle">+</span></button>
+                <div class="proof-body">
+                  We constructed \(f\in B(X)\) and proved \(\|f_n-f\|_\infty\to0\). Therefore every Cauchy sequence in \(B(X)\) converges in \(B(X)\), so \(B(X)\) is Banach.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <aside class="card">
+            <div class="card-label">Proof strategy</div>
+            <h3>Pointwise construction + uniform recovery</h3>
+            <div class="fact-list">
+              <div class="fact">Use the norm inequality to make each scalar sequence Cauchy.</div>
+              <div class="fact">Use completeness of \(\mathbb R\) to define the candidate limit.</div>
+              <div class="fact">Return to the original uniform estimate before taking the limit.</div>
+              <div class="fact">Verify that the limit lies in the same function space.</div>
+            </div>
+            <div class="status warning" style="margin-top:18px">
+              <strong>Common proof failure.</strong><br>
+              Pointwise convergence \(f_n(x)\to f(x)\) does not by itself imply \(\|f_n-f\|_\infty\to0\). The Cauchy estimate must be uniform in \(x\).
+            </div>
+          </aside>
+        </div>
+        <div class="card soft" style="margin-top:20px">
+          <div class="card-label">Immediate consequence — continuous bounded functions</div>
+          <div class="math-display">
+            \[
+              C_b(X)\text{ is closed in }B(X)\text{ under }\|\cdot\|_\infty
+              \quad\Longrightarrow\quad
+              C_b(X)\text{ is Banach}.
+            \]
+          </div>
+          <p class="muted">Indeed, a uniform limit of continuous functions is continuous, and the proof above already guarantees boundedness and uniform convergence. For compact \(K\), this specializes to the familiar Banach space \(C(K)\).</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="noncomplete">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">6. What can go wrong?</div>
+            <h2>Limits that escape the space</h2>
+          </div>
+          <p>An incomplete normed space can contain every term of a Cauchy sequence while excluding the limit selected by the surrounding Banach space.</p>
+        </div>
+
+        <div class="card">
+          <div class="counter-tabs segmented" role="tablist">
+            <button class="active" data-counter="c1" type="button">\(C^1[-1,1]\) with \(\|\cdot\|_\infty\)</button>
+            <button data-counter="c2" type="button">\(c_{00}\) with \(\|\cdot\|_1\)</button>
+            <button data-counter="c3" type="button">Polynomials in \(C[-1,1]\)</button>
+          </div>
+
+          <div id="c1" class="counter-panel active">
+            <div class="lab-grid">
+              <aside class="card soft">
+                <div class="card-label">Smooth approximants</div>
+                <div class="math-display">\[f_n(x)=\sqrt{x^2+\frac1n}.\]</div>
+                <div class="control">
+                  <label for="smoothNSlider"><span>Index \(n\)</span><span id="smoothNValue">12</span></label>
+                  <input id="smoothNSlider" type="range" min="1" max="120" value="12" step="1" />
+                </div>
+                <p class="muted small" style="margin-top:14px">Every \(f_n\) is continuously differentiable, but the uniform limit is \(|x|\), which is not differentiable at \(0\).</p>
+              </aside>
+              <div class="card soft"><div id="smoothPlot" class="plot small-plot"></div></div>
+              <aside class="card soft">
+                <div class="card-label">Exact obstruction</div>
+                <div id="smoothFormula" class="math-display"></div>
+                <div class="status bad">
+                  The sequence is Cauchy in the sup norm because it converges uniformly in \(C[-1,1]\). Its limit does not belong to \(C^1[-1,1]\). Therefore \(C^1[-1,1]\), equipped only with \(\|\cdot\|_\infty\), is not complete.
+                </div>
+              </aside>
+            </div>
+          </div>
+
+          <div id="c2" class="counter-panel">
+            <div class="lab-grid">
+              <aside class="card soft">
+                <div class="card-label">Finite-support truncations</div>
+                <div class="math-display">\[x^{(n)}=(2^{-1},2^{-2},\ldots,2^{-n},0,0,\ldots).\]</div>
+                <div class="control">
+                  <label for="c00NSlider"><span>Support length \(n\)</span><span id="c00NValue">8</span></label>
+                  <input id="c00NSlider" type="range" min="1" max="24" value="8" step="1" />
+                </div>
+              </aside>
+              <div class="card soft"><div id="c00Plot" class="plot small-plot"></div></div>
+              <aside class="card soft">
+                <div class="card-label">Escaping limit</div>
+                <div id="c00Formula" class="math-display"></div>
+                <div class="status bad">
+                  Each truncation lies in \(c_{00}\), but the \(\ell^1\)-limit \((2^{-k})_{k\ge1}\) has infinitely many nonzero coordinates. Hence \(c_{00}\) is dense in \(\ell^1\) but not closed, and therefore not Banach.
+                </div>
+              </aside>
+            </div>
+          </div>
+
+          <div id="c3" class="counter-panel">
+            <div class="grid-2">
+              <div class="card soft">
+                <div class="card-label">Polynomial subspace</div>
+                <div class="math-display">
+                  \[
+                    \mathcal P[-1,1]\subset C[-1,1],
+                    \qquad \|p\|_\infty=\max_{|x|\le1}|p(x)|.
+                  \]
+                </div>
+                <p class="muted">By the Weierstrass approximation theorem, there exists a polynomial sequence \((p_n)\) converging uniformly to \(|x|\). Thus \((p_n)\) is Cauchy in the sup norm.</p>
+              </div>
+              <div class="card soft">
+                <div class="card-label">Why the proof breaks</div>
+                <div class="math-display">\[p_n\in\mathcal P[-1,1],\qquad p_n\to |x|\notin\mathcal P[-1,1].\]</div>
+                <div class="status bad">The ambient space \(C[-1,1]\) supplies the uniform limit, but the polynomial subspace is not closed. The missing hypothesis in the closed-subspace theorem is precisely closedness.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">7. Guided theorem prover</div>
+            <h2>Choose the logically valid next step</h2>
+          </div>
+          <p>The feedback identifies the exact logical role of each step rather than merely marking answers right or wrong.</p>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-label">Problem</div>
+            <h3>Let \(Y\) be a closed subspace of a Banach space \(X\). Prove that \(Y\) is Banach.</h3>
+            <p class="muted" style="margin-top:12px">Suppose \((y_n)\) is Cauchy in \(Y\). What is the next justified step?</p>
+            <div class="quiz-options" id="quizOptions">
+              <button class="proof-option" data-answer="wrong1" type="button">Because \(Y\) is closed, \((y_n)\) converges immediately in \(Y\).</button>
+              <button class="proof-option" data-answer="correct" type="button">Since the inherited norm is the same, \((y_n)\) is Cauchy in \(X\); completeness of \(X\) gives \(y_n\to x\in X\).</button>
+              <button class="proof-option" data-answer="wrong2" type="button">Every Cauchy sequence has a convergent subsequence, so choose one in \(Y\).</button>
+              <button class="proof-option" data-answer="wrong3" type="button">Boundedness of Cauchy sequences implies compactness of \(Y\).</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-label">Feedback</div>
+            <div id="quizFeedback" class="status">Select a proposed next step.</div>
+            <div style="height:18px"></div>
+            <h3>Final architecture</h3>
+            <div class="flow-map">
+              <div class="flow-node">Cauchy in \(Y\)</div>
+              <div class="flow-arrow">⟹</div>
+              <div class="flow-node">Cauchy in \(X\)</div>
+              <div class="flow-arrow">⟹</div>
+              <div class="flow-node">limit \(x\in X\)</div>
+              <div class="flow-arrow">+</div>
+              <div class="flow-node">\(Y\) closed</div>
+              <div class="flow-arrow">⟹</div>
+              <div class="flow-node">\(x\in Y\)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">8. Common mistakes</div>
+            <h2>Distinctions that proofs depend on</h2>
+          </div>
+        </div>
+        <div class="card">
+          <div class="mistake">
+            <div class="wrong">Incorrect: Every bounded sequence in a Banach space converges.</div>
+            <p class="muted">Completeness concerns Cauchy sequences, not arbitrary bounded sequences. The standard basis \((e_n)\) in \(\ell^2\) is bounded but satisfies \(\|e_n-e_m\|_2=\sqrt2\) for \(n\ne m\).</p>
+            <div class="correct">Correct: Every Cauchy sequence in a Banach space converges in norm.</div>
+          </div>
+          <div class="mistake">
+            <div class="wrong">Incorrect: A pointwise Cauchy sequence of bounded functions is Cauchy in the sup norm.</div>
+            <p class="muted">Pointwise control allows the index to depend on \(x\). Sup-norm Cauchy behavior requires one index working simultaneously over the whole domain.</p>
+            <div class="correct">Correct: Sup-norm Cauchy implies pointwise Cauchy, but the converse can fail.</div>
+          </div>
+          <div class="mistake">
+            <div class="wrong">Incorrect: Every subspace of a Banach space is Banach.</div>
+            <p class="muted">A subspace is Banach under the inherited norm exactly when it is closed. Polynomial functions and \(c_{00}\) are standard nonclosed subspaces.</p>
+            <div class="correct">Correct: Closed subspaces of Banach spaces are Banach.</div>
+          </div>
+          <div class="mistake">
+            <div class="wrong">Incorrect: Completeness is topological and therefore unchanged under any equivalent-looking metric.</div>
+            <p class="muted">Completeness is a uniform property. Equivalent norms preserve it because they quantitatively compare distances, but arbitrary metrics inducing the same topology need not preserve completeness.</p>
+            <div class="correct">Correct: Equivalent norms preserve Cauchy sequences and completeness.</div>
+          </div>
+          <div class="mistake">
+            <div class="wrong">Incorrect: If every Cauchy sequence has a pointwise limit, the function space is complete.</div>
+            <p class="muted">The limit must belong to the same space and convergence must occur in the specified norm.</p>
+            <div class="correct">Correct: Always verify existence, membership, and convergence in the ambient norm.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">9. Final synthesis</div>
+            <h2>The conceptual chain</h2>
+          </div>
+        </div>
+        <div class="summary-chain">
+          <div class="summary-node">norm</div><div class="flow-arrow">→</div>
+          <div class="summary-node">distance between terms</div><div class="flow-arrow">→</div>
+          <div class="summary-node">Cauchy tails</div><div class="flow-arrow">→</div>
+          <div class="summary-node">candidate limit in the completion</div><div class="flow-arrow">→</div>
+          <div class="summary-node">membership in the original space</div><div class="flow-arrow">→</div>
+          <div class="summary-node">Banach space</div>
+        </div>
+        <div class="card definition-card">
+          <div class="math-display">
+            \[
+              \boxed{
+              \text{Banach}
+              =
+              \text{normed space with no missing limits of Cauchy sequences}
+              }
+            \]
+          </div>
+          <p class="muted" style="text-align:center">The most useful diagnostic is simple: construct the limit in a known completion, then ask whether the defining structure of the smaller space is preserved.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell">Banach Spaces — an interactive laboratory for completeness, uniform control, and escaping limits.</div>
+  </footer>
+
+  <script>
+    'use strict';
+
+    const state = {
+      sequence: 'geometric',
+      n: 5,
+      m: 12,
+      epsilon: 0.08,
+      qSequence: 'harmonic',
+      qEpsilon: 0.1,
+      qN: 12,
+      smoothN: 12,
+      c00N: 8
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    const range = (a, b, count) => Array.from({ length: count }, (_, i) => a + (b - a) * i / (count - 1));
+    const fmt = (x, digits = 4) => Number(x).toFixed(digits);
+
+    function renderMath(el, latex, displayMode = true) {
+      if (!el || typeof katex === 'undefined') return;
+      katex.render(latex, el, { displayMode, throwOnError: false, strict: 'ignore' });
+    }
+
+    function renderStaticMath() {
+      if (typeof renderMathInElement === 'undefined') return;
+      renderMathInElement(document.body, {
+        delimiters: [
+          { left: '$$', right: '$$', display: true },
+          { left: '\\[', right: '\\]', display: true },
+          { left: '\\(', right: '\\)', display: false }
+        ],
+        throwOnError: false,
+        strict: 'ignore'
+      });
+    }
+
+    function plotLayout(title = '', xTitle = 'x', yTitle = '') {
+      return {
+        title: { text: title, font: { family: 'Libre Baskerville, Georgia, serif', size: 17, color: css('--text') } },
+        paper_bgcolor: css('--surface'),
+        plot_bgcolor: css('--canvas'),
+        font: { family: 'Inter, sans-serif', color: css('--text') },
+        margin: { l: 52, r: 24, t: title ? 54 : 24, b: 48 },
+        xaxis: { title: xTitle, gridcolor: css('--grid'), zerolinecolor: css('--axis'), linecolor: css('--axis'), tickfont: { color: css('--muted') } },
+        yaxis: { title: yTitle, gridcolor: css('--grid'), zerolinecolor: css('--axis'), linecolor: css('--axis'), tickfont: { color: css('--muted') } },
+        showlegend: true,
+        legend: { orientation: 'h', x: 0, y: 1.08, font: { color: css('--text') } },
+        hovermode: 'closest'
+      };
+    }
+
+    const plotConfig = { responsive: true, displaylogo: false, modeBarButtonsToRemove: ['lasso2d','select2d'] };
+
+    function geometricPartial(k, x) {
+      let sum = 0;
+      for (let j = 0; j <= k; j += 1) sum += Math.pow(x / 2, j);
+      return sum;
+    }
+    function geometricLimit(x) { return 1 / (1 - x / 2); }
+    function smoothAbs(k, x) { return Math.sqrt(x * x + 1 / k); }
+    function powerFn(k, x) { return Math.pow(x, k); }
+
+    function sequenceSpec() {
+      if (state.sequence === 'geometric') {
+        return {
+          domain: [-1, 1],
+          fn: geometricPartial,
+          limit: geometricLimit,
+          limitName: String.raw`f(x)=\frac{1}{1-x/2}`,
+          formula: String.raw`f_k(x)=\sum_{j=0}^{k}\left(\frac{x}{2}\right)^j`,
+          explanation: 'Uniformly convergent geometric partial sums. This is a genuine sup-norm Cauchy sequence.',
+          title: 'Uniformly Cauchy geometric partial sums'
+        };
+      }
+      if (state.sequence === 'smoothabs') {
+        return {
+          domain: [-1, 1],
+          fn: smoothAbs,
+          limit: (x) => Math.abs(x),
+          limitName: String.raw`f(x)=|x|`,
+          formula: String.raw`f_k(x)=\sqrt{x^2+\frac{1}{k}}`,
+          explanation: 'Uniformly Cauchy in the sup norm. The ambient space C[-1,1] contains the limit, while C¹[-1,1] does not.',
+          title: 'A Cauchy sequence whose limit can escape a subspace'
+        };
+      }
+      return {
+        domain: [0, 1],
+        fn: powerFn,
+        limit: (x) => x === 1 ? 1 : 0,
+        limitName: String.raw`f(x)=\mathbf{1}_{\{1\}}(x)`,
+        formula: String.raw`f_k(x)=x^k`,
+        explanation: 'Pointwise convergence holds, but the sequence is not Cauchy in the sup norm: the transition layer keeps moving toward 1.',
+        title: 'Pointwise convergence without uniform Cauchy behavior'
+      };
+    }
+
+    function updateFunctionLab() {
+      state.sequence = $('sequenceSelect').value;
+      state.n = Number($('nSlider').value);
+      state.m = Number($('mSlider').value);
+      if (state.m <= state.n) {
+        state.m = state.n + 1;
+        $('mSlider').value = state.m;
+      }
+      state.epsilon = Number($('epsilonSlider').value);
+      $('nValue').textContent = state.n;
+      $('mValue').textContent = state.m;
+      $('epsilonValue').textContent = fmt(state.epsilon, 3);
+
+      const spec = sequenceSpec();
+      const xs = range(spec.domain[0], spec.domain[1], 701);
+      const yn = xs.map((x) => spec.fn(state.n, x));
+      const ym = xs.map((x) => spec.fn(state.m, x));
+      const yl = xs.map((x) => spec.limit(x));
+      const diffs = yn.map((y, i) => Math.abs(y - ym[i]));
+      let maxIndex = 0;
+      for (let i = 1; i < diffs.length; i += 1) if (diffs[i] > diffs[maxIndex]) maxIndex = i;
+      const sup = diffs[maxIndex];
+      const xStar = xs[maxIndex];
+
+      const epsilonLower = yn.map((y) => y - state.epsilon);
+      const epsilonUpper = yn.map((y) => y + state.epsilon);
+
+      const traces = [
+        {
+          x: xs, y: epsilonLower, type: 'scatter', mode: 'lines', name: 'lower ε-bound',
+          line: { color: css('--epsilon-line'), width: 1.6, dash: 'dash' },
+          hoverinfo: 'skip', showlegend: false
+        },
+        {
+          x: xs, y: epsilonUpper, type: 'scatter', mode: 'lines', name: `ε-tube around f_${state.n}`,
+          line: { color: css('--epsilon-line'), width: 1.6, dash: 'dash' },
+          fill: 'tonexty', fillcolor: css('--epsilon-fill'),
+          hovertemplate: `ε-tube: f_${state.n}(x) ± ${fmt(state.epsilon,3)}<extra></extra>`
+        },
+        { x: xs, y: yn, type: 'scatter', mode: 'lines', name: `f_${state.n}`, line: { color: css('--cyan'), width: 3 } },
+        { x: xs, y: ym, type: 'scatter', mode: 'lines', name: `f_${state.m}`, line: { color: css('--violet'), width: 3 } },
+        { x: xs, y: yl, type: 'scatter', mode: 'lines', name: 'candidate limit', line: { color: css('--teal'), width: 2, dash: 'dash' } },
+        {
+          x: [xStar, xStar], y: [yn[maxIndex], ym[maxIndex]], type: 'scatter', mode: 'lines+markers', name: 'maximum gap',
+          line: { color: css('--amber'), width: 4 }, marker: { color: css('--amber'), size: 7 }, hovertemplate: `x=${fmt(xStar,3)}<br>gap=${fmt(sup,5)}<extra></extra>`
+        }
+      ];
+      Plotly.react('functionPlot', traces, plotLayout(spec.title, 'x', 'function value'), plotConfig);
+
+      $('supDistance').textContent = fmt(sup, 5);
+      $('toleranceMetric').textContent = fmt(state.epsilon, 3);
+      const success = sup < state.epsilon;
+      $('tailVerdict').textContent = success ? 'passes' : 'fails';
+      $('tailVerdict').style.color = success ? css('--success') : css('--danger');
+
+      renderMath($('dynamicSequenceFormula'), String.raw`
+        \begin{aligned}
+        ${spec.formula},\qquad
+        \|f_{${state.n}}-f_{${state.m}}\|_\infty
+        &\approx ${fmt(sup,5)}
+        \mathrel{${success ? '<' : '\\ge'}}
+        \varepsilon=${fmt(state.epsilon,3)},\\[4pt]
+        \|f_{${state.n}}-f_{${state.m}}\|_\infty<\varepsilon
+        &\Longleftrightarrow
+        f_{${state.n}}(x)-\varepsilon<f_{${state.m}}(x)<f_{${state.n}}(x)+\varepsilon
+        \quad\forall x.
+        \end{aligned}
+      `);
+      const status = $('sequenceStatus');
+      status.className = `status ${success ? 'good' : (state.sequence === 'powers' ? 'bad' : 'warning')}`;
+      status.innerHTML = `<strong>${success ? `The whole graph of f_${state.m} lies inside the dashed ε-tube around f_${state.n}.` : `Part of the graph of f_${state.m} leaves the dashed ε-tube around f_${state.n}.`}</strong><br>${spec.explanation}`;
+    }
+
+    function scalarSequence(name, n) {
+      if (name === 'harmonic') return 1 / n;
+      if (name === 'alternating') return n % 2 === 0 ? 1 : -1;
+      const scale = Math.pow(10, Math.min(n, 12));
+      return Math.floor(Math.SQRT2 * scale) / scale;
+    }
+
+    function updateQuantifierLab() {
+      state.qSequence = $('qSequenceSelect').value;
+      state.qEpsilon = Number($('qEpsilon').value);
+      state.qN = Number($('qN').value);
+      $('qEpsilonValue').textContent = fmt(state.qEpsilon, 3);
+      $('qNValue').textContent = state.qN;
+
+      const upper = Math.max(100, state.qN + 55);
+      const ns = Array.from({ length: upper }, (_, i) => i + 1);
+      const ys = ns.map((n) => scalarSequence(state.qSequence, n));
+      const tail = ns.filter((n) => n >= state.qN);
+      let worst = { distance: -1, n: state.qN, m: state.qN };
+      for (let i = state.qN; i <= upper; i += 1) {
+        for (let j = i; j <= upper; j += 1) {
+          const d = Math.abs(scalarSequence(state.qSequence, i) - scalarSequence(state.qSequence, j));
+          if (d > worst.distance) worst = { distance: d, n: i, m: j };
+        }
+      }
+      const success = worst.distance < state.qEpsilon;
+      const colors = ns.map((n) => n >= state.qN ? css('--cyan') : css('--muted'));
+      const sizes = ns.map((n) => n >= state.qN ? 7 : 4);
+      const traces = [
+        { x: ns, y: ys, type: 'scatter', mode: 'markers+lines', name: 'sequence', marker: { color: colors, size: sizes }, line: { color: css('--line'), width: 1 }, hovertemplate: 'n=%{x}<br>xₙ=%{y:.6f}<extra></extra>' },
+        { x: [worst.n, worst.m], y: [scalarSequence(state.qSequence,worst.n), scalarSequence(state.qSequence,worst.m)], type: 'scatter', mode: 'markers', name: 'worst pair', marker: { color: css('--amber'), size: 12, symbol: 'diamond' } }
+      ];
+      const layout = plotLayout('Finite-window adversarial test', 'n', 'xₙ');
+      layout.shapes = [{ type: 'line', x0: state.qN, x1: state.qN, y0: 0, y1: 1, yref: 'paper', line: { color: css('--teal'), width: 2, dash: 'dash' } }];
+      Plotly.react('sequencePlot', traces, layout, plotConfig);
+
+      renderMath($('qFormula'), String.raw`
+        \max_{${state.qN}\le m,n\le ${upper}}|x_n-x_m|
+        \approx ${fmt(worst.distance,6)}
+        \quad ${success ? '<' : '\\ge'} \quad
+        \varepsilon=${fmt(state.qEpsilon,3)}.
+      `);
+      const status = $('qStatus');
+      status.className = `status ${success ? 'good' : 'bad'}`;
+      const caveat = state.qSequence === 'alternating'
+        ? 'The alternating sequence fails for every N whenever ε<2.'
+        : (state.qSequence === 'sqrt2'
+          ? 'These rational approximations are Cauchy in ℚ, but their real limit √2 is not rational; this exposes the incompleteness of ℚ.'
+          : 'This is a finite-window verification; the formula of the sequence supplies the rigorous global argument.');
+      status.innerHTML = `<strong>${success ? 'The chosen tail passes this adversarial search.' : 'The opponent found a violating pair.'}</strong><br>Worst pair: (${worst.n}, ${worst.m}). ${caveat}`;
+    }
+
+    function updateSmoothCounterexample() {
+      state.smoothN = Number($('smoothNSlider').value);
+      $('smoothNValue').textContent = state.smoothN;
+      const xs = range(-1,1,601);
+      const ys = xs.map((x) => smoothAbs(state.smoothN,x));
+      const lim = xs.map((x) => Math.abs(x));
+      Plotly.react('smoothPlot', [
+        { x: xs, y: ys, type: 'scatter', mode: 'lines', name: `f_${state.smoothN}`, line: { color: css('--cyan'), width: 3 } },
+        { x: xs, y: lim, type: 'scatter', mode: 'lines', name: '|x|', line: { color: css('--danger'), width: 2.5, dash: 'dash' } }
+      ], plotLayout('Smooth functions converging to a corner', 'x', 'value'), plotConfig);
+      const exactError = 1 / Math.sqrt(state.smoothN);
+      renderMath($('smoothFormula'), String.raw`
+        \bigl\|f_{${state.smoothN}}-|\cdot|\bigr\|_\infty
+        =\frac{1}{\sqrt{${state.smoothN}}}
+        \approx ${fmt(exactError,5)}.
+      `);
+    }
+
+    function updateC00Counterexample() {
+      state.c00N = Number($('c00NSlider').value);
+      $('c00NValue').textContent = state.c00N;
+      const ks = Array.from({ length: 24 }, (_, i) => i + 1);
+      const trunc = ks.map((k) => k <= state.c00N ? Math.pow(2,-k) : 0);
+      const limit = ks.map((k) => Math.pow(2,-k));
+      Plotly.react('c00Plot', [
+        { x: ks, y: limit, type: 'bar', name: 'limit sequence', marker: { color: css('--surface-3'), line: { color: css('--teal'), width: 1 } } },
+        { x: ks, y: trunc, type: 'bar', name: `x^(${state.c00N})`, marker: { color: css('--cyan') } }
+      ], { ...plotLayout('Finite support versus infinite support', 'coordinate k', 'magnitude'), barmode: 'overlay' }, plotConfig);
+      const tail = Math.pow(2,-state.c00N);
+      renderMath($('c00Formula'), String.raw`
+        \left\|x^{(${state.c00N})}-(2^{-k})_{k\ge1}\right\|_1
+        =\sum_{k>${state.c00N}}2^{-k}
+        =2^{-${state.c00N}}
+        \approx ${fmt(tail,7)}.
+      `);
+    }
+
+    function initializeProofSteps() {
+      document.querySelectorAll('.proof-step > button').forEach((button) => {
+        button.addEventListener('click', () => {
+          const step = button.parentElement;
+          const isOpen = step.classList.toggle('open');
+          button.querySelector('.proof-toggle').textContent = isOpen ? '−' : '+';
+        });
+      });
+    }
+
+    function initializeCounterTabs() {
+      document.querySelectorAll('[data-counter]').forEach((button) => {
+        button.addEventListener('click', () => {
+          document.querySelectorAll('[data-counter]').forEach((b) => b.classList.remove('active'));
+          document.querySelectorAll('.counter-panel').forEach((p) => p.classList.remove('active'));
+          button.classList.add('active');
+          $(button.dataset.counter).classList.add('active');
+          setTimeout(() => {
+            if (button.dataset.counter === 'c1') Plotly.Plots.resize($('smoothPlot'));
+            if (button.dataset.counter === 'c2') Plotly.Plots.resize($('c00Plot'));
+          }, 30);
+        });
+      });
+    }
+
+    function initializeQuiz() {
+      $('quizOptions').addEventListener('click', (event) => {
+        const button = event.target.closest('.proof-option');
+        if (!button) return;
+        document.querySelectorAll('.proof-option').forEach((b) => b.classList.remove('correct','incorrect'));
+        const feedback = $('quizFeedback');
+        const answer = button.dataset.answer;
+        if (answer === 'correct') {
+          button.classList.add('correct');
+          feedback.className = 'status good';
+          feedback.innerHTML = '<strong>Correct.</strong><br>A Cauchy sequence in the subspace is Cauchy in the ambient space because the norm is inherited. Completeness of X is used before closedness of Y. Once x∈X is obtained, closedness implies x∈Y.';
+        } else {
+          button.classList.add('incorrect');
+          feedback.className = 'status bad';
+          const messages = {
+            wrong1: '<strong>Invalid order of reasoning.</strong><br>Closedness does not create a limit. It only keeps an already established ambient limit inside Y.',
+            wrong2: '<strong>Not justified.</strong><br>The existence of a convergent subsequence is not automatic in an arbitrary normed space. Completeness of X directly yields convergence of the whole Cauchy sequence.',
+            wrong3: '<strong>False implication.</strong><br>Cauchy sequences are bounded, but bounded sets need not be compact in infinite-dimensional spaces.'
+          };
+          feedback.innerHTML = messages[answer];
+        }
+      });
+    }
+
+    function updateAllPlots() {
+      updateFunctionLab();
+      updateQuantifierLab();
+      updateSmoothCounterexample();
+      updateC00Counterexample();
+    }
+
+    function bindControls() {
+      ['sequenceSelect','nSlider','mSlider','epsilonSlider'].forEach((id) => $(id).addEventListener('input', updateFunctionLab));
+      ['qSequenceSelect','qEpsilon','qN'].forEach((id) => $(id).addEventListener('input', updateQuantifierLab));
+      $('smoothNSlider').addEventListener('input', updateSmoothCounterexample);
+      $('c00NSlider').addEventListener('input', updateC00Counterexample);
+
+      $('themeToggle').addEventListener('click', () => {
+        const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+        document.documentElement.dataset.theme = next;
+        localStorage.setItem('banach-lab-theme', next);
+        updateAllPlots();
+      });
+
+      $('resetButton').addEventListener('click', () => {
+        $('sequenceSelect').value = 'geometric'; $('nSlider').value = 5; $('mSlider').value = 12; $('epsilonSlider').value = .08;
+        $('qSequenceSelect').value = 'harmonic'; $('qEpsilon').value = .1; $('qN').value = 12;
+        $('smoothNSlider').value = 12; $('c00NSlider').value = 8;
+        updateAllPlots();
+      });
+    }
+
+    function initializeTheme() {
+      const saved = localStorage.getItem('banach-lab-theme');
+      if (saved === 'dark' || saved === 'light') document.documentElement.dataset.theme = saved;
+      else document.documentElement.dataset.theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initializeTheme();
+      renderStaticMath();
+      bindControls();
+      initializeProofSteps();
+      initializeCounterTabs();
+      initializeQuiz();
+      const start = () => {
+        if (typeof katex !== 'undefined' && typeof Plotly !== 'undefined') updateAllPlots();
+        else setTimeout(start, 80);
+      };
+      start();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Interactive laboratory for geometric separation theorems, weak and strict separation, supporting hyperplanes, closed convex sets, and certificates." />
+  <title>Separation Theorems — Interactive Convex Geometry Laboratory</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    :root{
+      --bg:#f7f9f8;--surface:rgba(255,255,255,.97);--surface-2:#eef5f5;--surface-3:#e4edef;
+      --text:#172126;--muted:#617178;--line:#d4dfe1;--cyan:#00a8c6;--cyan-deep:#087f98;
+      --teal:#168f88;--violet:#7567c7;--amber:#b57a20;--danger:#b74c4c;--success:#147d64;
+      --shadow:0 18px 52px rgba(37,56,64,.09);--radius:22px;--canvas:#fff;--axis:#65787e;
+      --grid:#dce6e8;--focus:rgba(0,168,198,.23)
+    }
+    html[data-theme="dark"]{
+      --bg:#121a20;--surface:rgba(27,38,46,.97);--surface-2:#213039;--surface-3:#273942;
+      --text:#edf5f6;--muted:#a8b8bd;--line:#344750;--cyan:#44c9e1;--cyan-deep:#7ed9e8;
+      --teal:#58c4b9;--violet:#aaa0e6;--amber:#e3b35d;--danger:#ef8989;--success:#68d0ad;
+      --shadow:0 18px 52px rgba(0,0,0,.25);--canvas:#17232a;--axis:#9bb0b7;--grid:#30424a;
+      --focus:rgba(68,201,225,.22)
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;color:var(--text);
+      background:
+        radial-gradient(circle at 7% 0%,rgba(0,168,198,.085),transparent 29rem),
+        radial-gradient(circle at 100% 17%,rgba(117,103,199,.065),transparent 32rem),
+        var(--bg);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.65;transition:background .25s ease,color .25s ease
+    }
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    .shell{width:min(1480px,calc(100% - 32px));margin:0 auto}
+    .topbar{
+      position:sticky;top:0;z-index:50;border-bottom:1px solid color-mix(in srgb,var(--line) 84%,transparent);
+      backdrop-filter:blur(18px);background:color-mix(in srgb,var(--bg) 82%,transparent)
+    }
+    .topbar-inner{min-height:68px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:-.02em}
+    .brand-mark{
+      width:34px;height:34px;border:1px solid var(--cyan);border-radius:11px;display:grid;place-items:center;
+      box-shadow:inset 0 0 0 6px color-mix(in srgb,var(--cyan) 10%,transparent)
+    }
+    .brand-mark::before{content:"H";color:var(--cyan-deep);font-family:"Libre Baskerville",serif;font-weight:700}
+    .top-actions{display:flex;gap:9px;align-items:center}
+    .icon-button,.ghost-button,.primary-button,.segmented button,.proof-option,.counter-tab,.map-node{
+      border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:12px;
+      min-height:40px;padding:9px 13px;transition:transform .18s ease,border-color .18s ease,background .18s ease
+    }
+    .icon-button:hover,.ghost-button:hover,.segmented button:hover,.proof-option:hover,.counter-tab:hover,.map-node:hover{
+      transform:translateY(-1px);border-color:var(--cyan)
+    }
+    .primary-button{background:var(--cyan);color:#062e37;font-weight:700;border-color:transparent}
+    .primary-button:hover{transform:translateY(-1px);filter:brightness(1.03)}
+    h1,h2,h3,.serif{font-family:"Libre Baskerville",Georgia,serif;letter-spacing:-.025em}
+    h1{font-size:clamp(2.65rem,5.8vw,5.15rem);line-height:1.03;margin:12px 0 20px}
+    h2{font-size:clamp(2rem,4vw,3.15rem);line-height:1.14;margin:0}
+    h3{font-size:1.2rem;margin:0}
+    p{margin:0}
+    .hero{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(360px,.92fr);gap:30px;padding:70px 0 46px;align-items:center}
+    .eyebrow{color:var(--cyan-deep);font-weight:700;text-transform:uppercase;letter-spacing:.14em;font-size:.78rem}
+    .hero p{color:var(--muted);max-width:850px;font-size:clamp(1.02rem,1.8vw,1.24rem)}
+    .hero-chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:28px}
+    .chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);padding:8px 11px;border-radius:999px;color:var(--muted);font-size:.9rem}
+    .chip::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--cyan)}
+    .hero-map{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:28px;padding:22px;min-height:420px;overflow:hidden}
+    .hero-svg{width:100%;height:370px;display:block}
+    .section{padding:72px 0}
+    .section-head{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:27px}
+    .section-head p{color:var(--muted);max-width:780px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+    .grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+    .lab-grid{display:grid;grid-template-columns:minmax(285px,.78fr) minmax(0,1.42fr) minmax(300px,.92fr);gap:20px;align-items:start}
+    .proof-grid{display:grid;grid-template-columns:minmax(0,1.22fr) minmax(300px,.78fr);gap:20px}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;min-width:0}
+    .card.soft{background:var(--surface-2);box-shadow:none}
+    .card h3+p{margin-top:9px;color:var(--muted)}
+    .card-label{color:var(--cyan-deep);font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;font-weight:700;margin-bottom:10px}
+    .muted{color:var(--muted)}.small{font-size:.9rem}
+    .definition-card{padding:30px;border-left:4px solid var(--cyan)}
+    .math-display{margin:18px 0;overflow-x:auto;overflow-y:hidden;padding:8px 2px}
+    .katex-display{margin:.72em 0!important}
+    .katex{max-width:100%}
+    .notation-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}
+    .notation-item{border:1px solid var(--line);background:var(--surface-2);border-radius:14px;padding:13px}
+    .notation-item strong{display:block;margin-bottom:6px;color:var(--cyan-deep)}
+    .flow-map{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;margin-top:18px}
+    .flow-node{border:1px solid var(--line);background:var(--surface-2);border-radius:14px;padding:12px 14px;min-width:150px;text-align:center}
+    .flow-node.clickable{cursor:pointer}
+    .flow-node.clickable:hover{border-color:var(--cyan)}
+    .flow-arrow{color:var(--cyan-deep);font-size:1.4rem}
+    .control-stack{display:grid;gap:16px}
+    .control label{display:flex;justify-content:space-between;gap:12px;align-items:baseline;font-weight:600;margin-bottom:7px}
+    .control label span:last-child{color:var(--cyan-deep);font-variant-numeric:tabular-nums}
+    input[type="range"]{width:100%;accent-color:var(--cyan)}
+    select{width:100%;min-height:43px;border-radius:11px;border:1px solid var(--line);background:var(--surface);color:var(--text);padding:8px 10px}
+    .control-note{color:var(--muted);font-size:.82rem;margin-top:5px}
+    .metric-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
+    .metric-strip.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .metric-cell{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:13px;text-align:center}
+    .metric-name{color:var(--muted);font-size:.79rem;text-transform:uppercase;letter-spacing:.06em}
+    .metric-value{font-size:1.16rem;font-weight:700;color:var(--cyan-deep);font-variant-numeric:tabular-nums}
+    .status{border-radius:14px;padding:14px;border:1px solid var(--line);background:var(--surface-2)}
+    .status.good{border-color:color-mix(in srgb,var(--success) 55%,var(--line));background:color-mix(in srgb,var(--success) 9%,var(--surface))}
+    .status.warning{border-color:color-mix(in srgb,var(--amber) 55%,var(--line));background:color-mix(in srgb,var(--amber) 8%,var(--surface))}
+    .status.bad{border-color:color-mix(in srgb,var(--danger) 55%,var(--line));background:color-mix(in srgb,var(--danger) 8%,var(--surface))}
+    .diagram-shell{background:var(--canvas);border:1px solid var(--line);border-radius:18px;overflow:hidden;min-height:500px}
+    .diagram-shell svg{display:block;width:100%;height:auto;min-height:500px;touch-action:none}
+    .legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;color:var(--muted);font-size:.86rem}
+    .legend span{display:flex;align-items:center;gap:7px}
+    .legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+    .proof-steps{display:grid;gap:10px}
+    .proof-step{border:1px solid var(--line);background:var(--surface);border-radius:15px;overflow:hidden}
+    .proof-step>button{width:100%;border:0;background:transparent;color:var(--text);display:flex;justify-content:space-between;gap:14px;padding:15px;text-align:left;font-weight:700}
+    .proof-body{display:none;border-top:1px solid var(--line);padding:0 16px 17px;color:var(--muted)}
+    .proof-step.open .proof-body{display:block}
+    .proof-number{display:inline-grid;place-items:center;width:26px;height:26px;margin-right:10px;border-radius:8px;background:var(--surface-2);color:var(--cyan-deep)}
+    .quiz-options{display:grid;gap:10px;margin-top:14px}
+    .proof-option{text-align:left}
+    .proof-option.correct{border-color:var(--success);background:color-mix(in srgb,var(--success) 10%,var(--surface))}
+    .proof-option.wrong{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 9%,var(--surface))}
+    .counter-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+    .counter-tab.active{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 9%,var(--surface))}
+    .counter-content{display:none}.counter-content.active{display:block}
+    .mistake{border-top:1px solid var(--line);padding:16px 0}.mistake:first-child{border-top:0;padding-top:0}
+    .mistake strong{color:var(--danger)}
+    .certificate{display:grid;gap:8px;margin-top:14px}
+    .certificate-row{display:grid;grid-template-columns:150px 1fr;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2)}
+    .certificate-row span:first-child{color:var(--muted)}
+    .footer{padding:38px 0 54px;color:var(--muted);border-top:1px solid var(--line)}
+    @media(max-width:1120px){
+      .hero,.lab-grid,.proof-grid{grid-template-columns:1fr}
+      .hero-map{min-height:360px}.hero-svg{height:320px}
+      .grid-4,.notation-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media(max-width:760px){
+      .shell{width:min(100% - 20px,1480px)}
+      .topbar-inner{min-height:60px}.brand span:last-child{display:none}
+      .hero{padding-top:46px}.section{padding:52px 0}
+      .grid-2,.grid-3,.grid-4,.notation-grid,.metric-strip,.metric-strip.four{grid-template-columns:1fr}
+      .section-head{align-items:start;flex-direction:column}
+      .card{padding:18px}.definition-card{padding:22px}
+      .diagram-shell,.diagram-shell svg{min-height:420px}
+      .certificate-row{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>Separation Theorems Laboratory</span></div>
+      <div class="top-actions">
+        <button class="ghost-button" id="scrollToLab">Open laboratory</button>
+        <button class="icon-button" id="themeToggle" aria-label="Toggle light and dark mode">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="shell hero">
+      <div>
+        <div class="eyebrow">Interactive convex analysis</div>
+        <h1>Separation theorems</h1>
+        <p>A hyperplane turns geometric disjointness into a linear certificate. Move points and convex sets, inspect the margin, and discover exactly when weak separation upgrades to strict separation.</p>
+        <div class="hero-chips">
+          <span class="chip">hyperplanes</span><span class="chip">weak separation</span><span class="chip">strict separation</span><span class="chip">closed convex sets</span><span class="chip">certificates</span>
+        </div>
+      </div>
+      <div class="hero-map" aria-label="Separating hyperplane illustration">
+        <svg class="hero-svg" viewBox="0 0 540 370" role="img">
+          <defs><pattern id="heroGrid" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M 36 0 L 0 0 0 36" fill="none" stroke="var(--grid)" stroke-width="1"/></pattern></defs>
+          <rect x="0" y="0" width="540" height="370" rx="18" fill="var(--canvas)"/>
+          <rect x="0" y="0" width="540" height="370" rx="18" fill="url(#heroGrid)"/>
+          <ellipse cx="150" cy="220" rx="92" ry="61" fill="color-mix(in srgb,var(--cyan) 17%,transparent)" stroke="var(--cyan)" stroke-width="3"/>
+          <polygon points="365,90 485,140 454,270 342,292 305,176" fill="color-mix(in srgb,var(--teal) 16%,transparent)" stroke="var(--teal)" stroke-width="3"/>
+          <line x1="275" y1="45" x2="275" y2="327" stroke="var(--violet)" stroke-width="4"/>
+          <line x1="275" y1="182" x2="345" y2="182" stroke="var(--amber)" stroke-width="4"/>
+          <circle cx="345" cy="182" r="7" fill="var(--amber)"/>
+          <text x="270" y="350" text-anchor="middle" fill="var(--muted)" font-family="Inter" font-size="15">one normal vector certifies two opposite half-spaces</text>
+        </svg>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">1 · Formal language</div><h2>Weak, strict, and supporting separation</h2></div>
+          <p>The same functional \(x\mapsto\langle u,x\rangle\) produces different conclusions depending on whether the support intervals overlap, touch, or have a positive gap.</p>
+        </div>
+        <div class="grid-3">
+          <article class="card">
+            <div class="card-label">Weak separation</div>
+            <div class="math-display" data-math="\sup_{a\in A}\langle u,a\rangle\le \inf_{b\in B}\langle u,b\rangle" data-display="true"></div>
+            <p class="muted">The two support intervals may touch. The separating hyperplane may meet one or both sets.</p>
+          </article>
+          <article class="card">
+            <div class="card-label">Strict separation</div>
+            <div class="math-display" data-math="\sup_{a\in A}\langle u,a\rangle< \inf_{b\in B}\langle u,b\rangle" data-display="true"></div>
+            <p class="muted">There is a positive scalar gap. Any level between the two support values defines a separating hyperplane.</p>
+          </article>
+          <article class="card">
+            <div class="card-label">Supporting hyperplane</div>
+            <div class="math-display" data-math="C\subseteq\{x:\langle u,x\rangle\le\alpha\},\qquad C\cap\{x:\langle u,x\rangle=\alpha\}\neq\varnothing" data-display="true"></div>
+            <p class="muted">The hyperplane touches the set without cutting through its interior.</p>
+          </article>
+        </div>
+        <div class="notation-grid">
+          <div class="notation-item"><strong><span data-math="u\neq0"></span></strong>normal vector</div>
+          <div class="notation-item"><strong><span data-math="H(u,\alpha)"></span></strong>hyperplane \(\langle u,x\rangle=\alpha\)</div>
+          <div class="notation-item"><strong><span data-math="h_C(u)"></span></strong>support function \(\sup_{x\in C}\langle u,x\rangle\)</div>
+          <div class="notation-item"><strong><span data-math="\gamma"></span></strong>separation margin</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="pointSetLab">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">2 · Point–set laboratory</div><h2>A closed convex set versus an exterior point</h2></div><p>Drag the point. The nearest-point projection determines a normal vector and a strict separating hyperplane automatically.</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Set and point controls</div>
+            <div class="control-stack">
+              <div class="control">
+                <label for="pointSetShape">Closed convex set</label>
+                <select id="pointSetShape">
+                  <option value="disk">Disk</option>
+                  <option value="square">Square</option>
+                  <option value="triangle">Triangle</option>
+                  <option value="ellipse">Ellipse</option>
+                </select>
+              </div>
+              <div class="control"><label for="pointX"><span data-math="p_1"></span><span id="pointXVal">3.80</span></label><input id="pointX" type="range" min="-4.5" max="4.5" step=".05" value="3.8"></div>
+              <div class="control"><label for="pointY"><span data-math="p_2"></span><span id="pointYVal">1.20</span></label><input id="pointY" type="range" min="-4.0" max="4.0" step=".05" value="1.2"></div>
+              <label class="toggle-line"><input id="showProjection" type="checkbox" checked>show nearest-point projection</label>
+              <label class="toggle-line"><input id="showNormal" type="checkbox" checked>show normal vector</label>
+              <label class="toggle-line"><input id="showHalfspaces" type="checkbox" checked>shade separating half-spaces</label>
+              <button id="randomExteriorPoint" class="ghost-button">Random exterior point</button>
+            </div>
+          </aside>
+
+          <article class="card">
+            <div class="diagram-shell"><svg id="pointSetSvg" viewBox="0 0 800 520" aria-label="Point and closed convex set with strict separating hyperplane"></svg></div>
+            <div class="legend">
+              <span><i style="background:var(--cyan)"></i>closed convex set</span>
+              <span><i style="background:var(--amber)"></i>exterior point</span>
+              <span><i style="background:var(--teal)"></i>nearest point</span>
+              <span><i style="background:var(--violet)"></i>separating hyperplane</span>
+            </div>
+          </article>
+
+          <aside class="card">
+            <div class="card-label">Geometric certificate</div>
+            <div id="pointSetFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">distance</div><div class="metric-value" id="pointDistance">—</div></div>
+              <div class="metric-cell"><div class="metric-name">margin</div><div class="metric-value" id="pointMargin">—</div></div>
+              <div class="metric-cell"><div class="metric-name">point outside?</div><div class="metric-value" id="pointOutside">—</div></div>
+              <div class="metric-cell"><div class="metric-name">separation</div><div class="metric-value" id="pointSepType">—</div></div>
+            </div>
+            <div id="pointSetStatus" class="status good" style="margin-top:14px"></div>
+            <div class="certificate" id="pointCertificate"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="twoSetLab">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">3 · Two-set laboratory</div><h2>When does weak separation become strict?</h2></div><p>Move one convex body toward the other. A positive gap yields strict separation; contact leaves only weak separation; overlap destroys separation.</p></div>
+        <div class="lab-grid">
+          <aside class="card">
+            <div class="card-label">Configuration controls</div>
+            <div class="control-stack">
+              <div class="control">
+                <label for="pairPreset">Convex pair</label>
+                <select id="pairPreset">
+                  <option value="diskSquare">Disk and square</option>
+                  <option value="twoDisks">Two disks</option>
+                  <option value="polygons">Two polygons</option>
+                </select>
+              </div>
+              <div class="control"><label for="gapControl">horizontal displacement<span id="gapControlVal">4.20</span></label><input id="gapControl" type="range" min="1.0" max="5.5" step=".05" value="4.2"></div>
+              <div class="control"><label for="verticalShift">vertical shift<span id="verticalShiftVal">0.30</span></label><input id="verticalShift" type="range" min="-2.2" max="2.2" step=".05" value=".3"></div>
+              <label class="toggle-line"><input id="showClosestPair" type="checkbox" checked>show closest pair</label>
+              <label class="toggle-line"><input id="showSupportBands" type="checkbox" checked>show support levels</label>
+              <button id="animateGap" class="ghost-button">Animate contact and separation</button>
+            </div>
+          </aside>
+
+          <article class="card">
+            <div class="diagram-shell"><svg id="twoSetSvg" viewBox="0 0 800 520" aria-label="Weak and strict separation of two convex sets"></svg></div>
+            <div class="legend">
+              <span><i style="background:var(--cyan)"></i>set A</span>
+              <span><i style="background:var(--teal)"></i>set B</span>
+              <span><i style="background:var(--violet)"></i>separator</span>
+              <span><i style="background:var(--amber)"></i>closest-point segment</span>
+            </div>
+          </article>
+
+          <aside class="card">
+            <div class="card-label">Support interval test</div>
+            <div id="twoSetFormula" class="math-display"></div>
+            <div class="metric-strip">
+              <div class="metric-cell"><div class="metric-name">distance</div><div class="metric-value" id="setDistance">—</div></div>
+              <div class="metric-cell"><div class="metric-name">support gap</div><div class="metric-value" id="supportGap">—</div></div>
+              <div class="metric-cell"><div class="metric-name">disjoint?</div><div class="metric-value" id="setsDisjoint">—</div></div>
+              <div class="metric-cell"><div class="metric-name">classification</div><div class="metric-value" id="setSepType">—</div></div>
+            </div>
+            <div id="twoSetStatus" class="status good" style="margin-top:14px"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">4 · Main theorems</div><h2>Conditions that guarantee a certificate</h2></div><p>Closedness, convexity, compactness, and positive distance each play a distinct role.</p></div>
+        <div class="grid-2">
+          <article class="card definition-card">
+            <div class="card-label">Point–set strict separation</div>
+            <div class="math-display" data-math="C\subset\mathbb R^n\text{ nonempty, closed, convex},\quad p\notin C" data-display="true"></div>
+            <div class="math-display" data-math="\exists u\neq0,\ \alpha\in\mathbb R:\quad \sup_{x\in C}\langle u,x\rangle<\langle u,p\rangle." data-display="true"></div>
+            <p>The nearest point \(q=P_Cp\) provides the canonical certificate \(u=p-q\).</p>
+          </article>
+          <article class="card definition-card">
+            <div class="card-label">Two-set strict separation</div>
+            <div class="math-display" data-math="A,B\subset\mathbb R^n\text{ nonempty, convex, disjoint}" data-display="true"></div>
+            <div class="math-display" data-math="\operatorname{dist}(A,B)>0\quad\Longrightarrow\quad \exists u\neq0:\ h_A(u)<-h_B(-u)." data-display="true"></div>
+            <p>A sufficient finite-dimensional condition is: one set compact and the other closed.</p>
+          </article>
+          <article class="card">
+            <div class="card-label">Weak separation</div>
+            <p>Under broad convexity assumptions, disjoint convex sets can often be placed in opposite closed half-spaces:</p>
+            <div class="math-display" data-math="\langle u,a\rangle\le\alpha\le\langle u,b\rangle\qquad(a\in A,\ b\in B)." data-display="true"></div>
+          </article>
+          <article class="card">
+            <div class="card-label">Supporting-hyperplane theorem</div>
+            <p>If \(C\subset\mathbb R^n\) is convex and \(x_0\in\partial C\), then under the standard finite-dimensional hypotheses there exists a nonzero \(u\) such that</p>
+            <div class="math-display" data-math="\langle u,x\rangle\le\langle u,x_0\rangle\qquad\forall x\in C." data-display="true"></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">5 · Proof architecture</div><h2>Projection produces the hyperplane</h2></div><p>The Euclidean proof of point–set separation is a one-line variational inequality once the nearest point exists.</p></div>
+        <div class="proof-grid">
+          <article class="card">
+            <div class="proof-steps">
+              <div class="proof-step open"><button type="button"><span><span class="proof-number">1</span>Choose the nearest point</span><span>−</span></button><div class="proof-body"><p>Because \(C\) is nonempty, closed, and convex in finite-dimensional Euclidean space, there exists a unique</p><div class="math-display" data-math="q=P_Cp\in C,\qquad \|p-q\|=\operatorname{dist}(p,C)>0." data-display="true"></div></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">2</span>Move from q toward an arbitrary point of C</span><span>+</span></button><div class="proof-body"><p>For \(x\in C\) and \(t\in[0,1]\), convexity gives \(q+t(x-q)\in C\). Minimality of \(q\) implies</p><div class="math-display" data-math="\|p-q\|^2\le\|p-q-t(x-q)\|^2." data-display="true"></div></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">3</span>Expand and divide by t</span><span>+</span></button><div class="proof-body"><div class="math-display" data-math="0\le -2t\langle p-q,x-q\rangle+t^2\|x-q\|^2." data-display="true"></div><p>Divide by \(t>0\) and let \(t\downarrow0\).</p></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">4</span>Obtain the supporting inequality</span><span>+</span></button><div class="proof-body"><div class="math-display" data-math="\langle p-q,x-q\rangle\le0\qquad\forall x\in C." data-display="true"></div><p>Thus \(u=p-q\) is an outward normal at \(q\).</p></div></div>
+              <div class="proof-step"><button type="button"><span><span class="proof-number">5</span>Create a strict gap</span><span>+</span></button><div class="proof-body"><p>For every \(x\in C\),</p><div class="math-display" data-math="\langle u,x\rangle\le\langle u,q\rangle<\langle u,p\rangle=\langle u,q\rangle+\|u\|^2." data-display="true"></div><p>Any level \(\alpha\) strictly between the last two values separates \(C\) and \(p\).</p></div></div>
+            </div>
+          </article>
+          <aside class="card">
+            <div class="card-label">Proof strategy</div>
+            <h3>Minimization → first-order inequality → certificate</h3>
+            <p class="muted">The nearest-point problem hides a normal cone condition. The residual vector \(p-q\) points outward and defines the separating functional.</p>
+            <div class="status good" style="margin-top:16px"><strong>Geometric meaning.</strong> The shortest segment from \(p\) to \(C\) is perpendicular to a supporting hyperplane at \(q\).</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">6 · Certificate viewpoint</div><h2>Disjointness becomes a checkable inequality</h2></div><p>A separator is not merely a picture: it is a finite algebraic witness.</p></div>
+        <article class="card definition-card">
+          <div class="math-display" data-math="\boxed{\ \langle u,a\rangle\le\alpha-\gamma\quad\forall a\in A,\qquad \langle u,b\rangle\ge\alpha+\gamma\quad\forall b\in B\ }" data-display="true"></div>
+          <p>When \(\gamma>0\), the certificate proves strict separation. When \(\gamma=0\), it proves only weak separation.</p>
+        </article>
+        <div class="grid-3" style="margin-top:20px">
+          <article class="card"><div class="card-label">Optimization</div><h3>Infeasibility certificates</h3><p>A separating functional can prove that two convex constraint systems have no common solution.</p></article>
+          <article class="card"><div class="card-label">Duality</div><h3>Primal geometry becomes a dual vector</h3><p>The normal \(u\) lives in the dual space and summarizes the separating direction.</p></article>
+          <article class="card"><div class="card-label">Machine learning</div><h3>Linear classifiers</h3><p>A hyperplane classifier is a strict separator when the labeled convex hulls have positive margin.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">7 · Why strict separation can fail</div><h2>Disjoint closed convex sets may have zero distance</h2></div><p>Closedness and disjointness alone do not force a positive margin when the sets are unbounded.</p></div>
+        <div class="grid-2">
+          <article class="card">
+            <div class="card-label">Counterexample</div>
+            <div class="math-display" data-math="A=\{(x,y):y\ge e^x\},\qquad B=\{(x,0):x\in\mathbb R\}." data-display="true"></div>
+            <p class="muted">Both sets are nonempty, closed, convex, and disjoint. Yet \(\operatorname{dist}(A,B)=0\) because \(e^x\to0\) as \(x\to-\infty\).</p>
+          </article>
+          <article class="card">
+            <div class="card-label">What survives</div>
+            <div class="math-display" data-math="0=\sup_{b\in B}\langle (0,1),b\rangle\le\inf_{a\in A}\langle (0,1),a\rangle" data-display="true"></div>
+            <p class="muted">The horizontal axis weakly separates the sets, but no positive support gap exists.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">8 · Guided theorem proving</div><h2>Choose the valid inference</h2></div><p>The key step is the variational inequality at the nearest point.</p></div>
+        <div class="proof-grid">
+          <article class="card">
+            <div class="card-label">Challenge</div>
+            <p>Let \(q=P_Cp\). Which statement follows from minimality of \(q\) and convexity of \(C\)?</p>
+            <div class="quiz-options">
+              <button class="proof-option" data-answer="wrong1">\(\langle p-q,x-q\rangle\ge0\) for every \(x\in C\).</button>
+              <button class="proof-option" data-answer="correct">\(\langle p-q,x-q\rangle\le0\) for every \(x\in C\).</button>
+              <button class="proof-option" data-answer="wrong2">\(p-q\in C\).</button>
+              <button class="proof-option" data-answer="wrong3">Every point of \(C\) has the same distance to \(p\).</button>
+            </div>
+          </article>
+          <aside class="card">
+            <div class="card-label">Feedback</div>
+            <div id="quizFeedback" class="status">Choose a proof step.</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">9 · What can go wrong?</div><h2>Each hypothesis performs a specific job</h2></div><p>Remove convexity, closedness, or positive distance and a different part of the proof fails.</p></div>
+        <article class="card">
+          <div class="counter-tabs">
+            <button class="counter-tab active" data-counter="convexity">No convexity</button>
+            <button class="counter-tab" data-counter="closedness">No closedness</button>
+            <button class="counter-tab" data-counter="distance">Zero distance</button>
+            <button class="counter-tab" data-counter="normal">Zero normal</button>
+          </div>
+          <div class="counter-content active" id="counter-convexity">
+            <div class="grid-2"><div><h3>A single hyperplane may not separate a nonconvex set</h3><p class="muted">Place two points on opposite sides of \(p\). Their nonconvex union excludes \(p\), but every hyperplane placing both points in one closed half-space also contains their segment, hence cannot strictly isolate \(p\).</p></div><div class="status bad"><strong>Proof break.</strong> The segment \(q+t(x-q)\) may leave the set, so the variational inequality cannot be derived.</div></div>
+          </div>
+          <div class="counter-content" id="counter-closedness">
+            <div class="grid-2"><div><h3>The nearest point may not exist</h3><p class="muted">For the open unit ball and a boundary point \(p\), the distance is zero but unattained.</p></div><div class="status bad"><strong>Proof break.</strong> There is no projection point \(q\in C\) from which to construct the normal.</div></div>
+          </div>
+          <div class="counter-content" id="counter-distance">
+            <div class="grid-2"><div><h3>Disjoint does not imply positive margin</h3><p class="muted">The exponential epigraph and the \(x\)-axis are disjoint, closed, and convex but approach each other asymptotically.</p></div><div class="status bad"><strong>Correct conclusion.</strong> Weak separation may remain, but strict support inequality fails.</div></div>
+          </div>
+          <div class="counter-content" id="counter-normal">
+            <div class="grid-2"><div><h3>The normal must be nonzero</h3><p class="muted">With \(u=0\), every point has the same functional value, so no geometric distinction is certified.</p></div><div class="status bad"><strong>Degenerate certificate.</strong> The equation \(\langle0,x\rangle=\alpha\) is either empty or the whole space.</div></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">10 · Common mistakes</div><h2>Precision traps</h2></div><p>Separation statements are sensitive to strict inequalities, attainment, and normalization.</p></div>
+        <article class="card">
+          <div class="mistake"><strong>Incorrect:</strong> “Disjoint closed convex sets are always strictly separated.” <span class="muted">Correct: positive distance is sufficient; unbounded closed convex sets may be disjoint with distance zero.</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “Weak separation means the hyperplane misses both sets.” <span class="muted">Correct: it may touch one or both sets.</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “The scalar \(\alpha\) is the certificate by itself.” <span class="muted">Correct: the certificate is the pair \((u,\alpha)\), with \(u\neq0\).</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “Any normal direction works.” <span class="muted">Correct: the support intervals in that direction must be ordered.</span></div>
+          <div class="mistake"><strong>Incorrect:</strong> “Strict pointwise inequalities automatically give a uniform margin.” <span class="muted">Correct: for noncompact sets, a pointwise gap may have infimum zero; the support-gap formulation makes the uniform margin explicit.</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head"><div><div class="eyebrow">11 · Final synthesis</div><h2>Geometry becomes a dual inequality</h2></div><p>Separation theorems convert convex disjointness into a functional witness.</p></div>
+        <div class="flow-map">
+          <div class="flow-node">closed convex geometry</div><span class="flow-arrow">→</span>
+          <div class="flow-node">nearest points or support</div><span class="flow-arrow">→</span>
+          <div class="flow-node">normal vector \(u\)</div><span class="flow-arrow">→</span>
+          <div class="flow-node">hyperplane \(H(u,\alpha)\)</div><span class="flow-arrow">→</span>
+          <div class="flow-node">certificate inequalities</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="shell">Interactive laboratory · weak and strict separation, supporting hyperplanes, and geometric certificates.</div></footer>
+
+  <script>
+    "use strict";
+
+    const $=(s,r=document)=>r.querySelector(s);
+    const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+    const css=name=>getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+    const fmt=(v,d=3)=>{const n=Math.abs(v)<1e-10?0:v;return n.toFixed(d).replace("-","−");};
+
+    function renderMath(root=document){
+      if(window.katex){
+        $$("[data-math]",root).forEach(el=>{
+          if(el.dataset.rendered==="1")return;
+          try{katex.render(el.dataset.math,el,{throwOnError:false,displayMode:el.dataset.display==="true"});el.dataset.rendered="1";}
+          catch(e){el.textContent=el.dataset.math;}
+        });
+      }
+      if(window.renderMathInElement){
+        renderMathInElement(root,{
+          throwOnError:false,
+          delimiters:[
+            {left:"\\(",right:"\\)",display:false},
+            {left:"\\[",right:"\\]",display:true}
+          ]
+        });
+      }
+    }
+    function renderInto(el,tex,display=true){
+      if(!window.katex){el.textContent=tex;return;}
+      katex.render(tex,el,{throwOnError:false,displayMode:display});
+    }
+
+    function setTheme(theme){
+      document.documentElement.dataset.theme=theme;
+      localStorage.setItem("separationLabTheme",theme);
+      drawAll();
+    }
+    document.documentElement.dataset.theme=localStorage.getItem("separationLabTheme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+    $("#themeToggle").addEventListener("click",()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark"));
+    $("#scrollToLab").addEventListener("click",()=>$("#pointSetLab").scrollIntoView({behavior:"smooth"}));
+
+    function svgEl(tag,attrs={}){
+      const el=document.createElementNS("http://www.w3.org/2000/svg",tag);
+      Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));
+      return el;
+    }
+    function clearSvg(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+    function drawGrid(svg,w,h,step=50){
+      svg.appendChild(svgEl("rect",{x:0,y:0,width:w,height:h,fill:css("--canvas")}));
+      for(let x=step;x<w;x+=step)svg.appendChild(svgEl("line",{x1:x,y1:0,x2:x,y2:h,stroke:css("--grid"),"stroke-width":1}));
+      for(let y=step;y<h;y+=step)svg.appendChild(svgEl("line",{x1:0,y1:y,x2:w,y2:y,stroke:css("--grid"),"stroke-width":1}));
+      svg.appendChild(svgEl("line",{x1:0,y1:h/2,x2:w,y2:h/2,stroke:css("--axis"),"stroke-width":1.3}));
+      svg.appendChild(svgEl("line",{x1:w/2,y1:0,x2:w/2,y2:h,stroke:css("--axis"),"stroke-width":1.3}));
+    }
+    const worldToScreen=(p,w,h,range=5)=>({x:w/2+p.x*w/(2*range),y:h/2-p.y*h/(2*range)});
+    const screenToWorld=(x,y,w,h,range=5)=>({x:(x-w/2)/(w/(2*range)),y:(h/2-y)/(h/(2*range))});
+    const dot=(a,b)=>a.x*b.x+a.y*b.y;
+    const sub=(a,b)=>({x:a.x-b.x,y:a.y-b.y});
+    const add=(a,b)=>({x:a.x+b.x,y:a.y+b.y});
+    const mul=(s,a)=>({x:s*a.x,y:s*a.y});
+    const norm=a=>Math.hypot(a.x,a.y);
+    const normalize=a=>{const n=norm(a);return n<1e-12?{x:1,y:0}:{x:a.x/n,y:a.y/n};};
+
+    function lineThroughNormal(svg,u,alpha,w,h,color,width=4,dash=""){
+      const p=mul(alpha,u),t={x:-u.y,y:u.x};
+      const a=worldToScreen(add(p,mul(-10,t)),w,h),b=worldToScreen(add(p,mul(10,t)),w,h);
+      svg.appendChild(svgEl("line",{x1:a.x,y1:a.y,x2:b.x,y2:b.y,stroke:color,"stroke-width":width,"stroke-dasharray":dash}));
+    }
+
+    function polygonContains(poly,p){
+      let sign=0;
+      for(let i=0;i<poly.length;i++){
+        const a=poly[i],b=poly[(i+1)%poly.length];
+        const c=(b.x-a.x)*(p.y-a.y)-(b.y-a.y)*(p.x-a.x);
+        if(Math.abs(c)<1e-10)continue;
+        if(sign===0)sign=Math.sign(c);
+        else if(Math.sign(c)!==sign)return false;
+      }
+      return true;
+    }
+
+    function closestPointSegment(p,a,b){
+      const ab=sub(b,a),den=dot(ab,ab);
+      if(den<1e-12)return a;
+      const t=clamp(dot(sub(p,a),ab)/den,0,1);
+      return add(a,mul(t,ab));
+    }
+
+    function closestPointPolygon(p,poly){
+      if(polygonContains(poly,p))return p;
+      let best=null,bestD=Infinity;
+      for(let i=0;i<poly.length;i++){
+        const q=closestPointSegment(p,poly[i],poly[(i+1)%poly.length]),d=norm(sub(p,q));
+        if(d<bestD){bestD=d;best=q;}
+      }
+      return best;
+    }
+
+    function pointSetGeometry(shape,p){
+      if(shape==="disk"){
+        const r=2.15,d=norm(p),inside=d<=r+1e-10;
+        return{inside,q:inside?p:mul(r/d,p),draw:{kind:"disk",r}};
+      }
+      if(shape==="ellipse"){
+        const a=2.7,b=1.55;
+        const inside=(p.x*p.x)/(a*a)+(p.y*p.y)/(b*b)<=1+1e-10;
+        if(inside)return{inside,q:p,draw:{kind:"ellipse",a,b}};
+        // Newton solve for closest point to axis-aligned ellipse.
+        let t=0;
+        for(let k=0;k<80;k++){
+          const fa=(a*p.x/(t+a*a)),fb=(b*p.y/(t+b*b));
+          const F=fa*fa+fb*fb-1;
+          if(Math.abs(F)<1e-12)break;
+          const dF=-2*(a*a*p.x*p.x/Math.pow(t+a*a,3)+b*b*p.y*p.y/Math.pow(t+b*b,3));
+          t=Math.max(0,t-F/dF);
+        }
+        const q={x:a*a*p.x/(t+a*a),y:b*b*p.y/(t+b*b)};
+        return{inside,q,draw:{kind:"ellipse",a,b}};
+      }
+      const poly=shape==="square"
+        ?[{x:-2.1,y:-2.1},{x:2.1,y:-2.1},{x:2.1,y:2.1},{x:-2.1,y:2.1}]
+        :[{x:-2.65,y:-1.9},{x:2.8,y:-1.55},{x:.35,y:2.75}];
+      const inside=polygonContains(poly,p);
+      return{inside,q:closestPointPolygon(p,poly),draw:{kind:"polygon",poly}};
+    }
+
+    function drawClosedSet(svg,draw,w,h){
+      if(draw.kind==="disk"){
+        const c=worldToScreen({x:0,y:0},w,h),r=draw.r*w/10;
+        svg.appendChild(svgEl("circle",{cx:c.x,cy:c.y,r,fill:`color-mix(in srgb,${css("--cyan")} 17%,transparent)`,stroke:css("--cyan"),"stroke-width":4}));
+      }else if(draw.kind==="ellipse"){
+        const c=worldToScreen({x:0,y:0},w,h);
+        svg.appendChild(svgEl("ellipse",{cx:c.x,cy:c.y,rx:draw.a*w/10,ry:draw.b*h/10,fill:`color-mix(in srgb,${css("--cyan")} 17%,transparent)`,stroke:css("--cyan"),"stroke-width":4}));
+      }else{
+        const pts=draw.poly.map(v=>worldToScreen(v,w,h));
+        svg.appendChild(svgEl("polygon",{points:pts.map(v=>`${v.x},${v.y}`).join(" "),fill:`color-mix(in srgb,${css("--cyan")} 17%,transparent)`,stroke:css("--cyan"),"stroke-width":4}));
+      }
+    }
+
+    function shadeHalfspace(svg,u,alpha,w,h,side,color,opacity=.06){
+      // Approximate by clipping a huge polygon to the plotting square.
+      let poly=[{x:-5,y:-5},{x:5,y:-5},{x:5,y:5},{x:-5,y:5}];
+      function clip(poly){
+        const out=[];
+        for(let i=0;i<poly.length;i++){
+          const A=poly[i],B=poly[(i+1)%poly.length];
+          const fA=side*(dot(u,A)-alpha),fB=side*(dot(u,B)-alpha);
+          const inA=fA<=1e-9,inB=fB<=1e-9;
+          if(inA&&inB)out.push(B);
+          else if(inA&&!inB){
+            const t=fA/(fA-fB);out.push(add(A,mul(t,sub(B,A))));
+          }else if(!inA&&inB){
+            const t=fA/(fA-fB);out.push(add(A,mul(t,sub(B,A))),B);
+          }
+        }
+        return out;
+      }
+      poly=clip(poly);
+      if(poly.length>=3){
+        const pts=poly.map(v=>worldToScreen(v,w,h));
+        svg.appendChild(svgEl("polygon",{points:pts.map(v=>`${v.x},${v.y}`).join(" "),fill:color,opacity}));
+      }
+    }
+
+    let pointDragging=false;
+    ["pointSetShape","pointX","pointY","showProjection","showNormal","showHalfspaces"].forEach(id=>$("#"+id).addEventListener("input",drawPointSetLab));
+    $("#randomExteriorPoint").addEventListener("click",()=>{
+      const ang=Math.random()*2*Math.PI,r=3.3+1.1*Math.random();
+      $("#pointX").value=(r*Math.cos(ang)).toFixed(2);
+      $("#pointY").value=(r*Math.sin(ang)).toFixed(2);
+      drawPointSetLab();
+    });
+
+    function drawPointSetLab(){
+      const svg=$("#pointSetSvg"),w=800,h=520;clearSvg(svg);drawGrid(svg,w,h);
+      const p={x:+$("#pointX").value,y:+$("#pointY").value};
+      const geom=pointSetGeometry($("#pointSetShape").value,p),q=geom.q;
+      drawClosedSet(svg,geom.draw,w,h);
+
+      let u={x:1,y:0},d=0,alpha=0,margin=0;
+      if(!geom.inside){
+        const residual=sub(p,q);d=norm(residual);u=normalize(residual);
+        const cq=dot(u,q),cp=dot(u,p);
+        alpha=(cq+cp)/2;margin=(cp-cq)/2;
+        if($("#showHalfspaces").checked){
+          shadeHalfspace(svg,u,alpha,w,h,1,css("--cyan"),.08);
+          shadeHalfspace(svg,u,alpha,w,h,-1,css("--amber"),.055);
+          drawClosedSet(svg,geom.draw,w,h);
+        }
+        lineThroughNormal(svg,u,alpha,w,h,css("--violet"),4);
+        if($("#showProjection").checked){
+          const P=worldToScreen(p,w,h),Q=worldToScreen(q,w,h);
+          svg.appendChild(svgEl("line",{x1:P.x,y1:P.y,x2:Q.x,y2:Q.y,stroke:css("--amber"),"stroke-width":4,"stroke-dasharray":"7 6"}));
+          svg.appendChild(svgEl("circle",{cx:Q.x,cy:Q.y,r:10,fill:css("--teal"),stroke:css("--canvas"),"stroke-width":3}));
+        }
+        if($("#showNormal").checked){
+          const Q=worldToScreen(q,w,h),N=worldToScreen(add(q,mul(1.2,u)),w,h);
+          svg.appendChild(svgEl("line",{x1:Q.x,y1:Q.y,x2:N.x,y2:N.y,stroke:css("--teal"),"stroke-width":4}));
+          svg.appendChild(svgEl("circle",{cx:N.x,cy:N.y,r:7,fill:css("--teal")}));
+        }
+      }
+      const P=worldToScreen(p,w,h);
+      svg.appendChild(svgEl("circle",{cx:P.x,cy:P.y,r:12,fill:geom.inside?css("--danger"):css("--amber"),stroke:css("--canvas"),"stroke-width":4,"data-role":"point",style:"cursor:grab"}));
+
+      $("#pointXVal").textContent=fmt(p.x,2);$("#pointYVal").textContent=fmt(p.y,2);
+      $("#pointDistance").textContent=fmt(d,3);$("#pointMargin").textContent=fmt(margin,3);
+      $("#pointOutside").textContent=geom.inside?"no":"yes";$("#pointSepType").textContent=geom.inside?"none":"strict";
+
+      const st=$("#pointSetStatus");
+      const cert=$("#pointCertificate");cert.innerHTML="";
+      if(geom.inside){
+        renderInto($("#pointSetFormula"),String.raw`p\in C`);
+        st.className="status bad";st.innerHTML="<strong>No separation.</strong> The point belongs to the set, so no hyperplane can place them in disjoint half-spaces.";
+      }else{
+        const cq=dot(u,q),cp=dot(u,p);
+        renderInto($("#pointSetFormula"),String.raw`u=p-q=(${fmt(p.x-q.x,3)},${fmt(p.y-q.y,3)}),\qquad \langle u,x\rangle\le\langle u,q\rangle<\langle u,p\rangle`);
+        st.className="status good";st.innerHTML="<strong>Strict certificate found.</strong> The nearest-point residual is normal to a supporting hyperplane and produces a positive gap.";
+        [
+          ["normalized normal",`û = (${fmt(u.x,3)}, ${fmt(u.y,3)})`],
+          ["support value",`⟨û,q⟩ = ${fmt(cq,3)}`],
+          ["point value",`⟨û,p⟩ = ${fmt(cp,3)}`],
+          ["chosen level",`α = ${fmt(alpha,3)}`]
+        ].forEach(([a,b])=>{
+          const row=document.createElement("div");row.className="certificate-row";
+          row.innerHTML=`<span>${a}</span><strong>${b}</strong>`;cert.appendChild(row);
+        });
+      }
+    }
+
+    const pointSvg=$("#pointSetSvg");
+    pointSvg.addEventListener("pointerdown",e=>{
+      if(e.target.closest("[data-role='point']")){pointDragging=true;pointSvg.setPointerCapture(e.pointerId);}
+    });
+    pointSvg.addEventListener("pointermove",e=>{
+      if(!pointDragging)return;
+      const r=pointSvg.getBoundingClientRect(),sx=(e.clientX-r.left)*800/r.width,sy=(e.clientY-r.top)*520/r.height;
+      const p=screenToWorld(sx,sy,800,520);
+      $("#pointX").value=clamp(p.x,-4.5,4.5);$("#pointY").value=clamp(p.y,-4,4);drawPointSetLab();
+    });
+    pointSvg.addEventListener("pointerup",()=>pointDragging=false);
+
+    // Two-set lab uses axis-aligned shapes for exact support and distance along a candidate closest direction.
+    let gapTimer=null;
+    ["pairPreset","gapControl","verticalShift","showClosestPair","showSupportBands"].forEach(id=>$("#"+id).addEventListener("input",drawTwoSetLab));
+    $("#animateGap").addEventListener("click",()=>{
+      clearInterval(gapTimer);
+      let v=+$("#gapControl").value,dir=-1;
+      gapTimer=setInterval(()=>{
+        v+=.035*dir;if(v<=1){v=1;dir=1;}if(v>=5.5){v=5.5;dir=-1;}
+        $("#gapControl").value=v;drawTwoSetLab();
+      },40);
+    });
+
+    function pairGeometry(){
+      const preset=$("#pairPreset").value,dx=+$("#gapControl").value,dy=+$("#verticalShift").value;
+      if(preset==="twoDisks"){
+        return{
+          A:{kind:"disk",c:{x:-dx/2,y:0},r:1.35},
+          B:{kind:"disk",c:{x:dx/2,y:dy},r:1.25}
+        };
+      }
+      if(preset==="diskSquare"){
+        return{
+          A:{kind:"disk",c:{x:-dx/2,y:0},r:1.35},
+          B:{kind:"square",c:{x:dx/2,y:dy},hx:1.15,hy:1.15}
+        };
+      }
+      return{
+        A:{kind:"polygon",poly:[{x:-dx/2-1.4,y:-1.2},{x:-dx/2-.9,y:1.55},{x:-dx/2+1.2,y:1.15},{x:-dx/2+1.45,y:-1.3}]},
+        B:{kind:"polygon",poly:[{x:dx/2-1.1,y:dy-1.4},{x:dx/2-1.4,y:dy+1.0},{x:dx/2+.8,y:dy+1.55},{x:dx/2+1.5,y:dy-.65}]}
+      };
+    }
+
+    function support(shape,u,maximize=true){
+      const s=maximize?1:-1;
+      if(shape.kind==="disk")return dot(u,shape.c)+s*shape.r;
+      if(shape.kind==="square")return dot(u,shape.c)+s*(Math.abs(u.x)*shape.hx+Math.abs(u.y)*shape.hy);
+      const vals=shape.poly.map(p=>dot(u,p));
+      return maximize?Math.max(...vals):Math.min(...vals);
+    }
+
+    function centerOf(shape){
+      if(shape.kind!=="polygon")return shape.c;
+      const sum=shape.poly.reduce((a,p)=>add(a,p),{x:0,y:0}); return mul(1/shape.poly.length,sum);
+    }
+
+    function drawShape(svg,shape,w,h,color){
+      if(shape.kind==="disk"){
+        const c=worldToScreen(shape.c,w,h);
+        svg.appendChild(svgEl("circle",{cx:c.x,cy:c.y,r:shape.r*w/10,fill:`color-mix(in srgb,${color} 16%,transparent)`,stroke:color,"stroke-width":4}));
+      }else if(shape.kind==="square"){
+        const tl=worldToScreen({x:shape.c.x-shape.hx,y:shape.c.y+shape.hy},w,h);
+        svg.appendChild(svgEl("rect",{x:tl.x,y:tl.y,width:2*shape.hx*w/10,height:2*shape.hy*h/10,fill:`color-mix(in srgb,${color} 16%,transparent)`,stroke:color,"stroke-width":4}));
+      }else{
+        const pts=shape.poly.map(p=>worldToScreen(p,w,h));
+        svg.appendChild(svgEl("polygon",{points:pts.map(p=>`${p.x},${p.y}`).join(" "),fill:`color-mix(in srgb,${color} 16%,transparent)`,stroke:color,"stroke-width":4}));
+      }
+    }
+
+    function approximateClosest(A,B){
+      // Sample support direction from center difference; exact for disks and adequate pedagogically for current presets.
+      const cA=centerOfCompat(A),cB=centerOfCompat(B);
+      let u=normalize(sub(cB,cA));
+      // Refine direction by sampling.
+      let best={gap:-Infinity,u};
+      for(let k=0;k<720;k++){
+        const th=2*Math.PI*k/720,dir={x:Math.cos(th),y:Math.sin(th)};
+        const gap=support(B,dir,false)-support(A,dir,true);
+        if(gap>best.gap)best={gap,u:dir};
+      }
+      u=best.u;
+      const aVal=support(A,u,true),bVal=support(B,u,false);
+      return{u,aVal,bVal,gap:bVal-aVal};
+    }
+
+    function centerOfCompat(shape){
+      if(shape.kind!=="polygon")return shape.c;
+      const sum=shape.poly.reduce((a,p)=>add(a,p),{x:0,y:0});
+      return mul(1/shape.poly.length,sum);
+    }
+
+    function supportPoint(shape,u,maximize=true){
+      if(shape.kind==="disk")return add(shape.c,mul((maximize?1:-1)*shape.r,u));
+      if(shape.kind==="square"){
+        return{
+          x:shape.c.x+(maximize?1:-1)*(u.x>=0?shape.hx:-shape.hx),
+          y:shape.c.y+(maximize?1:-1)*(u.y>=0?shape.hy:-shape.hy)
+        };
+      }
+      let best=shape.poly[0],bestVal=dot(u,best);
+      shape.poly.forEach(p=>{
+        const v=dot(u,p);
+        if((maximize&&v>bestVal)||(!maximize&&v<bestVal)){best=p;bestVal=v;}
+      });
+      return best;
+    }
+
+    function drawTwoSetLab(){
+      const svg=$("#twoSetSvg"),w=800,h=520;clearSvg(svg);drawGrid(svg,w,h);
+      const {A,B}=pairGeometry(),sep=approximateClosest(A,B);
+      drawShape(svg,A,w,h,css("--cyan"));drawShape(svg,B,w,h,css("--teal"));
+
+      const pA=supportPoint(A,sep.u,true),pB=supportPoint(B,sep.u,false);
+      const PA=worldToScreen(pA,w,h),PB=worldToScreen(pB,w,h);
+      const gap=sep.gap;
+      const alpha=(sep.aVal+sep.bVal)/2;
+
+      if(gap>=-1e-3){
+        lineThroughNormal(svg,sep.u,alpha,w,h,css("--violet"),4);
+        if($("#showSupportBands").checked){
+          lineThroughNormal(svg,sep.u,sep.aVal,w,h,css("--cyan"),2,"7 6");
+          lineThroughNormal(svg,sep.u,sep.bVal,w,h,css("--teal"),2,"7 6");
+        }
+      }
+      if($("#showClosestPair").checked){
+        svg.appendChild(svgEl("line",{x1:PA.x,y1:PA.y,x2:PB.x,y2:PB.y,stroke:css("--amber"),"stroke-width":4,"stroke-dasharray":"7 6"}));
+        svg.appendChild(svgEl("circle",{cx:PA.x,cy:PA.y,r:8,fill:css("--amber")}));
+        svg.appendChild(svgEl("circle",{cx:PB.x,cy:PB.y,r:8,fill:css("--amber")}));
+      }
+
+      $("#gapControlVal").textContent=fmt(+$("#gapControl").value,2);$("#verticalShiftVal").textContent=fmt(+$("#verticalShift").value,2);
+      const distance=Math.max(0,gap);
+      $("#setDistance").textContent=fmt(distance,3);$("#supportGap").textContent=fmt(gap,3);
+      $("#setsDisjoint").textContent=gap>1e-3?"yes":gap>=-1e-3?"touching":"no";
+      const type=gap>1e-3?"strict":gap>=-1e-3?"weak":"none";
+      $("#setSepType").textContent=type;
+      renderInto($("#twoSetFormula"),String.raw`h_A(u)=${fmt(sep.aVal,3)},\qquad \inf_{b\in B}\langle u,b\rangle=${fmt(sep.bVal,3)},\qquad \gamma=${fmt(gap,3)}`);
+
+      const st=$("#twoSetStatus");
+      if(gap>1e-3){
+        st.className="status good";st.innerHTML="<strong>Strict separation.</strong> The support intervals have a positive gap, so the midpoint level yields a margin certificate.";
+      }else if(gap>=-1e-3){
+        st.className="status warning";st.innerHTML="<strong>Weak separation only.</strong> The support levels coincide. A supporting hyperplane touches both sets.";
+      }else{
+        st.className="status bad";st.innerHTML="<strong>No separating hyperplane.</strong> The sampled support intervals overlap in every direction, indicating intersection.";
+      }
+    }
+
+    // Accordion
+    $$(".proof-step>button").forEach(btn=>btn.addEventListener("click",()=>{
+      const step=btn.parentElement;step.classList.toggle("open");btn.lastElementChild.textContent=step.classList.contains("open")?"−":"+";
+    }));
+
+    // Quiz
+    $$(".proof-option").forEach(btn=>btn.addEventListener("click",()=>{
+      $$(".proof-option").forEach(b=>b.classList.remove("correct","wrong"));
+      const f=$("#quizFeedback");
+      if(btn.dataset.answer==="correct"){
+        btn.classList.add("correct");f.className="status good";
+        f.innerHTML="<strong>Correct.</strong> The residual p−q forms an obtuse angle with every feasible direction x−q. This is precisely the normal-cone condition at the projection point.";
+      }else if(btn.dataset.answer==="wrong1"){
+        btn.classList.add("wrong");f.className="status bad";
+        f.innerHTML="<strong>Wrong sign.</strong> The expansion of the squared distance produces a nonpositive inner product.";
+      }else if(btn.dataset.answer==="wrong2"){
+        btn.classList.add("wrong");f.className="status bad";
+        f.innerHTML="<strong>Type error.</strong> The residual is a vector in the ambient space, not generally a point of C.";
+      }else{
+        btn.classList.add("wrong");f.className="status bad";
+        f.innerHTML="<strong>False conclusion.</strong> Minimality identifies one closest point; it does not equalize all distances.";
+      }
+    }));
+
+    // Counter tabs
+    $$(".counter-tab").forEach(tab=>tab.addEventListener("click",()=>{
+      $$(".counter-tab").forEach(t=>t.classList.toggle("active",t===tab));
+      $$(".counter-content").forEach(c=>c.classList.toggle("active",c.id==="counter-"+tab.dataset.counter));
+    }));
+
+    function drawAll(){drawPointSetLab();drawTwoSetLab();}
+    window.addEventListener("load",()=>{renderMath();drawAll();});
+    setTimeout(()=>{renderMath();drawAll();},300);
+  </script>
+</body>
+</html>
