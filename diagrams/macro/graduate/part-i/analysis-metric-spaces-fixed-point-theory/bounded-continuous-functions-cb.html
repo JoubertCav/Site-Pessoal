@@ -318,8 +318,52 @@
     }
 
     .formula-strip .katex-display {
-      margin: 0.1em 0;
+      margin: 0;
       text-align: left;
+    }
+
+    /* Consistent mathematical typography across formulas, readouts, and prose. */
+    .katex {
+      color: var(--ink);
+      font-size: 1.02em;
+      line-height: 1.28;
+      text-rendering: geometricPrecision;
+    }
+
+    .katex-display {
+      margin: 0;
+      padding: 0.12rem 0;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: thin;
+      scrollbar-color: var(--line) transparent;
+    }
+
+    .katex-display > .katex {
+      display: inline-block;
+      min-width: max-content;
+      white-space: nowrap;
+      text-align: left;
+    }
+
+    .formula-strip > div,
+    .equation-box > div {
+      width: 100%;
+    }
+
+    .formula-strip .katex-display > .katex {
+      font-size: clamp(1.05rem, 1.45vw, 1.26rem);
+    }
+
+    .equation-box .katex-display > .katex {
+      font-size: clamp(1.08rem, 1.55vw, 1.32rem);
+    }
+
+    .insight .katex,
+    .theory-line .katex,
+    .stat .katex,
+    .caption .katex {
+      font-size: 1em;
     }
 
     .visual-wrap {
@@ -594,7 +638,6 @@
     }
 
     .equation-box .katex-display {
-      margin: 0.12em 0;
       text-align: left;
     }
 
@@ -864,6 +907,10 @@
         supN: 3,
         supDecay: 0.62,
         supFrequency: 1.4,
+        supProfile: "oscillating",
+        supProbeX: 2.4,
+        supTolerance: 0.25,
+        supShowFibers: true,
 
         completeCase: "uniformCauchy",
         completeN: 5,
@@ -881,6 +928,7 @@
       };
 
       const state = { ...defaults };
+      let supAnimationTimer = null;
 
       const els = {
         navButtons: [...document.querySelectorAll(".nav-button")],
@@ -1652,25 +1700,67 @@
         );
       }
 
-      function approximateFunction(x) {
+      function supErrorProfile(x) {
+        if (state.supProfile === "localized") {
+          const center = 4.35;
+          const width = 0.34;
+
+          return Math.exp(
+            -Math.pow(
+              (x - center) / width,
+              2
+            )
+          );
+        }
+
+        if (state.supProfile === "oneSided") {
+          return (
+            0.62 +
+            0.38 *
+            Math.sin(
+              state.supFrequency * x
+            )
+          );
+        }
+
+        return Math.cos(
+          state.supFrequency * x
+        );
+      }
+
+      function supErrorAmplitude() {
         return (
-          targetFunction(x) +
           Math.pow(
             state.supDecay,
             state.supN
           ) *
-          1.15 *
-          Math.cos(
-            state.supFrequency * x
-          )
+          1.15
         );
+      }
+
+      function approximateFunction(x) {
+        return (
+          targetFunction(x) +
+          supErrorAmplitude() *
+          supErrorProfile(x)
+        );
+      }
+
+      function stopSupAnimation() {
+        if (supAnimationTimer) {
+          clearInterval(
+            supAnimationTimer
+          );
+
+          supAnimationTimer = null;
+        }
       }
 
       function renderSup() {
         const xValues = d3.range(
           0,
           6.001,
-          0.02
+          0.015
         );
 
         const target = xValues.map(
@@ -1681,12 +1771,13 @@
           approximateFunction
         );
 
-        const errors = approx.map(
+        const signedErrors = approx.map(
           (value, index) =>
-            Math.abs(
-              value -
-              target[index]
-            )
+            value - target[index]
+        );
+
+        const errors = signedErrors.map(
+          Math.abs
         );
 
         const supError = d3.max(errors);
@@ -1694,28 +1785,69 @@
           supError
         );
 
+        const probeIndex = clamp(
+          d3.bisectCenter(
+            xValues,
+            state.supProbeX
+          ),
+          0,
+          xValues.length - 1
+        );
+
+        state.supProbeX =
+          xValues[probeIndex];
+
+        const insideTolerance =
+          supError <=
+          state.supTolerance +
+          1e-10;
+
+        const profileNames = {
+          oscillating: "distributed oscillation",
+          localized: "localized spike",
+          oneSided: "one-sided bias"
+        };
+
         setHeader(
           "Uniform distance",
-          "The worst vertical gap is the distance",
-          "The sup norm compares two functions by the largest discrepancy over all states, not by an average or by one selected point.",
-          `‖f_n − f‖∞ = ${fmt(supError, 4)}`
+          "The entire error function determines one worst-case distance",
+          "Read the upper panel vertically and the lower panel as an error landscape. The sup norm is the height of the tallest error, wherever it occurs.",
+          insideTolerance
+            ? `uniformly within ε = ${fmt(state.supTolerance, 3)}`
+            : `ε violated: sup gap = ${fmt(supError, 4)}`,
+          insideTolerance ? "" : "warn"
         );
 
         renderMath(
           els.topFormula,
-          `d_\\infty(f,g)
-          =
-          \\|f-g\\|_\\infty
-          =
-          \\sup_{x\\in X}|f(x)-g(x)|`
+          `\\begin{aligned}
+          e_n(x)
+          &=
+          \\left|f_n(x)-f(x)\\right|,\\\\[0.35em]
+          \\left\\|f_n-f\\right\\|_\\infty
+          &=
+          \\sup_{x\\in X} e_n(x).
+          \\end{aligned}`
         );
 
         setSide(
-          "Shrink the uniform error",
-          "Increase the approximation index or alter error persistence. The entire dashed function must enter the same band."
+          "Explore pointwise and uniform error",
+          "Move the probe or hover over the diagram. Change the error shape to see why a small error at most states does not imply a small sup norm."
         );
 
         els.controls.innerHTML = `
+          <div class="control">
+            <div class="control-row">
+              <label for="supProfile">Error geometry</label>
+            </div>
+
+            <select id="supProfile">
+              <option value="oscillating" ${state.supProfile === "oscillating" ? "selected" : ""}>Distributed oscillation</option>
+              <option value="localized" ${state.supProfile === "localized" ? "selected" : ""}>Localized hidden spike</option>
+              <option value="oneSided" ${state.supProfile === "oneSided" ? "selected" : ""}>One-sided approximation bias</option>
+            </select>
+          </div>
+
           <div class="control">
             <div class="control-row">
               <label for="supN">Approximation index n</label>
@@ -1734,7 +1866,7 @@
 
           <div class="control">
             <div class="control-row">
-              <label for="supDecay">Error persistence ρ</label>
+              <label for="supDecay">Contraction rate ρ</label>
               <output>${fmt(state.supDecay)}</output>
             </div>
 
@@ -1761,105 +1893,283 @@
               max="3"
               step="0.05"
               value="${state.supFrequency}"
+              ${state.supProfile === "localized" ? "disabled" : ""}
             />
+          </div>
+
+          <div class="control">
+            <div class="control-row">
+              <label for="supProbeX">State probe x₀</label>
+              <output>${fmt(state.supProbeX, 2)}</output>
+            </div>
+
+            <input
+              id="supProbeX"
+              type="range"
+              min="0"
+              max="6"
+              step="0.01"
+              value="${state.supProbeX}"
+            />
+          </div>
+
+          <div class="control">
+            <div class="control-row">
+              <label for="supTolerance">Tolerance ε</label>
+              <output>${fmt(state.supTolerance, 3)}</output>
+            </div>
+
+            <input
+              id="supTolerance"
+              type="range"
+              min="0.01"
+              max="1.2"
+              step="0.01"
+              value="${state.supTolerance}"
+            />
+            <p class="control-help">Uniform accuracy requires every state to satisfy |fₙ(x)−f(x)| ≤ ε.</p>
           </div>
         `;
 
-        setButtons([]);
+        setButtons([
+          {
+            id: "toggleSupFibers",
+            label: state.supShowFibers
+              ? "Hide vertical gaps"
+              : "Show vertical gaps"
+          },
+          {
+            id: "matchSupTolerance",
+            label: "Set ε to current sup"
+          },
+          {
+            id: "animateSupConvergence",
+            label: supAnimationTimer
+              ? "Pause convergence"
+              : "Animate convergence",
+            primary: true
+          }
+        ]);
 
         setReadout([
           {
+            label: "Probe state",
+            value: `<span id="supProbeState">x₀ = ${fmt(xValues[probeIndex], 3)}</span>`
+          },
+          {
+            label: "Pointwise gap",
+            value: `<span id="supProbeGap">${fmt(errors[probeIndex], 4)}</span>`
+          },
+          {
             label: "Worst state",
-            value: `x = ${fmt(
-              xValues[maxIndex],
-              3
-            )}`
+            value: `x* = ${fmt(xValues[maxIndex], 3)}`
           },
           {
-            label: "Sup error",
-            value: fmt(
-              supError,
-              4
-            )
+            label: "Sup norm",
+            value: fmt(supError, 4)
           },
           {
-            label: "Approximation",
-            value: `f_${state.supN}`
+            label: "Error shape",
+            value: profileNames[state.supProfile]
           },
           {
-            label: "Metric",
-            value: "uniform"
+            label: "ε-test",
+            value: insideTolerance
+              ? "passes globally"
+              : "fails somewhere"
           }
         ]);
 
         els.insight.innerHTML =
-          `Every state is controlled by the same error bound.
-           This is why the sup norm is natural for Bellman operators:
-           it prevents a large approximation error from hiding at an
-           economically important state.`;
+          state.supProfile === "localized"
+            ? `The approximation is excellent across most of the state space, but one narrow spike still determines
+               ${inlineMath("\\|f_n-f\\|_\\infty")}. The sup norm cannot average that economically important state away.`
+            : `At the probe, the pointwise gap may be much smaller than the global distance. Uniform convergence asks whether
+               the <em>largest</em> pointwise error tends to zero, not whether a typical error does.`;
 
         const {
           shell,
           svg
         } = createSvg(
           820,
-          540,
-          "Sup norm as the largest vertical distance between two functions"
+          660,
+          "Linked function and absolute-error diagrams for the sup norm"
         );
 
         els.visualWrap.innerHTML = "";
         els.visualWrap.appendChild(shell);
 
         const width = 820;
-        const height = 540;
-        const margin = {
-          left: 62,
-          right: 30,
-          top: 34,
-          bottom: 54
-        };
+        const height = 660;
+        const left = 64;
+        const right = 30;
+        const topY = 38;
+        const mainBottom = 374;
+        const errorTop = 440;
+        const errorBottom = 600;
+
+        const xScale = d3
+          .scaleLinear()
+          .domain([0, 6])
+          .range([left, width - right]);
 
         const yMin = d3.min(
-          target.concat(approx)
-        ) - 0.65;
+          target.concat(approx).concat(
+            target.map(value => value - state.supTolerance),
+            target.map(value => value + state.supTolerance)
+          )
+        ) - 0.35;
 
         const yMax = d3.max(
-          target.concat(approx)
-        ) + 0.65;
-
-        const map = plotMap(
-          width,
-          height,
-          margin,
-          [0, 6],
-          [yMin, yMax]
-        );
-
-        drawGrid(
-          svg,
-          map,
-          width,
-          height,
-          margin,
-          [0, 1, 2, 3, 4, 5, 6],
-          d3.range(
-            Math.floor(yMin),
-            Math.ceil(yMax) + 1,
-            1
+          target.concat(approx).concat(
+            target.map(value => value - state.supTolerance),
+            target.map(value => value + state.supTolerance)
           )
+        ) + 0.35;
+
+        const yScale = d3
+          .scaleLinear()
+          .domain([yMin, yMax])
+          .range([mainBottom, topY]);
+
+        const errorCeiling = Math.max(
+          supError,
+          state.supTolerance,
+          0.08
+        ) * 1.22;
+
+        const errorScale = d3
+          .scaleLinear()
+          .domain([0, errorCeiling])
+          .range([errorBottom, errorTop]);
+
+        const xTicks = [0, 1, 2, 3, 4, 5, 6];
+        const mainYTicks = d3
+          .ticks(yMin, yMax, 5);
+        const errorYTicks = d3
+          .ticks(0, errorCeiling, 3);
+
+        xTicks.forEach(value => {
+          svgElement(
+            "line",
+            {
+              x1: xScale(value),
+              x2: xScale(value),
+              y1: topY,
+              y2: errorBottom,
+              stroke: css("--grid"),
+              "stroke-width": 1
+            },
+            svg
+          );
+
+          appendText(
+            svg,
+            String(value),
+            xScale(value),
+            errorBottom + 22,
+            "svg-small",
+            "middle"
+          );
+        });
+
+        mainYTicks.forEach(value => {
+          svgElement(
+            "line",
+            {
+              x1: left,
+              x2: width - right,
+              y1: yScale(value),
+              y2: yScale(value),
+              stroke: css("--grid"),
+              "stroke-width": 1
+            },
+            svg
+          );
+
+          appendText(
+            svg,
+            fmt(value, 1),
+            left - 10,
+            yScale(value) + 4,
+            "svg-small",
+            "end"
+          );
+        });
+
+        errorYTicks.forEach(value => {
+          svgElement(
+            "line",
+            {
+              x1: left,
+              x2: width - right,
+              y1: errorScale(value),
+              y2: errorScale(value),
+              stroke: css("--grid"),
+              "stroke-width": 1
+            },
+            svg
+          );
+
+          appendText(
+            svg,
+            fmt(value, 2),
+            left - 10,
+            errorScale(value) + 4,
+            "svg-small",
+            "end"
+          );
+        });
+
+        svgElement(
+          "line",
+          {
+            x1: left,
+            x2: width - right,
+            y1: mainBottom + 32,
+            y2: mainBottom + 32,
+            stroke: css("--line"),
+            "stroke-width": 1.2
+          },
+          svg
         );
 
-        const upper = xValues.map(
+        appendText(
+          svg,
+          "FUNCTION SPACE VIEW",
+          left,
+          topY - 14,
+          "svg-small"
+        );
+
+        appendText(
+          svg,
+          "ABSOLUTE ERROR  eₙ(x) = |fₙ(x) − f(x)|",
+          left,
+          errorTop - 17,
+          "svg-small"
+        );
+
+        appendText(
+          svg,
+          "state x",
+          width - right,
+          errorBottom + 42,
+          "svg-small",
+          "end"
+        );
+
+        const toleranceUpper = xValues.map(
           (x, index) => [
-            map.x(x),
-            map.y(
+            xScale(x),
+            yScale(
               target[index] +
-              supError
+              state.supTolerance
             )
           ]
         );
 
-        const lower = xValues
+        const toleranceLower = xValues
           .slice()
           .reverse()
           .map((x, reverseIndex) => {
@@ -1869,10 +2179,10 @@
               reverseIndex;
 
             return [
-              map.x(x),
-              map.y(
+              xScale(x),
+              yScale(
                 target[index] -
-                supError
+                state.supTolerance
               )
             ];
           });
@@ -1881,9 +2191,126 @@
           "path",
           {
             d:
-              `${pathFrom(upper)} ` +
-              `${pathFrom(lower).replace(/^M/, "L")} Z`,
-            fill: css("--primary-soft"),
+              `${pathFrom(toleranceUpper)} ` +
+              `${pathFrom(toleranceLower).replace(/^M/, "L")} Z`,
+            fill: css("--violet-soft"),
+            stroke: "none"
+          },
+          svg
+        );
+
+        [1, -1].forEach(sign => {
+          svgElement(
+            "path",
+            {
+              d: pathFrom(
+                xValues.map((x, index) => [
+                  xScale(x),
+                  yScale(
+                    target[index] +
+                    sign * state.supTolerance
+                  )
+                ]),
+                "monotone"
+              ),
+              fill: "none",
+              stroke: css("--violet"),
+              "stroke-width": 1.2,
+              "stroke-dasharray": "5 5",
+              opacity: 0.85
+            },
+            svg
+          );
+        });
+
+        if (state.supShowFibers) {
+          const fiberCount = 24;
+
+          for (
+            let fiber = 0;
+            fiber <= fiberCount;
+            fiber += 1
+          ) {
+            const index = Math.round(
+              fiber /
+              fiberCount *
+              (xValues.length - 1)
+            );
+
+            const relative =
+              errors[index] /
+              Math.max(supError, 1e-10);
+
+            svgElement(
+              "line",
+              {
+                x1: xScale(xValues[index]),
+                x2: xScale(xValues[index]),
+                y1: yScale(target[index]),
+                y2: yScale(approx[index]),
+                stroke: css("--amber"),
+                "stroke-width": 1 + 1.5 * relative,
+                opacity: 0.12 + 0.38 * relative
+              },
+              svg
+            );
+          }
+        }
+
+        svgElement(
+          "path",
+          {
+            d: pathFrom(
+              xValues.map((x, index) => [
+                xScale(x),
+                yScale(target[index])
+              ]),
+              "monotone"
+            ),
+            fill: "none",
+            stroke: css("--primary"),
+            "stroke-width": 3.2,
+            "stroke-linecap": "round"
+          },
+          svg
+        );
+
+        svgElement(
+          "path",
+          {
+            d: pathFrom(
+              xValues.map((x, index) => [
+                xScale(x),
+                yScale(approx[index])
+              ]),
+              "monotone"
+            ),
+            fill: "none",
+            stroke: css("--violet"),
+            "stroke-width": 2.8,
+            "stroke-dasharray": "9 6",
+            "stroke-linecap": "round"
+          },
+          svg
+        );
+
+        const errorArea = [
+          [xScale(xValues[0]), errorScale(0)],
+          ...xValues.map((x, index) => [
+            xScale(x),
+            errorScale(errors[index])
+          ]),
+          [
+            xScale(xValues[xValues.length - 1]),
+            errorScale(0)
+          ]
+        ];
+
+        svgElement(
+          "path",
+          {
+            d: `${pathFrom(errorArea)} Z`,
+            fill: css("--amber-soft"),
             stroke: "none"
           },
           svg
@@ -1894,36 +2321,126 @@
           {
             d: pathFrom(
               xValues.map((x, index) => [
-                map.x(x),
-                map.y(
-                  target[index]
-                )
+                xScale(x),
+                errorScale(errors[index])
               ]),
               "monotone"
             ),
             fill: "none",
-            stroke: css("--primary"),
-            "stroke-width": 3
+            stroke: css("--amber"),
+            "stroke-width": 2.7,
+            "stroke-linecap": "round"
           },
           svg
         );
 
+        let firstViolationIndex = -1;
+
+        errors.forEach((error, index) => {
+          if (error <= state.supTolerance) {
+            return;
+          }
+
+          if (firstViolationIndex < 0) {
+            firstViolationIndex = index;
+          }
+
+          if (index % 7 !== 0) {
+            return;
+          }
+
+          svgElement(
+            "circle",
+            {
+              cx: xScale(xValues[index]),
+              cy: errorScale(error),
+              r: 2.5,
+              fill: css("--danger"),
+              opacity: 0.82
+            },
+            svg
+          );
+        });
+
+        if (firstViolationIndex >= 0) {
+          appendText(
+            svg,
+            "ε violated here",
+            xScale(xValues[firstViolationIndex]) + 9,
+            errorScale(errors[firstViolationIndex]) - 9,
+            "svg-small"
+          ).setAttribute(
+            "fill",
+            css("--danger")
+          );
+        }
+
         svgElement(
-          "path",
+          "line",
           {
-            d: pathFrom(
-              xValues.map((x, index) => [
-                map.x(x),
-                map.y(
-                  approx[index]
-                )
-              ]),
-              "monotone"
-            ),
-            fill: "none",
+            x1: left,
+            x2: width - right,
+            y1: errorScale(state.supTolerance),
+            y2: errorScale(state.supTolerance),
             stroke: css("--violet"),
-            "stroke-width": 2.6,
-            "stroke-dasharray": "8 6"
+            "stroke-width": 1.8,
+            "stroke-dasharray": "6 5"
+          },
+          svg
+        );
+
+        appendText(
+          svg,
+          `ε = ${fmt(state.supTolerance, 3)}`,
+          width - right - 5,
+          errorScale(state.supTolerance) - 7,
+          "svg-small",
+          "end"
+        ).setAttribute(
+          "fill",
+          css("--violet")
+        );
+
+        svgElement(
+          "line",
+          {
+            x1: left,
+            x2: width - right,
+            y1: errorScale(supError),
+            y2: errorScale(supError),
+            stroke: css("--amber"),
+            "stroke-width": 1.5,
+            "stroke-dasharray": "3 5",
+            opacity: 0.85
+          },
+          svg
+        );
+
+        appendText(
+          svg,
+          `sup = ${fmt(supError, 4)}`,
+          width - right - 5,
+          errorScale(supError) - 7,
+          "svg-small",
+          "end"
+        ).setAttribute(
+          "fill",
+          css("--amber")
+        );
+
+        const maxX =
+          xValues[maxIndex];
+
+        svgElement(
+          "line",
+          {
+            x1: xScale(maxX),
+            x2: xScale(maxX),
+            y1: yScale(target[maxIndex]),
+            y2: yScale(approx[maxIndex]),
+            stroke: css("--amber"),
+            "stroke-width": 5,
+            "stroke-linecap": "round"
           },
           svg
         );
@@ -1931,60 +2448,38 @@
         svgElement(
           "line",
           {
-            x1: map.x(
-              xValues[maxIndex]
-            ),
-            x2: map.x(
-              xValues[maxIndex]
-            ),
-            y1: map.y(
-              target[maxIndex]
-            ),
-            y2: map.y(
-              approx[maxIndex]
-            ),
+            x1: xScale(maxX),
+            x2: xScale(maxX),
+            y1: mainBottom + 9,
+            y2: errorBottom,
             stroke: css("--amber"),
-            "stroke-width": 4
+            "stroke-width": 1,
+            "stroke-dasharray": "3 5",
+            opacity: 0.65
           },
           svg
         );
 
-        [
-          target[maxIndex],
-          approx[maxIndex]
-        ].forEach(value => {
-          svgElement(
-            "circle",
-            {
-              cx: map.x(
-                xValues[maxIndex]
-              ),
-              cy: map.y(value),
-              r: 5.5,
-              fill: css("--amber"),
-              stroke: css("--paper"),
-              "stroke-width": 1.8
-            },
-            svg
-          );
-        });
+        svgElement(
+          "circle",
+          {
+            cx: xScale(maxX),
+            cy: errorScale(supError),
+            r: 6.5,
+            fill: css("--amber"),
+            stroke: css("--paper"),
+            "stroke-width": 2
+          },
+          svg
+        );
 
         appendText(
           svg,
-          `sup gap = ${fmt(
-            supError,
-            4
-          )}`,
-          map.x(
-            xValues[maxIndex]
-          ) + 14,
-          map.y(
-            Math.max(
-              target[maxIndex],
-              approx[maxIndex]
-            )
-          ) - 10,
-          "svg-label"
+          `worst state x* = ${fmt(maxX, 3)}`,
+          xScale(maxX),
+          errorTop + 16,
+          "svg-small",
+          "middle"
         ).setAttribute(
           "fill",
           css("--amber")
@@ -1993,49 +2488,258 @@
         appendText(
           svg,
           "f",
-          map.x(5.35),
-          map.y(
-            targetFunction(5.35)
-          ) - 12,
+          xScale(5.55),
+          yScale(targetFunction(5.55)) - 13,
           "svg-title"
+        ).setAttribute(
+          "fill",
+          css("--primary")
         );
 
         appendText(
           svg,
           `f${state.supN}`,
-          map.x(4.8),
-          map.y(
-            approximateFunction(4.8)
-          ) + 20,
+          xScale(5.15),
+          yScale(approx[
+            clamp(
+              d3.bisectCenter(xValues, 5.15),
+              0,
+              xValues.length - 1
+            )
+          ]) + 22,
           "svg-title"
         ).setAttribute(
           "fill",
           css("--violet")
         );
 
+        const probeGroup = svgElement(
+          "g",
+          {
+            id: "supProbeGroup"
+          },
+          svg
+        );
+
+        const probeGuide = svgElement(
+          "line",
+          {
+            stroke: css("--ink"),
+            "stroke-width": 1.25,
+            "stroke-dasharray": "4 5",
+            opacity: 0.58
+          },
+          probeGroup
+        );
+
+        const probeGap = svgElement(
+          "line",
+          {
+            stroke: css("--ink"),
+            "stroke-width": 3.2,
+            "stroke-linecap": "round"
+          },
+          probeGroup
+        );
+
+        const probeTarget = svgElement(
+          "circle",
+          {
+            r: 5,
+            fill: css("--primary"),
+            stroke: css("--paper"),
+            "stroke-width": 1.8
+          },
+          probeGroup
+        );
+
+        const probeApprox = svgElement(
+          "circle",
+          {
+            r: 5,
+            fill: css("--violet"),
+            stroke: css("--paper"),
+            "stroke-width": 1.8
+          },
+          probeGroup
+        );
+
+        const probeError = svgElement(
+          "circle",
+          {
+            r: 5.5,
+            fill: css("--ink"),
+            stroke: css("--paper"),
+            "stroke-width": 1.8
+          },
+          probeGroup
+        );
+
+        const probeLabel = appendText(
+          probeGroup,
+          "",
+          0,
+          0,
+          "svg-label"
+        );
+
+        const updateProbe = index => {
+          const x = xValues[index];
+          const targetY = target[index];
+          const approxY = approx[index];
+          const error = errors[index];
+          const px = xScale(x);
+
+          state.supProbeX = x;
+
+          probeGuide.setAttribute("x1", px);
+          probeGuide.setAttribute("x2", px);
+          probeGuide.setAttribute("y1", topY);
+          probeGuide.setAttribute("y2", errorBottom);
+
+          probeGap.setAttribute("x1", px);
+          probeGap.setAttribute("x2", px);
+          probeGap.setAttribute("y1", yScale(targetY));
+          probeGap.setAttribute("y2", yScale(approxY));
+
+          probeTarget.setAttribute("cx", px);
+          probeTarget.setAttribute("cy", yScale(targetY));
+          probeApprox.setAttribute("cx", px);
+          probeApprox.setAttribute("cy", yScale(approxY));
+          probeError.setAttribute("cx", px);
+          probeError.setAttribute("cy", errorScale(error));
+
+          const labelOnLeft = x > 4.65;
+          probeLabel.setAttribute(
+            "x",
+            px + (labelOnLeft ? -12 : 12)
+          );
+          probeLabel.setAttribute(
+            "y",
+            Math.min(
+              yScale(targetY),
+              yScale(approxY)
+            ) - 11
+          );
+          probeLabel.setAttribute(
+            "text-anchor",
+            labelOnLeft ? "end" : "start"
+          );
+          probeLabel.textContent =
+            `pointwise gap = ${fmt(error, 4)}`;
+
+          const probeState =
+            document.getElementById("supProbeState");
+          const probeGapReadout =
+            document.getElementById("supProbeGap");
+          const probeSlider =
+            document.getElementById("supProbeX");
+
+          if (probeState) {
+            probeState.textContent =
+              `x₀ = ${fmt(x, 3)}`;
+          }
+
+          if (probeGapReadout) {
+            probeGapReadout.textContent =
+              fmt(error, 4);
+          }
+
+          if (probeSlider) {
+            probeSlider.value = x;
+            const output =
+              probeSlider
+                .closest(".control")
+                ?.querySelector("output");
+
+            if (output) {
+              output.textContent =
+                fmt(x, 2);
+            }
+          }
+        };
+
+        updateProbe(probeIndex);
+
+        const overlay = svgElement(
+          "rect",
+          {
+            x: left,
+            y: topY,
+            width: width - left - right,
+            height: errorBottom - topY,
+            fill: "transparent",
+            tabindex: 0,
+            "aria-label": "Move across states to inspect pointwise error"
+          },
+          svg
+        );
+
+        overlay.style.cursor = "crosshair";
+
+        overlay.addEventListener(
+          "pointermove",
+          event => {
+            const point = svg.createSVGPoint();
+            point.x = event.clientX;
+            point.y = event.clientY;
+
+            const local = point.matrixTransform(
+              svg.getScreenCTM().inverse()
+            );
+
+            const x = clamp(
+              xScale.invert(local.x),
+              0,
+              6
+            );
+
+            updateProbe(
+              clamp(
+                d3.bisectCenter(xValues, x),
+                0,
+                xValues.length - 1
+              )
+            );
+          }
+        );
+
         renderMath(
           els.mainEquation,
-          `f_n\\to f
-          \\text{ in }\\|\\cdot\\|_\\infty
-          \\Longleftrightarrow
-          \\sup_{x\\in X}
-          |f_n(x)-f(x)|
-          \\longrightarrow 0`
+          `\\left\\|f_n-f\\right\\|_\\infty\\leq\\varepsilon
+          \\quad\\Longleftrightarrow\\quad
+          \\forall x\\in X,\\;
+          \\left|f_n(x)-f(x)\\right|\\leq\\varepsilon.`
         );
 
         els.equationNote.textContent =
-          "Sup-norm convergence is uniform convergence: one iteration index controls the approximation error at every state.";
+          "The lower graph is the decisive object: the approximation is uniformly ε-accurate exactly when the entire error curve lies below the ε-line.";
 
         setTheory([
-          `<strong>Worst-case geometry.</strong> The distance equals the largest vertical discrepancy.`,
-          `<strong>Uniform convergence.</strong> One common band eventually contains the entire approximating function.`,
-          `<strong>Bellman relevance.</strong> Max operators interact cleanly with uniform error bounds.`
+          `<strong>Pointwise error.</strong> Each vertical fiber has length ${inlineMath("e_n(x)=\\left|f_n(x)-f(x)\\right|")}.`,
+          `<strong>Supremum.</strong> The tallest fiber, equivalently the peak of the lower graph, is the distance between the functions.`,
+          `<strong>Uniform ε-test.</strong> The approximation passes only when the complete error graph lies below one horizontal tolerance line.`,
+          `<strong>Convergence.</strong> As n rises, the peak—not merely an average height—must collapse to zero.`
         ]);
+
+        document
+          .getElementById("supProfile")
+          .addEventListener(
+            "change",
+            event => {
+              state.supProfile =
+                event.target.value;
+
+              render();
+            }
+          );
 
         [
           "supN",
           "supDecay",
-          "supFrequency"
+          "supFrequency",
+          "supProbeX",
+          "supTolerance"
         ].forEach(id => {
           document
             .getElementById(id)
@@ -2051,6 +2755,76 @@
               }
             );
         });
+
+        document
+          .getElementById("toggleSupFibers")
+          .addEventListener(
+            "click",
+            () => {
+              state.supShowFibers =
+                !state.supShowFibers;
+
+              render();
+            }
+          );
+
+        document
+          .getElementById("matchSupTolerance")
+          .addEventListener(
+            "click",
+            () => {
+              state.supTolerance =
+                clamp(
+                  Number(
+                    supError.toFixed(3)
+                  ),
+                  0.01,
+                  1.2
+                );
+
+              render();
+            }
+          );
+
+        document
+          .getElementById("animateSupConvergence")
+          .addEventListener(
+            "click",
+            () => {
+              if (supAnimationTimer) {
+                stopSupAnimation();
+                render();
+                return;
+              }
+
+              if (state.supN >= 12) {
+                state.supN = 0;
+              }
+
+              supAnimationTimer = setInterval(
+                () => {
+                  if (
+                    state.view !== "sup" ||
+                    state.supN >= 12
+                  ) {
+                    stopSupAnimation();
+
+                    if (state.view === "sup") {
+                      render();
+                    }
+
+                    return;
+                  }
+
+                  state.supN += 1;
+                  render();
+                },
+                520
+              );
+
+              render();
+            }
+          );
       }
 
       function completeTarget(x) {
@@ -3749,6 +4523,10 @@
         button.addEventListener(
           "click",
           () => {
+            if (button.dataset.view !== "sup") {
+              stopSupAnimation();
+            }
+
             state.view =
               button.dataset.view;
 
@@ -3760,6 +4538,8 @@
       els.resetButton.addEventListener(
         "click",
         () => {
+          stopSupAnimation();
+
           const currentView =
             state.view;
 
