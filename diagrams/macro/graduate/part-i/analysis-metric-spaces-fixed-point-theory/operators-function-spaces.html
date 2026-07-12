@@ -776,16 +776,16 @@
         },
         fixed: {
           index: "04 / 05",
-          kicker: "Invariant function",
-          title: "A fixed point is a curve left unchanged",
-          intro: "A fixed point f* satisfies Tf* = f*. Under a contraction, all iterates move toward this invariant function at a geometric rate.",
-          hint: "The amber band records the current sup-norm distance to the fixed point.",
-          top: String.raw`Tf^*=f^*,\qquad \|Tf-Tg\|_\infty\le \beta\|f-g\|_\infty`,
-          proofTitle: "Contraction converts iteration into existence and uniqueness",
+          kicker: "Invariance under the operator",
+          title: "A fixed point enters T and returns unchanged",
+          intro: "The definition is an identity, not merely a convergence statement: a function f* is fixed precisely when applying the operator produces the same function at every state, T(f*) = f*.",
+          hint: "Compare the input panel with the output panel. The amber curve is identical on both sides because Tf* and f* coincide pointwise.",
+          top: String.raw`f^*\in C_b(X)\text{ is a fixed point of }T\quad\Longleftrightarrow\quad T(f^*)=f^*`,
+          proofTitle: "The graphical content of the definition",
           proof: [
-            ["Shrinking", "Every application multiplies functional distance by at most β < 1."],
-            ["Limit", "The iterates form a Cauchy sequence and converge in a complete function space."],
-            ["Uniqueness", "Two fixed points would have distance at most β times the same distance, forcing equality."]
+            ["Input", "Choose a function f* in the domain of the operator T."],
+            ["Apply T", "Transform the entire function, obtaining the output T(f*)."],
+            ["Invariance", "The function is fixed exactly when T(f*)(x)=f*(x) for every state x; equivalently, their sup-norm distance is zero."]
           ]
         },
         bellman: {
@@ -1161,42 +1161,330 @@
         const n = Math.max(0, state.iteration);
         const data = xs.map(x => {
           const star = fixedFunction(x) + 0.12 * state.fixedShift;
-          const f = star + Math.pow(state.fixedScale, n) * (0.9 - 1.2 * x + 0.18 * Math.cos(2 * Math.PI * x));
-          const tf = star + state.fixedScale * (f - star);
-          return { x, star, f, tf };
+          const displacement = Math.pow(state.fixedScale, n) * (0.9 - 1.2 * x + 0.18 * Math.cos(2 * Math.PI * x));
+          const f = star + displacement;
+          const tf = star + state.fixedScale * displacement;
+          const tstar = star;
+          return { x, star, tstar, f, tf };
         });
-        const values = data.flatMap(d => [d.star, d.f, d.tf]);
-        const ctx = setupSvg([Math.min(...values) - 0.2, Math.max(...values) + 0.2]);
-        const c = colors();
 
-        const band = d3.area().x(d => ctx.x(d.x)).y0(d => ctx.y(d.star)).y1(d => ctx.y(d.f)).curve(d3.curveMonotoneX);
-        ctx.svg.append("path").datum(data).attr("d", band).attr("fill", c.amberSoft);
-        drawCurve(ctx, data, d => d.f, c.violet, 3.1);
-        drawCurve(ctx, data, d => d.tf, c.teal, 3.2);
-        drawCurve(ctx, data, d => d.star, c.amber, 2.5, "7 5");
-        addCurveLabel(ctx, 0.81, data[81].f, "f", c.violet);
-        addCurveLabel(ctx, 0.81, data[81].tf, "Tf", c.teal, 8, 15);
-        addCurveLabel(ctx, 0.81, data[81].star, "f*", c.amber, 8, 16);
+        const c = colors();
+        const svg = d3.select("#mainChart");
+        const node = svg.node();
+        const width = Math.max(620, node.clientWidth || 900);
+        const height = node.clientHeight || 500;
+        svg.attr("viewBox", `0 0 ${width} ${height}`);
+        svg.selectAll("*").remove();
+
+        const outer = { top: 58, right: 28, bottom: 52, left: 48 };
+        const centerGap = Math.max(96, Math.min(132, width * 0.13));
+        const panelWidth = (width - outer.left - outer.right - centerGap) / 2;
+        const leftPanel = {
+          x0: outer.left,
+          x1: outer.left + panelWidth,
+          title: "INPUT",
+          subtitle: "functions before applying T"
+        };
+        const rightPanel = {
+          x0: outer.left + panelWidth + centerGap,
+          x1: width - outer.right,
+          title: "OUTPUT",
+          subtitle: "their images under T"
+        };
+
+        const allValues = data.flatMap(d => [d.star, d.f, d.tf]);
+        const yExtent = d3.extent(allValues);
+        const yPadding = Math.max(0.18, (yExtent[1] - yExtent[0]) * 0.12);
+        const y = d3.scaleLinear()
+          .domain([yExtent[0] - yPadding, yExtent[1] + yPadding])
+          .nice()
+          .range([height - outer.bottom, outer.top]);
+        const xLeft = d3.scaleLinear().domain([0, 1]).range([leftPanel.x0, leftPanel.x1]);
+        const xRight = d3.scaleLinear().domain([0, 1]).range([rightPanel.x0, rightPanel.x1]);
+
+        const defs = svg.append("defs");
+        defs.append("marker")
+          .attr("id", "fixed-arrow")
+          .attr("viewBox", "0 -5 10 10")
+          .attr("refX", 9)
+          .attr("refY", 0)
+          .attr("markerWidth", 7)
+          .attr("markerHeight", 7)
+          .attr("orient", "auto")
+          .append("path")
+          .attr("d", "M0,-5L10,0L0,5")
+          .attr("fill", c.teal);
+
+        const drawPanel = (panel, xScale) => {
+          svg.append("rect")
+            .attr("x", panel.x0)
+            .attr("y", outer.top)
+            .attr("width", panel.x1 - panel.x0)
+            .attr("height", height - outer.top - outer.bottom)
+            .attr("rx", 17)
+            .attr("fill", c.paper)
+            .attr("fill-opacity", 0.26)
+            .attr("stroke", c.border);
+
+          const xGrid = d3.axisBottom(xScale)
+            .ticks(5)
+            .tickSize(-(height - outer.top - outer.bottom))
+            .tickFormat("");
+          const yGrid = d3.axisLeft(y)
+            .ticks(5)
+            .tickSize(-(panel.x1 - panel.x0))
+            .tickFormat("");
+
+          svg.append("g")
+            .attr("class", "grid")
+            .attr("transform", `translate(0,${height - outer.bottom})`)
+            .call(xGrid);
+          svg.append("g")
+            .attr("class", "grid")
+            .attr("transform", `translate(${panel.x0},0)`)
+            .call(yGrid);
+
+          svg.append("g")
+            .attr("class", "axis")
+            .attr("transform", `translate(0,${height - outer.bottom})`)
+            .call(d3.axisBottom(xScale).ticks(5));
+          svg.append("g")
+            .attr("class", "axis")
+            .attr("transform", `translate(${panel.x0},0)`)
+            .call(d3.axisLeft(y).ticks(5));
+
+          svg.append("text")
+            .attr("x", panel.x0 + 4)
+            .attr("y", 22)
+            .attr("fill", c.teal)
+            .attr("font-size", 10)
+            .attr("font-weight", 700)
+            .attr("letter-spacing", "0.16em")
+            .text(panel.title);
+
+          svg.append("text")
+            .attr("x", panel.x0 + 4)
+            .attr("y", 41)
+            .attr("fill", c.muted)
+            .attr("font-size", 12)
+            .text(panel.subtitle);
+
+          svg.append("text")
+            .attr("x", panel.x1)
+            .attr("y", height - 13)
+            .attr("text-anchor", "end")
+            .attr("fill", c.faint)
+            .attr("font-size", 11)
+            .text("state x");
+        };
+
+        drawPanel(leftPanel, xLeft);
+        drawPanel(rightPanel, xRight);
+
+        const curve = (xScale, accessor) => d3.line()
+          .x(d => xScale(d.x))
+          .y(d => y(accessor(d)))
+          .curve(d3.curveMonotoneX);
+
+        const areaBetween = (xScale, lower, upper) => d3.area()
+          .x(d => xScale(d.x))
+          .y0(d => y(lower(d)))
+          .y1(d => y(upper(d)))
+          .curve(d3.curveMonotoneX);
+
+        svg.append("path")
+          .datum(data)
+          .attr("d", areaBetween(xLeft, d => d.star, d => d.f))
+          .attr("fill", c.violetSoft);
+
+        svg.append("path")
+          .datum(data)
+          .attr("d", areaBetween(xRight, d => d.star, d => d.tf))
+          .attr("fill", c.tealSoft);
+
+        svg.append("path")
+          .datum(data)
+          .attr("d", curve(xLeft, d => d.f))
+          .attr("fill", "none")
+          .attr("stroke", c.violet)
+          .attr("stroke-width", 3.2)
+          .attr("stroke-linecap", "round")
+          .attr("stroke-linejoin", "round");
+
+        svg.append("path")
+          .datum(data)
+          .attr("d", curve(xLeft, d => d.star))
+          .attr("fill", "none")
+          .attr("stroke", c.amber)
+          .attr("stroke-width", 3.4)
+          .attr("stroke-linecap", "round")
+          .attr("stroke-linejoin", "round");
+
+        svg.append("path")
+          .datum(data)
+          .attr("d", curve(xRight, d => d.tf))
+          .attr("fill", "none")
+          .attr("stroke", c.teal)
+          .attr("stroke-width", 3.2)
+          .attr("stroke-linecap", "round")
+          .attr("stroke-linejoin", "round");
+
+        // Draw T(f*) underneath f* to make their exact coincidence visible.
+        svg.append("path")
+          .datum(data)
+          .attr("d", curve(xRight, d => d.tstar))
+          .attr("fill", "none")
+          .attr("stroke", c.teal)
+          .attr("stroke-width", 8.5)
+          .attr("stroke-opacity", 0.22)
+          .attr("stroke-linecap", "round")
+          .attr("stroke-linejoin", "round");
+
+        svg.append("path")
+          .datum(data)
+          .attr("d", curve(xRight, d => d.star))
+          .attr("fill", "none")
+          .attr("stroke", c.amber)
+          .attr("stroke-width", 3.4)
+          .attr("stroke-linecap", "round")
+          .attr("stroke-linejoin", "round");
+
+        const labelAt = 0.80;
+        const index = Math.round(labelAt * (data.length - 1));
+        const p = data[index];
+
+        const label = (x, yy, text, color, anchor = "start", dx = 8, dy = -8) => {
+          svg.append("text")
+            .attr("class", "curve-label")
+            .attr("x", x + dx)
+            .attr("y", yy + dy)
+            .attr("text-anchor", anchor)
+            .attr("fill", color)
+            .text(text);
+        };
+
+        label(xLeft(labelAt), y(p.f), "f", c.violet);
+        label(xLeft(labelAt), y(p.star), "f*", c.amber, "start", 8, 17);
+        label(xRight(labelAt), y(p.tf), "Tf", c.teal);
+        label(xRight(labelAt), y(p.star), "Tf* = f*", c.amber, "end", -8, 18);
+
+        const arrowY = height * 0.47;
+        svg.append("line")
+          .attr("x1", leftPanel.x1 + 22)
+          .attr("x2", rightPanel.x0 - 24)
+          .attr("y1", arrowY)
+          .attr("y2", arrowY)
+          .attr("stroke", c.teal)
+          .attr("stroke-width", 2.4)
+          .attr("marker-end", "url(#fixed-arrow)");
+
+        svg.append("circle")
+          .attr("cx", (leftPanel.x1 + rightPanel.x0) / 2)
+          .attr("cy", arrowY)
+          .attr("r", 24)
+          .attr("fill", c.paper)
+          .attr("stroke", c.teal)
+          .attr("stroke-width", 1.5);
+
+        svg.append("text")
+          .attr("x", (leftPanel.x1 + rightPanel.x0) / 2)
+          .attr("y", arrowY + 6)
+          .attr("text-anchor", "middle")
+          .attr("fill", c.teal)
+          .attr("font-family", '"Source Serif 4", serif')
+          .attr("font-size", 21)
+          .attr("font-style", "italic")
+          .text("T");
+
+        svg.append("text")
+          .attr("x", (leftPanel.x1 + rightPanel.x0) / 2)
+          .attr("y", arrowY - 39)
+          .attr("text-anchor", "middle")
+          .attr("fill", c.muted)
+          .attr("font-size", 11)
+          .text("apply the operator");
+
+        const invarianceY = height - outer.bottom + 30;
+        svg.append("text")
+          .attr("x", (leftPanel.x1 + rightPanel.x0) / 2)
+          .attr("y", invarianceY)
+          .attr("text-anchor", "middle")
+          .attr("fill", c.amber)
+          .attr("font-size", 11.5)
+          .attr("font-weight", 700)
+          .text("f* follows the invariant route:  f*  ↦  T(f*) = f*");
 
         const err = d3.max(data, d => Math.abs(d.f - d.star));
         const nextErr = d3.max(data, d => Math.abs(d.tf - d.star));
+        const fixedResidual = d3.max(data, d => Math.abs(d.tstar - d.star));
         const ratio = err === 0 ? 0 : nextErr / err;
 
-        addHoverOverlay(ctx, data, [
+        const addPanelHover = (panel, xScale, accessors) => {
+          const focus = svg.append("g").style("display", "none");
+          const vLine = focus.append("line")
+            .attr("stroke", c.axis)
+            .attr("stroke-dasharray", "4 4")
+            .attr("y1", outer.top)
+            .attr("y2", height - outer.bottom);
+          const dots = accessors.map(a => focus.append("circle")
+            .attr("r", 4.5)
+            .attr("fill", a.color)
+            .attr("stroke", c.paper)
+            .attr("stroke-width", 2));
+
+          svg.append("rect")
+            .attr("x", panel.x0)
+            .attr("y", outer.top)
+            .attr("width", panel.x1 - panel.x0)
+            .attr("height", height - outer.top - outer.bottom)
+            .attr("fill", "transparent")
+            .on("pointerenter", () => focus.style("display", null))
+            .on("pointerleave", () => {
+              focus.style("display", "none");
+              tooltip.style("opacity", 0);
+            })
+            .on("pointermove", function(event) {
+              const [mx] = d3.pointer(event, this);
+              const xv = Math.max(0, Math.min(1, xScale.invert(panel.x0 + mx)));
+              const nearest = data.reduce((a, b) => Math.abs(b.x - xv) < Math.abs(a.x - xv) ? b : a);
+              const px = xScale(nearest.x);
+              vLine.attr("x1", px).attr("x2", px);
+              const lines = accessors.map((a, i) => {
+                const value = a.accessor(nearest);
+                dots[i].attr("cx", px).attr("cy", y(value));
+                return `${a.label} = ${format(value, 3)}`;
+              });
+              tooltip
+                .style("left", `${event.clientX}px`)
+                .style("top", `${event.clientY}px`)
+                .style("opacity", 1)
+                .html(`x = ${format(nearest.x, 2)}<br>${lines.join("<br>")}`);
+            });
+        };
+
+        addPanelHover(leftPanel, xLeft, [
           { label: "f(x)", accessor: d => d.f, color: c.violet },
-          { label: "Tf(x)", accessor: d => d.tf, color: c.teal },
           { label: "f*(x)", accessor: d => d.star, color: c.amber }
         ]);
+        addPanelHover(rightPanel, xRight, [
+          { label: "Tf(x)", accessor: d => d.tf, color: c.teal },
+          { label: "T(f*)(x)=f*(x)", accessor: d => d.star, color: c.amber }
+        ]);
 
-        setStatus(ratio < 1 ? "distance contracted" : "distance not contracted", ratio < 1 ? "valid" : "invalid");
-        setReadout([["before", format(err, 4)], ["after", format(nextErr, 4)], ["ratio", format(ratio, 3)], ["fixed point", "Tf*=f*"]]);
-        document.getElementById("interpretation").textContent = "The fixed function does not move. Every other curve is pulled toward it, and the widest vertical gap contracts by the same modulus.";
-        renderMath("#bottomFormula", String.raw`\|Tf-f^*\|_\infty=${format(nextErr,4)}=${format(state.fixedScale,2)}\,\|f-f^*\|_\infty`);
+        setStatus(fixedResidual < 1e-10 ? "fixed-point identity verified" : "candidate is not fixed", fixedResidual < 1e-10 ? "valid" : "invalid");
+        setReadout([
+          ["fixed residual", format(fixedResidual, 4)],
+          ["before distance", format(err, 4)],
+          ["after distance", format(nextErr, 4)],
+          ["contraction ratio", format(ratio, 3)]
+        ]);
+        document.getElementById("interpretation").textContent = "The definition is represented by the amber curve, not by the shrinking bands: f* appears as an input on the left and as exactly the same output on the right. The violet curve is not fixed; it moves to Tf. Contraction explains why nonfixed functions approach f*, but invariance T(f*) = f* is what makes f* a fixed point.";
+        renderMath("#bottomFormula", String.raw`T(f^*)=f^*\quad\Longleftrightarrow\quad \|T(f^*)-f^*\|_\infty=0,\qquad \|Tf-f^*\|_\infty=${format(nextErr,4)}`);
 
         setControls([
-          controlSlider({ key: "fixedScale", symbol: "β", name: "contraction modulus", min: 0.15, max: 0.98, step: 0.01, note: "β < 1 makes the fixed point globally attractive." }),
-          controlSlider({ key: "fixedShift", symbol: "s", name: "fixed-point level", min: -1.2, max: 1.2, step: 0.01, note: "Moves the invariant function without changing the contraction logic." }),
-          controlSlider({ key: "iteration", symbol: "n", name: "pre-iterations", min: 0, max: 10, step: 1, formatValue: v => String(Math.round(v)) })
+          controlSlider({ key: "fixedScale", symbol: "β", name: "contraction modulus", min: 0.15, max: 0.98, step: 0.01, note: "Changes how a nonfixed input f moves toward f*. It does not change the identity T(f*) = f*." }),
+          controlSlider({ key: "fixedShift", symbol: "s", name: "fixed-point level", min: -1.2, max: 1.2, step: 0.01, note: "Moves the invariant function vertically while preserving T(f*) = f*." }),
+          controlSlider({ key: "iteration", symbol: "n", name: "pre-iterations", min: 0, max: 10, step: 1, formatValue: v => String(Math.round(v)), note: "Moves the comparison function f closer to f* before the displayed application of T." })
         ]);
       }
 
