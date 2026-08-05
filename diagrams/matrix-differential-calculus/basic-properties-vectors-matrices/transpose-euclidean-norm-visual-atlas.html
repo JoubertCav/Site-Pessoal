@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Interactive graphical atlas of matrix transpose and Euclidean norm." />
+  <title>Transpose & Euclidean Norm — Visual Atlas</title>
+
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f2e9;
+      --panel: #fffdf8;
+      --panel-soft: rgba(255,255,255,.78);
+      --panel-faint: rgba(255,255,255,.48);
+      --ink: #17242d;
+      --muted: #6d7a80;
+      --line: rgba(23,36,45,.14);
+      --grid: rgba(23,36,45,.065);
+
+      --teal: #0e817d;
+      --teal-soft: #ddf2ef;
+      --violet: #6c59aa;
+      --violet-soft: #eee9fb;
+      --gold: #b1842a;
+      --gold-soft: #f8edcc;
+      --red: #ba6267;
+      --red-soft: #f8e3e4;
+      --slate: #536873;
+
+      --shadow: 0 22px 70px rgba(25,38,45,.11);
+      --shadow-soft: 0 10px 28px rgba(25,38,45,.08);
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #0d151a;
+      --panel: #151f25;
+      --panel-soft: rgba(21,31,37,.88);
+      --panel-faint: rgba(21,31,37,.58);
+      --ink: #edf3f4;
+      --muted: #9caeb4;
+      --line: rgba(237,243,244,.115);
+      --grid: rgba(237,243,244,.055);
+
+      --teal: #5acdc6;
+      --teal-soft: #173b3a;
+      --violet: #b9a8f1;
+      --violet-soft: #2e2943;
+      --gold: #e2b65d;
+      --gold-soft: #45391f;
+      --red: #ed9095;
+      --red-soft: #472a2d;
+      --slate: #a1b4bb;
+
+      --shadow: 0 25px 75px rgba(0,0,0,.38);
+      --shadow-soft: 0 12px 30px rgba(0,0,0,.25);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 10% 8%, color-mix(in srgb, var(--teal-soft) 68%, transparent), transparent 28%),
+        radial-gradient(circle at 90% 92%, color-mix(in srgb, var(--violet-soft) 46%, transparent), transparent 28%),
+        var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+    }
+
+    button, input { font: inherit; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--panel) 82%, transparent);
+      backdrop-filter: blur(22px);
+    }
+
+    .brand {
+      min-width: 0;
+    }
+
+    .eyebrow {
+      margin: 0 0 3px;
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 820;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(19px, 2vw, 28px);
+      font-weight: 600;
+      letter-spacing: -.02em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 39px;
+      height: 39px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel-soft);
+      color: var(--muted);
+      cursor: pointer;
+      transition: .16s ease;
+    }
+
+    .icon-btn:hover {
+      color: var(--ink);
+      border-color: color-mix(in srgb, var(--teal) 44%, var(--line));
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .layout {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 250px minmax(0,1fr);
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 68px;
+      align-self: start;
+      height: calc(100vh - 68px);
+      padding: 16px 14px 28px;
+      border-right: 1px solid var(--line);
+      background: color-mix(in srgb, var(--panel-faint) 72%, transparent);
+      overflow-y: auto;
+    }
+
+    .side-title {
+      margin: 4px 8px 10px;
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 820;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .nav-btn {
+      width: 100%;
+      border: 1px solid transparent;
+      border-radius: 13px;
+      padding: 10px;
+      background: transparent;
+      color: var(--muted);
+      display: grid;
+      grid-template-columns: 30px minmax(0,1fr) 14px;
+      align-items: center;
+      gap: 9px;
+      text-align: left;
+      cursor: pointer;
+      transition: .16s ease;
+    }
+
+    .nav-btn + .nav-btn { margin-top: 4px; }
+
+    .nav-btn:hover {
+      color: var(--ink);
+      background: color-mix(in srgb, var(--panel) 66%, transparent);
+      transform: translateX(2px);
+    }
+
+    .nav-btn.active {
+      color: var(--ink);
+      border-color: color-mix(in srgb, var(--teal) 40%, var(--line));
+      background: linear-gradient(135deg, var(--teal-soft), color-mix(in srgb, var(--panel) 78%, var(--teal-soft)));
+      box-shadow: inset 3px 0 0 var(--teal);
+    }
+
+    .nav-icon {
+      width: 29px;
+      height: 29px;
+      display: grid;
+      place-items: center;
+      border-radius: 9px;
+      background: color-mix(in srgb, var(--panel) 72%, transparent);
+      font-family: var(--serif);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .nav-label {
+      font-size: 12px;
+      font-weight: 730;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .nav-arrow {
+      opacity: 0;
+      transition: .16s ease;
+    }
+
+    .nav-btn.active .nav-arrow,
+    .nav-btn:hover .nav-arrow {
+      opacity: 1;
+    }
+
+    .main {
+      min-width: 0;
+      padding: 22px;
+      display: grid;
+      grid-template-rows: auto auto minmax(520px,1fr) auto;
+      gap: 13px;
+    }
+
+    .concept-head {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) auto;
+      gap: 18px;
+      align-items: end;
+    }
+
+    .concept-kicker {
+      margin: 0 0 4px;
+      color: var(--teal);
+      font-size: 10px;
+      font-weight: 840;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    .concept-title {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(27px,4vw,46px);
+      font-weight: 600;
+      letter-spacing: -.03em;
+    }
+
+    .concept-formula {
+      min-height: 42px;
+      max-width: 600px;
+      padding: 9px 13px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--panel-soft);
+      overflow-x: auto;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .concept-formula .katex { font-size: 1.03em; }
+
+    .microcopy {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 28px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 650;
+    }
+
+    .microcopy::before {
+      content: "";
+      width: 22px;
+      height: 1px;
+      background: var(--teal);
+    }
+
+    .stage-card {
+      position: relative;
+      min-height: 520px;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+        radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--panel) 82%, transparent), transparent 66%),
+        var(--panel-faint);
+      background-size: 28px 28px, 28px 28px, auto, auto;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    #stage {
+      width: 100%;
+      height: 100%;
+      min-height: 520px;
+      display: block;
+      position: relative;
+      z-index: 1;
+      touch-action: none;
+    }
+
+    .stage-badge,
+    .step-indicator {
+      position: absolute;
+      top: 14px;
+      z-index: 4;
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--panel) 82%, transparent);
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 770;
+      letter-spacing: .05em;
+      backdrop-filter: blur(12px);
+      pointer-events: none;
+    }
+
+    .stage-badge { left: 14px; }
+    .step-indicator { right: 14px; }
+
+    .hover-note {
+      position: absolute;
+      z-index: 8;
+      max-width: 260px;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel);
+      color: var(--ink);
+      box-shadow: var(--shadow);
+      font-size: 11px;
+      line-height: 1.4;
+      opacity: 0;
+      transform: translateY(5px) scale(.98);
+      pointer-events: none;
+      transition: .12s ease;
+    }
+
+    .hover-note.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .controlbar {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) auto;
+      gap: 12px;
+      align-items: center;
+      min-height: 58px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: var(--panel-soft);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .control-left,
+    .control-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .control-btn,
+    .seg-btn {
+      border: 1px solid var(--line);
+      background: color-mix(in srgb, var(--panel) 74%, transparent);
+      color: var(--muted);
+      cursor: pointer;
+      transition: .15s ease;
+    }
+
+    .control-btn {
+      min-height: 34px;
+      border-radius: 11px;
+      padding: 8px 11px;
+      font-size: 11px;
+      font-weight: 730;
+    }
+
+    .control-btn.primary {
+      color: #fff;
+      background: var(--teal);
+      border-color: var(--teal);
+    }
+
+    html[data-theme="dark"] .control-btn.primary {
+      color: #102126;
+    }
+
+    .control-btn:hover,
+    .seg-btn:hover {
+      color: var(--ink);
+      border-color: color-mix(in srgb, var(--teal) 44%, var(--line));
+      transform: translateY(-1px);
+    }
+
+    .segmented {
+      display: inline-flex;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: color-mix(in srgb, var(--panel) 56%, transparent);
+    }
+
+    .seg-btn {
+      border: 0;
+      border-radius: 9px;
+      padding: 7px 10px;
+      background: transparent;
+      font-size: 10px;
+      font-weight: 770;
+    }
+
+    .seg-btn.active {
+      color: var(--ink);
+      background: var(--teal-soft);
+    }
+
+    .slider-wrap {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 34px;
+      padding: 0 8px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: color-mix(in srgb, var(--panel) 58%, transparent);
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 720;
+    }
+
+    input[type="range"] {
+      width: 145px;
+      accent-color: var(--teal);
+      cursor: pointer;
+    }
+
+    .legend {
+      display: flex;
+      gap: 11px;
+      align-items: center;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .dot.teal { background: var(--teal); }
+    .dot.violet { background: var(--violet); }
+    .dot.gold { background: var(--gold); }
+    .dot.red { background: var(--red); }
+
+    svg text {
+      fill: var(--ink);
+      font-family: var(--sans);
+      pointer-events: none;
+    }
+
+    .label {
+      fill: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .small-label {
+      fill: var(--muted);
+      font-size: 11px;
+      font-weight: 680;
+    }
+
+    .big-label {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .axis {
+      stroke: var(--slate);
+      stroke-width: 1.7;
+    }
+
+    .guide {
+      stroke: var(--line);
+      stroke-width: 1.1;
+      stroke-dasharray: 5 6;
+    }
+
+    .arrow {
+      stroke: var(--slate);
+      stroke-width: 2;
+      fill: none;
+      marker-end: url(#arrow);
+    }
+
+    .arrow-teal {
+      stroke: var(--teal);
+      stroke-width: 2.7;
+      fill: none;
+      marker-end: url(#arrowTeal);
+    }
+
+    .arrow-violet {
+      stroke: var(--violet);
+      stroke-width: 2.7;
+      fill: none;
+      marker-end: url(#arrowViolet);
+    }
+
+    .matrix-cell {
+      fill: color-mix(in srgb, var(--panel) 84%, transparent);
+      stroke: var(--line);
+      stroke-width: 1;
+      transition: .18s ease;
+    }
+
+    .matrix-cell.teal {
+      fill: var(--teal-soft);
+      stroke: color-mix(in srgb, var(--teal) 62%, var(--line));
+    }
+
+    .matrix-cell.violet {
+      fill: var(--violet-soft);
+      stroke: color-mix(in srgb, var(--violet) 62%, var(--line));
+    }
+
+    .matrix-cell.gold {
+      fill: var(--gold-soft);
+      stroke: color-mix(in srgb, var(--gold) 62%, var(--line));
+    }
+
+    .matrix-cell.red {
+      fill: var(--red-soft);
+      stroke: color-mix(in srgb, var(--red) 62%, var(--line));
+    }
+
+    .matrix-cell.active {
+      stroke-width: 2.5;
+      filter: drop-shadow(0 6px 10px color-mix(in srgb, var(--gold) 22%, transparent));
+      transform-box: fill-box;
+      transform-origin: center;
+      transform: scale(1.045);
+    }
+
+    .cell-value {
+      font-family: var(--serif);
+      font-size: 19px;
+      font-weight: 600;
+      text-anchor: middle;
+      dominant-baseline: middle;
+    }
+
+    .clickable { cursor: pointer; }
+    .clickable:hover { stroke-width: 2; filter: brightness(1.035); }
+
+    .draggable {
+      cursor: grab;
+      touch-action: none;
+    }
+
+    .draggable:active { cursor: grabbing; }
+
+    .pulse {
+      animation: pulse 1.45s ease-in-out infinite;
+      transform-origin: center;
+      transform-box: fill-box;
+    }
+
+    .draw-in {
+      stroke-dasharray: 500;
+      stroke-dashoffset: 500;
+      animation: drawLine .75s ease forwards;
+    }
+
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn .38s ease forwards;
+    }
+
+    .scale-in {
+      opacity: 0;
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: scaleIn .42s cubic-bezier(.2,.8,.2,1) forwards;
+    }
+
+    @keyframes pulse {
+      0%,100% { opacity: .58; transform: scale(.98); }
+      50% { opacity: 1; transform: scale(1.04); }
+    }
+
+    @keyframes drawLine {
+      to { stroke-dashoffset: 0; }
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(.92); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; }
+
+      .sidebar {
+        position: sticky;
+        top: 68px;
+        z-index: 20;
+        height: auto;
+        display: flex;
+        gap: 6px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        padding: 9px 10px;
+        background: color-mix(in srgb, var(--panel) 86%, transparent);
+        backdrop-filter: blur(18px);
+      }
+
+      .side-title { display: none; }
+
+      .nav-btn {
+        flex: 0 0 auto;
+        width: auto;
+        min-width: 145px;
+      }
+
+      .main { padding: 14px; }
+    }
+
+    @media (max-width: 680px) {
+      .topbar { padding: 11px 12px; }
+      .eyebrow { display: none; }
+      h1 { font-size: 18px; }
+
+      .concept-head {
+        grid-template-columns: 1fr;
+        align-items: start;
+      }
+
+      .concept-formula {
+        width: 100%;
+        max-width: none;
+      }
+
+      .main {
+        grid-template-rows: auto auto minmax(465px,1fr) auto;
+      }
+
+      #stage, .stage-card {
+        min-height: 465px;
+      }
+
+      .controlbar {
+        grid-template-columns: 1fr;
+      }
+
+      input[type="range"] { width: 110px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <p class="eyebrow">Interactive graphical mathematics</p>
+        <h1>Transpose &amp; Euclidean Norm</h1>
+      </div>
+
+      <div class="top-actions">
+        <button class="icon-btn" id="resetBtn" title="Reset current visual" aria-label="Reset current visual">↺</button>
+        <button class="icon-btn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">◐</button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" id="sidebar" aria-label="Concept navigation"></aside>
+
+      <main class="main">
+        <section class="concept-head">
+          <div>
+            <p class="concept-kicker" id="conceptKicker"></p>
+            <h2 class="concept-title" id="conceptTitle"></h2>
+          </div>
+          <div class="concept-formula" id="conceptFormula"></div>
+        </section>
+
+        <div class="microcopy" id="microcopy"></div>
+
+        <section class="stage-card">
+          <div class="stage-badge" id="stageBadge"></div>
+          <div class="step-indicator" id="stepIndicator">ready</div>
+          <svg id="stage" viewBox="0 0 1000 580" role="img" aria-label="Interactive graphical visualization of matrix transpose and Euclidean norm"></svg>
+          <div class="hover-note" id="hoverNote"></div>
+        </section>
+
+        <section class="controlbar">
+          <div class="control-left" id="controls"></div>
+          <div class="control-right">
+            <div class="legend">
+              <span class="legend-item"><span class="dot teal"></span> original object</span>
+              <span class="legend-item"><span class="dot violet"></span> transformed object</span>
+              <span class="legend-item"><span class="dot gold"></span> selected/result</span>
+              <span class="legend-item"><span class="dot red"></span> mismatch</span>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const svg = document.getElementById("stage");
+      const sidebar = document.getElementById("sidebar");
+      const controls = document.getElementById("controls");
+      const hoverNote = document.getElementById("hoverNote");
+      const stageCard = document.querySelector(".stage-card");
+      const stepIndicator = document.getElementById("stepIndicator");
+      const NS = "http://www.w3.org/2000/svg";
+
+      const navItems = [
+        ["transpose", "A′", "Transpose"],
+        ["double-transpose", "′′", "Transpose twice"],
+        ["sum-law", "+", "Transpose of a sum"],
+        ["product-law", "AB", "Transpose of a product"],
+        ["vector-row", "x′", "Column to row"],
+        ["inner-product", "x′x", "Self inner product"],
+        ["norm", "‖x‖", "Euclidean norm"]
+      ];
+
+      const concepts = {
+        transpose: {
+          kicker: "Definition",
+          title: "Transpose of a matrix",
+          formula: "A=(a_{ij})\\in\\mathbb{R}^{m\\times n}\\quad\\Longrightarrow\\quad A'=(a_{ji})\\in\\mathbb{R}^{n\\times m}",
+          badge: "click a cell or animate all entries",
+          micro: "Each entry crosses the main diagonal: row i becomes column i.",
+          draw: drawTranspose
+        },
+        "double-transpose": {
+          kicker: "Property 1",
+          title: "Transpose twice",
+          formula: "(A')'=A",
+          badge: "watch every entry return",
+          micro: "The first transpose swaps the indices; the second swaps them back.",
+          draw: drawDoubleTranspose
+        },
+        "sum-law": {
+          kicker: "Property 2",
+          title: "Transpose of a sum",
+          formula: "(A+B)'=A'+B'",
+          badge: "compare the two paths",
+          micro: "Adding first or transposing first produces the same final matrix.",
+          draw: drawSumLaw
+        },
+        "product-law": {
+          kicker: "Property 3",
+          title: "Transpose of a product",
+          formula: "(AB)'=B'A'",
+          badge: "the order reverses",
+          micro: "Transposing a composition reverses the order of the factors.",
+          draw: drawProductLaw
+        },
+        "vector-row": {
+          kicker: "Vector orientation",
+          title: "Column vector to row vector",
+          formula: "x\\in\\mathbb{R}^{n\\times 1}\\quad\\Longrightarrow\\quad x'\\in\\mathbb{R}^{1\\times n}",
+          badge: "animate the rotation",
+          micro: "The same components are preserved; only their orientation changes.",
+          draw: drawVectorRow
+        },
+        "inner-product": {
+          kicker: "Quadratic form",
+          title: "Self inner product",
+          formula: "x'x=\\sum_{i=1}^{n}x_i^2",
+          badge: "change the vector components",
+          micro: "The row vector multiplies the column vector, producing one scalar.",
+          draw: drawInnerProduct
+        },
+        norm: {
+          kicker: "Definition",
+          title: "Euclidean norm",
+          formula: "\\|x\\|=(x'x)^{1/2}=\\sqrt{\\sum_{i=1}^{n}x_i^2}",
+          badge: "drag the vector endpoint",
+          micro: "The norm is the geometric length of the vector from the origin.",
+          draw: drawNorm
+        }
+      };
+
+      let active = "transpose";
+      let localState = {};
+      let timers = [];
+
+      buildSidebar();
+      installDefs();
+      selectConcept(active);
+
+      function buildSidebar() {
+        sidebar.innerHTML = "";
+        const title = document.createElement("div");
+        title.className = "side-title";
+        title.textContent = "Concepts";
+        sidebar.appendChild(title);
+
+        navItems.forEach(([id, icon, label]) => {
+          const btn = document.createElement("button");
+          btn.className = "nav-btn";
+          btn.dataset.id = id;
+          btn.innerHTML = `
+            <span class="nav-icon">${icon}</span>
+            <span class="nav-label">${label}</span>
+            <span class="nav-arrow">›</span>
+          `;
+          btn.addEventListener("click", () => selectConcept(id));
+          sidebar.appendChild(btn);
+        });
+      }
+
+      function selectConcept(id) {
+        stopTimers();
+        active = id;
+        localState = {};
+        document.querySelectorAll(".nav-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.id === id));
+
+        const concept = concepts[id];
+        document.getElementById("conceptKicker").textContent = concept.kicker;
+        document.getElementById("conceptTitle").textContent = concept.title;
+        document.getElementById("stageBadge").textContent = concept.badge;
+        document.getElementById("microcopy").textContent = concept.micro;
+        stepIndicator.textContent = "ready";
+
+        const formulaBox = document.getElementById("conceptFormula");
+        formulaBox.innerHTML = "";
+        renderKatex(concept.formula, formulaBox);
+
+        clearStage();
+        controls.innerHTML = "";
+        concept.draw();
+      }
+
+      document.getElementById("resetBtn").addEventListener("click", () => selectConcept(active));
+
+      const root = document.documentElement;
+      root.dataset.theme = localStorage.getItem("transpose-atlas-theme") ||
+        (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+
+      document.getElementById("themeBtn").addEventListener("click", () => {
+        root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
+        localStorage.setItem("transpose-atlas-theme", root.dataset.theme);
+      });
+
+      function stopTimers() {
+        timers.forEach(clearTimeout);
+        timers = [];
+      }
+
+      function later(fn, delay) {
+        const id = setTimeout(fn, delay);
+        timers.push(id);
+        return id;
+      }
+
+      function clearStage() {
+        [...svg.children].forEach(child => {
+          if (child.tagName.toLowerCase() !== "defs") child.remove();
+        });
+        hideTooltip();
+      }
+
+      function installDefs() {
+        const defs = el("defs");
+        [
+          ["arrow", "var(--slate)"],
+          ["arrowTeal", "var(--teal)"],
+          ["arrowViolet", "var(--violet)"],
+          ["arrowGold", "var(--gold)"]
+        ].forEach(([id, fill]) => {
+          const marker = el("marker", {
+            id,
+            viewBox: "0 -5 10 10",
+            refX: 8,
+            refY: 0,
+            markerWidth: 6,
+            markerHeight: 6,
+            orient: "auto"
+          });
+          marker.appendChild(el("path", { d: "M0,-4 L9,0 L0,4 Z", fill }));
+          defs.appendChild(marker);
+        });
+        svg.appendChild(defs);
+      }
+
+      function el(tag, attrs = {}, value = null) {
+        const node = document.createElementNS(NS, tag);
+        Object.entries(attrs).forEach(([key, val]) => node.setAttribute(key, val));
+        if (value !== null) node.textContent = value;
+        return node;
+      }
+
+      function append(node) {
+        svg.appendChild(node);
+        return node;
+      }
+
+      function text(x, y, value, cls = "label", anchor = "middle", parent = svg) {
+        const t = el("text", {
+          x, y, class: cls,
+          "text-anchor": anchor,
+          "dominant-baseline": "middle"
+        }, value);
+        parent.appendChild(t);
+        return t;
+      }
+
+      function line(x1, y1, x2, y2, cls = "arrow", parent = svg) {
+        const l = el("line", { x1, y1, x2, y2, class: cls });
+        parent.appendChild(l);
+        return l;
+      }
+
+      function rect(x, y, w, h, attrs = {}, parent = svg) {
+        const r = el("rect", { x, y, width: w, height: h, rx: 14, ...attrs });
+        parent.appendChild(r);
+        return r;
+      }
+
+      function circle(cx, cy, r, attrs = {}, parent = svg) {
+        const c = el("circle", { cx, cy, r, ...attrs });
+        parent.appendChild(c);
+        return c;
+      }
+
+      function renderKatex(formula, target) {
+        if (window.katex) {
+          katex.render(formula, target, { throwOnError: false, displayMode: false });
+        } else {
+          target.textContent = formula;
+        }
+      }
+
+      function showTooltip(evt, content) {
+        const box = stageCard.getBoundingClientRect();
+        hoverNote.innerHTML = content;
+        hoverNote.style.left = `${Math.min(box.width - 270, Math.max(12, evt.clientX - box.left + 12))}px`;
+        hoverNote.style.top = `${Math.min(box.height - 90, Math.max(12, evt.clientY - box.top + 12))}px`;
+        hoverNote.classList.add("show");
+      }
+
+      function hideTooltip() {
+        hoverNote.classList.remove("show");
+      }
+
+      function makeButton(label, handler, className = "") {
+        const btn = document.createElement("button");
+        btn.className = `control-btn ${className}`.trim();
+        btn.textContent = label;
+        btn.addEventListener("click", handler);
+        controls.appendChild(btn);
+        return btn;
+      }
+
+      function makeSegment(options, initial, onChange) {
+        const wrap = document.createElement("div");
+        wrap.className = "segmented";
+        options.forEach(option => {
+          const btn = document.createElement("button");
+          btn.className = "seg-btn" + (option.value === initial ? " active" : "");
+          btn.textContent = option.label;
+          btn.addEventListener("click", () => {
+            wrap.querySelectorAll(".seg-btn").forEach(x => x.classList.remove("active"));
+            btn.classList.add("active");
+            onChange(option.value);
+          });
+          wrap.appendChild(btn);
+        });
+        controls.appendChild(wrap);
+      }
+
+      function makeSlider(label, min, max, step, value, onInput) {
+        const wrap = document.createElement("label");
+        wrap.className = "slider-wrap";
+
+        const name = document.createElement("span");
+        name.textContent = label;
+
+        const input = document.createElement("input");
+        input.type = "range";
+        input.min = min;
+        input.max = max;
+        input.step = step;
+        input.value = value;
+
+        const output = document.createElement("span");
+        output.textContent = value;
+
+        input.addEventListener("input", () => {
+          output.textContent = input.value;
+          onInput(Number(input.value));
+        });
+
+        wrap.append(name, input, output);
+        controls.appendChild(wrap);
+      }
+
+      function svgPoint(evt) {
+        const point = svg.createSVGPoint();
+        point.x = evt.clientX;
+        point.y = evt.clientY;
+        return point.matrixTransform(svg.getScreenCTM().inverse());
+      }
+
+      function makeDrag(target, onMove) {
+        let dragging = false;
+        target.classList.add("draggable");
+
+        target.addEventListener("pointerdown", evt => {
+          dragging = true;
+          target.setPointerCapture(evt.pointerId);
+          evt.preventDefault();
+        });
+
+        target.addEventListener("pointermove", evt => {
+          if (!dragging) return;
+          const p = svgPoint(evt);
+          onMove(p.x, p.y);
+        });
+
+        const end = evt => {
+          dragging = false;
+          try { target.releasePointerCapture(evt.pointerId); } catch {}
+        };
+
+        target.addEventListener("pointerup", end);
+        target.addEventListener("pointercancel", end);
+      }
+
+      function clamp(value, min, max) {
+        return Math.max(min, Math.min(max, value));
+      }
+
+      function formatNum(value) {
+        const rounded = Math.round(value * 100) / 100;
+        return Number.isInteger(rounded) ? String(rounded) : String(rounded);
+      }
+
+      function matrixTranspose(A) {
+        return A[0].map((_, j) => A.map(row => row[j]));
+      }
+
+      function matrixAdd(A, B) {
+        return A.map((row, i) => row.map((value, j) => value + B[i][j]));
+      }
+
+      function matrixMultiply(A, B) {
+        return A.map(row =>
+          B[0].map((_, k) =>
+            row.reduce((sum, value, j) => sum + value * B[j][k], 0)
+          )
+        );
+      }
+
+      function drawMatrix(data, x, y, options = {}) {
+        const rows = data.length;
+        const cols = data[0].length;
+        const cw = options.cw || 72;
+        const ch = options.ch || 58;
+        const klass = options.klass || "";
+        const cells = [];
+        const group = append(el("g", { class: options.animate === false ? "" : "fade-in" }));
+
+        data.forEach((row, i) => {
+          row.forEach((value, j) => {
+            const cell = el("rect", {
+              x: x + j * cw,
+              y: y + i * ch,
+              width: cw - 6,
+              height: ch - 6,
+              rx: 10,
+              class: `matrix-cell ${klass} ${options.clickable ? "clickable" : ""}`
+            });
+
+            const label = el("text", {
+              x: x + j * cw + (cw - 6) / 2,
+              y: y + i * ch + (ch - 6) / 2,
+              class: "cell-value"
+            }, value);
+
+            group.append(cell, label);
+            cells.push({ cell, label, row: i, col: j, x: x + j * cw, y: y + i * ch });
+          });
+        });
+
+        const width = cols * cw - 6;
+        const height = rows * ch - 6;
+
+        group.appendChild(el("path", {
+          d: `M${x-16},${y} q-10,0 -10,10 v${height-20} q0,10 10,10`,
+          fill: "none",
+          stroke: "var(--ink)",
+          "stroke-width": 2
+        }));
+
+        group.appendChild(el("path", {
+          d: `M${x+width+16},${y} q10,0 10,10 v${height-20} q0,10 -10,10`,
+          fill: "none",
+          stroke: "var(--ink)",
+          "stroke-width": 2
+        }));
+
+        return { group, cells, rows, cols, cw, ch, x, y, width, height };
+      }
+
+      function drawTranspose() {
+        const A = [
+          ["a₁₁","a₁₂","a₁₃"],
+          ["a₂₁","a₂₂","a₂₃"]
+        ];
+        const AT = matrixTranspose(A);
+        localState.cell = localState.cell || [0, 0];
+
+        const mA = drawMatrix(A, 110, 175, { cw: 82, ch: 72, klass: "teal", clickable: true });
+        const mT = drawMatrix(AT, 650, 130, { cw: 82, ch: 72, klass: "violet", clickable: true });
+
+        text(230, 110, "A₂×₃", "big-label");
+        text(770, 75, "A′₃×₂", "big-label");
+        line(410, 245, 570, 245, "arrow-teal").classList.add("draw-in");
+        text(490, 210, "transpose", "small-label");
+
+        const [i, j] = localState.cell;
+        const source = mA.cells.find(c => c.row === i && c.col === j);
+        const target = mT.cells.find(c => c.row === j && c.col === i);
+
+        source.cell.classList.add("active", "gold");
+        target.cell.classList.add("active", "gold");
+
+        const sx = source.x + 38;
+        const sy = source.y + 32;
+        const tx = target.x + 38;
+        const ty = target.y + 32;
+
+        const path = append(el("path", {
+          d: `M${sx},${sy} C${sx+150},${sy-115} ${tx-150},${ty+115} ${tx},${ty}`,
+          class: "arrow-teal draw-in"
+        }));
+
+        text(500, 450, `a${toSub(i+1)}${toSub(j+1)}  →  a${toSub(j+1)}${toSub(i+1)}`, "big-label");
+        text(500, 505, `row ${i+1}, column ${j+1} becomes row ${j+1}, column ${i+1}`, "label");
+
+        mA.cells.forEach(cell => {
+          cell.cell.addEventListener("click", () => {
+            localState.cell = [cell.row, cell.col];
+            clearStage();
+            controls.innerHTML = "";
+            drawTranspose();
+          });
+          cell.cell.addEventListener("mousemove", evt => {
+            showTooltip(evt, `<strong>Original position</strong><br>row ${cell.row+1}, column ${cell.col+1}`);
+          });
+          cell.cell.addEventListener("mouseleave", hideTooltip);
+        });
+
+        mT.cells.forEach(cell => {
+          cell.cell.addEventListener("click", () => {
+            localState.cell = [cell.col, cell.row];
+            clearStage();
+            controls.innerHTML = "";
+            drawTranspose();
+          });
+        });
+
+        makeButton("Animate all entries", () => {
+          stopTimers();
+          const sequence = [];
+          for (let r = 0; r < A.length; r++) {
+            for (let c = 0; c < A[0].length; c++) sequence.push([r, c]);
+          }
+          sequence.forEach((cell, index) => {
+            later(() => {
+              localState.cell = cell;
+              clearStage();
+              controls.innerHTML = "";
+              drawTranspose();
+              stepIndicator.textContent = `entry ${index+1} / ${sequence.length}`;
+            }, index * 650);
+          });
+        }, "primary");
+
+        makeButton("Next entry", () => {
+          const flat = i * A[0].length + j;
+          const next = (flat + 1) % (A.length * A[0].length);
+          localState.cell = [Math.floor(next / A[0].length), next % A[0].length];
+          clearStage();
+          controls.innerHTML = "";
+          drawTranspose();
+        });
+
+        stepIndicator.textContent = `${i+1},${j+1} → ${j+1},${i+1}`;
+      }
+
+      function drawDoubleTranspose() {
+        const A = [
+          ["a","b","c"],
+          ["d","e","f"]
+        ];
+        const AT = matrixTranspose(A);
+        const ATT = matrixTranspose(AT);
+        localState.phase = localState.phase || 0;
+
+        const mA = drawMatrix(A, 55, 190, { cw: 72, ch: 68, klass: "teal" });
+        const mT = drawMatrix(AT, 390, 145, { cw: 72, ch: 68, klass: "violet" });
+        const mTT = drawMatrix(ATT, 720, 190, { cw: 72, ch: 68, klass: "gold" });
+
+        text(155, 125, "A", "big-label");
+        text(460, 85, "A′", "big-label");
+        text(820, 125, "(A′)′", "big-label");
+
+        line(280, 250, 355, 250, "arrow-teal").classList.add("draw-in");
+        line(600, 250, 685, 250, "arrow-violet").classList.add("draw-in");
+
+        if (localState.phase >= 1) {
+          mA.cells.forEach((cell, idx) => {
+            mT.cells[idx].cell.classList.add("violet");
+          });
+        }
+
+        if (localState.phase >= 2) {
+          mTT.cells.forEach((cell, idx) => {
+            cell.cell.classList.add("active", "gold");
+          });
+        }
+
+        text(500, 445, "swap indices once: (i,j) → (j,i)", "big-label");
+        text(500, 493, "swap again: (j,i) → (i,j)", "big-label");
+        text(500, 535, "The original arrangement is restored.", "label");
+
+        makeButton("Animate two transposes", () => {
+          stopTimers();
+          localState.phase = 0;
+          clearStage();
+          controls.innerHTML = "";
+          drawDoubleTranspose();
+
+          later(() => {
+            localState.phase = 1;
+            clearStage();
+            controls.innerHTML = "";
+            drawDoubleTranspose();
+            stepIndicator.textContent = "first transpose";
+          }, 650);
+
+          later(() => {
+            localState.phase = 2;
+            clearStage();
+            controls.innerHTML = "";
+            drawDoubleTranspose();
+            stepIndicator.textContent = "back to A";
+          }, 1400);
+        }, "primary");
+
+        stepIndicator.textContent = localState.phase === 0 ? "start" : localState.phase === 1 ? "A′" : "A restored";
+      }
+
+      function drawSumLaw() {
+        const A = [[1,2],[3,4]];
+        const B = [[5,-1],[2,6]];
+        const sum = matrixAdd(A,B);
+        const left = matrixTranspose(sum);
+        const right = matrixAdd(matrixTranspose(A), matrixTranspose(B));
+        localState.path = localState.path || "both";
+
+        makeSegment([
+          { label: "both paths", value: "both" },
+          { label: "add then transpose", value: "left" },
+          { label: "transpose then add", value: "right" }
+        ], localState.path, value => {
+          localState.path = value;
+          clearStage();
+          controls.innerHTML = "";
+          drawSumLaw();
+        });
+
+        if (localState.path === "both" || localState.path === "left") {
+          drawMatrix(A, 55, 105, { cw: 58, ch: 55, klass: "teal" });
+          text(145, 80, "+", "big-label");
+          drawMatrix(B, 185, 105, { cw: 58, ch: 55, klass: "violet" });
+          line(310, 160, 390, 160, "arrow-teal").classList.add("draw-in");
+          drawMatrix(sum, 420, 105, { cw: 58, ch: 55, klass: "gold" });
+          line(545, 160, 625, 160, "arrow-teal").classList.add("draw-in");
+          drawMatrix(left, 660, 105, { cw: 58, ch: 55, klass: "gold" });
+          text(760, 55, "(A+B)′", "big-label");
+        }
+
+        if (localState.path === "both" || localState.path === "right") {
+          drawMatrix(matrixTranspose(A), 100, 345, { cw: 58, ch: 55, klass: "teal" });
+          text(225, 400, "+", "big-label");
+          drawMatrix(matrixTranspose(B), 280, 345, { cw: 58, ch: 55, klass: "violet" });
+          line(405, 400, 535, 400, "arrow-violet").classList.add("draw-in");
+          drawMatrix(right, 585, 345, { cw: 58, ch: 55, klass: "gold" });
+          text(685, 300, "A′+B′", "big-label");
+        }
+
+        if (localState.path === "both") {
+          line(760, 240, 685, 315, "guide");
+          text(820, 280, "same matrix", "label", "start");
+        }
+
+        text(500, 535, "Entrywise addition commutes with the row–column swap.", "label");
+        stepIndicator.textContent = localState.path;
+      }
+
+      function drawProductLaw() {
+        const A = [[1,2,0],[0,1,3]];
+        const B = [[2,1],[1,0],[4,2]];
+        const AB = matrixMultiply(A,B);
+        const left = matrixTranspose(AB);
+        const BT = matrixTranspose(B);
+        const AT = matrixTranspose(A);
+        const right = matrixMultiply(BT,AT);
+        localState.mode = localState.mode || "compare";
+
+        makeSegment([
+          { label: "compare", value: "compare" },
+          { label: "(AB)′", value: "left" },
+          { label: "B′A′", value: "right" }
+        ], localState.mode, value => {
+          localState.mode = value;
+          clearStage();
+          controls.innerHTML = "";
+          drawProductLaw();
+        });
+
+        if (localState.mode === "compare" || localState.mode === "left") {
+          drawMatrix(A, 45, 95, { cw: 55, ch: 52, klass: "teal" });
+          text(225, 150, "×", "big-label");
+          drawMatrix(B, 265, 70, { cw: 55, ch: 52, klass: "violet" });
+          line(390, 150, 450, 150, "arrow-teal").classList.add("draw-in");
+          drawMatrix(AB, 480, 95, { cw: 55, ch: 52, klass: "gold" });
+          line(600, 150, 660, 150, "arrow-teal").classList.add("draw-in");
+          drawMatrix(left, 690, 95, { cw: 55, ch: 52, klass: "gold" });
+          text(780, 48, "(AB)′", "big-label");
+        }
+
+        if (localState.mode === "compare" || localState.mode === "right") {
+          drawMatrix(BT, 110, 355, { cw: 55, ch: 52, klass: "violet" });
+          text(300, 410, "×", "big-label");
+          drawMatrix(AT, 345, 330, { cw: 55, ch: 52, klass: "teal" });
+          line(470, 410, 565, 410, "arrow-violet").classList.add("draw-in");
+          drawMatrix(right, 610, 355, { cw: 55, ch: 52, klass: "gold" });
+          text(700, 305, "B′A′", "big-label");
+        }
+
+        if (localState.mode === "compare") {
+          text(885, 280, "same result", "label");
+          line(800, 215, 740, 330, "guide");
+        }
+
+        text(500, 525, "The factor order reverses: the last map becomes the first transpose factor.", "label");
+        stepIndicator.textContent = "order reversed";
+      }
+
+      function drawVectorRow() {
+        const x = [["x₁"],["x₂"],["x₃"],["x₄"]];
+        const xt = matrixTranspose(x);
+        localState.orientation = localState.orientation || "both";
+
+        makeSegment([
+          { label: "both", value: "both" },
+          { label: "column", value: "column" },
+          { label: "row", value: "row" }
+        ], localState.orientation, value => {
+          localState.orientation = value;
+          clearStage();
+          controls.innerHTML = "";
+          drawVectorRow();
+        });
+
+        if (localState.orientation === "both" || localState.orientation === "column") {
+          drawMatrix(x, 210, 120, { cw: 90, ch: 72, klass: "teal" });
+          text(255, 70, "x ∈ ℝ⁴×¹", "big-label");
+        }
+
+        if (localState.orientation === "both") {
+          append(el("path", {
+            d: "M360,280 C455,135 560,135 650,280",
+            class: "arrow-teal draw-in"
+          }));
+          text(500, 155, "transpose", "small-label");
+        }
+
+        if (localState.orientation === "both" || localState.orientation === "row") {
+          drawMatrix(xt, 600, 245, { cw: 90, ch: 72, klass: "violet" });
+          text(760, 190, "x′ ∈ ℝ¹×⁴", "big-label");
+        }
+
+        text(500, 500, "The entries stay in the same order: x₁,x₂,x₃,x₄.", "label");
+        stepIndicator.textContent = localState.orientation;
+      }
+
+      function drawInnerProduct() {
+        localState.values = localState.values || [2, -1, 3];
+        const x = localState.values.map(value => [value]);
+        const xt = [localState.values];
+        const squares = localState.values.map(value => value * value);
+        const sum = squares.reduce((a,b) => a+b, 0);
+        localState.term = localState.term ?? -1;
+
+        const mRow = drawMatrix(xt, 85, 220, { cw: 70, ch: 64, klass: "violet" });
+        text(190, 160, "x′", "big-label");
+        text(330, 250, "×", "big-label");
+        const mCol = drawMatrix(x, 385, 155, { cw: 70, ch: 64, klass: "teal" });
+        text(420, 105, "x", "big-label");
+        text(500, 250, "=", "big-label");
+
+        rect(565, 205, 120, 90, { class: "matrix-cell gold" });
+        text(625, 250, String(sum), "big-label");
+
+        if (localState.term >= 0) {
+          mRow.cells[localState.term].cell.classList.add("active", "gold");
+          mCol.cells[localState.term].cell.classList.add("active", "gold");
+        }
+
+        const expression = localState.term < 0
+          ? `${localState.values.map(v => `${v}²`).join(" + ")} = ${sum}`
+          : `${localState.values.slice(0,localState.term+1).map(v => `${v}²`).join(" + ")}${localState.term < 2 ? " + …" : ""}`;
+
+        text(500, 400, expression, "big-label");
+        text(500, 465, "A 1×3 row times a 3×1 column gives one scalar.", "label");
+
+        makeSlider("x₁", -4, 4, 1, localState.values[0], value => {
+          localState.values[0] = value;
+          clearStage(); controls.innerHTML = ""; drawInnerProduct();
+        });
+        makeSlider("x₂", -4, 4, 1, localState.values[1], value => {
+          localState.values[1] = value;
+          clearStage(); controls.innerHTML = ""; drawInnerProduct();
+        });
+        makeSlider("x₃", -4, 4, 1, localState.values[2], value => {
+          localState.values[2] = value;
+          clearStage(); controls.innerHTML = ""; drawInnerProduct();
+        });
+
+        makeButton("Animate terms", () => {
+          stopTimers();
+          [0,1,2].forEach((term,index) => {
+            later(() => {
+              localState.term = term;
+              clearStage();
+              controls.innerHTML = "";
+              drawInnerProduct();
+              stepIndicator.textContent = `square ${index+1} / 3`;
+            }, index * 700);
+          });
+          later(() => {
+            localState.term = -1;
+            clearStage();
+            controls.innerHTML = "";
+            drawInnerProduct();
+            stepIndicator.textContent = `sum = ${sum}`;
+          }, 2250);
+        }, "primary");
+
+        stepIndicator.textContent = `x′x = ${sum}`;
+      }
+
+      function drawNorm() {
+        localState.vx = localState.vx ?? 3;
+        localState.vy = localState.vy ?? 4;
+
+        const O = { x: 360, y: 400 };
+        const scale = 55;
+        const P = {
+          x: O.x + localState.vx * scale,
+          y: O.y - localState.vy * scale
+        };
+        const Q = {
+          x: P.x,
+          y: O.y
+        };
+        const norm = Math.sqrt(localState.vx ** 2 + localState.vy ** 2);
+        const signX = localState.vx >= 0 ? 1 : -1;
+        const signY = localState.vy >= 0 ? -1 : 1;
+
+        line(80, O.y, 900, O.y, "axis");
+        line(O.x, 540, O.x, 60, "axis");
+        text(915, O.y, "x₁", "label", "start");
+        text(O.x, 40, "x₂", "label");
+
+        const triangle = append(el("path", {
+          d: `M${O.x},${O.y} L${Q.x},${Q.y} L${P.x},${P.y} Z`,
+          fill: "color-mix(in srgb, var(--gold) 18%, transparent)",
+          stroke: "none",
+          class: "fade-in"
+        }));
+
+        line(O.x, O.y, Q.x, Q.y, "arrow-violet").classList.add("draw-in");
+        line(Q.x, Q.y, P.x, P.y, "arrow").setAttribute("marker-end", "url(#arrowGold)");
+        line(Q.x, Q.y, P.x, P.y, "arrow").classList.add("draw-in");
+        const hyp = line(O.x, O.y, P.x, P.y, "arrow-teal");
+        hyp.classList.add("draw-in");
+
+        line(P.x, P.y, P.x, O.y, "guide");
+        line(O.x, P.y, P.x, P.y, "guide");
+
+        const rightSize = 18;
+        const rightAngle = append(el("path", {
+          d: `M${Q.x},${Q.y} l${-signX * rightSize},0 l0,${signY * rightSize} l${signX * rightSize},0`,
+          fill: "none",
+          stroke: "var(--gold)",
+          "stroke-width": 2
+        }));
+
+        const endpoint = circle(P.x, P.y, 10, {
+          fill: "var(--gold)",
+          class: "draggable pulse"
+        });
+
+        text(O.x - 16, O.y + 18, "0", "small-label", "end");
+        text(P.x + 18, P.y - 20, `x = (${formatNum(localState.vx)}, ${formatNum(localState.vy)})`, "label", "start");
+
+        const midHX = (O.x + Q.x) / 2;
+        const midHY = O.y + (localState.vx >= 0 ? 26 : -22);
+        const midVX = Q.x + (localState.vy >= 0 ? 24 : -24);
+        const midVY = (Q.y + P.y) / 2;
+        const midDX = (O.x + P.x) / 2 + 18;
+        const midDY = (O.y + P.y) / 2 - 16;
+
+        text(midHX, midHY, `x₁ = ${formatNum(localState.vx)}`, "label");
+        text(midVX, midVY, `x₂ = ${formatNum(localState.vy)}`, "label");
+        text(midDX, midDY, `‖x‖ = ${formatNum(norm)}`, "big-label", "start");
+
+        text(690, 92, "right triangle in the plane", "small-label");
+
+        rect(620, 125, 300, 210, {
+          fill: "color-mix(in srgb, var(--panel) 78%, transparent)",
+          stroke: "var(--line)",
+          "stroke-width": 1.2
+        });
+        text(770, 165, "legs", "small-label");
+        text(770, 192, `horizontal = |x₁| = ${formatNum(Math.abs(localState.vx))}`, "label");
+        text(770, 222, `vertical = |x₂| = ${formatNum(Math.abs(localState.vy))}`, "label");
+        text(770, 262, `x′x = ${formatNum(localState.vx**2)} + ${formatNum(localState.vy**2)}`, "label");
+        text(770, 294, `= ${formatNum(norm**2)}`, "big-label");
+        text(770, 325, `‖x‖ = √(${formatNum(norm**2)}) = ${formatNum(norm)}`, "label");
+
+        text(500, 530, "Graphically, ‖x‖ is the hypotenuse of the right triangle whose legs are the vector components.", "label");
+
+        makeDrag(endpoint, (x,y) => {
+          localState.vx = Math.round(clamp((x-O.x)/scale, -4, 6) * 10) / 10;
+          localState.vy = Math.round(clamp((O.y-y)/scale, -2, 6) * 10) / 10;
+          clearStage();
+          controls.innerHTML = "";
+          drawNorm();
+        });
+
+        makeButton("3–4–5 triangle", () => {
+          localState.vx = 3;
+          localState.vy = 4;
+          clearStage();
+          controls.innerHTML = "";
+          drawNorm();
+        });
+
+        makeButton("1–1–√2", () => {
+          localState.vx = 1;
+          localState.vy = 1;
+          clearStage();
+          controls.innerHTML = "";
+          drawNorm();
+        });
+
+        makeButton("Unit vector", () => {
+          localState.vx = 1;
+          localState.vy = 0;
+          clearStage();
+          controls.innerHTML = "";
+          drawNorm();
+        });
+
+        stepIndicator.textContent = `hypotenuse = ${formatNum(norm)}`;
+      }
+
+      function toSub(n) {
+        return String(n).replace(/\d/g, digit => "₀₁₂₃₄₅₆₇₈₉"[Number(digit)]);
+      }
+    });
+  </script>
+</body>
+</html>

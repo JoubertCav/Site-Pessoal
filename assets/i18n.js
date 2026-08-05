@@ -133,6 +133,8 @@
     "dg.macro.p": "Mensuração, moeda, IS-LM, AS-AD, curvas de Phillips, microfundamentos, crescimento, economia aberta, política fiscal e dinâmica da dívida.",
     "dg.econometrics": "Econometria",
     "dg.econometrics.p": "Regressão, métodos de grandes amostras, modelos de equações múltiplas, séries temporais, dados em painel, métodos não paramétricos, métodos não lineares e aprendizado de máquina.",
+    "dg.matrix": "Cálculo Diferencial Matricial",
+    "dg.matrix.p": "Diferenciais matriciais, derivadas, Hessianas, Jacobianas e aplicações em estatística e econometria.",
 
     // Contact
     "title.contact": "Contato | Joubert Cavalcante",

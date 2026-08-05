@@ -1,0 +1,1690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Interactive visual atlas of square matrix classes." />
+  <title>Square Matrices — Visual Atlas</title>
+
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f2e9;
+      --panel: #fffdf8;
+      --panel-soft: rgba(255,255,255,.82);
+      --panel-faint: rgba(255,255,255,.52);
+      --ink: #17242d;
+      --muted: #6d7a80;
+      --line: rgba(23,36,45,.14);
+      --grid: rgba(23,36,45,.065);
+
+      --teal: #0e817d;
+      --teal-soft: #ddf2ef;
+      --violet: #6c59aa;
+      --violet-soft: #eee9fb;
+      --gold: #b1842a;
+      --gold-soft: #f8edcc;
+      --red: #ba6267;
+      --red-soft: #f8e3e4;
+      --slate: #536873;
+
+      --shadow: 0 22px 70px rgba(25,38,45,.11);
+      --shadow-soft: 0 10px 28px rgba(25,38,45,.08);
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #0d151a;
+      --panel: #151f25;
+      --panel-soft: rgba(21,31,37,.88);
+      --panel-faint: rgba(21,31,37,.58);
+      --ink: #edf3f4;
+      --muted: #9caeb4;
+      --line: rgba(237,243,244,.115);
+      --grid: rgba(237,243,244,.055);
+
+      --teal: #5acdc6;
+      --teal-soft: #173b3a;
+      --violet: #b9a8f1;
+      --violet-soft: #2e2943;
+      --gold: #e2b65d;
+      --gold-soft: #45391f;
+      --red: #ed9095;
+      --red-soft: #472a2d;
+      --slate: #a1b4bb;
+
+      --shadow: 0 25px 75px rgba(0,0,0,.38);
+      --shadow-soft: 0 12px 30px rgba(0,0,0,.25);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 9% 8%, color-mix(in srgb, var(--teal-soft) 70%, transparent), transparent 28%),
+        radial-gradient(circle at 90% 92%, color-mix(in srgb, var(--violet-soft) 50%, transparent), transparent 28%),
+        var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+    }
+
+    button, input { font: inherit; }
+    button { -webkit-tap-highlight-color: transparent; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) auto;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--panel) 82%, transparent);
+      backdrop-filter: blur(22px);
+    }
+
+    .brand { min-width: 0; }
+    .eyebrow {
+      margin: 0 0 3px;
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 820;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(18px, 2vw, 28px);
+      font-weight: 600;
+      letter-spacing: -.02em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 39px;
+      height: 39px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel-soft);
+      color: var(--muted);
+      cursor: pointer;
+      transition: .16s ease;
+    }
+
+    .icon-btn:hover {
+      color: var(--ink);
+      border-color: color-mix(in srgb, var(--teal) 44%, var(--line));
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .layout {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 68px;
+      align-self: start;
+      height: calc(100vh - 68px);
+      padding: 16px 14px 28px;
+      border-right: 1px solid var(--line);
+      background: color-mix(in srgb, var(--panel-faint) 72%, transparent);
+      overflow-y: auto;
+    }
+
+    .group-title {
+      margin: 4px 8px 10px;
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 820;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .group-title + .nav-btn { margin-top: 0; }
+
+    .nav-btn {
+      width: 100%;
+      border: 1px solid transparent;
+      border-radius: 13px;
+      padding: 10px;
+      background: transparent;
+      color: var(--muted);
+      display: grid;
+      grid-template-columns: 30px minmax(0,1fr) 14px;
+      align-items: center;
+      gap: 9px;
+      text-align: left;
+      cursor: pointer;
+      transition: .16s ease;
+    }
+
+    .nav-btn + .nav-btn { margin-top: 4px; }
+    .nav-btn:hover {
+      color: var(--ink);
+      background: color-mix(in srgb, var(--panel) 66%, transparent);
+      transform: translateX(2px);
+    }
+    .nav-btn.active {
+      color: var(--ink);
+      border-color: color-mix(in srgb, var(--teal) 40%, var(--line));
+      background: linear-gradient(135deg, var(--teal-soft), color-mix(in srgb, var(--panel) 78%, var(--teal-soft)));
+      box-shadow: inset 3px 0 0 var(--teal);
+    }
+
+    .nav-icon {
+      width: 29px;
+      height: 29px;
+      display: grid;
+      place-items: center;
+      border-radius: 9px;
+      background: color-mix(in srgb, var(--panel) 72%, transparent);
+      font-family: var(--serif);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .nav-label {
+      font-size: 12px;
+      font-weight: 730;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .nav-arrow { opacity: 0; transition: .16s ease; }
+    .nav-btn.active .nav-arrow,
+    .nav-btn:hover .nav-arrow { opacity: 1; }
+
+    .main {
+      min-width: 0;
+      padding: 22px;
+      display: grid;
+      grid-template-rows: auto auto minmax(520px,1fr) auto;
+      gap: 13px;
+    }
+
+    .concept-head {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) auto;
+      gap: 18px;
+      align-items: end;
+    }
+
+    .concept-kicker {
+      margin: 0 0 4px;
+      color: var(--teal);
+      font-size: 10px;
+      font-weight: 840;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    .concept-title {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(27px,4vw,46px);
+      font-weight: 600;
+      letter-spacing: -.03em;
+    }
+
+    .concept-formula {
+      min-height: 42px;
+      max-width: 620px;
+      padding: 9px 13px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--panel-soft);
+      overflow-x: auto;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .concept-formula .katex { font-size: 1.03em; }
+
+    .microcopy {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 28px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 650;
+    }
+
+    .microcopy::before {
+      content: "";
+      width: 22px;
+      height: 1px;
+      background: var(--teal);
+    }
+
+    .stage-card {
+      position: relative;
+      min-height: 520px;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+        radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--panel) 82%, transparent), transparent 66%),
+        var(--panel-faint);
+      background-size: 28px 28px, 28px 28px, auto, auto;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    #stage {
+      width: 100%;
+      height: 100%;
+      min-height: 520px;
+      display: block;
+      position: relative;
+      z-index: 1;
+    }
+
+    .stage-badge,
+    .step-indicator,
+    .remark-chip {
+      position: absolute;
+      z-index: 4;
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--panel) 82%, transparent);
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 770;
+      letter-spacing: .05em;
+      backdrop-filter: blur(12px);
+      pointer-events: none;
+    }
+    .stage-badge { top: 14px; left: 14px; }
+    .step-indicator { top: 14px; right: 14px; }
+    .remark-chip { bottom: 14px; right: 14px; }
+
+    .hover-note {
+      position: absolute;
+      z-index: 8;
+      max-width: 280px;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel);
+      color: var(--ink);
+      box-shadow: var(--shadow);
+      font-size: 11px;
+      line-height: 1.4;
+      opacity: 0;
+      transform: translateY(5px) scale(.98);
+      pointer-events: none;
+      transition: .12s ease;
+    }
+    .hover-note.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .controlbar {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) auto;
+      gap: 12px;
+      align-items: center;
+      min-height: 58px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: var(--panel-soft);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .control-left,
+    .control-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .control-btn,
+    .seg-btn {
+      border: 1px solid var(--line);
+      background: color-mix(in srgb, var(--panel) 74%, transparent);
+      color: var(--muted);
+      cursor: pointer;
+      transition: .15s ease;
+    }
+
+    .control-btn {
+      min-height: 34px;
+      border-radius: 11px;
+      padding: 8px 11px;
+      font-size: 11px;
+      font-weight: 730;
+    }
+
+    .control-btn.primary {
+      color: #fff;
+      background: var(--teal);
+      border-color: var(--teal);
+    }
+    html[data-theme="dark"] .control-btn.primary { color: #102126; }
+
+    .control-btn:hover,
+    .seg-btn:hover {
+      color: var(--ink);
+      border-color: color-mix(in srgb, var(--teal) 44%, var(--line));
+      transform: translateY(-1px);
+    }
+
+    .segmented {
+      display: inline-flex;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: color-mix(in srgb, var(--panel) 56%, transparent);
+    }
+
+    .seg-btn {
+      border: 0;
+      border-radius: 9px;
+      padding: 7px 10px;
+      background: transparent;
+      font-size: 10px;
+      font-weight: 770;
+    }
+    .seg-btn.active {
+      color: var(--ink);
+      background: var(--teal-soft);
+    }
+
+    .slider-wrap {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 34px;
+      padding: 0 8px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: color-mix(in srgb, var(--panel) 58%, transparent);
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 720;
+    }
+
+    input[type="range"] {
+      width: 135px;
+      accent-color: var(--teal);
+      cursor: pointer;
+    }
+
+    .legend {
+      display: flex;
+      gap: 11px;
+      align-items: center;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 700;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .dot.teal { background: var(--teal); }
+    .dot.violet { background: var(--violet); }
+    .dot.gold { background: var(--gold); }
+    .dot.red { background: var(--red); }
+
+    svg text {
+      fill: var(--ink);
+      font-family: var(--sans);
+      pointer-events: none;
+    }
+    .label {
+      fill: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .small-label {
+      fill: var(--muted);
+      font-size: 11px;
+      font-weight: 680;
+    }
+    .big-label {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .axis {
+      stroke: var(--slate);
+      stroke-width: 1.7;
+    }
+    .guide {
+      stroke: var(--line);
+      stroke-width: 1.1;
+      stroke-dasharray: 5 6;
+    }
+    .arrow {
+      stroke: var(--slate);
+      stroke-width: 2;
+      fill: none;
+      marker-end: url(#arrow);
+    }
+    .arrow-teal {
+      stroke: var(--teal);
+      stroke-width: 2.7;
+      fill: none;
+      marker-end: url(#arrowTeal);
+    }
+    .arrow-violet {
+      stroke: var(--violet);
+      stroke-width: 2.7;
+      fill: none;
+      marker-end: url(#arrowViolet);
+    }
+
+    .matrix-cell {
+      fill: color-mix(in srgb, var(--panel) 84%, transparent);
+      stroke: var(--line);
+      stroke-width: 1;
+      transition: .18s ease;
+    }
+    .matrix-cell.teal {
+      fill: var(--teal-soft);
+      stroke: color-mix(in srgb, var(--teal) 62%, var(--line));
+    }
+    .matrix-cell.violet {
+      fill: var(--violet-soft);
+      stroke: color-mix(in srgb, var(--violet) 62%, var(--line));
+    }
+    .matrix-cell.gold {
+      fill: var(--gold-soft);
+      stroke: color-mix(in srgb, var(--gold) 62%, var(--line));
+    }
+    .matrix-cell.red {
+      fill: var(--red-soft);
+      stroke: color-mix(in srgb, var(--red) 62%, var(--line));
+    }
+    .matrix-cell.active {
+      stroke-width: 2.4;
+      filter: drop-shadow(0 6px 10px color-mix(in srgb, var(--gold) 22%, transparent));
+      transform-box: fill-box;
+      transform-origin: center;
+      transform: scale(1.04);
+    }
+
+    .cell-value {
+      font-family: var(--serif);
+      font-size: 18px;
+      font-weight: 600;
+      text-anchor: middle;
+      dominant-baseline: middle;
+    }
+    .clickable { cursor: pointer; }
+    .clickable:hover { stroke-width: 2; filter: brightness(1.035); }
+
+    .draw-in {
+      stroke-dasharray: 500;
+      stroke-dashoffset: 500;
+      animation: drawLine .75s ease forwards;
+    }
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn .38s ease forwards;
+    }
+    .pulse {
+      animation: pulse 1.55s ease-in-out infinite;
+      transform-origin: center;
+      transform-box: fill-box;
+    }
+
+    @keyframes drawLine { to { stroke-dashoffset: 0; } }
+    @keyframes fadeIn { to { opacity: 1; } }
+    @keyframes pulse {
+      0%,100% { opacity: .58; transform: scale(.98); }
+      50% { opacity: 1; transform: scale(1.04); }
+    }
+
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar {
+        position: sticky;
+        top: 68px;
+        z-index: 20;
+        height: auto;
+        display: flex;
+        gap: 6px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        padding: 9px 10px;
+        background: color-mix(in srgb, var(--panel) 86%, transparent);
+        backdrop-filter: blur(18px);
+      }
+      .group-title { display: none; }
+      .nav-btn {
+        flex: 0 0 auto;
+        width: auto;
+        min-width: 150px;
+      }
+      .main { padding: 14px; }
+    }
+
+    @media (max-width: 680px) {
+      .topbar { padding: 11px 12px; }
+      .eyebrow { display: none; }
+      h1 { font-size: 18px; }
+      .concept-head {
+        grid-template-columns: 1fr;
+        align-items: start;
+      }
+      .concept-formula {
+        width: 100%;
+        max-width: none;
+      }
+      .main {
+        grid-template-rows: auto auto minmax(470px,1fr) auto;
+      }
+      #stage, .stage-card {
+        min-height: 470px;
+      }
+      .controlbar { grid-template-columns: 1fr; }
+      input[type="range"] { width: 105px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <p class="eyebrow">Interactive graphical mathematics</p>
+        <h1>Square Matrices — Visual Atlas</h1>
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn" id="resetBtn" title="Reset current visual" aria-label="Reset current visual">↺</button>
+        <button class="icon-btn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">◐</button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" id="sidebar" aria-label="Concept navigation"></aside>
+
+      <main class="main">
+        <section class="concept-head">
+          <div>
+            <p class="concept-kicker" id="conceptKicker"></p>
+            <h2 class="concept-title" id="conceptTitle"></h2>
+          </div>
+          <div class="concept-formula" id="conceptFormula"></div>
+        </section>
+
+        <div class="microcopy" id="microcopy"></div>
+
+        <section class="stage-card">
+          <div class="stage-badge" id="stageBadge"></div>
+          <div class="step-indicator" id="stepIndicator">ready</div>
+          <div class="remark-chip" id="remarkChip"></div>
+          <svg id="stage" viewBox="0 0 1000 580" role="img" aria-label="Interactive graphical visualization of square matrix classes"></svg>
+          <div class="hover-note" id="hoverNote"></div>
+        </section>
+
+        <section class="controlbar">
+          <div class="control-left" id="controls"></div>
+          <div class="control-right">
+            <div class="legend">
+              <span class="legend-item"><span class="dot teal"></span> allowed / original</span>
+              <span class="legend-item"><span class="dot violet"></span> transformed / matched</span>
+              <span class="legend-item"><span class="dot gold"></span> diagonal / result</span>
+              <span class="legend-item"><span class="dot red"></span> forced zero / forbidden</span>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+  const svg = document.getElementById("stage");
+  const sidebar = document.getElementById("sidebar");
+  const controls = document.getElementById("controls");
+  const hoverNote = document.getElementById("hoverNote");
+  const stageCard = document.querySelector(".stage-card");
+  const stepIndicator = document.getElementById("stepIndicator");
+  const remarkChip = document.getElementById("remarkChip");
+  const NS = "http://www.w3.org/2000/svg";
+
+  const groups = [
+    {
+      title: "Structure",
+      items: [
+        ["square", "n×n", "Square matrix"],
+        ["lower-family", "L", "Lower triangular family"],
+        ["upper-family", "U", "Upper triangular family"],
+        ["triangular", "△", "Triangular summary"]
+      ]
+    },
+    {
+      title: "Diagonal core",
+      items: [
+        ["diagonal-dg", "dg", "Diagonal part & diagonal"],
+        ["identity", "I", "Identity matrix"]
+      ]
+    },
+    {
+      title: "Transpose-based classes",
+      items: [
+        ["symmetric", "A′", "Symmetric"],
+        ["skew", "−A′", "Skew-symmetric"]
+      ]
+    },
+    {
+      title: "Metric / operator classes",
+      items: [
+        ["orthogonal", "Q", "Orthogonal"],
+        ["semi-orthogonal", "Q̃", "Semi-orthogonal"],
+        ["idempotent", "P²", "Idempotent"]
+      ]
+    }
+  ];
+
+  const concepts = {
+    square: {
+      kicker: "Definition",
+      title: "Square matrix",
+      formula: "A\\in\\mathbb{R}^{n\\times n}",
+      badge: "same number of rows and columns",
+      micro: "A square matrix fills an n-by-n grid: the row count equals the column count.",
+      remark: "shape only",
+      draw: drawSquare
+    },
+    "lower-family": {
+      kicker: "Family",
+      title: "Lower triangular family",
+      formula: "\\text{lower: }a_{ij}=0\\ (i<j),\\quad \\text{strict: }a_{ij}=0\\ (i\\le j),\\quad \\text{unit: }a_{ij}=0\\ (i<j),\\ a_{ii}=1",
+      badge: "switch among lower, strict lower, and unit lower",
+      micro: "Entries above the diagonal are forced to zero. The diagonal may be free, zero, or fixed to one, depending on the subclass.",
+      remark: "zeros above diagonal",
+      draw: drawLowerFamily
+    },
+    "upper-family": {
+      kicker: "Family",
+      title: "Upper triangular family",
+      formula: "\\text{upper: }a_{ij}=0\\ (i>j),\\quad \\text{strict: }a_{ij}=0\\ (i\\ge j),\\quad \\text{unit: }a_{ij}=0\\ (i>j),\\ a_{ii}=1",
+      badge: "switch among upper, strict upper, and unit upper",
+      micro: "Entries below the diagonal are forced to zero. The diagonal may be free, zero, or fixed to one, depending on the subclass.",
+      remark: "zeros below diagonal",
+      draw: drawUpperFamily
+    },
+    triangular: {
+      kicker: "Summary",
+      title: "Triangular matrix",
+      formula: "A\\text{ triangular }\\iff A\\text{ is lower triangular or upper triangular (or both)}",
+      badge: "triangular means lower or upper",
+      micro: "The two triangular families mirror each other across the main diagonal. A diagonal matrix belongs to both families.",
+      remark: "lower, upper, or both",
+      draw: drawTriangularSummary
+    },
+    "diagonal-dg": {
+      kicker: "Diagonal extraction",
+      title: "Diagonal part and diagonal matrices",
+      formula: "\\operatorname{dg}(A)=\\operatorname{diag}(a_{11},a_{22},\\dots,a_{nn}),\\qquad A\\text{ diagonal}\\iff A=\\operatorname{dg}(A)",
+      badge: "keep only the main diagonal",
+      micro: "The operator dg(A) erases every off-diagonal entry and preserves only the diagonal.",
+      remark: "off-diagonal entries removed",
+      draw: drawDiagonalPart
+    },
+    identity: {
+      kicker: "Particular diagonal matrix",
+      title: "Identity matrix",
+      formula: "I_n=\\operatorname{diag}(1,1,\\dots,1),\\qquad IA=AI=A",
+      badge: "ones on the diagonal, zeros elsewhere",
+      micro: "The identity leaves every matrix or vector unchanged under multiplication of the same order.",
+      remark: "neutral element",
+      draw: drawIdentity
+    },
+    symmetric: {
+      kicker: "Transpose-based class",
+      title: "Symmetric matrix",
+      formula: "A'=A",
+      badge: "mirror equality across the diagonal",
+      micro: "Each entry above the diagonal matches its mirror image below the diagonal.",
+      remark: "real square only",
+      draw: drawSymmetric
+    },
+    skew: {
+      kicker: "Transpose-based class",
+      title: "Skew-symmetric matrix",
+      formula: "A'=-A",
+      badge: "mirror entries change sign",
+      micro: "Each off-diagonal entry is the negative of its mirror. The diagonal must be zero.",
+      remark: "real square only",
+      draw: drawSkew
+    },
+    orthogonal: {
+      kicker: "Metric class",
+      title: "Orthogonal matrix",
+      formula: "AA'=A'A=I",
+      badge: "columns are orthonormal",
+      micro: "An orthogonal matrix rotates or reflects space without changing lengths or angles.",
+      remark: "real square only",
+      draw: drawOrthogonal
+    },
+    "semi-orthogonal": {
+      kicker: "Rectangular analogue",
+      title: "Semi-orthogonal matrix",
+      formula: "\\text{either }A'A=I\\text{ or }AA'=I\\text{, but not both for a non-square matrix}",
+      badge: "rectangular matrix with one orthogonality side",
+      micro: "A non-square matrix can have orthonormal columns or orthonormal rows, but not both simultaneously.",
+      remark: "rectangular, one-sided identity",
+      draw: drawSemiOrthogonal
+    },
+    idempotent: {
+      kicker: "Operator class",
+      title: "Idempotent matrix",
+      formula: "A^2=A",
+      badge: "apply twice = apply once",
+      micro: "An idempotent matrix acts like a projection: once a vector has been projected, repeating the operation does nothing new.",
+      remark: "projection-type behavior",
+      draw: drawIdempotent
+    }
+  };
+
+  let active = "square";
+  let localState = {};
+  let timers = [];
+
+  buildSidebar();
+  installDefs();
+  selectConcept(active);
+
+  function buildSidebar() {
+    sidebar.innerHTML = "";
+    groups.forEach(group => {
+      const header = document.createElement("div");
+      header.className = "group-title";
+      header.textContent = group.title;
+      sidebar.appendChild(header);
+
+      group.items.forEach(([id, icon, label]) => {
+        const btn = document.createElement("button");
+        btn.className = "nav-btn";
+        btn.dataset.id = id;
+        btn.innerHTML = `
+          <span class="nav-icon">${icon}</span>
+          <span class="nav-label">${label}</span>
+          <span class="nav-arrow">›</span>
+        `;
+        btn.addEventListener("click", () => selectConcept(id));
+        sidebar.appendChild(btn);
+      });
+    });
+  }
+
+  function selectConcept(id) {
+    stopTimers();
+    active = id;
+    localState = {};
+    document.querySelectorAll(".nav-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.id === id));
+
+    const c = concepts[id];
+    document.getElementById("conceptKicker").textContent = c.kicker;
+    document.getElementById("conceptTitle").textContent = c.title;
+    document.getElementById("stageBadge").textContent = c.badge;
+    document.getElementById("microcopy").textContent = c.micro;
+    remarkChip.textContent = c.remark;
+    stepIndicator.textContent = "ready";
+
+    const box = document.getElementById("conceptFormula");
+    box.innerHTML = "";
+    renderKatex(c.formula, box);
+
+    clearStage();
+    controls.innerHTML = "";
+    c.draw();
+  }
+
+  document.getElementById("resetBtn").addEventListener("click", () => selectConcept(active));
+
+  const root = document.documentElement;
+  root.dataset.theme = localStorage.getItem("square-matrix-atlas-theme") ||
+    (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+
+  document.getElementById("themeBtn").addEventListener("click", () => {
+    root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
+    localStorage.setItem("square-matrix-atlas-theme", root.dataset.theme);
+  });
+
+  function stopTimers() {
+    timers.forEach(clearTimeout);
+    timers = [];
+  }
+
+  function later(fn, delay) {
+    const id = setTimeout(fn, delay);
+    timers.push(id);
+    return id;
+  }
+
+  function clearStage() {
+    [...svg.children].forEach(child => {
+      if (child.tagName.toLowerCase() !== "defs") child.remove();
+    });
+    hideTooltip();
+  }
+
+  function installDefs() {
+    const defs = el("defs");
+    [
+      ["arrow", "var(--slate)"],
+      ["arrowTeal", "var(--teal)"],
+      ["arrowViolet", "var(--violet)"],
+      ["arrowGold", "var(--gold)"]
+    ].forEach(([id, fill]) => {
+      const marker = el("marker", {
+        id,
+        viewBox: "0 -5 10 10",
+        refX: 8,
+        refY: 0,
+        markerWidth: 6,
+        markerHeight: 6,
+        orient: "auto"
+      });
+      marker.appendChild(el("path", { d: "M0,-4 L9,0 L0,4 Z", fill }));
+      defs.appendChild(marker);
+    });
+    svg.appendChild(defs);
+  }
+
+  function el(tag, attrs = {}, value = null) {
+    const node = document.createElementNS(NS, tag);
+    Object.entries(attrs).forEach(([key, val]) => node.setAttribute(key, val));
+    if (value !== null) node.textContent = value;
+    return node;
+  }
+
+  function append(node) {
+    svg.appendChild(node);
+    return node;
+  }
+
+  function text(x, y, value, cls = "label", anchor = "middle", parent = svg) {
+    const t = el("text", {
+      x, y, class: cls,
+      "text-anchor": anchor,
+      "dominant-baseline": "middle"
+    }, value);
+    parent.appendChild(t);
+    return t;
+  }
+
+  function line(x1, y1, x2, y2, cls = "arrow", parent = svg) {
+    const l = el("line", { x1, y1, x2, y2, class: cls });
+    parent.appendChild(l);
+    return l;
+  }
+
+  function rect(x, y, w, h, attrs = {}, parent = svg) {
+    const r = el("rect", { x, y, width: w, height: h, rx: 14, ...attrs });
+    parent.appendChild(r);
+    return r;
+  }
+
+  function circle(cx, cy, r, attrs = {}, parent = svg) {
+    const c = el("circle", { cx, cy, r, ...attrs });
+    parent.appendChild(c);
+    return c;
+  }
+
+  function renderKatex(formula, target) {
+    if (window.katex) {
+      katex.render(formula, target, { throwOnError: false, displayMode: false });
+    } else {
+      target.textContent = formula;
+    }
+  }
+
+  function showTooltip(evt, content) {
+    const box = stageCard.getBoundingClientRect();
+    hoverNote.innerHTML = content;
+    hoverNote.style.left = `${Math.min(box.width - 290, Math.max(12, evt.clientX - box.left + 12))}px`;
+    hoverNote.style.top = `${Math.min(box.height - 90, Math.max(12, evt.clientY - box.top + 12))}px`;
+    hoverNote.classList.add("show");
+  }
+
+  function hideTooltip() {
+    hoverNote.classList.remove("show");
+  }
+
+  function makeButton(label, handler, className = "") {
+    const btn = document.createElement("button");
+    btn.className = `control-btn ${className}`.trim();
+    btn.textContent = label;
+    btn.addEventListener("click", handler);
+    controls.appendChild(btn);
+    return btn;
+  }
+
+  function makeSegment(options, initial, onChange) {
+    const wrap = document.createElement("div");
+    wrap.className = "segmented";
+    options.forEach(option => {
+      const btn = document.createElement("button");
+      btn.className = "seg-btn" + (option.value === initial ? " active" : "");
+      btn.textContent = option.label;
+      btn.addEventListener("click", () => {
+        wrap.querySelectorAll(".seg-btn").forEach(x => x.classList.remove("active"));
+        btn.classList.add("active");
+        onChange(option.value);
+      });
+      wrap.appendChild(btn);
+    });
+    controls.appendChild(wrap);
+  }
+
+  function makeSlider(label, min, max, step, value, onInput) {
+    const wrap = document.createElement("label");
+    wrap.className = "slider-wrap";
+    const name = document.createElement("span");
+    name.textContent = label;
+    const input = document.createElement("input");
+    input.type = "range";
+    input.min = min;
+    input.max = max;
+    input.step = step;
+    input.value = value;
+    const output = document.createElement("span");
+    output.textContent = value;
+    input.addEventListener("input", () => {
+      output.textContent = input.value;
+      onInput(Number(input.value));
+    });
+    wrap.append(name, input, output);
+    controls.appendChild(wrap);
+  }
+
+  function formatNum(value) {
+    const rounded = Math.round(value * 100) / 100;
+    return Number.isInteger(rounded) ? String(rounded) : String(rounded);
+  }
+
+  function matrixTranspose(A) {
+    return A[0].map((_, j) => A.map(row => row[j]));
+  }
+
+  function matrixMultiply(A, B) {
+    return A.map(row => B[0].map((_, k) => row.reduce((sum, val, j) => sum + val * B[j][k], 0)));
+  }
+
+  function drawMatrix(data, x, y, options = {}) {
+    const rows = data.length;
+    const cols = data[0].length;
+    const cw = options.cw || 72;
+    const ch = options.ch || 58;
+    const klass = options.klass || "";
+    const cells = [];
+    const group = append(el("g", { class: options.animate === false ? "" : "fade-in" }));
+
+    data.forEach((row, i) => {
+      row.forEach((value, j) => {
+        const cell = el("rect", {
+          x: x + j * cw,
+          y: y + i * ch,
+          width: cw - 6,
+          height: ch - 6,
+          rx: 10,
+          class: `matrix-cell ${klass} ${options.clickable ? "clickable" : ""}`
+        });
+        const label = el("text", {
+          x: x + j * cw + (cw - 6) / 2,
+          y: y + i * ch + (ch - 6) / 2,
+          class: "cell-value"
+        }, value);
+        group.append(cell, label);
+        cells.push({ cell, label, row: i, col: j, x: x + j * cw, y: y + i * ch });
+      });
+    });
+
+    const width = cols * cw - 6;
+    const height = rows * ch - 6;
+
+    group.appendChild(el("path", {
+      d: `M${x-16},${y} q-10,0 -10,10 v${height-20} q0,10 10,10`,
+      fill: "none", stroke: "var(--ink)", "stroke-width": 2
+    }));
+    group.appendChild(el("path", {
+      d: `M${x+width+16},${y} q10,0 10,10 v${height-20} q0,10 -10,10`,
+      fill: "none", stroke: "var(--ink)", "stroke-width": 2
+    }));
+
+    return { group, cells, rows, cols, cw, ch, x, y, width, height };
+  }
+
+  function shadeCell(cell, kind) {
+    cell.cell.classList.add(kind);
+  }
+
+  function pairLabel(i, j) {
+    return `a${toSub(i+1)}${toSub(j+1)}`;
+  }
+
+  function toSub(n) {
+    return String(n).replace(/\d/g, digit => "₀₁₂₃₄₅₆₇₈₉"[Number(digit)]);
+  }
+
+  function drawSquare() {
+    localState.n = localState.n || 4;
+    const n = localState.n;
+    const data = Array.from({ length: n }, (_, i) =>
+      Array.from({ length: n }, (_, j) => i === j ? `a${toSub(i+1)}${toSub(j+1)}` : `a${toSub(i+1)}${toSub(j+1)}`)
+    );
+    const m = drawMatrix(data, 310, 110, { cw: 82, ch: 68, klass: "teal", clickable: true });
+
+    text(500, 70, `${n} rows`, "small-label");
+    text(275, 255, `${n} cols`, "small-label", "end");
+    line(315, 90, 640, 90, "arrow-teal").classList.add("draw-in");
+    line(288, 114, 288, 380, "arrow-violet").classList.add("draw-in");
+
+    m.cells.forEach(cell => {
+      cell.cell.addEventListener("mousemove", evt => showTooltip(evt, `<strong>${pairLabel(cell.row, cell.col)}</strong><br>row ${cell.row+1}, column ${cell.col+1}`));
+      cell.cell.addEventListener("mouseleave", hideTooltip);
+    });
+
+    text(500, 455, `n × n means: ${n} rows and ${n} columns`, "big-label");
+    text(500, 505, "Only when the two counts match is the matrix square.", "label");
+
+    makeSlider("n", 2, 6, 1, n, value => {
+      localState.n = value;
+      clearStage(); controls.innerHTML = ""; drawSquare();
+    });
+
+    stepIndicator.textContent = `${n} × ${n}`;
+  }
+
+  function drawTriangularTemplate(mode) {
+    const n = 5;
+    const data = Array.from({ length: n }, (_, i) =>
+      Array.from({ length: n }, (_, j) => {
+        if (mode === "lower") {
+          if (j > i) return "0";
+          if (j === i) return `d${toSub(i+1)}`;
+          return `ℓ${toSub(i+1)}${toSub(j+1)}`;
+        }
+        if (mode === "strict-lower") {
+          if (j >= i) return "0";
+          return `ℓ${toSub(i+1)}${toSub(j+1)}`;
+        }
+        if (mode === "unit-lower") {
+          if (j > i) return "0";
+          if (j === i) return "1";
+          return `ℓ${toSub(i+1)}${toSub(j+1)}`;
+        }
+        if (mode === "upper") {
+          if (i > j) return "0";
+          if (i === j) return `d${toSub(i+1)}`;
+          return `u${toSub(i+1)}${toSub(j+1)}`;
+        }
+        if (mode === "strict-upper") {
+          if (i >= j) return "0";
+          return `u${toSub(i+1)}${toSub(j+1)}`;
+        }
+        if (mode === "unit-upper") {
+          if (i > j) return "0";
+          if (i === j) return "1";
+          return `u${toSub(i+1)}${toSub(j+1)}`;
+        }
+      })
+    );
+
+    const m = drawMatrix(data, 330, 95, { cw: 72, ch: 58, clickable: true });
+    m.cells.forEach(cell => {
+      const i = cell.row, j = cell.col;
+      const above = j > i;
+      const below = i > j;
+      const diag = i === j;
+
+      if (mode.includes("lower")) {
+        if (above) shadeCell(cell, "red");
+        if (diag && mode === "unit-lower") shadeCell(cell, "gold");
+        if (diag && mode === "strict-lower") shadeCell(cell, "red");
+        if (!above && !(diag && mode === "strict-lower")) if (!(diag && mode === "unit-lower")) shadeCell(cell, "teal");
+      } else {
+        if (below) shadeCell(cell, "red");
+        if (diag && mode === "unit-upper") shadeCell(cell, "gold");
+        if (diag && mode === "strict-upper") shadeCell(cell, "red");
+        if (!below && !(diag && mode === "strict-upper")) if (!(diag && mode === "unit-upper")) shadeCell(cell, "teal");
+      }
+
+      if (diag && mode === "lower") shadeCell(cell, "gold");
+      if (diag && mode === "upper") shadeCell(cell, "gold");
+
+      cell.cell.addEventListener("mousemove", evt => {
+        const role =
+          mode === "lower" ? (above ? "forced zero (above diagonal)" : diag ? "diagonal entry" : "free lower entry") :
+          mode === "strict-lower" ? (j >= i ? "forced zero (on or above diagonal)" : "free lower entry") :
+          mode === "unit-lower" ? (above ? "forced zero (above diagonal)" : diag ? "fixed to one" : "free lower entry") :
+          mode === "upper" ? (below ? "forced zero (below diagonal)" : diag ? "diagonal entry" : "free upper entry") :
+          mode === "strict-upper" ? (i >= j ? "forced zero (on or below diagonal)" : "free upper entry") :
+          (below ? "forced zero (below diagonal)" : diag ? "fixed to one" : "free upper entry");
+        showTooltip(evt, `<strong>${data[i][j]}</strong><br>${role}`);
+      });
+      cell.cell.addEventListener("mouseleave", hideTooltip);
+    });
+
+    append(el("path", {
+      d: `M330,95 L684,379`,
+      class: "guide"
+    }));
+  }
+
+  function drawLowerFamily() {
+    localState.kind = localState.kind || "lower";
+    const kind = localState.kind;
+
+    makeSegment([
+      { label: "lower", value: "lower" },
+      { label: "strict", value: "strict-lower" },
+      { label: "unit", value: "unit-lower" }
+    ], kind, value => {
+      localState.kind = value;
+      clearStage(); controls.innerHTML = ""; drawLowerFamily();
+    });
+
+    drawTriangularTemplate(kind);
+    text(500, 425,
+      kind === "lower" ? "Above-diagonal region = 0" :
+      kind === "strict-lower" ? "Diagonal and above-diagonal region = 0" :
+      "Above-diagonal region = 0, diagonal = 1",
+      "big-label"
+    );
+    text(500, 475, "The lower-left region is the only place where free entries may remain.", "label");
+    stepIndicator.textContent =
+      kind === "lower" ? "lower triangular" :
+      kind === "strict-lower" ? "strictly lower" : "unit lower";
+  }
+
+  function drawUpperFamily() {
+    localState.kind = localState.kind || "upper";
+    const kind = localState.kind;
+
+    makeSegment([
+      { label: "upper", value: "upper" },
+      { label: "strict", value: "strict-upper" },
+      { label: "unit", value: "unit-upper" }
+    ], kind, value => {
+      localState.kind = value;
+      clearStage(); controls.innerHTML = ""; drawUpperFamily();
+    });
+
+    drawTriangularTemplate(kind);
+    text(500, 425,
+      kind === "upper" ? "Below-diagonal region = 0" :
+      kind === "strict-upper" ? "Diagonal and below-diagonal region = 0" :
+      "Below-diagonal region = 0, diagonal = 1",
+      "big-label"
+    );
+    text(500, 475, "The upper-right region is the only place where free entries may remain.", "label");
+    stepIndicator.textContent =
+      kind === "upper" ? "upper triangular" :
+      kind === "strict-upper" ? "strictly upper" : "unit upper";
+  }
+
+  function drawTriangularSummary() {
+    localState.which = localState.which || "both";
+    makeSegment([
+      { label: "lower", value: "lower" },
+      { label: "upper", value: "upper" },
+      { label: "diagonal (both)", value: "diagonal" },
+      { label: "both families", value: "both" }
+    ], localState.which, value => {
+      localState.which = value;
+      clearStage(); controls.innerHTML = ""; drawTriangularSummary();
+    });
+
+    if (localState.which === "lower" || localState.which === "both") {
+      const left = drawMatrix([
+        ["d₁","0","0","0"],
+        ["ℓ₂₁","d₂","0","0"],
+        ["ℓ₃₁","ℓ₃₂","d₃","0"],
+        ["ℓ₄₁","ℓ₄₂","ℓ₄₃","d₄"]
+      ], 120, 145, { cw: 66, ch: 56 });
+      left.cells.forEach(c => {
+        if (c.col > c.row) shadeCell(c, "red");
+        else if (c.col === c.row) shadeCell(c, "gold");
+        else shadeCell(c, "teal");
+      });
+      text(245, 105, "lower", "big-label");
+    }
+
+    if (localState.which === "upper" || localState.which === "both") {
+      const right = drawMatrix([
+        ["d₁","u₁₂","u₁₃","u₁₄"],
+        ["0","d₂","u₂₃","u₂₄"],
+        ["0","0","d₃","u₃₄"],
+        ["0","0","0","d₄"]
+      ], localState.which === "both" ? 590 : 340, 145, { cw: 66, ch: 56 });
+      right.cells.forEach(c => {
+        if (c.row > c.col) shadeCell(c, "red");
+        else if (c.row === c.col) shadeCell(c, "gold");
+        else shadeCell(c, "teal");
+      });
+      text(localState.which === "both" ? 715 : 465, 105, "upper", "big-label");
+    }
+
+    if (localState.which === "diagonal") {
+      const diag = drawMatrix([
+        ["d₁","0","0","0"],
+        ["0","d₂","0","0"],
+        ["0","0","d₃","0"],
+        ["0","0","0","d₄"]
+      ], 340, 145, { cw: 66, ch: 56 });
+      diag.cells.forEach(c => {
+        if (c.row === c.col) shadeCell(c, "gold");
+        else shadeCell(c, "red");
+      });
+      text(500, 105, "diagonal", "big-label");
+      text(500, 430, "A diagonal matrix is simultaneously lower triangular and upper triangular.", "big-label");
+    } else {
+      text(500, 430, "Triangular means: lower OR upper. Diagonal matrices sit in the overlap.", "big-label");
+    }
+
+    text(500, 485, "The main diagonal is the boundary line between the two triangular regions.", "label");
+    stepIndicator.textContent = localState.which;
+  }
+
+  function drawDiagonalPart() {
+    const A = [
+      ["a₁₁","a₁₂","a₁₃","a₁₄"],
+      ["a₂₁","a₂₂","a₂₃","a₂₄"],
+      ["a₃₁","a₃₂","a₃₃","a₃₄"],
+      ["a₄₁","a₄₂","a₄₃","a₄₄"]
+    ];
+    const dA = [
+      ["a₁₁","0","0","0"],
+      ["0","a₂₂","0","0"],
+      ["0","0","a₃₃","0"],
+      ["0","0","0","a₄₄"]
+    ];
+
+    const mA = drawMatrix(A, 90, 120, { cw: 70, ch: 58 });
+    const md = drawMatrix(dA, 620, 120, { cw: 70, ch: 58 });
+
+    mA.cells.forEach(c => {
+      if (c.row === c.col) shadeCell(c, "gold");
+      else shadeCell(c, "teal");
+    });
+    md.cells.forEach(c => {
+      if (c.row === c.col) shadeCell(c, "gold");
+      else shadeCell(c, "red");
+    });
+
+    text(225, 80, "A", "big-label");
+    text(760, 80, "dg(A)", "big-label");
+    line(395, 230, 560, 230, "arrow-teal").classList.add("draw-in");
+    text(478, 192, "erase off-diagonal entries", "small-label");
+
+    text(500, 430, "dg(A) keeps only the main diagonal of A", "big-label");
+    text(500, 485, "A is diagonal exactly when nothing changes under dg(A).", "label");
+
+    makeButton("Show diagonal matrix example", () => {
+      clearStage(); controls.innerHTML = "";
+      const diag = drawMatrix(dA, 320, 125, { cw: 76, ch: 60 });
+      diag.cells.forEach(c => {
+        if (c.row === c.col) shadeCell(c, "gold");
+        else shadeCell(c, "red");
+      });
+      text(500, 95, "A = dg(A)", "big-label");
+      text(500, 430, "All off-diagonal entries are zero.", "big-label");
+      text(500, 485, "This is what it means to be diagonal.", "label");
+      stepIndicator.textContent = "diagonal";
+    }, "primary");
+
+    stepIndicator.textContent = "extract diagonal";
+  }
+
+  function drawIdentity() {
+    const A = [
+      ["a₁₁","a₁₂","a₁₃"],
+      ["a₂₁","a₂₂","a₂₃"],
+      ["a₃₁","a₃₂","a₃₃"]
+    ];
+    const I = [
+      ["1","0","0"],
+      ["0","1","0"],
+      ["0","0","1"]
+    ];
+    localState.side = localState.side || "left";
+
+    makeSegment([
+      { label: "IA = A", value: "left" },
+      { label: "AI = A", value: "right" },
+      { label: "identity itself", value: "self" }
+    ], localState.side, value => {
+      localState.side = value;
+      clearStage(); controls.innerHTML = ""; drawIdentity();
+    });
+
+    if (localState.side === "self") {
+      const mI = drawMatrix(I, 345, 130, { cw: 82, ch: 70 });
+      mI.cells.forEach(c => {
+        if (c.row === c.col) shadeCell(c, "gold");
+        else shadeCell(c, "red");
+      });
+      text(500, 90, "I₃", "big-label");
+      text(500, 430, "Identity = ones on the diagonal, zeros elsewhere", "big-label");
+      text(500, 485, "It is a particular diagonal matrix.", "label");
+      stepIndicator.textContent = "identity matrix";
+      return;
+    }
+
+    drawMatrix(I, 90, 145, { cw: 65, ch: 56 }).cells.forEach(c => {
+      if (c.row === c.col) c.cell.classList.add("gold");
+      else c.cell.classList.add("red");
+    });
+    text(185, 105, "I", "big-label");
+    text(285, 228, "×", "big-label");
+    drawMatrix(A, 350, 145, { cw: 65, ch: 56 }).cells.forEach(c => c.cell.classList.add("teal"));
+    text(445, 105, localState.side === "left" ? "A" : "A", "big-label");
+    text(555, 228, "=", "big-label");
+    drawMatrix(A, 620, 145, { cw: 65, ch: 56 }).cells.forEach(c => c.cell.classList.add("teal"));
+    text(715, 105, "A", "big-label");
+
+    if (localState.side === "right") {
+      clearStage();
+      drawMatrix(A, 90, 145, { cw: 65, ch: 56 }).cells.forEach(c => c.cell.classList.add("teal"));
+      text(185, 105, "A", "big-label");
+      text(285, 228, "×", "big-label");
+      drawMatrix(I, 350, 145, { cw: 65, ch: 56 }).cells.forEach(c => {
+        if (c.row === c.col) c.cell.classList.add("gold");
+        else c.cell.classList.add("red");
+      });
+      text(445, 105, "I", "big-label");
+      text(555, 228, "=", "big-label");
+      drawMatrix(A, 620, 145, { cw: 65, ch: 56 }).cells.forEach(c => c.cell.classList.add("teal"));
+      text(715, 105, "A", "big-label");
+    }
+
+    text(500, 430, localState.side === "left" ? "Left multiplication by I changes nothing." : "Right multiplication by I changes nothing.", "big-label");
+    text(500, 485, "Identity is the multiplicative neutral element of the correct order.", "label");
+    stepIndicator.textContent = localState.side === "left" ? "IA = A" : "AI = A";
+  }
+
+  function drawSymmetric() {
+    const A = [
+      ["2","3","−1","4"],
+      ["3","5","0","2"],
+      ["−1","0","1","7"],
+      ["4","2","7","6"]
+    ];
+    localState.pair = localState.pair || [0,1];
+
+    const m = drawMatrix(A, 320, 110, { cw: 72, ch: 58, clickable: true });
+    append(el("path", { d: `M320,110 L602,336`, class: "guide" }));
+
+    m.cells.forEach(cell => {
+      const i = cell.row, j = cell.col;
+      if (i === j) shadeCell(cell, "gold");
+      else if (i < j) shadeCell(cell, "teal");
+      else shadeCell(cell, "violet");
+
+      cell.cell.addEventListener("click", () => {
+        localState.pair = [i, j];
+        clearStage(); controls.innerHTML = ""; drawSymmetric();
+      });
+    });
+
+    const [i, j] = localState.pair;
+    const c1 = m.cells.find(c => c.row === i && c.col === j);
+    const c2 = m.cells.find(c => c.row === j && c.col === i);
+    c1.cell.classList.add("active");
+    c2.cell.classList.add("active");
+
+    const x1 = c1.x + 33, y1 = c1.y + 26;
+    const x2 = c2.x + 33, y2 = c2.y + 26;
+    append(el("path", {
+      d: `M${x1},${y1} Q${(x1+x2)/2+40},${(y1+y2)/2} ${x2},${y2}`,
+      class: "arrow-violet draw-in"
+    }));
+
+    text(500, 70, "mirror across the diagonal", "small-label");
+    text(500, 420, `a${toSub(i+1)}${toSub(j+1)} = a${toSub(j+1)}${toSub(i+1)}`, "big-label");
+    text(500, 475, "Choose any off-diagonal entry: its reflected partner must be equal.", "label");
+
+    stepIndicator.textContent = `${i+1},${j+1} ↔ ${j+1},${i+1}`;
+  }
+
+  function drawSkew() {
+    const A = [
+      ["0","2","−3","1"],
+      ["−2","0","4","5"],
+      ["3","−4","0","−6"],
+      ["−1","−5","6","0"]
+    ];
+    localState.pair = localState.pair || [0,1];
+
+    const m = drawMatrix(A, 320, 110, { cw: 72, ch: 58, clickable: true });
+    append(el("path", { d: `M320,110 L602,336`, class: "guide" }));
+
+    m.cells.forEach(cell => {
+      const i = cell.row, j = cell.col;
+      if (i === j) shadeCell(cell, "red");
+      else if (i < j) shadeCell(cell, "teal");
+      else shadeCell(cell, "violet");
+
+      cell.cell.addEventListener("click", () => {
+        localState.pair = [i, j];
+        clearStage(); controls.innerHTML = ""; drawSkew();
+      });
+    });
+
+    const [i, j] = localState.pair;
+    const c1 = m.cells.find(c => c.row === i && c.col === j);
+    const c2 = m.cells.find(c => c.row === j && c.col === i);
+    c1.cell.classList.add("active");
+    c2.cell.classList.add("active");
+
+    text(500, 70, "mirror across diagonal, then change sign", "small-label");
+    text(500, 420, `a${toSub(i+1)}${toSub(j+1)} = -a${toSub(j+1)}${toSub(i+1)}`, "big-label");
+    text(500, 470, "The diagonal must satisfy aᵢᵢ = −aᵢᵢ, hence aᵢᵢ = 0.", "big-label");
+    text(500, 515, "Skew-symmetry forces zeros on the diagonal.", "label");
+
+    stepIndicator.textContent = "diagonal = 0";
+  }
+
+  function drawOrthogonal() {
+    localState.theta = localState.theta ?? 35;
+    const theta = localState.theta * Math.PI / 180;
+    const O = { x: 300, y: 315 };
+    const scale = 110;
+
+    line(70, O.y, 560, O.y, "axis");
+    line(O.x, 520, O.x, 95, "axis");
+    text(575, O.y, "x₁", "label", "start");
+    text(O.x, 75, "x₂", "label");
+
+    const e1 = { x: O.x + scale, y: O.y };
+    const e2 = { x: O.x, y: O.y - scale };
+    const q1 = { x: O.x + scale * Math.cos(theta), y: O.y - scale * Math.sin(theta) };
+    const q2 = { x: O.x - scale * Math.sin(theta), y: O.y - scale * Math.cos(theta) };
+
+    line(O.x, O.y, e1.x, e1.y, "guide");
+    line(O.x, O.y, e2.x, e2.y, "guide");
+    line(O.x, O.y, q1.x, q1.y, "arrow-teal").classList.add("draw-in");
+    line(O.x, O.y, q2.x, q2.y, "arrow-violet").classList.add("draw-in");
+    circle(q1.x, q1.y, 7, { fill: "var(--teal)" });
+    circle(q2.x, q2.y, 7, { fill: "var(--violet)" });
+    append(el("circle", {
+      cx: O.x, cy: O.y, r: scale,
+      fill: "none", stroke: "var(--line)", "stroke-width": 1.2, "stroke-dasharray": "5 6"
+    }));
+    text(q1.x + 18, q1.y - 12, "q₁", "label", "start");
+    text(q2.x - 18, q2.y - 12, "q₂", "label", "end");
+
+    const Q = [
+      [formatNum(Math.cos(theta)), formatNum(-Math.sin(theta))],
+      [formatNum(Math.sin(theta)), formatNum(Math.cos(theta))]
+    ];
+    const m = drawMatrix(Q, 655, 140, { cw: 84, ch: 70 });
+    m.cells.forEach((c, idx) => {
+      if (idx < 2) c.cell.classList.add("teal");
+      else c.cell.classList.add("violet");
+    });
+    text(740, 100, "Q", "big-label");
+    text(740, 265, "columns = orthonormal vectors", "label");
+
+    text(500, 445, "Orthogonal matrices preserve length and angle", "big-label");
+    text(500, 495, "Geometrically: rotation or reflection. Algebraically: Q′Q = QQ′ = I.", "label");
+
+    makeSlider("angle", -180, 180, 5, localState.theta, value => {
+      localState.theta = value;
+      clearStage(); controls.innerHTML = ""; drawOrthogonal();
+    });
+
+    makeButton("quarter-turn", () => {
+      localState.theta = 90; clearStage(); controls.innerHTML = ""; drawOrthogonal();
+    });
+
+    stepIndicator.textContent = `θ = ${localState.theta}°`;
+  }
+
+  function drawSemiOrthogonal() {
+    localState.kind = localState.kind || "tall";
+
+    makeSegment([
+      { label: "tall: A′A = I", value: "tall" },
+      { label: "wide: AA′ = I", value: "wide" }
+    ], localState.kind, value => {
+      localState.kind = value;
+      clearStage(); controls.innerHTML = ""; drawSemiOrthogonal();
+    });
+
+    if (localState.kind === "tall") {
+      const A = [
+        ["q₁₁","q₁₂"],
+        ["q₂₁","q₂₂"],
+        ["q₃₁","q₃₂"]
+      ];
+      const m = drawMatrix(A, 210, 145, { cw: 90, ch: 72 });
+      m.cells.forEach(c => c.cell.classList.add("teal"));
+      text(300, 105, "A ∈ ℝ³×²", "big-label");
+      line(420, 250, 570, 250, "arrow-teal").classList.add("draw-in");
+      const id = drawMatrix([["1","0"],["0","1"]], 645, 180, { cw: 84, ch: 70 });
+      id.cells.forEach(c => c.row === c.col ? c.cell.classList.add("gold") : c.cell.classList.add("red"));
+      text(740, 140, "A′A = I₂", "big-label");
+      text(500, 435, "Columns are orthonormal", "big-label");
+      text(500, 485, "Because the matrix is tall, AA′ cannot also be an identity of size 3×3.", "label");
+      stepIndicator.textContent = "orthonormal columns";
+    } else {
+      const A = [
+        ["r₁₁","r₁₂","r₁₃"],
+        ["r₂₁","r₂₂","r₂₃"]
+      ];
+      const m = drawMatrix(A, 170, 180, { cw: 80, ch: 72 });
+      m.cells.forEach(c => c.cell.classList.add("violet"));
+      text(290, 140, "A ∈ ℝ²×³", "big-label");
+      line(430, 250, 575, 250, "arrow-violet").classList.add("draw-in");
+      const id = drawMatrix([["1","0"],["0","1"]], 650, 180, { cw: 84, ch: 70 });
+      id.cells.forEach(c => c.row === c.col ? c.cell.classList.add("gold") : c.cell.classList.add("red"));
+      text(745, 140, "AA′ = I₂", "big-label");
+      text(500, 435, "Rows are orthonormal", "big-label");
+      text(500, 485, "Because the matrix is wide, A′A cannot also be an identity of size 3×3.", "label");
+      stepIndicator.textContent = "orthonormal rows";
+    }
+  }
+
+  function drawIdempotent() {
+    localState.vx = localState.vx ?? 2.5;
+    localState.vy = localState.vy ?? 3.2;
+    const O = { x: 175, y: 345 };
+    const scale = 55;
+
+    const v = { x: O.x + localState.vx * scale, y: O.y - localState.vy * scale };
+    const Pv = { x: O.x + localState.vx * scale, y: O.y };
+    const PPv = Pv;
+
+    line(55, O.y, 390, O.y, "axis");
+    line(O.x, 505, O.x, 110, "axis");
+    text(402, O.y, "x-axis", "label", "start");
+
+    line(O.x, O.y, v.x, v.y, "arrow-violet").classList.add("draw-in");
+    line(O.x, O.y, Pv.x, Pv.y, "arrow-teal").classList.add("draw-in");
+    line(v.x, v.y, Pv.x, Pv.y, "guide");
+    circle(v.x, v.y, 8, { fill: "var(--violet)" });
+    circle(Pv.x, Pv.y, 8, { fill: "var(--teal)" });
+    text(v.x + 16, v.y - 14, "v", "label", "start");
+    text(Pv.x + 16, Pv.y - 16, "Pv", "label", "start");
+
+    const P = [["1","0"],["0","0"]];
+    const mP = drawMatrix(P, 520, 150, { cw: 84, ch: 70 });
+    mP.cells.forEach(c => {
+      if (c.row === 0 && c.col === 0) c.cell.classList.add("gold");
+      else c.cell.classList.add("red");
+    });
+    text(605, 110, "P", "big-label");
+
+    line(640, 260, 760, 260, "arrow-teal").classList.add("draw-in");
+    rect(790, 215, 110, 90, { class: "matrix-cell gold" });
+    text(845, 258, "P² = P", "label");
+
+    text(500, 430, "P projects every vector onto the x-axis", "big-label");
+    text(500, 480, "Once projected, applying P again does nothing new: P(Pv) = Pv.", "label");
+
+    makeSlider("v₁", -1, 5, 0.5, localState.vx, value => {
+      localState.vx = value; clearStage(); controls.innerHTML = ""; drawIdempotent();
+    });
+    makeSlider("v₂", -1, 5, 0.5, localState.vy, value => {
+      localState.vy = value; clearStage(); controls.innerHTML = ""; drawIdempotent();
+    });
+
+    stepIndicator.textContent = "projection";
+  }
+});
+</script>
+</body>
+</html>
