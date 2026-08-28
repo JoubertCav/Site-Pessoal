@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>OLS as an Orthogonal Decomposition · 3D</title>
+<style>
+:root{
+  --paper:#f6f2ea;--card:#fffdf9;--ink:#12243b;--muted:#6f7e8b;--line:#ddd7cc;--grid:#e8e3da;
+  --cyan:#08a9c4;--cyan-dark:#087d90;--cyan-soft:#e7f7fa;
+  --mag:#c93a7b;--mag-soft:#f9e6ef;
+  --amber:#c48620;--amber-soft:#fff2d2;
+  --ghost:#9baab0;--shadow:0 10px 28px rgba(18,36,59,.07);--radius:20px
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+body{min-height:100vh;background-image:radial-gradient(circle at 12% 8%,rgba(8,169,196,.035),transparent 24%)}
+button,input,select{font:inherit}
+button{color:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:3px solid rgba(8,169,196,.25);outline-offset:2px}
+.app{max-width:1600px;margin:0 auto;padding:16px}
+.header{display:flex;justify-content:space-between;align-items:center;gap:18px;background:rgba(255,253,249,.9);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow)}
+.topic{min-width:0}
+.eyebrow{font-size:11px;font-weight:900;letter-spacing:.15em;text-transform:uppercase;color:var(--cyan-dark);margin-bottom:6px}
+h1{margin:0;font-size:clamp(22px,2.2vw,30px);font-weight:780;letter-spacing:-.03em}
+.subtitle{margin-top:7px;font-size:13.5px;line-height:1.45;color:var(--muted);max-width:930px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:rgba(255,255,255,.7);border-radius:12px;padding:9px 13px;font-weight:800;cursor:pointer;box-shadow:0 1px 0 rgba(255,255,255,.9) inset;transition:.15s}
+.btn:hover{transform:translateY(-1px);border-color:#b6c0c3}
+.btn.primary{background:var(--ink);border-color:var(--ink);color:white}
+.layout{display:grid;grid-template-columns:280px minmax(0,1fr) 360px;gap:16px;margin-top:16px;align-items:start}
+.card{background:rgba(255,253,249,.95);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.controls,.inspector{padding:16px}
+.controls{position:sticky;top:14px}
+.inspector{position:sticky;top:14px}
+.sectionTitle{font-size:11px;text-transform:uppercase;letter-spacing:.13em;font-weight:900;color:var(--muted);margin:0 0 10px}
+.control{padding:14px 0;border-top:1px solid rgba(221,215,204,.85)}
+.control:first-of-type{border-top:0;padding-top:0}
+.labelRow{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:8px;font-size:13px}
+.range{width:100%;accent-color:var(--cyan)}
+.value{font-variant-numeric:tabular-nums;color:var(--cyan-dark);font-weight:800}
+.toggleRow{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.switch{position:relative;width:48px;height:28px;flex:0 0 auto}
+.switch input{opacity:0;width:0;height:0}
+.track{position:absolute;inset:0;border-radius:999px;background:#cac7c0;cursor:pointer;transition:.2s}
+.track:before{content:"";position:absolute;width:20px;height:20px;left:4px;top:4px;border-radius:50%;background:white;box-shadow:0 1px 4px rgba(0,0,0,.22);transition:.2s}
+.switch input:checked + .track{background:var(--cyan)}
+.switch input:checked + .track:before{transform:translateX(20px)}
+.select{width:100%;border:1px solid var(--line);background:#fcfaf6;border-radius:11px;padding:9px 10px;color:var(--ink)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.step{border:1px solid var(--line);background:#fcfaf6;border-radius:10px;padding:8px 0;font-size:12px;font-weight:850;cursor:pointer}
+.step.active{border-color:var(--cyan);background:var(--cyan-soft);color:#086e80}
+.note{margin-top:10px;padding:11px 12px;border-radius:12px;border:1px solid #c8e7ea;background:#f1fbfb;font-size:12px;line-height:1.5}
+.note.warn{background:var(--amber-soft);border-color:#dfbc70;color:#694a0b}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:7px;font-size:11px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:7px}
+.sw{width:16px;height:3px;border-radius:3px;background:var(--ink)}
+.sw.c{background:var(--cyan)} .sw.m{background:var(--mag)} .sw.a{background:var(--amber)} .sw.g{background:var(--ghost)}
+.sw.p{width:11px;height:11px;border-radius:50%;background:rgba(8,169,196,.18);box-shadow:0 0 0 2px rgba(8,169,196,.32)}
+.tip{margin-top:10px;padding:11px 12px;border-radius:12px;border:1px solid #d9e3e6;background:#f5f8f7;font-size:12px;line-height:1.45;color:#536474}
+.tip strong{display:block;color:var(--ink);margin-bottom:4px}
+.main{display:flex;flex-direction:column;gap:14px}
+.eqCard{padding:16px 18px}
+.eqMain{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 0;font-family:Cambria,"Times New Roman",serif;font-size:clamp(20px,2.2vw,29px)}
+.eqTerm{padding:3px 6px;border-radius:8px}
+.eqTerm.c{background:var(--cyan-soft);color:var(--cyan-dark)}
+.eqTerm.m{background:var(--mag-soft);color:var(--mag)}
+.eqTerm.a{background:var(--amber-soft);color:#8b5c11}
+.eqSub{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
+.eqBox{border:1px solid var(--line);background:#fcfaf6;border-radius:12px;padding:11px;text-align:center;font-family:Cambria,"Times New Roman",serif;font-size:15px}
+.vizCard{padding:13px}
+.vizHead{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:4px 6px 11px}
+.vizTitle{font-weight:800;letter-spacing:-.01em}
+.badge{display:flex;align-items:center;gap:7px;border:1px solid #bce4e9;background:#effafb;color:#096e80;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:900}
+.badge.warn{background:var(--amber-soft);border-color:#dfbc70;color:#694a0b}
+.dot{width:8px;height:8px;border-radius:50%;background:currentColor}
+.canvasWrap{position:relative;height:min(72vh,740px);min-height:570px;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fcfaf6;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
+canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+canvas.dragging{cursor:grabbing}
+canvas.dragPoint{cursor:move}
+.tooltip{position:absolute;pointer-events:none;opacity:0;background:rgba(18,36,59,.95);color:white;border-radius:8px;padding:7px 8px;font-size:11px;line-height:1.4;white-space:nowrap;transform:translate(12px,-10px)}
+.scenePanel{position:absolute;left:14px;top:14px;z-index:3;width:198px;border:1px solid var(--line);border-radius:12px;background:rgba(255,253,249,.94);padding:9px 10px;box-shadow:0 5px 16px rgba(18,36,59,.055);pointer-events:none}
+.scenePanelTitle{font-size:9px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+.sceneRow{display:flex;justify-content:space-between;gap:8px;font:700 10px/1.4 ui-monospace,monospace;margin:4px 0}
+.sceneRow strong{color:var(--cyan-dark)}
+.sceneRow.warn strong{color:var(--amber)}
+.sceneRow.sep{padding-top:6px;margin-top:6px;border-top:1px solid var(--line)}
+.orbitHint{position:absolute;right:12px;bottom:10px;font-size:11px;color:var(--muted);background:rgba(255,253,249,.92);padding:6px 9px;border-radius:9px;border:1px solid var(--line);pointer-events:none;backdrop-filter:blur(6px)}
+.what{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:14px}
+.what>div{border:1px solid var(--line);background:#fcfaf6;border-radius:12px;padding:12px;font-size:12px;line-height:1.5}
+.what b{display:block;margin-bottom:4px}
+.statGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat{border:1px solid var(--line);background:#fcfaf6;border-radius:12px;padding:10px}
+.k{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:850}
+.v{font-size:17px;font-weight:900;margin-top:4px;font-variant-numeric:tabular-nums}
+.cyan{color:var(--cyan-dark)} .mag{color:var(--mag)} .amber{color:var(--amber)}
+.matrixBlock{margin-top:12px}
+.matrixLabel{display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:12px;margin-bottom:6px}
+.matrixLabel b{font-size:13px}
+.matrix{display:grid;gap:3px;padding:7px;border-left:2px solid var(--ink);border-right:2px solid var(--ink);border-radius:4px;max-height:210px;overflow:auto}
+.cell{min-width:42px;height:29px;border-radius:7px;background:#f3f0ea;display:flex;align-items:center;justify-content:center;font-size:11px;font-variant-numeric:tabular-nums}
+.cell.cyan{background:var(--cyan-soft)} .cell.mag{background:var(--mag-soft)} .cell.warn{background:var(--amber-soft)}
+.vectorList{display:grid;gap:5px}
+.vectorRow{display:grid;grid-template-columns:42px 1fr;gap:7px;align-items:center;font-size:12px}
+.vecName{font-weight:900}
+.vecVals{display:flex;gap:3px;overflow:hidden}
+.pill{min-width:34px;padding:4px 6px;border-radius:8px;background:#f3f0ea;text-align:center;font-variant-numeric:tabular-nums}
+.pill.cyan{background:var(--cyan-soft)} .pill.mag{background:var(--mag-soft)} .pill.warn{background:var(--amber-soft)}
+.inspectorInner{display:grid;gap:14px}
+@media(max-width:1220px){
+  .layout{grid-template-columns:250px minmax(0,1fr)}
+  .inspector{grid-column:1/-1;position:static}
+  .inspectorInner{grid-template-columns:1fr 1fr 1fr}
+}
+@media(max-width:840px){
+  .app{padding:9px}.header{flex-direction:column;align-items:flex-start}
+  .layout{grid-template-columns:1fr}.controls,.inspector{position:static}
+  .canvasWrap{height:64vh;min-height:470px}.eqSub,.what,.inspectorInner{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="header">
+    <div class="topic">
+      <div class="eyebrow">Theorem · 3D orthogonal decomposition</div>
+      <h1>OLS as an Orthogonal Decomposition</h1>
+      <div class="subtitle">See y split uniquely into a fitted component ŷ = Py in S(X) and a residual component ê = My in S(X)<sup>⊥</sup>.</div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="resetBtn">Reset View</button>
+      <button class="btn primary" id="newBtn">New Example</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="card controls">
+      <div class="sectionTitle">Controls</div>
+
+      <div class="control">
+        <div class="labelRow"><b>Selected coordinate of y</b><span id="coordLabel">y₁</span></div>
+        <select id="coordSelect" class="select">
+          <option value="0">Coordinate 1</option>
+          <option value="1">Coordinate 2</option>
+          <option value="2">Coordinate 3</option>
+        </select>
+      </div>
+
+      <div class="control">
+        <div class="labelRow"><b>Adjust selected y-coordinate</b><span id="yVal" class="value">0.00</span></div>
+        <input id="yRange" class="range" type="range" min="-2.5" max="3.5" step=".02">
+        <div class="tip" style="margin-top:8px">Drag the navy endpoint of <strong>y</strong> directly in the 3D scene, or use this slider.</div>
+      </div>
+
+      <div class="control">
+        <div class="labelRow"><b>Trial decomposition coefficient c₁</b><span id="c1Val" class="value">0.00</span></div>
+        <input id="c1Range" class="range" type="range" min="-1.5" max="1.5" step=".02">
+      </div>
+
+      <div class="control">
+        <div class="labelRow"><b>Trial decomposition coefficient c₂</b><span id="c2Val" class="value">0.00</span></div>
+        <input id="c2Range" class="range" type="range" min="-1.5" max="1.5" step=".02">
+        <div class="tip" style="margin-top:8px">This defines <strong>s = Xc</strong>. Then <strong>r = y − s</strong>. Only when c = b̂ does r become orthogonal to the plane.</div>
+      </div>
+
+      <div class="control">
+        <div class="labelRow"><b>Move x₂ toward x₁</b><span id="alignVal" class="value">0%</span></div>
+        <input id="alignRange" class="range" type="range" min="0" max="1" step=".01" value="0">
+      </div>
+
+      <div class="control">
+        <div class="toggleRow">
+          <div><b>Show trial decomposition</b><div class="subtitle" style="font-size:12px;margin-top:4px;max-width:none">Compare an arbitrary split y = s + r with the OLS split.</div></div>
+          <label class="switch"><input id="trialToggle" type="checkbox" checked><span class="track"></span></label>
+        </div>
+      </div>
+
+      <div class="control">
+        <div class="labelRow"><b>Guided mode</b><span id="stepLabel">1 / 4</span></div>
+        <div class="steps">
+          <button class="step active" data-step="0">1</button>
+          <button class="step" data-step="1">2</button>
+          <button class="step" data-step="2">3</button>
+          <button class="step" data-step="3">4</button>
+        </div>
+        <div id="stepNote" class="note"></div>
+      </div>
+
+      <div class="control">
+        <div class="sectionTitle" style="margin-bottom:8px">Legend</div>
+        <div class="legend">
+          <span><i class="sw"></i> y</span>
+          <span><i class="sw c"></i> ŷ = Py</span>
+          <span><i class="sw m"></i> ê = My</span>
+          <span><i class="sw a"></i> trial r = y − s</span>
+          <span><i class="sw p"></i> plane S(X)</span>
+          <span><i class="sw g"></i> previous ŷ</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <section class="card eqCard">
+        <div class="sectionTitle">Live theorem</div>
+        <div class="eqMain">
+          <span>y</span><span>=</span>
+          <span class="eqTerm c">Py = ŷ</span><span>+</span>
+          <span class="eqTerm m">My = ê</span>
+          <span>,</span>
+          <span class="eqTerm a">ŷᵀê = 0</span>
+        </div>
+        <div class="eqSub">
+          <div class="eqBox">ℝ<sup>n×1</sup> = S(X) ⊕ S(X)<sup>⊥</sup></div>
+          <div class="eqBox">ŷ = Py ∈ S(X)</div>
+          <div class="eqBox">ê = My ∈ S(X)<sup>⊥</sup></div>
+        </div>
+      </section>
+
+      <section class="card vizCard" id="vizCard">
+        <div class="vizHead">
+          <div class="vizTitle">3D decomposition in observation space (r₁, r₂, r₃)</div>
+          <div id="badge" class="badge"><span class="dot"></span><span>Orthogonality verified</span></div>
+        </div>
+        <div class="canvasWrap" id="canvasWrap">
+          <div class="scenePanel" id="scenePanel">
+            <div class="scenePanelTitle">Decomposition check</div>
+            <div class="sceneRow"><span>ŷᵀê</span><strong id="dotHE">0.0000</strong></div>
+            <div class="sceneRow"><span>‖y − (ŷ + ê)‖</span><strong id="gapExact">0.0000</strong></div>
+            <div class="sceneRow sep"><span>distance of trial r from S(X)⊥</span><strong id="trialPerp">0.0000</strong></div>
+          </div>
+          <canvas id="plot" tabindex="0" aria-label="3D orthogonal decomposition of y into Py and My"></canvas>
+          <div id="tooltip" class="tooltip"></div>
+          <div class="orbitHint">drag y · drag empty space to orbit · wheel to zoom in further</div>
+        </div>
+      </section>
+
+      <section class="card what">
+        <div><b>1 · Projection</b>ŷ is the cyan projection of y onto the plane spanned by the columns of X.</div>
+        <div><b>2 · Orthogonality</b>The magenta residual ê leaves the plane at a right angle, so ŷᵀê = 0.</div>
+        <div><b>3 · Uniqueness</b>Try another s = Xc. Then r = y − s usually tilts away from S(X)⊥, so the split is not orthogonal.</div>
+      </section>
+    </main>
+
+    <aside class="card inspector">
+      <div class="sectionTitle">Mathematical inspector</div>
+      <div class="inspectorInner">
+        <div>
+          <div class="statGrid">
+            <div class="stat"><div class="k">rank(X)</div><div class="v" id="rankStat">2</div></div>
+            <div class="stat"><div class="k">cond(XᵀX)</div><div class="v" id="condStat">1.00</div></div>
+            <div class="stat"><div class="k">‖ê‖</div><div class="v mag" id="enormStat">0.000</div></div>
+            <div class="stat"><div class="k">‖ŷ‖</div><div class="v cyan" id="yhatnormStat">0.000</div></div>
+          </div>
+
+          <div class="matrixBlock">
+            <div class="matrixLabel"><b>X = [x₁ x₂]</b><span>3 × 2</span></div>
+            <div class="matrix" id="xMatrix"></div>
+          </div>
+          <div class="matrixBlock">
+            <div class="matrixLabel"><b>P</b><span>3 × 3</span></div>
+            <div class="matrix" id="pMatrix"></div>
+          </div>
+          <div class="matrixBlock">
+            <div class="matrixLabel"><b>M = I₃ − P</b><span>3 × 3</span></div>
+            <div class="matrix" id="mMatrix"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="matrixBlock">
+            <div class="matrixLabel"><b>y</b><span>3 × 1</span></div>
+            <div class="vectorList" id="yVector"></div>
+          </div>
+          <div class="matrixBlock">
+            <div class="matrixLabel"><b>ŷ = Py</b><span>3 × 1</span></div>
+            <div class="vectorList" id="yhatVector"></div>
+          </div>
+          <div class="matrixBlock">
+            <div class="matrixLabel"><b>ê = My</b><span>3 × 1</span></div>
+            <div class="vectorList" id="eVector"></div>
+          </div>
+          <div class="matrixBlock">
+            <div class="matrixLabel"><b>b̂ = (XᵀX)<sup>−1</sup>Xᵀy</b><span>2 × 1</span></div>
+            <div class="vectorList" id="bVector"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="matrixBlock">
+            <div class="matrixLabel"><b>Trial decomposition</b><span>s = Xc, &nbsp; r = y − s</span></div>
+            <div class="vectorList" id="trialVectors"></div>
+          </div>
+          <div class="matrixBlock">
+            <div class="matrixLabel"><b>Orthogonality tests</b><span>2 × 1</span></div>
+            <div class="vectorList" id="orthoTests"></div>
+          </div>
+          <div class="tip" id="warningBox"><strong>Unique orthogonal split.</strong> Because rank(X) = K, the projection onto S(X) is unique.</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+(() => {
+const C={ink:'#12243b',muted:'#6f7e8b',cyan:'#08a9c4',cyanDark:'#087d90',mag:'#c93a7b',amber:'#c48620',grid:'#e8e3da',ghost:'#9baab0'};
+const base={
+  x1:[1.0,.18,.82],
+  x2:[-.42,1.0,.52],
+  y:[1.62,1.78,.24],
+  c:[.60,-.38],
+  align:0,
+  trialOn:true,
+  selectedCoord:0,
+  yaw:-0.78,pitch:0.56,zoom:1,
+  activeStep:0,
+  hover:null,
+  dragMode:null,
+  lastPointer:null,
+  prev:null
+};
+const state=JSON.parse(JSON.stringify(base));
+
+const $=id=>document.getElementById(id);
+const wrap=$('canvasWrap'), canvas=$('plot'), ctx=canvas.getContext('2d'), tooltip=$('tooltip');
+
+const dot=(a,b)=>a.reduce((s,v,i)=>s+v*b[i],0);
+const add=(a,b)=>a.map((v,i)=>v+b[i]);
+const sub=(a,b)=>a.map((v,i)=>v-b[i]);
+const mul=(a,s)=>a.map(v=>v*s);
+const norm=a=>Math.sqrt(dot(a,a));
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const fmt=(x,d=3)=>{ if(Math.abs(x)<5e-5)x=0; return Number.isFinite(x)?x.toFixed(d):'—'; };
+const eye=n=>Array.from({length:n},(_,i)=>Array.from({length:n},(_,j)=>i===j?1:0));
+
+function cross(a,b){
+  return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+}
+function unit(a){
+  const n=norm(a); return n<1e-12?[0,0,0]:a.map(v=>v/n);
+}
+function solve2(A,b){
+  const det=A[0][0]*A[1][1]-A[0][1]*A[1][0];
+  if(Math.abs(det)<1e-10)return null;
+  return [
+    ( b[0]*A[1][1]-A[0][1]*b[1])/det,
+    ( A[0][0]*b[1]-b[0]*A[1][0])/det
+  ];
+}
+function matmul(A,B){
+  const rows=A.length, cols=B[0].length, inner=B.length;
+  return Array.from({length:rows},(_,i)=>Array.from({length:cols},(_,j)=>{
+    let s=0; for(let k=0;k<inner;k++) s+=A[i][k]*B[k][j]; return s;
+  }));
+}
+function matvec(A,v){
+  return A.map(r=>dot(r,v));
+}
+function transpose(A){
+  return A[0].map((_,j)=>A.map(r=>r[j]));
+}
+function outer(u,v){
+  return u.map(ui=>v.map(vj=>ui*vj));
+}
+function addM(A,B){ return A.map((r,i)=>r.map((v,j)=>v+B[i][j])); }
+function subM(A,B){ return A.map((r,i)=>r.map((v,j)=>v-B[i][j])); }
+function scaleM(A,s){ return A.map(r=>r.map(v=>v*s)); }
+
+function compute(){
+  const x1=[...state.x1];
+  const x2=state.x2.map((v,i)=>(1-state.align)*v + state.align*x1[i]);
+  const X=[[x1[0],x2[0]],[x1[1],x2[1]],[x1[2],x2[2]]];
+  const Xt=transpose(X);
+  const XtX=matmul(Xt,X);
+  const Xty=matvec(Xt,state.y);
+  const bhat=solve2(XtX,Xty);
+  const det=XtX[0][0]*XtX[1][1]-XtX[0][1]*XtX[1][0];
+  const rank=Math.abs(det)>1e-8?2:1;
+  let P,M,yhat,e,cond=Infinity;
+  if(rank===2){
+    const invXtX=[
+      [ XtX[1][1]/det, -XtX[0][1]/det ],
+      [ -XtX[1][0]/det, XtX[0][0]/det ]
+    ];
+    const XtXtr=Xt;
+    P=matmul(matmul(X,invXtX),XtXtr);
+    M=subM(eye(3),P);
+    yhat=matvec(P,state.y);
+    e=matvec(M,state.y);
+    const tr=XtX[0][0]+XtX[1][1], disc=Math.sqrt((XtX[0][0]-XtX[1][1])**2 + 4*XtX[0][1]*XtX[1][0]);
+    const lmax=(tr+disc)/2, lmin=(tr-disc)/2;
+    cond=lmin>1e-10?lmax/lmin:Infinity;
+  }else{
+    // Fallback for singular display.
+    const u=unit(x1);
+    yhat=mul(u,dot(u,state.y));
+    e=sub(state.y,yhat);
+    P=outer(u,u);
+    M=subM(eye(3),P);
+  }
+
+  const s=add(mul(x1,state.c[0]),mul(x2,state.c[1]));
+  const r=sub(state.y,s);
+
+  const n=rank===2?unit(cross(x1,x2)):unit(cross(x1,[0,0,1]));
+  const trialPerp=norm(cross(unit(n), unit(r)));
+  return {x1,x2,X,XtX,bhat,yhat,e,P,M,s,r,rank,cond,det,normal:n};
+}
+
+function snapshot(){
+  const q=compute();
+  state.prev={y:[...state.y],yhat:[...q.yhat],e:[...q.e],s:[...q.s],r:[...q.r]};
+}
+
+function bounds(q){
+  const all=[...q.x1,...q.x2,...state.y,...q.yhat,...q.s];
+  const m=Math.max(2.6,...all.map(v=>Math.abs(v)))+0.45;
+  return {m};
+}
+
+function project(v,w,h,m){
+  const X=v[0]/m, Y=v[2]/m, Z=v[1]/m;
+  const cy=Math.cos(state.yaw), sy=Math.sin(state.yaw);
+  const cp=Math.cos(state.pitch), sp=Math.sin(state.pitch);
+  const xr=cy*X - sy*Y, yr=sy*X + cy*Y, zr=Z;
+  const y2=cp*yr - sp*zr, z2=sp*yr + cp*zr;
+  const cam=4/state.zoom, depth=cam-y2, f=Math.min(w,h)*0.5/depth;
+  return {x:w/2+xr*f, y:h/2-z2*f, depth};
+}
+function line3(a,b,w,h,m,color,width=1,dash=[],alpha=1){
+  const A=project(a,w,h,m),B=project(b,w,h,m);
+  ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.lineTo(B.x,B.y);ctx.stroke();ctx.restore();
+}
+function arrow3(a,b,w,h,m,color,width=2.3,alpha=1){
+  const A=project(a,w,h,m),B=project(b,w,h,m);
+  const dx=B.x-A.x,dy=B.y-A.y,L=Math.hypot(dx,dy)||1,ux=dx/L,uy=dy/L,px=-uy,py=ux,hs=8+width*1.2;
+  ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=width;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.lineTo(B.x,B.y);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(B.x,B.y);
+  ctx.lineTo(B.x-ux*hs+px*hs*.42,B.y-uy*hs+py*hs*.42);
+  ctx.lineTo(B.x-ux*hs-px*hs*.42,B.y-uy*hs-py*hs*.42);
+  ctx.closePath();ctx.fill();ctx.restore();
+}
+function point3(v,w,h,m,color,r=7){
+  const P=project(v,w,h,m);
+  ctx.save();ctx.fillStyle=color;ctx.beginPath();ctx.arc(P.x,P.y,r,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='white';ctx.lineWidth=2.1;ctx.stroke();ctx.restore();
+  return P;
+}
+function label3(v,w,h,m,text,color,dx=8,dy=-8,font='700 11px system-ui'){
+  const P=project(v,w,h,m);
+  ctx.save();ctx.fillStyle=color;ctx.font=font;ctx.shadowColor='rgba(252,250,246,.96)';ctx.shadowBlur=6;
+  ctx.fillText(text,P.x+dx,P.y+dy);ctx.restore();
+}
+
+function drawAxes(w,h,m){
+  const R=m*1.03;
+  line3([-R,0,0],[R,0,0],w,h,m,C.ink,1.2,[4,5],.65);
+  line3([0,-R,0],[0,R,0],w,h,m,C.ink,1.2,[4,5],.65);
+  line3([0,0,-R],[0,0,R],w,h,m,C.ink,1.2,[4,5],.65);
+  label3([R,0,0],w,h,m,'r₁',C.muted,6,-4,'10px ui-monospace');
+  label3([0,R,0],w,h,m,'r₂',C.muted,6,-4,'10px ui-monospace');
+  label3([0,0,R],w,h,m,'r₃',C.muted,6,-4,'10px ui-monospace');
+}
+function drawPlane(q,w,h,m){
+  const u=unit(q.x1);
+  let vraw=sub(q.x2,mul(u,dot(u,q.x2)));
+  let v=norm(vraw)<1e-8?unit([0,1,0]):unit(vraw);
+  const S=m*0.95,N=8;
+  if(q.rank===2){
+    for(let i=0;i<N;i++) for(let j=0;j<N;j++){
+      const a0=-S+2*S*i/N, a1=-S+2*S*(i+1)/N, b0=-S+2*S*j/N, b1=-S+2*S*(j+1)/N;
+      const cell=[add(mul(u,a0),mul(v,b0)),add(mul(u,a1),mul(v,b0)),add(mul(u,a1),mul(v,b1)),add(mul(u,a0),mul(v,b1))];
+      const P=cell.map(p=>project(p,w,h,m));
+      ctx.save();
+      ctx.globalAlpha=.06;
+      ctx.fillStyle=C.cyan;ctx.strokeStyle='rgba(8,169,196,.18)';ctx.lineWidth=.9;
+      ctx.beginPath();P.forEach((p,k)=>k?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.restore();
+    }
+    for(let i=0;i<=N;i++){
+      const t=-S+2*S*i/N;
+      line3(add(mul(u,t),mul(v,-S)),add(mul(u,t),mul(v,S)),w,h,m,C.cyan,.9,[],.33);
+      line3(add(mul(u,-S),mul(v,t)),add(mul(u,S),mul(v,t)),w,h,m,C.cyan,.9,[],.33);
+    }
+    label3(add(mul(u,-S*.55),mul(v,S*.76)),w,h,m,'S(X)',C.cyanDark,0,0,'800 12px system-ui');
+  }else{
+    line3(mul(u,-S),mul(u,S),w,h,m,C.amber,7,[],.22);
+    label3(mul(u,S*.55),w,h,m,'rank loss: plane collapses to a line',C.amber,9,-6,'800 11px system-ui');
+  }
+  return {u,v};
+}
+function drawRightAngle(base,dir1,dir2,w,h,m){
+  const s=m*0.08;
+  const A=base, B=add(base,mul(dir1,s)), D=add(base,mul(dir2,s)), Cc=add(B,mul(dir2,s));
+  line3(A,B,w,h,m,C.mag,1.8,[],.95);
+  line3(B,Cc,w,h,m,C.mag,1.8,[],.95);
+  line3(Cc,D,w,h,m,C.mag,1.8,[],.95);
+}
+
+let yHit=null;
+function drawScene(){
+  const q=compute();
+  const rect=wrap.getBoundingClientRect(), w=rect.width, h=rect.height;
+  ctx.clearRect(0,0,w,h);
+  const {m}=bounds(q);
+  drawAxes(w,h,m);
+  const basis=drawPlane(q,w,h,m);
+
+  if(state.prev){
+    arrow3([0,0,0],state.prev.yhat,w,h,m,C.ghost,2,.28);
+    arrow3(state.prev.yhat,state.prev.y,w,h,m,C.ghost,1.8,.24);
+  }
+
+  // Normal guide through yhat.
+  if(q.rank===2){
+    line3(add(q.yhat,mul(q.normal,-m*.95)),add(q.yhat,mul(q.normal,m*.95)),w,h,m,C.mag,1.2,[6,6],.42);
+    label3(add(q.yhat,mul(q.normal,m*.63)),w,h,m,'S(X)⊥',C.mag,8,0,'800 11px system-ui');
+  }
+
+  // Column vectors
+  arrow3([0,0,0],q.x1,w,h,m,'#1f93a7',2.6,.92);
+  label3(q.x1,w,h,m,'x₁','#0a7f91',8,-8,'800 12px system-ui');
+  arrow3([0,0,0],q.x2,w,h,m,'#59b8c7',2.6,.92);
+  label3(q.x2,w,h,m,'x₂','#0a7f91',8,14,'800 12px system-ui');
+
+  // OLS decomposition
+  arrow3([0,0,0],q.yhat,w,h,m,C.cyan,4,.97);
+  label3(q.yhat,w,h,m,'ŷ = Py',C.cyanDark,10,-10,'800 12px system-ui');
+  arrow3(q.yhat,state.y,w,h,m,C.mag,4.2,1);
+  label3(add(q.yhat,mul(q.e,.55)),w,h,m,'ê = My',C.mag,11,5,'800 12px system-ui');
+  arrow3([0,0,0],state.y,w,h,m,C.ink,3.7,1);
+  label3(state.y,w,h,m,'y',C.ink,10,-10,'800 12px system-ui');
+
+  point3(q.yhat,w,h,m,C.cyan,6);
+  const yP=point3(state.y,w,h,m,C.ink,state.hover==='y'||state.dragMode==='y'?8.4:7.4);
+  yHit=yP;
+
+  if(q.rank===2 && norm(q.e)>.08){
+    drawRightAngle(q.yhat,basis.u,unit(q.e),w,h,m);
+  }
+
+  // Trial decomposition
+  if(state.trialOn){
+    arrow3([0,0,0],q.s,w,h,m,C.ghost,2.2,.86);
+    label3(q.s,w,h,m,'s = Xc',C.ghost,10,0,'800 11px system-ui');
+    arrow3(q.s,state.y,w,h,m,C.amber,3,1);
+    label3(add(q.s,mul(q.r,.5)),w,h,m,'r = y − s',C.amber,11,5,'800 11px system-ui');
+  }
+
+  $('dotHE').textContent=fmt(dot(q.yhat,q.e),4);
+  $('gapExact').textContent=fmt(norm(sub(state.y,add(q.yhat,q.e))),4);
+  $('trialPerp').textContent=fmt(norm(cross(unit(q.r),q.normal)),4);
+}
+function resize(){
+  const rect=wrap.getBoundingClientRect(), dpr=Math.min(2,devicePixelRatio||1);
+  canvas.width=Math.round(rect.width*dpr); canvas.height=Math.round(rect.height*dpr);
+  canvas.style.width=rect.width+'px'; canvas.style.height=rect.height+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  drawScene();
+}
+function renderVectorList(id, labels, values, klass=''){
+  const box=$(id); box.innerHTML='';
+  labels.forEach((lab,i)=>{
+    const row=document.createElement('div'); row.className='vectorRow';
+    const name=document.createElement('div'); name.className='vecName'+(klass?' '+klass:''); name.textContent=lab;
+    const vals=document.createElement('div'); vals.className='vecVals';
+    const pill=document.createElement('div'); pill.className='pill'+(klass?' '+klass:''); pill.textContent=fmt(values[i]);
+    vals.appendChild(pill); row.append(name,vals); box.appendChild(row);
+  });
+}
+function renderMatrix(id, M, klassFn=null){
+  const box=$(id); box.innerHTML=''; box.style.gridTemplateColumns=`repeat(${M[0].length}, minmax(42px,1fr))`;
+  M.forEach((row,i)=>row.forEach((v,j)=>{
+    const d=document.createElement('div'); d.className='cell';
+    if(klassFn) d.classList.add(klassFn(i,j,v));
+    d.textContent=fmt(v,3);
+    box.appendChild(d);
+  }));
+}
+function renderInspector(){
+  const q=compute();
+  $('coordSelect').value=state.selectedCoord;
+  $('coordLabel').textContent=['y₁','y₂','y₃'][state.selectedCoord];
+  $('yVal').textContent=fmt(state.y[state.selectedCoord],2);
+  $('yRange').value=state.y[state.selectedCoord];
+  $('c1Val').textContent=fmt(state.c[0],2);
+  $('c2Val').textContent=fmt(state.c[1],2);
+  $('c1Range').value=state.c[0]; $('c2Range').value=state.c[1];
+  $('alignVal').textContent=Math.round(state.align*100)+'%';
+  $('alignRange').value=state.align;
+  $('trialToggle').checked=state.trialOn;
+
+  $('rankStat').textContent=q.rank;
+  $('condStat').textContent=q.cond>9999?'∞':fmt(q.cond,1);
+  $('enormStat').textContent=fmt(norm(q.e),3);
+  $('yhatnormStat').textContent=fmt(norm(q.yhat),3);
+
+  renderMatrix('xMatrix', [[q.x1[0],q.x2[0]],[q.x1[1],q.x2[1]],[q.x1[2],q.x2[2]]]);
+  renderMatrix('pMatrix', q.P, ()=> 'cyan');
+  renderMatrix('mMatrix', q.M, ()=> 'mag');
+
+  renderVectorList('yVector', ['1','2','3'], state.y);
+  renderVectorList('yhatVector', ['1','2','3'], q.yhat, 'cyan');
+  renderVectorList('eVector', ['1','2','3'], q.e, 'mag');
+  renderVectorList('bVector', ['1','2'], q.bhat || [0,0], 'cyan');
+
+  const trialBox=$('trialVectors'); trialBox.innerHTML='';
+  [
+    ['s₁', q.s[0], ''],
+    ['s₂', q.s[1], ''],
+    ['s₃', q.s[2], ''],
+    ['r₁', q.r[0], 'warn'],
+    ['r₂', q.r[1], 'warn'],
+    ['r₃', q.r[2], 'warn']
+  ].forEach(([name,val,klass])=>{
+    const row=document.createElement('div'); row.className='vectorRow';
+    row.innerHTML=`<div class="vecName ${klass}">${name}</div><div class="vecVals"><div class="pill ${klass}">${fmt(val,3)}</div></div>`;
+    trialBox.appendChild(row);
+  });
+
+  const orth=$('orthoTests'); orth.innerHTML='';
+  [
+    ['x₁ᵀê', dot(q.x1,q.e), 'mag'],
+    ['x₂ᵀê', dot(q.x2,q.e), 'mag'],
+    ['ŝᵀr', dot(q.s,q.r), 'warn']
+  ].forEach(([name,val,klass])=>{
+    const row=document.createElement('div'); row.className='vectorRow';
+    row.innerHTML=`<div class="vecName ${klass}">${name}</div><div class="vecVals"><div class="pill ${klass}">${fmt(val,4)}</div></div>`;
+    orth.appendChild(row);
+  });
+
+  const badge=$('badge');
+  if(q.rank===2 && Math.abs(dot(q.yhat,q.e))<1e-6){
+    badge.className='badge';
+    badge.innerHTML='<span class="dot"></span><span>Orthogonality verified</span>';
+  }else{
+    badge.className='badge warn';
+    badge.innerHTML='<span class="dot"></span><span>Rank failure or loss of uniqueness</span>';
+  }
+
+  const warning=$('warningBox');
+  if(q.rank===2){
+    warning.className='tip';
+    const trialErr=norm(cross(q.r,q.normal));
+    warning.innerHTML=`<strong>Unique orthogonal split.</strong> Here y = ŷ + ê with ŷ ∈ S(X) and ê ∈ S(X)<sup>⊥</sup>. For your current trial s = Xc, the residual r misses S(X)<sup>⊥</sup> by ${fmt(trialErr,4)}.`;
+  }else{
+    warning.className='tip warn';
+    warning.innerHTML='<strong>Rank has fallen.</strong> The two columns are collinear, so S(X) collapses to a line and the full-rank OLS formula no longer applies as stated.';
+  }
+}
+const steps=[
+  'Rotate the scene. The cyan plane is the column space S(X) inside ℝ³.',
+  'Move the endpoint of y. The cyan projection ŷ = Py slides inside the plane, while the magenta residual ê = My remains perpendicular to it.',
+  'Change the trial coefficients c. This gives another split y = s + r, but usually r is not in S(X)⊥.',
+  'Move x₂ toward x₁. The plane degenerates, showing why the theorem assumes rank(X) = K.'
+];
+function renderStep(){
+  document.querySelectorAll('.step').forEach((b,i)=>b.classList.toggle('active',i===state.activeStep));
+  $('stepLabel').textContent=`${state.activeStep+1} / 4`;
+  const box=$('stepNote');
+  box.textContent=steps[state.activeStep];
+  box.className='note'+(state.activeStep===3?' warn':'');
+}
+function render(){
+  renderStep();
+  renderInspector();
+  drawScene();
+}
+function pointHit(cx,cy){
+  if(!yHit) return null;
+  const rect=canvas.getBoundingClientRect();
+  const d=Math.hypot(cx-rect.left-yHit.x, cy-rect.top-yHit.y);
+  return d<18 ? 'y' : null;
+}
+function cameraBasis(){
+  const cy=Math.cos(state.yaw), sy=Math.sin(state.yaw), sp=Math.sin(state.pitch), cp=Math.cos(state.pitch);
+  return {right:[cy,0,-sy], up:[sp*sy,cp,sp*cy]};
+}
+canvas.addEventListener('pointerdown', e=>{
+  const hit=pointHit(e.clientX,e.clientY);
+  state.lastPointer={x:e.clientX,y:e.clientY};
+  if(hit){
+    snapshot();
+    state.dragMode='y';
+    state.hover='y';
+    canvas.classList.add('dragPoint');
+  }else{
+    state.dragMode='orbit';
+    canvas.classList.add('dragging');
+  }
+  canvas.setPointerCapture(e.pointerId);
+  render();
+});
+canvas.addEventListener('pointermove', e=>{
+  if(state.dragMode && state.lastPointer){
+    const dx=e.clientX-state.lastPointer.x, dy=e.clientY-state.lastPointer.y;
+    if(state.dragMode==='orbit'){
+      state.yaw += dx*.008;
+      state.pitch = clamp(state.pitch + dy*.008, -1.25, 1.25);
+    }else if(state.dragMode==='y'){
+      const {right,up}=cameraBasis();
+      const s=.010/state.zoom;
+      state.y=state.y.map((v,i)=>clamp(v+right[i]*dx*s-up[i]*dy*s,-2.5,3.5));
+      $('yRange').value=state.y[state.selectedCoord];
+    }
+    state.lastPointer={x:e.clientX,y:e.clientY};
+    tooltip.style.opacity='0';
+    render();
+    return;
+  }
+  const hit=pointHit(e.clientX,e.clientY);
+  state.hover=hit;
+  if(hit==='y'){
+    const q=compute();
+    tooltip.style.left=(yHit.x)+'px'; tooltip.style.top=(yHit.y)+'px';
+    tooltip.innerHTML=`y = [${state.y.map(v=>fmt(v,2)).join(', ')}]ᵀ<br>ŷᵀê = ${fmt(dot(q.yhat,q.e),4)}<br><span style="color:#9fe7f0">drag to move y</span>`;
+    tooltip.style.opacity='1';
+  }else tooltip.style.opacity='0';
+  render();
+});
+canvas.addEventListener('pointerup', e=>{
+  state.dragMode=null; state.lastPointer=null; canvas.classList.remove('dragging','dragPoint');
+  try{ canvas.releasePointerCapture(e.pointerId); }catch{}
+});
+canvas.addEventListener('pointerleave', ()=>{ if(!state.dragMode){ state.hover=null; tooltip.style.opacity='0'; render(); } });
+canvas.addEventListener('wheel', e=>{
+  e.preventDefault();
+  state.zoom=clamp(state.zoom*(e.deltaY>0?.90:1.10),.65,3.4);
+  render();
+},{passive:false});
+
+$('coordSelect').addEventListener('change', e=>{ state.selectedCoord=+e.target.value; render(); });
+$('yRange').addEventListener('input', e=>{ snapshot(); state.y[state.selectedCoord]=+e.target.value; render(); });
+$('c1Range').addEventListener('input', e=>{ state.c[0]=+e.target.value; render(); });
+$('c2Range').addEventListener('input', e=>{ state.c[1]=+e.target.value; render(); });
+$('alignRange').addEventListener('input', e=>{ snapshot(); state.align=+e.target.value; render(); });
+$('trialToggle').addEventListener('change', e=>{ state.trialOn=e.target.checked; render(); });
+document.querySelectorAll('.step').forEach(b=>b.addEventListener('click', ()=>{ state.activeStep=+b.dataset.step; render(); }));
+$('resetBtn').addEventListener('click', ()=>{
+  state.yaw=base.yaw; state.pitch=base.pitch; state.zoom=1; state.prev=null; state.hover=null; render();
+});
+$('newBtn').addEventListener('click', ()=>{
+  const b1=.35+Math.random()*.85, b2=-.7+Math.random()*1.3;
+  state.y=state.x1.map((v,i)=>(.5+Math.random()*1.2)+b1*state.x1[i]+b2*state.x2[i]+(Math.random()-.5)*1.6);
+  state.c=[-1+Math.random()*2,-1+Math.random()*2];
+  state.align=Math.random()*.25;
+  state.prev=null;
+  render();
+});
+
+window.addEventListener('resize', resize);
+new ResizeObserver(resize).observe(wrap);
+render();
+requestAnimationFrame(resize);
+})();
+</script>
+</body>
+</html>
