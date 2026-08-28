@@ -60,9 +60,9 @@ h1{margin:0;font-size:clamp(21px,2vw,30px);letter-spacing:-.03em;font-weight:780
 .badge{display:flex;align-items:center;gap:7px;border:1px solid #bce4e9;background:#effafb;color:#096e80;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:900}
 .badge.warn{background:var(--amber-soft);border-color:#dfbc70;color:#694a0b}
 .badgeDot{width:8px;height:8px;border-radius:50%;background:currentColor}
-.canvasWrap{position:relative;height:min(68vh,690px);min-height:510px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fcfaf6;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
+.canvasWrap{position:relative;height:min(72vh,735px);min-height:570px;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fcfaf6;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
 canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
-canvas.dragging{cursor:grabbing}
+canvas.dragging{cursor:grabbing} canvas.dragPoint{cursor:ns-resize}
 .tooltip{position:absolute;pointer-events:none;opacity:0;background:rgba(16,34,56,.95);color:white;border-radius:8px;padding:7px 8px;font-size:11px;line-height:1.4;white-space:nowrap;transform:translate(12px,-10px)}
 .eqCard{padding:16px 18px}
 .eqMain{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 0;font-family:Cambria,"Times New Roman",serif;font-size:clamp(19px,2.15vw,29px)}
@@ -94,7 +94,13 @@ canvas.dragging{cursor:grabbing}
 .betaGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:8px}
 .beta{border:1px solid var(--line);border-radius:11px;background:#fcfaf6;padding:9px;text-align:center;font-size:11px}
 .beta b{display:block;margin-top:3px;font-size:15px;color:var(--cyan2)}
-.orbitHint{position:absolute;right:12px;bottom:10px;font-size:11px;color:var(--muted);background:rgba(255,253,249,.9);padding:6px 9px;border-radius:9px;border:1px solid var(--line);pointer-events:none;backdrop-filter:blur(6px)}
+.orbitHint{position:absolute;right:12px;bottom:10px;font-size:11px;color:var(--muted);background:rgba(255,253,249,.92);padding:6px 9px;border-radius:9px;border:1px solid var(--line);pointer-events:none;backdrop-filter:blur(6px)}
+.meanOverlay{position:absolute;left:14px;top:14px;z-index:4;width:188px;border:1px solid var(--line);border-radius:12px;background:rgba(255,253,249,.94);padding:9px 10px;box-shadow:0 5px 16px rgba(19,37,58,.055);pointer-events:none}
+.meanOverlayTitle{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:900;margin-bottom:7px}
+.meanOverlayRow{display:flex;justify-content:space-between;gap:8px;font:700 10px/1.4 ui-monospace,monospace;margin:4px 0}
+.meanOverlayRow strong{color:var(--cyan2)}
+.meanOverlay.warn .meanOverlayRow strong{color:var(--amber)}
+.meanOverlayRow.gap{padding-top:6px;margin-top:6px;border-top:1px solid var(--line)}
 @media(max-width:1220px){
  .layout{grid-template-columns:250px minmax(0,1fr)}
  .inspector{grid-column:1/-1;position:static}
@@ -185,9 +191,15 @@ canvas.dragging{cursor:grabbing}
       <div id="badge" class="badge"><span class="badgeDot"></span><span>Invariant: ŷ(x̄) = ȳ</span></div>
     </div>
     <div class="canvasWrap" id="canvasWrap">
-      <canvas id="plot" tabindex="0" aria-label="3D OLS plane. Drag to orbit, click points to select observations."></canvas>
+      <canvas id="plot" tabindex="0" aria-label="3D OLS plane. Drag observations vertically, drag empty space to orbit, and use the wheel to zoom."></canvas>
+      <div id="meanOverlay" class="meanOverlay">
+        <div class="meanOverlayTitle">Mean-point identity</div>
+        <div class="meanOverlayRow"><span>ȳ</span><strong id="sceneYbar">0.000</strong></div>
+        <div class="meanOverlayRow"><span>ŷ(x̄₁,x̄₂)</span><strong id="sceneMeanFit">0.000</strong></div>
+        <div class="meanOverlayRow gap"><span>difference</span><strong id="sceneGap">0.000000</strong></div>
+      </div>
       <div id="tooltip" class="tooltip"></div>
-      <div class="orbitHint">drag to orbit · wheel to zoom · click a point to select</div>
+      <div class="orbitHint">drag a point vertically · drag empty space to orbit · wheel to zoom</div>
     </div>
   </section>
 
@@ -376,10 +388,20 @@ function project(x,y,z,w,h,cs){
   return {x:w/2+x1*f,y:h/2-z2*f,depth};
 }
 
-function line3(a,b,w,h,cs,color,width=1,dash=[]){
+function line3(a,b,w,h,cs,color,width=1,dash=[],alpha=1){
   const A=project(...a,w,h,cs),B=project(...b,w,h,cs);
-  ctx.save();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);
+  ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);ctx.lineCap='round';
   ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.lineTo(B.x,B.y);ctx.stroke();ctx.restore();
+}
+function arrow3(a,b,w,h,cs,color,width=2.5,alpha=1){
+  const A=project(...a,w,h,cs),B=project(...b,w,h,cs);
+  const dx=B.x-A.x,dy=B.y-A.y,L=Math.hypot(dx,dy)||1,ux=dx/L,uy=dy/L,px=-uy,py=ux,hs=8+width;
+  ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=width;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.lineTo(B.x,B.y);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(B.x,B.y);
+  ctx.lineTo(B.x-ux*hs+px*hs*.42,B.y-uy*hs+py*hs*.42);
+  ctx.lineTo(B.x-ux*hs-px*hs*.42,B.y-uy*hs-py*hs*.42);
+  ctx.closePath();ctx.fill();ctx.restore();
 }
 function poly3(points,w,h,cs,fill,stroke,alpha=1){
   const P=points.map(p=>project(...p,w,h,cs)).sort((a,b)=>0);
@@ -411,24 +433,24 @@ function drawAxes(r,b,w,h,cs){
 
 function planeZ(p,x,y){return p.b0+p.b1*x+p.b2*y}
 function drawPlane(p,b,w,h,cs,ghost=false){
-  const nx=7,ny=7;
+  const nx=8,ny=8;
   ctx.save();
   for(let i=0;i<nx;i++){
     for(let j=0;j<ny;j++){
       const x0=b.xmin+(b.xmax-b.xmin)*i/nx, x1=b.xmin+(b.xmax-b.xmin)*(i+1)/nx;
       const y0=b.ymin+(b.ymax-b.ymin)*j/ny, y1=b.ymin+(b.ymax-b.ymin)*(j+1)/ny;
       const pts=[[x0,y0,planeZ(p,x0,y0)],[x1,y0,planeZ(p,x1,y0)],[x1,y1,planeZ(p,x1,y1)],[x0,y1,planeZ(p,x0,y1)]];
-      poly3(pts,w,h,cs,ghost?'rgba(157,165,172,.045)':'rgba(8,169,196,.055)',ghost?C.ghost:C.cyan,ghost?.12:.20);
+      const centerWeight=1-Math.min(1,Math.hypot(i-(nx-1)/2,j-(ny-1)/2)/(nx*.7));
+      poly3(pts,w,h,cs,ghost?'rgba(157,165,172,.035)':`rgba(8,169,196,${.04+.035*centerWeight})`,ghost?C.ghost:C.cyan,ghost?.08:.12);
     }
   }
-  // grid lines on plane
   for(let i=0;i<=nx;i++){
     const x=b.xmin+(b.xmax-b.xmin)*i/nx;
-    line3([x,b.ymin,planeZ(p,x,b.ymin)],[x,b.ymax,planeZ(p,x,b.ymax)],w,h,cs,ghost?C.ghost:C.cyan,ghost?.8:1.0,ghost?[5,5]:[]);
+    line3([x,b.ymin,planeZ(p,x,b.ymin)],[x,b.ymax,planeZ(p,x,b.ymax)],w,h,cs,ghost?C.ghost:C.cyan,ghost?.7:.9,ghost?[5,5]:[],ghost?.28:.33);
   }
   for(let j=0;j<=ny;j++){
     const y=b.ymin+(b.ymax-b.ymin)*j/ny;
-    line3([b.xmin,y,planeZ(p,b.xmin,y)],[b.xmax,y,planeZ(p,b.xmax,y)],w,h,cs,ghost?C.ghost:C.cyan,ghost?.8:1.0,ghost?[5,5]:[]);
+    line3([b.xmin,y,planeZ(p,b.xmin,y)],[b.xmax,y,planeZ(p,b.xmax,y)],w,h,cs,ghost?C.ghost:C.cyan,ghost?.7:.9,ghost?[5,5]:[],ghost?.28:.33);
   }
   ctx.restore();
 }
@@ -439,20 +461,31 @@ function drawPoints(r,b,w,h,cs){
     const obs=project(r.x1[i],r.x2[i],r.y[i],w,h,cs);
     const fit=project(r.x1[i],r.x2[i],r.yhat[i],w,h,cs);
     items.push({i,obs,fit,depth:obs.depth});
+
+    // faint vertical guide for the observation
+    line3([r.x1[i],r.x2[i],b.zmin],[r.x1[i],r.x2[i],b.zmax],w,h,cs,C.grid,.6,[2,6],.34);
+
+    // residual segment
+    const selected=i===state.selected;
     ctx.save();
-    ctx.strokeStyle=C.mag;ctx.lineWidth=1.9;
+    ctx.strokeStyle=C.mag;ctx.globalAlpha=selected?1:.68;ctx.lineWidth=selected?2.8:1.65;ctx.lineCap='round';
     ctx.beginPath();ctx.moveTo(fit.x,fit.y);ctx.lineTo(obs.x,obs.y);ctx.stroke();
-    ctx.fillStyle=C.cyan;ctx.beginPath();ctx.arc(fit.x,fit.y,4.1,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+
+    ctx.save();
+    ctx.fillStyle=C.cyan;ctx.beginPath();ctx.arc(fit.x,fit.y,selected?5.0:4.0,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='white';ctx.lineWidth=1.7;ctx.stroke();
     ctx.restore();
   }
+
   items.sort((a,b)=>b.depth-a.depth);
   items.forEach(it=>{
     ctx.save();
     ctx.fillStyle=it.i===state.selected?C.mag:C.ink;
-    ctx.beginPath();ctx.arc(it.obs.x,it.obs.y,it.i===state.selected?7.8:6.2,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(it.obs.x,it.obs.y,it.i===state.selected?8.2:6.1,0,Math.PI*2);ctx.fill();
     ctx.strokeStyle='white';ctx.lineWidth=2;ctx.stroke();
     if(state.hover===it.i||state.selected===it.i){
-      ctx.strokeStyle=C.cyan;ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(it.obs.x,it.obs.y,12,0,Math.PI*2);ctx.stroke();
+      ctx.strokeStyle=C.cyan;ctx.lineWidth=2.4;ctx.beginPath();ctx.arc(it.obs.x,it.obs.y,12.2,0,Math.PI*2);ctx.stroke();
     }
     ctx.restore();
   });
@@ -462,18 +495,52 @@ function drawPoints(r,b,w,h,cs){
 function drawMean(r,w,h,cs){
   const P=project(r.x1bar,r.x2bar,r.ybar,w,h,cs);
   const F=project(r.x1bar,r.x2bar,r.meanFit,w,h,cs);
+  const floor=project(r.x1bar,r.x2bar,0,w,h,cs);
+
   ctx.save();
-  if(!state.includeIntercept){
-    ctx.strokeStyle=C.amber;ctx.lineWidth=2.5;
-    ctx.beginPath();ctx.moveTo(F.x,F.y);ctx.lineTo(P.x,P.y);ctx.stroke();
+
+  // Mean-coordinate construction: floor point -> mean outcome.
+  ctx.setLineDash([5,5]);
+  ctx.strokeStyle=state.includeIntercept?'rgba(8,169,196,.65)':'rgba(196,134,32,.72)';
+  ctx.lineWidth=1.45;
+  ctx.beginPath();ctx.moveTo(floor.x,floor.y);ctx.lineTo(P.x,P.y);ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Small floor target at (x̄1,x̄2,0)
+  ctx.fillStyle='rgba(16,34,56,.12)';
+  ctx.beginPath();ctx.arc(floor.x,floor.y,4,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle=C.muted;ctx.font='700 10px system-ui';
+  ctx.fillText('(x̄₁,x̄₂)',floor.x+8,floor.y+4);
+
+  if(state.includeIntercept){
+    // The two objects are the same point: draw concentric target rings.
+    ctx.strokeStyle=C.cyan;ctx.lineWidth=2.2;
+    ctx.beginPath();ctx.arc(P.x,P.y,12,0,Math.PI*2);ctx.stroke();
+    ctx.globalAlpha=.55;ctx.setLineDash([3,4]);
+    ctx.beginPath();ctx.arc(P.x,P.y,17,0,Math.PI*2);ctx.stroke();
+    ctx.setLineDash([]);ctx.globalAlpha=1;
+
+    ctx.fillStyle=C.cyan;ctx.beginPath();ctx.arc(P.x,P.y,7.5,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='white';ctx.lineWidth=2;ctx.stroke();
+
+    ctx.fillStyle=C.ink;ctx.font='800 12px system-ui';
+    ctx.fillText('(x̄₁, x̄₂, ȳ)',P.x+14,P.y-12);
+    ctx.fillStyle=C.cyan2;ctx.font='800 11px system-ui';
+    ctx.fillText('same point: ȳ = ŷ(x̄₁,x̄₂)',P.x+14,P.y+7);
+  }else{
+    // Separate mean outcome and the fitted plane value at the mean regressors.
+    arrow3([r.x1bar,r.x2bar,r.meanFit],[r.x1bar,r.x2bar,r.ybar],w,h,cs,C.amber,3,1);
+    ctx.fillStyle=C.cyan;ctx.beginPath();ctx.arc(F.x,F.y,5.2,0,Math.PI*2);ctx.fill();ctx.strokeStyle='white';ctx.lineWidth=1.8;ctx.stroke();
+    ctx.fillStyle=C.amber;ctx.beginPath();ctx.arc(P.x,P.y,7.8,0,Math.PI*2);ctx.fill();ctx.strokeStyle='white';ctx.lineWidth=2;ctx.stroke();
+
+    ctx.fillStyle=C.ink;ctx.font='800 12px system-ui';
+    ctx.fillText('(x̄₁, x̄₂, ȳ)',P.x+14,P.y-12);
+    ctx.fillStyle=C.amber;ctx.font='800 11px system-ui';
+    ctx.fillText(`gap = ${fmt(r.meanFit-r.ybar,3)}`,P.x+14,P.y+7);
+    ctx.fillStyle=C.cyan2;ctx.font='700 10px system-ui';
+    ctx.fillText('ŷ(x̄₁,x̄₂)',F.x+10,F.y+13);
   }
-  ctx.fillStyle=state.includeIntercept?C.cyan:C.amber;
-  ctx.beginPath();ctx.arc(P.x,P.y,8.5,0,Math.PI*2);ctx.fill();
-  ctx.strokeStyle='white';ctx.lineWidth=2;ctx.stroke();
-  ctx.fillStyle=C.ink;ctx.font='700 12px system-ui';
-  ctx.fillText('(x̄₁, x̄₂, ȳ)',P.x+12,P.y-10);
-  ctx.fillStyle=state.includeIntercept?C.cyan2:C.amber;ctx.font='700 11px system-ui';
-  ctx.fillText(state.includeIntercept?'lies on fitted plane':`vertical gap = ${fmt(r.meanFit-r.ybar,2)}`,P.x+12,P.y+7);
+
   ctx.restore();
 }
 
@@ -483,11 +550,30 @@ function draw(){
   ctx.clearRect(0,0,w,h);
   const r=ols();if(!r)return;
   const b=bounds(r),cs=centerScale(r,b);
+
   drawAxes(r,b,w,h,cs);
   if(state.prevPlane)drawPlane(state.prevPlane,b,w,h,cs,true);
   drawPlane(r,b,w,h,cs,false);
-  drawMean(r,w,h,cs);
+
+  const lx=b.xmin+(b.xmax-b.xmin)*.13,ly=b.ymax-(b.ymax-b.ymin)*.12;
+  const LP=project(lx,ly,planeZ(r,lx,ly),w,h,cs);
+  ctx.save();ctx.fillStyle=C.cyan2;ctx.font='800 11px system-ui';ctx.shadowColor='#fcfaf6';ctx.shadowBlur=5;
+  ctx.fillText('fitted OLS hyperplane',LP.x+8,LP.y-7);ctx.restore();
+
   lastProjected=drawPoints(r,b,w,h,cs);
+  drawMean(r,w,h,cs);
+
+  if(!state.includeIntercept){
+    const O=project(0,0,0,w,h,cs);
+    ctx.save();ctx.fillStyle=C.amber;ctx.beginPath();ctx.arc(O.x,O.y,5,0,Math.PI*2);ctx.fill();
+    ctx.font='800 10px system-ui';ctx.fillText('forced through origin',O.x+9,O.y+16);ctx.restore();
+  }
+
+  const gap=r.meanFit-r.ybar;
+  $('sceneYbar').textContent=fmt(r.ybar,3);
+  $('sceneMeanFit').textContent=fmt(r.meanFit,3);
+  $('sceneGap').textContent=fmt(gap,6);
+  $('meanOverlay').className='meanOverlay'+(state.includeIntercept&&Math.abs(gap)<1e-8?'':' warn');
 }
 
 function resize(){
@@ -590,30 +676,52 @@ function pointHit(cx,cy){
 
 canvas.addEventListener('pointerdown',e=>{
   const hit=pointHit(e.clientX,e.clientY);
+  state.lastPointer={x:e.clientX,y:e.clientY};
   if(hit!=null){
-    state.selected=hit;populateSelect();render();return;
+    snapshotPlane();
+    state.selected=hit;state.hover=hit;state.dragOrbit='point';
+    $('obsSelect').value=hit;
+    canvas.classList.add('dragPoint');
+  }else{
+    state.dragOrbit='orbit';
+    canvas.classList.add('dragging');
   }
-  state.dragOrbit=true;state.lastPointer={x:e.clientX,y:e.clientY};canvas.classList.add('dragging');canvas.setPointerCapture(e.pointerId);
+  canvas.setPointerCapture(e.pointerId);
+  render();
 });
 canvas.addEventListener('pointermove',e=>{
   const rect=canvas.getBoundingClientRect();
   const hit=pointHit(e.clientX,e.clientY);
-  state.hover=hit;
+
   if(state.dragOrbit&&state.lastPointer){
     const dx=e.clientX-state.lastPointer.x,dy=e.clientY-state.lastPointer.y;
-    state.yaw+=dx*.008;state.pitch=clamp(state.pitch+dy*.008,-1.25,1.25);
-    state.lastPointer={x:e.clientX,y:e.clientY};tooltip.style.opacity='0';draw();return;
+    if(state.dragOrbit==='orbit'){
+      state.yaw+=dx*.008;state.pitch=clamp(state.pitch+dy*.008,-1.25,1.25);
+    }else{
+      state.y[state.selected]=clamp(state.y[state.selected]-dy*.026,-2,10);
+      $('yRange').value=state.y[state.selected];
+    }
+    state.lastPointer={x:e.clientX,y:e.clientY};
+    tooltip.style.opacity='0';
+    render();
+    return;
   }
+
+  state.hover=hit;
   if(hit!=null){
     const r=ols(),i=hit,p=lastProjected.find(q=>q.i===i);
     tooltip.style.left=(p.obs.x)+'px';tooltip.style.top=(p.obs.y)+'px';
-    tooltip.innerHTML=`obs ${i+1}<br>x₁ = ${fmt(r.x1[i],2)}<br>x₂ = ${fmt(r.x2[i],2)}<br>y = ${fmt(r.y[i],2)}<br>ŷ = ${fmt(r.yhat[i],2)}<br>ê = ${fmt(r.e[i],2)}`;
+    tooltip.innerHTML=`obs ${i+1}<br>x₁ = ${fmt(r.x1[i],2)}<br>x₂ = ${fmt(r.x2[i],2)}<br>y = ${fmt(r.y[i],2)}<br>ŷ = ${fmt(r.yhat[i],2)}<br>ê = ${fmt(r.e[i],2)}<br><span style="color:#9fe7f0">drag vertically to change y</span>`;
     tooltip.style.opacity='1';
   }else tooltip.style.opacity='0';
-  draw();
+  render();
 });
-canvas.addEventListener('pointerup',e=>{state.dragOrbit=false;state.lastPointer=null;canvas.classList.remove('dragging');try{canvas.releasePointerCapture(e.pointerId)}catch{}});
-canvas.addEventListener('pointerleave',()=>{if(!state.dragOrbit){state.hover=null;tooltip.style.opacity='0';draw()}});
+canvas.addEventListener('pointerup',e=>{
+  state.dragOrbit=false;state.lastPointer=null;
+  canvas.classList.remove('dragging','dragPoint');
+  try{canvas.releasePointerCapture(e.pointerId)}catch{}
+});
+canvas.addEventListener('pointerleave',()=>{if(!state.dragOrbit){state.hover=null;tooltip.style.opacity='0';render()}});
 canvas.addEventListener('wheel',e=>{e.preventDefault();state.zoom=clamp(state.zoom*(e.deltaY>0?.92:1.08),.65,1.65);draw()},{passive:false});
 
 $('interceptToggle').addEventListener('change',e=>{snapshotPlane();state.includeIntercept=e.target.checked;render()});
@@ -622,7 +730,7 @@ $('yRange').addEventListener('input',e=>{snapshotPlane();state.y[state.selected]
 $('x1Spread').addEventListener('input',e=>{snapshotPlane();state.x1Spread=+e.target.value;render()});
 $('x2Spread').addEventListener('input',e=>{snapshotPlane();state.x2Spread=+e.target.value;render()});
 document.querySelectorAll('.step').forEach(b=>b.addEventListener('click',()=>{state.activeStep=+b.dataset.step;render()}));
-$('resetBtn').addEventListener('click',()=>{state.yaw=base.yaw;state.pitch=base.pitch;state.zoom=1;state.prevPlane=null;render()});
+$('resetBtn').addEventListener('click',()=>{state.yaw=base.yaw;state.pitch=base.pitch;state.zoom=1;state.prevPlane=null;state.hover=null;render()});
 $('newBtn').addEventListener('click',()=>{
   const b0=2+Math.random()*1.5,b1=.4+Math.random()*.8,b2=-.5+Math.random()*1.0;
   const {x1,x2}=xs();

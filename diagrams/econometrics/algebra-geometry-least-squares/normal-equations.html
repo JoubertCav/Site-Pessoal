@@ -1,49 +1,462 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Normal Equations & Residual Orthogonality</title>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Normal Equations & Residual Orthogonality · 3D</title>
 <style>
-:root{--paper:#f6f3ec;--card:#fffdf8;--ink:#10243e;--muted:#687788;--line:#d9ddd9;--grid:#dfe5e3;--cyan:#00a9c6;--cyan-d:#007b91;--cyan-s:#def6fa;--mag:#d43b83;--mag-s:#fbe5ef;--amber:#b97810;--amber-s:#fff1cc;--shadow:0 10px 28px rgba(16,36,62,.07);--r:18px}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}button,input{font:inherit}button{color:inherit}button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px solid rgba(0,169,198,.28);outline-offset:2px}.app{max-width:1540px;margin:auto;padding:14px 18px 24px}header{display:flex;align-items:center;gap:16px;min-height:76px;border-bottom:1px solid var(--line);padding:4px 2px 12px}.topic{display:flex;align-items:center;gap:14px;min-width:0;flex:1}.num{width:42px;height:42px;border:1px solid #b9c4c8;border-radius:13px;display:grid;place-items:center;font:700 13px/1 ui-monospace,monospace;color:var(--cyan-d);background:#ffffff8a}h1{font-family:Georgia,serif;font-size:clamp(21px,2.4vw,30px);font-weight:500;line-height:1.05;letter-spacing:-.02em;margin:0}.sub{font-size:13px;color:var(--muted);margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.actions{display:flex;gap:8px}.btn{border:1px solid #cfd6d7;background:var(--card);border-radius:11px;padding:9px 12px;font-size:12px;font-weight:750;cursor:pointer;box-shadow:0 2px 8px #10243e08;transition:.15s}.btn:hover{transform:translateY(-1px);border-color:#9cafb4}.btn.primary{background:var(--ink);border-color:var(--ink);color:white}
-.layout{display:grid;grid-template-columns:242px minmax(520px,1fr) 302px;gap:14px;margin-top:14px;align-items:start}.card{background:#fffdf8ee;border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}.side{display:flex;flex-direction:column;gap:12px}.panel,.inspect{padding:15px}.eyebrow{font:700 10px/1.2 ui-monospace,monospace;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);margin-bottom:10px}.control{margin:12px 0}.labelrow{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;font-weight:750;margin-bottom:6px}.val{font:700 11px/1 ui-monospace,monospace;color:var(--cyan-d)}input[type=range]{width:100%;height:25px;accent-color:var(--cyan);cursor:pointer}.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}.seg button{border:1px solid var(--line);background:white;border-radius:9px;padding:7px 3px;font-size:10px;cursor:pointer}.seg button.active{background:var(--cyan-s);border-color:#8bd7e4;color:#006d80;font-weight:800}.tip{padding:11px 12px;background:#f5f8f6;border:1px solid #dce5e1;border-radius:12px;font-size:10.5px;line-height:1.45;color:#526474}.tip strong{display:block;color:var(--ink);margin-bottom:3px}.notice{padding:10px 11px;border:1px solid #a9dfe7;border-radius:11px;background:var(--cyan-s);font-size:10px;line-height:1.4;color:#35616b}.notice.warn{background:var(--amber-s);border-color:#e9ca83;color:#71501c}.main{min-width:0;display:flex;flex-direction:column;gap:12px}.eqbar{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}.equation{font-family:Georgia,serif;font-size:clamp(16px,1.8vw,21px);white-space:nowrap}.cyan{color:var(--cyan-d)}.mag{color:var(--mag)}.badge{padding:7px 10px;border:1px solid #9edce6;border-radius:99px;background:var(--cyan-s);color:#006f83;font:700 10px/1 ui-monospace,monospace;white-space:nowrap}.badge.warn{background:var(--amber-s);border-color:#e9ca83;color:#79500d}
-.viz{padding:14px;overflow:hidden}.vizhead{display:flex;justify-content:space-between;gap:12px;padding:2px 3px 9px}.viztitle{font-family:Georgia,serif;font-size:18px}.viznote{text-align:right;color:var(--muted);font-size:11px}.stage{position:relative;border:1px solid #dde3e0;border-radius:15px;background:#fbfaf5;overflow:hidden;min-height:500px}.stage:before{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:26px 26px;opacity:.33;pointer-events:none}.stage-label{position:absolute;top:13px;left:15px;z-index:2;font:700 10px/1 ui-monospace,monospace;color:#596a78}.stage svg{width:100%;height:auto;min-height:500px;display:block;touch-action:none}.plane{fill:#cceff4;fill-opacity:.58;stroke:#73c9d6;stroke-width:1.5}.plane-grid{stroke:#79cbd7;stroke-width:.75;opacity:.55}.plane-rank1{stroke:var(--amber);stroke-width:10;opacity:.3;stroke-linecap:round}.axis{stroke:#a8b2b5;stroke-width:1.2;stroke-dasharray:4 5}.vec{fill:none;stroke-width:3;stroke-linecap:round}.vec.y{stroke:var(--ink);marker-end:url(#navyArrow)}.vec.fit{stroke:var(--cyan);marker-end:url(#cyanArrow)}.vec.resid{stroke:var(--mag);marker-end:url(#magArrow)}.vec.combo{stroke:#62758b;stroke-width:2.2;stroke-dasharray:5 4;marker-end:url(#grayArrow)}.vec.col{stroke:#338da0;stroke-width:2;marker-end:url(#cyanArrow)}.ghost{opacity:.22;stroke-dasharray:5 5}.endpoint{stroke:white;stroke-width:3;cursor:grab}.endpoint.y{fill:var(--ink)}.endpoint.combo{fill:#62758b}.lbl{font-size:11px;font-weight:800;fill:var(--ink);paint-order:stroke;stroke:#fbfaf5;stroke-width:4px;stroke-linejoin:round}.lbl.cyan{fill:var(--cyan-d)}.lbl.mag{fill:var(--mag)}.rightangle{fill:none;stroke:var(--mag);stroke-width:1.8}.hot{filter:drop-shadow(0 0 5px rgba(212,59,131,.5))}.legend{display:flex;gap:14px;flex-wrap:wrap;padding:9px 4px 0;font-size:10px;color:var(--muted)}.legend span{display:inline-flex;gap:6px;align-items:center}.key{width:16px;height:3px;border-radius:4px;background:var(--ink)}.key.c{background:var(--cyan)}.key.m{background:var(--mag)}.key.d{height:1px;border-top:2px dashed #62758b;background:none}
-.forms{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.form{padding:10px 11px;border:1px solid var(--line);border-radius:12px;background:#fafaf6;cursor:pointer;transition:.15s}.form:hover,.form.active{border-color:#7dcfdb;background:var(--cyan-s)}.formno{font:700 9px/1 ui-monospace,monospace;color:var(--muted)}.formeq{font-family:Georgia,serif;font-size:14px;margin-top:5px}.formcap{font-size:9.5px;color:var(--muted);margin-top:4px}.guide{display:flex;gap:11px;align-items:center;padding:11px 13px;background:var(--ink);color:white;border-radius:14px}.gstep{font:700 10px/1 ui-monospace,monospace;color:#94deea;white-space:nowrap}.gcopy{font-size:12px;line-height:1.4;flex:1}.guide button{border:1px solid #ffffff47;background:transparent;color:white;border-radius:8px;padding:6px 8px;cursor:pointer}.guide button:disabled{opacity:.3}.focus{animation:pulse 1.7s ease-in-out infinite}@keyframes pulse{50%{filter:drop-shadow(0 0 7px #d43b8373)}}
-.row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:7px 0;border-bottom:1px solid #eaede9}.row:last-child{border:0}.mname{font-family:Georgia,serif;font-size:15px}.dim{font:600 9px/1 ui-monospace,monospace;color:#7b8995}.mval{font:700 10.5px/1.2 ui-monospace,monospace;text-align:right}.matrixblock{margin-top:12px}.matrixtitle{display:flex;justify-content:space-between;margin-bottom:7px;font-size:11px;font-weight:800}.matrix{position:relative;display:grid;gap:3px;padding:3px 8px}.matrix:before,.matrix:after{content:"";position:absolute;top:0;bottom:0;width:6px;border-top:1.5px solid #7d8a95;border-bottom:1.5px solid #7d8a95}.matrix:before{left:0;border-left:1.5px solid #7d8a95}.matrix:after{right:0;border-right:1.5px solid #7d8a95}.cell{text-align:center;padding:5px 2px;border-radius:5px;background:#edf7f7;font:600 9px/1 ui-monospace,monospace;transition:.15s}.cell.neg{background:#faeaf1}.cell.colhot{background:#cceff4;transform:scale(1.03)}.meters{margin-top:13px}.meter{margin:10px 0}.meterhead{display:flex;justify-content:space-between;font:700 10px/1 ui-monospace,monospace}.track{height:7px;margin-top:6px;border-radius:99px;background:#e8ece9;overflow:hidden;position:relative}.track:after{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:#8b979e}.fill{position:absolute;top:1px;height:5px;border-radius:9px;background:var(--mag);transition:width .2s,left .2s}.stats{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}.stat{padding:9px;border:1px solid #e0e5e2;border-radius:10px;background:#fafaf6}.sl{font-size:8.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}.sv{font:800 13px/1 ui-monospace,monospace;margin-top:4px}.hover{position:fixed;pointer-events:none;z-index:50;background:var(--ink);color:white;border-radius:9px;padding:7px 9px;font:600 10px/1.35 ui-monospace,monospace;opacity:0;transform:translate(10px,10px);box-shadow:0 8px 24px #10243e40}.hover.show{opacity:1}
-@media(max-width:1120px){.layout{grid-template-columns:220px 1fr}.right{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:12px}.stage,.stage svg{min-height:450px}}@media(max-width:760px){.app{padding:10px}.layout{grid-template-columns:1fr}.main{grid-row:1}.left{grid-row:2}.right{grid-row:3;display:grid;grid-template-columns:1fr}.stage,.stage svg{min-height:400px}.eqbar{align-items:flex-start;flex-direction:column}.equation{white-space:normal}.forms{grid-template-columns:1fr}.sub{white-space:normal}.guide{flex-wrap:wrap}.actions .btn:first-child{display:none}}@media(max-width:520px){header{align-items:flex-start}.num{display:none}.actions{flex-direction:column}.app{padding:8px}.viz{padding:8px}.stage,.stage svg{min-height:360px}.viznote{display:none}.panel,.inspect{padding:13px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
-</style></head><body><div class="app">
-<header><div class="topic"><div class="num">02</div><div><h1>Normal Equations & Residual Orthogonality</h1><div class="sub">OLS leaves a residual perpendicular to every direction generated by the columns of X.</div></div></div><div class="actions"><button class="btn" id="reset">Reset</button><button class="btn primary" id="new">New Example</button></div></header>
-<div class="layout"><aside class="side left"><section class="card panel"><div class="eyebrow">Controls</div>
-<div class="control"><div class="labelrow"><label for="y1">Outcome y₁</label><output class="val" id="y1v"></output></div><input id="y1" type="range" min="-2.2" max="2.2" step=".01"></div><div class="control"><div class="labelrow"><label for="y2">Outcome y₂</label><output class="val" id="y2v"></output></div><input id="y2" type="range" min="-2.2" max="2.2" step=".01"></div><div class="control"><div class="labelrow"><label for="y3">Outcome y₃</label><output class="val" id="y3v"></output></div><input id="y3" type="range" min="-2.2" max="2.2" step=".01"></div>
-<div class="control"><div class="labelrow"><label for="collin">Align x₂ with x₁</label><output class="val" id="collinv"></output></div><input id="collin" type="range" min="0" max="1" step=".01"></div><div class="control"><div class="labelrow"><label for="view">Rotate view</label><output class="val" id="viewv"></output></div><input id="view" type="range" min="-50" max="50" step="1"></div>
-<div class="tip"><strong>Drag y in the scene</strong>Move its endpoint to perturb two coordinates. Every vector, matrix, and dot product updates.</div></section>
-<section class="card panel"><div class="eyebrow">Linear combination Xc</div><div class="control"><div class="labelrow"><label for="c1">c₁</label><output class="val" id="c1v"></output></div><input id="c1" type="range" min="-1.5" max="1.5" step=".01"></div><div class="control"><div class="labelrow"><label for="c2">c₂</label><output class="val" id="c2v"></output></div><input id="c2" type="range" min="-1.5" max="1.5" step=".01"></div><div class="notice">Change c. The dashed vector moves inside S(X), but <strong>(Xc)ᵀê remains zero</strong>.</div></section>
-<section class="card panel"><div class="eyebrow">What to notice</div><div class="tip"><strong>1 · Projection</strong>ŷ lies in S(X); ê points away from it.</div><div class="tip" style="margin-top:7px"><strong>2 · K conditions</strong>Each column contributes one zero inner product.</div><div class="tip" style="margin-top:7px"><strong>3 · Every combination</strong>Orthogonality extends from columns to all Xc.</div></section></aside>
+:root{
+  --paper:#f6f3ec;--card:#fffdf8;--ink:#10243e;--muted:#687788;--line:#d9ddd9;--grid:#e3e8e6;
+  --cyan:#00a9c6;--cyan-d:#007b91;--cyan-s:#def6fa;--cyan-2:#4bb9ca;
+  --mag:#d43b83;--mag-s:#fbe5ef;--amber:#b97810;--amber-s:#fff1cc;--ghost:#9eb4b8;
+  --shadow:0 10px 28px rgba(16,36,62,.07);--r:18px
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+body{background-image:radial-gradient(circle at 14% 8%,rgba(0,169,198,.035),transparent 22%)}
+button,input{font:inherit}button{color:inherit}
+button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px solid rgba(0,169,198,.28);outline-offset:2px}
+.app{max-width:1580px;margin:auto;padding:14px 18px 24px}
+header{display:flex;align-items:center;gap:16px;min-height:76px;border-bottom:1px solid var(--line);padding:4px 2px 12px}
+.topic{display:flex;align-items:center;gap:14px;min-width:0;flex:1}
+.num{width:42px;height:42px;border:1px solid #b9c4c8;border-radius:13px;display:grid;place-items:center;font:700 13px/1 ui-monospace,monospace;color:var(--cyan-d);background:#ffffff8a}
+h1{font-family:Georgia,serif;font-size:clamp(21px,2.4vw,30px);font-weight:500;line-height:1.05;letter-spacing:-.02em;margin:0}
+.sub{font-size:13px;color:var(--muted);margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.actions{display:flex;gap:8px}
+.btn{border:1px solid #cfd6d7;background:var(--card);border-radius:11px;padding:9px 12px;font-size:12px;font-weight:750;cursor:pointer;box-shadow:0 2px 8px #10243e08;transition:.15s}
+.btn:hover{transform:translateY(-1px);border-color:#9cafb4}.btn.primary{background:var(--ink);border-color:var(--ink);color:white}
+.layout{display:grid;grid-template-columns:244px minmax(560px,1fr) 310px;gap:14px;margin-top:14px;align-items:start}
+.card{background:#fffdf8ee;border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.side{display:flex;flex-direction:column;gap:12px}.panel,.inspect{padding:15px}
+.eyebrow{font:700 10px/1.2 ui-monospace,monospace;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);margin-bottom:10px}
+.control{margin:12px 0}.labelrow{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;font-weight:750;margin-bottom:6px}
+.val{font:700 11px/1 ui-monospace,monospace;color:var(--cyan-d)}
+input[type=range]{width:100%;height:25px;accent-color:var(--cyan);cursor:pointer}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.seg button{border:1px solid var(--line);background:white;border-radius:9px;padding:7px 3px;font-size:10px;cursor:pointer}
+.seg button.active{background:var(--cyan-s);border-color:#8bd7e4;color:#006d80;font-weight:800}
+.tip{padding:11px 12px;background:#f5f8f6;border:1px solid #dce5e1;border-radius:12px;font-size:10.5px;line-height:1.45;color:#526474}
+.tip strong{display:block;color:var(--ink);margin-bottom:3px}
+.notice{padding:10px 11px;border:1px solid #a9dfe7;border-radius:11px;background:var(--cyan-s);font-size:10px;line-height:1.4;color:#35616b}
+.notice.warn{background:var(--amber-s);border-color:#e9ca83;color:#71501c}
+.main{min-width:0;display:flex;flex-direction:column;gap:12px}
+.eqbar{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.equation{font-family:Georgia,serif;font-size:clamp(16px,1.8vw,21px);white-space:nowrap}
+.cyan{color:var(--cyan-d)}.mag{color:var(--mag)}
+.badge{padding:7px 10px;border:1px solid #9edce6;border-radius:99px;background:var(--cyan-s);color:#006f83;font:700 10px/1 ui-monospace,monospace;white-space:nowrap}
+.badge.warn{background:var(--amber-s);border-color:#e9ca83;color:#79500d}
+.viz{padding:14px;overflow:hidden}
+.vizhead{display:flex;justify-content:space-between;gap:12px;padding:2px 3px 9px}
+.viztitle{font-family:Georgia,serif;font-size:18px}.viznote{text-align:right;color:var(--muted);font-size:11px;line-height:1.4}
+.stage{position:relative;border:1px solid #dde3e0;border-radius:15px;background:#fbfaf5;overflow:hidden;min-height:570px}
+.stage-label{position:absolute;top:13px;left:15px;z-index:3;font:700 10px/1 ui-monospace,monospace;color:#596a78;pointer-events:none}
+canvas{display:block;width:100%;height:570px;touch-action:none;cursor:grab}
+canvas.orbit{cursor:grabbing}canvas.drag-y{cursor:move}
+.stage-help{position:absolute;right:12px;bottom:10px;z-index:3;border:1px solid var(--line);border-radius:9px;background:#fffdf8e8;padding:6px 8px;font-size:9px;color:var(--muted);pointer-events:none}
+.live-dots{position:absolute;top:12px;right:12px;z-index:3;display:grid;gap:6px;pointer-events:none}
+.live-dot{padding:6px 8px;border-radius:9px;background:#fffdf8eb;border:1px solid var(--line);font:700 9px/1 ui-monospace,monospace;box-shadow:0 3px 10px #10243e0b}
+.live-dot b{color:var(--mag)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;padding:9px 4px 0;font-size:10px;color:var(--muted)}
+.legend span{display:inline-flex;gap:6px;align-items:center}.key{width:16px;height:3px;border-radius:4px;background:var(--ink)}
+.key.c{background:var(--cyan)}.key.m{background:var(--mag)}.key.d{height:1px;border-top:2px dashed #62758b;background:none}
+.key.n{height:1px;border-top:2px dashed var(--mag);background:none}.key.p{height:10px;background:#cceff488;border:1px solid #73c9d6}
+.forms{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.form{padding:10px 11px;border:1px solid var(--line);border-radius:12px;background:#fafaf6;cursor:pointer;transition:.15s}
+.form:hover,.form.active{border-color:#7dcfdb;background:var(--cyan-s)}
+.formno{font:700 9px/1 ui-monospace,monospace;color:var(--muted)}.formeq{font-family:Georgia,serif;font-size:14px;margin-top:5px}.formcap{font-size:9.5px;color:var(--muted);margin-top:4px}
+.guide{display:flex;gap:11px;align-items:center;padding:11px 13px;background:var(--ink);color:white;border-radius:14px}
+.gstep{font:700 10px/1 ui-monospace,monospace;color:#94deea;white-space:nowrap}.gcopy{font-size:12px;line-height:1.4;flex:1}
+.guide button{border:1px solid #ffffff47;background:transparent;color:white;border-radius:8px;padding:6px 8px;cursor:pointer}.guide button:disabled{opacity:.3}
+.focus{animation:pulse 1.7s ease-in-out infinite}@keyframes pulse{50%{filter:drop-shadow(0 0 7px #d43b8373)}}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:7px 0;border-bottom:1px solid #eaede9}.row:last-child{border:0}
+.mname{font-family:Georgia,serif;font-size:15px}.dim{font:600 9px/1 ui-monospace,monospace;color:#7b8995}.mval{font:700 10.5px/1.2 ui-monospace,monospace;text-align:right}
+.matrixblock{margin-top:12px}.matrixtitle{display:flex;justify-content:space-between;margin-bottom:7px;font-size:11px;font-weight:800}
+.matrix{position:relative;display:grid;gap:3px;padding:3px 8px}.matrix:before,.matrix:after{content:"";position:absolute;top:0;bottom:0;width:6px;border-top:1.5px solid #7d8a95;border-bottom:1.5px solid #7d8a95}
+.matrix:before{left:0;border-left:1.5px solid #7d8a95}.matrix:after{right:0;border-right:1.5px solid #7d8a95}
+.cell{text-align:center;padding:5px 2px;border-radius:5px;background:#edf7f7;font:600 9px/1 ui-monospace,monospace;transition:.15s}
+.cell.neg{background:#faeaf1}.cell.colhot{background:#cceff4;transform:scale(1.03)}
+.meters{margin-top:13px}.meter{margin:10px 0}.meterhead{display:flex;justify-content:space-between;font:700 10px/1 ui-monospace,monospace}
+.track{height:7px;margin-top:6px;border-radius:99px;background:#e8ece9;overflow:hidden;position:relative}.track:after{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:#8b979e}
+.fill{position:absolute;top:1px;height:5px;border-radius:9px;background:var(--mag);transition:width .2s,left .2s}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}.stat{padding:9px;border:1px solid #e0e5e2;border-radius:10px;background:#fafaf6}
+.sl{font-size:8.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}.sv{font:800 13px/1 ui-monospace,monospace;margin-top:4px}
+.hover{position:fixed;pointer-events:none;z-index:50;background:var(--ink);color:white;border-radius:9px;padding:7px 9px;font:600 10px/1.35 ui-monospace,monospace;opacity:0;transform:translate(10px,10px);box-shadow:0 8px 24px #10243e40}.hover.show{opacity:1}
+@media(max-width:1120px){.layout{grid-template-columns:220px 1fr}.right{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:12px}.stage{min-height:500px}canvas{height:500px}}
+@media(max-width:760px){.app{padding:10px}.layout{grid-template-columns:1fr}.main{grid-row:1}.left{grid-row:2}.right{grid-row:3;display:grid;grid-template-columns:1fr}.stage{min-height:430px}canvas{height:430px}.eqbar{align-items:flex-start;flex-direction:column}.equation{white-space:normal}.forms{grid-template-columns:1fr}.sub{white-space:normal}.guide{flex-wrap:wrap}.actions .btn:first-child{display:none}}
+@media(max-width:520px){header{align-items:flex-start}.num{display:none}.actions{flex-direction:column}.app{padding:8px}.viz{padding:8px}.stage{min-height:390px}canvas{height:390px}.viznote{display:none}.panel,.inspect{padding:13px}.live-dots{display:none}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="topic"><div class="num">02</div><div><h1>Normal Equations & Residual Orthogonality</h1><div class="sub">OLS leaves a residual perpendicular to every direction generated by the columns of X.</div></div></div>
+  <div class="actions"><button class="btn" id="reset">Reset</button><button class="btn primary" id="new">New Example</button></div>
+</header>
 
-<main class="main"><section class="card eqbar"><div class="equation"><span class="mag">ê = y − Xb̂</span> &nbsp;and&nbsp; <span class="cyan">Xᵀê = 0<sub>K</sub></span></div><div class="badge" id="badge">2 / 2 orthogonality conditions hold</div></section>
-<section class="card viz"><div class="vizhead"><div><div class="eyebrow" style="margin-bottom:5px">Geometric statement</div><div class="viztitle">y = ŷ + ê in observation space</div></div><div class="viznote">The translucent plane is S(X).<br>Rotate the view; the mathematics stays fixed.</div></div><div class="stage" id="stage"><div class="stage-label">OBSERVATION SPACE · ℝ³</div><svg id="scene" viewBox="0 0 760 500" role="img" aria-label="Column space plane with fitted vector and orthogonal residual"></svg></div><div class="legend"><span><i class="key"></i> y</span><span><i class="key c"></i> fitted ŷ ∈ S(X)</span><span><i class="key m"></i> residual ê ∈ S(X)⊥</span><span><i class="key d"></i> arbitrary Xc</span></div></section>
-<section class="forms" aria-label="Equivalent forms"><button class="form active" data-form="0"><div class="formno">(i) MATRIX FORM</div><div class="formeq">Xᵀê = 0<sub>K</sub></div><div class="formcap">All conditions at once</div></button><button class="form" data-form="1"><div class="formno">(ii) COLUMN FORM</div><div class="formeq">xₖᵀê = 0</div><div class="formcap">One condition per regressor</div></button><button class="form" data-form="2"><div class="formno">(iii) SUBSPACE FORM</div><div class="formeq">ê ∈ S(X)⊥</div><div class="formcap">The geometric statement</div></button></section>
-<section class="guide"><div class="gstep" id="gstep">STEP 1 / 4</div><div class="gcopy" id="gcopy"></div><button id="prev" aria-label="Previous guided step">←</button><button id="next" aria-label="Next guided step">→</button></section></main>
+<div class="layout">
+<aside class="side left">
+  <section class="card panel">
+    <div class="eyebrow">Controls</div>
+    <div class="control"><div class="labelrow"><label for="y1">Outcome y₁</label><output class="val" id="y1v"></output></div><input id="y1" type="range" min="-2.5" max="2.5" step=".01"></div>
+    <div class="control"><div class="labelrow"><label for="y2">Outcome y₂</label><output class="val" id="y2v"></output></div><input id="y2" type="range" min="-2.5" max="2.5" step=".01"></div>
+    <div class="control"><div class="labelrow"><label for="y3">Outcome y₃</label><output class="val" id="y3v"></output></div><input id="y3" type="range" min="-2.5" max="2.5" step=".01"></div>
+    <div class="control"><div class="labelrow"><label for="collin">Align x₂ with x₁</label><output class="val" id="collinv"></output></div><input id="collin" type="range" min="0" max="1" step=".01"></div>
+    <div class="tip"><strong>Direct manipulation</strong>Drag the navy y endpoint to move it in the screen plane. Drag empty space to orbit. Wheel to zoom.</div>
+  </section>
 
-<aside class="side right"><section class="card inspect"><div class="eyebrow">Mathematical inspector</div><div class="row"><span class="mname">y <span class="dim">3 × 1</span></span><span class="mval" id="yv"></span></div><div class="row"><span class="mname">b̂ <span class="dim">2 × 1</span></span><span class="mval cyan" id="bv"></span></div><div class="row"><span class="mname">ŷ <span class="dim">3 × 1</span></span><span class="mval cyan" id="fitv"></span></div><div class="row"><span class="mname">ê <span class="dim">3 × 1</span></span><span class="mval mag" id="ev"></span></div>
-<div class="matrixblock"><div class="matrixtitle"><span>X = [x₁ &nbsp; x₂]</span><span class="dim">3 × 2</span></div><div class="matrix" id="xm"></div></div><div class="matrixblock"><div class="matrixtitle"><span>Xᵀê</span><span class="dim">2 × 1</span></div><div class="matrix" id="xte"></div></div>
-<div class="meters"><div class="meter" data-col="0"><div class="meterhead"><span>x₁ᵀê</span><span id="d1"></span></div><div class="track"><div class="fill" id="bar1"></div></div></div><div class="meter" data-col="1"><div class="meterhead"><span>x₂ᵀê</span><span id="d2"></span></div><div class="track"><div class="fill" id="bar2"></div></div></div></div>
-<div class="stats"><div class="stat"><div class="sl">rank(X)</div><div class="sv" id="rank"></div></div><div class="stat"><div class="sl">cond(XᵀX)</div><div class="sv" id="cond"></div></div><div class="stat"><div class="sl">ŷᵀê</div><div class="sv cyan" id="fe"></div></div><div class="stat"><div class="sl">(Xc)ᵀê</div><div class="sv" id="ce"></div></div></div><div class="notice" id="ranknote" style="margin-top:12px"></div></section>
-<section class="card inspect"><div class="eyebrow">Dimension check</div><div class="row"><span class="mname">Xᵀ <span class="dim">2 × 3</span></span><span class="mval">×</span></div><div class="row"><span class="mname">ê <span class="dim">3 × 1</span></span><span class="mval">=</span></div><div class="row"><span class="mname">0₂ <span class="dim">2 × 1</span></span><span class="mval cyan">valid</span></div></section></aside>
-</div></div><div class="hover" id="hover"></div>
+  <section class="card panel">
+    <div class="eyebrow">Linear combination Xc</div>
+    <div class="control"><div class="labelrow"><label for="c1">c₁</label><output class="val" id="c1v"></output></div><input id="c1" type="range" min="-1.5" max="1.5" step=".01"></div>
+    <div class="control"><div class="labelrow"><label for="c2">c₂</label><output class="val" id="c2v"></output></div><input id="c2" type="range" min="-1.5" max="1.5" step=".01"></div>
+    <div class="notice">Change c. The dashed vector moves anywhere inside S(X), while <strong>(Xc)ᵀê remains zero</strong>.</div>
+  </section>
+
+  <section class="card panel">
+    <div class="eyebrow">What to notice</div>
+    <div class="tip"><strong>1 · Projection</strong>ŷ is the orthogonal projection of y onto S(X).</div>
+    <div class="tip" style="margin-top:7px"><strong>2 · Normal direction</strong>ê lies on the dashed magenta normal S(X)⊥.</div>
+    <div class="tip" style="margin-top:7px"><strong>3 · All combinations</strong>If x₁ᵀê=x₂ᵀê=0, then every Xc is also perpendicular to ê.</div>
+  </section>
+</aside>
+
+<main class="main">
+  <section class="card eqbar">
+    <div class="equation"><span class="mag">ê = y − Xb̂</span> &nbsp;and&nbsp; <span class="cyan">Xᵀê = 0<sub>K</sub></span></div>
+    <div class="badge" id="badge">2 / 2 orthogonality conditions hold</div>
+  </section>
+
+  <section class="card viz">
+    <div class="vizhead">
+      <div><div class="eyebrow" style="margin-bottom:5px">Geometric statement</div><div class="viztitle">The residual is normal to the entire column space</div></div>
+      <div class="viznote">Orbit the scene freely.<br>The geometry, vectors, and matrices stay synchronized.</div>
+    </div>
+    <div class="stage" id="stage">
+      <div class="stage-label">OBSERVATION SPACE · ℝ³</div>
+      <canvas id="scene" aria-label="Interactive 3D column-space plane, fitted vector, residual, and normal equations"></canvas>
+      <div class="live-dots">
+        <div class="live-dot">x₁ᵀê = <b id="live1">0</b></div>
+        <div class="live-dot">x₂ᵀê = <b id="live2">0</b></div>
+        <div class="live-dot">(Xc)ᵀê = <b id="livec">0</b></div>
+      </div>
+      <div class="stage-help">drag y · orbit background · wheel zoom</div>
+    </div>
+    <div class="legend">
+      <span><i class="key"></i> y</span>
+      <span><i class="key c"></i> ŷ ∈ S(X)</span>
+      <span><i class="key m"></i> ê</span>
+      <span><i class="key p"></i> S(X)</span>
+      <span><i class="key n"></i> S(X)⊥</span>
+      <span><i class="key d"></i> arbitrary Xc</span>
+    </div>
+  </section>
+
+  <section class="forms" aria-label="Equivalent forms">
+    <button class="form active" data-form="0"><div class="formno">(i) MATRIX FORM</div><div class="formeq">Xᵀê = 0<sub>K</sub></div><div class="formcap">All conditions at once</div></button>
+    <button class="form" data-form="1"><div class="formno">(ii) COLUMN FORM</div><div class="formeq">xₖᵀê = 0</div><div class="formcap">One condition per regressor</div></button>
+    <button class="form" data-form="2"><div class="formno">(iii) SUBSPACE FORM</div><div class="formeq">ê ∈ S(X)⊥</div><div class="formcap">The geometric statement</div></button>
+  </section>
+
+  <section class="guide"><div class="gstep" id="gstep">STEP 1 / 4</div><div class="gcopy" id="gcopy"></div><button id="prev">←</button><button id="next">→</button></section>
+</main>
+
+<aside class="side right">
+  <section class="card inspect">
+    <div class="eyebrow">Mathematical inspector</div>
+    <div class="row"><span class="mname">y <span class="dim">3 × 1</span></span><span class="mval" id="yv"></span></div>
+    <div class="row"><span class="mname">b̂ <span class="dim">2 × 1</span></span><span class="mval cyan" id="bv"></span></div>
+    <div class="row"><span class="mname">ŷ <span class="dim">3 × 1</span></span><span class="mval cyan" id="fitv"></span></div>
+    <div class="row"><span class="mname">ê <span class="dim">3 × 1</span></span><span class="mval mag" id="ev"></span></div>
+
+    <div class="matrixblock"><div class="matrixtitle"><span>X = [x₁ &nbsp; x₂]</span><span class="dim">3 × 2</span></div><div class="matrix" id="xm"></div></div>
+    <div class="matrixblock"><div class="matrixtitle"><span>Xᵀê</span><span class="dim">2 × 1</span></div><div class="matrix" id="xte"></div></div>
+
+    <div class="meters">
+      <div class="meter" data-col="0"><div class="meterhead"><span>x₁ᵀê</span><span id="d1"></span></div><div class="track"><div class="fill" id="bar1"></div></div></div>
+      <div class="meter" data-col="1"><div class="meterhead"><span>x₂ᵀê</span><span id="d2"></span></div><div class="track"><div class="fill" id="bar2"></div></div></div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="sl">rank(X)</div><div class="sv" id="rank"></div></div>
+      <div class="stat"><div class="sl">cond(XᵀX)</div><div class="sv" id="cond"></div></div>
+      <div class="stat"><div class="sl">ŷᵀê</div><div class="sv cyan" id="fe"></div></div>
+      <div class="stat"><div class="sl">(Xc)ᵀê</div><div class="sv" id="ce"></div></div>
+    </div>
+    <div class="notice" id="ranknote" style="margin-top:12px"></div>
+  </section>
+
+  <section class="card inspect">
+    <div class="eyebrow">Dimension check</div>
+    <div class="row"><span class="mname">Xᵀ <span class="dim">2 × 3</span></span><span class="mval">×</span></div>
+    <div class="row"><span class="mname">ê <span class="dim">3 × 1</span></span><span class="mval">=</span></div>
+    <div class="row"><span class="mname">0₂ <span class="dim">2 × 1</span></span><span class="mval cyan">valid</span></div>
+  </section>
+</aside>
+</div>
+</div>
+<div class="hover" id="hover"></div>
+
 <script>
-(()=>{const init={y:[1.55,1.8,.15],x1:[1,.18,.78],x2:[-.38,1,.52],collin:0,view:0,c:[.7,-.55]};const state={...init,y:[...init.y],x1:[...init.x1],x2:[...init.x2],c:[...init.c],ghost:null,hot:-1,step:0,form:0};const $=id=>document.getElementById(id),dot=(a,b)=>a.reduce((s,v,i)=>s+v*b[i],0),add=(a,b)=>a.map((v,i)=>v+b[i]),sub=(a,b)=>a.map((v,i)=>v-b[i]),mul=(a,s)=>a.map(v=>v*s),norm=a=>Math.sqrt(dot(a,a)),unit=a=>mul(a,1/(norm(a)||1)),fmt=(v,d=2)=>Math.abs(v)<.0005?'0':v.toFixed(d).replace(/\.00$/,'').replace(/(\.\d)0$/,'$1'),vec=v=>'['+v.map(x=>fmt(x)).join(', ')+']ᵀ';
-function calc(){const x1=state.x1,x2=state.x2.map((v,i)=>(1-state.collin)*v+state.collin*x1[i]),a=dot(x1,x1),b=dot(x1,x2),d=dot(x2,x2),det=a*d-b*b,rank=Math.abs(det)>1e-7?2:1;let bh,fit;if(rank===2){const p=dot(x1,state.y),q=dot(x2,state.y);bh=[(d*p-b*q)/det,(a*q-b*p)/det];fit=add(mul(x1,bh[0]),mul(x2,bh[1]))}else{bh=[dot(x1,state.y)/a,0];fit=mul(x1,bh[0])}const e=sub(state.y,fit),xte=[dot(x1,e),dot(x2,e)],combo=add(mul(x1,state.c[0]),mul(x2,state.c[1])),tr=a+d,disc=Math.sqrt((a-d)**2+4*b*b),lmax=(tr+disc)/2,lmin=(tr-disc)/2,cond=lmin>1e-10?lmax/lmin:Infinity;return{x1,x2,bh,fit,e,xte,combo,rank,cond}}
-function remember(){const q=calc();state.ghost={y:[...state.y],fit:[...q.fit],e:[...q.e]}}const NS='http://www.w3.org/2000/svg';function el(t,a={},text=''){const e=document.createElementNS(NS,t);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text)e.textContent=text;return e}
-function project(v){const a=(state.view+25)*Math.PI/180,c=Math.cos(a),s=Math.sin(a),depth=-s*v[0]+c*v[2];return{x:370+98*(c*v[0]+s*v[2]),y:300-98*(v[1]+.32*depth)}}
-function arrow(svg,a,b,cls,label,labcls=''){const A=project(a),B=project(b);svg.append(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y,class:'vec '+cls}),el('text',{x:B.x+9,y:B.y-8,class:'lbl '+labcls},label));return B}
-function draw(q){const svg=$('scene');svg.innerHTML='';const defs=el('defs');[['navyArrow','#10243e'],['cyanArrow','#00a9c6'],['magArrow','#d43b83'],['grayArrow','#62758b']].forEach(([id,color])=>{const m=el('marker',{id,viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:5,markerHeight:5,orient:'auto-start-reverse'});m.append(el('path',{d:'M0 0L10 5L0 10z',fill:color}));defs.append(m)});svg.append(defs);const O=project([0,0,0]);[[2.7,0,0],[0,2.5,0],[0,0,2.7]].forEach((v,i)=>{const p=project(v);svg.append(el('line',{x1:O.x,y1:O.y,x2:p.x,y2:p.y,class:'axis'}),el('text',{x:p.x+5,y:p.y-4,class:'lbl'},['r₁','r₂','r₃'][i]))});
-const u=unit(q.x1),raw=sub(q.x2,mul(u,dot(u,q.x2))),v=unit(raw),S=2.15;if(q.rank===2){const corners=[add(mul(u,-S),mul(v,-S)),add(mul(u,S),mul(v,-S)),add(mul(u,S),mul(v,S)),add(mul(u,-S),mul(v,S))].map(project);svg.append(el('polygon',{points:corners.map(p=>p.x+','+p.y).join(' '),class:'plane'}));[-1,0,1].forEach(k=>{let A=project(add(mul(u,-S),mul(v,k))),B=project(add(mul(u,S),mul(v,k))),C=project(add(mul(v,-S),mul(u,k))),D=project(add(mul(v,S),mul(u,k)));svg.append(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y,class:'plane-grid'}),el('line',{x1:C.x,y1:C.y,x2:D.x,y2:D.y,class:'plane-grid'}))})}else{const A=project(mul(u,-S)),B=project(mul(u,S));svg.append(el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y,class:'plane-rank1'}))}
-const planeLabel=project(add(mul(u,-1.7),mul(v,1.55)));svg.append(el('text',{x:planeLabel.x,y:planeLabel.y,class:'lbl cyan'},q.rank===2?'S(X)':'S(X) collapses to a line'));
-if(state.ghost){arrow(svg,[0,0,0],state.ghost.fit,'fit ghost','');arrow(svg,state.ghost.fit,state.ghost.y,'resid ghost','')}
-const colScale=.88;arrow(svg,[0,0,0],mul(q.x1,colScale),'col'+(state.hot===0?' hot':''),'x₁','cyan');arrow(svg,[0,0,0],mul(q.x2,colScale),'col'+(state.hot===1?' hot':''),'x₂','cyan');arrow(svg,[0,0,0],q.fit,'fit','ŷ','cyan');arrow(svg,q.fit,state.y,'resid','ê','mag');arrow(svg,[0,0,0],q.combo,'combo','Xc');const Y=arrow(svg,[0,0,0],state.y,'y','y');const g=el('circle',{cx:Y.x,cy:Y.y,r:9,class:'endpoint y',tabindex:'0','aria-label':'Draggable outcome vector y'});svg.append(g);const F=project(q.fit),E=project(add(q.fit,mul(unit(q.e),.18))),P=project(add(q.fit,mul(u,.18)));svg.append(el('path',{d:`M ${F.x} ${F.y} L ${E.x} ${E.y} L ${E.x+P.x-F.x} ${E.y+P.y-F.y}`,class:'rightangle'}));g.addEventListener('pointerdown',ev=>{ev.preventDefault();let px=ev.clientX,py=ev.clientY;const move=e=>{remember();state.y[0]=Math.max(-2.2,Math.min(2.2,state.y[0]+(e.clientX-px)/95));state.y[1]=Math.max(-2.2,Math.min(2.2,state.y[1]-(e.clientY-py)/95));px=e.clientX;py=e.clientY;syncControls();render()};const up=()=>{window.removeEventListener('pointermove',move);window.removeEventListener('pointerup',up)};window.addEventListener('pointermove',move);window.addEventListener('pointerup',up)});
-[['x₁',q.x1,0],['x₂',q.x2,1]].forEach(([name,v,i])=>{const p=project(mul(v,colScale));const hit=el('circle',{cx:p.x,cy:p.y,r:16,fill:'transparent','data-col':i,tabindex:'0','aria-label':name+' column of X'});hit.addEventListener('mouseenter',e=>{state.hot=i;tip(e,`${name} ∈ ℝ³<br>${vec(v)}`);render()});hit.addEventListener('mousemove',moveTip);hit.addEventListener('mouseleave',()=>{state.hot=-1;hideTip();render()});svg.append(hit)})}
-function matrix(id,data,cols,hotCols=false){const box=$(id);box.innerHTML='';box.style.gridTemplateColumns=`repeat(${cols},1fr)`;data.flat().forEach((v,j)=>{const c=j%cols,d=document.createElement('div');d.className='cell '+(v<0?'neg ':'')+(hotCols&&c===state.hot?'colhot':'');d.textContent=fmt(v);if(hotCols){d.addEventListener('mouseenter',e=>{state.hot=c;tip(e,`column x${c+1}`);render()});d.addEventListener('mouseleave',()=>{state.hot=-1;hideTip();render()})}box.append(d)})}
+(()=>{
+const init={
+  y:[1.55,1.8,.15],
+  x1:[1,.18,.78],
+  x2:[-.38,1,.52],
+  collin:0,
+  c:[.7,-.55],
+  cam:{yaw:-.72,pitch:.55,zoom:1}
+};
+const state={
+  y:[...init.y],x1:[...init.x1],x2:[...init.x2],collin:0,c:[...init.c],
+  cam:{...init.cam},ghost:null,hot:-1,step:0,form:0,drag:null,last:null
+};
+const $=id=>document.getElementById(id);
+const canvas=$('scene'),ctx=canvas.getContext('2d');
+const dot=(a,b)=>a.reduce((s,v,i)=>s+v*b[i],0);
+const add=(a,b)=>a.map((v,i)=>v+b[i]);
+const sub=(a,b)=>a.map((v,i)=>v-b[i]);
+const mul=(a,s)=>a.map(v=>v*s);
+const norm=a=>Math.sqrt(dot(a,a));
+const unit=a=>mul(a,1/(norm(a)||1));
+const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const fmt=(v,d=2)=>Math.abs(v)<.0005?'0':v.toFixed(d).replace(/\.00$/,'').replace(/(\.\d)0$/,'$1');
+const vec=v=>'['+v.map(x=>fmt(x)).join(', ')+']ᵀ';
+
+function calc(){
+  const x1=state.x1;
+  const x2=state.x2.map((v,i)=>(1-state.collin)*v+state.collin*x1[i]);
+  const a=dot(x1,x1),b=dot(x1,x2),d=dot(x2,x2),det=a*d-b*b,rank=Math.abs(det)>1e-7?2:1;
+  let bh,fit;
+  if(rank===2){
+    const p=dot(x1,state.y),q=dot(x2,state.y);
+    bh=[(d*p-b*q)/det,(a*q-b*p)/det];
+    fit=add(mul(x1,bh[0]),mul(x2,bh[1]));
+  }else{
+    bh=[dot(x1,state.y)/a,0];
+    fit=mul(x1,bh[0]);
+  }
+  const e=sub(state.y,fit);
+  const xte=[dot(x1,e),dot(x2,e)];
+  const combo=add(mul(x1,state.c[0]),mul(x2,state.c[1]));
+  const tr=a+d,disc=Math.sqrt((a-d)**2+4*b*b),lmax=(tr+disc)/2,lmin=(tr-disc)/2;
+  const cond=lmin>1e-10?lmax/lmin:Infinity;
+  const normal=rank===2?unit(cross(x1,x2)):unit(cross(x1,[0,0,1]));
+  return{x1,x2,bh,fit,e,xte,combo,rank,cond,normal};
+}
+function remember(){const q=calc();state.ghost={y:[...state.y],fit:[...q.fit],e:[...q.e]}}
+function resize(){
+  const r=canvas.getBoundingClientRect(),dpr=Math.min(2,devicePixelRatio||1);
+  canvas.width=Math.round(r.width*dpr);canvas.height=Math.round(r.height*dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+}
+function project(v,w,h){
+  const c=state.cam,cy=Math.cos(c.yaw),sy=Math.sin(c.yaw),cp=Math.cos(c.pitch),sp=Math.sin(c.pitch);
+  const xr=cy*v[0]-sy*v[2],yr=sy*v[0]+cy*v[2],zr=v[1];
+  const yy=cp*yr-sp*zr,zz=sp*yr+cp*zr;
+  const camera=5/state.cam.zoom,depth=camera-yy,f=Math.min(w,h)*.76/depth;
+  return{x:w/2+xr*f,y:h/2-zz*f,depth};
+}
+function cameraBasis(){
+  const c=state.cam,cy=Math.cos(c.yaw),sy=Math.sin(c.yaw),sp=Math.sin(c.pitch),cp=Math.cos(c.pitch);
+  return{right:[cy,0,-sy],up:[sp*sy,cp,sp*cy]};
+}
+function line3(a,b,color,width=1,dash=[],alpha=1){
+  const w=canvas.clientWidth,h=canvas.clientHeight,A=project(a,w,h),B=project(b,w,h);
+  ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.lineTo(B.x,B.y);ctx.stroke();ctx.restore();
+}
+function arrow3(a,b,color,width=3,alpha=1,label='',labelColor=color,dash=[]){
+  const w=canvas.clientWidth,h=canvas.clientHeight,A=project(a,w,h),B=project(b,w,h);
+  const dx=B.x-A.x,dy=B.y-A.y,L=Math.hypot(dx,dy)||1,ux=dx/L,uy=dy/L,px=-uy,py=ux,hs=9+width;
+  ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.lineTo(B.x,B.y);ctx.stroke();ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(B.x,B.y);ctx.lineTo(B.x-ux*hs+px*hs*.42,B.y-uy*hs+py*hs*.42);ctx.lineTo(B.x-ux*hs-px*hs*.42,B.y-uy*hs-py*hs*.42);ctx.closePath();ctx.fill();
+  if(label){ctx.fillStyle=labelColor;ctx.font='800 12px system-ui';ctx.shadowColor='#fbfaf5';ctx.shadowBlur=5;ctx.fillText(label,B.x+10,B.y-8)}
+  ctx.restore();
+  return B;
+}
+function point3(v,color,r=7){
+  const w=canvas.clientWidth,h=canvas.clientHeight,P=project(v,w,h);
+  ctx.save();ctx.fillStyle=color;ctx.beginPath();ctx.arc(P.x,P.y,r,0,Math.PI*2);ctx.fill();ctx.strokeStyle='white';ctx.lineWidth=2.5;ctx.stroke();ctx.restore();
+  return P;
+}
+function label3(v,text,color,dx=8,dy=-8,font='800 11px system-ui'){
+  const P=project(v,canvas.clientWidth,canvas.clientHeight);ctx.save();ctx.fillStyle=color;ctx.font=font;ctx.shadowColor='#fbfaf5';ctx.shadowBlur=5;ctx.fillText(text,P.x+dx,P.y+dy);ctx.restore()
+}
+function planePoint(u,v,a,b){return add(mul(u,a),mul(v,b))}
+function drawPlane(q){
+  const u=unit(q.x1),raw=sub(q.x2,mul(u,dot(u,q.x2))),v=unit(raw),S=2.35,N=7;
+  if(q.rank===2){
+    for(let i=0;i<N;i++)for(let j=0;j<N;j++){
+      const a0=-S+2*S*i/N,a1=-S+2*S*(i+1)/N,b0=-S+2*S*j/N,b1=-S+2*S*(j+1)/N;
+      const pts=[planePoint(u,v,a0,b0),planePoint(u,v,a1,b0),planePoint(u,v,a1,b1),planePoint(u,v,a0,b1)].map(p=>project(p,canvas.clientWidth,canvas.clientHeight));
+      ctx.save();ctx.globalAlpha=.095;ctx.fillStyle='#00a9c6';ctx.beginPath();pts.forEach((p,k)=>k?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fill();ctx.restore();
+    }
+    for(let i=0;i<=N;i++){
+      const t=-S+2*S*i/N;
+      line3(planePoint(u,v,t,-S),planePoint(u,v,t,S),'#65c6d4',.9,[],.5);
+      line3(planePoint(u,v,-S,t),planePoint(u,v,S,t),'#65c6d4',.9,[],.5);
+    }
+    label3(planePoint(u,v,-1.8,1.85),'S(X)','#007b91',0,0,'800 12px system-ui');
+  }else{
+    line3(mul(u,-S),mul(u,S),'#b97810',11,[],.25);
+    label3(mul(u,1.7),'S(X) collapses to a line','#b97810',10,-8,'800 11px system-ui');
+  }
+  return{u,v};
+}
+function drawRightAngle(q,u){
+  if(q.rank<2||norm(q.e)<.08)return;
+  const ehat=unit(q.e),s=.17;
+  const A=q.fit,B=add(A,mul(u,s)),C=add(B,mul(ehat,s)),D=add(A,mul(ehat,s));
+  line3(A,B,'#d43b83',1.8);line3(B,C,'#d43b83',1.8);line3(C,D,'#d43b83',1.8);
+}
+let screen={};
+function draw(){
+  resize();
+  const q=calc(),w=canvas.clientWidth,h=canvas.clientHeight;
+  ctx.clearRect(0,0,w,h);
+
+  // faint reference axes
+  [[2.9,0,0],[0,2.9,0],[0,0,2.9]].forEach((v,i)=>{
+    line3(mul(v,-1),v,'#a8b2b5',1,[4,6],.75);
+    label3(v,['r₁','r₂','r₃'][i],'#73818e',5,-4,'10px ui-monospace');
+  });
+
+  const basis=drawPlane(q);
+
+  if(state.ghost){
+    arrow3([0,0,0],state.ghost.fit,'#8ebbc2',1.8,.28,'');
+    arrow3(state.ghost.fit,state.ghost.y,'#b68ca1',1.8,.25,'');
+  }
+
+  // normal guide through the fitted point
+  if(q.rank===2){
+    const n=q.normal;
+    line3(add(q.fit,mul(n,-2.15)),add(q.fit,mul(n,2.15)),'#d43b83',1.4,[6,6],.38);
+    label3(add(q.fit,mul(n,1.75)),'S(X)⊥','#d43b83',8,0,'800 11px system-ui');
+  }
+
+  // basis vectors and arbitrary direction
+  const scale=.94;
+  arrow3([0,0,0],mul(q.x1,scale),'#208ba0',2.3,state.hot===0?1:.82,'x₁','#007b91');
+  arrow3([0,0,0],mul(q.x2,scale),'#4bb9ca',2.3,state.hot===1?1:.82,'x₂','#007b91');
+  arrow3([0,0,0],q.combo,'#62758b',2.2,.9,'Xc','#62758b',[6,5]);
+
+  // decomposition
+  arrow3([0,0,0],q.fit,'#00a9c6',4,1,'ŷ','#007b91');
+  arrow3(q.fit,state.y,'#d43b83',4.2,1,'ê','#d43b83');
+  const Y=arrow3([0,0,0],state.y,'#10243e',3.5,1,'y','#10243e');
+  point3(state.y,'#10243e',8.5);
+  point3(q.fit,'#00a9c6',6);
+
+  drawRightAngle(q,basis.u);
+
+  // short geometric annotation along residual
+  if(norm(q.e)>.12){
+    const mid=add(q.fit,mul(q.e,.55));
+    label3(mid,'normal to every Xc','#d43b83',12,5,'700 10px system-ui');
+  }
+
+  screen.y=Y;
+  screen.x1=project(mul(q.x1,scale),w,h);
+  screen.x2=project(mul(q.x2,scale),w,h);
+
+  $('live1').textContent=fmt(q.xte[0],4);
+  $('live2').textContent=fmt(q.xte[1],4);
+  $('livec').textContent=fmt(dot(q.combo,q.e),4);
+}
+function matrix(id,data,cols,hotCols=false){
+  const box=$(id);box.innerHTML='';box.style.gridTemplateColumns=`repeat(${cols},1fr)`;
+  data.flat().forEach((v,j)=>{
+    const c=j%cols,d=document.createElement('div');
+    d.className='cell '+(v<0?'neg ':'')+(hotCols&&c===state.hot?'colhot':'');d.textContent=fmt(v);
+    if(hotCols){
+      d.addEventListener('mouseenter',e=>{state.hot=c;tip(e,`column x${c+1}`);render()});
+      d.addEventListener('mouseleave',()=>{state.hot=-1;hideTip();render()})
+    }
+    box.append(d)
+  })
+}
 function meter(id,val){const max=.08,cl=Math.max(-1,Math.min(1,val/max)),w=Math.abs(cl)*50,b=$(id);b.style.width=w+'%';b.style.left=(cl<0?50-w:50)+'%'}
-function inspect(q){$('yv').textContent=vec(state.y);$('bv').textContent=vec(q.bh);$('fitv').textContent=vec(q.fit);$('ev').textContent=vec(q.e);matrix('xm',q.x1.map((v,i)=>[v,q.x2[i]]),2,true);matrix('xte',q.xte.map(v=>[v]),1);$('d1').textContent=fmt(q.xte[0],4);$('d2').textContent=fmt(q.xte[1],4);meter('bar1',q.xte[0]);meter('bar2',q.xte[1]);$('rank').textContent=q.rank;$('cond').textContent=q.cond>9999?'∞':fmt(q.cond,1);$('fe').textContent=fmt(dot(q.fit,q.e),4);$('ce').textContent=fmt(dot(q.combo,q.e),4);const ok=q.rank===2;$('badge').className='badge'+(ok?'':' warn');$('badge').textContent=ok?'2 / 2 orthogonality conditions hold':'Rank has fallen: assumption rank(X)=K fails';$('ranknote').className='notice'+(ok?'':' warn');$('ranknote').innerHTML=ok?'<strong>Full column rank.</strong> The plane is two-dimensional and b̂ is unique.':'<strong>x₂ is collinear with x₁.</strong> S(X) is now a line; the OLS coefficient is not unique.'}
-const steps=['Drag y. Its projection ŷ slides inside S(X), while ê remains perpendicular.','Hover x₁ or x₂. Each column contributes one scalar equation xₖᵀê = 0.','Change c₁ and c₂. Every Xc stays in S(X), so (Xc)ᵀê remains zero.','Align x₂ with x₁. Rank falls, the plane collapses, and the full-rank assumption fails.'];function guide(){const ids=['stage','xm','c1','collin'];document.querySelectorAll('.focus').forEach(e=>e.classList.remove('focus'));$(ids[state.step]).classList.add('focus');$('gstep').textContent=`STEP ${state.step+1} / 4`;$('gcopy').textContent=steps[state.step];$('prev').disabled=state.step===0;$('next').disabled=state.step===3;document.querySelectorAll('.form').forEach((b,i)=>b.classList.toggle('active',i===state.form))}
-function syncControls(){['y1','y2','y3'].forEach((id,i)=>{$(id).value=state.y[i];$(id+'v').textContent=fmt(state.y[i])});$('collin').value=state.collin;$('collinv').textContent=Math.round(state.collin*100)+'%';$('view').value=state.view;$('viewv').textContent=state.view+'°';['c1','c2'].forEach((id,i)=>{$(id).value=state.c[i];$(id+'v').textContent=fmt(state.c[i])})}function render(){const q=calc();draw(q);inspect(q);guide()}
-function tip(e,html){const t=$('hover');t.innerHTML=html;t.classList.add('show');moveTip(e)}function moveTip(e){const t=$('hover');t.style.left=Math.min(innerWidth-180,e.clientX)+'px';t.style.top=Math.min(innerHeight-70,e.clientY)+'px'}function hideTip(){$('hover').classList.remove('show')}
-['y1','y2','y3'].forEach((id,i)=>$(id).addEventListener('input',e=>{remember();state.y[i]=+e.target.value;syncControls();render()}));$('collin').addEventListener('input',e=>{remember();state.collin=+e.target.value;syncControls();render()});$('view').addEventListener('input',e=>{state.view=+e.target.value;syncControls();render()});['c1','c2'].forEach((id,i)=>$(id).addEventListener('input',e=>{state.c[i]=+e.target.value;syncControls();render()}));$('prev').onclick=()=>{state.step=Math.max(0,state.step-1);render()};$('next').onclick=()=>{state.step=Math.min(3,state.step+1);render()};document.querySelectorAll('.form').forEach((b,i)=>b.onclick=()=>{state.form=i;state.step=Math.min(2,i);render()});$('reset').onclick=()=>{Object.assign(state,{y:[...init.y],x1:[...init.x1],x2:[...init.x2],collin:0,view:0,c:[...init.c],ghost:null,hot:-1,step:0,form:0});syncControls();render()};$('new').onclick=()=>{remember();state.y=[-1.8+Math.random()*3.6,-1.8+Math.random()*3.6,-1.4+Math.random()*2.8];state.x2=[-.8+Math.random()*.8,.65+Math.random()*.65,.2+Math.random()*.8];state.collin=Math.random()*.35;state.c=[-1+Math.random()*2,-1+Math.random()*2];syncControls();render()};window.addEventListener('keydown',e=>{if(e.altKey&&e.key==='ArrowRight'){state.step=Math.min(3,state.step+1);render()}if(e.altKey&&e.key==='ArrowLeft'){state.step=Math.max(0,state.step-1);render()}});syncControls();render()
-})();</script></body></html>
+function inspect(q){
+  $('yv').textContent=vec(state.y);$('bv').textContent=vec(q.bh);$('fitv').textContent=vec(q.fit);$('ev').textContent=vec(q.e);
+  matrix('xm',q.x1.map((v,i)=>[v,q.x2[i]]),2,true);matrix('xte',q.xte.map(v=>[v]),1);
+  $('d1').textContent=fmt(q.xte[0],4);$('d2').textContent=fmt(q.xte[1],4);meter('bar1',q.xte[0]);meter('bar2',q.xte[1]);
+  $('rank').textContent=q.rank;$('cond').textContent=q.cond>9999?'∞':fmt(q.cond,1);$('fe').textContent=fmt(dot(q.fit,q.e),4);$('ce').textContent=fmt(dot(q.combo,q.e),4);
+  const ok=q.rank===2;$('badge').className='badge'+(ok?'':' warn');
+  $('badge').textContent=ok?'2 / 2 orthogonality conditions hold':'Rank has fallen: assumption rank(X)=K fails';
+  $('ranknote').className='notice'+(ok?'':' warn');
+  $('ranknote').innerHTML=ok?'<strong>Full column rank.</strong> ê is the normal direction to the two-dimensional plane S(X).':'<strong>x₂ is collinear with x₁.</strong> S(X) is now a line; the two-dimensional plane disappears.'
+}
+const steps=[
+  'Drag y. Its orthogonal projection ŷ slides inside S(X), while ê stays on the normal line S(X)⊥.',
+  'Hover x₁ or x₂. Each column gives one scalar normal equation xₖᵀê = 0.',
+  'Change c₁ and c₂. Xc can point anywhere inside S(X), yet (Xc)ᵀê remains zero.',
+  'Align x₂ with x₁. Rank falls, the plane collapses to a line, and the full-rank assumption fails.'
+];
+function guide(){
+  const ids=['stage','xm','c1','collin'];document.querySelectorAll('.focus').forEach(e=>e.classList.remove('focus'));$(ids[state.step]).classList.add('focus');
+  $('gstep').textContent=`STEP ${state.step+1} / 4`;$('gcopy').textContent=steps[state.step];$('prev').disabled=state.step===0;$('next').disabled=state.step===3;
+  document.querySelectorAll('.form').forEach((b,i)=>b.classList.toggle('active',i===state.form))
+}
+function syncControls(){
+  ['y1','y2','y3'].forEach((id,i)=>{$(id).value=state.y[i];$(id+'v').textContent=fmt(state.y[i])});
+  $('collin').value=state.collin;$('collinv').textContent=Math.round(state.collin*100)+'%';
+  ['c1','c2'].forEach((id,i)=>{$(id).value=state.c[i];$(id+'v').textContent=fmt(state.c[i])})
+}
+function render(){const q=calc();draw();inspect(q);guide()}
+function tip(e,html){const t=$('hover');t.innerHTML=html;t.classList.add('show');moveTip(e)}
+function moveTip(e){const t=$('hover');t.style.left=Math.min(innerWidth-180,e.clientX)+'px';t.style.top=Math.min(innerHeight-70,e.clientY)+'px'}
+function hideTip(){$('hover').classList.remove('show')}
+
+// y tip or orbit interaction
+function nearY(cx,cy){
+  const r=canvas.getBoundingClientRect();
+  return screen.y && Math.hypot(cx-r.left-screen.y.x,cy-r.top-screen.y.y)<20
+}
+canvas.addEventListener('pointerdown',e=>{
+  state.last={x:e.clientX,y:e.clientY};
+  if(nearY(e.clientX,e.clientY)){remember();state.drag='y';canvas.classList.add('drag-y')}
+  else{state.drag='orbit';canvas.classList.add('orbit')}
+  canvas.setPointerCapture(e.pointerId)
+});
+canvas.addEventListener('pointermove',e=>{
+  if(state.drag&&state.last){
+    const dx=e.clientX-state.last.x,dy=e.clientY-state.last.y;
+    if(state.drag==='orbit'){
+      state.cam.yaw+=dx*.008;state.cam.pitch=clamp(state.cam.pitch+dy*.008,-1.3,1.3)
+    }else{
+      const {right,up}=cameraBasis(),s=.010/state.cam.zoom;
+      state.y=state.y.map((v,i)=>clamp(v+right[i]*dx*s-up[i]*dy*s,-2.5,2.5));
+      syncControls()
+    }
+    state.last={x:e.clientX,y:e.clientY};render();return
+  }
+  const r=canvas.getBoundingClientRect();
+  const d1=screen.x1?Math.hypot(e.clientX-r.left-screen.x1.x,e.clientY-r.top-screen.x1.y):999;
+  const d2=screen.x2?Math.hypot(e.clientX-r.left-screen.x2.x,e.clientY-r.top-screen.x2.y):999;
+  const h=d1<18?0:d2<18?1:-1;
+  if(h!==state.hot){state.hot=h;render()}
+  if(h>=0)tip(e,`${h===0?'x₁':'x₂'} ∈ ℝ³<br>${vec(h===0?calc().x1:calc().x2)}<br>${h===0?'x₁ᵀê':'x₂ᵀê'} = ${fmt(calc().xte[h],4)}`);
+  else hideTip()
+});
+canvas.addEventListener('pointerup',e=>{state.drag=null;state.last=null;canvas.classList.remove('orbit','drag-y');try{canvas.releasePointerCapture(e.pointerId)}catch{}})
+canvas.addEventListener('pointerleave',()=>{if(!state.drag){state.hot=-1;hideTip();render()}})
+canvas.addEventListener('wheel',e=>{e.preventDefault();state.cam.zoom=clamp(state.cam.zoom*(e.deltaY>0?.92:1.08),.62,1.85);render()},{passive:false});
+
+['y1','y2','y3'].forEach((id,i)=>$(id).addEventListener('input',e=>{remember();state.y[i]=+e.target.value;syncControls();render()}));
+$('collin').addEventListener('input',e=>{remember();state.collin=+e.target.value;syncControls();render()});
+['c1','c2'].forEach((id,i)=>$(id).addEventListener('input',e=>{state.c[i]=+e.target.value;syncControls();render()}));
+$('prev').onclick=()=>{state.step=Math.max(0,state.step-1);render()};$('next').onclick=()=>{state.step=Math.min(3,state.step+1);render()};
+document.querySelectorAll('.form').forEach((b,i)=>b.onclick=()=>{state.form=i;state.step=Math.min(2,i);render()});
+$('reset').onclick=()=>{state.y=[...init.y];state.x1=[...init.x1];state.x2=[...init.x2];state.collin=0;state.c=[...init.c];state.cam={...init.cam};state.ghost=null;state.hot=-1;state.step=0;state.form=0;syncControls();render()};
+$('new').onclick=()=>{remember();state.y=[-1.8+Math.random()*3.6,-1.8+Math.random()*3.6,-1.4+Math.random()*2.8];state.x2=[-.8+Math.random()*.8,.65+Math.random()*.65,.2+Math.random()*.8];state.collin=Math.random()*.35;state.c=[-1+Math.random()*2,-1+Math.random()*2];syncControls();render()};
+window.addEventListener('keydown',e=>{if(e.altKey&&e.key==='ArrowRight'){state.step=Math.min(3,state.step+1);render()}if(e.altKey&&e.key==='ArrowLeft'){state.step=Math.max(0,state.step-1);render()}});
+window.addEventListener('resize',render);
+
+syncControls();render();
+})();
+</script>
+</body>
+</html>
