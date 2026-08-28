@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>04 · OLS Hyperplane Through Sample Means · 3D</title>
+<style>
+:root{
+  --paper:#f6f1e8;--card:#fffdf9;--ink:#13253a;--muted:#74808a;
+  --cyan:#12a8bf;--cyan2:#0a7f91;--cyan-soft:#e6f7f8;
+  --mag:#c43a7a;--mag-soft:#f9e5ee;
+  --amber:#c48620;--amber-soft:#fff2d3;
+  --line:#ddd6ca;--grid:#e8e2d8;--ghost:#a9b0b6;
+  --shadow:0 8px 24px rgba(16,34,56,.055);--radius:20px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+body{min-height:100vh;background:radial-gradient(circle at top left,rgba(255,255,255,.55),transparent 34%),var(--paper)}
+button,input,select{font:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid rgba(8,169,196,.28);outline-offset:2px}
+.app{max-width:1600px;margin:0 auto;padding:18px}
+.header{display:flex;justify-content:space-between;align-items:center;gap:22px;background:rgba(255,253,249,.88);border:1px solid var(--line);border-radius:var(--radius);padding:17px 20px;box-shadow:var(--shadow);backdrop-filter:blur(10px)}
+.eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:900;color:var(--cyan2);margin-bottom:5px}
+h1{margin:0;font-size:clamp(21px,2vw,30px);letter-spacing:-.03em;font-weight:780}
+.subtitle{margin-top:6px;color:var(--muted);font-size:13.5px;line-height:1.45;max-width:920px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:rgba(255,255,255,.65);color:var(--ink);padding:9px 13px;border-radius:12px;font-weight:780;cursor:pointer;box-shadow:0 1px 0 rgba(255,255,255,.8) inset}
+.btn.primary{background:var(--ink);border-color:var(--ink);color:white}
+.layout{display:grid;grid-template-columns:285px minmax(0,1fr) 360px;gap:16px;margin-top:16px;align-items:start}
+.card{background:rgba(255,253,249,.94);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.controls,.inspector{padding:16px;position:sticky;top:14px}
+.sectionTitle{font-size:11px;text-transform:uppercase;letter-spacing:.13em;font-weight:900;color:var(--muted);margin:0 0 10px}
+.control{padding:14px 0;border-top:1px solid rgba(221,214,202,.8)}
+.control:first-of-type{border-top:0;padding-top:0}
+.labelRow{display:flex;justify-content:space-between;gap:12px;align-items:baseline;margin-bottom:8px;font-size:13px}
+.range{width:100%;accent-color:var(--cyan);height:4px}
+.mini{font-size:12px;line-height:1.45;color:var(--muted);margin-top:6px}
+.toggleRow{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.switch{position:relative;width:48px;height:28px;flex:0 0 auto}
+.switch input{opacity:0;width:0;height:0}
+.track{position:absolute;inset:0;border-radius:999px;background:#c8c6c0;cursor:pointer;transition:.2s}
+.track:before{content:"";position:absolute;width:20px;height:20px;left:4px;top:4px;border-radius:50%;background:white;box-shadow:0 1px 4px rgba(0,0,0,.23);transition:.2s}
+.switch input:checked+.track{background:var(--cyan)}
+.switch input:checked+.track:before{transform:translateX(20px)}
+.select{width:100%;border:1px solid var(--line);background:#fcfaf6;color:var(--ink);border-radius:11px;padding:9px 10px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.step{border:1px solid var(--line);background:#fcfaf6;border-radius:10px;padding:8px 0;font-size:12px;font-weight:850;cursor:pointer}
+.step.active{border-color:var(--cyan);background:var(--cyan-soft);color:#086e80}
+.note{margin-top:10px;padding:11px 12px;border-radius:12px;border:1px solid #c8e7ea;background:#f1fbfb;font-size:12px;line-height:1.5}
+.note.warn{background:var(--amber-soft);border-color:#dfbc70;color:#694a0b}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:7px;font-size:11px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:7px}
+.sw{width:16px;height:3px;border-radius:2px;background:var(--ink)}
+.sw.c{background:var(--cyan)} .sw.m{background:var(--mag)} .sw.g{background:var(--ghost)}
+.sw.mean{width:10px;height:10px;border-radius:50%;background:var(--cyan);box-shadow:0 0 0 3px rgba(8,169,196,.18)}
+.main{display:flex;flex-direction:column;gap:14px}
+.vizCard{padding:13px}
+.vizHead{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:4px 6px 11px}
+.vizTitle{font-weight:780;letter-spacing:-.01em}
+.badge{display:flex;align-items:center;gap:7px;border:1px solid #bce4e9;background:#effafb;color:#096e80;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:900}
+.badge.warn{background:var(--amber-soft);border-color:#dfbc70;color:#694a0b}
+.badgeDot{width:8px;height:8px;border-radius:50%;background:currentColor}
+.canvasWrap{position:relative;height:min(68vh,690px);min-height:510px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fcfaf6;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
+canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+canvas.dragging{cursor:grabbing}
+.tooltip{position:absolute;pointer-events:none;opacity:0;background:rgba(16,34,56,.95);color:white;border-radius:8px;padding:7px 8px;font-size:11px;line-height:1.4;white-space:nowrap;transform:translate(12px,-10px)}
+.eqCard{padding:16px 18px}
+.eqMain{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 0;font-family:Cambria,"Times New Roman",serif;font-size:clamp(19px,2.15vw,29px)}
+.eqTerm{padding:3px 6px;border-radius:8px}
+.eqTerm.c{background:var(--cyan-soft);color:var(--cyan2)}
+.eqTerm.m{background:var(--mag-soft);color:var(--mag)}
+.eqSub{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.eqBox{border:1px solid var(--line);background:#fcfaf6;border-radius:12px;padding:11px;text-align:center;font-family:Cambria,"Times New Roman",serif;font-size:16px}
+.what{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:14px}
+.what>div{border:1px solid var(--line);background:#fcfaf6;border-radius:12px;padding:12px;font-size:12px;line-height:1.5}
+.what b{display:block;margin-bottom:4px}
+.statGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat{border:1px solid var(--line);background:#fcfaf6;border-radius:12px;padding:10px}
+.stat .k{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:850}
+.stat .v{font-size:17px;font-weight:900;margin-top:4px;font-variant-numeric:tabular-nums}
+.cyan{color:var(--cyan2)}.mag{color:var(--mag)}.amber{color:var(--amber)}
+.matrixBlock{margin-top:12px}
+.matrixLabel{display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:12px;margin-bottom:6px}
+.matrixLabel b{font-size:13px}
+.matrix{display:grid;gap:3px;padding:7px;border-left:2px solid var(--ink);border-right:2px solid var(--ink);border-radius:4px;max-height:180px;overflow:auto}
+.cell{min-width:43px;height:29px;border-radius:7px;background:#f3f0ea;display:flex;align-items:center;justify-content:center;font-size:11px;font-variant-numeric:tabular-nums}
+.cell.hi{outline:2px solid var(--cyan);background:var(--cyan-soft)}
+.vectorList{display:grid;gap:5px}
+.vectorRow{display:grid;grid-template-columns:42px 1fr;gap:7px;align-items:center;font-size:12px}
+.vecName{font-weight:900}
+.vecVals{display:flex;gap:3px;overflow:hidden}
+.pill{min-width:34px;padding:4px 6px;border-radius:8px;background:#f3f0ea;text-align:center;font-variant-numeric:tabular-nums}
+.pill.hi{outline:2px solid var(--cyan);background:var(--cyan-soft)}
+.betaGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:8px}
+.beta{border:1px solid var(--line);border-radius:11px;background:#fcfaf6;padding:9px;text-align:center;font-size:11px}
+.beta b{display:block;margin-top:3px;font-size:15px;color:var(--cyan2)}
+.orbitHint{position:absolute;right:12px;bottom:10px;font-size:11px;color:var(--muted);background:rgba(255,253,249,.9);padding:6px 9px;border-radius:9px;border:1px solid var(--line);pointer-events:none;backdrop-filter:blur(6px)}
+@media(max-width:1220px){
+ .layout{grid-template-columns:250px minmax(0,1fr)}
+ .inspector{grid-column:1/-1;position:static}
+ .inspectorInner{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+}
+@media(max-width:820px){
+ .app{padding:9px}.header{flex-direction:column;align-items:flex-start}.layout{grid-template-columns:1fr}
+ .controls,.inspector{position:static}.canvasWrap{height:62vh;min-height:470px}
+ .eqSub,.what{grid-template-columns:1fr}.inspectorInner{display:block}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="header">
+  <div>
+    <div class="eyebrow">Result 04 · 3D OLS geometry</div>
+    <h1>The OLS hyperplane passes through the sample means</h1>
+    <div class="subtitle">Rotate the fitted OLS hyperplane in 3D and watch the sample-mean point remain on its surface whenever X contains a constant column.</div>
+  </div>
+  <div class="actions">
+    <button class="btn" id="resetBtn">Reset View</button>
+    <button class="btn primary" id="newBtn">New Example</button>
+  </div>
+</header>
+
+<div class="layout">
+<aside class="card controls">
+  <div class="sectionTitle">Controls</div>
+
+  <div class="control">
+    <div class="toggleRow">
+      <div><b>Include intercept</b><div class="mini">X = [ιₙ, x₁, x₂].</div></div>
+      <label class="switch"><input id="interceptToggle" type="checkbox" checked><span class="track"></span></label>
+    </div>
+  </div>
+
+  <div class="control">
+    <div class="labelRow"><b>Selected observation</b><span id="obsLabel">1</span></div>
+    <select id="obsSelect" class="select"></select>
+    <div class="mini">Click a point in the 3D scene to select it.</div>
+  </div>
+
+  <div class="control">
+    <div class="labelRow"><b>Selected yᵢ</b><span id="yValue">0.00</span></div>
+    <input id="yRange" class="range" type="range" min="-2" max="10" step=".05">
+    <div class="mini">Move one observation vertically and watch the plane refit.</div>
+  </div>
+
+  <div class="control">
+    <div class="labelRow"><b>x₁ spread</b><span id="x1SpreadValue">1.00×</span></div>
+    <input id="x1Spread" class="range" type="range" min=".5" max="1.8" step=".05" value="1">
+  </div>
+
+  <div class="control">
+    <div class="labelRow"><b>x₂ spread</b><span id="x2SpreadValue">1.00×</span></div>
+    <input id="x2Spread" class="range" type="range" min=".5" max="1.8" step=".05" value="1">
+  </div>
+
+  <div class="control">
+    <div class="labelRow"><b>Guided mode</b><span id="stepLabel">1 / 4</span></div>
+    <div class="steps">
+      <button class="step active" data-step="0">1</button>
+      <button class="step" data-step="1">2</button>
+      <button class="step" data-step="2">3</button>
+      <button class="step" data-step="3">4</button>
+    </div>
+    <div id="stepNote" class="note"></div>
+  </div>
+
+  <div class="control">
+    <div class="sectionTitle" style="margin-bottom:8px">Legend</div>
+    <div class="legend">
+      <span><i class="sw"></i> observed point</span>
+      <span><i class="sw c"></i> fitted plane</span>
+      <span><i class="sw m"></i> residual</span>
+      <span><i class="sw mean"></i> mean point</span>
+      <span><i class="sw g"></i> previous plane</span>
+    </div>
+  </div>
+</aside>
+
+<main class="main">
+  <section class="card vizCard">
+    <div class="vizHead">
+      <div class="vizTitle">3D fitted hyperplane: (x₁, x₂, y)</div>
+      <div id="badge" class="badge"><span class="badgeDot"></span><span>Invariant: ŷ(x̄) = ȳ</span></div>
+    </div>
+    <div class="canvasWrap" id="canvasWrap">
+      <canvas id="plot" tabindex="0" aria-label="3D OLS plane. Drag to orbit, click points to select observations."></canvas>
+      <div id="tooltip" class="tooltip"></div>
+      <div class="orbitHint">drag to orbit · wheel to zoom · click a point to select</div>
+    </div>
+  </section>
+
+  <section class="card eqCard">
+    <div class="sectionTitle">Live proposition</div>
+    <div class="eqMain">
+      <span class="eqTerm c">ȳ̂</span><span>=</span>
+      <span class="eqTerm c">x̄<sup>⊤</sup>b̂</span><span>=</span>
+      <span>ȳ</span><span>=</span><strong id="meanEq">0.000</strong>
+    </div>
+    <div class="eqSub">
+      <div class="eqBox">
+        ŷ = <span id="planeEq" class="cyan">b̂₀ + b̂₁x₁ + b̂₂x₂</span>
+      </div>
+      <div class="eqBox">
+        ŷ(x̄₁,x̄₂) − ȳ = <span id="gapEq">0.000</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="card what">
+    <div><b>1 · Orbit the plane</b>Rotate the scene to see the fitted surface, observations, and vertical residuals.</div>
+    <div><b>2 · Move one yᵢ</b>The plane tilts, but with an intercept the cyan sample-mean point stays on it.</div>
+    <div><b>3 · Remove the intercept</b>The fitted plane is forced through the 3D origin; the sample-mean point generally leaves the plane.</div>
+  </section>
+</main>
+
+<aside class="card inspector">
+  <div class="sectionTitle">Mathematical inspector</div>
+  <div class="inspectorInner">
+    <div>
+      <div class="statGrid">
+        <div class="stat"><div class="k">x̄₁</div><div class="v" id="x1barStat">0.000</div></div>
+        <div class="stat"><div class="k">x̄₂</div><div class="v" id="x2barStat">0.000</div></div>
+        <div class="stat"><div class="k">ȳ</div><div class="v" id="ybarStat">0.000</div></div>
+        <div class="stat"><div class="k">ŷ(x̄)</div><div class="v cyan" id="meanFitStat">0.000</div></div>
+      </div>
+      <div class="betaGrid">
+        <div class="beta">b̂₀<b id="b0Stat">0.000</b></div>
+        <div class="beta">b̂₁<b id="b1Stat">0.000</b></div>
+        <div class="beta">b̂₂<b id="b2Stat">0.000</b></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="matrixBlock">
+        <div class="matrixLabel"><b>X</b><span id="xDim">8 × 3</span></div>
+        <div class="matrix" id="xMatrix"></div>
+      </div>
+      <div class="matrixBlock">
+        <div class="matrixLabel"><b>x̄</b><span id="xbarDim">3 × 1</span></div>
+        <div class="vectorList" id="xbarVector"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="matrixBlock">
+        <div class="matrixLabel"><b>Selected observation</b><span>point i</span></div>
+        <div class="vectorList" id="selectedVector"></div>
+      </div>
+      <div class="matrixBlock">
+        <div class="matrixLabel"><b>Residual</b><span>scalar</span></div>
+        <div class="vectorList" id="residualVector"></div>
+      </div>
+    </div>
+  </div>
+</aside>
+</div>
+</div>
+
+<script>
+(() => {
+const C={ink:'#102238',muted:'#6f7984',cyan:'#08a9c4',cyan2:'#087d90',mag:'#c82e79',amber:'#c7861a',grid:'#ded8cd',ghost:'#9da5ac'};
+const base={
+  includeIntercept:true,
+  x1Spread:1,x2Spread:1,
+  selected:0,
+  yaw:-0.72,pitch:0.58,zoom:1.0,
+  activeStep:0,hover:null,dragOrbit:false,lastPointer:null,
+  x1:[-2.8,-1.9,-1.1,-.4,.5,1.2,2.0,2.8],
+  x2:[-1.5,.8,-.8,1.8,-1.7,.7,-.2,1.5],
+  y:[1.3,2.9,2.2,4.5,3.2,5.0,5.5,7.0],
+  prevPlane:null
+};
+const state=structuredClone(base);
+const $=id=>document.getElementById(id);
+const canvas=$('plot'),ctx=canvas.getContext('2d'),wrap=$('canvasWrap'),tooltip=$('tooltip');
+const fmt=(x,d=3)=>{if(Math.abs(x)<5e-4)x=0;return Number.isFinite(x)?x.toFixed(d):'—'};
+const mean=a=>a.reduce((s,v)=>s+v,0)/a.length;
+const dot=(a,b)=>a.reduce((s,v,i)=>s+v*b[i],0);
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+
+function xs(){
+  const x1m=mean(state.x1),x2m=mean(state.x2);
+  return {
+    x1:state.x1.map(v=>(v-x1m)*state.x1Spread+0.7),
+    x2:state.x2.map(v=>(v-x2m)*state.x2Spread-0.45)
+  };
+}
+
+function solveLinear(A,b){
+  const n=A.length,M=A.map((r,i)=>[...r,b[i]]);
+  for(let c=0;c<n;c++){
+    let p=c;
+    for(let r=c+1;r<n;r++)if(Math.abs(M[r][c])>Math.abs(M[p][c]))p=r;
+    if(Math.abs(M[p][c])<1e-10)return null;
+    [M[c],M[p]]=[M[p],M[c]];
+    const q=M[c][c];
+    for(let j=c;j<=n;j++)M[c][j]/=q;
+    for(let r=0;r<n;r++){
+      if(r===c)continue;
+      const f=M[r][c];
+      for(let j=c;j<=n;j++)M[r][j]-=f*M[c][j];
+    }
+  }
+  return M.map(r=>r[n]);
+}
+
+function ols(){
+  const {x1,x2}=xs(),y=[...state.y],n=y.length;
+  const K=state.includeIntercept?3:2;
+  const X=[];
+  for(let i=0;i<n;i++)X.push(state.includeIntercept?[1,x1[i],x2[i]]:[x1[i],x2[i]]);
+  const XtX=Array.from({length:K},()=>Array(K).fill(0));
+  const Xty=Array(K).fill(0);
+  for(let i=0;i<n;i++){
+    for(let a=0;a<K;a++){
+      Xty[a]+=X[i][a]*y[i];
+      for(let b=0;b<K;b++)XtX[a][b]+=X[i][a]*X[i][b];
+    }
+  }
+  const beta=solveLinear(XtX,Xty);
+  if(!beta)return null;
+  const b0=state.includeIntercept?beta[0]:0;
+  const b1=state.includeIntercept?beta[1]:beta[0];
+  const b2=state.includeIntercept?beta[2]:beta[1];
+  const yhat=x1.map((v,i)=>b0+b1*v+b2*x2[i]);
+  const e=y.map((v,i)=>v-yhat[i]);
+  const x1bar=mean(x1),x2bar=mean(x2),ybar=mean(y);
+  const meanFit=b0+b1*x1bar+b2*x2bar;
+  return {x1,x2,y,X,beta,b0,b1,b2,yhat,e,x1bar,x2bar,ybar,meanFit,K};
+}
+
+function snapshotPlane(){
+  const r=ols(); if(!r)return;
+  state.prevPlane={b0:r.b0,b1:r.b1,b2:r.b2};
+}
+
+function bounds(r){
+  const xmin=Math.min(...r.x1)-.8,xmax=Math.max(...r.x1)+.8;
+  const ymin=Math.min(...r.x2)-.8,ymax=Math.max(...r.x2)+.8;
+  let zmin=Math.min(...r.y,...r.yhat,0)-1;
+  let zmax=Math.max(...r.y,...r.yhat,0)+1;
+  return{xmin,xmax,ymin,ymax,zmin,zmax};
+}
+
+function centerScale(r,b){
+  return {
+    cx:(b.xmin+b.xmax)/2,
+    cy:(b.ymin+b.ymax)/2,
+    cz:(b.zmin+b.zmax)/2,
+    sx:2/(b.xmax-b.xmin),
+    sy:2/(b.ymax-b.ymin),
+    sz:2/(b.zmax-b.zmin)
+  };
+}
+
+function project(x,y,z,w,h,cs){
+  let X=(x-cs.cx)*cs.sx;
+  let Y=(y-cs.cy)*cs.sy;
+  let Z=(z-cs.cz)*cs.sz;
+
+  const cy=Math.cos(state.yaw),sy=Math.sin(state.yaw);
+  const cp=Math.cos(state.pitch),sp=Math.sin(state.pitch);
+
+  let x1=cy*X-sy*Y;
+  let y1=sy*X+cy*Y;
+  let z1=Z;
+
+  let y2=cp*y1-sp*z1;
+  let z2=sp*y1+cp*z1;
+
+  const cam=4.0/state.zoom;
+  const depth=cam-y2;
+  const f=Math.min(w,h)*0.48/depth;
+  return {x:w/2+x1*f,y:h/2-z2*f,depth};
+}
+
+function line3(a,b,w,h,cs,color,width=1,dash=[]){
+  const A=project(...a,w,h,cs),B=project(...b,w,h,cs);
+  ctx.save();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);
+  ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.lineTo(B.x,B.y);ctx.stroke();ctx.restore();
+}
+function poly3(points,w,h,cs,fill,stroke,alpha=1){
+  const P=points.map(p=>project(...p,w,h,cs)).sort((a,b)=>0);
+  ctx.save();ctx.globalAlpha=alpha;ctx.fillStyle=fill;ctx.strokeStyle=stroke;ctx.lineWidth=1.2;
+  ctx.beginPath();P.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();
+}
+
+function drawAxes(r,b,w,h,cs){
+  const x0=0,y0=0,z0=0;
+  line3([b.xmin,y0,z0],[b.xmax,y0,z0],w,h,cs,C.ink,1.35);
+  line3([x0,b.ymin,z0],[x0,b.ymax,z0],w,h,cs,C.ink,1.35);
+  line3([x0,y0,b.zmin],[x0,y0,b.zmax],w,h,cs,C.ink,1.35);
+
+  ctx.save();ctx.fillStyle=C.muted;ctx.font='11px system-ui';
+  const ax=project(b.xmax,0,0,w,h,cs),ay=project(0,b.ymax,0,w,h,cs),az=project(0,0,b.zmax,w,h,cs);
+  ctx.fillText('x₁',ax.x+5,ax.y);ctx.fillText('x₂',ay.x+5,ay.y);ctx.fillText('y',az.x+5,az.y);
+  ctx.restore();
+
+  const gx=7,gy=7;
+  for(let i=0;i<=gx;i++){
+    const x=b.xmin+(b.xmax-b.xmin)*i/gx;
+    line3([x,b.ymin,0],[x,b.ymax,0],w,h,cs,C.grid,.65,[2,5]);
+  }
+  for(let j=0;j<=gy;j++){
+    const y=b.ymin+(b.ymax-b.ymin)*j/gy;
+    line3([b.xmin,y,0],[b.xmax,y,0],w,h,cs,C.grid,.65,[2,5]);
+  }
+}
+
+function planeZ(p,x,y){return p.b0+p.b1*x+p.b2*y}
+function drawPlane(p,b,w,h,cs,ghost=false){
+  const nx=7,ny=7;
+  ctx.save();
+  for(let i=0;i<nx;i++){
+    for(let j=0;j<ny;j++){
+      const x0=b.xmin+(b.xmax-b.xmin)*i/nx, x1=b.xmin+(b.xmax-b.xmin)*(i+1)/nx;
+      const y0=b.ymin+(b.ymax-b.ymin)*j/ny, y1=b.ymin+(b.ymax-b.ymin)*(j+1)/ny;
+      const pts=[[x0,y0,planeZ(p,x0,y0)],[x1,y0,planeZ(p,x1,y0)],[x1,y1,planeZ(p,x1,y1)],[x0,y1,planeZ(p,x0,y1)]];
+      poly3(pts,w,h,cs,ghost?'rgba(157,165,172,.045)':'rgba(8,169,196,.055)',ghost?C.ghost:C.cyan,ghost?.12:.20);
+    }
+  }
+  // grid lines on plane
+  for(let i=0;i<=nx;i++){
+    const x=b.xmin+(b.xmax-b.xmin)*i/nx;
+    line3([x,b.ymin,planeZ(p,x,b.ymin)],[x,b.ymax,planeZ(p,x,b.ymax)],w,h,cs,ghost?C.ghost:C.cyan,ghost?.8:1.0,ghost?[5,5]:[]);
+  }
+  for(let j=0;j<=ny;j++){
+    const y=b.ymin+(b.ymax-b.ymin)*j/ny;
+    line3([b.xmin,y,planeZ(p,b.xmin,y)],[b.xmax,y,planeZ(p,b.xmax,y)],w,h,cs,ghost?C.ghost:C.cyan,ghost?.8:1.0,ghost?[5,5]:[]);
+  }
+  ctx.restore();
+}
+
+function drawPoints(r,b,w,h,cs){
+  const items=[];
+  for(let i=0;i<r.y.length;i++){
+    const obs=project(r.x1[i],r.x2[i],r.y[i],w,h,cs);
+    const fit=project(r.x1[i],r.x2[i],r.yhat[i],w,h,cs);
+    items.push({i,obs,fit,depth:obs.depth});
+    ctx.save();
+    ctx.strokeStyle=C.mag;ctx.lineWidth=1.9;
+    ctx.beginPath();ctx.moveTo(fit.x,fit.y);ctx.lineTo(obs.x,obs.y);ctx.stroke();
+    ctx.fillStyle=C.cyan;ctx.beginPath();ctx.arc(fit.x,fit.y,4.1,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+  }
+  items.sort((a,b)=>b.depth-a.depth);
+  items.forEach(it=>{
+    ctx.save();
+    ctx.fillStyle=it.i===state.selected?C.mag:C.ink;
+    ctx.beginPath();ctx.arc(it.obs.x,it.obs.y,it.i===state.selected?7.8:6.2,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='white';ctx.lineWidth=2;ctx.stroke();
+    if(state.hover===it.i||state.selected===it.i){
+      ctx.strokeStyle=C.cyan;ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(it.obs.x,it.obs.y,12,0,Math.PI*2);ctx.stroke();
+    }
+    ctx.restore();
+  });
+  return items;
+}
+
+function drawMean(r,w,h,cs){
+  const P=project(r.x1bar,r.x2bar,r.ybar,w,h,cs);
+  const F=project(r.x1bar,r.x2bar,r.meanFit,w,h,cs);
+  ctx.save();
+  if(!state.includeIntercept){
+    ctx.strokeStyle=C.amber;ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(F.x,F.y);ctx.lineTo(P.x,P.y);ctx.stroke();
+  }
+  ctx.fillStyle=state.includeIntercept?C.cyan:C.amber;
+  ctx.beginPath();ctx.arc(P.x,P.y,8.5,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='white';ctx.lineWidth=2;ctx.stroke();
+  ctx.fillStyle=C.ink;ctx.font='700 12px system-ui';
+  ctx.fillText('(x̄₁, x̄₂, ȳ)',P.x+12,P.y-10);
+  ctx.fillStyle=state.includeIntercept?C.cyan2:C.amber;ctx.font='700 11px system-ui';
+  ctx.fillText(state.includeIntercept?'lies on fitted plane':`vertical gap = ${fmt(r.meanFit-r.ybar,2)}`,P.x+12,P.y+7);
+  ctx.restore();
+}
+
+let lastProjected=[];
+function draw(){
+  const rect=wrap.getBoundingClientRect(),w=rect.width,h=rect.height;if(w<10||h<10)return;
+  ctx.clearRect(0,0,w,h);
+  const r=ols();if(!r)return;
+  const b=bounds(r),cs=centerScale(r,b);
+  drawAxes(r,b,w,h,cs);
+  if(state.prevPlane)drawPlane(state.prevPlane,b,w,h,cs,true);
+  drawPlane(r,b,w,h,cs,false);
+  drawMean(r,w,h,cs);
+  lastProjected=drawPoints(r,b,w,h,cs);
+}
+
+function resize(){
+  const rect=wrap.getBoundingClientRect(),dpr=Math.min(2,devicePixelRatio||1);
+  canvas.width=Math.round(rect.width*dpr);canvas.height=Math.round(rect.height*dpr);
+  canvas.style.width=rect.width+'px';canvas.style.height=rect.height+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);draw();
+}
+
+function populateSelect(){
+  const s=$('obsSelect');s.innerHTML='';
+  state.y.forEach((_,i)=>{
+    const o=document.createElement('option');o.value=i;o.textContent=`Observation ${i+1}`;s.appendChild(o);
+  });
+  s.value=state.selected;
+}
+
+function renderInspector(){
+  const r=ols();if(!r)return;
+  const gap=r.meanFit-r.ybar;
+  $('x1barStat').textContent=fmt(r.x1bar);
+  $('x2barStat').textContent=fmt(r.x2bar);
+  $('ybarStat').textContent=fmt(r.ybar);
+  $('meanFitStat').textContent=fmt(r.meanFit);
+  $('b0Stat').textContent=fmt(r.b0);$('b1Stat').textContent=fmt(r.b1);$('b2Stat').textContent=fmt(r.b2);
+  $('meanEq').textContent=fmt(r.ybar);
+  $('gapEq').textContent=fmt(gap);$('gapEq').className=Math.abs(gap)<1e-8?'cyan':'amber';
+  const signs=v=>v>=0?`+ ${fmt(v,3)}`:`− ${fmt(Math.abs(v),3)}`;
+  $('planeEq').textContent=`${fmt(r.b0,3)} ${signs(r.b1)}x₁ ${signs(r.b2)}x₂`;
+
+  const badge=$('badge');
+  if(state.includeIntercept&&Math.abs(gap)<1e-8){
+    badge.className='badge';badge.innerHTML='<span class="badgeDot"></span><span>Invariant: ŷ(x̄) = ȳ</span>';
+  }else{
+    badge.className='badge warn';badge.innerHTML='<span class="badgeDot"></span><span>No intercept: mean point not guaranteed on plane</span>';
+  }
+
+  const mat=$('xMatrix');mat.innerHTML='';mat.style.gridTemplateColumns=`repeat(${r.K},minmax(43px,1fr))`;
+  r.X.forEach((row,i)=>row.forEach(v=>{
+    const d=document.createElement('div');d.className='cell'+(i===state.selected?' hi':'');d.textContent=fmt(v,2);
+    d.addEventListener('mouseenter',()=>{state.hover=i;render();});
+    d.addEventListener('mouseleave',()=>{state.hover=null;render();});
+    mat.appendChild(d);
+  }));
+  $('xDim').textContent=`${r.y.length} × ${r.K}`;
+  $('xbarDim').textContent=`${r.K} × 1`;
+
+  const xb=$('xbarVector');xb.innerHTML='';
+  const vals=state.includeIntercept?[1,r.x1bar,r.x2bar]:[r.x1bar,r.x2bar];
+  const rr=document.createElement('div');rr.className='vectorRow';
+  const n=document.createElement('div');n.className='vecName';n.textContent='=';
+  const vb=document.createElement('div');vb.className='vecVals';
+  vals.forEach(v=>{const p=document.createElement('div');p.className='pill';p.textContent=fmt(v,3);vb.appendChild(p)});
+  rr.append(n,vb);xb.appendChild(rr);
+
+  const i=state.selected;
+  const sv=$('selectedVector');sv.innerHTML='';
+  [['x₁',r.x1[i]],['x₂',r.x2[i]],['y',r.y[i]],['ŷ',r.yhat[i]]].forEach(([name,val])=>{
+    const row=document.createElement('div');row.className='vectorRow';
+    row.innerHTML=`<div class="vecName">${name}</div><div class="vecVals"><div class="pill">${fmt(val,3)}</div></div>`;
+    sv.appendChild(row);
+  });
+  const ev=$('residualVector');ev.innerHTML=`<div class="vectorRow"><div class="vecName mag">êᵢ</div><div class="vecVals"><div class="pill">${fmt(r.e[i],3)}</div></div></div>`;
+}
+
+const steps=[
+  'Orbit the 3D scene. The cyan surface is the fitted OLS hyperplane in (x₁, x₂, y)-space.',
+  'Select an observation and move its y-value. The hyperplane tilts and every fitted value is recomputed.',
+  'With an intercept, b̂₀ = ȳ − b̂₁x̄₁ − b̂₂x̄₂. Hence the mean point lies exactly on the fitted plane.',
+  'Turn the intercept off. The fitted plane is constrained to pass through (0,0,0), and the sample-mean point generally leaves it.'
+];
+function renderStep(){
+  document.querySelectorAll('.step').forEach((b,i)=>b.classList.toggle('active',i===state.activeStep));
+  $('stepLabel').textContent=`${state.activeStep+1} / 4`;
+  $('stepNote').textContent=steps[state.activeStep];
+  $('stepNote').className='note'+(state.activeStep===3?' warn':'');
+}
+function render(){
+  const r=ols();if(!r)return;
+  $('interceptToggle').checked=state.includeIntercept;
+  $('obsSelect').value=state.selected;
+  $('obsLabel').textContent=state.selected+1;
+  $('yRange').value=state.y[state.selected];
+  $('yValue').textContent=fmt(state.y[state.selected],2);
+  $('x1Spread').value=state.x1Spread;$('x2Spread').value=state.x2Spread;
+  $('x1SpreadValue').textContent=state.x1Spread.toFixed(2)+'×';
+  $('x2SpreadValue').textContent=state.x2Spread.toFixed(2)+'×';
+  renderStep();renderInspector();draw();
+}
+
+function pointHit(cx,cy){
+  const rect=canvas.getBoundingClientRect();
+  let best=null,bd=1e9;
+  lastProjected.forEach(p=>{
+    const d=Math.hypot(cx-rect.left-p.obs.x,cy-rect.top-p.obs.y);
+    if(d<bd){bd=d;best=p.i}
+  });
+  return bd<16?best:null;
+}
+
+canvas.addEventListener('pointerdown',e=>{
+  const hit=pointHit(e.clientX,e.clientY);
+  if(hit!=null){
+    state.selected=hit;populateSelect();render();return;
+  }
+  state.dragOrbit=true;state.lastPointer={x:e.clientX,y:e.clientY};canvas.classList.add('dragging');canvas.setPointerCapture(e.pointerId);
+});
+canvas.addEventListener('pointermove',e=>{
+  const rect=canvas.getBoundingClientRect();
+  const hit=pointHit(e.clientX,e.clientY);
+  state.hover=hit;
+  if(state.dragOrbit&&state.lastPointer){
+    const dx=e.clientX-state.lastPointer.x,dy=e.clientY-state.lastPointer.y;
+    state.yaw+=dx*.008;state.pitch=clamp(state.pitch+dy*.008,-1.25,1.25);
+    state.lastPointer={x:e.clientX,y:e.clientY};tooltip.style.opacity='0';draw();return;
+  }
+  if(hit!=null){
+    const r=ols(),i=hit,p=lastProjected.find(q=>q.i===i);
+    tooltip.style.left=(p.obs.x)+'px';tooltip.style.top=(p.obs.y)+'px';
+    tooltip.innerHTML=`obs ${i+1}<br>x₁ = ${fmt(r.x1[i],2)}<br>x₂ = ${fmt(r.x2[i],2)}<br>y = ${fmt(r.y[i],2)}<br>ŷ = ${fmt(r.yhat[i],2)}<br>ê = ${fmt(r.e[i],2)}`;
+    tooltip.style.opacity='1';
+  }else tooltip.style.opacity='0';
+  draw();
+});
+canvas.addEventListener('pointerup',e=>{state.dragOrbit=false;state.lastPointer=null;canvas.classList.remove('dragging');try{canvas.releasePointerCapture(e.pointerId)}catch{}});
+canvas.addEventListener('pointerleave',()=>{if(!state.dragOrbit){state.hover=null;tooltip.style.opacity='0';draw()}});
+canvas.addEventListener('wheel',e=>{e.preventDefault();state.zoom=clamp(state.zoom*(e.deltaY>0?.92:1.08),.65,1.65);draw()},{passive:false});
+
+$('interceptToggle').addEventListener('change',e=>{snapshotPlane();state.includeIntercept=e.target.checked;render()});
+$('obsSelect').addEventListener('change',e=>{state.selected=+e.target.value;render()});
+$('yRange').addEventListener('input',e=>{snapshotPlane();state.y[state.selected]=+e.target.value;render()});
+$('x1Spread').addEventListener('input',e=>{snapshotPlane();state.x1Spread=+e.target.value;render()});
+$('x2Spread').addEventListener('input',e=>{snapshotPlane();state.x2Spread=+e.target.value;render()});
+document.querySelectorAll('.step').forEach(b=>b.addEventListener('click',()=>{state.activeStep=+b.dataset.step;render()}));
+$('resetBtn').addEventListener('click',()=>{state.yaw=base.yaw;state.pitch=base.pitch;state.zoom=1;state.prevPlane=null;render()});
+$('newBtn').addEventListener('click',()=>{
+  const b0=2+Math.random()*1.5,b1=.4+Math.random()*.8,b2=-.5+Math.random()*1.0;
+  const {x1,x2}=xs();
+  state.y=x1.map((v,i)=>b0+b1*v+b2*x2[i]+(Math.random()-.5)*2.2);
+  state.prevPlane=null;render();
+});
+window.addEventListener('resize',resize);
+new ResizeObserver(resize).observe(wrap);
+populateSelect();render();requestAnimationFrame(resize);
+})();
+</script>
+</body>
+</html>

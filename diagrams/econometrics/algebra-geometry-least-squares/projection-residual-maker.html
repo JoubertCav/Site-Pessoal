@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>05 · Projection and Residual-Maker Matrices</title>
+<style>
+:root{
+  --paper:#f6f1e8; --card:#fffdf9; --ink:#13253a; --muted:#74808a;
+  --cyan:#12a8bf; --cyan-dark:#0a7f91; --cyan-soft:#e5f7f9;
+  --mag:#c43a7a; --mag-soft:#f9e4ee;
+  --amber:#c48620; --amber-soft:#fff2d3;
+  --line:#ded7cc; --grid:#e9e3d9; --ghost:#a8b0b7;
+  --shadow:0 8px 26px rgba(19,37,58,.06); --r:20px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+body{min-height:100vh}
+button,input{font:inherit}
+button:focus-visible,input:focus-visible{outline:3px solid rgba(18,168,191,.25);outline-offset:2px}
+.app{max-width:1600px;margin:auto;padding:18px}
+.header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px 20px;border:1px solid var(--line);border-radius:var(--r);background:rgba(255,253,249,.93);box-shadow:var(--shadow)}
+.eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan-dark);font-weight:900;margin-bottom:5px}
+h1{margin:0;font-size:clamp(21px,2vw,30px);letter-spacing:-.03em;font-weight:780}
+.subtitle{margin-top:6px;color:var(--muted);font-size:13.5px;line-height:1.45;max-width:900px}
+.actions{display:flex;gap:8px}
+.btn{border:1px solid var(--line);background:#fffdfa;color:var(--ink);padding:9px 13px;border-radius:12px;font-weight:800;cursor:pointer}
+.btn.primary{background:var(--ink);color:white;border-color:var(--ink)}
+.layout{display:grid;grid-template-columns:285px minmax(0,1fr) 370px;gap:16px;margin-top:16px;align-items:start}
+.card{background:rgba(255,253,249,.96);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.controls,.inspector{padding:16px;position:sticky;top:14px}
+.sectionTitle{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:900;margin:0 0 10px}
+.control{padding:13px 0;border-top:1px solid rgba(222,215,204,.8)}
+.control:first-of-type{padding-top:0;border-top:0}
+.labelRow{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:8px;font-size:13px}
+.labelRow b{font-weight:800}
+.range{width:100%;accent-color:var(--cyan)}
+.mini{font-size:11.5px;color:var(--muted);line-height:1.45;margin-top:5px}
+.compGrid{display:grid;grid-template-columns:28px 1fr 48px;gap:7px;align-items:center;margin:7px 0}
+.compGrid label{font-family:Cambria,"Times New Roman",serif;font-size:15px;font-weight:700}
+.compGrid output{text-align:right;font-size:11px;font-variant-numeric:tabular-nums;color:var(--muted)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.step{border:1px solid var(--line);background:#fcfaf6;border-radius:10px;padding:8px 0;font-size:12px;font-weight:850;cursor:pointer}
+.step.active{border-color:var(--cyan);background:var(--cyan-soft);color:#086f80}
+.note{margin-top:10px;padding:11px 12px;border-radius:12px;border:1px solid #c9e7ea;background:#f1fbfb;font-size:12px;line-height:1.48}
+.note.warn{border-color:#e5c67f;background:var(--amber-soft);color:#68490c}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:7px;font-size:11px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:7px}
+.sw{width:16px;height:3px;border-radius:3px;background:var(--ink)}
+.sw.c{background:var(--cyan)} .sw.m{background:var(--mag)} .sw.g{background:var(--ghost)}
+.sw.p{height:10px;width:15px;background:rgba(18,168,191,.18);border:1px solid var(--cyan)}
+.main{display:flex;flex-direction:column;gap:14px}
+.vizCard{padding:13px}
+.vizHead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:4px 6px 11px}
+.vizTitle{font-weight:800;letter-spacing:-.01em}
+.badge{display:flex;align-items:center;gap:7px;border:1px solid #c7e7ea;background:#f1fbfb;color:#086f80;padding:7px 10px;border-radius:999px;font-size:12px;font-weight:900}
+.badge.warn{border-color:#e3c06e;background:var(--amber-soft);color:#68490c}
+.dot{width:8px;height:8px;border-radius:50%;background:currentColor}
+.canvasWrap{position:relative;height:min(68vh,690px);min-height:520px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fcfaf6}
+canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+canvas.dragY{cursor:move} canvas.orbiting{cursor:grabbing}
+.tip{position:absolute;pointer-events:none;opacity:0;background:rgba(19,37,58,.95);color:white;padding:7px 8px;border-radius:8px;font-size:11px;line-height:1.4;white-space:nowrap;transform:translate(12px,-10px)}
+.hint{position:absolute;right:12px;bottom:10px;padding:6px 9px;border:1px solid var(--line);border-radius:9px;background:rgba(255,253,249,.9);color:var(--muted);font-size:11px;pointer-events:none}
+.eqCard{padding:16px 18px}
+.eqTop{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;font-family:Cambria,"Times New Roman",serif;font-size:clamp(19px,2.15vw,29px);padding:6px 0}
+.term{padding:3px 7px;border-radius:8px}
+.term.c{background:var(--cyan-soft);color:var(--cyan-dark)} .term.m{background:var(--mag-soft);color:var(--mag)}
+.eqGrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
+.eqBox{border:1px solid var(--line);border-radius:12px;background:#fcfaf6;padding:10px;text-align:center;font-family:Cambria,"Times New Roman",serif;font-size:15px}
+.what{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:14px}
+.what>div{border:1px solid var(--line);border-radius:12px;background:#fcfaf6;padding:12px;font-size:12px;line-height:1.48}
+.what b{display:block;margin-bottom:4px}
+.statGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat{border:1px solid var(--line);border-radius:12px;background:#fcfaf6;padding:10px}
+.stat .k{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:850}
+.stat .v{margin-top:4px;font-size:17px;font-weight:900;font-variant-numeric:tabular-nums}
+.cyan{color:var(--cyan-dark)} .mag{color:var(--mag)} .amber{color:var(--amber)}
+.matrixBlock{margin-top:12px}
+.matrixLabel{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px;font-size:12px}
+.matrixLabel b{font-size:13px}
+.matrix{display:grid;gap:3px;padding:7px;border-left:2px solid var(--ink);border-right:2px solid var(--ink);border-radius:4px}
+.cell{height:30px;min-width:42px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11px;font-variant-numeric:tabular-nums;transition:.1s}
+.cell.hi{outline:2px solid var(--cyan);outline-offset:1px}
+.vectorList{display:grid;gap:5px}
+.vectorRow{display:grid;grid-template-columns:48px 1fr;gap:7px;align-items:center;font-size:12px}
+.vecName{font-weight:900}
+.vecVals{display:flex;gap:3px;overflow:hidden}
+.pill{min-width:36px;padding:4px 6px;border-radius:8px;background:#f3f0ea;text-align:center;font-variant-numeric:tabular-nums}
+.pill.hi{outline:2px solid var(--cyan);background:var(--cyan-soft)}
+.matrixTabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px}
+.tab{border:1px solid var(--line);border-radius:10px;background:#fcfaf6;padding:7px;font-size:11px;font-weight:850;cursor:pointer}
+.tab.active{background:var(--cyan-soft);border-color:#a9dfe5;color:#086f80}
+@media(max-width:1240px){
+ .layout{grid-template-columns:255px minmax(0,1fr)}
+ .inspector{grid-column:1/-1;position:static}
+ .inspectorInner{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+}
+@media(max-width:840px){
+ .app{padding:9px}.header{flex-direction:column;align-items:flex-start}.layout{grid-template-columns:1fr}
+ .controls,.inspector{position:static}.canvasWrap{height:62vh;min-height:470px}
+ .eqGrid,.what{grid-template-columns:1fr}.inspectorInner{display:block}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="header">
+  <div>
+    <div class="eyebrow">Result 05 · Linear algebra of OLS</div>
+    <h1>Projection and residual-maker matrices</h1>
+    <div class="subtitle">Decompose any vector y into its projection onto S(X) and an orthogonal residual in S(X)⊥.</div>
+  </div>
+  <div class="actions">
+    <button class="btn" id="resetBtn">Reset</button>
+    <button class="btn primary" id="newBtn">New Example</button>
+  </div>
+</header>
+
+<div class="layout">
+<aside class="card controls">
+  <div class="sectionTitle">Controls</div>
+
+  <div class="control">
+    <div class="labelRow"><b>Vector y ∈ R³</b><span>drag its tip</span></div>
+    <div class="compGrid"><label>y₁</label><input id="y1" class="range ySlider" type="range" min="-3.5" max="3.5" step=".05"><output id="y1o"></output></div>
+    <div class="compGrid"><label>y₂</label><input id="y2" class="range ySlider" type="range" min="-3.5" max="3.5" step=".05"><output id="y2o"></output></div>
+    <div class="compGrid"><label>y₃</label><input id="y3" class="range ySlider" type="range" min="-3.5" max="3.5" step=".05"><output id="y3o"></output></div>
+  </div>
+
+  <div class="control">
+    <div class="labelRow"><b>Plane orientation</b><span id="azOut">25°</span></div>
+    <input id="az" class="range snapControl" type="range" min="-180" max="180" step="1" value="25">
+    <div class="labelRow" style="margin-top:9px"><b>Tilt</b><span id="tiltOut">32°</span></div>
+    <input id="tilt" class="range snapControl" type="range" min="-70" max="70" step="1" value="32">
+    <div class="mini">Rotates the subspace S(X) itself.</div>
+  </div>
+
+  <div class="control">
+    <div class="labelRow"><b>Angle between columns of X</b><span id="basisOut">64°</span></div>
+    <input id="basisAngle" class="range snapControl" type="range" min="7" max="90" step="1" value="64">
+    <div class="mini">Changes the basis inside the same plane. P should stay unchanged while S(X) is unchanged.</div>
+  </div>
+
+  <div class="control">
+    <div class="labelRow"><b>Guided mode</b><span id="stepLabel">1 / 4</span></div>
+    <div class="steps">
+      <button class="step active" data-step="0">1</button>
+      <button class="step" data-step="1">2</button>
+      <button class="step" data-step="2">3</button>
+      <button class="step" data-step="3">4</button>
+    </div>
+    <div id="stepNote" class="note"></div>
+  </div>
+
+  <div class="control">
+    <div class="sectionTitle" style="margin-bottom:8px">Legend</div>
+    <div class="legend">
+      <span><i class="sw"></i> y</span>
+      <span><i class="sw c"></i> Py = ŷ</span>
+      <span><i class="sw m"></i> My = ê</span>
+      <span><i class="sw p"></i> S(X)</span>
+      <span><i class="sw g"></i> before</span>
+    </div>
+  </div>
+</aside>
+
+<main class="main">
+  <section class="card vizCard">
+    <div class="vizHead">
+      <div class="vizTitle">Orthogonal decomposition in R³</div>
+      <div id="badge" class="badge"><span class="dot"></span><span>(Py)ᵀ(My) = 0</span></div>
+    </div>
+    <div id="canvasWrap" class="canvasWrap">
+      <canvas id="plot" tabindex="0" aria-label="3D projection onto the column-space plane. Drag the tip of y or drag empty space to orbit."></canvas>
+      <div id="tooltip" class="tip"></div>
+      <div class="hint">drag y tip · drag empty space to orbit · wheel to zoom</div>
+    </div>
+  </section>
+
+  <section class="card eqCard">
+    <div class="sectionTitle">Live definition</div>
+    <div class="eqTop">
+      <span>y</span><span>=</span>
+      <span class="term c">Py</span><span>+</span>
+      <span class="term m">My</span>
+      <span>,</span>
+      <span class="term c">Py ∈ S(X)</span>
+      <span>,</span>
+      <span class="term m">My ∈ S(X)⊥</span>
+    </div>
+    <div class="eqGrid">
+      <div class="eqBox">P = X(XᵀX)⁻¹Xᵀ</div>
+      <div class="eqBox">M = I₃ − P</div>
+      <div class="eqBox">(Py)ᵀ(My) = <strong id="dotEq">0.000000</strong></div>
+    </div>
+  </section>
+
+  <section class="card what">
+    <div><b>1 · Move y</b>The cyan fitted vector slides inside S(X); the magenta residual stays perpendicular to the plane.</div>
+    <div><b>2 · Rotate S(X)</b>P and M change because the target subspace changes.</div>
+    <div><b>3 · Change the basis</b>The columns of X can move inside the same plane while P and M remain the same.</div>
+  </section>
+</main>
+
+<aside class="card inspector">
+  <div class="sectionTitle">Mathematical inspector</div>
+  <div class="inspectorInner">
+    <div>
+      <div class="statGrid">
+        <div class="stat"><div class="k">rank(X)</div><div class="v" id="rankStat">2</div></div>
+        <div class="stat"><div class="k">cond(XᵀX)</div><div class="v" id="condStat">1.00</div></div>
+        <div class="stat"><div class="k">‖Py‖</div><div class="v cyan" id="pyNorm">0.000</div></div>
+        <div class="stat"><div class="k">‖My‖</div><div class="v mag" id="myNorm">0.000</div></div>
+      </div>
+
+      <div class="matrixBlock">
+        <div class="matrixLabel"><b>Vectors</b><span>3 × 1</span></div>
+        <div id="vectors" class="vectorList"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="matrixBlock">
+        <div class="matrixLabel"><b>X</b><span>3 × 2</span></div>
+        <div id="xMatrix" class="matrix"></div>
+      </div>
+      <div class="matrixBlock">
+        <div class="matrixLabel"><b>XᵀX</b><span>2 × 2</span></div>
+        <div id="xtxMatrix" class="matrix"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="matrixTabs">
+        <button class="tab active" data-mat="P">P · projection</button>
+        <button class="tab" data-mat="M">M · residual</button>
+      </div>
+      <div class="matrixBlock">
+        <div class="matrixLabel"><b id="pmLabel">P</b><span>3 × 3</span></div>
+        <div id="pmMatrix" class="matrix"></div>
+      </div>
+      <div class="statGrid" style="margin-top:10px">
+        <div class="stat"><div class="k">‖P²−P‖F</div><div class="v cyan" id="pIdem">0.000</div></div>
+        <div class="stat"><div class="k">‖M²−M‖F</div><div class="v mag" id="mIdem">0.000</div></div>
+      </div>
+    </div>
+  </div>
+</aside>
+</div>
+</div>
+
+<script>
+(() => {
+const C={ink:'#13253a',muted:'#74808a',cyan:'#12a8bf',cyanDark:'#0a7f91',mag:'#c43a7a',amber:'#c48620',grid:'#e9e3d9',ghost:'#a8b0b7'};
+const base={
+  y:[2.3,-1.45,2.75],
+  az:25*Math.PI/180, tilt:32*Math.PI/180, basisAngle:64*Math.PI/180,
+  yaw:-0.72,pitch:0.54,zoom:1,
+  step:0, pmView:'P',
+  dragMode:null,last:null,hover:null,prev:null
+};
+const state=structuredClone(base);
+const $=id=>document.getElementById(id);
+const canvas=$('plot'),ctx=canvas.getContext('2d'),wrap=$('canvasWrap'),tooltip=$('tooltip');
+const fmt=(x,d=3)=>{if(Math.abs(x)<.5*10**(-d))x=0;return Number.isFinite(x)?x.toFixed(d):'—'};
+const dot=(a,b)=>a.reduce((s,v,i)=>s+v*b[i],0);
+const norm=a=>Math.sqrt(dot(a,a));
+const add=(a,b)=>a.map((v,i)=>v+b[i]);
+const sub=(a,b)=>a.map((v,i)=>v-b[i]);
+const scale=(a,s)=>a.map(v=>v*s);
+const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+const unit=a=>{const n=norm(a);return n?scale(a,1/n):[0,0,0]};
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const deg=r=>r*180/Math.PI;
+
+function matT(A){return A[0].map((_,j)=>A.map(r=>r[j]))}
+function matMul(A,B){return A.map(r=>B[0].map((_,j)=>r.reduce((s,v,k)=>s+v*B[k][j],0)))}
+function matVec(A,v){return A.map(r=>dot(r,v))}
+function matSub(A,B){return A.map((r,i)=>r.map((v,j)=>v-B[i][j]))}
+function matAdd(A,B){return A.map((r,i)=>r.map((v,j)=>v+B[i][j]))}
+function eye(n){return Array.from({length:n},(_,i)=>Array.from({length:n},(_,j)=>i===j?1:0))}
+function inv2(A){
+  const d=A[0][0]*A[1][1]-A[0][1]*A[1][0];
+  return [[A[1][1]/d,-A[0][1]/d],[-A[1][0]/d,A[0][0]/d]];
+}
+function frob(A){return Math.sqrt(A.flat().reduce((s,v)=>s+v*v,0))}
+function outer(a,b){return a.map(x=>b.map(y=>x*y))}
+function colMatrix(cols){return Array.from({length:cols[0].length},(_,i)=>cols.map(c=>c[i]))}
+
+function basis(){
+  const n=unit([
+    Math.cos(state.tilt)*Math.cos(state.az),
+    Math.cos(state.tilt)*Math.sin(state.az),
+    Math.sin(state.tilt)
+  ]);
+  const ref=Math.abs(n[2])<.88?[0,0,1]:[0,1,0];
+  const u=unit(cross(ref,n));
+  const v=unit(cross(n,u));
+  const a=state.basisAngle;
+  const x1=u;
+  const x2=add(scale(u,Math.cos(a)),scale(v,Math.sin(a)));
+  return {n,u,v,x1,x2};
+}
+function model(){
+  const b=basis();
+  const X=colMatrix([b.x1,b.x2]);
+  const Xt=matT(X), XtX=matMul(Xt,X), XtXinv=inv2(XtX);
+  const P=matMul(matMul(X,XtXinv),Xt);
+  const M=matSub(eye(3),P);
+  const py=matVec(P,state.y),my=matVec(M,state.y);
+  const evals2=(()=>{
+    const a=XtX[0][0],d=XtX[1][1],c=XtX[0][1];
+    const tr=a+d,disc=Math.sqrt((a-d)*(a-d)+4*c*c);
+    return [(tr+disc)/2,(tr-disc)/2];
+  })();
+  const cond=evals2[0]/evals2[1];
+  return {b,X,XtX,XtXinv,P,M,py,my,cond};
+}
+function snapshot(){
+  const m=model();
+  state.prev={y:[...state.y],py:[...m.py],my:[...m.my],b:{...m.b,x1:[...m.b.x1],x2:[...m.b.x2],u:[...m.b.u],v:[...m.b.v],n:[...m.b.n]},P:m.P.map(r=>[...r]),M:m.M.map(r=>[...r])};
+}
+
+function project(p,w,h){
+  const cy=Math.cos(state.yaw),sy=Math.sin(state.yaw);
+  const cp=Math.cos(state.pitch),sp=Math.sin(state.pitch);
+  const [X,Y,Z]=p;
+  const xr=cy*X-sy*Y;
+  const yr=sy*X+cy*Y;
+  const zr=Z;
+  const yy=cp*yr-sp*zr;
+  const zz=sp*yr+cp*zr;
+  const cam=5.3/state.zoom,depth=cam-yy;
+  const f=Math.min(w,h)*.72/depth;
+  return {x:w/2+xr*f,y:h/2-zz*f,depth};
+}
+function cameraRight(){return [Math.cos(state.yaw),-Math.sin(state.yaw),0]}
+function cameraUp(){
+  const sy=Math.sin(state.yaw),cy=Math.cos(state.yaw),sp=Math.sin(state.pitch),cp=Math.cos(state.pitch);
+  return [sp*sy,sp*cy,cp];
+}
+function line3(a,b,w,h,color,width=1,dash=[],alpha=1){
+  const A=project(a,w,h),B=project(b,w,h);
+  ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);
+  ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.lineTo(B.x,B.y);ctx.stroke();ctx.restore();
+}
+function arrow3(a,b,w,h,color,width=3,alpha=1,label=null){
+  const A=project(a,w,h),B=project(b,w,h);
+  const dx=B.x-A.x,dy=B.y-A.y,L=Math.hypot(dx,dy),ux=dx/(L||1),uy=dy/(L||1);
+  ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=width;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.lineTo(B.x,B.y);ctx.stroke();
+  const hs=9+width,px=-uy,py=ux;
+  ctx.beginPath();ctx.moveTo(B.x,B.y);ctx.lineTo(B.x-ux*hs+px*hs*.42,B.y-uy*hs+py*hs*.42);ctx.lineTo(B.x-ux*hs-px*hs*.42,B.y-uy*hs-py*hs*.42);ctx.closePath();ctx.fill();
+  if(label){ctx.font='700 12px system-ui';ctx.fillText(label,B.x+10,B.y-8)}
+  ctx.restore();
+}
+function planePoint(b,a,c){return add(scale(b.u,a),scale(b.v,c))}
+function drawPlane(b,w,h,ghost=false){
+  const R=3.1,N=7;
+  ctx.save();
+  for(let i=0;i<N;i++){
+    for(let j=0;j<N;j++){
+      const a0=-R+2*R*i/N,a1=-R+2*R*(i+1)/N,c0=-R+2*R*j/N,c1=-R+2*R*(j+1)/N;
+      const pts=[planePoint(b,a0,c0),planePoint(b,a1,c0),planePoint(b,a1,c1),planePoint(b,a0,c1)].map(p=>project(p,w,h));
+      ctx.globalAlpha=ghost?.04:.075;ctx.fillStyle=ghost?C.ghost:C.cyan;
+      ctx.beginPath();pts.forEach((p,k)=>k?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fill();
+    }
+  }
+  for(let i=0;i<=N;i++){
+    const t=-R+2*R*i/N;
+    line3(planePoint(b,t,-R),planePoint(b,t,R),w,h,ghost?C.ghost:C.cyan,ghost?.7:.85,ghost?[5,5]:[],ghost?.35:.45);
+    line3(planePoint(b,-R,t),planePoint(b,R,t),w,h,ghost?C.ghost:C.cyan,ghost?.7:.85,ghost?[5,5]:[],ghost?.35:.45);
+  }
+  ctx.restore();
+}
+function drawAxes(w,h){
+  const O=[0,0,0],R=3.7;
+  const axes=[[[R,0,0],'e₁'],[[0,R,0],'e₂'],[[0,0,R],'e₃']];
+  axes.forEach(([p,l])=>{
+    line3(scale(p,-1),p,w,h,C.grid,1,[3,5],.9);
+    const P=project(p,w,h);ctx.save();ctx.fillStyle=C.muted;ctx.font='11px system-ui';ctx.fillText(l,P.x+5,P.y);ctx.restore();
+  });
+}
+function drawRightAngle(m,w,h){
+  const p=m.py,e=m.my;
+  if(norm(p)<.15||norm(e)<.15)return;
+  const a=unit(p),b=unit(e),s=.24;
+  const q1=add(p,scale(a,-s)),q2=add(q1,scale(b,s)),q3=add(p,scale(b,s));
+  line3(q1,q2,w,h,C.mag,1.8,[],.9);line3(q2,q3,w,h,C.mag,1.8,[],.9);
+}
+function drawScene(){
+  const rect=wrap.getBoundingClientRect(),w=rect.width,h=rect.height;if(w<10||h<10)return;
+  ctx.clearRect(0,0,w,h);
+  const m=model(),O=[0,0,0];
+  drawAxes(w,h);
+  if(state.prev)drawPlane(state.prev.b,w,h,true);
+  drawPlane(m.b,w,h,false);
+
+  // Orthogonal complement line
+  line3(scale(m.b.n,-3.5),scale(m.b.n,3.5),w,h,C.mag,1.2,[5,6],.38);
+
+  // Previous decomposition
+  if(state.prev){
+    arrow3(O,state.prev.y,w,h,C.ghost,1.8,.32,null);
+    arrow3(O,state.prev.py,w,h,C.ghost,1.8,.32,null);
+    arrow3(state.prev.py,state.prev.y,w,h,C.ghost,1.8,.32,null);
+  }
+
+  // X basis
+  const bx1=scale(m.b.x1,2.15),bx2=scale(m.b.x2,2.15);
+  arrow3(O,bx1,w,h,C.cyanDark,state.hover==='x1'?4:2.1,.68,'x₁');
+  arrow3(O,bx2,w,h,C.cyan,state.hover==='x2'?4:2.1,.68,'x₂');
+
+  // Decomposition
+  arrow3(O,state.y,w,h,C.ink,3.4,1,'y');
+  arrow3(O,m.py,w,h,C.cyan,4.0,1,'Py');
+  arrow3(m.py,state.y,w,h,C.mag,4.0,1,'My');
+  drawRightAngle(m,w,h);
+
+  // key points
+  const pts=[
+    {name:'y',p:state.y,color:C.ink,r:7},
+    {name:'Py',p:m.py,color:C.cyan,r:6},
+  ];
+  pts.forEach(o=>{
+    const P=project(o.p,w,h);ctx.save();ctx.fillStyle=o.color;ctx.beginPath();ctx.arc(P.x,P.y,o.r,0,Math.PI*2);ctx.fill();ctx.strokeStyle='white';ctx.lineWidth=2;ctx.stroke();ctx.restore();
+  });
+
+  // labels
+  const lab=project(planePoint(m.b,-2.5,2.45),w,h);
+  ctx.save();ctx.fillStyle=C.cyanDark;ctx.font='800 12px system-ui';ctx.fillText('S(X)',lab.x,lab.y);ctx.restore();
+
+  const nlab=project(scale(m.b.n,2.7),w,h);
+  ctx.save();ctx.fillStyle=C.mag;ctx.font='800 11px system-ui';ctx.fillText('S(X)⊥',nlab.x+5,nlab.y);ctx.restore();
+
+  state._screen={y:project(state.y,w,h),py:project(m.py,w,h)};
+}
+function resize(){
+  const r=wrap.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1);
+  canvas.width=Math.round(r.width*dpr);canvas.height=Math.round(r.height*dpr);
+  canvas.style.width=r.width+'px';canvas.style.height=r.height+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);drawScene();
+}
+function heat(v){
+  const a=Math.min(1,Math.abs(v));
+  if(v>=0)return `rgba(18,168,191,${.08+.30*a})`;
+  return `rgba(196,58,122,${.08+.28*a})`;
+}
+function renderMatrix(id,A,cols,hoverPrefix=''){
+  const el=$(id);el.innerHTML='';el.style.gridTemplateColumns=`repeat(${cols},minmax(42px,1fr))`;
+  A.forEach((row,i)=>row.forEach((v,j)=>{
+    const d=document.createElement('div');d.className='cell';d.style.background=heat(v);d.textContent=fmt(v,3);d.title=`[${i+1}, ${j+1}] = ${fmt(v,6)}`;
+    if(hoverPrefix==='X'){
+      d.addEventListener('mouseenter',()=>{state.hover=j===0?'x1':'x2';drawScene()});
+      d.addEventListener('mouseleave',()=>{state.hover=null;drawScene()});
+    }
+    el.appendChild(d);
+  }));
+}
+function renderVectors(m){
+  const box=$('vectors');box.innerHTML='';
+  [['y',state.y,''],['Py',m.py,'cyan'],['My',m.my,'mag']].forEach(([name,a,cls])=>{
+    const row=document.createElement('div');row.className='vectorRow';
+    const nm=document.createElement('div');nm.className='vecName '+cls;nm.textContent=name;
+    const vals=document.createElement('div');vals.className='vecVals';
+    a.forEach((v,i)=>{const p=document.createElement('div');p.className='pill';p.textContent=fmt(v,3);p.title=`${name}${i+1} = ${fmt(v,6)}`;vals.appendChild(p)});
+    row.append(nm,vals);box.appendChild(row);
+  });
+}
+const steps=[
+  'Start with y. The translucent cyan plane is S(X), spanned by the two columns of X.',
+  'Move y. P sends y to the closest point Py in S(X); M sends y to the orthogonal component My.',
+  'Rotate the plane. The subspace changes, so both P and M change and the decomposition rotates with it.',
+  'Change only the angle between x₁ and x₂. The basis changes inside the same S(X), but the projection matrix P stays the same.'
+];
+function renderStep(){
+  document.querySelectorAll('.step').forEach((b,i)=>b.classList.toggle('active',i===state.step));
+  $('stepLabel').textContent=`${state.step+1} / 4`;
+  $('stepNote').textContent=steps[state.step];
+  const warn=model().cond>100;
+  $('stepNote').className='note'+(warn?' warn':'');
+}
+function renderInspector(){
+  const m=model(),py=m.py,my=m.my;
+  $('rankStat').textContent='2';
+  $('condStat').textContent=m.cond<1000?fmt(m.cond,2):m.cond.toExponential(1);
+  $('condStat').className='v '+(m.cond>100?'amber':'');
+  $('pyNorm').textContent=fmt(norm(py));
+  $('myNorm').textContent=fmt(norm(my));
+  $('dotEq').textContent=fmt(dot(py,my),6);
+  const badge=$('badge');
+  if(Math.abs(dot(py,my))<1e-8){
+    badge.className='badge';badge.innerHTML='<span class="dot"></span><span>Invariant: (Py)ᵀ(My) = 0</span>';
+  }else{
+    badge.className='badge warn';badge.innerHTML='<span class="dot"></span><span>Numerical orthogonality warning</span>';
+  }
+  renderVectors(m);
+  renderMatrix('xMatrix',m.X,2,'X');
+  renderMatrix('xtxMatrix',m.XtX,2);
+  const A=state.pmView==='P'?m.P:m.M;
+  $('pmLabel').textContent=state.pmView;
+  renderMatrix('pmMatrix',A,3);
+  $('pIdem').textContent=fmt(frob(matSub(matMul(m.P,m.P),m.P)),6);
+  $('mIdem').textContent=fmt(frob(matSub(matMul(m.M,m.M),m.M)),6);
+}
+function syncControls(){
+  ['y1','y2','y3'].forEach((id,i)=>{$(id).value=state.y[i];$(id+'o').value=fmt(state.y[i],2)});
+  $('az').value=deg(state.az);$('tilt').value=deg(state.tilt);$('basisAngle').value=deg(state.basisAngle);
+  $('azOut').textContent=`${Math.round(deg(state.az))}°`;
+  $('tiltOut').textContent=`${Math.round(deg(state.tilt))}°`;
+  $('basisOut').textContent=`${Math.round(deg(state.basisAngle))}°`;
+}
+function render(){syncControls();renderStep();renderInspector();drawScene()}
+
+// Controls
+['y1','y2','y3'].forEach((id,i)=>{
+  $(id).addEventListener('pointerdown',snapshot);
+  $(id).addEventListener('input',e=>{state.y[i]=+e.target.value;render()});
+});
+$('az').addEventListener('pointerdown',snapshot);
+$('tilt').addEventListener('pointerdown',snapshot);
+$('basisAngle').addEventListener('pointerdown',snapshot);
+$('az').addEventListener('input',e=>{state.az=+e.target.value*Math.PI/180;render()});
+$('tilt').addEventListener('input',e=>{state.tilt=+e.target.value*Math.PI/180;render()});
+$('basisAngle').addEventListener('input',e=>{state.basisAngle=+e.target.value*Math.PI/180;render()});
+document.querySelectorAll('.step').forEach(b=>b.addEventListener('click',()=>{state.step=+b.dataset.step;render()}));
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
+  state.pmView=b.dataset.mat;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t===b));
+  renderInspector();
+}));
+$('resetBtn').addEventListener('click',()=>{Object.assign(state,structuredClone(base));render()});
+$('newBtn').addEventListener('click',()=>{
+  snapshot();
+  state.y=[-2.5+Math.random()*5,-2.5+Math.random()*5,-2.5+Math.random()*5];
+  state.az=(-140+Math.random()*280)*Math.PI/180;
+  state.tilt=(-50+Math.random()*100)*Math.PI/180;
+  state.basisAngle=(28+Math.random()*58)*Math.PI/180;
+  render();
+});
+
+// Canvas interaction: drag y tip, otherwise orbit
+function nearY(clientX,clientY){
+  if(!state._screen)return false;
+  const r=canvas.getBoundingClientRect();
+  return Math.hypot(clientX-r.left-state._screen.y.x,clientY-r.top-state._screen.y.y)<18;
+}
+canvas.addEventListener('pointerdown',e=>{
+  state.last={x:e.clientX,y:e.clientY};
+  if(nearY(e.clientX,e.clientY)){snapshot();state.dragMode='y';canvas.classList.add('dragY')}
+  else{state.dragMode='orbit';canvas.classList.add('orbiting')}
+  canvas.setPointerCapture(e.pointerId);
+});
+canvas.addEventListener('pointermove',e=>{
+  const rect=canvas.getBoundingClientRect();
+  if(state.dragMode&&state.last){
+    const dx=e.clientX-state.last.x,dy=e.clientY-state.last.y;
+    if(state.dragMode==='orbit'){
+      state.yaw+=dx*.008;state.pitch=clamp(state.pitch+dy*.008,-1.3,1.3);
+    }else{
+      const s=0.009/state.zoom;
+      const delta=add(scale(cameraRight(),dx*s),scale(cameraUp(),-dy*s));
+      state.y=state.y.map((v,i)=>clamp(v+delta[i],-3.5,3.5));
+    }
+    state.last={x:e.clientX,y:e.clientY};tooltip.style.opacity='0';render();return;
+  }
+  if(state._screen){
+    const dY=Math.hypot(e.clientX-rect.left-state._screen.y.x,e.clientY-rect.top-state._screen.y.y);
+    const dP=Math.hypot(e.clientX-rect.left-state._screen.py.x,e.clientY-rect.top-state._screen.py.y);
+    if(dY<16){
+      tooltip.style.left=state._screen.y.x+'px';tooltip.style.top=state._screen.y.y+'px';
+      tooltip.innerHTML=`y = [${state.y.map(v=>fmt(v,2)).join(', ')}]ᵀ`;tooltip.style.opacity='1';
+    }else if(dP<15){
+      const p=model().py;tooltip.style.left=state._screen.py.x+'px';tooltip.style.top=state._screen.py.y+'px';
+      tooltip.innerHTML=`Py = [${p.map(v=>fmt(v,2)).join(', ')}]ᵀ`;tooltip.style.opacity='1';
+    }else tooltip.style.opacity='0';
+  }
+});
+canvas.addEventListener('pointerup',e=>{
+  state.dragMode=null;state.last=null;canvas.classList.remove('dragY','orbiting');
+  try{canvas.releasePointerCapture(e.pointerId)}catch{}
+});
+canvas.addEventListener('pointerleave',()=>{if(!state.dragMode)tooltip.style.opacity='0'});
+canvas.addEventListener('wheel',e=>{e.preventDefault();state.zoom=clamp(state.zoom*(e.deltaY>0?.93:1.075),.65,1.65);drawScene()},{passive:false});
+
+window.addEventListener('resize',resize);
+new ResizeObserver(resize).observe(wrap);
+render();requestAnimationFrame(resize);
+})();
+</script>
+</body>
+</html>
